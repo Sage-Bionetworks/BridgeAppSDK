@@ -1,0 +1,3 @@
+[submodule "ResearchKit"]
+	path = ResearchKit
+	url = git@github.com:Erin-Mounts/ResearchKit.git
