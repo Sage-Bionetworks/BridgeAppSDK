@@ -32,7 +32,7 @@ import UIKit
 import ResearchKit
 import HealthKit
 
-class ProfileViewController: UITableViewController, HealthClientType {
+public class ProfileViewController: UITableViewController, HealthClientType {
     // MARK: Properties
 
     let healthObjectTypes = [
@@ -47,7 +47,7 @@ class ProfileViewController: UITableViewController, HealthClientType {
     
     // MARK: UIViewController
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         guard let healthStore = healthStore else { fatalError("healhStore not set") }
@@ -71,11 +71,11 @@ class ProfileViewController: UITableViewController, HealthClientType {
     
     // MARK: UITableViewDataSource
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return healthObjectTypes.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCellWithIdentifier(ProfileStaticTableViewCell.reuseIdentifier, forIndexPath: indexPath) as? ProfileStaticTableViewCell else { fatalError("Unable to dequeue a ProfileStaticTableViewCell") }
         let objectType = healthObjectTypes[indexPath.row]
         
@@ -98,7 +98,7 @@ class ProfileViewController: UITableViewController, HealthClientType {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     

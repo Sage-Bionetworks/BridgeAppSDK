@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import UIKit
 
 @IBDesignable
-class ProfileHeaderView: UIView {
+public class ProfileHeaderView: UIView {
     // MARK: Properties
     
     var seperatorHeight = CGFloat(0.5)
@@ -40,7 +40,7 @@ class ProfileHeaderView: UIView {
 
     // MARK: UIView
     
-    override func drawRect(rect: CGRect) {
+    override public func drawRect(rect: CGRect) {
         // Draw a seperator line at the bottom of the view.
         var fillRect = bounds
         fillRect.origin.y = bounds.size.height - seperatorHeight

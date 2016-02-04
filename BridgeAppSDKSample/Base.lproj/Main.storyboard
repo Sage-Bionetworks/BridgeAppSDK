@@ -161,7 +161,7 @@
         <!--Dashboard-->
         <scene sceneID="brc-di-7T4">
             <objects>
-                <tableViewController id="dm3-ta-z1g" customClass="DashboardTableViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="dm3-ta-z1g" customClass="DashboardTableViewController" customModule="BridgeAppSDK" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="250" sectionHeaderHeight="28" sectionFooterHeight="28" id="BmR-f8-Zdj">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -288,7 +288,7 @@
         <!--Activities-->
         <scene sceneID="Sdb-gs-9i7">
             <objects>
-                <tableViewController title="Activities" id="sOb-We-vhw" customClass="ActivityViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Activities" id="sOb-We-vhw" customClass="ActivityViewController" customModule="BridgeAppSDK" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="f47-ig-pPA">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -333,12 +333,12 @@
         <!--Profile-->
         <scene sceneID="y6w-Lq-1h9">
             <objects>
-                <tableViewController id="qxp-fi-jKy" customClass="ProfileViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="qxp-fi-jKy" customClass="ProfileViewController" customModule="BridgeAppSDK" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="49" sectionHeaderHeight="28" sectionFooterHeight="28" id="uZ9-Yj-GUH">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="oQO-XA-pUa" customClass="ProfileHeaderView" customModule="BridgeAppSDKSample" customModuleProvider="target">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="oQO-XA-pUa" customClass="ProfileHeaderView" customModule="BridgeAppSDK">
                             <rect key="frame" x="0.0" y="64" width="600" height="164"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="dpF-Nr-dqH">
@@ -399,7 +399,7 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfileStaticTableViewCell" id="l1j-hP-NgK" customClass="ProfileStaticTableViewCell" customModule="BridgeAppSDKSample" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfileStaticTableViewCell" id="l1j-hP-NgK" customClass="ProfileStaticTableViewCell" customModule="BridgeAppSDK">
                                 <rect key="frame" x="0.0" y="256" width="600" height="49"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l1j-hP-NgK" id="gSL-84-VI9">

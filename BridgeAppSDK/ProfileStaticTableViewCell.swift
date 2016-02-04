@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import UIKit
 
-class ProfileStaticTableViewCell: UITableViewCell {
+public class ProfileStaticTableViewCell: UITableViewCell {
     // MARK: Properties
     
     static let reuseIdentifier = "ProfileStaticTableViewCell"

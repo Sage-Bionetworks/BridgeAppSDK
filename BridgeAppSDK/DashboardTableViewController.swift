@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import UIKit
 import ResearchKit
 
-class DashboardTableViewController: UITableViewController {
+public class DashboardTableViewController: UITableViewController {
     // MARK: Properties
     
     @IBOutlet var pieChart: ORKPieChartView!
@@ -48,7 +48,7 @@ class DashboardTableViewController: UITableViewController {
     
     // MARK: UIViewController
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         // Set the data source for each graph
@@ -61,7 +61,7 @@ class DashboardTableViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         // Animate any visible charts
@@ -75,7 +75,7 @@ class DashboardTableViewController: UITableViewController {
     
     // MARK: UITableViewDelegate
     
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    override public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         // Animate charts as they're scrolled into view.
         if let animatableChart = animatableChartInCell(cell) {
             animatableChart.animateWithDuration(0.5)
