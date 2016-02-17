@@ -37,19 +37,6 @@ public protocol SBASurveyPredicateRule: class {
     var rulePredicate: NSPredicate? { get }
 }
 
-public extension NSObject {
-    public func matchesRulePredicate(result: ORKResult?) -> Bool? {
-        if let rule = self as? SBASurveyPredicateRule,
-            let predicate = rule.rulePredicate {
-                // If the result is nil then it fails
-                guard let result = result else { return false }
-                // Otherwise, evaluate against the predicate
-                return predicate.evaluateWithObject(result)
-        }
-        return nil
-    }
-}
-
 public protocol SBASurveyNavigationStep: SBASurveyPredicateRule, SBANavigationRule {
     
     // For a survey step, the rule predicate is readwrite
@@ -68,61 +55,6 @@ public protocol SBASurveyNavigationStep: SBASurveyPredicateRule, SBANavigationRu
     func matchingSurveyStep(stepResult: ORKStepResult) -> ORKFormStep?
 }
 
-public extension SBASurveyNavigationStep {
-    
-    public func matchesExpectedResult(result: ORKResult) -> Bool {
-        if let stepResult = result as? ORKStepResult,
-            let step = self.matchingSurveyStep(stepResult) {
-            if let matchingRule = step.matchesRulePredicate(stepResult) {
-                // If the step has a rule predicate defined on it, then evaluate the whole step result
-                return matchingRule
-            }
-            // Otherwise, evaluate each form item
-            if let formItems = step.formItems {
-                for formItem in formItems {
-                    let formResult = stepResult.resultForIdentifier(formItem.identifier)
-                    if let matchingRule = formItem.matchesRulePredicate(formResult) where !matchingRule {
-                        // If a form item does not match the expected result then exit, otherwise keep going
-                        return false
-                    }
-                }
-            }
-        }
-        return true;
-    }
-    
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
-        guard let results = taskResult.results else { return nil }
-        let predicate = self.surveyStepResultFilterPredicate
-        let filteredResults = results.filter() { predicate.evaluateWithObject($0) && !matchesExpectedResult($0)}
-        if (filteredResults.count > 0 && !self.skipIfPassed) || (filteredResults.count == 0 && self.skipIfPassed) {
-            return self.skipNextStepIdentifier
-        }
-        return nil;
-    }
-    
-    public func sharedCopying(copy: AnyObject) -> AnyObject {
-        guard let step = copy as? SBASurveyNavigationStep else { return copy }
-        step.skipNextStepIdentifier = self.skipNextStepIdentifier
-        step.rulePredicate = self.rulePredicate
-        return step
-    }
-    
-    public func sharedDecoding(coder aDecoder: NSCoder) {
-        self.skipNextStepIdentifier = aDecoder.decodeObjectForKey("skipNextStepIdentifier") as! String
-        self.skipIfPassed = aDecoder.decodeBoolForKey("skipIfPassed")
-        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
-    }
-    
-    public func sharedEncoding(aCoder: NSCoder) {
-        aCoder.encodeObject(self.skipNextStepIdentifier, forKey: "skipNextStepIdentifier")
-        aCoder.encodeBool(self.skipIfPassed, forKey: "skipIfPassed")
-        if let rulePredicate = self.rulePredicate {
-            aCoder.encodeObject(rulePredicate, forKey: "rulePredicate")
-        }
-    }
-}
-
 public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
     
     public var skipNextStepIdentifier: String = ORKNullStepIdentifier
@@ -131,6 +63,11 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
     
     override public init(identifier: String) {
         super.init(identifier: identifier)
+    }
+    
+    init(surveyItem: SBASurveyItem) {
+        super.init(identifier: surveyItem.identifier)
+        self.sharedCopyFromSurveyItem(surveyItem)
     }
     
     public var surveyStepResultFilterPredicate: NSPredicate {
@@ -172,6 +109,11 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
         super.init(identifier: identifier, steps: steps)
     }
     
+    init(surveyItem: SBASurveyItem, steps: [ORKStep]?) {
+        super.init(identifier: surveyItem.identifier, steps: steps)
+        self.sharedCopyFromSurveyItem(surveyItem)
+    }
+    
     public var surveyStepResultFilterPredicate: NSPredicate {
         return NSPredicate(format: "identifier BEGINSWITH %@", "\(self.identifier).")
     }
@@ -200,7 +142,7 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
     }
 }
 
-public class SBASurveyFormItem : ORKFormItem, SBASurveyPredicateRule {
+public final class SBASurveyFormItem : ORKFormItem, SBASurveyPredicateRule {
     
     public var rulePredicate: NSPredicate?
     
@@ -233,5 +175,80 @@ public class SBASurveyFormItem : ORKFormItem, SBASurveyPredicateRule {
         if let rulePredicate = self.rulePredicate {
             aCoder.encodeObject(rulePredicate, forKey: "rulePredicate")
         }
+    }
+}
+
+public extension SBASurveyNavigationStep {
+    
+    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+        guard let results = taskResult.results else { return nil }
+        let predicate = self.surveyStepResultFilterPredicate
+        let filteredResults = results.filter() { predicate.evaluateWithObject($0) && !matchesExpectedResult($0)}
+        if (filteredResults.count > 0 && !self.skipIfPassed) || (filteredResults.count == 0 && self.skipIfPassed) {
+            return self.skipNextStepIdentifier
+        }
+        return nil;
+    }
+    
+    func matchesRulePredicate(item: AnyObject, result: ORKResult?) -> Bool? {
+        if let rule = item as? SBASurveyPredicateRule,
+            let predicate = rule.rulePredicate {
+                // If the result is nil then it fails
+                guard let result = result else { return false }
+                // Otherwise, evaluate against the predicate
+                return predicate.evaluateWithObject(result)
+        }
+        return nil
+    }
+    
+    func matchesExpectedResult(result: ORKResult) -> Bool {
+        if let stepResult = result as? ORKStepResult,
+            let step = self.matchingSurveyStep(stepResult) {
+                if let matchingRule = matchesRulePredicate(step, result:stepResult) {
+                    // If the step has a rule predicate defined on it, then evaluate the whole step result
+                    return matchingRule
+                }
+                // Otherwise, evaluate each form item
+                if let formItems = step.formItems {
+                    for formItem in formItems {
+                        let formResult = stepResult.resultForIdentifier(formItem.identifier)
+                        if let matchingRule = matchesRulePredicate(formItem, result:formResult) where !matchingRule {
+                            // If a form item does not match the expected result then exit, otherwise keep going
+                            return false
+                        }
+                    }
+                }
+        }
+        return true;
+    }
+    
+    func sharedCopying(copy: AnyObject) -> AnyObject {
+        guard let step = copy as? SBASurveyNavigationStep else { return copy }
+        step.skipNextStepIdentifier = self.skipNextStepIdentifier
+        step.rulePredicate = self.rulePredicate
+        return step
+    }
+    
+    func sharedDecoding(coder aDecoder: NSCoder) {
+        self.skipNextStepIdentifier = aDecoder.decodeObjectForKey("skipNextStepIdentifier") as! String
+        self.skipIfPassed = aDecoder.decodeBoolForKey("skipIfPassed")
+        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
+    }
+    
+    func sharedEncoding(aCoder: NSCoder) {
+        aCoder.encodeObject(self.skipNextStepIdentifier, forKey: "skipNextStepIdentifier")
+        aCoder.encodeBool(self.skipIfPassed, forKey: "skipIfPassed")
+        if let rulePredicate = self.rulePredicate {
+            aCoder.encodeObject(rulePredicate, forKey: "rulePredicate")
+        }
+    }
+    
+    func sharedCopyFromSurveyItem(surveyItem: AnyObject) {
+        guard let surveyItem = surveyItem as? SBASurveyItem else { return }
+        if let skipIdentifier = surveyItem.skipIdentifier {
+            self.skipNextStepIdentifier = skipIdentifier
+        }
+        self.rulePredicate = surveyItem.rulePredicate
+        self.skipIfPassed = surveyItem.skipIfPassed
     }
 }

@@ -69,7 +69,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "skipIfPassed" : true
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "quiz")
         
         guard let surveyStep = step as? SBASurveyFormStep else {
@@ -103,7 +103,7 @@ class SBASurveyFactoryTests: XCTestCase {
             ],
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "quiz")
         
         guard let surveyStep = step as? ORKFormStep else {
@@ -137,7 +137,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "skipIfPassed" : true
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "quiz")
         
         guard let surveyStep = step as? SBASurveySubtaskStep else {
@@ -163,7 +163,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "nextIdentifier" : "exit"
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "ineligible")
         XCTAssertEqual(step.text, "You can't get there from here")
         
@@ -183,7 +183,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "expectedAnswer" : true
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "question1")
         
         guard let surveyStep = step as? ORKFormStep else {
@@ -224,7 +224,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "expectedAnswer" : "b"
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "question1")
         
         guard let surveyStep = step as? ORKFormStep else {
@@ -273,7 +273,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 ["prompt" : "c", "value" : 2, "exclusive": true]],
         ]
         
-        let step = SBASurveyFactory().createSurveyStep(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertEqual(step.identifier, "question1")
         
         guard let surveyStep = step as? ORKFormStep else {
