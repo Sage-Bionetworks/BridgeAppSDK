@@ -47,6 +47,23 @@
     return nil;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    return [[self class] init];
+}
+
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    return [[self class] init];
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    // Do nothing
+}
+
 @end
 
 @implementation MockORKTaskWithOptionals

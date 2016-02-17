@@ -35,23 +35,30 @@ import ResearchKit
 
 /**
  * The purpose of the Survey Factory is to allow subclassing for custom types of steps
- * that are not recognized by this factory and to allow usage by Obj-c classes that 
+ * that are not recognized by this factory and to allow usage by Obj-c classes that
  * do not recognize protocol extensions.
  */
 public class SBASurveyFactory : NSObject {
-       
+
+    /**
+     * Factory method for creating a survey step with a dictionary
+     */
     public func createSurveyStepWithDictionary(dictionary: NSDictionary) -> ORKStep {
         return self.createSurveyStep(dictionary, isSubtaskStep: false)
     }
     
-    public func createSurveyStepWithCustomType(inputItem: AnyObject) -> ORKStep {
-        guard let inputItem = inputItem as? SBASurveyItem else {
-            assertionFailure("Unrecognized class for the base class implementation")
-            return ORKStep(identifier: "NULL")
-        }
+    /**
+     * Factory method for creating a custom type of survey question that is not 
+     * defined by this class. Note: Only swift can subclass this method directly
+     */
+    public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
         return inputItem.createCustomStep()
     }
-    
+}
+
+// Use an extension to keep this internal when calling via Objective-C
+extension SBASurveyFactory {
+
     func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool) -> ORKStep {
         switch (inputItem.type) {
         case .Instruction:
@@ -64,31 +71,6 @@ public class SBASurveyFactory : NSObject {
             return inputItem.createFormStep(isSubtaskStep)
         }
     }
-}
-
-public enum SBASurveyItemType: UInt8 {
-    case Custom = 0x00
-    case Instruction = 0x10
-    case Subtask = 0x20
-    case Question = 0xF0
-    case BoolQuestion = 0xF1
-    case SingleChoiceTextQuestion = 0xF2
-    case MultipleChoiceTextQuestion = 0xF3
-    case CompoundQuestion = 0xFF
-}
-
-public protocol SBASurveyItem: SBASurveyPredicateRule {
-    var identifier: String { get }
-    var type: SBASurveyItemType { get }
-    var optional: Bool { get }
-    var title: String? { get }
-    var prompt: String? { get }
-    var items: [AnyObject]? { get }
-    var skipIdentifier: String? { get }
-    var skipIfPassed: Bool { get }
-    var nextIdentifier: String? { get }
-    func formItemRulePredicate() -> NSPredicate?
-    func createCustomStep() -> ORKStep
 }
 
 extension SBASurveyItem {
@@ -135,7 +117,7 @@ extension SBASurveyItem {
         
         let answerFormat = self.createAnswerFormat()
         
-        if let rulePredicate = self.formItemRulePredicate() {
+        if let rulePredicate = self.rulePredicate {
             // If there is a rule predicate then return a survey form item
             let formItem = SBASurveyFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
             formItem.rulePredicate = rulePredicate
@@ -174,14 +156,13 @@ extension SBASurveyItem {
     }
 
     func usesNavigation() -> Bool {
-        if (self.skipIdentifier != nil) ||
-            (self.rulePredicate != nil) {
+        if (self.skipIdentifier != nil) {
                 return true
         }
         guard let items = self.items else { return false }
         for item in items {
             if let item = item as? SBASurveyItem,
-                let _ = item.formItemRulePredicate() {
+                let _ = item.rulePredicate {
                     return true
             }
         }
@@ -189,121 +170,5 @@ extension SBASurveyItem {
     }
 }
 
-extension NSDictionary: SBASurveyItem {
-    
-    public var identifier: String {
-        return (self["identifier"] as? String) ?? "\(self.hash)"
-    }
-    
-    public var type: SBASurveyItemType {
-        if let type = self["type"] as? String {
-            if type == "boolean" {
-                return .BoolQuestion
-            }
-            else if type == "singleChoiceText" {
-                return .SingleChoiceTextQuestion
-            }
-            else if type == "multipleChoiceText" {
-                return .MultipleChoiceTextQuestion
-            }
-            else if type == "instruction" {
-                return .Instruction
-            }
-            else if type == "subtask" {
-                return .Subtask
-            }
-        }
-        else if let items = self.items where items.count > 0 {
-            return .CompoundQuestion
-        }
-        return .Custom
-    }
 
-    public var title: String? {
-        return self["title"] as? String
-    }
 
-    public var prompt: String? {
-        return self["prompt"] as? String
-    }
-    
-    public var optional: Bool {
-        let optional = self["optional"] as? Bool
-        return optional ?? false
-    }
-    
-    public var items: [AnyObject]? {
-        return self["items"] as? [AnyObject]
-    }
-    
-    public var expectedAnswer: AnyObject? {
-        return self["expectedAnswer"]
-    }
-    
-    public var rulePredicate: NSPredicate? {
-        return self["rulePredicate"] as? NSPredicate
-    }
-    
-    public func formItemRulePredicate() -> NSPredicate? {
-        if let expectedAnswer = self.expectedAnswer as? Bool
-            where self.type == .BoolQuestion {
-            return NSPredicate(format: "answer = %@", expectedAnswer)
-        }
-        else if let expectedAnswer = self.expectedAnswer as? String
-            where self.type == .SingleChoiceTextQuestion {
-            return NSPredicate(format: "answer = %@", [expectedAnswer])
-        }
-        return nil;
-    }
-    
-    public var skipIdentifier: String? {
-        return self["skipIdentifier"] as? String
-    }
-    
-    public var skipIfPassed: Bool {
-        let skipIfPassed = self["skipIfPassed"] as? Bool
-        return skipIfPassed ?? false
-    }
-    
-    public var nextIdentifier: String? {
-        return self["nextIdentifier"] as? String
-    }
-    
-    public func createCustomStep() -> ORKStep {
-        return self.createInstructionStep()
-    }
-}
-
-public protocol SBATextChoice  {
-    var prompt: String? { get }
-    var value: protocol<NSCoding, NSCopying, NSObjectProtocol> { get }
-    var detailText: String? { get }
-    var exclusive: Bool { get }
-}
-
-extension NSDictionary: SBATextChoice {
-    
-    public var value: protocol<NSCoding, NSCopying, NSObjectProtocol> {
-        return (self["value"] as? protocol<NSCoding, NSCopying, NSObjectProtocol>) ?? self.prompt ?? self.identifier
-    }
-    
-    public var detailText: String? {
-        return self["detailText"] as? String
-    }
-    
-    public var exclusive: Bool {
-        let exclusive = self["exclusive"] as? Bool
-        return exclusive ?? false
-    }
-}
-
-extension ORKTextChoice: SBATextChoice {
-    public var prompt: String? { return self.text }
-}
-
-extension NSString: SBATextChoice {
-    public var prompt: String? { return self as String }
-    public var value: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self }
-    public var detailText: String? { return nil }
-    public var exclusive: Bool { return false }
-}

@@ -93,14 +93,14 @@ public class SBASubtaskStep: ORKStep {
     public var subtask: ORKTask {
         return _subtask
     }
-    private var _subtask: ORKTask
+    private var _subtask: protocol <ORKTask, NSCopying, NSSecureCoding>
     
     public init(identifier: String, steps: [ORKStep]?) {
         _subtask = ORKOrderedTask(identifier: identifier, steps: steps)
         super.init(identifier: identifier);
     }
     
-    public init(subtask: ORKTask) {
+    public init(subtask: protocol <ORKTask, NSCopying, NSSecureCoding>) {
         _subtask = subtask;
         super.init(identifier: subtask.identifier);
     }
@@ -163,19 +163,14 @@ public class SBASubtaskStep: ORKStep {
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = super.copyWithZone(zone)
         guard let subtaskStep = copy as? SBASubtaskStep else { return copy }
-        if let subtask = self.subtask as? NSCopying {
-            subtaskStep._subtask = subtask.copyWithZone(zone) as! ORKTask
-        }
-        else {
-            subtaskStep._subtask = self._subtask
-        }
+        subtaskStep._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
         return subtaskStep
     }
 
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        _subtask = aDecoder.decodeObjectForKey("subtask") as! ORKTask
+        _subtask = aDecoder.decodeObjectForKey("subtask") as! protocol <ORKTask, NSCopying, NSSecureCoding>
         super.init(coder: aDecoder);
     }
     
@@ -196,12 +191,11 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     
     // Swift Fun Fact: In order to use a superclass initializer it must be overridden 
     // by the subclass. syoung 02/11/2016
-    override init(identifier: String, steps: [ORKStep]?) {
+    public override init(identifier: String, steps: [ORKStep]?) {
         super.init(identifier: identifier, steps: steps)
     }
 
-    func subtaskStepWithIdentifier(identifier: String?) -> SBASubtaskStep?
-    {
+    func subtaskStepWithIdentifier(identifier: String?) -> SBASubtaskStep? {
         // Look for a period in the range of the string
         guard let range = identifier?.rangeOfString(".") where range.endIndex > identifier!.startIndex else {
             return nil
@@ -254,7 +248,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             }
         }
         else {
-            // If this isn't a subtask step then look to super nav for the previous step
+            // If this isn't a subtask step then look to super nav for the next step
             returnStep = superStepAfterStep(step, withResult: result)
         }
         
@@ -322,10 +316,8 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         for step in self.steps {
             // Check if the step is a subtask step and validate parameters
             if let subtaskStep = step as? SBASubtaskStep,
-                let subRet = subtaskStep.subtask.providesBackgroundAudioPrompts {
-                if (subRet) {
+                let subRet = subtaskStep.subtask.providesBackgroundAudioPrompts where subRet {
                     return true
-                }
             }
         }
         return false

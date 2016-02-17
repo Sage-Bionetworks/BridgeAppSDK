@@ -44,6 +44,8 @@
 		FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */; };
 		FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */; };
 		FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */; };
+		FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84392C1C7518FE0086E961 /* SBATextChoice.swift */; };
+		FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84392E1C7519340086E961 /* SBASurveyItem.swift */; };
 		FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */; };
 		FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE5515C1C6D267100C9E1AA /* MockORKTask.m */; };
 		FBE551671C6D3E7900C9E1AA /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBE551661C6D3E7900C9E1AA /* ResearchKit.framework */; };
@@ -158,6 +160,8 @@
 		FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyNavigationTests.swift; sourceTree = "<group>"; };
 		FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactory.swift; sourceTree = "<group>"; };
 		FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactoryTests.swift; sourceTree = "<group>"; };
+		FB84392C1C7518FE0086E961 /* SBATextChoice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATextChoice.swift; sourceTree = "<group>"; };
+		FB84392E1C7519340086E961 /* SBASurveyItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyItem.swift; sourceTree = "<group>"; };
 		FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANavigableOrderedTaskTests.m; sourceTree = "<group>"; };
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
@@ -252,6 +256,8 @@
 				FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */,
 				FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */,
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
+				FB84392E1C7519340086E961 /* SBASurveyItem.swift */,
+				FB84392C1C7518FE0086E961 /* SBATextChoice.swift */,
 			);
 			name = TasksAndSteps;
 			sourceTree = "<group>";
@@ -591,10 +597,12 @@
 				801040DF1C5ACDF800D26E19 /* HealthDataStepViewController.swift in Sources */,
 				801040D11C5ACDF800D26E19 /* ResearchContainerSegue.swift in Sources */,
 				801040D31C5ACDF800D26E19 /* IntroductionViewController.swift in Sources */,
+				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				801040DD1C5ACDF800D26E19 /* WithdrawViewController.swift in Sources */,
 				801040D81C5ACDF800D26E19 /* ActivityViewController.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
+				FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */,
 				801040CF1C5ACDF800D26E19 /* AppDelegate.swift in Sources */,
 				801040DB1C5ACDF800D26E19 /* ProfileStaticTableViewCell.swift in Sources */,
 				801040DA1C5ACDF800D26E19 /* ProfileViewController.swift in Sources */,

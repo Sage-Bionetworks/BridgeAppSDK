@@ -34,7 +34,7 @@
 #import <Foundation/Foundation.h>
 #import <ResearchKit/ResearchKit.h>
 
-@interface MockORKTaskWithoutOptionals : NSObject <ORKTask>
+@interface MockORKTaskWithoutOptionals : NSObject <ORKTask, NSCopying, NSSecureCoding>
 
 @end
 

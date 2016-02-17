@@ -291,7 +291,7 @@ class SBASurveyNavigationTests: XCTestCase {
             steps += [formStep]
         }
         let subtaskStep = SBASurveySubtaskStep(identifier: "quiz", steps: steps)
-        subtaskStep.skipNextStepIdentifier = "skip"
+        subtaskStep.skipToStepIdentifier = "skip"
         return subtaskStep
     }
     
@@ -360,7 +360,7 @@ class SBASurveyNavigationTests: XCTestCase {
     
     func createQuizStep() -> SBASurveyFormStep {
         let step = SBASurveyFormStep(identifier: "quiz")
-        step.skipNextStepIdentifier = "skip"
+        step.skipToStepIdentifier = "skip"
         return step
     }
     

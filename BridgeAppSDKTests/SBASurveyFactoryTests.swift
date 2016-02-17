@@ -51,6 +51,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep: NSDictionary = [
             "identifier" : "quiz",
+            "type" : "compound",
             "items" : [
                 [   "identifier" : "question1",
                     "type" : "boolean",
@@ -77,7 +78,7 @@ class SBASurveyFactoryTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(surveyStep.skipNextStepIdentifier, "consent")
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
         XCTAssertTrue(surveyStep.skipIfPassed)
         
         guard let formItems = surveyStep.formItems where formItems.count == 3 else {
@@ -90,6 +91,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep: NSDictionary = [
             "identifier" : "quiz",
+            "type" : "compound",
             "items" : [
                 [   "identifier" : "question1",
                     "type" : "boolean",
@@ -122,15 +124,15 @@ class SBASurveyFactoryTests: XCTestCase {
             "items" : [
                 [   "identifier" : "question1",
                     "type" : "boolean",
-                    "prompt" : "Are you older than 18?",
+                    "prompt" : "I can share my data broadly or only with Sage?",
                     "expectedAnswer" : true],
                 [   "identifier" : "question2",
                     "type" : "boolean",
-                    "prompt" : "Are you a US resident?",
-                    "expectedAnswer" : true],
+                    "prompt" : "My name is stored with my results?",
+                    "expectedAnswer" : false],
                 [   "identifier" : "question3",
                     "type" : "boolean",
-                    "prompt" : "Can you read English?",
+                    "prompt" : "I can leave the study at any time?",
                     "expectedAnswer" : true],
             ],
             "skipIdentifier" : "consent",
@@ -145,7 +147,7 @@ class SBASurveyFactoryTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(surveyStep.skipNextStepIdentifier, "consent")
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
         XCTAssertTrue(surveyStep.skipIfPassed)
         
         guard let subtask = surveyStep.subtask as? ORKOrderedTask else {
