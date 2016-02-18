@@ -100,7 +100,7 @@
         // Get the next step
         expectedIdentifier = expectedOrder[idx];
         step = [task stepAfterStep:step withResult:taskResult];
-        
+
         // Check expectations
         XCTAssertNotNil(step);
         XCTAssertEqualObjects(step.identifier, expectedIdentifier);
@@ -128,6 +128,87 @@
     }
     
 }
+
+- (void)testNavigationWithRules {
+    
+    NSMutableArray *steps = [self createStepsWithPrefix:@"step" numberOfSteps:2];
+    SBADirectNavigationStep *stepA1 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepA.1"];
+    [steps addObject:stepA1];
+    SBADirectNavigationStep *stepA2 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepA.2"];
+    [steps addObject:stepA2];
+    ORKInstructionStep *stepB1 = [[ORKInstructionStep alloc] initWithIdentifier:@"stepB.1"];
+    [steps addObject:stepB1];
+    SBADirectNavigationStep *stepB2 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepB.2"];
+    [steps addObject:stepB2];
+    
+    stepA1.nextStepIdentifier = @"stepB.1";
+    stepB2.nextStepIdentifier = @"stepA.2";
+    stepA2.nextStepIdentifier = @"Exit";
+    
+    ORKTaskResult *taskResult = [[ORKTaskResult alloc] initWithIdentifier:@"base"];
+    
+    SBANavigableOrderedTask *task = [[SBANavigableOrderedTask alloc] initWithIdentifier:@"base" steps:steps];
+    
+    NSArray *expectedOrder = @[@"step1", @"step2", @"stepA.1", @"stepB.1", @"stepB.2", @"stepA.2"];
+    NSInteger idx = 0;
+    ORKStep *step = nil;
+    NSString *expectedIdentifier = nil;
+    
+    // -- test stepAfterStep:withResult:
+    
+    do {
+        // Add result for the given step
+        if (step) {
+            ORKStepResult *stepResult = [[ORKStepResult alloc] initWithIdentifier:step.identifier];
+            if (taskResult.results) {
+                taskResult.results = [taskResult.results arrayByAddingObject:stepResult];
+            }
+            else {
+                taskResult.results = @[stepResult];
+            }
+        }
+        
+        // Get the next step
+        expectedIdentifier = expectedOrder[idx];
+        step = [task stepAfterStep:step withResult:taskResult];
+        
+        // ORKTaskViewController will look ahead to the next step and then look back to
+        // see what navigation rules it should be using for buttons. Need to honor that flow.
+        [task stepAfterStep:step withResult:taskResult];
+        [task stepBeforeStep:step withResult:taskResult];
+        
+        // Check expectations
+        XCTAssertNotNil(step);
+        XCTAssertEqualObjects(step.identifier, expectedIdentifier);
+        
+    } while ((step != nil) && [step.identifier isEqualToString:expectedIdentifier] && (++idx < expectedOrder.count));
+    
+    // Check that exited while loop for expected reason
+    XCTAssertNotNil(step);
+    XCTAssertEqual(idx, expectedOrder.count);
+    idx--;
+    
+    // Check that the step after the last step is nil
+    ORKStep *afterLast = [task stepAfterStep:step withResult:taskResult];
+    XCTAssertNil(afterLast);
+    
+    // -- test stepBeforeStep:withResult:
+    
+    while ((step != nil) && [step.identifier isEqualToString:expectedIdentifier] && (--idx >= 0)) {
+        // Get the step before
+        expectedIdentifier = expectedOrder[idx];
+        step = [task stepBeforeStep:step withResult:taskResult];
+        
+        // Check expectations
+        XCTAssertNotNil(step);
+        XCTAssertEqualObjects(step.identifier, expectedIdentifier);
+        
+        // Lop off the last result
+        taskResult.results = [taskResult.results subarrayWithRange:NSMakeRange(0, taskResult.results.count - 1)];
+    }
+    
+}
+
 
 - (void)testOptionalORKTaskMethodsArePassedThrough_BaseDefault {
     ORKOrderedTask *baseTask = [self createOrderedTaskWithIdentifier:@"base" numberOfSteps:5];
@@ -177,14 +258,19 @@
 
 #pragma mark - helper methods
 
-- (ORKOrderedTask*)createOrderedTaskWithIdentifier:(NSString*)identifier numberOfSteps:(NSUInteger)numberOfSteps {
+- (NSMutableArray*)createStepsWithPrefix:(NSString*)prefix numberOfSteps:(NSUInteger)numberOfSteps {
     NSMutableArray *steps = [NSMutableArray new];
     for (int ii=1; ii <= numberOfSteps; ii++) {
-        ORKStep *step = [[ORKInstructionStep alloc] initWithIdentifier:[NSString stringWithFormat:@"step%@", @(ii)]];
+        ORKStep *step = [[ORKInstructionStep alloc] initWithIdentifier:[NSString stringWithFormat:@"%@%@", prefix, @(ii)]];
         step.title = [NSString stringWithFormat:@"Step %@", @(ii)];
         [steps addObject:step];
     }
-    ORKOrderedTask *task = [[ORKOrderedTask alloc] initWithIdentifier:identifier steps:steps];
+    return steps;
+}
+
+- (ORKOrderedTask*)createOrderedTaskWithIdentifier:(NSString*)identifier numberOfSteps:(NSUInteger)numberOfSteps {
+    ORKOrderedTask *task = [[ORKOrderedTask alloc] initWithIdentifier:identifier
+                                                                steps:[self createStepsWithPrefix:@"step" numberOfSteps:numberOfSteps]];
     return task;
 }
 
