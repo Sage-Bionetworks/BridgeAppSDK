@@ -74,13 +74,6 @@
 			remoteGlobalIDString = 801040B11C5A843D00D26E19;
 			remoteInfo = BridgeAppSDK;
 		};
-		801040F91C5AD5D200D26E19 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8632A6A91C22215E00557973 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
 		801DF43B1C5191F50012F509 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8632A6A91C22215E00557973 /* ResearchKit.xcodeproj */;
@@ -452,7 +445,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				801040FA1C5AD5D200D26E19 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDK;
 			productName = BridgeAppSDK;
@@ -646,11 +638,6 @@
 			isa = PBXTargetDependency;
 			target = 801040B11C5A843D00D26E19 /* BridgeAppSDK */;
 			targetProxy = 801040C51C5A843D00D26E19 /* PBXContainerItemProxy */;
-		};
-		801040FA1C5AD5D200D26E19 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = 801040F91C5AD5D200D26E19 /* PBXContainerItemProxy */;
 		};
 		805128851C56E17200D5761D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
