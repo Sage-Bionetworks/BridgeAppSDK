@@ -54,7 +54,6 @@
 		FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84392E1C7519340086E961 /* SBASurveyItem.swift */; };
 		FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */; };
 		FBC45E7A1C759040007AA424 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E791C759040007AA424 /* Localization.swift */; };
-		FBC45E7D1C75B09D007AA424 /* ConsentDocument.json in Resources */ = {isa = PBXBuildFile; fileRef = FBC45E7C1C75B09D007AA424 /* ConsentDocument.json */; };
 		FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */; };
 		FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE5515C1C6D267100C9E1AA /* MockORKTask.m */; };
 		FBE551671C6D3E7900C9E1AA /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBE551661C6D3E7900C9E1AA /* ResearchKit.framework */; };
@@ -172,7 +171,6 @@
 		FB84392E1C7519340086E961 /* SBASurveyItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyItem.swift; sourceTree = "<group>"; };
 		FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentDocumentFactory.swift; sourceTree = "<group>"; };
 		FBC45E791C759040007AA424 /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
-		FBC45E7C1C75B09D007AA424 /* ConsentDocument.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ConsentDocument.json; sourceTree = "<group>"; };
 		FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANavigableOrderedTaskTests.m; sourceTree = "<group>"; };
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
@@ -445,7 +443,6 @@
 		FBC45E7B1C75B069007AA424 /* Test Files */ = {
 			isa = PBXGroup;
 			children = (
-				FBC45E7C1C75B09D007AA424 /* ConsentDocument.json */,
 			);
 			name = "Test Files";
 			sourceTree = "<group>";
@@ -624,7 +621,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBC45E7D1C75B09D007AA424 /* ConsentDocument.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
