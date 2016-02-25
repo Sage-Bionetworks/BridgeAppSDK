@@ -98,7 +98,7 @@ class SBASurveyFactoryTests: XCTestCase {
                     "prompt" : "Are you older than 18?"],
                 [   "identifier" : "question2",
                     "type" : "boolean",
-                    "prompt" : "Are you a US resident?"],
+                    "text" : "Are you a US resident?"],
                 [   "identifier" : "question3",
                     "type" : "boolean",
                     "prompt" : "Can you read English?"],
@@ -114,6 +114,13 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.formItems?.count, 3)
+        
+        guard let formItems = surveyStep.formItems where formItems.count == 3 else { return }
+        
+        XCTAssertEqual(formItems[0].text, "Are you older than 18?")
+        XCTAssertEqual(formItems[1].text, "Are you a US resident?")
+        XCTAssertEqual(formItems[2].text, "Can you read English?")
+        
     }
     
     func testFactory_SubtaskSurveyQuestion_WithRule() {
@@ -162,22 +169,49 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep: NSDictionary = [
             "identifier" : "ineligible",
             "prompt" : "You can't get there from here",
+            "detailText": "Tap the button below to begin the consent process",
+            "type"  : "instruction",
             "nextIdentifier" : "exit"
         ]
         
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertEqual(step.identifier, "ineligible")
-        XCTAssertEqual(step.text, "You can't get there from here")
         
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         guard let surveyStep = step as? SBADirectNavigationStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
+        XCTAssertEqual(surveyStep.identifier, "ineligible")
+        XCTAssertEqual(surveyStep.text, "You can't get there from here")
+        XCTAssertEqual(surveyStep.detailText, "Tap the button below to begin the consent process")
         XCTAssertEqual(surveyStep.nextStepIdentifier, "exit")
     }
     
+    func testFactory_CompletionStep() {
+        
+        let inputStep: NSDictionary = [
+            "identifier" : "quizComplete",
+            "title" : "Great Job!",
+            "text" : "You answered correctly",
+            "detailText": "Tap the button below to begin the consent process",
+            "type"  : "completion",
+        ]
+        
+        
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
+        guard let surveyStep = step as? ORKInstructionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "quizComplete")
+        XCTAssertEqual(surveyStep.title, "Great Job!")
+        XCTAssertEqual(surveyStep.text, "You answered correctly")
+        XCTAssertEqual(surveyStep.detailText, "Tap the button below to begin the consent process")
+    }
+    
     func testFactory_BooleanQuestion() {
+        
         let inputStep: NSDictionary = [
             "identifier" : "question1",
             "type" : "boolean",
@@ -311,6 +345,65 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(choiceC.text, "c")
         XCTAssertEqual(choiceC.value as? Int, 2)
         XCTAssertTrue(choiceC.exclusive)
+    }
+    
+    func testFactory_TextChoice() {
+        
+        let inputStep: NSDictionary = [
+            "identifier": "purpose",
+            "title": "What is the purpose of this study?",
+            "type": "singleChoiceText",
+            "items":[
+                ["text" :"Understand the fluctuations of Parkinson disease symptoms", "value" : true],
+                ["text" :"Treating Parkinson disease", "value": false],
+            ],
+            "expectedAnswer": true,
+        ]
+        
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
+        XCTAssertEqual(step.identifier, "purpose")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+                return
+        }
+        
+        XCTAssertNil(formItem.text)
+        
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.textChoices.count, 2)
+        if (answerFormat.textChoices.count != 2) {
+            return
+        }
+        
+        XCTAssertEqual(answerFormat.textChoices.first!.text, "Understand the fluctuations of Parkinson disease symptoms")
+        let firstValue = answerFormat.textChoices.first!.value as? Bool
+        XCTAssertEqual(firstValue, true)
+        
+        XCTAssertEqual(answerFormat.textChoices.last!.text, "Treating Parkinson disease")
+        let lastValue = answerFormat.textChoices.last!.value as? Bool
+        XCTAssertEqual(lastValue, false)
+        
+        XCTAssertNotNil(formItem.rulePredicate)
+        guard let navigationRule = formItem.rulePredicate else {
+            return
+        }
+        
+        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
+        questionResult.choiceAnswers = [true]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = [false]
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
     }
     
 }

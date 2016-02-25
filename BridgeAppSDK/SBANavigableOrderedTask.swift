@@ -42,145 +42,6 @@ public protocol SBANavigationRule: class, NSSecureCoding {
 }
 
 /**
- * The direct navigation step allows for a final step to be displayed with a direct 
- * pointer to something other than the next step in the sequencial order defined by
- * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
- */
-public final class SBADirectNavigationStep: ORKInstructionStep, SBANavigationRule {
-    
-    public var nextStepIdentifier: String = ORKNullStepIdentifier
-    
-    override public init(identifier: String) {
-        super.init(identifier: identifier)
-    }
-    
-    public init(identifier: String, nextStepIdentifier: String) {
-        self.nextStepIdentifier = nextStepIdentifier
-        super.init(identifier: identifier)
-    }
-    
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
-        return self.nextStepIdentifier;
-    }
-    
-    // MARK: NSCopy
-    
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let step = copy as? SBADirectNavigationStep else { return copy }
-        step.nextStepIdentifier = self.nextStepIdentifier
-        return step
-    }
-    
-    // MARK: NSCoding
-    
-    required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder);
-        self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as! String
-    }
-    
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
-    }
-}
-
-/**
- * The subtask step is a logical grouping of steps where the steps are defined by a subtask.
- */
-public class SBASubtaskStep: ORKStep {
-    
-    public var subtask: ORKTask {
-        return _subtask
-    }
-    private var _subtask: protocol <ORKTask, NSCopying, NSSecureCoding>
-    
-    public init(identifier: String, steps: [ORKStep]?) {
-        _subtask = ORKOrderedTask(identifier: identifier, steps: steps)
-        super.init(identifier: identifier);
-    }
-    
-    public init(subtask: protocol <ORKTask, NSCopying, NSSecureCoding>) {
-        _subtask = subtask;
-        super.init(identifier: subtask.identifier);
-    }
-    
-    func substepIdentifier(identifier: String) -> String? {
-        guard let range = identifier.rangeOfString("\(self.subtask.identifier).") else { return nil }
-        let stepRange = Range(start: range.endIndex, end: identifier.endIndex)
-        let stepIdentifier = identifier.substringWithRange(stepRange)
-        return stepIdentifier
-    }
-    
-    func replacementStep(step: ORKStep?) -> ORKStep? {
-        guard let step = step else { return nil }
-        let stepIdentifier = "\(self.subtask.identifier).\(step.identifier)"
-        return step.copyWithIdentifier(stepIdentifier)
-    }
-    
-    func filteredTaskResult(inputResult: ORKTaskResult) -> ORKTaskResult {
-        // create a mutated copy of the results that includes only the subtask results
-        let subtaskResult: ORKTaskResult = inputResult.copy() as! ORKTaskResult
-        let prefix = "\(self.subtask.identifier)."
-        let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
-        subtaskResult.results = subtaskResult.results?.filter() { predicate.evaluateWithObject($0) }
-        if let stepResults = subtaskResult.results {
-            for stepResult in stepResults {
-                stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
-            }
-        }
-        return subtaskResult;
-    }
-    
-    func stepWithIdentifier(identifier: String) -> ORKStep? {
-        guard let stepIdentifier = substepIdentifier(identifier),
-            let step = self.subtask.stepWithIdentifier?(stepIdentifier) else {
-                return nil
-        }
-        return replacementStep(step)
-    }
-    
-    func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-        guard let step = step else {
-            return replacementStep(self.subtask.stepAfterStep(nil, withResult: result))
-        }
-        guard let substepIdentifier = substepIdentifier(step.identifier) else {
-            return nil
-        }
-        let substep = step.copyWithIdentifier(substepIdentifier)
-        return replacementStep(self.subtask.stepAfterStep(substep, withResult: filteredTaskResult(result)))
-    }
-    
-    override public var requestedPermissions: ORKPermissionMask {
-        if let permissions = self.subtask.requestedPermissions {
-            return permissions
-        }
-        return .None
-    }
-    
-    // MARK: NSCopy
-    
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let subtaskStep = copy as? SBASubtaskStep else { return copy }
-        subtaskStep._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
-        return subtaskStep
-    }
-
-    // MARK: NSCoding
-    
-    required public init(coder aDecoder: NSCoder) {
-        _subtask = aDecoder.decodeObjectForKey("subtask") as! protocol <ORKTask, NSCopying, NSSecureCoding>
-        super.init(coder: aDecoder);
-    }
-    
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(_subtask, forKey: "subtask")
-    }
-}
-
-/**
  * SBANavigableOrderedTask can process both SBASubtaskStep steps and as well as any step that conforms
  * to the SBANavigationRule.
  */
@@ -253,9 +114,13 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         }
         
         // Look for step in the ordered steps and lop off everything after this one
+        if let previousIdentifier = step?.identifier,
+            let idx = self.orderedStepIdentifiers.indexOf(previousIdentifier) where idx < self.orderedStepIdentifiers.endIndex {
+                self.orderedStepIdentifiers.removeRange(Range(start: idx.advancedBy(1), end: self.orderedStepIdentifiers.endIndex))
+        }
         if let identifier = returnStep?.identifier {
             if let idx = self.orderedStepIdentifiers.indexOf(identifier) {
-                self.orderedStepIdentifiers.removeRange(Range(start: idx, end: self.orderedStepIdentifiers.count))
+                self.orderedStepIdentifiers.removeRange(Range(start: idx, end: self.orderedStepIdentifiers.endIndex))
             }
             self.orderedStepIdentifiers += [identifier]
         }

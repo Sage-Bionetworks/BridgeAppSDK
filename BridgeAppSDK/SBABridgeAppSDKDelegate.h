@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  BridgeAppSDKDelegate.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,12 +31,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#ifndef BridgeAppSDKDelegate_h
+#define BridgeAppSDKDelegate_h
+
 #import <UIKit/UIKit.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
+- (NSBundle*)resourceBundle;
+- (NSString*)pathForResource:(NSString*)resourceName ofType:(NSString*)resourceType;
+@end
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
+#endif /* BridgeAppSDKDelegate_h */

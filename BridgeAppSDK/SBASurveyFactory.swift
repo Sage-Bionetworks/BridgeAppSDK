@@ -39,6 +39,28 @@ import ResearchKit
  * do not recognize protocol extensions.
  */
 public class SBASurveyFactory : NSObject {
+    
+    public var steps: [ORKStep]?
+    
+    public override init() {
+        super.init()
+    }
+    
+    public convenience init?(jsonNamed: String) {
+        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
+        self.init(dictionary: json)
+    }
+    
+    public convenience init(dictionary: NSDictionary) {
+        self.init()
+        self.mapSteps(dictionary)
+    }
+    
+    func mapSteps(dictionary: NSDictionary) {
+        if let steps = dictionary["steps"] as? [NSDictionary] {
+            self.steps = steps.map({ self.createSurveyStepWithDictionary($0) })
+        }
+    }
 
     /**
      * Factory method for creating a survey step with a dictionary
@@ -54,21 +76,17 @@ public class SBASurveyFactory : NSObject {
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
         return inputItem.createCustomStep()
     }
-}
-
-// Use an extension to keep this internal when calling via Objective-C
-extension SBASurveyFactory {
 
     func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool) -> ORKStep {
-        switch (inputItem.type) {
-        case .Instruction:
+        switch (inputItem.surveyItemType) {
+        case .Instruction, .Completion:
             return inputItem.createInstructionStep()
-        case .Custom:
-            return self.createSurveyStepWithCustomType(inputItem)
         case .Subtask:
             return inputItem.createSubtaskStep(self)
-        default:
+        case .Form(_):
             return inputItem.createFormStep(isSubtaskStep)
+        default:
+            return self.createSurveyStepWithCustomType(inputItem)
         }
     }
 }
@@ -77,14 +95,19 @@ extension SBASurveyItem {
     
     func createInstructionStep() -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
-        if let nextIdentifier = self.nextIdentifier {
+        if case .Completion = self.surveyItemType {
+            instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
+        }
+        else if let nextIdentifier = self.nextIdentifier {
             instructionStep = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
         }
         else {
             instructionStep = ORKInstructionStep(identifier: self.identifier)
         }
-        instructionStep.title = self.title
+        instructionStep.title = self.stepTitle
         instructionStep.text = self.prompt
+        instructionStep.detailText = self.detailText
+        instructionStep.image = self.image
         return instructionStep
     }
     
@@ -101,22 +124,20 @@ extension SBASurveyItem {
         let step = (!isSubtaskStep && self.usesNavigation()) ?
             SBASurveyFormStep(surveyItem: self) :
             ORKFormStep(identifier: self.identifier)
-        if (self.type == .CompoundQuestion) {
+        if case SBASurveyItemType.Form(.Compound) = self.surveyItemType {
             step.formItems = self.items?.map({ ($0 as! SBASurveyItem).createFormItem($0.prompt) })
         }
         else {
             step.formItems = [self.createFormItem(nil)]
         }
-        step.title = self.title
+        step.title = self.stepTitle
         step.text = self.prompt
         step.optional = self.optional
         return step
     }
     
     func createFormItem(text: String?) -> ORKFormItem {
-        
         let answerFormat = self.createAnswerFormat()
-        
         if let rulePredicate = self.rulePredicate {
             // If there is a rule predicate then return a survey form item
             let formItem = SBASurveyFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
@@ -130,20 +151,19 @@ extension SBASurveyItem {
     }
     
     func createAnswerFormat() -> ORKAnswerFormat? {
-        let type = self.type
-        
-        // Create the answer format that maps to the question type
-        if (type == .BoolQuestion) {
+        guard let subtype = self.surveyItemType.formSubtype() else { return nil }
+        switch(subtype) {
+        case .Boolean:
             return ORKBooleanAnswerFormat()
-        }
-        else if (type == .SingleChoiceTextQuestion || type == .MultipleChoiceTextQuestion) {
-            let textChoices = self.items!.map({createTextChoice($0)})
-            let style: ORKChoiceAnswerStyle = (type == .SingleChoiceTextQuestion) ? .SingleChoice : .MultipleChoice
+        case .SingleChoiceText, .MultipleChoiceText:
+            guard let textChoices = self.items?.map({createTextChoice($0)}) else { return nil }
+            let style: ORKChoiceAnswerStyle = (subtype == .SingleChoiceText) ? .SingleChoice : .MultipleChoice
             return ORKTextChoiceAnswerFormat(style: style, textChoices: textChoices)
-        }
         
-        assertionFailure("Form item question type \(type) not implemented")
-        return nil
+        default:
+            assertionFailure("Form item question type \(subtype) not implemented")
+            return nil
+        }
     }
     
     func createTextChoice(obj: AnyObject) -> ORKTextChoice {
@@ -156,7 +176,7 @@ extension SBASurveyItem {
     }
 
     func usesNavigation() -> Bool {
-        if (self.skipIdentifier != nil) {
+        if (self.skipIdentifier != nil) || (self.rulePredicate != nil) {
                 return true
         }
         guard let items = self.items else { return false }

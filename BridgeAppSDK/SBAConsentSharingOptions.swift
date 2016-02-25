@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAConsentSharingOptions.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,12 +31,30 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import ResearchKit
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+public protocol SBAConsentSharingOptions: class {
+    var investigatorShortDescription: String { get }
+    var investigatorLongDescription: String { get }
+    var localizedLearnMoreHTMLContent: String { get }
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+extension NSDictionary: SBAConsentSharingOptions {
+    
+    public var investigatorShortDescription: String {
+        return self["investigatorShortDescription"] as? String ?? ""
+    }
+    
+    public var investigatorLongDescription: String {
+        return self["investigatorLongDescription"] as? String ?? ""
+    }
+    
+    public var localizedLearnMoreHTMLContent: String {
+        if let html = self["learnMoreHTMLContent"] as? String,
+            let htmlContent = SBAResourceFinder().htmlNamed(html) {
+            return htmlContent
+        }
+        return ""
+    }
+}
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
