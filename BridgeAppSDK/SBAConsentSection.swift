@@ -40,6 +40,7 @@ public protocol SBAConsentSection: class {
     var sectionSummary: String? { get }
     var sectionContent: String? { get }
     var sectionHtmlContent: String? { get }
+    var sectionLearnMoreButtonTitle: String? { get }
     var sectionCustomImage: UIImage? { get }
     var sectionCustomAnimationURL: NSURL? { get }
 }
@@ -55,6 +56,7 @@ extension SBAConsentSection {
         section.htmlContent = self.sectionHtmlContent
         section.customImage = self.sectionCustomImage
         section.customAnimationURL = self.sectionCustomAnimationURL
+        section.customLearnMoreButtonTitle = self.sectionLearnMoreButtonTitle
         return section
     }
     
@@ -92,6 +94,10 @@ extension NSDictionary: SBAConsentSection {
     
     public var sectionContent: String? {
         return self["sectionContent"] as? String
+    }
+    
+    public var sectionLearnMoreButtonTitle: String? {
+        return self["sectionLearnMoreButtonTitle"] as? String
     }
     
     public var sectionHtmlContent: String? {
