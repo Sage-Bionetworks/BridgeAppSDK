@@ -55,6 +55,8 @@
 		FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */; };
 		FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84392C1C7518FE0086E961 /* SBATextChoice.swift */; };
 		FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84392E1C7519340086E961 /* SBASurveyItem.swift */; };
+		FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = FBAE3CF11C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FBAE3CF21C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m */; };
 		FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */; };
 		FBC45E7A1C759040007AA424 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E791C759040007AA424 /* Localization.swift */; };
 		FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */; };
@@ -221,7 +223,6 @@
 		FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAResourceFinder.swift; sourceTree = "<group>"; };
 		FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingOptions.swift; sourceTree = "<group>"; };
 		FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANavigableOrderedTask.swift; sourceTree = "<group>"; };
-		FB68173D1C6D0068006C8FC9 /* BridgeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BridgeSDK.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Parkinson-egoyzlmkkaesivfypokrqaejvyjk/Build/Products/Debug-iphoneos/BridgeSDK.framework"; sourceTree = "<group>"; };
 		FB6BA0941C7CDA6000C9903F /* SBADirectNavigationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADirectNavigationStep.swift; sourceTree = "<group>"; };
 		FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASubtaskStep.swift; sourceTree = "<group>"; };
 		FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyNavigationTests.swift; sourceTree = "<group>"; };
@@ -229,6 +230,8 @@
 		FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactoryTests.swift; sourceTree = "<group>"; };
 		FB84392C1C7518FE0086E961 /* SBATextChoice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATextChoice.swift; sourceTree = "<group>"; };
 		FB84392E1C7519340086E961 /* SBASurveyItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyItem.swift; sourceTree = "<group>"; };
+		FBAE3CF11C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAPDFPrintPageRenderer.h; sourceTree = "<group>"; };
+		FBAE3CF21C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAPDFPrintPageRenderer.m; sourceTree = "<group>"; };
 		FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentDocumentFactory.swift; sourceTree = "<group>"; };
 		FBC45E791C759040007AA424 /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -483,6 +486,23 @@
 			name = Demo;
 			sourceTree = "<group>";
 		};
+		FBAE3CE61C86157E003CEC4A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FBAE3CF01C861587003CEC4A /* PDF */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		FBAE3CF01C861587003CEC4A /* PDF */ = {
+			isa = PBXGroup;
+			children = (
+				FBAE3CF11C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h */,
+				FBAE3CF21C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m */,
+			);
+			name = PDF;
+			sourceTree = "<group>";
+		};
 		FBC45E6F1C758D87007AA424 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -495,6 +515,7 @@
 		FBC45E711C758DBA007AA424 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				FBAE3CE61C86157E003CEC4A /* Utilities */,
 				FBC45E6F1C758D87007AA424 /* Extensions */,
 				FBC45E721C758DC9007AA424 /* Localization */,
 				16BF5B6B1BE2BD1C007C79C6 /* Protocols */,
@@ -533,6 +554,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
 			);
@@ -756,6 +778,7 @@
 				801040DF1C5ACDF800D26E19 /* HealthDataStepViewController.swift in Sources */,
 				801040D11C5ACDF800D26E19 /* ResearchContainerSegue.swift in Sources */,
 				801040D31C5ACDF800D26E19 /* IntroductionViewController.swift in Sources */,
+				FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */,
 				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				801040DD1C5ACDF800D26E19 /* WithdrawViewController.swift in Sources */,
@@ -995,6 +1018,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
