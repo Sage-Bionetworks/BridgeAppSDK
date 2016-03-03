@@ -50,11 +50,7 @@ extension NSDictionary: SBAConsentSharingOptions {
     }
     
     public var localizedLearnMoreHTMLContent: String {
-        if let html = self["learnMoreHTMLContent"] as? String,
-            let htmlContent = SBAResourceFinder().htmlNamed(html) {
-            return htmlContent
-        }
-        return ""
+        return self.learnMoreHTMLContent ?? ""
     }
 }
 
