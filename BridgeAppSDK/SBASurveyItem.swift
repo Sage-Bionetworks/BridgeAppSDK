@@ -43,6 +43,7 @@ public protocol SBASurveyItem: class {
     var image: UIImage? { get }
     var items: [AnyObject]? { get }
     var imageName: String? { get }
+    var learnMoreHTMLContent: String? { get }
     var skipIdentifier: String? { get }
     var skipIfPassed: Bool { get }
     var nextIdentifier: String? { get }
@@ -140,6 +141,14 @@ extension NSDictionary: SBASurveyItem {
     
     public var imageName: String? {
         return self["image"] as? String
+    }
+    
+    public var learnMoreHTMLContent: String? {
+        guard let html = self["learnMoreHTMLContentURL"] as? String,
+            let htmlContent = SBAResourceFinder().htmlNamed(html) else {
+                return nil;
+        }
+        return htmlContent
     }
     
     public var optional: Bool {

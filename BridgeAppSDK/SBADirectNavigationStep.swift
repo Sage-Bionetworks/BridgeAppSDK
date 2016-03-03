@@ -46,11 +46,16 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBANavigationRul
      */
     public var nextStepIdentifier: String?
     
+    /**
+     * HTML Content for the "learn more" for this step
+     */
+    public var learnMoreHTMLContent: String?
+    
     override public init(identifier: String) {
         super.init(identifier: identifier)
     }
     
-    public init(identifier: String, nextStepIdentifier: String) {
+    public init(identifier: String, nextStepIdentifier: String?) {
         self.nextStepIdentifier = nextStepIdentifier
         super.init(identifier: identifier)
     }

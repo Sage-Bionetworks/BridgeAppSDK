@@ -95,11 +95,15 @@ extension SBASurveyItem {
     
     func createInstructionStep() -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
+        let learnMoreHTMLContent = self.learnMoreHTMLContent
+        let nextIdentifier = self.nextIdentifier
         if case .Completion = self.surveyItemType {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
-        else if let nextIdentifier = self.nextIdentifier {
-            instructionStep = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
+        else if (nextIdentifier != nil) || (learnMoreHTMLContent != nil) {
+            let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
+            step.learnMoreHTMLContent = learnMoreHTMLContent;
+            instructionStep = step
         }
         else {
             instructionStep = ORKInstructionStep(identifier: self.identifier)
