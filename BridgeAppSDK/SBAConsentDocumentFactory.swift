@@ -85,10 +85,19 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             
         case .SharingOptions:
             let share = inputItem as! SBAConsentSharingOptions
-            return ORKConsentSharingStep(identifier: inputItem.identifier,
+            let step = ORKConsentSharingStep(identifier: inputItem.identifier,
                 investigatorShortDescription: share.investigatorShortDescription,
                 investigatorLongDescription: share.investigatorLongDescription,
                 localizedLearnMoreHTMLContent: share.localizedLearnMoreHTMLContent)
+            
+            if let additionalText = inputItem.prompt, let text = step.text {
+                step.text = "\(text)\n\n\(additionalText)"
+            }
+            if let textChoices = inputItem.items?.map({inputItem.createTextChoice($0)}) {
+                step.answerFormat = ORKTextChoiceAnswerFormat(style: .SingleChoice, textChoices: textChoices)
+            }
+            
+            return step;
             
         case .Review:
             return ORKConsentReviewStep(identifier: inputItem.identifier,
