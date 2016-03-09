@@ -10,6 +10,9 @@
 
 @interface SBAPDFPrintPageRenderer : UIPrintPageRenderer
 
++ (CGSize)defaultPageSize;
++ (CGRect)defaultBounds;
+
 @property (nonatomic) UIEdgeInsets pageMargins;
 @property (nonatomic) CGSize pageSize;
 

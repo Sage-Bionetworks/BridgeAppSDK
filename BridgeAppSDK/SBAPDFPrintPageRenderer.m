@@ -40,6 +40,14 @@ static const CGFloat LetterHeight = 11.0f;
     return pageSize;
 }
 
++ (CGRect)defaultBounds {
+    UIEdgeInsets pageMargins = UIEdgeInsetsMake(PageEdge, PageEdge, PageEdge, PageEdge);
+    CGRect paperRect;
+    paperRect.size = [self defaultPageSize];
+    CGRect printableRect = UIEdgeInsetsInsetRect(paperRect, pageMargins);
+    return CGRectMake(0, 0, printableRect.size.width, printableRect.size.height);
+}
+
 - (CGRect)paperRect {
     return CGRectMake(0, 0, self.pageSize.width, self.pageSize.height);
 }
