@@ -40,17 +40,23 @@ class Localization: NSObject {
     }()
     
     static func localizedString(key: String) -> String {
-        return NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
+        var str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
+        if (str == key) {
+            if let defaultStr = listOfAllLocalizedStrings[key] {
+                str = defaultStr
+            }
+        }
+        return str
     }
     
     // List of the strings used in this module. This func is never called but is included to allow running 
     // the localization macro
-    func listOfAllLocalizedStrings() -> [String] {
+    static var listOfAllLocalizedStrings: [String : String] = {
         return [
-            NSLocalizedString("SBA_CONSENT_TITLE", tableName: nil, bundle: Localization.localeBundle, value: "Consent", comment: "Consent title"),
-            NSLocalizedString("SBA_CONSENT_SIGNATURE_CONTENT", tableName: nil, bundle: Localization.localeBundle, value:"By agreeing you confirm that you read the consent and that you wish to take part in this research study.", comment:"Consent signature page content"),
-            NSLocalizedString("SBA_CONSENT_PERSON_TITLE", tableName: nil, bundle: Localization.localeBundle, value: "Participant", comment: "Title for the person participating in the study"),
+    "SBA_CONSENT_TITLE" : NSLocalizedString("SBA_CONSENT_TITLE", tableName: nil, bundle: localeBundle, value: "Consent", comment: "Consent title"),
+    "SBA_CONSENT_SIGNATURE_CONTENT" : NSLocalizedString("SBA_CONSENT_SIGNATURE_CONTENT", tableName: nil, bundle: localeBundle, value:"By agreeing you confirm that you read the consent and that you wish to take part in this research study.", comment:"Consent signature page content"),
+    "SBA_CONSENT_PERSON_TITLE" : NSLocalizedString("SBA_CONSENT_PERSON_TITLE", tableName: nil, bundle: localeBundle, value: "Participant", comment: "Title for the person participating in the study"),
         ]
-    }
+    }()
 
 }

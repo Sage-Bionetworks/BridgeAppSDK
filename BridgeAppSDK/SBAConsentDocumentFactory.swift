@@ -100,9 +100,11 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .Review:
-            return ORKConsentReviewStep(identifier: inputItem.identifier,
+            let step = ORKConsentReviewStep(identifier: inputItem.identifier,
                 signature: self.consentDocument.signatures?.first,
                 inDocument: self.consentDocument)
+            step.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
+            return step;
         }
     }
 }
