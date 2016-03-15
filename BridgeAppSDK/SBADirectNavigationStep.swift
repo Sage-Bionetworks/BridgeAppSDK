@@ -33,12 +33,28 @@
 
 import ResearchKit
 
+public protocol SBADirectNavigationRule: SBANavigationRule {
+    var nextStepIdentifier: String? { get }
+}
+
+extension SBADirectNavigationRule {
+    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+        return self.nextStepIdentifier;
+    }
+}
+
+extension NSDictionary: SBADirectNavigationRule {
+    public var nextStepIdentifier: String? {
+        return self["nextIdentifier"] as? String
+    }
+}
+
 /**
  * The direct navigation step allows for a final step to be displayed with a direct
  * pointer to something other than the next step in the sequencial order defined by
  * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
  */
-public final class SBADirectNavigationStep: ORKInstructionStep, SBANavigationRule {
+public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigationRule {
     
     /**
      * Pointer to the next step to show after this one. If nil, then the next step
@@ -58,12 +74,6 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBANavigationRul
     public init(identifier: String, nextStepIdentifier: String?) {
         self.nextStepIdentifier = nextStepIdentifier
         super.init(identifier: identifier)
-    }
-    
-    // MARK: SBANavigationRule
-    
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
-        return self.nextStepIdentifier;
     }
     
     // MARK: NSCopy

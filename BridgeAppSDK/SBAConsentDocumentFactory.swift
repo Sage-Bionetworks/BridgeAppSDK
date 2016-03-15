@@ -90,11 +90,12 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
                 investigatorLongDescription: share.investigatorLongDescription,
                 localizedLearnMoreHTMLContent: share.localizedLearnMoreHTMLContent)
             
-            if let additionalText = inputItem.prompt, let text = step.text {
+            if let additionalText = inputItem.stepText, let text = step.text {
                 step.text = "\(text)\n\n\(additionalText)"
             }
-            if let textChoices = inputItem.items?.map({inputItem.createTextChoice($0)}) {
-                step.answerFormat = ORKTextChoiceAnswerFormat(style: .SingleChoice, textChoices: textChoices)
+            if let form = inputItem as? SBAFormStepSurveyItem,
+                let textChoices = form.items?.map({form.createTextChoice($0)}) {
+                    step.answerFormat = ORKTextChoiceAnswerFormat(style: .SingleChoice, textChoices: textChoices)
             }
             
             return step;

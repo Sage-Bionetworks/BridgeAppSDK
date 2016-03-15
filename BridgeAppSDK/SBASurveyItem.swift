@@ -32,23 +32,41 @@
 //
 
 import ResearchKit
+import BridgeSDK
 
 public protocol SBASurveyItem: class {
-    var identifier: String { get }
+    var identifier: String! { get }
     var surveyItemType: SBASurveyItemType { get }
-    var optional: Bool { get }
     var stepTitle: String? { get }
-    var detailText: String? { get }
-    var prompt: String? { get }
-    var image: UIImage? { get }
+    var stepText: String? { get }
+    var stepDetail: String? { get }
+    func createCustomStep() -> ORKStep
+}
+
+public protocol SBAFormStepSurveyItem: SBASurveyItem {
+    var optional: Bool { get }
     var items: [AnyObject]? { get }
-    var imageName: String? { get }
-    var learnMoreHTMLContent: String? { get }
+    var range: AnyObject? { get }
     var skipIdentifier: String? { get }
     var skipIfPassed: Bool { get }
-    var nextIdentifier: String? { get }
     var rulePredicate: NSPredicate? { get }
-    func createCustomStep() -> ORKStep
+}
+
+public protocol SBAInstructionStepSurveyItem: SBASurveyItem {
+    var stepImage: UIImage? { get }
+    var learnMoreHTMLContent: String? { get }
+}
+
+public protocol SBADateRange: class {
+    var minDate: NSDate? { get }
+    var maxDate: NSDate? { get }
+}
+
+public protocol SBANumberRange: class {
+    var minNumber: NSNumber? { get }
+    var maxNumber: NSNumber? { get }
+    var unitLabel: String? { get }
+    var stepInterval: Int { get }
 }
 
 public enum SBASurveyItemType {
@@ -63,8 +81,16 @@ public enum SBASurveyItemType {
     public enum FormSubtype {
         case Compound               // ORKFormItems > 1
         case Boolean                // ORKBooleanAnswerFormat
-        case SingleChoiceText       // ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
-        case MultipleChoiceText     // ORKTextChoiceAnswerFormat of style MultipleChoiceTextQuestion
+        case SingleChoice           // ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
+        case MultipleChoice         // ORKTextChoiceAnswerFormat of style MultipleChoiceTextQuestion
+        case Text                   // ORKTextAnswerFormat
+        case Date                   // ORKDateAnswerFormat of style Date
+        case DateTime               // ORKDateAnswerFormat of style DateTime
+        case Time                   // ORKTimeOfDayAnswerFormat
+        case Duration               // ORKTimeIntervalAnswerFormat
+        case Integer                // ORKNumericAnswerFormat of style Integer
+        case Decimal                // ORKNumericAnswerFormat of style Decimal
+        case Scale                  // ORKScaleAnswerFormat
     }
 
     case Consent(ConsentSubtype)
@@ -83,8 +109,8 @@ public enum SBASurveyItemType {
         case "dataGroups"            : self = .DataGroups
         case "compound"              : self = .Form(.Compound)
         case "boolean"               : self = .Form(.Boolean)
-        case "singleChoiceText"      : self = .Form(.SingleChoiceText)
-        case "multipleChoiceText"    : self = .Form(.MultipleChoiceText)
+        case "singleChoiceText"      : self = .Form(.SingleChoice)
+        case "multipleChoiceText"    : self = .Form(.MultipleChoice)
         case "consentSharingOptions" : self = .Consent(.SharingOptions)
         case "consentReview"         : self = .Consent(.Review)
         case "consentVisual"         : self = .Consent(.Visual)
@@ -107,93 +133,5 @@ public enum SBASurveyItemType {
     }
 }
 
-extension NSDictionary: SBASurveyItem {
-    
-    public var identifier: String {
-        return (self["identifier"] as? String) ?? "\(self.hash)"
-    }
-    
-    public var surveyItemType: SBASurveyItemType {
-        let type = self["type"] as? String
-        return SBASurveyItemType(rawValue: type)
-    }
-    
-    public var stepTitle: String? {
-        return self["title"] as? String
-    }
-    
-    public var prompt: String? {
-        return self["prompt"] as? String ?? self["text"] as? String
-    }
-    
-    public var detailText: String? {
-        return self["detailText"] as? String
-    }
-    
-    public var image: UIImage? {
-        guard let imageNamed = self["image"] as? String else { return nil }
-        return SBAResourceFinder().imageNamed(imageNamed)
-    }
-    
-    public var items: [AnyObject]? {
-        return self["items"] as? [AnyObject]
-    }
-    
-    public var imageName: String? {
-        return self["image"] as? String
-    }
-    
-    public var learnMoreHTMLContent: String? {
-        guard let html = self["learnMoreHTMLContentURL"] as? String,
-            let htmlContent = SBAResourceFinder().htmlNamed(html) else {
-                return nil;
-        }
-        return htmlContent
-    }
-    
-    public var optional: Bool {
-        let optional = self["optional"] as? Bool
-        return optional ?? false
-    }
-    
-    public var expectedAnswer: AnyObject? {
-        return self["expectedAnswer"]
-    }
-    
-    public var rulePredicate: NSPredicate? {
-        if let rulePredicate = self["rulePredicate"] as? NSPredicate {
-            return rulePredicate
-        }
-        else if let subtype = self.surveyItemType.formSubtype() {
-            if case .Boolean = subtype,
-                let expectedAnswer = self.expectedAnswer as? Bool
-            {
-                return NSPredicate(format: "answer = %@", expectedAnswer)
-            }
-            else if case .SingleChoiceText = subtype,
-                let expectedAnswer = self.expectedAnswer
-            {
-                let answerArray = [expectedAnswer]
-                return NSPredicate(format: "answer = %@", answerArray)
-            }
-        }
-        return nil;
-    }
-    
-    public var skipIdentifier: String? {
-        return self["skipIdentifier"] as? String
-    }
-    
-    public var skipIfPassed: Bool {
-        let skipIfPassed = self["skipIfPassed"] as? Bool
-        return skipIfPassed ?? false
-    }
-    
-    public var nextIdentifier: String? {
-        return self["nextIdentifier"] as? String
-    }
-    
-    public func createCustomStep() -> ORKStep {
-        return self.createInstructionStep()
-    }
-}
+
+

@@ -34,6 +34,7 @@
 import XCTest
 import BridgeAppSDK
 import ResearchKit
+import BridgeSDK
 
 class SBASurveyFactoryTests: XCTestCase {
     
@@ -46,6 +47,10 @@ class SBASurveyFactoryTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+    
+    // -------------------------------------------------
+    // MARK: NSDictionary
+    // -------------------------------------------------
     
     func testFactory_CompoundSurveyQuestion_WithRule() {
         
@@ -406,4 +411,998 @@ class SBASurveyFactoryTests: XCTestCase {
         
     }
     
+    // -------------------------------------------------
+    // MARK: SBBSurvey
+    // -------------------------------------------------
+    
+    func testFactory_SBBSurveyInfoScreen() {
+        let inputStep = SBBSurveyInfoScreen()
+        inputStep.identifier = "abc123"
+        inputStep.title = "Title"
+        inputStep.prompt = "Text"
+        inputStep.promptDetail = "Detail"
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "abc123")
+        XCTAssertEqual(step.title, "Title")
+        XCTAssertEqual(step.text, "Text")
+        
+        guard let surveyStep = step as? ORKInstructionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.detailText, "Detail")
+    }
+    
+    // MARK: BooleanConstraints
+    
+    func testFactory_BooleanConstraints() {
+
+        let inputStep = SBBSurveyQuestion()
+        inputStep.identifier = "living-alone-status"
+        inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep.uiHint = "checkbox"
+        inputStep.prompt = "Do you live alone?"
+        inputStep.constraints = SBBBooleanConstraints();
+        
+        let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
+            "value" : NSNumber(bool: true),
+            "operator" : "ne",
+            "skipTo" : "video-usage",
+            "type" : "SurveyRule"
+        ])
+        let ruleSkip = SBBSurveyRule(dictionaryRepresentation:         [
+            "value" : "true",
+            "operator" : "de",
+            "skipTo" : "video-usage",
+            "type" : "SurveyRule"
+            ])
+        inputStep.constraints.rules = [ruleNotEqual, ruleSkip]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "living-alone-status")
+        XCTAssertEqual(step.text, "Do you live alone?")
+        
+        guard let surveyStep = step as? SBASurveyFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        XCTAssertTrue(surveyStep.skipIfPassed)
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
+        
+        guard let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+                return
+        }
+        
+        XCTAssertNil(formItem.text)
+        XCTAssertNotNil(formItem.rulePredicate)
+        
+        guard let navigationRule = formItem.rulePredicate else {
+            return
+        }
+        
+        let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.booleanAnswer = false
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.booleanAnswer = true
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    // MARK: MultiValueConstraints
+
+    func testFactory_MultiValueConstraints() {
+
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:[
+                                                    "value" : "false",
+                                                    "operator" : "eq",
+                                                    "skipTo" : "video-usage",
+                                                    "type" : "SurveyRule"
+                                                    ]),
+            SBBSurveyRule(dictionaryRepresentation:[
+                                                    "value" : "true",
+                                                    "operator" : "de",
+                                                    "skipTo" : "video-usage",
+                                                    "type" : "SurveyRule"
+                                                    ])]
+
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "medical-usage")
+        XCTAssertEqual(step.text, "Do you ever use your smartphone to look for health or medical information online?")
+        
+        guard let surveyStep = step as? SBASurveyFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        XCTAssertTrue(surveyStep.skipIfPassed)
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
+        
+        guard let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+                return
+        }
+        
+        XCTAssertNil(formItem.text)
+
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.textChoices.count, 3)
+        
+        guard let textChoice = answerFormat.textChoices.first else {
+            return
+        }
+        
+        XCTAssertEqual(textChoice.text, "Yes, I have done this")
+        guard let value = textChoice.value as? String else {
+            XCTAssert(false, "\(textChoice.value) is not of expected class type")
+            return
+        }
+        XCTAssertEqual(value, "true")
+        
+        XCTAssertNotNil(formItem.rulePredicate)
+        guard let navigationRule = formItem.rulePredicate else {
+            return
+        }
+        
+        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["false"]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["true"]
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+
+    func testFactory_MultiValueConstraints_NotEqual() {
+        
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:[
+                "value" : "true",
+                "operator" : "ne",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not meet expected format")
+                return
+        }
+        
+        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["false"]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["maybe"]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["true"]
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_MultiValueConstraints_OtherThan() {
+        
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:[
+                "value" : "true",
+                "operator" : "ot",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not meet expected format")
+                return
+        }
+        
+        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["false"]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["maybe"]
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.choiceAnswers = ["true"]
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_MultiValueConstraints_AllowMultiple() {
+        
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: true)
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+        
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.MultipleChoice)
+    }
+    
+    func testFactory_MultiValueConstraints_AllowOther_Uppercase() {
+        
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
+        guard let constraints = inputStep.constraints as? SBBMultiValueConstraints else { return }
+        
+        constraints.allowOtherValue = true
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+        
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.textChoices.count, 4)
+       
+        guard let lastChoice = answerFormat.textChoices.last else { return }
+        XCTAssertEqual(lastChoice.text, "Other")
+    }
+    
+    func testFactory_MultiValueConstraints_AllowOther_Lowercase() {
+        
+        let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
+        guard let constraints = inputStep.constraints as? SBBMultiValueConstraints else { return }
+        
+        constraints.allowOtherValue = true
+        for textChoice in constraints.enumeration {
+            if let choice = textChoice as? SBBSurveyQuestionOption {
+                choice.label = choice.label.lowercaseString
+            }
+        }
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+        
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.textChoices.count, 4)
+        
+        guard let lastChoice = answerFormat.textChoices.last else { return }
+        XCTAssertEqual(lastChoice.text, "other")
+    }
+    
+    // MARK: StringConstraints
+    
+    func testFactory_TextAnswer() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        // pattern, maxLength and minLength are currently unsupported
+        inputStep.constraints = SBBStringConstraints()
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "feelings")
+        XCTAssertEqual(step.text, "How do you feel?")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first else {
+            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+            return
+        }
+        guard let _ = formItem.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertNil(formItem.text)
+    }
+    
+    // MARK: DateTimeConstraints
+    
+    func testFactory_DateTimeConstraints() {
+
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        
+        let constraints = SBBDateTimeConstraints()
+        constraints.dataType = "datetime"
+        constraints.allowFutureValue = false
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "last-smoked")
+        XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first else {
+            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+            return
+        }
+        
+        XCTAssertNil(formItem.text)
+        
+        guard let answerFormat = formItem.answerFormat as? ORKDateAnswerFormat else {
+            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.DateAndTime)
+        
+        XCTAssertNil(answerFormat.minimumDate)
+        XCTAssertNil(answerFormat.defaultDate)
+        XCTAssertNotNil(answerFormat.maximumDate)
+        guard let maximumDate = answerFormat.maximumDate else {
+            return
+        }
+        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, NSTimeInterval(0), accuracy: 5)
+        
+    }
+    
+    func testFactory_DateConstraints() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        
+        let constraints = SBBDateConstraints()
+        constraints.dataType = "date"
+        constraints.allowFutureValue = false
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "last-smoked")
+        XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first else {
+            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+            return
+        }
+        
+        XCTAssertNil(formItem.text)
+        
+        guard let answerFormat = formItem.answerFormat as? ORKDateAnswerFormat else {
+            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.Date)
+        
+        XCTAssertNil(answerFormat.minimumDate)
+        XCTAssertNil(answerFormat.defaultDate)
+        XCTAssertNotNil(answerFormat.maximumDate)
+        guard let maximumDate = answerFormat.maximumDate else {
+            return
+        }
+        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, NSTimeInterval(0), accuracy: 5)
+        
+    }
+    
+    func testFactory_TimeConstraints() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        inputStep.constraints = SBBTimeConstraints()
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "last-smoked")
+        XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first else {
+            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+            return
+        }
+        
+        XCTAssertNil(formItem.text)
+        
+        guard let _ = formItem.answerFormat as? ORKTimeOfDayAnswerFormat else {
+            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+            return
+        }
+    }
+    
+    func testFactory_DurationConstraints() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        inputStep.constraints = SBBDurationConstraints()
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "last-smoked")
+        XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        
+        guard let surveyStep = step as? ORKFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        
+        guard let formItem = surveyStep.formItems?.first else {
+            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+            return
+        }
+        
+        XCTAssertNil(formItem.text)
+        
+        guard let _ = formItem.answerFormat as? ORKTimeIntervalAnswerFormat else {
+            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+            return
+        }
+    }
+    
+    // MARK: IntegerConstraints
+    
+    func testFactory_IntegerConstraints() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "lt",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ]),
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : "true",
+                "operator" : "de",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "age")
+        XCTAssertEqual(step.text, "How old are you?")
+        
+        guard let surveyStep = step as? SBASurveyFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        XCTAssertTrue(surveyStep.skipIfPassed)
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
+        
+        guard let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let answerFormat = formItem.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+                return
+        }
+        
+        XCTAssertNil(formItem.text)
+        XCTAssertNotNil(formItem.rulePredicate)
+        
+        XCTAssertEqual(answerFormat.unit, "years")
+        XCTAssertEqual(answerFormat.minimum, NSNumber(int: 18))
+        XCTAssertEqual(answerFormat.maximum, NSNumber(int: 100))
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Integer)
+        
+        guard let navigationRule = formItem.rulePredicate else {
+            return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+    }
+    
+    func testFactory_IntegerConstraints_Equal() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "eq",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+            XCTAssert(false, "\(step) does not match expected")
+            return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_IntegerConstraints_NotEqual() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "ne",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not match expected")
+                return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_IntegerConstraints_GreaterThan() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "gt",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not match expected")
+                return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_IntegerConstraints_GreaterThanOrEqual() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "ge",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not match expected")
+                return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_IntegerConstraints_LessThanOrEqual() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "le",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not match expected")
+                return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+    }
+    
+    func testFactory_IntegerConstraints_OtherThan() {
+        
+        let inputStep:SBBSurveyQuestion = createIntegerQuestion()
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(int: 50),
+                "operator" : "ot",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? SBASurveyFormStep,
+            let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let navigationRule = formItem.rulePredicate else {
+                XCTAssert(false, "\(step) does not match expected")
+                return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        
+        questionResult.numericAnswer = NSNumber(int: 49)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 50)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(int: 51)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+    }
+
+    func testFactory_DecimalConstraints() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "numberfield"
+        inputStep.identifier = "age"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How old are you?"
+        
+        let constraints = SBBDecimalConstraints()
+        inputStep.constraints = constraints
+        constraints.minValue = NSNumber(double: 18.3)
+        constraints.maxValue = NSNumber(double: 100.2)
+        constraints.unit = "years"
+        
+        inputStep.constraints.rules = [
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : NSNumber(double: 50.0),
+                "operator" : "lt",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ]),
+            SBBSurveyRule(dictionaryRepresentation:         [
+                "value" : "true",
+                "operator" : "de",
+                "skipTo" : "video-usage",
+                "type" : "SurveyRule"
+                ])]
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        XCTAssertEqual(step.identifier, "age")
+        XCTAssertEqual(step.text, "How old are you?")
+        
+        guard let surveyStep = step as? SBASurveyFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.formItems?.count, 1)
+        XCTAssertTrue(surveyStep.skipIfPassed)
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
+        
+        guard let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
+            let answerFormat = formItem.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+                return
+        }
+        
+        XCTAssertNil(formItem.text)
+        XCTAssertNotNil(formItem.rulePredicate)
+        
+        XCTAssertEqual(answerFormat.unit, "years")
+        XCTAssertEqual(answerFormat.minimum, NSNumber(double: 18.3))
+        XCTAssertEqual(answerFormat.maximum, NSNumber(double: 100.2))
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Decimal)
+        
+        guard let navigationRule = formItem.rulePredicate else {
+            return
+        }
+        
+        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(double: 49.0)
+        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(double: 50.0)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+        questionResult.numericAnswer = NSNumber(double: 51.0)
+        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        
+    }
+    
+    // MARK: IntegerConstraint with uiHint == slider
+    
+    func testFactory_IntegerSlider_step100() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(100)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+                XCTAssert(false, "\(step) Not of expected class")
+                return
+        }
+        
+        XCTAssertEqual(scaleFormat.step, 100)
+    }
+    
+    func testFactory_IntegerSlider_step5() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(5)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        // ResearchKit requires that number of steps between min and max value are >= 1 and <= 13
+        // so if there would be more than 13 steps (100/5 == 20) then use continuous scale
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+
+        XCTAssertEqual(scaleFormat.maximumFractionDigits, 0)
+        XCTAssertEqual(scaleFormat.minimum, 0.0)
+        XCTAssertEqual(scaleFormat.maximum, 100.0)
+    }
+    
+    func testFactory_IntegerSlider_step25() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(25)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+        
+        XCTAssertEqual(scaleFormat.step, 25)
+        XCTAssertEqual(scaleFormat.minimum, 0)
+        XCTAssertEqual(scaleFormat.maximum, 100)
+    }
+
+    func testFactory_IntegerSlider_stepNil() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(nil)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        // If the step size is not defined, but the slider uiHint is set,
+        // then should be step size == 1. This will result in more than 13 step intervals
+        // so the returned class should be continuous scale
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
+                XCTAssert(false, "\(step) is not of expected format")
+                return
+        }
+        
+        XCTAssertEqual(scaleFormat.maximumFractionDigits, 0)
+        XCTAssertEqual(scaleFormat.minimum, 0.0)
+        XCTAssertEqual(scaleFormat.maximum, 100.0)
+    }
+    
+    func testFactory_IntegerSlider_stepInvalid() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(37)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        
+        // a step size of 37 is not divisible by 100 so is invalid
+        guard let surveyStep = step as? ORKFormStep,
+            let formItem = surveyStep.formItems?.first,
+            let _ = formItem.answerFormat as? ORKNumericAnswerFormat else {
+            XCTAssert(false, "\(step) Not of expected class")
+            return
+        }
+    }
+    
+
+    
+    
+    // MARK: Helper methods
+
+    func createMultipleChoiceQuestion(allowMultiple allowMultiple: Bool) -> SBBSurveyQuestion {
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "radiobutton"
+        inputStep.identifier = "medical-usage"
+        inputStep.guid = "c564984a-0951-48b5-a490-43d07aa04886"
+        inputStep.prompt = "Do you ever use your smartphone to look for health or medical information online?"
+        
+        let constraints = SBBMultiValueConstraints()
+        constraints.allowMultiple = NSNumber(bool: allowMultiple)
+        constraints.dataType = "string"
+        constraints.enumeration = [
+            SBBSurveyQuestionOption(dictionaryRepresentation:[
+                "label" : "Yes, I have done this",
+                "value" : "true",
+                "type" : "SurveyQuestionOption"
+                ]),
+            
+            SBBSurveyQuestionOption(dictionaryRepresentation:[
+                "label" : "No, I have never done this",
+                "value" : "false",
+                "type" : "SurveyQuestionOption"
+                ]),
+            
+            SBBSurveyQuestionOption(dictionaryRepresentation:[
+                "label" : "Maybe",
+                "value" : "maybe",
+                "type" : "SurveyQuestionOption"
+                ]),
+        ]
+        inputStep.constraints = constraints
+        
+        return inputStep
+    }
+    
+    func createIntegerQuestion() -> SBBSurveyQuestion {
+    
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "numberfield"
+        inputStep.identifier = "age"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How old are you?"
+        
+        let constraints = SBBIntegerConstraints()
+        inputStep.constraints = constraints
+        constraints.minValue = NSNumber(int: 18)
+        constraints.maxValue = NSNumber(int: 100)
+        constraints.unit = "years"
+        
+        return inputStep;
+    }
+    
+    func createSliderQuestion(step: Int32?) -> SBBSurveyQuestion {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "numberfield"
+        inputStep.identifier = "age"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How old are you?"
+        inputStep.uiHint = "slider"
+        
+        let constraints = SBBIntegerConstraints()
+        inputStep.constraints = constraints
+        constraints.minValue = NSNumber(int: 0)
+        constraints.maxValue = NSNumber(int: 100)
+        constraints.unit = "years"
+        if let step = step {
+            constraints.step = NSNumber(int: step)
+        }
+        
+        return inputStep;
+    }
+
+
 }
