@@ -230,7 +230,7 @@ public extension SBASurveyNavigationStep {
     }
     
     func sharedCopyFromSurveyItem(surveyItem: AnyObject) {
-        guard let surveyItem = surveyItem as? SBASurveyItem else { return }
+        guard let surveyItem = surveyItem as? SBAFormStepSurveyItem else { return }
         if let skipIdentifier = surveyItem.skipIdentifier {
             self.skipToStepIdentifier = skipIdentifier
         }

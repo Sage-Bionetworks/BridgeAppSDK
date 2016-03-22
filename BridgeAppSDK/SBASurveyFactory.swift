@@ -32,6 +32,7 @@
 //
 
 import ResearchKit
+import BridgeSDK
 
 /**
  * The purpose of the Survey Factory is to allow subclassing for custom types of steps
@@ -76,27 +77,61 @@ public class SBASurveyFactory : NSObject {
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
         return inputItem.createCustomStep()
     }
+    
+    /**
+     * Factory method for creating an ORKTask from an SBBSurvey 
+     */
+    public func createSurveyTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
+        let steps: [ORKStep] = survey.elements.map({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
+        return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
+    }
+    
+    /**
+     * Factory method for creating a survey step with an SBBSurveyElement
+     */
+    public func createSurveyStepWithSurveyElement(inputItem: SBBSurveyElement) -> ORKStep {
+        if let surveyItem = inputItem as? SBASurveyItem {
+            return self.createSurveyStep(surveyItem, isSubtaskStep: false)
+        }
+        else {
+            let step = ORKStep(identifier: inputItem.identifier)
+            step.title = inputItem.prompt
+            step.text = inputItem.promptDetail
+            return step
+        }
+    }
 
     func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool) -> ORKStep {
         switch (inputItem.surveyItemType) {
         case .Instruction, .Completion:
-            return inputItem.createInstructionStep()
+            if let instruction = inputItem as? SBAInstructionStepSurveyItem {
+                return instruction.createInstructionStep()
+            }
         case .Subtask:
-            return inputItem.createSubtaskStep(self)
+            if let form = inputItem as? SBAFormStepSurveyItem {
+                return form.createSubtaskStep(self)
+            } else { break }
         case .Form(_):
-            return inputItem.createFormStep(isSubtaskStep)
+            if let form = inputItem as? SBAFormStepSurveyItem {
+                return form.createFormStep(isSubtaskStep)
+            } else { break }
         default:
-            return self.createSurveyStepWithCustomType(inputItem)
+            break;
         }
+        return self.createSurveyStepWithCustomType(inputItem)
     }
+    
 }
 
-extension SBASurveyItem {
+extension SBAInstructionStepSurveyItem {
     
     func createInstructionStep() -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
         let learnMoreHTMLContent = self.learnMoreHTMLContent
-        let nextIdentifier = self.nextIdentifier
+        var nextIdentifier: String? = nil
+        if let directStep = self as? SBADirectNavigationRule {
+            nextIdentifier = directStep.nextStepIdentifier
+        }
         if case .Completion = self.surveyItemType {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
@@ -109,11 +144,14 @@ extension SBASurveyItem {
             instructionStep = ORKInstructionStep(identifier: self.identifier)
         }
         instructionStep.title = self.stepTitle
-        instructionStep.text = self.prompt
-        instructionStep.detailText = self.detailText
-        instructionStep.image = self.image
+        instructionStep.text = self.stepText
+        instructionStep.detailText = self.stepDetail
+        instructionStep.image = self.stepImage;
         return instructionStep
     }
+}
+
+extension SBAFormStepSurveyItem {
     
     func createSubtaskStep(factory:SBASurveyFactory) -> SBASubtaskStep {
         assert(self.items?.count > 0, "A subtask step requires items")
@@ -129,13 +167,16 @@ extension SBASurveyItem {
             SBASurveyFormStep(surveyItem: self) :
             ORKFormStep(identifier: self.identifier)
         if case SBASurveyItemType.Form(.Compound) = self.surveyItemType {
-            step.formItems = self.items?.map({ ($0 as! SBASurveyItem).createFormItem($0.prompt) })
+            step.formItems = self.items?.map({
+                let formItem = $0 as! SBAFormStepSurveyItem
+                return formItem.createFormItem(formItem.stepText)
+            })
         }
         else {
             step.formItems = [self.createFormItem(nil)]
         }
         step.title = self.stepTitle
-        step.text = self.prompt
+        step.text = self.stepText
         step.optional = self.optional
         return step
     }
@@ -159,10 +200,26 @@ extension SBASurveyItem {
         switch(subtype) {
         case .Boolean:
             return ORKBooleanAnswerFormat()
-        case .SingleChoiceText, .MultipleChoiceText:
+        case .Text:
+            return ORKTextAnswerFormat()
+        case .SingleChoice, .MultipleChoice:
             guard let textChoices = self.items?.map({createTextChoice($0)}) else { return nil }
-            let style: ORKChoiceAnswerStyle = (subtype == .SingleChoiceText) ? .SingleChoice : .MultipleChoice
+            let style: ORKChoiceAnswerStyle = (subtype == .SingleChoice) ? .SingleChoice : .MultipleChoice
             return ORKTextChoiceAnswerFormat(style: style, textChoices: textChoices)
+        case .Date, .DateTime:
+            let style: ORKDateAnswerStyle = (subtype == .Date) ? .Date : .DateAndTime
+            let range = self.range as? SBADateRange
+            return ORKDateAnswerFormat(style: style, defaultDate: nil, minimumDate: range?.minDate, maximumDate: range?.maxDate, calendar: nil)
+        case .Time:
+            return ORKTimeOfDayAnswerFormat()
+        case .Duration:
+            return ORKTimeIntervalAnswerFormat()
+        case .Integer, .Decimal, .Scale:
+            guard let range = self.range as? SBANumberRange else {
+                assertionFailure("\(subtype) requires a valid number range")
+                return nil
+            }
+            return range.createAnswerFormat(subtype)
         
         default:
             assertionFailure("Form item question type \(subtype) not implemented")
@@ -175,8 +232,7 @@ extension SBASurveyItem {
             assertionFailure("Passing object \(obj) does not match expected protocol SBATextChoice")
             return ORKTextChoice(text: "", detailText: nil, value: NSNull(), exclusive: false)
         }
-        let text = textChoice.prompt ?? "\(textChoice.value)"
-        return ORKTextChoice(text: text, detailText: textChoice.detailText, value: textChoice.value, exclusive: textChoice.exclusive)
+        return ORKTextChoice(text: textChoice.choiceText, detailText: textChoice.choiceDetail, value: textChoice.choiceValue, exclusive: textChoice.exclusive)
     }
 
     func usesNavigation() -> Bool {
@@ -185,13 +241,39 @@ extension SBASurveyItem {
         }
         guard let items = self.items else { return false }
         for item in items {
-            if let item = item as? SBASurveyItem,
+            if let item = item as? SBAFormStepSurveyItem,
                 let _ = item.rulePredicate {
                     return true
             }
         }
         return false
     }
+}
+
+extension SBANumberRange {
+    
+    func createAnswerFormat(subtype: SBASurveyItemType.FormSubtype) -> ORKAnswerFormat {
+        
+        if (subtype == .Scale),
+            // If this is a scale subtype then check that the max, min and step interval are valid
+            let min = self.minNumber?.integerValue, let max = self.maxNumber?.integerValue where
+            (max > min) && ((max - min) % self.stepInterval) == 0
+        {
+            // ResearchKit will throw an assertion if the number of steps is greater than 13 so 
+            // hardcode a check for whether or not to use a continuous scale based on that number
+            if ((max - min) / self.stepInterval) > 13 {
+                return ORKContinuousScaleAnswerFormat(maximumValue: Double(max), minimumValue: Double(min), defaultValue: 0.0, maximumFractionDigits: 0)
+            }
+            else {
+                return ORKScaleAnswerFormat(maximumValue: max, minimumValue: min, defaultValue: 0, step: self.stepInterval)
+            }
+        }
+        
+        // Fall through for non-scale or invalid scale type
+        let style: ORKNumericAnswerStyle = (subtype == .Decimal) ? .Decimal : .Integer
+        return ORKNumericAnswerFormat(style: style, unit: self.unitLabel, minimum: self.minNumber, maximum: self.maxNumber)
+    }
+    
 }
 
 

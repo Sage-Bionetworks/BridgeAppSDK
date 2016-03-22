@@ -34,16 +34,24 @@
 import ResearchKit
 
 public protocol SBATextChoice  {
-    var prompt: String? { get }
-    var value: protocol<NSCoding, NSCopying, NSObjectProtocol> { get }
-    var detailText: String? { get }
+    var choiceText: String { get }
+    var choiceDetail: String? { get }
+    var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { get }
     var exclusive: Bool { get }
 }
 
 extension NSDictionary: SBATextChoice {
     
-    public var value: protocol<NSCoding, NSCopying, NSObjectProtocol> {
-        return (self["value"] as? protocol<NSCoding, NSCopying, NSObjectProtocol>) ?? self.prompt ?? self.identifier
+    public var choiceText: String {
+        return (self["text"] as? String) ?? (self["prompt"] as? String) ?? self.identifier
+    }
+    
+    public var choiceDetail: String? {
+        return self["detailText"] as? String
+    }
+    
+    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> {
+        return (self["value"] as? protocol<NSCoding, NSCopying, NSObjectProtocol>) ?? self.choiceText ?? self.identifier
     }
     
     public var exclusive: Bool {
@@ -53,12 +61,14 @@ extension NSDictionary: SBATextChoice {
 }
 
 extension ORKTextChoice: SBATextChoice {
-    public var prompt: String? { return self.text }
+    public var choiceText: String { return self.text }
+    public var choiceDetail: String? { return self.detailText }
+    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self.value }
 }
 
 extension NSString: SBATextChoice {
-    public var prompt: String? { return self as String }
-    public var value: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self }
-    public var detailText: String? { return nil }
+    public var choiceText: String { return self as String }
+    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self }
+    public var choiceDetail: String? { return nil }
     public var exclusive: Bool { return false }
 }
