@@ -422,7 +422,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.prompt = "Text"
         inputStep.promptDetail = "Detail"
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "abc123")
         XCTAssertEqual(step.title, "Title")
@@ -461,7 +461,7 @@ class SBASurveyFactoryTests: XCTestCase {
             ])
         inputStep.constraints.rules = [ruleNotEqual, ruleSkip]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "living-alone-status")
         XCTAssertEqual(step.text, "Do you live alone?")
@@ -517,7 +517,7 @@ class SBASurveyFactoryTests: XCTestCase {
                                                     "type" : "SurveyRule"
                                                     ])]
 
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "medical-usage")
         XCTAssertEqual(step.text, "Do you ever use your smartphone to look for health or medical information online?")
@@ -579,7 +579,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -612,7 +612,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -637,7 +637,7 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_MultiValueConstraints_AllowMultiple() {
         
         let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: true)
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? ORKFormStep,
             let formItem = surveyStep.formItems?.first,
@@ -656,7 +656,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         constraints.allowOtherValue = true
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? ORKFormStep,
             let formItem = surveyStep.formItems?.first,
@@ -684,7 +684,7 @@ class SBASurveyFactoryTests: XCTestCase {
             }
         }
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? ORKFormStep,
             let formItem = surveyStep.formItems?.first,
@@ -712,7 +712,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // pattern, maxLength and minLength are currently unsupported
         inputStep.constraints = SBBStringConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "feelings")
         XCTAssertEqual(step.text, "How do you feel?")
@@ -751,7 +751,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.allowFutureValue = false
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "last-smoked")
         XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
@@ -800,7 +800,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.allowFutureValue = false
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "last-smoked")
         XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
@@ -845,7 +845,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "datetimepicker"
         inputStep.constraints = SBBTimeConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "last-smoked")
         XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
@@ -879,7 +879,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "datetimepicker"
         inputStep.constraints = SBBDurationConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "last-smoked")
         XCTAssertEqual(step.text, "When is the last time you smoked (put todays date if you are still smoking)?")
@@ -923,7 +923,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "age")
         XCTAssertEqual(step.text, "How old are you?")
@@ -980,7 +980,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1012,7 +1012,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1044,7 +1044,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1076,7 +1076,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1108,7 +1108,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1140,7 +1140,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? SBASurveyFormStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
@@ -1189,7 +1189,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ])]
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         XCTAssertEqual(step.identifier, "age")
         XCTAssertEqual(step.text, "How old are you?")
@@ -1241,7 +1241,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(100)
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? ORKFormStep,
             let formItem = surveyStep.formItems?.first,
@@ -1257,7 +1257,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(5)
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         // ResearchKit requires that number of steps between min and max value are >= 1 and <= 13
         // so if there would be more than 13 steps (100/5 == 20) then use continuous scale
@@ -1277,7 +1277,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(25)
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         guard let surveyStep = step as? ORKFormStep,
             let formItem = surveyStep.formItems?.first,
@@ -1295,7 +1295,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(nil)
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         // If the step size is not defined, but the slider uiHint is set,
         // then should be step size == 1. This will result in more than 13 step intervals
@@ -1316,7 +1316,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(37)
         
-        let step = SBASurveyFactory().createSurveyStepWithSBBSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
         // a step size of 37 is not divisible by 100 so is invalid
         guard let surveyStep = step as? ORKFormStep,

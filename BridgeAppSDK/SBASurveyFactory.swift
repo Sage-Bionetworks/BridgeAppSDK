@@ -79,9 +79,17 @@ public class SBASurveyFactory : NSObject {
     }
     
     /**
+     * Factory method for creating an ORKTask from an SBBSurvey 
+     */
+    public func createSurveyTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
+        let steps: [ORKStep] = survey.elements.map({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
+        return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
+    }
+    
+    /**
      * Factory method for creating a survey step with an SBBSurveyElement
      */
-    public func createSurveyStepWithSBBSurveyElement(inputItem: SBBSurveyElement) -> ORKStep {
+    public func createSurveyStepWithSurveyElement(inputItem: SBBSurveyElement) -> ORKStep {
         if let surveyItem = inputItem as? SBASurveyItem {
             return self.createSurveyStep(surveyItem, isSubtaskStep: false)
         }
