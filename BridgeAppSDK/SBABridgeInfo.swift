@@ -1,5 +1,5 @@
 //
-//  SBAAppDelegate.swift
+//  SBABridgeInfo.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -34,38 +34,35 @@
 import UIKit
 import BridgeSDK
 
-@UIApplicationMain
-public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate  {
-    
-    public var window: UIWindow?
-    
-    public func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        // Override point for customization before application launch.
-        
-        self.initializeBridgeServerConnection()
-        
-        return true
-    }
-
-    
-    // MARK: Default setup
-    
-    lazy public var bridgeInfo: SBABridgeInfo = {
-        return SBABridgeInfoPList()
-    }()
-    
-    func initializeBridgeServerConnection() {
-        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, environment: bridgeInfo.environment)
-    }
-    
-    
-    // MARK: SBABridgeAppSDKDelegate
-    
-    public func resourceBundle() -> NSBundle! {
-        return NSBundle.mainBundle()
-    }
-    
-    public func pathForResource(resourceName: String!, ofType resourceType: String!) -> String! {
-        return self.resourceBundle().pathForResource(resourceName, ofType: resourceType)
-    }
+public protocol SBABridgeInfo: class {
+    var studyIdentifier: String! { get }
+    var environment: SBBEnvironment! { get }
 }
+
+public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
+    
+    public var studyIdentifier: String!
+    public var environment: SBBEnvironment! = .Prod
+    
+    var plist: NSDictionary!
+
+    convenience override init() {
+        self.init(name: "BridgeInfo")!
+    }
+    
+    init?(name: String) {
+        super.init()
+        guard let plist = SBAResourceFinder().plistNamed(name) else {
+            assertionFailure("\(name) plist file not found in the resource bundle")
+            return nil
+        }
+        guard let studyIdentifier = plist["studyIdentifier"] as? String else {
+            assertionFailure("\(name) plist file does not define the 'studyIdentifier'")
+            return nil
+        }
+        self.studyIdentifier = studyIdentifier
+        self.plist = plist
+    }
+    
+}
+

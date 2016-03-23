@@ -89,6 +89,14 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
+    func plistNamed(resouceNamed: String) -> NSDictionary? {
+        if let path = self.pathForResource(resouceNamed, ofType: "plist"),
+            let dictionary = NSDictionary(contentsOfFile: path) {
+                return dictionary
+        }
+        return nil
+    }
+    
     func urlNamed(resourceNamed: String, withExtension: String) -> NSURL? {
         if let resourceDelegate = self.sharedResourceDelegate(),
             let url = resourceDelegate.resourceBundle().URLForResource(resourceNamed, withExtension: withExtension)
