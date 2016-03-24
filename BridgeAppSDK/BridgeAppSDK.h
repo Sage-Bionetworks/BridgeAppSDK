@@ -40,4 +40,6 @@ FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 
 #import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
+#import <BridgeAppSDK/SBAUserWrapper.h>
 #import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
+#import <BridgeAppSDK/SBAEncryptionWrapper.h>

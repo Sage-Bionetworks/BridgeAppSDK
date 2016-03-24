@@ -61,11 +61,16 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
     
     // MARK: SBABridgeAppSDKDelegate
     
-    public func resourceBundle() -> NSBundle! {
+    public var currentUser: SBAUserWrapper {
+        return _currentUser
+    }
+    private let _currentUser = SBAUser()
+    
+    public func resourceBundle() -> NSBundle {
         return NSBundle.mainBundle()
     }
     
-    public func pathForResource(resourceName: String!, ofType resourceType: String!) -> String! {
+    public func pathForResource(resourceName: String, ofType resourceType: String) -> String? {
         return self.resourceBundle().pathForResource(resourceName, ofType: resourceType)
     }
 }

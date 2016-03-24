@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBAEncryptionWrapper.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,12 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
+#import <Foundation/Foundation.h>
 
-#import <UIKit/UIKit.h>
-#import "SBAUserWrapper.h"
+@interface SBAEncryptionWrapper : NSObject
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
++ (NSData *)cmsEncrypt:(NSData *)data identityPath:(NSString *)identityPath error:(NSError * __autoreleasing *)error;
 
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// Current user singleton
-@property (readonly) id <SBAUserWrapper> _Nonnull currentUser;
++ (NSString *)sha1:(NSString *)input;
 
 @end
-
-#endif /* BridgeAppSDKDelegate_h */

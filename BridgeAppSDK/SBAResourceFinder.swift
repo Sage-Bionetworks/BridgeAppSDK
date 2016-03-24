@@ -35,6 +35,8 @@ import UIKit
 
 class SBAResourceFinder: NSObject {
     
+    static let sharedResourceFinder = SBAResourceFinder()
+    
     func sharedResourceDelegate() -> SBABridgeAppSDKDelegate? {
         return UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate
     }

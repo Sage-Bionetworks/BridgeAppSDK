@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBAEncryptionWrapper.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
+#import "SBAEncryptionWrapper.h"
+#import "APCCMSSupport.h"
 
-#import <UIKit/UIKit.h>
-#import "SBAUserWrapper.h"
+@implementation SBAEncryptionWrapper
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
++ (NSData *)cmsEncrypt:(NSData *)data identityPath:(NSString *)identityPath error:(NSError * __autoreleasing *)error {
+    Class support = NSClassFromString(@"APCCMSSupport");
+    if (support != Nil) {
+        if (error != nil) {
+            *error = nil;
+        }
+        NSData *encryptedData = [support cmsEncrypt:data identityPath:identityPath error:error];
+        return encryptedData;
+    } else {
+        NSLog(@"WARNING: APCCMSSupport class not implemented. Your data is not being encrypted. See ENCRYPTION_README.txt and APCCMSSupport.h for details.");
+        return [data copy];
+    }
+}
 
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// Current user singleton
-@property (readonly) id <SBAUserWrapper> _Nonnull currentUser;
++ (NSString *)sha1:(NSString *)input {
+    Class support = NSClassFromString(@"APCCMSSupport");
+    if (support != Nil) {
+        return [support sha1:input];
+    } else {
+        NSLog(@"WARNING: APCCMSSupport class not implemented. Your data is not being encrypted. See ENCRYPTION_README.txt and APCCMSSupport.h for details.");
+        return [input copy];
+    }
+}
 
 @end
-
-#endif /* BridgeAppSDKDelegate_h */

@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDKDelegate.h
-//  BridgeAppSDK
+//  APCCMSSupport.h
+//  APCAppCore
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,21 +31,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
+#import <Foundation/Foundation.h>
 
-#import <UIKit/UIKit.h>
-#import "SBAUserWrapper.h"
+/*!
+ This defines the APCCMSSupport class. If an implementation of this class exists in the app in which AppCore is running,
+ the cmsEncrypt() function in APCCMS.m will call its cmsEncrypt:identityPath:error: class method to encrypt data
+ before it is sent to the back-end storage server, or before being saved on device to be sent on later.
+ 
+ If no implementation of this class is found, the default behavior for cmsEncrypt() is to save and send the data
+ with no encryption.
+ */
+@interface APCCMSSupport : NSObject
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
+/*!
+ *  Encrypt data using CMS. See https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax and https://tools.ietf.org/html/rfc5652 for details.
+ *
+ *  @param data         The data to be encrypted.
+ *  @param identityPath Path to the .pem (X.509) public key file to be used for encryption.
+ *  @param error        Error, if any, encountered while attempting to encrypt the data.
+ *
+ *  @return The CMS-encrypted data.
+ */
++ (NSData *)cmsEncrypt:(NSData *)data identityPath:(NSString *)identityPath error:(NSError * __autoreleasing *)error;
 
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// Current user singleton
-@property (readonly) id <SBAUserWrapper> _Nonnull currentUser;
+/*!
+ * Returns the hashed string using sha-1
+ *
+ * @param input         The input string
+ * @return              The SHA-1 hashed string
+ */
++ (NSString *) sha1:(NSString *)input;
 
 @end
-
-#endif /* BridgeAppSDKDelegate_h */
