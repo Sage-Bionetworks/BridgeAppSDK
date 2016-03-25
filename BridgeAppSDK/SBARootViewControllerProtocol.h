@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBARootViewControllerProtocol.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,18 +31,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
+#ifndef SBARootViewControllerProtocol_h
+#define SBARootViewControllerProtocol_h
 
-#import <UIKit/UIKit.h>
-#import "SBAUserWrapper.h"
+@protocol SBARootViewControllerProtocol <NSObject>
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
-
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
+@property (nonatomic) BOOL contentHidden;
 
 @end
 
-#endif /* BridgeAppSDKDelegate_h */
+
+#endif /* SBARootViewControllerProtocol_h */

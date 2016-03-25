@@ -37,10 +37,14 @@ import ResearchKit
 
 public class SBAUser: NSObject, SBAUserWrapper {
     
+    let lockQueue = dispatch_queue_create("com.sba.UserLockQueue", nil)
+
     public func logout() {
         self.sessionToken = nil
-        resetKeychain()
-        resetUserDefaults()
+        dispatch_sync(lockQueue) {
+            self.resetUserDefaults()
+            self.resetKeychain()
+        }
     }
     
     // --------------------------------------------------
@@ -120,25 +124,30 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }
     
     func getKeychainObject(key: String) -> NSSecureCoding? {
-        var err: NSError?
-        let str = ORKKeychainWrapper.objectForKey(key, error: &err)
-        if let error = err {
-            print("Error accessing keychain: \(error)")
+        var obj: NSSecureCoding?
+        dispatch_sync(lockQueue) {
+            var err: NSError?
+            obj = ORKKeychainWrapper.objectForKey(key, error: &err)
+            if let error = err {
+                print("Error accessing keychain: \(error)")
+            }
         }
-        return str
+        return obj
     }
     
     func setKeychainObject(object: NSSecureCoding?, key: String) {
-        do {
-            if let obj = object {
-                try ORKKeychainWrapper.setObject(obj, forKey: key)
+        dispatch_async(lockQueue) {
+            do {
+                if let obj = object {
+                    try ORKKeychainWrapper.setObject(obj, forKey: key)
+                }
+                else {
+                    try ORKKeychainWrapper.removeObjectForKey(key)
+                }
             }
-            else {
-                try ORKKeychainWrapper.removeObjectForKey(key)
+            catch let error as NSError {
+                print(error.localizedDescription)
             }
-        }
-        catch let error as NSError {
-            print(error.localizedDescription)
         }
     }
     
@@ -164,65 +173,107 @@ public class SBAUser: NSObject, SBAUserWrapper {
     
     public var hasRegistered: Bool {
         get {
-            return userDefaults().boolForKey(kRegisteredKey)
+            return syncBoolForKey(kRegisteredKey)
         }
         set (newValue) {
-            userDefaults().setBool(newValue, forKey: kRegisteredKey)
+            syncSetBool(newValue, forKey: kRegisteredKey)
         }
     }
 
     public var loginVerified: Bool {
         get {
-            return userDefaults().boolForKey(kLoginVerifiedKey)
+            return syncBoolForKey(kLoginVerifiedKey)
         }
         set (newValue) {
-            userDefaults().setBool(newValue, forKey: kLoginVerifiedKey)
+            syncSetBool(newValue, forKey: kLoginVerifiedKey)
         }
     }
 
     public var consentVerified: Bool {
         get {
-            return userDefaults().boolForKey(kConsentVerifiedKey)
+            return syncBoolForKey(kConsentVerifiedKey)
         }
         set (newValue) {
-            userDefaults().setBool(newValue, forKey: kConsentVerifiedKey)
+            syncSetBool(newValue, forKey: kConsentVerifiedKey)
         }
     }
     
     public var paused: Bool {
         get {
-            return userDefaults().boolForKey(kStudyPausedKey)
+            return syncBoolForKey(kStudyPausedKey)
         }
         set (newValue) {
-            userDefaults().setBool(newValue, forKey: kStudyPausedKey)
+            syncSetBool(newValue, forKey: kStudyPausedKey)
         }
     }
     
     public var dataSharingScope: SBBUserDataSharingScope {
         get {
-            return SBBUserDataSharingScope(rawValue: userDefaults().integerForKey(kDataSharingScopeKey)) ?? .None
+            return SBBUserDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .None
         }
         set (newValue) {
-            userDefaults().setInteger(newValue.rawValue, forKey: kDataSharingScopeKey)
+            syncSetInteger(newValue.rawValue, forKey: kDataSharingScopeKey)
         }
     }
 
     public var dataGroups: [String]? {
         get {
-            return userDefaults().objectForKey(kSavedDataGroupsKey) as? [String]
+            return syncObjectForKey(kSavedDataGroupsKey) as? [String]
         }
         set (newValue) {
-            if let value = newValue {
-                userDefaults().setObject(value, forKey: kSavedDataGroupsKey)
-            }
-            else {
-                userDefaults().removeObjectForKey(kSavedDataGroupsKey)
-            }
+            syncSetObject(newValue, forKey: kSavedDataGroupsKey)
         }
     }
     
     func userDefaults() -> NSUserDefaults {
         return NSUserDefaults.standardUserDefaults()
+    }
+    
+    func syncBoolForKey(key: String) -> Bool {
+        var ret: Bool = false
+        dispatch_sync(lockQueue) {
+            ret = self.userDefaults().boolForKey(key)
+        }
+        return ret
+    }
+    
+    func syncSetBool(value:Bool, forKey key: String) {
+        dispatch_async(lockQueue) {
+            self.userDefaults().setBool(value, forKey: key)
+        }
+    }
+    
+    func syncIntForKey(key: String) -> Int {
+        var ret: Int = 0
+        dispatch_sync(lockQueue) {
+            ret = self.userDefaults().integerForKey(key)
+        }
+        return ret
+    }
+    
+    func syncSetInteger(value:Int, forKey key: String) {
+        dispatch_async(lockQueue) {
+            self.userDefaults().setInteger(value, forKey: key)
+        }
+    }
+    
+    func syncObjectForKey(key: String) -> AnyObject? {
+        var ret: AnyObject?
+        dispatch_sync(lockQueue) {
+            ret = self.userDefaults().objectForKey(key)
+        }
+        return ret
+    }
+    
+    func syncSetObject(value:AnyObject?, forKey key: String) {
+        dispatch_async(lockQueue) {
+            if let obj = value {
+                self.userDefaults().setObject(obj, forKey: key)
+            }
+            else {
+                self.userDefaults().removeObjectForKey(key)
+            }
+        }
     }
     
     func resetUserDefaults() {

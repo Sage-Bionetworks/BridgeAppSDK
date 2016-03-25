@@ -55,7 +55,7 @@ public class SBASubtaskStep: ORKStep {
     
     func substepIdentifier(identifier: String) -> String? {
         guard let range = identifier.rangeOfString("\(self.subtask.identifier).") else { return nil }
-        let stepRange = Range(start: range.endIndex, end: identifier.endIndex)
+        let stepRange = range.endIndex ..< identifier.endIndex
         let stepIdentifier = identifier.substringWithRange(stepRange)
         return stepIdentifier
     }

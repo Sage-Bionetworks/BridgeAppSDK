@@ -35,8 +35,21 @@ import UIKit
 import BridgeSDK
 
 public protocol SBABridgeInfo: class {
+    
+    /**
+     *
+     */
     var studyIdentifier: String! { get }
+    
+    /**
+     * Environment to load
+     */
     var environment: SBBEnvironment! { get }
+    
+    /**
+     * App store link for this application. By default, this returns the value pulled from the main bundle
+     */
+    var appStoreLinkURL: NSURL! { get }
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -62,6 +75,15 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
         }
         self.studyIdentifier = studyIdentifier
         self.plist = plist
+    }
+    
+    public var appStoreLinkURL: NSURL! {
+        guard let appStoreLinkURLString = self.plist["appStoreLinkURL"] as? String,
+            let url = NSURL(string: appStoreLinkURLString)
+        else {
+            return NSBundle.mainBundle().appStoreLinkURL()
+        }
+        return url
     }
     
 }

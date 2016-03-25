@@ -116,11 +116,11 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         // Look for step in the ordered steps and lop off everything after this one
         if let previousIdentifier = step?.identifier,
             let idx = self.orderedStepIdentifiers.indexOf(previousIdentifier) where idx < self.orderedStepIdentifiers.endIndex {
-                self.orderedStepIdentifiers.removeRange(Range(start: idx.advancedBy(1), end: self.orderedStepIdentifiers.endIndex))
+                self.orderedStepIdentifiers.removeRange(idx.advancedBy(1) ..< self.orderedStepIdentifiers.endIndex)
         }
         if let identifier = returnStep?.identifier {
             if let idx = self.orderedStepIdentifiers.indexOf(identifier) {
-                self.orderedStepIdentifiers.removeRange(Range(start: idx, end: self.orderedStepIdentifiers.endIndex))
+                self.orderedStepIdentifiers.removeRange(idx ..< self.orderedStepIdentifiers.endIndex)
             }
             self.orderedStepIdentifiers += [identifier]
         }
