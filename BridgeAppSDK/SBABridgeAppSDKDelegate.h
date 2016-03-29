@@ -35,7 +35,6 @@
 #define BridgeAppSDKDelegate_h
 
 #import <UIKit/UIKit.h>
-#import "SBAUserWrapper.h"
 
 @protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
 

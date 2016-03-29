@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBALocalizationMacroWrapper.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,17 +31,17 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import "SBALocalizationMacroWrapper.h"
+@import ResearchKit;
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+@implementation SBALocalizationMacroWrapper
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
++ (NSString *)localizedORKString:(NSString *)orkStringKey {
+    return ORKLocalizedString(orkStringKey, nil);
+}
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBAEncryptionWrapper.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
++ (NSString *)localizedNumber:(NSNumber *)number {
+    return ORKLocalizedStringFromNumber(number);
+}
+
+@end

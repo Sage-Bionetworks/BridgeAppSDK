@@ -63,7 +63,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kPasswordPropertyKey = "password"
     let kSubpopulationGuidKey = "SavedSubpopulationGuid"
     let kConsentSignatureKey = "ConsentSignature"
-    let kUserIdKey = "userId"
+    let kExternalIdKey = "externalId"
     
     public var name: String? {
         get {
@@ -83,12 +83,12 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var userId: String? {
+    public var externalId: String? {
         get {
-            return getKeychainObject(kUserIdKey) as? String ?? self.email?.sha1_hashed()
+            return getKeychainObject(kExternalIdKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kUserIdKey)
+            setKeychainObject(newValue, key: kExternalIdKey)
         }
     }
     
@@ -114,9 +114,9 @@ public class SBAUser: NSObject, SBAUserWrapper {
     /**
      * Consent signature should be stored in keychain.
      */
-    public var consentSignature: SBAConsentSignatureWrapper? {
+    public var consentSignature: SBAConsentSignature? {
         get {
-            return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignatureWrapper
+            return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignature
         }
         set (newValue) {
             setKeychainObject(newValue, key: kConsentSignatureKey)
@@ -136,7 +136,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }
     
     func setKeychainObject(object: NSSecureCoding?, key: String) {
-        dispatch_async(lockQueue) {
+        dispatch_sync(lockQueue) {
             do {
                 if let obj = object {
                     try ORKKeychainWrapper.setObject(obj, forKey: key)
@@ -160,6 +160,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
+    
     // --------------------------------------------------
     // MARK: NSUserDefaults storage
     // --------------------------------------------------
@@ -168,7 +169,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kLoginVerifiedKey = "SignedIn"
     let kConsentVerifiedKey = "consentVerified"
     let kSavedDataGroupsKey = "SavedDataGroups"
-    let kStudyPausedKey = "studyPaused"
+    let kDataSharingEnabledKey = "dataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
     
     public var hasRegistered: Bool {
@@ -198,12 +199,12 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var paused: Bool {
+    public var dataSharingEnabled: Bool {
         get {
-            return syncBoolForKey(kStudyPausedKey)
+            return syncBoolForKey(kDataSharingEnabledKey)
         }
         set (newValue) {
-            syncSetBool(newValue, forKey: kStudyPausedKey)
+            syncSetBool(newValue, forKey: kDataSharingEnabledKey)
         }
     }
     
@@ -238,7 +239,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }
     
     func syncSetBool(value:Bool, forKey key: String) {
-        dispatch_async(lockQueue) {
+        dispatch_sync(lockQueue) {
             self.userDefaults().setBool(value, forKey: key)
         }
     }
@@ -252,7 +253,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }
     
     func syncSetInteger(value:Int, forKey key: String) {
-        dispatch_async(lockQueue) {
+        dispatch_sync(lockQueue) {
             self.userDefaults().setInteger(value, forKey: key)
         }
     }
@@ -266,7 +267,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }
     
     func syncSetObject(value:AnyObject?, forKey key: String) {
-        dispatch_async(lockQueue) {
+        dispatch_sync(lockQueue) {
             if let obj = value {
                 self.userDefaults().setObject(obj, forKey: key)
             }
@@ -286,9 +287,22 @@ public class SBAUser: NSObject, SBAUserWrapper {
     
 }
 
-extension String {
-
-    func sha1_hashed() -> String {
-        return SBAEncryptionWrapper.sha1(self)
+extension SBAUser : SBBAuthManagerDelegateProtocol {
+    
+    public func sessionTokenForAuthManager(authManager: SBBAuthManagerProtocol) -> String? {
+        return self.sessionToken
     }
+    
+    public func authManager(authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
+        self.sessionToken = sessionToken
+    }
+    
+    public func usernameForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
+        return self.email
+    }
+    
+    public func passwordForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
+        return self.password
+    }
+    
 }

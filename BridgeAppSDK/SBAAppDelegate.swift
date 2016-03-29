@@ -33,9 +33,10 @@
 
 import UIKit
 import BridgeSDK
+import ResearchKit
 
 @UIApplicationMain
-public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, ORKPasscodeDelegate  {
+public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresenter, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, ORKPasscodeDelegate  {
     
     public var window: UIWindow?
     
@@ -72,11 +73,34 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         // Make sure that the content view controller is not hiding content
         containerRootViewController?.contentHidden = false
         
-        // TODO: syoung 03/25/2016 login
+        self.currentUser.ensureSignedInWithCompletion() { (error) in
+            // Check if there are any errors during sign in that we need to address
+            if let error = error {
+                if (error.code == SBBErrorCode.ServerPreconditionNotMet.rawValue) {
+                    self.showReconsentIfNecessary()
+                }
+                else if (error.code == SBBErrorCode.UnsupportedAppVersion.rawValue) {
+                    self.handleUnsupportedAppVersionError(error, networkManager: nil)
+                }
+            }
+        }
     }
     
     public func applicationWillEnterForeground(application: UIApplication) {
         lockScreen()
+    }
+    
+    // ------------------------------------------------
+    // MARK: Optional property overrides
+    // ------------------------------------------------
+    
+    /**
+     * Should the email be checked on signUp for the '+test' pattern as part of the email
+     * If YES, sign up process will check for special string in email addresses to auto-detect test users
+     * If NO, sign up will treat all emails and data as valid in production
+     */
+    public var shouldPerformTestUserEmailCheckOnSignup : Bool {
+        return false
     }
     
     // ------------------------------------------------
@@ -103,6 +127,7 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
     
     func initializeBridgeServerConnection() {
         BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, environment: bridgeInfo.environment)
+        SBAUserBridgeManager.setAuthDelegate(self.currentUser)
     }
     
     
@@ -116,6 +141,9 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         }
         else if (self.currentUser.loginVerified) {
             showMainViewController(animated)
+            if (!self.currentUser.consentVerified) {
+                showReconsentIfNecessary()
+            }
         }
         else if (self.currentUser.hasRegistered) {
             showEmailVerificationViewController(animated)
@@ -125,12 +153,17 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         }
     }
     
+    public func showReconsentIfNecessary() {
+        // TODO: syoung 03/29/2016 Implement default method
+        assertionFailure("Not implemented")
+    }
+    
     /**
     * Abstract method for showing the study overview (onboarding) for a user who is not signed in
     */
     public func showOnboardingViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 May wish to implement a default onboarding (study overview)
-        assertionFailure("Not implemented: Abstract method")
+        // TODO: syoung 03/24/2016 Implement default method
+        assertionFailure("Not implemented")
     }
     
     /**
@@ -138,16 +171,16 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
      * but not signed in
      */
     public func showEmailVerificationViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 May wish to implement a default main
-        assertionFailure("Not implemented: Abstract method")
+        // TODO: syoung 03/24/2016 Implement default method
+        assertionFailure("Not implemented")
     }
     
     /**
      * Abstract method for showing the main view controller for a user who signed in
      */
     public func showMainViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 May wish to implement a default main
-        assertionFailure("Not implemented: Abstract method")
+        // TODO: syoung 03/24/2016 Implement default method
+        assertionFailure("Not implemented")
     }
     
     /**
@@ -173,13 +206,13 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
     /**
      * Convenience method for presenting a modal view controller.
      */
-    public func presentModalViewController(viewController: UIViewController, animated: Bool) {
+    public func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
         guard let rootVC = self.window?.rootViewController else { return }
         var topViewController: UIViewController = rootVC
         while (topViewController.presentedViewController != nil) {
             topViewController = topViewController.presentedViewController!
         }
-        topViewController.presentViewController(viewController, animated: false, completion: nil)
+        topViewController.presentViewController(viewController, animated: animated, completion: completion)
     }
     
     
@@ -197,8 +230,9 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         self.catastrophicStartupError = error
     }
     
-    func showCatastrophicStartupErrorViewController(animated: Bool) {
-        // TODO: implement syoung 03/24/2016
+    public func showCatastrophicStartupErrorViewController(animated: Bool) {
+        // TODO: syoung 03/24/2016 Implement default method
+        assertionFailure("Not implemented")
     }
     
     
@@ -206,7 +240,7 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
     // MARK: Unsupported App Version
     // ------------------------------------------------
     
-    public func handleUnsupportedAppVersionError(error: NSError!, networkManager: SBBNetworkManagerProtocol!) -> Bool {
+    public func handleUnsupportedAppVersionError(error: NSError, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
         if let _ = self.window?.rootViewController {
             showCatastrophicStartupErrorViewController(true)
@@ -246,7 +280,7 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         let message = Localization.localizedString("SBA_RESET_PASSCODE_MESSAGE")
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         
-        let cancelAction = UIAlertAction(title: Localization.localizedString("SBA_CANCEL"), style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: Localization.buttonCancel(), style: .Cancel, handler: nil)
         alert.addAction(cancelAction)
         
         let logoutAction = UIAlertAction(title: Localization.localizedString("SBA_LOGOUT"), style: .Destructive, handler: { _ in
@@ -282,8 +316,7 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         vc.modalTransitionStyle = .CoverVertical
         
         passcodeViewController = vc
-        presentModalViewController(vc, animated: false)
-        
+        presentViewController(vc, animated: false, completion: nil)        
     }
     
     func dismissPasscodeViewController(animated: Bool) {
@@ -306,4 +339,6 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBABridgeAppSDK
         // Show the appropriate view controller
         showAppropriateViewController(true)
     }
+    
+
 }

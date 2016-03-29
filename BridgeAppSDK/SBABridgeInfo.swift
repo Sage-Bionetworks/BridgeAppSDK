@@ -37,7 +37,7 @@ import BridgeSDK
 public protocol SBABridgeInfo: class {
     
     /**
-     *
+     * Study identifier used to setup the study with Bridge
      */
     var studyIdentifier: String! { get }
     
@@ -50,6 +50,17 @@ public protocol SBABridgeInfo: class {
      * App store link for this application. By default, this returns the value pulled from the main bundle
      */
     var appStoreLinkURL: NSURL! { get }
+    
+    /**
+     * Email format to use for registration via externalId should be in the form
+     * "name+%@@company.org"
+     */
+    var emailFormatForRegistrationViaExternalId: String? { get }
+    
+    /**
+     * Password format for use for registration via externalId. (optional)
+     */
+    var passwordFormatForRegistrationViaExternalId: String? { get }
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -84,6 +95,14 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
             return NSBundle.mainBundle().appStoreLinkURL()
         }
         return url
+    }
+    
+    public var emailFormatForRegistrationViaExternalId: String? {
+        return self.plist["emailFormatForRegistrationViaExternalId"] as? String
+    }
+    
+    public var passwordFormatForRegistrationViaExternalId: String? {
+        return self.plist["passwordFormatForRegistrationViaExternalId"] as? String
     }
     
 }
