@@ -77,10 +77,6 @@
 		FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */; };
 		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
-		FFC68EF81CA477D200FF7B07 /* ENCRYPTION_README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FFC68EF71CA477D200FF7B07 /* ENCRYPTION_README.txt */; };
-		FFC68EFB1CA4787600FF7B07 /* SBAEncryptionWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = FFC68EF91CA4787600FF7B07 /* SBAEncryptionWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FFC68EFC1CA4787600FF7B07 /* SBAEncryptionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC68EFA1CA4787600FF7B07 /* SBAEncryptionWrapper.m */; };
-		FFC68EFE1CA4791700FF7B07 /* APCCMSSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = FFC68EFD1CA4791700FF7B07 /* APCCMSSupport.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -272,10 +268,6 @@
 		FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
 		FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeInfo.swift; sourceTree = "<group>"; };
 		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
-		FFC68EF71CA477D200FF7B07 /* ENCRYPTION_README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ENCRYPTION_README.txt; sourceTree = "<group>"; };
-		FFC68EF91CA4787600FF7B07 /* SBAEncryptionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAEncryptionWrapper.h; sourceTree = "<group>"; };
-		FFC68EFA1CA4787600FF7B07 /* SBAEncryptionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEncryptionWrapper.m; sourceTree = "<group>"; };
-		FFC68EFD1CA4791700FF7B07 /* APCCMSSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APCCMSSupport.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,6 +307,7 @@
 				801040E51C5AD18100D26E19 /* BridgeAppSDKSample */,
 				161479C21BD6CE8F0099A068 /* BridgeAppSDK */,
 				801040C11C5A843D00D26E19 /* BridgeAppSDKTests */,
+				FBE1A9391CAB212F00F1F584 /* Frameworks */,
 				161479C11BD6CE8F0099A068 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -559,6 +552,13 @@
 			path = "Test Files";
 			sourceTree = "<group>";
 		};
+		FBE1A9391CAB212F00F1F584 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FBE5515A1C6D265000C9E1AA /* MockObjects */ = {
 			isa = PBXGroup;
 			children = (
@@ -658,10 +658,6 @@
 		FFC68EED1CA4778D00FF7B07 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
-				FFC68EF71CA477D200FF7B07 /* ENCRYPTION_README.txt */,
-				FFC68EFD1CA4791700FF7B07 /* APCCMSSupport.h */,
-				FFC68EF91CA4787600FF7B07 /* SBAEncryptionWrapper.h */,
-				FFC68EFA1CA4787600FF7B07 /* SBAEncryptionWrapper.m */,
 			);
 			name = Encryption;
 			sourceTree = "<group>";
@@ -676,8 +672,6 @@
 				FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */,
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
-				FFC68EFB1CA4787600FF7B07 /* SBAEncryptionWrapper.h in Headers */,
-				FFC68EFE1CA4791700FF7B07 /* APCCMSSupport.h in Headers */,
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
@@ -866,7 +860,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFC68EF81CA477D200FF7B07 /* ENCRYPTION_README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -937,7 +930,6 @@
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				801040D71C5ACDF800D26E19 /* LineGraphDataSource.swift in Sources */,
 				801040D21C5ACDF800D26E19 /* OnboardingViewController.swift in Sources */,
-				FFC68EFC1CA4787600FF7B07 /* SBAEncryptionWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
