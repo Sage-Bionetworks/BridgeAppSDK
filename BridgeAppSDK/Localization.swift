@@ -69,16 +69,16 @@ public class Localization: NSObject {
         }
         
         let result =
-            trim(bundleInfo? ["CFBundleDisplayName"]) ??
-            trim(bundleInfo? ["CFBundleName"]) ??
-            trim(bundleInfo? ["CFBundleExecutable"]) ??
-            trim(mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")) ??
-            trim(mainBundle.objectForInfoDictionaryKey("CFBundleName")) ??
-            trim(mainBundle.objectForInfoDictionaryKey("CFBundleExecutable")) ??
-            trim(localizedBundleInfo? ["CFBundleDisplayName"]) ??
-            trim(localizedBundleInfo? ["CFBundleName"]) ??
-            trim(localizedBundleInfo? ["CFBundleExecutable"]) ??
-            "???"
+                trim(localizedBundleInfo? ["CFBundleDisplayName"]) ??
+                trim(mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")) ??
+                trim(bundleInfo? ["CFBundleDisplayName"]) ??
+                trim(localizedBundleInfo? ["CFBundleName"]) ??
+                trim(mainBundle.objectForInfoDictionaryKey("CFBundleName")) ??
+                trim(bundleInfo? ["CFBundleName"]) ??
+                trim(localizedBundleInfo? ["CFBundleExecutable"]) ??
+                trim(mainBundle.objectForInfoDictionaryKey("CFBundleExecutable")) ??
+                trim(bundleInfo? ["CFBundleExecutable"]) ??
+                "???"
         
         return result
     }()
