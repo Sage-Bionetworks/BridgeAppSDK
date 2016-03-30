@@ -61,6 +61,11 @@ public protocol SBABridgeInfo: class {
      * Password format for use for registration via externalId. (optional)
      */
     var passwordFormatForRegistrationViaExternalId: String? { get }
+    
+    /**
+     * Data group for the test user. (optional)
+     */
+    var testUserDataGroup: String? { get }
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -104,6 +109,11 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var passwordFormatForRegistrationViaExternalId: String? {
         return self.plist["passwordFormatForRegistrationViaExternalId"] as? String
     }
+    
+    public var testUserDataGroup: String? {
+        return self.plist["testUserDataGroup"] as? String
+    }
+
     
 }
 

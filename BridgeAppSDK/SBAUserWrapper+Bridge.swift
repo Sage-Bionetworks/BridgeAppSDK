@@ -42,7 +42,7 @@ let SBAHiddenTestEmailString = "+test"
 /**
  * Datagroup to set if the user is a test user
  */
-let SBATestDataGroup = "test_user"
+let SBATestDataGroup = SBAAppDelegate.sharedDelegate?.bridgeInfo.testUserDataGroup ?? "test_user"
 
 let SBAUserErrorDomain = "SBAUserError"
 
@@ -213,7 +213,7 @@ public extension SBAUserWrapper {
             
             // Copy info from the user session response object
             if let response = responseObject as? SBAUserSessionInfoWrapper {
-                self!.copyFromUserSession(response)
+                self!.updateFromUserSession(response)
             }
             
             if let consentSignature = self!.consentSignature where requiresConsent {
@@ -230,7 +230,7 @@ public extension SBAUserWrapper {
         }
     }
     
-    private func copyFromUserSession(response: SBAUserSessionInfoWrapper) {
+    private func updateFromUserSession(response: SBAUserSessionInfoWrapper) {
         
         // Get the data groups from the response object
         self.dataGroups = response.dataGroups
@@ -285,7 +285,7 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
     }
     
     var dataSharingScope: SBBUserDataSharingScope {
-        guard let sharingKey = self["dataGroups"] as? String where self.dataSharingEnabled else {
+        guard let sharingKey = self["sharingScope"] as? String where self.dataSharingEnabled else {
             return .None
         }
         return SBBUserDataSharingScope(key: sharingKey)
