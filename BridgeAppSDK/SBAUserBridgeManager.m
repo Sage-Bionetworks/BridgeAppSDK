@@ -35,14 +35,6 @@
 
 @implementation SBAUserBridgeManager
 
-+ (BOOL) serverDisabled {
-#if DEVELOPMENT
-    return YES;
-#else
-    return NO;
-#endif
-}
-
 + (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
@@ -53,64 +45,48 @@
     dataGroups:(NSArray<NSString *> *)dataGroups
     completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     
-    if ([self serverDisabled]) {
-        if (completionBlock) {
-            completionBlock(nil, nil);
-        }
-    }
-    else
-    {
-        NSParameterAssert(email);
-        NSParameterAssert(password);
-        [SBBComponent(SBBAuthManager) signUpWithEmail: email
-                                             username: externalId ?: email
-                                             password: password
-                                           dataGroups: dataGroups
-                                           completion: ^(NSURLSessionDataTask * __unused task,
-                                                         id responseObject,
-                                                         NSError *error)
-         {
-             if (!error) {
-                 NSLog(@"User Signed Up");
-             }
+    NSParameterAssert(email);
+    NSParameterAssert(password);
+    [SBBComponent(SBBAuthManager) signUpWithEmail: email
+                                         username: externalId ?: email
+                                         password: password
+                                       dataGroups: dataGroups
+                                       completion: ^(NSURLSessionDataTask * __unused task,
+                                                     id responseObject,
+                                                     NSError *error)
+     {
+         if (!error) {
+             NSLog(@"User Signed Up");
+         }
 #if DEBUG
-             else {
-                 NSLog(@"Error with signup: %@", error);
-             }
+         else {
+             NSLog(@"Error with signup: %@", error);
+         }
 #endif
-             if (completionBlock) {
-                 completionBlock(responseObject, error);
-             }
-         }];
-    }
+         if (completionBlock) {
+             completionBlock(responseObject, error);
+         }
+     }];
 }
 
 + (void)signIn:(NSString *)username password:(NSString *)password completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     
-    if ([self serverDisabled]) {
-        if (completionBlock) {
-            completionBlock(nil, nil);
-        }
-    }
-    else
-    {
-        NSParameterAssert(username);
-        NSParameterAssert(password);
-        [SBBComponent(SBBAuthManager) signInWithUsername: username
-                                                password: password
-                                              completion:^(NSURLSessionDataTask * __unused task,
-                                                                     id responseObject,
-                                                                     NSError *error) {
+    NSParameterAssert(username);
+    NSParameterAssert(password);
+    [SBBComponent(SBBAuthManager) signInWithUsername: username
+                                            password: password
+                                          completion:^(NSURLSessionDataTask * __unused task,
+                                                                 id responseObject,
+                                                                 NSError *error) {
 #if DEBUG
-            if (error != nil) {
-                NSLog(@"Error with signup: %@", error);
-            }
+        if (error != nil) {
+            NSLog(@"Error with signup: %@", error);
+        }
 #endif
-            if (completionBlock) {
-                completionBlock(responseObject, error);
-            }
-        }];
-    }
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
 }
 
 + (void)sendUserConsented:(NSString *)name
@@ -120,57 +96,41 @@
         subpopulationGuid:(NSString *)subpopGuid
                completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock
 {
-    if ([self serverDisabled]) {
-        if (completionBlock) {
-            completionBlock(nil, nil);
-        }
-    }
-    else
-    {
-        NSParameterAssert(name);
-        NSParameterAssert(birthDate);
-        NSParameterAssert(subpopGuid);
-        [SBBComponent(SBBConsentManager) consentSignature:name
-                                     forSubpopulationGuid:subpopGuid
-                                                birthdate:birthDate
-                                           signatureImage:consentImage
-                                              dataSharing:sharingScope
-                                               completion:^(id responseObject, NSError * error) {
+    NSParameterAssert(name);
+    NSParameterAssert(birthDate);
+    NSParameterAssert(subpopGuid);
+    [SBBComponent(SBBConsentManager) consentSignature:name
+                                 forSubpopulationGuid:subpopGuid
+                                            birthdate:birthDate
+                                       signatureImage:consentImage
+                                          dataSharing:sharingScope
+                                           completion:^(id responseObject, NSError * error) {
 #if DEBUG
-                                                   if (error != nil) {
-                                                       NSLog(@"Error with sending user consent: %@", error);
-                                                   }
+                                               if (error != nil) {
+                                                   NSLog(@"Error with sending user consent: %@", error);
+                                               }
 #endif
-                                                   if (completionBlock) {
-                                                       completionBlock(responseObject, error);
-                                                   }
-                                               }];
-    }
+                                               if (completionBlock) {
+                                                   completionBlock(responseObject, error);
+                                               }
+                                           }];
 }
 
 
 + (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     
-    if ([self serverDisabled]) {
-        if (completionBlock) {
-            completionBlock(nil, nil);
+    [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask * __unused task,
+                                                                 id responseObject,
+                                                                 NSError *error) {
+#if DEBUG
+        if (error != nil) {
+            NSLog(@"Error with signup: %@", error);
         }
-    }
-    else
-    {
-        [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask * __unused task,
-                                                                     id responseObject,
-                                                                     NSError *error) {
-    #if DEBUG
-            if (error != nil) {
-                NSLog(@"Error with signup: %@", error);
-            }
-    #endif
-            if (completionBlock) {
-                completionBlock(responseObject, error);
-            }
-        }];
-    }
+#endif
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
 }
 
 @end
