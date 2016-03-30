@@ -62,6 +62,22 @@ public class SBASurveyFactory : NSObject {
             self.steps = steps.map({ self.createSurveyStepWithDictionary($0) })
         }
     }
+    
+    /**
+     * Factory method for creating an ORKTask from an SBBSurvey
+     */
+    public func createSurveyTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
+        let steps: [ORKStep] = survey.elements.map({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
+        return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
+    }
+    
+    /**
+     * Factory method for creating an ORKTask from an SBAActiveTask
+     */
+    public func createTaskWithActiveTask(activeTask: SBAActiveTask, taskOptions: ORKPredefinedTaskOption) ->
+        protocol <ORKTask, NSCopying, NSSecureCoding>? {
+        return activeTask.createDefaultORKActiveTask(taskOptions)
+    }
 
     /**
      * Factory method for creating a survey step with a dictionary
@@ -76,14 +92,6 @@ public class SBASurveyFactory : NSObject {
      */
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
         return inputItem.createCustomStep()
-    }
-    
-    /**
-     * Factory method for creating an ORKTask from an SBBSurvey 
-     */
-    public func createSurveyTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
-        let steps: [ORKStep] = survey.elements.map({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
-        return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
     }
     
     /**

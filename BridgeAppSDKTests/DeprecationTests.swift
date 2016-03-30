@@ -50,6 +50,7 @@ class DeprecationTests: XCTestCase {
         super.tearDown()
     }
 
+    /** Test of understanding of deprecated range init method
     func testRange() {
         
         let string = "abcdefghijklmnopqrstuvwxyz"
@@ -62,7 +63,7 @@ class DeprecationTests: XCTestCase {
         XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
         XCTAssertEqual(spliceRangeString, deprecatedRangeString)
         
-    }
+    }*/
 
 
 }

@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAActiveTask+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,18 +31,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+extension NSDictionary: SBAActiveTask {
+    
+    var taskTypeName: String? {
+        return self["taskType"] as? String
+    }
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+    public var taskType: SBAActiveTaskType {
+        return SBAActiveTaskType(name: taskTypeName)
+    }
+    
+    public var intendedUseDescription: String? {
+        return self["intendedUseDescription"] as? String
+    }
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
+    public var taskOptions: [String : AnyObject]? {
+        return self["taskOptions"] as? [String : AnyObject]
+    }
+
+    public var localizedSteps: [SBASurveyItem]? {
+        guard let steps = self["localizedSteps"] as? [AnyObject] else { return nil }
+        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
+    }
+
+}
+
+
+
+

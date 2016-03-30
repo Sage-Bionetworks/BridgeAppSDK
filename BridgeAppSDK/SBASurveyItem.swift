@@ -75,6 +75,7 @@ public enum SBASurveyItemType {
     case Instruction                // ORKInstructionStep
     case Completion                 // ORKCompletionStep
     case Subtask                    // SBASubtaskStep
+    case ActiveTask                 // SBAActiveTask substep
     case DataGroups                 // data groups step
     
     case Form(FormSubtype)          // ORKFormStep
@@ -106,6 +107,7 @@ public enum SBASurveyItemType {
         case "instruction"           : self = .Instruction
         case "completion"            : self = .Completion
         case "subtask"               : self = .Subtask
+        case "activeTask"            : self = .ActiveTask
         case "dataGroups"            : self = .DataGroups
         case "compound"              : self = .Form(.Compound)
         case "boolean"               : self = .Form(.Boolean)

@@ -36,12 +36,17 @@ import ResearchKit
 extension NSDictionary: SBASurveyItem {
     
     public var identifier: String! {
-        return (self["identifier"] as? String) ?? "\(self.hash)"
+        return (self["identifier"] as? String) ?? (self["schemaIdentifier"] as? String) ?? NSUUID().UUIDString
     }
     
     public var surveyItemType: SBASurveyItemType {
-        let type = self["type"] as? String
-        return SBASurveyItemType(rawValue: type)
+        if let type = self["type"] as? String {
+            return SBASurveyItemType(rawValue: type)
+        }
+        else if self.taskTypeName != nil {
+            return .ActiveTask
+        }
+        return .Custom(nil)
     }
     
     public var stepTitle: String? {

@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBATrackedDataObject.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,18 +31,41 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "SBADataObject.h"
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+NS_ASSUME_NONNULL_BEGIN
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@interface SBATrackedDataObject : SBADataObject
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
+/**
+ * Is this data object being tracked with follow-up questions?
+ */
+@property (nonatomic) BOOL tracking;
+
+/**
+ * Frequency of taking/doing (if applicable)
+ */
+@property (nonatomic) NSUInteger frequency;
+
+
+#pragma mark - Subclasses should override the following methods and provide implementation
+
+/**
+ * Whether or not the frequency range should be used. Default = NO
+ */
+@property (nonatomic, readonly) BOOL usesFrequencyRange;
+
+/**
+ * Localized text to display as the full descriptor. Default = identifier.
+ */
+@property (nonatomic, readonly) NSString * text;
+
+/**
+ * Localized shortened text to display when used in a sentence. Default = identifier.
+ */
+@property (nonatomic, readonly) NSString * shortText;
+
+@end
+
+NS_ASSUME_NONNULL_END

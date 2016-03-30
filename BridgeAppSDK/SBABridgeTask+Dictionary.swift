@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBABridgeTask+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,18 +31,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+extension NSDictionary: SBABridgeTask {
+    
+    public var taskIdentifier: String! {
+        return self["taskIdentifier"] as! String
+    }
+    
+    public var schemaIdentifier: String! {
+        return self["schemaIdentifier"] as! String
+    }
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
+    public var schemaRevision: Int! {
+        return self["schemaRevision"] as? Int ?? 1
+    }
+    
+    public var taskSteps: [SBASurveyItem] {
+        guard let steps = self["taskSteps"] as? [AnyObject] else {
+            // return self if there are no taskSteps
+            return [self as SBASurveyItem]
+        }
+        // otherwise, explicitly map the steps to SBASurveyItem
+        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
+    }
+}
