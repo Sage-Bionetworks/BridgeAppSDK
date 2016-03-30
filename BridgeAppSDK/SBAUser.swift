@@ -37,11 +37,11 @@ import ResearchKit
 
 public class SBAUser: NSObject, SBAUserWrapper {
     
-    let lockQueue = dispatch_queue_create("com.sba.UserLockQueue", nil)
+    let lockQueue = dispatch_queue_create("org.sagebase.UserLockQueue", nil)
 
     public func logout() {
         self.sessionToken = nil
-        dispatch_sync(lockQueue) {
+        dispatch_async(lockQueue) {
             self.resetUserDefaults()
             self.resetKeychain()
         }
@@ -111,9 +111,6 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    /**
-     * Consent signature should be stored in keychain.
-     */
     public var consentSignature: SBAConsentSignature? {
         get {
             return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignature
@@ -123,7 +120,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    func getKeychainObject(key: String) -> NSSecureCoding? {
+    private func getKeychainObject(key: String) -> NSSecureCoding? {
         var obj: NSSecureCoding?
         dispatch_sync(lockQueue) {
             var err: NSError?
@@ -135,8 +132,8 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return obj
     }
     
-    func setKeychainObject(object: NSSecureCoding?, key: String) {
-        dispatch_sync(lockQueue) {
+    private func setKeychainObject(object: NSSecureCoding?, key: String) {
+        dispatch_async(lockQueue) {
             do {
                 if let obj = object {
                     try ORKKeychainWrapper.setObject(obj, forKey: key)
@@ -151,7 +148,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    func resetKeychain() {
+    private func resetKeychain() {
         do {
             try ORKKeychainWrapper.resetKeychain()
         }
@@ -230,7 +227,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return NSUserDefaults.standardUserDefaults()
     }
     
-    func syncBoolForKey(key: String) -> Bool {
+    private func syncBoolForKey(key: String) -> Bool {
         var ret: Bool = false
         dispatch_sync(lockQueue) {
             ret = self.userDefaults().boolForKey(key)
@@ -238,13 +235,13 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return ret
     }
     
-    func syncSetBool(value:Bool, forKey key: String) {
-        dispatch_sync(lockQueue) {
+    private func syncSetBool(value:Bool, forKey key: String) {
+        dispatch_async(lockQueue) {
             self.userDefaults().setBool(value, forKey: key)
         }
     }
     
-    func syncIntForKey(key: String) -> Int {
+    private func syncIntForKey(key: String) -> Int {
         var ret: Int = 0
         dispatch_sync(lockQueue) {
             ret = self.userDefaults().integerForKey(key)
@@ -252,13 +249,13 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return ret
     }
     
-    func syncSetInteger(value:Int, forKey key: String) {
-        dispatch_sync(lockQueue) {
+    private func syncSetInteger(value:Int, forKey key: String) {
+        dispatch_async(lockQueue) {
             self.userDefaults().setInteger(value, forKey: key)
         }
     }
     
-    func syncObjectForKey(key: String) -> AnyObject? {
+    private func syncObjectForKey(key: String) -> AnyObject? {
         var ret: AnyObject?
         dispatch_sync(lockQueue) {
             ret = self.userDefaults().objectForKey(key)
@@ -266,8 +263,8 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return ret
     }
     
-    func syncSetObject(value:AnyObject?, forKey key: String) {
-        dispatch_sync(lockQueue) {
+    private func syncSetObject(value:AnyObject?, forKey key: String) {
+        dispatch_async(lockQueue) {
             if let obj = value {
                 self.userDefaults().setObject(obj, forKey: key)
             }
@@ -277,7 +274,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    func resetUserDefaults() {
+    private func resetUserDefaults() {
         let store = userDefaults()
         for (key, _) in store.dictionaryRepresentation() {
             store.removeObjectForKey(key)
