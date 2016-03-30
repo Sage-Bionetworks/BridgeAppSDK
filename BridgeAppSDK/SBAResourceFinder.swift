@@ -91,8 +91,8 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
-    func plistNamed(resouceNamed: String) -> NSDictionary? {
-        if let path = self.pathForResource(resouceNamed, ofType: "plist"),
+    func plistNamed(resourceNamed: String) -> NSDictionary? {
+        if let path = self.pathForResource(resourceNamed, ofType: "plist"),
             let dictionary = NSDictionary(contentsOfFile: path) {
                 return dictionary
         }
