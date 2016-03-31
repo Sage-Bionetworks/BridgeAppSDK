@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  DeprecationTests.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import XCTest
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+/**
+ * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
+ * it is unclear how to update your code.
+ */
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+class DeprecationTests: XCTestCase {
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
+    override func setUp() {
+        super.setUp()
+        // Put setup code here. This method is called before the invocation of each test method in the class.
+    }
+    
+    override func tearDown() {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
+    }
+
+    func testRange() {
+        
+        let string = "abcdefghijklmnopqrstuvwxyz"
+        let range = string.rangeOfString("defg")!
+        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
+        let spliceRange = range.endIndex ..< string.endIndex
+        
+        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
+        let spliceRangeString = string.substringWithRange(spliceRange)
+        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
+        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
+        
+    }
+
+
+}

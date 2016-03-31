@@ -134,20 +134,20 @@ public class ProfileViewController: UITableViewController, HealthClientType {
             Check a health store has been set and a `HKQuantityType` can be
             created with the identifier provided.
         */
-        guard let healthStore = healthStore, quantityType = HKQuantityType.quantityTypeForIdentifier(identifier) else { return }
+//        guard let healthStore = healthStore, quantityType = HKQuantityType.quantityTypeForIdentifier(identifier) else { return }
         
-        // Get the most recent entry from the health store.
-        healthStore.mostRecentQauntitySampleOfType(quantityType) { quantity, _ in
-            guard let quantity = quantity else { return }
-            
-            // Update the cell on the main thread.
-            NSOperationQueue.mainQueue().addOperationWithBlock() {
-                guard let indexPath = self.indexPathForObjectTypeIdentifier(identifier) else { return }
-                guard let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? ProfileStaticTableViewCell else { return }
-                
-                cell.valueLabel.text = "\(quantity)"
-            }
-        }
+//        // Get the most recent entry from the health store.
+//        healthStore.mostRecentQuantitySampleOfType(quantityType) { quantity, _ in
+//            guard let quantity = quantity else { return }
+//            
+//            // Update the cell on the main thread.
+//            NSOperationQueue.mainQueue().addOperationWithBlock() {
+//                guard let indexPath = self.indexPathForObjectTypeIdentifier(identifier) else { return }
+//                guard let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? ProfileStaticTableViewCell else { return }
+//                
+//                cell.valueLabel.text = "\(quantity)"
+//            }
+//        }
     }
     
     // MARK: Convenience

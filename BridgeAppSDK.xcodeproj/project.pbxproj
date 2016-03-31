@@ -11,27 +11,6 @@
 		801040BC1C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		801040CF1C5ACDF800D26E19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161479C31BD6CE8F0099A068 /* AppDelegate.swift */; };
-		801040D01C5ACDF800D26E19 /* ResearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */; };
-		801040D11C5ACDF800D26E19 /* ResearchContainerSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */; };
-		801040D21C5ACDF800D26E19 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */; };
-		801040D31C5ACDF800D26E19 /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */; };
-		801040D41C5ACDF800D26E19 /* DashboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C366B31BE7ADBA0036112D /* DashboardTableViewController.swift */; };
-		801040D51C5ACDF800D26E19 /* PieChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D117571BE8D12000D7F153 /* PieChartDataSource.swift */; };
-		801040D61C5ACDF800D26E19 /* DiscreteGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */; };
-		801040D71C5ACDF800D26E19 /* LineGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */; };
-		801040D81C5ACDF800D26E19 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16147A0E1BD83F700099A068 /* ActivityViewController.swift */; };
-		801040D91C5ACDF800D26E19 /* StudyTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E651BD99DBA00B6D223 /* StudyTasks.swift */; };
-		801040DA1C5ACDF800D26E19 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */; };
-		801040DB1C5ACDF800D26E19 /* ProfileStaticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B701BE2C989007C79C6 /* ProfileStaticTableViewCell.swift */; };
-		801040DC1C5ACDF800D26E19 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D35FC61BEA363F004CBB06 /* ProfileHeaderView.swift */; };
-		801040DD1C5ACDF800D26E19 /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207411BECBA8B0051D9D8 /* WithdrawViewController.swift */; };
-		801040DE1C5ACDF800D26E19 /* HealthDataStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FA92E81BF13D98001E46C0 /* HealthDataStep.swift */; };
-		801040DF1C5ACDF800D26E19 /* HealthDataStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168F25711BE052AD001D2D65 /* HealthDataStepViewController.swift */; };
-		801040E01C5ACDF800D26E19 /* ConsentDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207551BECED750051D9D8 /* ConsentDocument.swift */; };
-		801040E11C5ACDF800D26E19 /* HealthClientType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */; };
-		801040E21C5ACDF800D26E19 /* AnimatableChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2074F1BECCB1A0051D9D8 /* AnimatableChart.swift */; };
-		801040E31C5ACDF800D26E19 /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D35FC81BEA48D3004CBB06 /* HKHealthStore+Queries.swift */; };
 		801040E81C5AD18100D26E19 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 801040E61C5AD18100D26E19 /* Info.plist */; };
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F11C5AD29300D26E19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EE1C5AD29300D26E19 /* Main.storyboard */; };
@@ -43,6 +22,7 @@
 		809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
 		80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */; };
+		FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0C9EF21CAA52F700BA5B44 /* NSDate+Utilities.swift */; };
 		FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */; };
 		FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */; };
@@ -62,9 +42,42 @@
 		FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */; };
 		FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE5515C1C6D267100C9E1AA /* MockORKTask.m */; };
 		FBE551691C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */; };
+		FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */; };
+		FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */; };
 		FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF08E0BF1C9A6A120082D530 /* SBASurveyItem+Dictionary.swift */; };
+		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
+		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
+		FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
+		FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */; };
 		FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
+		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
+		FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */; };
+		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
+		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
+		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
+		FFCB989D1CAC9A3A005078EF /* ResearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */; };
+		FFCB989E1CAC9A3A005078EF /* ResearchContainerSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */; };
+		FFCB989F1CAC9A47005078EF /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */; };
+		FFCB98A01CAC9A47005078EF /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */; };
+		FFCB98A11CAC9A4D005078EF /* DashboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C366B31BE7ADBA0036112D /* DashboardTableViewController.swift */; };
+		FFCB98A21CAC9A4D005078EF /* PieChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D117571BE8D12000D7F153 /* PieChartDataSource.swift */; };
+		FFCB98A31CAC9A4D005078EF /* DiscreteGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */; };
+		FFCB98A41CAC9A4D005078EF /* LineGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */; };
+		FFCB98A51CAC9A53005078EF /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16147A0E1BD83F700099A068 /* ActivityViewController.swift */; };
+		FFCB98A61CAC9A53005078EF /* StudyTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E651BD99DBA00B6D223 /* StudyTasks.swift */; };
+		FFCB98A71CAC9A58005078EF /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */; };
+		FFCB98A81CAC9A58005078EF /* ProfileStaticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B701BE2C989007C79C6 /* ProfileStaticTableViewCell.swift */; };
+		FFCB98A91CAC9A58005078EF /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D35FC61BEA363F004CBB06 /* ProfileHeaderView.swift */; };
+		FFCB98AA1CAC9A5E005078EF /* HealthDataStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FA92E81BF13D98001E46C0 /* HealthDataStep.swift */; };
+		FFCB98AB1CAC9A5E005078EF /* HealthDataStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168F25711BE052AD001D2D65 /* HealthDataStepViewController.swift */; };
+		FFCB98AC1CAC9A5E005078EF /* ConsentDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207551BECED750051D9D8 /* ConsentDocument.swift */; };
+		FFCB98AD1CAC9A63005078EF /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207411BECBA8B0051D9D8 /* WithdrawViewController.swift */; };
+		FFCB98AE1CAC9A6D005078EF /* HealthClientType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */; };
+		FFCB98AF1CAC9A6D005078EF /* AnimatableChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2074F1BECCB1A0051D9D8 /* AnimatableChart.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -186,14 +199,13 @@
 
 /* Begin PBXFileReference section */
 		161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeAppSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		161479C31BD6CE8F0099A068 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		161479CF1BD6CE8F0099A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16147A0E1BD83F700099A068 /* ActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		165A7E651BD99DBA00B6D223 /* StudyTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyTasks.swift; sourceTree = "<group>"; };
 		165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
 		168F25711BE052AD001D2D65 /* HealthDataStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthDataStepViewController.swift; sourceTree = "<group>"; };
-		16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ../BridgeAppSDKSample/ProfileViewController.swift; sourceTree = "<group>"; };
 		16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthClientType.swift; sourceTree = "<group>"; };
 		16BF5B701BE2C989007C79C6 /* ProfileStaticTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStaticTableViewCell.swift; sourceTree = "<group>"; };
 		801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -219,8 +231,8 @@
 		B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscreteGraphDataSource.swift; sourceTree = "<group>"; };
 		B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineGraphDataSource.swift; sourceTree = "<group>"; };
 		B5D35FC61BEA363F004CBB06 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
-		B5D35FC81BEA48D3004CBB06 /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "HKHealthStore+Queries.swift"; path = "BridgeAppSDK/HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
 		B5FA92E81BF13D98001E46C0 /* HealthDataStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthDataStep.swift; sourceTree = "<group>"; };
+		FB0C9EF21CAA52F700BA5B44 /* NSDate+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Utilities.swift"; sourceTree = "<group>"; };
 		FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSection.swift; sourceTree = "<group>"; };
 		FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBABridgeAppSDKDelegate.h; sourceTree = "<group>"; };
 		FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAResourceFinder.swift; sourceTree = "<group>"; };
@@ -242,8 +254,22 @@
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
 		FBE5515C1C6D267100C9E1AA /* MockORKTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockORKTask.m; sourceTree = "<group>"; };
 		FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyNavigationStep.swift; sourceTree = "<group>"; };
+		FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Utilities.swift"; sourceTree = "<group>"; };
+		FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBALocalizationMacroWrapper.h; sourceTree = "<group>"; };
+		FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBALocalizationMacroWrapper.m; sourceTree = "<group>"; };
 		FF08E0BF1C9A6A120082D530 /* SBASurveyItem+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Dictionary.swift"; sourceTree = "<group>"; };
+		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
+		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
+		FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBARootViewControllerProtocol.h; sourceTree = "<group>"; };
+		FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAUserBridgeManager.h; sourceTree = "<group>"; };
+		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
+		FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAUserWrapper+Bridge.swift"; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
+		FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppDelegate.swift; sourceTree = "<group>"; };
+		FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
+		FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeInfo.swift; sourceTree = "<group>"; };
+		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
+		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +309,7 @@
 				801040E51C5AD18100D26E19 /* BridgeAppSDKSample */,
 				161479C21BD6CE8F0099A068 /* BridgeAppSDK */,
 				801040C11C5A843D00D26E19 /* BridgeAppSDKTests */,
+				FBE1A9391CAB212F00F1F584 /* Frameworks */,
 				161479C11BD6CE8F0099A068 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -301,16 +328,11 @@
 			isa = PBXGroup;
 			children = (
 				801040B41C5A843D00D26E19 /* BridgeAppSDK.h */,
-				FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */,
-				161479C31BD6CE8F0099A068 /* AppDelegate.swift */,
-				86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */,
-				B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */,
+				FF9D4C501CA2172C001C293C /* Startup */,
 				16BF5B611BE29643007C79C6 /* Onboarding */,
-				16BF5B651BE29658007C79C6 /* Dashboard */,
 				16BF5B671BE29676007C79C6 /* Activities */,
-				16BF5B641BE2964F007C79C6 /* Profile */,
-				B5C207401BECBA710051D9D8 /* Withdrawal */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
+				FF9D4C8E1CA324F9001C293C /* User */,
 				FBC45E711C758DBA007AA424 /* Library */,
 				FB14FFE51C7686CC00E0D5AF /* Resources */,
 				161479D51BD6CFB00099A068 /* Supporting Files */,
@@ -329,7 +351,6 @@
 		168F25701BE05281001D2D65 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
-				FB6817381C6B00F3006C8FC9 /* Demo */,
 				FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */,
 				FB6BA0941C7CDA6000C9903F /* SBADirectNavigationStep.swift */,
 				FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */,
@@ -346,10 +367,8 @@
 		16BF5B611BE29643007C79C6 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				FB8439141C7274150086E961 /* Demo */,
-				FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */,
-				FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */,
-				FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */,
+				FBF1B6AD1CAAED0F007C1082 /* UI */,
+				FBF1B6A31CAAED02007C1082 /* Consent */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -364,22 +383,9 @@
 			name = Profile;
 			sourceTree = "<group>";
 		};
-		16BF5B651BE29658007C79C6 /* Dashboard */ = {
-			isa = PBXGroup;
-			children = (
-				B5C366B31BE7ADBA0036112D /* DashboardTableViewController.swift */,
-				B5D117571BE8D12000D7F153 /* PieChartDataSource.swift */,
-				B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */,
-				B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */,
-			);
-			name = Dashboard;
-			sourceTree = "<group>";
-		};
 		16BF5B671BE29676007C79C6 /* Activities */ = {
 			isa = PBXGroup;
 			children = (
-				16147A0E1BD83F700099A068 /* ActivityViewController.swift */,
-				165A7E651BD99DBA00B6D223 /* StudyTasks.swift */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -403,6 +409,7 @@
 				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
 				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
 				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
+				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -410,10 +417,18 @@
 		801040E51C5AD18100D26E19 /* BridgeAppSDKSample */ = {
 			isa = PBXGroup;
 			children = (
+				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
+				86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */,
+				B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */,
+				FF6B39331CA1E4DB00BF1413 /* Onboarding */,
+				FF6B39341CA1E5A000BF1413 /* Dashboard */,
+				FF6B39351CA1E61A00BF1413 /* Activities */,
+				16BF5B641BE2964F007C79C6 /* Profile */,
+				FB6817381C6B00F3006C8FC9 /* TasksAndSteps */,
+				B5C207401BECBA710051D9D8 /* Withdrawal */,
+				FF6B39361CA1E74900BF1413 /* Library */,
 				801040F51C5AD57E00D26E19 /* Frameworks */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
-				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
-				80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */,
 			);
 			path = BridgeAppSDKSample;
 			sourceTree = "<group>";
@@ -421,6 +436,7 @@
 		801040F41C5AD55800D26E19 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */,
 				801040F21C5AD2D700D26E19 /* Assets.xcassets */,
 				801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */,
 				801040EE1C5AD29300D26E19 /* Main.storyboard */,
@@ -475,28 +491,21 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		FB6817381C6B00F3006C8FC9 /* Demo */ = {
+		FB6817381C6B00F3006C8FC9 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
 				B5FA92E81BF13D98001E46C0 /* HealthDataStep.swift */,
 				168F25711BE052AD001D2D65 /* HealthDataStepViewController.swift */,
 				B5C207551BECED750051D9D8 /* ConsentDocument.swift */,
 			);
-			name = Demo;
-			sourceTree = "<group>";
-		};
-		FB8439141C7274150086E961 /* Demo */ = {
-			isa = PBXGroup;
-			children = (
-				161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */,
-				165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */,
-			);
-			name = Demo;
+			name = TasksAndSteps;
 			sourceTree = "<group>";
 		};
 		FBAE3CE61C86157E003CEC4A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */,
+				FB0C9EF21CAA52F700BA5B44 /* NSDate+Utilities.swift */,
 				FBAE3CF01C861587003CEC4A /* PDF */,
 			);
 			name = Utilities;
@@ -514,19 +523,17 @@
 		FBC45E6F1C758D87007AA424 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B5D35FC81BEA48D3004CBB06 /* HKHealthStore+Queries.swift */,
+				FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */,
 			);
 			name = Extensions;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		FBC45E711C758DBA007AA424 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				FBAE3CE61C86157E003CEC4A /* Utilities */,
-				FBC45E6F1C758D87007AA424 /* Extensions */,
+				FFC68EED1CA4778D00FF7B07 /* Encryption */,
 				FBC45E721C758DC9007AA424 /* Localization */,
-				16BF5B6B1BE2BD1C007C79C6 /* Protocols */,
+				FBAE3CE61C86157E003CEC4A /* Utilities */,
 			);
 			name = Library;
 			sourceTree = "<group>";
@@ -535,6 +542,8 @@
 			isa = PBXGroup;
 			children = (
 				FBC45E791C759040007AA424 /* Localization.swift */,
+				FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */,
+				FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */,
 			);
 			name = Localization;
 			sourceTree = "<group>";
@@ -546,6 +555,13 @@
 			path = "Test Files";
 			sourceTree = "<group>";
 		};
+		FBE1A9391CAB212F00F1F584 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FBE5515A1C6D265000C9E1AA /* MockObjects */ = {
 			isa = PBXGroup;
 			children = (
@@ -555,6 +571,100 @@
 			name = MockObjects;
 			sourceTree = "<group>";
 		};
+		FBF1B6A31CAAED02007C1082 /* Consent */ = {
+			isa = PBXGroup;
+			children = (
+				FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */,
+				FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */,
+				FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */,
+			);
+			name = Consent;
+			sourceTree = "<group>";
+		};
+		FBF1B6AD1CAAED0F007C1082 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		FF6B39331CA1E4DB00BF1413 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */,
+				165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		FF6B39341CA1E5A000BF1413 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				B5C366B31BE7ADBA0036112D /* DashboardTableViewController.swift */,
+				B5D117571BE8D12000D7F153 /* PieChartDataSource.swift */,
+				B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */,
+				B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */,
+			);
+			name = Dashboard;
+			sourceTree = "<group>";
+		};
+		FF6B39351CA1E61A00BF1413 /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+				16147A0E1BD83F700099A068 /* ActivityViewController.swift */,
+				165A7E651BD99DBA00B6D223 /* StudyTasks.swift */,
+			);
+			name = Activities;
+			sourceTree = "<group>";
+		};
+		FF6B39361CA1E74900BF1413 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				FBC45E6F1C758D87007AA424 /* Extensions */,
+				16BF5B6B1BE2BD1C007C79C6 /* Protocols */,
+			);
+			name = Library;
+			sourceTree = "<group>";
+		};
+		FF9D4C501CA2172C001C293C /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */,
+				FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */,
+				FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */,
+				FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */,
+			);
+			name = Startup;
+			sourceTree = "<group>";
+		};
+		FF9D4C8E1CA324F9001C293C /* User */ = {
+			isa = PBXGroup;
+			children = (
+				FF9D4C8F1CA3250B001C293C /* Data Model */,
+				FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */,
+				FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */,
+				FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */,
+			);
+			name = User;
+			sourceTree = "<group>";
+		};
+		FF9D4C8F1CA3250B001C293C /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */,
+				FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */,
+				FF9D4C901CA32536001C293C /* SBAUser.swift */,
+			);
+			name = "Data Model";
+			sourceTree = "<group>";
+		};
+		FFC68EED1CA4778D00FF7B07 /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Encryption;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -562,7 +672,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */,
+				FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */,
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
+				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
 			);
@@ -767,7 +880,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFCB98A11CAC9A4D005078EF /* DashboardTableViewController.swift in Sources */,
+				FFCB98AC1CAC9A5E005078EF /* ConsentDocument.swift in Sources */,
+				FFCB989E1CAC9A3A005078EF /* ResearchContainerSegue.swift in Sources */,
+				FFCB98AB1CAC9A5E005078EF /* HealthDataStepViewController.swift in Sources */,
+				FFCB98AE1CAC9A6D005078EF /* HealthClientType.swift in Sources */,
+				FFCB98A31CAC9A4D005078EF /* DiscreteGraphDataSource.swift in Sources */,
+				FFCB98A41CAC9A4D005078EF /* LineGraphDataSource.swift in Sources */,
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
+				FFCB989F1CAC9A47005078EF /* OnboardingViewController.swift in Sources */,
+				FFCB989D1CAC9A3A005078EF /* ResearchContainerViewController.swift in Sources */,
+				FFCB98AF1CAC9A6D005078EF /* AnimatableChart.swift in Sources */,
+				FFCB98A91CAC9A58005078EF /* ProfileHeaderView.swift in Sources */,
+				FFCB98A01CAC9A47005078EF /* IntroductionViewController.swift in Sources */,
+				FFCB98A21CAC9A4D005078EF /* PieChartDataSource.swift in Sources */,
+				FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */,
+				FFCB98AA1CAC9A5E005078EF /* HealthDataStep.swift in Sources */,
+				FFCB98A81CAC9A58005078EF /* ProfileStaticTableViewCell.swift in Sources */,
+				FFCB98A71CAC9A58005078EF /* ProfileViewController.swift in Sources */,
+				FFCB98AD1CAC9A63005078EF /* WithdrawViewController.swift in Sources */,
+				FFCB98A61CAC9A53005078EF /* StudyTasks.swift in Sources */,
+				FFCB98A51CAC9A53005078EF /* ActivityViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -776,41 +909,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */,
-				801040D91C5ACDF800D26E19 /* StudyTasks.swift in Sources */,
+				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
-				801040E01C5ACDF800D26E19 /* ConsentDocument.swift in Sources */,
+				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
 				FBC45E7A1C759040007AA424 /* Localization.swift in Sources */,
-				801040D61C5ACDF800D26E19 /* DiscreteGraphDataSource.swift in Sources */,
-				801040E11C5ACDF800D26E19 /* HealthClientType.swift in Sources */,
-				801040E31C5ACDF800D26E19 /* HKHealthStore+Queries.swift in Sources */,
-				801040DF1C5ACDF800D26E19 /* HealthDataStepViewController.swift in Sources */,
-				801040D11C5ACDF800D26E19 /* ResearchContainerSegue.swift in Sources */,
-				801040D31C5ACDF800D26E19 /* IntroductionViewController.swift in Sources */,
 				FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */,
 				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
+				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
-				801040DD1C5ACDF800D26E19 /* WithdrawViewController.swift in Sources */,
-				801040D81C5ACDF800D26E19 /* ActivityViewController.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
 				FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */,
-				801040CF1C5ACDF800D26E19 /* AppDelegate.swift in Sources */,
 				FB14FFE91C769F9E00E0D5AF /* SBAConsentSharingOptions.swift in Sources */,
-				801040DB1C5ACDF800D26E19 /* ProfileStaticTableViewCell.swift in Sources */,
 				FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */,
-				801040DA1C5ACDF800D26E19 /* ProfileViewController.swift in Sources */,
+				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
+				FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
-				801040E21C5ACDF800D26E19 /* AnimatableChart.swift in Sources */,
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
-				801040D51C5ACDF800D26E19 /* PieChartDataSource.swift in Sources */,
-				801040D01C5ACDF800D26E19 /* ResearchContainerViewController.swift in Sources */,
-				801040DE1C5ACDF800D26E19 /* HealthDataStep.swift in Sources */,
+				FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
+				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
+				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
+				FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */,
 				FBE551691C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift in Sources */,
-				801040D41C5ACDF800D26E19 /* DashboardTableViewController.swift in Sources */,
-				801040DC1C5ACDF800D26E19 /* ProfileHeaderView.swift in Sources */,
+				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
-				801040D71C5ACDF800D26E19 /* LineGraphDataSource.swift in Sources */,
-				801040D21C5ACDF800D26E19 /* OnboardingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,6 +944,7 @@
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */,
 				FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */,
+				FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

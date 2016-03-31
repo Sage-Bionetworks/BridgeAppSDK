@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAUserBridgeManager.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,43 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+@import BridgeSDK;
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+NS_ASSUME_NONNULL_BEGIN
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+/*!
+ *  Typedef for SBBNetworkManager data methods' completion block.
+ *
+ *  @param task           The NSURLSessionDataTask.
+ *  @param responseObject The JSON object from the response, if any.
+ *  @param error          Any error that occurred.
+ */
+typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject, NSError * _Nullable error);
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
+@interface SBAUserBridgeManager : NSObject
+
++ (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
+
++ (void)signUp:(NSString *)email
+      password:(NSString *)password
+    externalId:(NSString * _Nullable)externalId
+    dataGroups:(NSArray<NSString *> * _Nullable)dataGroups
+    completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
++ (void)signIn:(NSString *)username
+      password:(NSString *)password
+    completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
++ (void)sendUserConsented:(NSString *)name
+                birthDate:(NSDate *)birthDate
+             consentImage:(UIImage * _Nullable)consentImage
+             sharingScope:(SBBUserDataSharingScope)sharingScope
+        subpopulationGuid:(NSString *)subpopGuid
+               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
++ (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
+@end
+
+NS_ASSUME_NONNULL_END

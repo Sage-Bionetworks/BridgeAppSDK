@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAConsentSignature.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+public protocol SBAConsentSignature : class, NSSecureCoding {
+    
+    /**
+     * Age verification stored with consent
+     */
+    var signatureBirthdate: NSDate? { get set }
+    
+    /**
+     * Name used to sign consent
+     */
+    var signatureName: String? { get set }
+    
+    /**
+     * UIImage representation of consent signature
+     */
+    var signatureImage: UIImage?  { get set }
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>

@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  UIAlertController+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,47 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import UIKit
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+/**
+ * Utility for presenting alerts
+ */
+public protocol SBAAlertPresenter: class {
+    func presentViewController(viewController: UIViewController,
+                               animated: Bool,
+                               completion: (() -> Void)?)
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+extension UIViewController: SBAAlertPresenter {
+}
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
+public extension SBAAlertPresenter {
+    
+    public func showAlertWithOk(title: String?, message: String, actionHandler: ((UIAlertAction) -> Void)?) {
+        
+        let okAction = UIAlertAction(title:Localization.buttonOK(), style: .Default, handler: actionHandler)
+        showAlertWithActions(title, message: message, animated: true, actions: [okAction])
+    }
+    
+    public func showAlertWithYesNo(title: String?, message: String, actionHandler: ((Bool) -> Void)) {
+        
+        let noAction = UIAlertAction(title: Localization.buttonNo(), style: .Default, handler: { _ in
+            actionHandler(false)
+        })
+        let yesAction = UIAlertAction(title: Localization.buttonYes(), style: .Default, handler: { _ in
+            actionHandler(true)
+        })
+
+        showAlertWithActions(title, message: message, animated: true, actions: [noAction, yesAction])
+    }
+    
+    public func showAlertWithActions(title: String?, message: String, animated: Bool, actions: [UIAlertAction]) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        for action in actions {
+            alert.addAction(action)
+        }
+        self.presentViewController(alert, animated: animated, completion: nil)
+    }
+}
+
+

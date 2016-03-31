@@ -35,6 +35,8 @@ import UIKit
 
 class SBAResourceFinder: NSObject {
     
+    static let sharedResourceFinder = SBAResourceFinder()
+    
     func sharedResourceDelegate() -> SBABridgeAppSDKDelegate? {
         return UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate
     }
@@ -85,6 +87,14 @@ class SBAResourceFinder: NSObject {
         if let data = self.dataNamed(resourceNamed, ofType: "json"),
             let json = try? NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers){
                 return json as? NSDictionary
+        }
+        return nil
+    }
+    
+    func plistNamed(resourceNamed: String) -> NSDictionary? {
+        if let path = self.pathForResource(resourceNamed, ofType: "plist"),
+            let dictionary = NSDictionary(contentsOfFile: path) {
+                return dictionary
         }
         return nil
     }

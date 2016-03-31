@@ -37,8 +37,11 @@
 #import <UIKit/UIKit.h>
 
 @protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
-- (NSBundle*)resourceBundle;
-- (NSString*)pathForResource:(NSString*)resourceName ofType:(NSString*)resourceType;
+
+// Resource handling
+- (NSBundle * _Nonnull)resourceBundle;
+- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
+
 @end
 
 #endif /* BridgeAppSDKDelegate_h */
