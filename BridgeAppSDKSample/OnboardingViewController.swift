@@ -13,7 +13,6 @@ other materials provided with the distribution.
 
 3.  Neither the name of the copyright holder(s) nor the names of any contributors
 may be used to endorse or promote products derived from this software without
- @IBOutlet weak var registrationCodeTextField: UITextField!
 specific prior written permission. No license is granted to the trademarks of
 the copyright holders even if such marks are included in this software.
 
