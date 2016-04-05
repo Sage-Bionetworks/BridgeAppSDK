@@ -65,6 +65,12 @@
 		FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6411171CB341EC007FB9E1 /* SBATrackedDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6411191CB34766007FB9E1 /* SBAMedication.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF64111C1CB34766007FB9E1 /* SBAMedication.m in Sources */ = {isa = PBXBuildFile; fileRef = FF64111A1CB34766007FB9E1 /* SBAMedication.m */; };
+		FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6411371CB436B6007FB9E1 /* SBAClassTypeMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF64113A1CB436B6007FB9E1 /* SBAClassTypeMap.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6411381CB436B6007FB9E1 /* SBAClassTypeMap.m */; };
+		FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */; };
+		FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */; };
+		FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */; };
+		FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF6484161CB617790055B9E7 /* MedicationTracking.json */; };
 		FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
@@ -292,6 +298,12 @@
 		FF6411171CB341EC007FB9E1 /* SBATrackedDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATrackedDataObject.h; sourceTree = "<group>"; };
 		FF6411191CB34766007FB9E1 /* SBAMedication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAMedication.h; sourceTree = "<group>"; };
 		FF64111A1CB34766007FB9E1 /* SBAMedication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAMedication.m; sourceTree = "<group>"; };
+		FF6411371CB436B6007FB9E1 /* SBAClassTypeMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAClassTypeMap.h; sourceTree = "<group>"; };
+		FF6411381CB436B6007FB9E1 /* SBAClassTypeMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAClassTypeMap.m; sourceTree = "<group>"; };
+		FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataObjectTests.swift; sourceTree = "<group>"; };
+		FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
+		FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
+		FF6484161CB617790055B9E7 /* MedicationTracking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MedicationTracking.json; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppDelegate.swift; sourceTree = "<group>"; };
 		FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
@@ -375,6 +387,7 @@
 			isa = PBXGroup;
 			children = (
 				161479CF1BD6CE8F0099A068 /* Info.plist */,
+				FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -432,10 +445,12 @@
 				801040C41C5A843D00D26E19 /* Info.plist */,
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
 				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
+				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
 				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
 				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
 				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
 				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
+				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -532,6 +547,8 @@
 			children = (
 				FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */,
 				FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */,
+				FF6411371CB436B6007FB9E1 /* SBAClassTypeMap.h */,
+				FF6411381CB436B6007FB9E1 /* SBAClassTypeMap.m */,
 				FBAD11571CADB2F0005611D0 /* SBADataObject.h */,
 				FBAD11581CADB2F0005611D0 /* SBADataObject.m */,
 				FBAD11661CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift */,
@@ -593,6 +610,7 @@
 		FBC45E7B1C75B069007AA424 /* Test Files */ = {
 			isa = PBXGroup;
 			children = (
+				FF6484161CB617790055B9E7 /* MedicationTracking.json */,
 			);
 			path = "Test Files";
 			sourceTree = "<group>";
@@ -756,6 +774,7 @@
 				FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */,
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */,
+				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
@@ -944,6 +963,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,6 +971,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,6 +1014,7 @@
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FBAD11671CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
+				FF64113A1CB436B6007FB9E1 /* SBAClassTypeMap.m in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
 				FBC45E7A1C759040007AA424 /* Localization.swift in Sources */,
 				FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */,
@@ -1032,9 +1054,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */,
+				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */,
+				FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */,
 				FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */,
 				FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */,
 			);

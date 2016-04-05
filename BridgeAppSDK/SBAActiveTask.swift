@@ -68,7 +68,7 @@ extension ORKPredefinedTaskHandOption {
     }
 }
 
-public protocol SBAActiveTask: SBASurveyItem {
+public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskType: SBAActiveTaskType { get }
     var intendedUseDescription: String? { get }
     var taskOptions: [String : AnyObject]? { get }
@@ -123,7 +123,7 @@ extension SBAActiveTask {
         let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
         return ORKOrderedTask.twoFingerTappingIntervalTaskWithIdentifier(
-            self.identifier,
+            self.schemaIdentifier,
             intendedUseDescription:self.intendedUseDescription,
             duration:duration,
             options:options,
@@ -145,7 +145,7 @@ extension SBAActiveTask {
         let customTargetPluralName: String? = taskOptions?["customTargetPluralName"] as? String
         let requireReversal: Bool = taskOptions?["requireReversal"] as? Bool ?? false
         
-        return ORKOrderedTask.spatialSpanMemoryTaskWithIdentifier(self.identifier,
+        return ORKOrderedTask.spatialSpanMemoryTaskWithIdentifier(self.schemaIdentifier,
                                                                   intendedUseDescription: self.intendedUseDescription,
                                                                   initialSpan: initialSpan,
                                                                   minimumSpan: minimumSpan,
@@ -166,7 +166,7 @@ extension SBAActiveTask {
         let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
         let recordingSettings: [String: AnyObject]? = taskOptions?["recordingSettings"] as? [String: AnyObject]
         
-        return ORKOrderedTask.audioTaskWithIdentifier(self.identifier,
+        return ORKOrderedTask.audioTaskWithIdentifier(self.schemaIdentifier,
                                                       intendedUseDescription: self.intendedUseDescription,
                                                       speechInstruction: speechInstruction,
                                                       shortSpeechInstruction: shortSpeechInstruction,
@@ -181,7 +181,7 @@ extension SBAActiveTask {
         let walkDuration: NSTimeInterval = taskOptions?["walkDuration"] as? NSTimeInterval ?? 30.0
         let restDuration: NSTimeInterval = taskOptions?["restDuration"] as? NSTimeInterval ?? 30.0
         
-        return ORKOrderedTask.walkBackAndForthTaskWithIdentifier(self.identifier,
+        return ORKOrderedTask.walkBackAndForthTaskWithIdentifier(self.schemaIdentifier,
                                                                  intendedUseDescription: self.intendedUseDescription,
                                                                  walkDuration: walkDuration,
                                                                  restDuration: restDuration,
@@ -194,7 +194,7 @@ extension SBAActiveTask {
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
         let excludeOptions = ORKTremorActiveTaskOption(rawValue: (taskOptions?["excludeOptions"] as? UInt) ?? 0)
         
-        return ORKOrderedTask.tremorTestTaskWithIdentifier(self.identifier,
+        return ORKOrderedTask.tremorTestTaskWithIdentifier(self.schemaIdentifier,
                                                            intendedUseDescription: self.intendedUseDescription,
                                                            activeStepDuration: duration,
                                                            activeTaskOptions: excludeOptions,

@@ -36,8 +36,9 @@ import ResearchKit
 public protocol SBABridgeTask: class {
     var taskIdentifier: String! { get }
     var schemaIdentifier: String! { get }
-    var schemaRevision: Int! { get }
-    var taskSteps: [SBASurveyItem] { get }
+    var schemaRevision: NSNumber! { get }
+    var taskSteps: [SBAStepTransformer] { get }
+    var insertSteps: [SBAStepTransformer]? { get }
 }
 
 public extension SBABridgeTask {
@@ -49,44 +50,41 @@ public extension SBABridgeTask {
     public func createORKTask(factory factory: SBASurveyFactory) -> ORKTask? {
         let steps = self.taskSteps
         guard steps.count > 0 else { return nil }
-        guard steps.count > 1 else {
-            // If there is only 1 step then do not need to wrap subtasks in a subtask step
-            let item = steps.first!
-            switch item.surveyItemType {
-            case .ActiveTask  :
-                return factory.createTaskWithActiveTask(item as! SBAActiveTask, taskOptions: .None)
-            default:
-                let step = factory.createSurveyStep(item, isSubtaskStep: false)
-                return ORKOrderedTask(identifier: self.taskIdentifier, steps: [step])
-            }
-        }
-        
+
         let lastIndex = steps.count - 1
-        let subtaskSteps: [ORKStep] = steps.enumerate().map(){ (index, item) in
-            
-            switch item.surveyItemType {
-                
-            case .ActiveTask  :
-                let task = item as! SBAActiveTask
-                let taskOptions: ORKPredefinedTaskOption = index==lastIndex ? .None : .ExcludeConclusion
-                if let subtask = factory.createTaskWithActiveTask(task, taskOptions:taskOptions) {
-                    if let orderedTask = subtask as? ORKOrderedTask {
-                        return SBASubtaskStep(identifier: orderedTask.identifier, steps: orderedTask.steps)
-                    }
-                    else {
-                        return SBASubtaskStep(subtask: subtask)
-                    }
-                }
-                else {
-                    return SBASubtaskStep(identifier: task.identifier, steps: nil)
-                }
-                
-            default:
-                return factory.createSurveyStep(item, isSubtaskStep: false)
-            }
+        var subtaskSteps: [ORKStep] = steps.enumerate().map(){ (index, item) in
+            return item.transformToStep(factory, isLastStep:(lastIndex == index))
         }
         
-        return SBANavigableOrderedTask(identifier: self.taskIdentifier, steps: subtaskSteps)
+        // Map the insert steps
+        if let insertSteps = self.insertSteps?.enumerate().map({ (index, item) in
+            return item.transformToStep(factory, isLastStep: false)
+        }) where insertSteps.count > 0 {
+            
+            var introStep: ORKStep!
+            if let subtaskStep = subtaskSteps.first as? SBASubtaskStep,
+                let orderedTask = subtaskStep.subtask as? ORKOrderedTask {
+                // Pull out the first step from the ordered task and use that as the intro step
+                introStep = orderedTask.removeStepAtIndex(0)
+            }
+            else {
+                // If the first step isn't of the subtask step type with an ordered task
+                // then use the first step as the intro step
+                introStep = subtaskSteps.removeAtIndex(0)
+            }
+            
+            // Insert the steps inside
+            subtaskSteps = [introStep] + insertSteps + subtaskSteps
+        }
+
+        if let subtaskStep = subtaskSteps.first as? SBASubtaskStep where subtaskSteps.count == 1 {
+            // If there is only 1 step then do not need to wrap subtasks in a subtask step
+            return subtaskStep.subtask
+        }
+        else {
+            // Create a navigable ordered task for the steps
+            return SBANavigableOrderedTask(identifier: self.taskIdentifier, steps: subtaskSteps)
+        }
     }
     
 }

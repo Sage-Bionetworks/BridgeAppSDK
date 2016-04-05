@@ -33,6 +33,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SBAJSONObject.h"
+#import "SBAClassTypeMap.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -81,6 +82,16 @@ NS_ASSUME_NONNULL_BEGIN
  * Mapping name for the type of object class. By Default, this is the coderForClass.
  */
 + (NSString *)classType;
+
+/**
+ * String for the class type key for the dictionary representation of this object. By default, returns "classType".
+ */
++ (NSString *)classTypeKey;
+
+/**
+ * Overrideable method for mapping a setter to a different class type
+ */
+- (id _Nullable)mapValue:(id _Nullable)value forKey:(NSString *)key withClassType:(NSString * _Nullable)classType;
 
 /**
  * Dictionary representation for this data object

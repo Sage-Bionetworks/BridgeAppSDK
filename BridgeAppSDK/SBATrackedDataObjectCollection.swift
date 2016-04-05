@@ -33,36 +33,57 @@
 
 import ResearchKit
 
-public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask {
+public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask, SBAStepTransformer {
+    
+    // MARK: SBAStepTransformer
+    
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+        // TODO: implement
+        return ORKStep(identifier: self.identifier)
+    }
+
+    // MARK: SBABridgeTask
     
     let taskIdentifierKey = "taskIdentifier"
-    public var taskIdentifier: String!
+    public dynamic var taskIdentifier: String!
     
     let schemaIdentifierKey = "schemaIdentifier"
-    public var schemaIdentifier: String! {
-        return self.identifier
-    }
+    public dynamic var schemaIdentifier: String!
     
     let schemaRevisionKey = "schemaRevision"
-    public var schemaRevision: Int!
+    public dynamic var schemaRevision: NSNumber!
     
-    let trackedItemsKey = "items"
-    public var trackedItems: [SBATrackedDataObject] = {
-        return []   // init with empty if needed
-    }()
-    
-    let surveyStepsKey = "steps"
-    public var steps: [protocol <NSCoding, NSCopying, NSObjectProtocol, SBASurveyItem> ] = {
-        return []   // init with empty if needed
-    }()
-    
-    public var taskSteps: [SBASurveyItem] {
-        return self.steps.map({ $0 as SBASurveyItem })
+    public var taskSteps: [SBAStepTransformer] {
+        return [self]
     }
     
-    // Add tracking and frequency to the dictionary keys
+    public var insertSteps: [SBAStepTransformer]? {
+        return nil
+    }
+    
+    // MARK: SBADataObject overrides
+    
+    let trackedItemsKey = "items"
+    public dynamic var trackedItems: [SBATrackedDataObject] = {
+        return []   // init with empty if needed
+    }()
+    
+    let itemsClassTypeKey = "itemsClassType"
+    public dynamic var itemsClassType: String?
+    
+    let stepsKey = "steps"
+    public dynamic var steps: [AnyObject] = {
+        return []   // init with empty if needed
+    }()
+    
+    let identifierKey = "identifier"
+    override public func defaultIdentifierIfNil() -> String {
+        return self.schemaIdentifier
+    }
+    
     override public func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys() + [taskIdentifierKey, schemaIdentifierKey, schemaRevisionKey, trackedItemsKey, surveyStepsKey]
+        return [taskIdentifierKey, schemaIdentifierKey, schemaRevisionKey, itemsClassTypeKey, trackedItemsKey, stepsKey] +
+            super.dictionaryRepresentationKeys().filter({ $0 != identifierKey })
     }
     
     public override func valueForKey(key: String) -> AnyObject? {
@@ -76,33 +97,25 @@ public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask {
 
     override public func setValue(value: AnyObject?, forKey key: String) {
         
-        // If this is the trackedItems or surveySteps, then need to ensure mapped to appropriate
-        // class type, otherwise, just fall through to super
-        guard let array = value as? [AnyObject] else {
-            super.setValue(value, forKey: key)
-            return
-        }
-
         switch key {
             
         case trackedItemsKey:
-            self.trackedItems = array.map({ (obj) -> SBATrackedDataObject in
-                if let dataObject = obj as? SBATrackedDataObject {
-                    return dataObject
-                }
-                else if let dictionary = obj as? [String : AnyObject] {
-                    return SBATrackedDataObject(dictionaryRepresentation: dictionary)
-                }
-                else {
-                    return SBATrackedDataObject(identifier: NSUUID().UUIDString)
-                }
-            })
-        
-        case surveyStepsKey:
-            self.steps = array.map({
-                $0 as? protocol <NSCoding, NSCopying, NSObjectProtocol, SBASurveyItem>
-                    ?? NSDictionary()
-            })
+            if let array = value as? [AnyObject] {
+                self.trackedItems = array.map({ (obj) -> SBATrackedDataObject in
+                    if let dataObject = obj as? SBATrackedDataObject {
+                        return dataObject
+                    }
+                    else if let mappedObject = self.mapValue(obj, forKey: key, withClassType: self.itemsClassType) as? SBATrackedDataObject {
+                        return mappedObject;
+                    }
+                    else {
+                        return SBATrackedDataObject(identifier: NSUUID().UUIDString)
+                    }
+                })
+            }
+            else {
+                self.trackedItems = []
+            }
             
         default:
             super.setValue(value, forKey: key)

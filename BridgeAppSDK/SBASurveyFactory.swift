@@ -108,8 +108,16 @@ public class SBASurveyFactory : NSObject {
             return step
         }
     }
+    
+    func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep {
+        return self.createSurveyStep(inputItem, isSubtaskStep: nil, isLastStep: nil)
+    }
 
-    func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool) -> ORKStep {
+    func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?) -> ORKStep {
+        return self.createSurveyStep(inputItem, isSubtaskStep: isSubtaskStep, isLastStep: nil)
+    }
+    
+    func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep {
         switch (inputItem.surveyItemType) {
         case .Instruction, .Completion:
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
@@ -121,7 +129,7 @@ public class SBASurveyFactory : NSObject {
             } else { break }
         case .Form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createFormStep(isSubtaskStep)
+                return form.createFormStep(isSubtaskStep ?? false)
             } else { break }
         default:
             break;

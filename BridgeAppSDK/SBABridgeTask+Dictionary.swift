@@ -43,16 +43,25 @@ extension NSDictionary: SBABridgeTask {
         return self["schemaIdentifier"] as! String
     }
 
-    public var schemaRevision: Int! {
-        return self["schemaRevision"] as? Int ?? 1
+    public var schemaRevision: NSNumber! {
+        return self["schemaRevision"] as? NSNumber ?? NSNumber(integer:1)
     }
     
-    public var taskSteps: [SBASurveyItem] {
+    public var taskSteps: [SBAStepTransformer] {
         guard let steps = self["taskSteps"] as? [AnyObject] else {
             // return self if there are no taskSteps
-            return [self as SBASurveyItem]
+            return [self as SBAStepTransformer]
         }
         // otherwise, explicitly map the steps to SBASurveyItem
-        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
+        return steps.map({ return ($0 as? SBAStepTransformer) ?? NSDictionary() })
+    }
+    
+    public var insertSteps: [SBAStepTransformer]? {
+        guard let steps = self["insertSteps"] as? [AnyObject] else {
+            // return self if there are no taskSteps
+            return nil
+        }
+        // otherwise, explicitly map the steps to SBASurveyItem
+        return steps.map({ return ($0 as? SBAStepTransformer) ?? NSDictionary() })
     }
 }

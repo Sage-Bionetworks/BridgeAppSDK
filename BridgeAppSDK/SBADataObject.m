@@ -58,7 +58,12 @@
 
 - (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary {
     if ((self = [super init])) {
-        [self setValuesForKeysWithDictionary:dictionary];
+        for (NSString *key in [self dictionaryRepresentationKeys]) {
+            id value = dictionary[key];
+            if (value && ![value isKindOfClass:[NSNull class]]) {
+                [self setValue:value forKey:key];
+            }
+        }
         if (_identifier == nil) {
             _identifier = [self defaultIdentifierIfNil];
         }
@@ -66,9 +71,55 @@
     return self;
 }
 
+- (void)setValue:(id)value forKey:(NSString *)key {
+    [super setValue:[self mapValue:value forKey:key withClassType:nil]
+             forKey:key];
+}
+
+- (id)mapValue:(id)value forKey:(NSString *)key withClassType:(NSString *)classType {
+    if ([value isKindOfClass:[NSDictionary class]]) {
+        return [self objectWithDictionaryRepresentation:(NSDictionary*)value classType:classType];
+    }
+    else if ([value isKindOfClass:[NSArray class]] && [[value firstObject] isKindOfClass:[NSDictionary class]]) {
+        NSMutableArray *mappedValues = [NSMutableArray new];
+        for (id obj in (NSArray*)value) {
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [mappedValues addObject:[self objectWithDictionaryRepresentation:(NSDictionary*)obj classType:classType]];
+            }
+            else {
+                [mappedValues addObject:obj];
+            }
+        }
+        if ([value isKindOfClass:[NSMutableArray class]]) {
+            return mappedValues;
+        }
+        else {
+            return [mappedValues copy];
+        }
+    }
+    return value;
+}
+
+- (id)objectWithDictionaryRepresentation:(NSDictionary*)dictionary classType:(NSString*)aClassType {
+    
+    // SBBObjects use type for the class type so check both the property key for this class and the SBBObject property key
+    NSString *classType = aClassType ?: dictionary[[[self class] classTypeKey]] ?: dictionary[@"type"];
+    if (classType == nil) {
+        return dictionary;
+    }
+    
+    // Look to see if the class type map can map this dictionary to an object type
+    id mappedValue = [[SBAClassTypeMap sharedMap] objectWithDictionaryRepresentation:dictionary classType:classType];
+    if (mappedValue == nil) {
+        return dictionary;
+    }
+    
+    return mappedValue;
+}
+
 - (NSString *)classType {
     if (_classType == nil) {
-        _classType = [self classType];
+        _classType = [[self class] classType];
     }
     return _classType;
 }
@@ -77,13 +128,17 @@
     return NSStringFromClass([self classForCoder]);
 }
 
++ (NSString *)classTypeKey {
+    return NSStringFromSelector(@selector(classType));
+}
+
 - (NSString *)defaultIdentifierIfNil {
     return [[NSUUID UUID] UUIDString];
 }
 
 - (NSArray <NSString *> *)dictionaryRepresentationKeys {
     return @[NSStringFromSelector(@selector(identifier)),
-             NSStringFromSelector(@selector(classType))];
+             [[self class] classTypeKey]];
 }
 
 - (NSDictionary *)dictionaryRepresentation {

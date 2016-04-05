@@ -33,6 +33,25 @@
 
 import ResearchKit
 
+
+extension NSDictionary: SBAStepTransformer {
+    
+    // Because an NSDictionary could be used to create both an SBASurveyItem *and* an SBAActiveTask
+    // need to look to see which is the more likely form to result in a valid result.
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+        if (self.surveyItemType.isNilType()) {
+            let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion
+            guard let subtask = factory.createTaskWithActiveTask(self, taskOptions:taskOptions) else {
+                return ORKStep(identifier: self.schemaIdentifier)
+            }
+            return SBASubtaskStep(subtask: subtask)
+        }
+        else {
+            return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
+        }
+    }
+}
+
 extension NSDictionary: SBASurveyItem {
     
     public var identifier: String! {
@@ -42,9 +61,6 @@ extension NSDictionary: SBASurveyItem {
     public var surveyItemType: SBASurveyItemType {
         if let type = self["type"] as? String {
             return SBASurveyItemType(rawValue: type)
-        }
-        else if self.taskTypeName != nil {
-            return .ActiveTask
         }
         return .Custom(nil)
     }
@@ -64,6 +80,7 @@ extension NSDictionary: SBASurveyItem {
     public func createCustomStep() -> ORKStep {
         return self.createInstructionStep()
     }
+
 }
 
 extension NSDictionary: SBAInstructionStepSurveyItem {
