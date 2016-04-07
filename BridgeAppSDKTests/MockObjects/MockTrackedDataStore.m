@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  MockTrackedDataStore.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,19 +31,37 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+#import "MockTrackedDataStore.h"
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@implementation MockTrackedDataStore
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
+- (instancetype)init {
+    return [self initWithUserDefaultsWithSuiteName:[[NSUUID UUID] UUIDString]];
+}
+
+- (NSArray *)momentInDayResultDefaultIdMap {
+    return @[@[@"momentInDay", @"momentInDayFormat"],
+             @[@"medicationActivityTiming", @"medicationActivityTiming"]];
+}
+
+- (NSDate *)lastCompletionDate {
+    // Override the drop thru to look at the current user
+    return self.mockLastCompletionDate;
+}
+
+- (void)setLastCompletionDate:(NSDate *)lastCompletionDate {
+    self.mockLastCompletionDate = lastCompletionDate;
+}
+
+- (void)commitChanges {
+    self.commitChanges_called = YES;
+    [super commitChanges];
+}
+
+- (void)reset {
+    self.reset_called = YES;
+    [super reset];
+}
+
+@end

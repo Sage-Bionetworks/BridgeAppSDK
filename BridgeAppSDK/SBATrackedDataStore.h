@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBATrackedDataStore.h
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2016, Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,19 +31,41 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <ResearchKit/ResearchKit.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+NS_ASSUME_NONNULL_BEGIN
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@class SBATrackedDataObject;
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
+@interface SBATrackedDataStore : NSObject
+
++ (instancetype)defaultStore;
+
+@property (nonatomic, copy) NSDate * _Nullable lastCompletionDate;
+@property (nonatomic, copy) NSArray <ORKStepResult *> * _Nullable momentInDayResult;
+@property (nonatomic, copy) NSDate * _Nullable lastTrackingSurveyDate;
+@property (nonatomic, copy) NSArray <SBATrackedDataObject*> * _Nullable selectedItems;
+@property (nonatomic) BOOL skippedSelectionSurveyQuestion;
+
+@property (nonatomic, readonly) NSArray <NSString*> * _Nullable trackedItems;
+@property (nonatomic, readonly) BOOL hasNoTrackedItems;
+@property (nonatomic, readonly) BOOL hasSelectedOrSkipped;
+@property (nonatomic, readonly) BOOL shouldIncludeChangedQuestion;
+@property (nonatomic, readonly) BOOL shouldIncludeMomentInDayStep;
+@property (nonatomic, readonly) BOOL hasChanges;
+
+@property (nonatomic, readonly) NSUserDefaults *storedDefaults;
+@property (nonatomic, copy, readonly) NSArray *momentInDayResultDefaultIdMap;
+
+/**
+ * Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
+ */
+- (instancetype)initWithUserDefaultsWithSuiteName:(NSString * _Nullable)suiteName;
+
+- (void)commitChanges;
+- (void)reset;
+
+@end
+
+NS_ASSUME_NONNULL_END
