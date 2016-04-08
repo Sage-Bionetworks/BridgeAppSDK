@@ -1,5 +1,5 @@
 //
-//  SBAMedication.h
+//  SequenceType+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,34 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBATrackedDataObject.h"
+import Foundation
 
-@interface SBAMedication : SBATrackedDataObject
+extension SequenceType {
+    
+    /**
+    Returns an `Array` containing the results of mapping and filtered `transform`
+    over `self`.
+    */
+    @warn_unused_result
+    public func mapAndFilter<T>(@noescape transform: (Self.Generator.Element) throws -> T?) rethrows -> [T] {
+        var result = [T]()
+        for element in self {
+            if let t = try transform(element) {
+                result += [t]
+            }
+        }
+        return result
+    }
+    
+    public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
+        for element in self {
+            if let obj = element as? NSObject,
+                let id = obj.valueForKey("identifier") as? String
+                where (id == identifier) {
+                return element
+            }
+        }
+        return nil
+    }
 
-@property (nonatomic, copy) NSString * _Nonnull name;
-
-@property (nonatomic, copy) NSString * _Nullable detail;
-
-@property (nonatomic, copy) NSString * _Nullable brand;
-
-@property (nonatomic) BOOL injection;
-
-@end
+}

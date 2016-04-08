@@ -95,6 +95,7 @@ public enum SBASurveyItemType {
         case Integer                // ORKNumericAnswerFormat of style Integer
         case Decimal                // ORKNumericAnswerFormat of style Decimal
         case Scale                  // ORKScaleAnswerFormat
+        case TimingRange            // Timing Range: ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
     }
 
     case Consent(ConsentSubtype)
@@ -115,6 +116,7 @@ public enum SBASurveyItemType {
         case "boolean"               : self = .Form(.Boolean)
         case "singleChoiceText"      : self = .Form(.SingleChoice)
         case "multipleChoiceText"    : self = .Form(.MultipleChoice)
+        case "timingRange"           : self = .Form(.TimingRange)
         case "consentSharingOptions" : self = .Consent(.SharingOptions)
         case "consentReview"         : self = .Consent(.Review)
         case "consentVisual"         : self = .Consent(.Visual)

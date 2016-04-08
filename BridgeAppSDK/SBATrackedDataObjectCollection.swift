@@ -37,9 +37,67 @@ public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask, SBASt
     
     // MARK: SBAStepTransformer
     
+    
+    
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+        
+
+        
         // TODO: implement
         return ORKStep(identifier: self.identifier)
+    }
+
+    public var dataStore: SBATrackedDataStore = {
+       return SBATrackedDataStore.defaultStore()
+    }()
+    
+    public func filteredSteps(include: SBATrackingStepIncludes) -> [ORKStep] {
+        return filteredSteps(include, factory: SBASurveyFactory())
+    }
+    
+    private func filteredSteps(include: SBATrackingStepIncludes, factory: SBASurveyFactory) -> [ORKStep] {
+        
+        var firstActivityStepIdentifier: String?
+        
+        // Filter and map
+        let steps: [ORKStep] = self.steps.mapAndFilter { (element) -> ORKStep? in
+            
+            // If the item is not of the expected protocol then ignore it
+            guard let item = element as? SBASurveyItem else { return nil }
+            
+            // Look to see if the item has a tracking type and create the appropriate step if it does
+            if let trackingItem = item as? SBATrackedStepSurveyItem,
+                let trackingType = trackingItem.trackingType {
+                
+                // If should not include the tracking item then just return nil
+                guard include.shouldInclude(trackingType) else { return nil }
+                
+                // Let the factory create the step
+                let step = factory.createSurveyStep(trackingItem, trackedItems: trackedItems)
+
+                // Keep a pointer to the first activity step
+                if (trackingType == .Activity) && (firstActivityStepIdentifier == nil) {
+                    firstActivityStepIdentifier = step.identifier
+                }
+                
+                return step
+            }
+            else if (include.includeSurvey()) {
+                // If this is the survey then all non-tracking type items are included
+                // otherwise, if only including activities then they are not.
+                return factory.createSurveyStep(item)
+            }
+            return nil
+        }
+        
+        // Map the next step identifier back into the changed step
+        if let changedStep = steps.first as? SBASurveyFormStep,
+            let nextStepIdentifier = firstActivityStepIdentifier
+            where include.nextStepIfNoChange == .Activity  {
+            changedStep.skipToStepIdentifier = nextStepIdentifier
+        }
+        
+        return steps
     }
 
     // MARK: SBABridgeTask

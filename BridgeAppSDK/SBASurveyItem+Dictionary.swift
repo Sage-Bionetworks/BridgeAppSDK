@@ -144,3 +144,22 @@ extension NSDictionary: SBAFormStepSurveyItem {
         return self["expectedAnswer"]
     }
 }
+
+extension NSDictionary: SBANumberRange {
+    
+    public var minNumber: NSNumber? {
+        return self["min"] as? NSNumber
+    }
+    
+    public var maxNumber: NSNumber? {
+        return self["max"] as? NSNumber
+    }
+
+    public var unitLabel: String? {
+        return self["unit"] as? String
+    }
+
+    public var stepInterval: Int {
+        return self["stepInterval"] as? Int ?? 1
+    }
+}

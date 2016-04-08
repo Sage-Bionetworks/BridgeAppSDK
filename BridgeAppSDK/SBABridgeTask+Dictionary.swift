@@ -40,7 +40,7 @@ extension NSDictionary: SBABridgeTask {
     }
     
     public var schemaIdentifier: String! {
-        return self["schemaIdentifier"] as! String
+        return self["schemaIdentifier"] as? String ?? self.taskIdentifier
     }
 
     public var schemaRevision: NSNumber! {

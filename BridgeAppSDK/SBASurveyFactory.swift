@@ -137,6 +137,13 @@ public class SBASurveyFactory : NSObject {
         return self.createSurveyStepWithCustomType(inputItem)
     }
     
+    func createSurveyStep(inputItem: SBATrackedStepSurveyItem, trackedItems: [SBATrackedDataObject]) -> ORKStep {
+        guard let trackingType = inputItem.trackingType where trackingType.isTrackedFormStepType() else {
+            return self.createSurveyStep(inputItem)
+        }
+        return SBATrackedFormStep(surveyItem: inputItem, trackedItems: trackedItems)
+    }
+    
 }
 
 extension SBAInstructionStepSurveyItem {
@@ -182,6 +189,18 @@ extension SBAFormStepSurveyItem {
         let step = (!isSubtaskStep && self.usesNavigation()) ?
             SBASurveyFormStep(surveyItem: self) :
             ORKFormStep(identifier: self.identifier)
+        buildFormItems(step, isSubtaskStep: isSubtaskStep)
+        mapStepValues(step)
+        return step
+    }
+    
+    func mapStepValues(step:ORKFormStep) {
+        step.title = self.stepTitle
+        step.text = self.stepText
+        step.optional = self.optional
+    }
+    
+    func buildFormItems(step:ORKFormStep, isSubtaskStep: Bool) {
         if case SBASurveyItemType.Form(.Compound) = self.surveyItemType {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
@@ -191,10 +210,6 @@ extension SBAFormStepSurveyItem {
         else {
             step.formItems = [self.createFormItem(nil)]
         }
-        step.title = self.stepTitle
-        step.text = self.stepText
-        step.optional = self.optional
-        return step
     }
     
     func createFormItem(text: String?) -> ORKFormItem {
@@ -236,6 +251,13 @@ extension SBAFormStepSurveyItem {
                 return nil
             }
             return range.createAnswerFormat(subtype)
+        case .TimingRange:
+            guard let textChoices = self.items?.mapAndFilter({ (obj) -> ORKTextChoice? in
+                guard let item = obj as? SBANumberRange else { return nil }
+                return item.createORKTextChoice()
+            }) else { return nil }
+            let notSure = ORKTextChoice(text: Localization.localizedString("SBA_NOT_SURE_CHOICE"), value: "Not sure")
+            return ORKTextChoiceAnswerFormat(style: .SingleChoice, textChoices: textChoices + [notSure])
         
         default:
             assertionFailure("Form item question type \(subtype) not implemented")
@@ -248,7 +270,7 @@ extension SBAFormStepSurveyItem {
             assertionFailure("Passing object \(obj) does not match expected protocol SBATextChoice")
             return ORKTextChoice(text: "", detailText: nil, value: NSNull(), exclusive: false)
         }
-        return ORKTextChoice(text: textChoice.choiceText, detailText: textChoice.choiceDetail, value: textChoice.choiceValue, exclusive: textChoice.exclusive)
+        return textChoice.createORKTextChoice()
     }
 
     func usesNavigation() -> Bool {
@@ -290,6 +312,78 @@ extension SBANumberRange {
         return ORKNumericAnswerFormat(style: style, unit: self.unitLabel, minimum: self.minNumber, maximum: self.maxNumber)
     }
     
+    // Return a timing interval
+    func createORKTextChoice() -> ORKTextChoice? {
+        
+        let formatter = NSDateComponentsFormatter()
+        formatter.allowedUnits = timeIntervalUnit
+        formatter.unitsStyle = .Full
+        let unit = self.unitLabel ?? "seconds"
+        
+        // Note: in all cases, the value is returned in English so that the localized 
+        // values will result in the same answer in any table. It is up to the researcher to translate.
+        if let max = dateComponents(self.maxNumber), let maxString = formatter.stringFromDateComponents(max) {
+            let maxNum = self.maxNumber!.integerValue
+            if let minNum = self.minNumber?.integerValue {
+                let maxText = String(format: Localization.localizedString("SBA_RANGE_%@_AGO"), maxString)
+                return ORKTextChoice(text: "\(minNum)-\(maxText)",
+                                     value: "\(minNum)-\(maxNum) \(unit) ago")
+            }
+            else {
+                let text = String(format: Localization.localizedString("SBA_LESS_THAN_%@_AGO"), maxString)
+                return ORKTextChoice(text: text, value: "Less than \(maxNum) \(unit) ago")
+            }
+        }
+        else if let min = dateComponents(self.minNumber), let minString = formatter.stringFromDateComponents(min) {
+            let minNum = self.minNumber!.integerValue
+            let text = String(format: Localization.localizedString("SBA_MORE_THAN_%@_AGO"), minString)
+            return ORKTextChoice(text: text, value: "More than \(minNum) \(unit) ago")
+        }
+        
+        assertionFailure("Not a valid range with neither a min or max value defined")
+        return nil
+    }
+    
+    var timeIntervalUnit: NSCalendarUnit {
+        guard let unit = self.unitLabel else { return NSCalendarUnit.Second }
+        switch unit {
+        case "minutes" :
+            return NSCalendarUnit.Minute
+        case "hours" :
+            return NSCalendarUnit.Hour
+        case "days" :
+            return NSCalendarUnit.Day
+        case "weeks" :
+            return NSCalendarUnit.WeekOfMonth
+        case "months" :
+            return NSCalendarUnit.Month
+        case "years" :
+            return NSCalendarUnit.Year
+        default :
+            return NSCalendarUnit.Second
+        }
+    }
+    
+    func dateComponents(num: NSNumber?) -> NSDateComponents? {
+        guard let value = num?.integerValue else { return nil }
+        let components = NSDateComponents()
+        switch(timeIntervalUnit) {
+        case NSCalendarUnit.Year:
+            components.year = value
+        case NSCalendarUnit.Month:
+            components.month = value
+        case NSCalendarUnit.WeekOfMonth:
+            components.weekOfYear = value
+        case NSCalendarUnit.Hour:
+            components.hour = value
+        case NSCalendarUnit.Minute:
+            components.minute = value
+        default:
+            components.second = value
+        }
+        return components
+    }
+
 }
 
 
