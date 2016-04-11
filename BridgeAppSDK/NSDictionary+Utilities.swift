@@ -1,5 +1,5 @@
 //
-//  SBAActiveTask+Dictionary.swift
+//  NSDictionary+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,36 +33,20 @@
 
 import Foundation
 
-extension NSDictionary: SBAActiveTask {
+extension NSDictionary {
     
-    var taskTypeName: String? {
-        return self["taskType"] as? String
-    }
-
-    public var taskType: SBAActiveTaskType {
-        return SBAActiveTaskType(name: taskTypeName)
-    }
-    
-    public var intendedUseDescription: String? {
-        return self["intendedUseDescription"] as? String
-    }
-
-    public var taskOptions: [String : AnyObject]? {
-        return self["taskOptions"] as? [String : AnyObject]
+    func objectWithResourceDictionary() -> AnyObject? {
+        guard let resourceName = self["resourceName"] as? String,
+            let classType = self["classType"] as? String else {
+                return nil
+        }
+        let bundleName = self["resourceBundle"] as? String
+        let bundle = (bundleName != nil) ? NSBundle(identifier: bundleName!) : nil
+        guard let json = SBAResourceFinder.sharedResourceFinder.jsonNamed(resourceName, bundle: bundle) else {
+            return nil
+        }
+        let result = SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(json as [NSObject : AnyObject], classType: classType)
+        return result
     }
     
-    public var predefinedExclusions: ORKPredefinedTaskOption? {
-        guard let exclusions = self["predefinedExclusions"] as? UInt else { return nil }
-        return ORKPredefinedTaskOption(rawValue: exclusions)
-    }
-
-    public var localizedSteps: [SBASurveyItem]? {
-        guard let steps = self["localizedSteps"] as? [AnyObject] else { return nil }
-        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
-    }
-
 }
-
-
-
-

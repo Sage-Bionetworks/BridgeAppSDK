@@ -33,23 +33,83 @@
 
 import ResearchKit
 
-public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask, SBAStepTransformer {
+extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBAConditionalRule {
+    
+    // MARK: SBABridgeTask
+    
+    public var taskSteps: [SBAStepTransformer] {
+        return [self]
+    }
+
+    public var insertSteps: [SBAStepTransformer]? {
+        return nil
+    }
     
     // MARK: SBAStepTransformer
     
-    
-    
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
         
-
+        var steps: [ORKStep]!
         
-        // TODO: implement
-        return ORKStep(identifier: self.identifier)
+        if (isLastStep) {
+            // If this is the last step then it is not being inserted into another task activity
+            steps = filteredSteps(.StandAloneSurvey, factory: factory)
+        }
+        else if (!self.dataStore.hasSelectedOrSkipped) {
+            steps = filteredSteps(.SurveyAndActivity, factory: factory)
+        }
+        else if (self.shouldShowChangedStep()) {
+            if (self.dataStore.hasNoTrackedItems) {
+                steps = filteredSteps(.ChangedOnly, factory: factory)
+            }
+            else {
+                steps = filteredSteps(.ChangedAndActivity, factory: factory)
+            }
+        }
+        else if (!self.dataStore.hasNoTrackedItems) {
+            steps = filteredSteps(.ActivityOnly, factory: factory)
+        }
+        else {
+            steps = []
+        }
+        
+        let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
+        task.conditionalRule = self
+        
+        return SBASubtaskStep(subtask: task)
     }
-
-    public var dataStore: SBATrackedDataStore = {
-       return SBATrackedDataStore.defaultStore()
-    }()
+    
+    // MARK: SBAConditionalRule
+    
+    public func shouldSkipStep(step: ORKStep?, previousStep: ORKStep?, result: ORKTaskResult) -> Bool {
+        
+        // Check if this step is a tracked step
+        let trackedStep = step as? SBATrackedFormStep
+        
+        // update the previous step with the result
+        if let previous = previousStep as? SBATrackedFormStep {
+            switch (previous.trackingType!) {
+            case .Selection:
+                self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
+            case .Frequency:
+                self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
+            case .Activity:
+                self.dataStore.updateMomentInDayForStepIdentifier(previous.identifier, result: result)
+            default:
+                break
+            }
+        }
+        
+        // If the tracked step is nil then should *not* skip the step
+        if trackedStep == nil { return false }
+        
+        // Otherwise, update the step with the selected items and then determine if it should be skipped
+        trackedStep!.updateWithSelectedItems(self.dataStore.selectedItems ?? [])
+        return trackedStep!.shouldSkipStep
+    }
+    
+    
+    // MARK: Functions for transforming and recording results
     
     public func filteredSteps(include: SBATrackingStepIncludes) -> [ORKStep] {
         return filteredSteps(include, factory: SBASurveyFactory())
@@ -73,7 +133,7 @@ public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask, SBASt
                 guard include.shouldInclude(trackingType) else { return nil }
                 
                 // Let the factory create the step
-                let step = factory.createSurveyStep(trackingItem, trackedItems: trackedItems)
+                let step = factory.createSurveyStep(trackingItem, trackedItems: self.items)
 
                 // Keep a pointer to the first activity step
                 if (trackingType == .Activity) && (firstActivityStepIdentifier == nil) {
@@ -99,84 +159,22 @@ public class SBATrackedDataObjectCollection: SBADataObject, SBABridgeTask, SBASt
         
         return steps
     }
-
-    // MARK: SBABridgeTask
     
-    let taskIdentifierKey = "taskIdentifier"
-    public dynamic var taskIdentifier: String!
-    
-    let schemaIdentifierKey = "schemaIdentifier"
-    public dynamic var schemaIdentifier: String!
-    
-    let schemaRevisionKey = "schemaRevision"
-    public dynamic var schemaRevision: NSNumber!
-    
-    public var taskSteps: [SBAStepTransformer] {
-        return [self]
+    public func findStep(trackingType: SBATrackingStepType) -> SBATrackedStepSurveyItem? {
+        return self.steps.findObject({ (obj) -> Bool in
+            guard let trackingItem = obj as? SBATrackedStepSurveyItem,
+                let type = trackingItem.trackingType else { return false }
+            return type == trackingType
+        }) as? SBATrackedStepSurveyItem
     }
     
-    public var insertSteps: [SBAStepTransformer]? {
-        return nil
-    }
-    
-    // MARK: SBADataObject overrides
-    
-    let trackedItemsKey = "items"
-    public dynamic var trackedItems: [SBATrackedDataObject] = {
-        return []   // init with empty if needed
-    }()
-    
-    let itemsClassTypeKey = "itemsClassType"
-    public dynamic var itemsClassType: String?
-    
-    let stepsKey = "steps"
-    public dynamic var steps: [AnyObject] = {
-        return []   // init with empty if needed
-    }()
-    
-    let identifierKey = "identifier"
-    override public func defaultIdentifierIfNil() -> String {
-        return self.schemaIdentifier
-    }
-    
-    override public func dictionaryRepresentationKeys() -> [String] {
-        return [taskIdentifierKey, schemaIdentifierKey, schemaRevisionKey, itemsClassTypeKey, trackedItemsKey, stepsKey] +
-            super.dictionaryRepresentationKeys().filter({ $0 != identifierKey })
-    }
-    
-    public override func valueForKey(key: String) -> AnyObject? {
-        switch key {
-        case trackedItemsKey:
-            return self.trackedItems
-        default:
-            return super.valueForKey(key)
+    func shouldShowChangedStep() -> Bool {
+        if let _ = self.findStep(.Changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
+            let interval = self.repeatTimeInterval as NSTimeInterval
+            return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
         }
-    }
-
-    override public func setValue(value: AnyObject?, forKey key: String) {
-        
-        switch key {
-            
-        case trackedItemsKey:
-            if let array = value as? [AnyObject] {
-                self.trackedItems = array.map({ (obj) -> SBATrackedDataObject in
-                    if let dataObject = obj as? SBATrackedDataObject {
-                        return dataObject
-                    }
-                    else if let mappedObject = self.mapValue(obj, forKey: key, withClassType: self.itemsClassType) as? SBATrackedDataObject {
-                        return mappedObject;
-                    }
-                    else {
-                        return SBATrackedDataObject(identifier: NSUUID().UUIDString)
-                    }
-                })
-            }
-            else {
-                self.trackedItems = []
-            }
-            
-        default:
-            super.setValue(value, forKey: key)
+        else {
+            return false
         }
     }
 }

@@ -47,8 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (Class _Nullable)classForClassType:(NSString *)classType;
 
-- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary*)dictionary classType:(NSString *)classType;
-- (id _Nullable)objectWithIdentifier:(NSString*)identifier classType:(NSString *)classType;
+- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary *)dictionary classType:(NSString *)classType;
+- (id _Nullable)objectWithIdentifier:(NSString *)identifier classType:(NSString *)classType;
 
 @end
 

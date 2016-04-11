@@ -41,6 +41,10 @@ public protocol SBANavigationRule: class, NSSecureCoding {
     func nextStepIdentifier(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String?
 }
 
+public protocol SBAConditionalRule: class, NSSecureCoding {
+    func shouldSkipStep(step: ORKStep?, previousStep: ORKStep?, result: ORKTaskResult) -> Bool
+}
+
 /**
  * SBANavigableOrderedTask can process both SBASubtaskStep steps and as well as any step that conforms
  * to the SBANavigationRule.
@@ -48,6 +52,8 @@ public protocol SBANavigationRule: class, NSSecureCoding {
 public class SBANavigableOrderedTask: ORKOrderedTask {
     
     public var additionalTaskResults: [ORKTaskResult]?
+    public var conditionalRule: SBAConditionalRule?
+    
     private var orderedStepIdentifiers: [String] = []
     
     // Swift Fun Fact: In order to use a superclass initializer it must be overridden 
@@ -70,25 +76,38 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     }
     
     func superStepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+        
         var returnStep: ORKStep?
+        var previousStep: ORKStep? = step
+        var shouldSkip = false
         
-        if let navigableStep = step as? SBANavigationRule,
-            let nextStepIdentifier = navigableStep.nextStepIdentifier(result, additionalTaskResults:self.additionalTaskResults) {
-                // If this is a step that conforms to the SBANavigableStep protocol and
-                // the next step identifier is non-nil then get the next step by looking within
-                // the steps associated with this task
-                returnStep = super.stepWithIdentifier(nextStepIdentifier)
-        }
-        else {
-            // If we've dropped through without setting the return step to something non-nil
-            // then look to super for the next step
-            returnStep = super.stepAfterStep(step, withResult: result)
-        }
+        repeat {
         
-        // If the superclass returns a step of type subtask step, then get the first step from the subtask
-        if let subtaskStep = returnStep as? SBASubtaskStep {
-            returnStep = subtaskStep.stepAfterStep(nil, withResult: result)
-        }
+            if let navigableStep = previousStep as? SBANavigationRule,
+                let nextStepIdentifier = navigableStep.nextStepIdentifier(result, additionalTaskResults:self.additionalTaskResults) {
+                    // If this is a step that conforms to the SBANavigableStep protocol and
+                    // the next step identifier is non-nil then get the next step by looking within
+                    // the steps associated with this task
+                    returnStep = super.stepWithIdentifier(nextStepIdentifier)
+            }
+            else {
+                // If we've dropped through without setting the return step to something non-nil
+                // then look to super for the next step
+                returnStep = super.stepAfterStep(previousStep, withResult: result)
+            }
+            
+            // If the superclass returns a step of type subtask step, then get the first step from the subtask
+            if let subtaskStep = returnStep as? SBASubtaskStep {
+                returnStep = subtaskStep.stepAfterStep(nil, withResult: result)
+            }
+            
+            // Check to see if this is a conditional step that *should* be skipped
+            shouldSkip = conditionalRule?.shouldSkipStep(returnStep, previousStep: previousStep, result: result) ?? false
+            if (shouldSkip) {
+                previousStep = returnStep
+            }
+            
+        } while(shouldSkip)
         
         return returnStep;
     }

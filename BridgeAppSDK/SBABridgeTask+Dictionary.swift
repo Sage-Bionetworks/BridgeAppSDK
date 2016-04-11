@@ -36,7 +36,10 @@ import Foundation
 extension NSDictionary: SBABridgeTask {
     
     public var taskIdentifier: String! {
-        return self["taskIdentifier"] as! String
+        return _nullableTaskIdentifier ?? NSUUID().UUIDString
+    }
+    private var _nullableTaskIdentifier: String? {
+        return self["taskIdentifier"] as? String
     }
     
     public var schemaIdentifier: String! {
@@ -53,7 +56,7 @@ extension NSDictionary: SBABridgeTask {
             return [self as SBAStepTransformer]
         }
         // otherwise, explicitly map the steps to SBASurveyItem
-        return steps.map({ return ($0 as? SBAStepTransformer) ?? NSDictionary() })
+        return steps.mapAndFilter({ return mapToStepTransformer($0) })
     }
     
     public var insertSteps: [SBAStepTransformer]? {
@@ -62,6 +65,17 @@ extension NSDictionary: SBABridgeTask {
             return nil
         }
         // otherwise, explicitly map the steps to SBASurveyItem
-        return steps.map({ return ($0 as? SBAStepTransformer) ?? NSDictionary() })
+        return steps.mapAndFilter({ return mapToStepTransformer($0) })
     }
+    
+    private func mapToStepTransformer(obj: AnyObject) -> SBAStepTransformer? {
+        // If the object is not a dictionary then just return either the object or nil if not transformable
+        guard let dictionary = obj as? NSDictionary,
+            let transformer = dictionary.objectWithResourceDictionary() as? SBAStepTransformer else {
+            return obj as? SBAStepTransformer
+        }
+        return transformer
+    }
+    
+
 }

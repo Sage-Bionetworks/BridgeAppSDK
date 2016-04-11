@@ -72,6 +72,7 @@ public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskType: SBAActiveTaskType { get }
     var intendedUseDescription: String? { get }
     var taskOptions: [String : AnyObject]? { get }
+    var predefinedExclusions: ORKPredefinedTaskOption? { get }
     var localizedSteps: [SBASurveyItem]? { get }
 }
 
@@ -79,19 +80,21 @@ extension SBAActiveTask {
     
     func createDefaultORKActiveTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask? {
         
+        let predefinedExclusions = self.predefinedExclusions ?? options
+        
         // Map known active tasks
         var task: ORKOrderedTask!
         switch self.taskType {
         case .Tapping:
-            task = tappingTask(options)
+            task = tappingTask(predefinedExclusions)
         case .Memory:
-            task = memoryTask(options)
+            task = memoryTask(predefinedExclusions)
         case .Voice:
-            task = voiceTask(options)
+            task = voiceTask(predefinedExclusions)
         case .Walking:
-            task = walkingTask(options)
+            task = walkingTask(predefinedExclusions)
         case .Tremor:
-            task = tremorTask(options)
+            task = tremorTask(predefinedExclusions)
         default:
             // exit early if not supported by base implementation
             return nil

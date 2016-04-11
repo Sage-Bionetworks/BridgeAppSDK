@@ -395,6 +395,15 @@ class SBAActiveTaskTests: XCTestCase {
             "taskType"                  : "tapping",
         ]
         
+        let voiceTask: NSDictionary = [
+            "taskIdentifier"            : "1-Voice-ABCD-1234",
+            "schemaIdentifier"          : "Voice Activity",
+            "schemaRevision"            : 2,
+            "taskType"                  : "voice",
+            "intendedUseDescription"    : "intended Use Description Text",
+            "predefinedExclusions"      : 0,
+            ]
+        
         let walkingTask: NSDictionary = [
             "taskIdentifier"            : "1-Walking-ABCD-1234",
             "schemaIdentifier"          : "Walking Activity",
@@ -405,7 +414,7 @@ class SBAActiveTaskTests: XCTestCase {
         
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Combo-ABCD-1234",
-            "taskSteps"                     :[
+            "taskSteps"                 :[
                 [
                     "identifier" : "introduction",
                     "text" : "This is a combo task",
@@ -413,8 +422,16 @@ class SBAActiveTaskTests: XCTestCase {
                     "type"  : "instruction",
                 ],
                 tappingTask,
+                voiceTask,
                 walkingTask
-            ]
+            ],
+            "insertSteps"               :[
+                [
+                    "resourceName"      : "MedicationTracking",
+                    "resourceBundle"    : NSBundle(forClass: self.classForCoder).bundleIdentifier ?? "",
+                    "classType"         : "TrackedDataObjectCollection"
+                    ]
+                ]
         ]
         
         let result = inputTask.createORKTask()
@@ -426,7 +443,7 @@ class SBAActiveTaskTests: XCTestCase {
             return
         }
         
-        let expectedCount = 3
+        let expectedCount = 5
         XCTAssertEqual(task.steps.count, expectedCount, "\(task.steps)")
         guard task.steps.count == expectedCount else { return }
         
@@ -439,19 +456,44 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertEqual(instructionStep.text, "This is a combo task")
         XCTAssertEqual(instructionStep.detailText, "Tap the button below to begin")
         
-        // Step 2 - Tapping Subtask
-        guard let tappingStep = task.steps[1] as? SBASubtaskStep else {
-            XCTAssert(false, "\(task.steps[1]) not of expect class")
-            return
-        }
-        XCTAssertEqual(tappingStep.identifier, "Tapping Activity")
+        // Step 2 - Medication tracking
+        //guard
+            let medStep = task.steps[1]
+//                as? ORKInstructionStep else {
+//            XCTAssert(false, "\(task.steps[1]) not of expect class")
+//            return
+//        }
+        XCTAssertEqual(medStep.identifier, "Medication Tracker")
         
-        // Step 3 - Walking Subtask
-        guard let memoryStep = task.steps[2] as? SBASubtaskStep else {
+        // Step 3 - Tapping Subtask
+        guard let tappingStep = task.steps[2] as? SBASubtaskStep,
+            let tapTask = tappingStep.subtask as? ORKOrderedTask,
+            let lastTapStep = tapTask.steps.last else {
             XCTAssert(false, "\(task.steps[2]) not of expect class")
             return
         }
+        XCTAssertEqual(tappingStep.identifier, "Tapping Activity")
+        XCTAssertNotEqual(lastTapStep.identifier, "conclusion")
+        
+        // Step 4 - Voice Subtask
+        guard let voiceStep = task.steps[3] as? SBASubtaskStep,
+            let vTask = voiceStep.subtask as? ORKOrderedTask,
+            let lastVoiceStep = vTask.steps.last else {
+            XCTAssert(false, "\(task.steps[3]) not of expect class")
+            return
+        }
+        XCTAssertEqual(voiceStep.identifier, "Voice Activity")
+        XCTAssertEqual(lastVoiceStep.identifier, "conclusion")
+        
+        // Step 5 - Walking Subtask
+        guard let memoryStep = task.steps[4] as? SBASubtaskStep,
+            let mTask = memoryStep.subtask as? ORKOrderedTask,
+            let lastMemoryStep = mTask.steps.last else {
+            XCTAssert(false, "\(task.steps[4]) not of expect class")
+            return
+        }
         XCTAssertEqual(memoryStep.identifier, "Walking Activity")
+        XCTAssertEqual(lastMemoryStep.identifier, "conclusion")
         
     }
 

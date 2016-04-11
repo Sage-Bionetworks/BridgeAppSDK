@@ -1,5 +1,5 @@
 //
-//  SBAActiveTask+Dictionary.swift
+//  SBATrackedDataObjectCollection.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,38 +31,21 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+#import "SBATrackedDataObject.h"
 
-extension NSDictionary: SBAActiveTask {
-    
-    var taskTypeName: String? {
-        return self["taskType"] as? String
-    }
+@class SBATrackedDataStore;
 
-    public var taskType: SBAActiveTaskType {
-        return SBAActiveTaskType(name: taskTypeName)
-    }
-    
-    public var intendedUseDescription: String? {
-        return self["intendedUseDescription"] as? String
-    }
+@interface SBATrackedDataObjectCollection : SBADataObject
 
-    public var taskOptions: [String : AnyObject]? {
-        return self["taskOptions"] as? [String : AnyObject]
-    }
-    
-    public var predefinedExclusions: ORKPredefinedTaskOption? {
-        guard let exclusions = self["predefinedExclusions"] as? UInt else { return nil }
-        return ORKPredefinedTaskOption(rawValue: exclusions)
-    }
+@property (nonatomic, copy) NSString *taskIdentifier;
+@property (nonatomic, copy) NSString *schemaIdentifier;
+@property (nonatomic, copy) NSNumber *schemaRevision;
 
-    public var localizedSteps: [SBASurveyItem]? {
-        guard let steps = self["localizedSteps"] as? [AnyObject] else { return nil }
-        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
-    }
+@property (nonatomic, copy) NSString *itemsClassType;
+@property (nonatomic, copy) NSArray <SBATrackedDataObject *> *items;
+@property (nonatomic, copy) NSArray *steps;
 
-}
+@property (nonatomic) SBATrackedDataStore *dataStore;
+@property (nonatomic) NSNumber *repeatTimeInterval;
 
-
-
-
+@end

@@ -141,7 +141,7 @@ public class SBASurveyFactory : NSObject {
         guard let trackingType = inputItem.trackingType where trackingType.isTrackedFormStepType() else {
             return self.createSurveyStep(inputItem)
         }
-        return SBATrackedFormStep(surveyItem: inputItem, trackedItems: trackedItems)
+        return SBATrackedFormStep(surveyItem: inputItem, items: trackedItems)
     }
     
 }

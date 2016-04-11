@@ -70,7 +70,12 @@ class SBAResourceFinder: NSObject {
     }
     
     func dataNamed(resourceNamed: String, ofType: String) -> NSData? {
-        if let path = self.pathForResource(resourceNamed, ofType: ofType) {
+        return dataNamed(resourceNamed, ofType: ofType, bundle: nil)
+    }
+    
+    func dataNamed(resourceNamed: String, ofType: String, bundle: NSBundle?) -> NSData? {
+        if let path = bundle?.pathForResource(resourceNamed, ofType: ofType) ??
+            self.pathForResource(resourceNamed, ofType: ofType) {
             return NSData(contentsOfFile: path)
         }
         return nil
@@ -84,7 +89,11 @@ class SBAResourceFinder: NSObject {
     }
     
     func jsonNamed(resourceNamed: String) -> NSDictionary? {
-        if let data = self.dataNamed(resourceNamed, ofType: "json"),
+        return jsonNamed(resourceNamed, bundle: nil)
+    }
+    
+    func jsonNamed(resourceNamed: String, bundle: NSBundle?) -> NSDictionary? {
+        if let data = self.dataNamed(resourceNamed, ofType: "json", bundle: bundle),
             let json = try? NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers){
                 return json as? NSDictionary
         }

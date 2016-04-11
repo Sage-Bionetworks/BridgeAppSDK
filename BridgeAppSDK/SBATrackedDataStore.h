@@ -34,9 +34,9 @@
 #import <Foundation/Foundation.h>
 #import <ResearchKit/ResearchKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "SBATrackedDataObjectCollection.h"
 
-@class SBATrackedDataObject;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface SBATrackedDataStore : NSObject
 
@@ -62,6 +62,16 @@ NS_ASSUME_NONNULL_BEGIN
  * Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
  */
 - (instancetype)initWithUserDefaultsWithSuiteName:(NSString * _Nullable)suiteName;
+
+- (void)updateSelectedItems:(NSArray<SBATrackedDataObject *> *)items
+             stepIdentifier:(NSString *)stepIdentifier
+                     result:(ORKTaskResult*)result;
+
+- (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
+                                  result:(ORKTaskResult *)result;
+
+- (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
+                                    result:(ORKTaskResult *)result;
 
 - (void)commitChanges;
 - (void)reset;

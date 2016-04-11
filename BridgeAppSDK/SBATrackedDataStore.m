@@ -168,6 +168,93 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
     [self.changesDictionary setValue:@(selectedItems == nil) forKey:[[self class] skippedSelectionSurveyQuestionKey]];
 }
 
+- (void)updateSelectedItems:(NSArray<SBATrackedDataObject *> *)items
+             stepIdentifier:(NSString *)stepIdentifier
+                     result:(ORKTaskResult*)result {
+    self.selectedItems = [self filterSelectedItems:items selectionStepIdentifier:stepIdentifier result:result];
+}
+- (NSArray<SBATrackedDataObject *> *)filterSelectedItems:(NSArray<SBATrackedDataObject *> *)items
+                                 selectionStepIdentifier:(NSString *)selectionStepIdentifier
+                                                  result:(ORKTaskResult*)result {
+
+    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:selectionStepIdentifier];
+    ORKChoiceQuestionResult *selectionResult = (ORKChoiceQuestionResult *)[stepResult.results firstObject];
+    
+    if (selectionResult == nil) {
+        return nil;
+    }
+    if (![selectionResult isKindOfClass:[ORKChoiceQuestionResult class]]) {
+        NSAssert(NO, @"The Medication selection result was not of the expected class of ORKChoiceQuestionResult");
+        return nil;
+    }
+    
+    // If skipped return nil
+    if ((selectionResult.choiceAnswers == nil) ||
+        ([selectionResult.choiceAnswers isEqualToArray:@[kSkippedAnswer]])) {
+        return nil;
+    }
+    
+    // Get the selected ids
+    NSArray *selectedIds = selectionResult.choiceAnswers;
+    
+    // Get the selected meds by filtering this list
+    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
+    NSPredicate *idsPredicate = [NSPredicate predicateWithFormat:@"%K IN %@", identifierKey, selectedIds];
+    NSArray *sort = @[[NSSortDescriptor sortDescriptorWithKey:identifierKey ascending:YES]];
+    NSArray *selectedItems = [[items filteredArrayUsingPredicate:idsPredicate] sortedArrayUsingDescriptors:sort];
+    if (selectedItems.count > 0) {
+        // Map frequency from the previously stored results
+        NSPredicate *frequencyPredicate = [NSPredicate predicateWithFormat:@"%K > 0", NSStringFromSelector(@selector(frequency))];
+        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[frequencyPredicate, idsPredicate]];
+        NSArray *previousItems = [[self.selectedItems filteredArrayUsingPredicate:predicate] sortedArrayUsingDescriptors:sort];
+        
+        if (previousItems.count > 0) {
+            // If there are frequency results to map, then map them into the returned results
+            // (which may be a different object from the med list in the data store)
+            NSEnumerator *enumerator = [previousItems objectEnumerator];
+            SBATrackedDataObject *previousItem = [enumerator nextObject];
+            for (SBATrackedDataObject *item in selectedItems) {
+                if ([previousItem.identifier isEqualToString:item.identifier]) {
+                    item.frequency = previousItem.frequency;
+                    previousItem = [enumerator nextObject];
+                    if (previousItem == nil) { break; }
+                }
+            }
+        }
+    }
+    
+    return  selectedItems;
+}
+
+- (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
+                                  result:(ORKTaskResult *)result {
+    
+    ORKStepResult *frequencyResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
+    
+    if (frequencyResult != nil) {
+
+        // Get the selected items array
+        NSArray *selectedItems = self.selectedItems;
+        
+        // If there are frequency results to map, then map them into the returned results
+        // (which may be a different object from the med list in the data store)
+        for (SBATrackedDataObject *item in selectedItems) {
+            ORKScaleQuestionResult *result = (ORKScaleQuestionResult *)[frequencyResult resultForIdentifier:item.identifier];
+            if ([result isKindOfClass:[ORKScaleQuestionResult class]]) {
+                item.frequency = [result.scaleAnswer unsignedIntegerValue];
+            }
+        }
+        
+        // Set it back to the selected Items
+        self.selectedItems = selectedItems;
+    }
+}
+
+- (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
+                                    result:(ORKTaskResult *)result {
+    // TODO: syoung 04/11/2016 implement 
+}
+
 - (NSDate *)lastTrackingSurveyDate {
     return [self.storedDefaults objectForKey:[[self class] lastTrackingSurveyDateKey]];
 }

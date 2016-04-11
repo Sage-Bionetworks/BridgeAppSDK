@@ -133,7 +133,7 @@ public class SBATrackedFormStep: ORKFormStep {
         super.init(identifier: identifier)
     }
     
-    public init(surveyItem: SBATrackedStepSurveyItem, trackedItems:[SBATrackedDataObject]) {
+    public init(surveyItem: SBATrackedStepSurveyItem, items:[SBATrackedDataObject]) {
         super.init(identifier: surveyItem.identifier)
         self.trackingType = surveyItem.trackingType
         self.textFormat = surveyItem.textFormat
@@ -146,7 +146,7 @@ public class SBATrackedFormStep: ORKFormStep {
         if let range = surveyItem as? SBANumberRange where (self.trackingType == .Frequency) {
             self.frequencyAnswerFormat = range.createAnswerFormat(.Scale)
         }
-        updateWithSelectedItems(trackedItems)
+        updateWithSelectedItems(items)
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -159,6 +159,13 @@ public class SBATrackedFormStep: ORKFormStep {
         self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
     }
     
+    override public func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
+        aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
+        aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
+    }
+    
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = super.copyWithZone(zone) as! SBATrackedFormStep
         copy._shouldSkipStep = self._shouldSkipStep
@@ -166,13 +173,6 @@ public class SBATrackedFormStep: ORKFormStep {
         copy.textFormat = self.textFormat
         copy.frequencyAnswerFormat = self.frequencyAnswerFormat
         return copy
-    }
-    
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
-        aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
-        aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
     }
     
     public var shouldSkipStep: Bool {
@@ -215,7 +215,7 @@ public class SBATrackedFormStep: ORKFormStep {
         if (self.optional) {
             let skipChoice = ORKTextChoice(text: Localization.localizedString("SBA_SKIP_CHOICE"),
                                            detailText: nil,
-                                           value: "Skip",
+                                           value: "Skipped",
                                            exclusive: true)
             choices += [skipChoice]
             self.optional = false;

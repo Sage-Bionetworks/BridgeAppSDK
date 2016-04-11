@@ -98,18 +98,18 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(dataCollection.itemsClassType, "Medication")
         
         let expectedCount = 15
-        XCTAssertEqual(dataCollection.trackedItems.count, expectedCount);
-        if (dataCollection.trackedItems.count != expectedCount) {
+        XCTAssertEqual(dataCollection.items.count, expectedCount);
+        if (dataCollection.items.count != expectedCount) {
             return
         }
         
-        let meds = dataCollection.trackedItems;
+        let meds = dataCollection.items;
         guard let levodopa = meds[0] as? SBAMedication,
             let carbidopa = meds[1] as? SBAMedication,
             let rytary = meds[2] as? SBAMedication,
             let duopa = meds.last as? SBAMedication
             else {
-                XCTAssert(false, "trackedItems not of expected type \(meds)")
+                XCTAssert(false, "items not of expected type \(meds)")
                 return
         }
         
@@ -153,6 +153,11 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let include = SBATrackingStepIncludes.StandAloneSurvey
         let steps = dataCollection.filteredSteps(include)
         
+        checkStandAloneSurveySteps(steps, dataCollection: dataCollection)
+    }
+    
+    func checkStandAloneSurveySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
+    
         let expectedCount = 5
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
@@ -183,9 +188,9 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
         XCTAssertEqual(frequencyStep.text, "How many times a day do you take each of the following medications?")
-        checkMedicationFrequencyStep(frequencyStep, idList: [], expectedFrequencyIds: [], items: dataCollection.trackedItems)
-        checkMedicationFrequencyStep(frequencyStep, idList: ["Levodopa", "Carbex", "Duopa"], expectedFrequencyIds: ["Levodopa", "Carbex"], items: dataCollection.trackedItems)
-        checkMedicationFrequencyStep(frequencyStep, idList: ["Duopa"], expectedFrequencyIds: [], items: dataCollection.trackedItems)
+        checkMedicationFrequencyStep(frequencyStep, idList: [], expectedFrequencyIds: [], items: dataCollection.items)
+        checkMedicationFrequencyStep(frequencyStep, idList: ["Levodopa", "Carbex", "Duopa"], expectedFrequencyIds: ["Levodopa", "Carbex"], items: dataCollection.items)
+        checkMedicationFrequencyStep(frequencyStep, idList: ["Duopa"], expectedFrequencyIds: [], items: dataCollection.items)
         
         // Step 5
         guard let conclusionStep = steps.last as? ORKInstructionStep else {
@@ -207,7 +212,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             "type"         : "trackingSelection",
             "text"         : "Do you take any of these medications?\n(Please select all that apply)",]
         
-        let step = SBATrackedFormStep(surveyItem: inputItem, trackedItems:dataCollection.trackedItems)
+        let step = SBATrackedFormStep(surveyItem: inputItem, items:dataCollection.items)
         checkMedicationSelectionStep(step, optional: false)
     }
     
@@ -247,7 +252,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                                 ["Carbidopa/Levodopa Continuous Infusion (Duopa)", "Duopa"],
                                 ["None of the above", "None"]];
         if (optional) {
-            expectedChoices += [["Prefer not to answer", "Skip"]];
+            expectedChoices += [["Prefer not to answer", "Skipped"]];
         }
         XCTAssertEqual(answerFormat.textChoices.count, expectedChoices.count)
         if answerFormat.textChoices.count <= expectedChoices.count {
@@ -303,6 +308,11 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let include = SBATrackingStepIncludes.ActivityOnly
         let steps = dataCollection.filteredSteps(include)
         
+        checkActivityOnlySteps(steps, dataCollection: dataCollection)
+    }
+    
+    func checkActivityOnlySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
+        
         let expectedCount = 2
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
@@ -323,8 +333,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(answerFormat.textChoices.count, 3)
         XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
         
-        checkMedicationActivityStep(momentInDayStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.trackedItems)
-        checkMedicationActivityStep(momentInDayStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.trackedItems)
+        checkMedicationActivityStep(momentInDayStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.items)
+        checkMedicationActivityStep(momentInDayStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.items)
         
         guard let timingStep = steps.last as? SBATrackedFormStep,
             let timingFormItem = timingStep.formItems?.first,
@@ -361,15 +371,15 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         
         // Check the text formatting
-        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.trackedItems)
+        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.items)
         XCTAssertEqual(timingStep.text, "When was the last time you took your Levodopa or Rytary?")
         
-        checkMedicationActivityStep(timingStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.trackedItems)
+        checkMedicationActivityStep(timingStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.items)
         
-        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Rytary", "Sinemet"], expectedSkipped: false, items: dataCollection.trackedItems)
+        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Rytary", "Sinemet"], expectedSkipped: false, items: dataCollection.items)
         XCTAssertEqual(timingStep.text, "When was the last time you took your Levodopa, Rytary, or Sinemet?")
         
-        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Rytary", "Sinemet", "Atamet"], expectedSkipped: false, items: dataCollection.trackedItems)
+        checkMedicationActivityStep(timingStep, idList: ["Levodopa", "Rytary", "Sinemet", "Atamet"], expectedSkipped: false, items: dataCollection.items)
         XCTAssertEqual(timingStep.text, "When was the last time you took your Levodopa, Rytary, Sinemet, or Atamet?")
 
     }
@@ -388,6 +398,11 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let include = SBATrackingStepIncludes.ChangedAndActivity
         let steps = dataCollection.filteredSteps(include)
         
+        checkChangedAndActivitySteps(steps, expectedSkipIdentifier: "momentInDay", dataCollection: dataCollection)
+    }
+    
+    func checkChangedAndActivitySteps(steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
+        
         let expectedCount = 6
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
@@ -401,7 +416,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(changedStep.identifier, "medicationChanged")
         XCTAssertEqual(changedStep.text, "Has your Parkinson diagnosis or medication changed?")
         XCTAssertTrue(changedStep.skipIfPassed)
-        XCTAssertEqual(changedStep.skipToStepIdentifier, "momentInDay")
+        XCTAssertEqual(changedStep.skipToStepIdentifier, expectedSkipIdentifier)
         
         guard let navigationRule = formItem.rulePredicate else {
             return
@@ -442,48 +457,20 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let include = SBATrackingStepIncludes.ChangedOnly
         let steps = dataCollection.filteredSteps(include)
         
-        let expectedCount = 6
-        XCTAssertEqual(steps.count, expectedCount)
-        guard steps.count == expectedCount else { return }
-        
-        guard let changedStep = steps.first as? SBASurveyFormStep,
-            let formItem = changedStep.formItems?.first as? SBASurveyFormItem,
-            let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
-                XCTAssert(false, "\(steps.first) not of expected type")
-                return
-        }
-        XCTAssertEqual(changedStep.identifier, "medicationChanged")
-        XCTAssertEqual(changedStep.text, "Has your Parkinson diagnosis or medication changed?")
-        XCTAssertTrue(changedStep.skipIfPassed)
-        XCTAssertEqual(changedStep.skipToStepIdentifier, "nextSection")
-        
-        // Step 2
-        let dataGroupsStep = steps[1]
-        XCTAssertEqual(dataGroupsStep.identifier, "dataGroups")
-        
-        // Step 3
-        let selectionStep = steps[2]
-        XCTAssertEqual(selectionStep.identifier, "medicationSelection")
-        
-        // Step 4
-        let frequencyStep = steps[3]
-        XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
-        
-        // Step 5
-        let momentInDayStep = steps[4]
-        XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
-        
-        // Step 6
-        let timingStep = steps[5]
-        XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
+        checkChangedAndActivitySteps(steps, expectedSkipIdentifier: "nextSection", dataCollection: dataCollection)
     }
-    
+
     func testMedicationTrackerFromResourceFile_Steps_SurveyAndActivity() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
         
         let include = SBATrackingStepIncludes.SurveyAndActivity
         let steps = dataCollection.filteredSteps(include)
+        
+        checkSurveyAndActivitySteps(steps, dataCollection: dataCollection)
+    }
+    
+    func checkSurveyAndActivitySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
         
         let expectedCount = 6
         XCTAssertEqual(steps.count, expectedCount)
@@ -514,8 +501,130 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
     }
     
+    // MARK: transformToStep tests
+
+    func testTransformToStep_StandAlone() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: true)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        checkStandAloneSurveySteps(task.steps, dataCollection: dataCollection)
+    }
+    
+    func testTransformToStep_EmptySet_LastSurveyToday() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        // If the selected items set is empty (but there is one) then do not show the activity steps
+        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.selectedItems = []
+        
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(task.steps.count, 0)
+    }
+    
+    func testTransformToStep_InjectionOnlySet_LastSurveyToday() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        // If the selected items set does not include any that are tracked then should
+        // return the empty set (for a date in the near past)
+        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
+        
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(task.steps.count, 0)
+    }
+    
+    func testTransformToStep_ActivityOnly() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        // If the activity steps includes a tracked item, then should include the activty 
+        // steps, but do not need to include any of the others
+        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        checkActivityOnlySteps(task.steps, dataCollection: dataCollection)
+    }
+    
+    func testTransformToStep_ChangedAndActivity_CurrentlyHasTracked() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        // If the activity steps includes a tracked item and the last survey was more than
+        // 30 days ago then should ask about changes
+        dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
+        dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        checkChangedAndActivitySteps(task.steps, expectedSkipIdentifier: "momentInDay", dataCollection: dataCollection)
+    }
+    
+    func testTransformToStep_ChangedAndActivity_NoMedsCurrentlyTracked() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        dataCollection.dataStore = dataStore
+        
+        // If the activity steps includes a tracked item and the last survey was more than
+        // 30 days ago then should ask about changes
+        dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
+        dataStore.selectedItems = []
+        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        checkChangedAndActivitySteps(task.steps, expectedSkipIdentifier: "nextSection", dataCollection: dataCollection)
+    }
     
     // Mark: convenience methods
+    
+    func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
+        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("MockTrackedDataStore")
+        XCTAssertNotNil(result)
+        guard let classType = result as? SBATrackedDataStore.Type else {
+            XCTAssert(false, "\(result) not of expected class type")
+            return nil
+        }
+        return classType.init()
+    }
     
     func dataCollectionForMedicationTracking() -> SBATrackedDataObjectCollection? {
         guard let json = self.jsonForResource("MedicationTracking") as? [NSObject: AnyObject] else {

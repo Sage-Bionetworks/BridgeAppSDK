@@ -50,6 +50,16 @@ extension SequenceType {
         return result
     }
     
+    @warn_unused_result
+    public func findObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+        for element in self {
+            if try transform(element) {
+                return element
+            }
+        }
+        return nil
+    }
+    
     public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
         for element in self {
             if let obj = element as? NSObject,
