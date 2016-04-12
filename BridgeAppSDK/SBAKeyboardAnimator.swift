@@ -1,5 +1,5 @@
 //
-//  SBALoadingViewPresenter.swift
+//  SBAKeyboardListener.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,32 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
-public protocol SBALoadingViewPresenter: class {
-    var loadingView: UIView! { get }
+public protocol SBAKeyboardAnimator: class {
+    var view: UIView! { get }
+    var keyboardHeightLayoutConstraint: NSLayoutConstraint! { get }
 }
 
-public extension SBALoadingViewPresenter {
+extension SBAKeyboardAnimator {
     
-    public func showLoadingView() {
-        loadingView.alpha = 0.0
-        loadingView.superview?.addSubview(loadingView)
-        loadingView.hidden = false
-        UIView.animateWithDuration(0.2, animations: {
-            self.loadingView.alpha = 1.0
-        })
-    }
-    
-    public func hideLoadingView(completion: (() -> Void)?) {
-        UIView.animateWithDuration(0.2, animations: {
-            self.loadingView.alpha = 0.0
-            }, completion: {_ in
-                self.loadingView.hidden = true
-                completion?()
-        })
+    public func keyboardChangedFrameNotification(notification: NSNotification) {
+        if let userInfo = notification.userInfo {
+            let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
+            let duration:NSTimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+            let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let animationCurveRaw = animationCurveRawNSN?.unsignedLongValue ?? UIViewAnimationOptions.CurveEaseInOut.rawValue
+            let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+            if endFrame?.origin.y >= UIScreen.mainScreen().bounds.size.height {
+                self.keyboardHeightLayoutConstraint?.constant = 0.0
+            } else {
+                self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 0.0
+            }
+            UIView.animateWithDuration(duration,
+                                       delay: NSTimeInterval(0),
+                                       options: animationCurve,
+                                       animations: { self.view.layoutIfNeeded() },
+                                       completion: nil)
+        }
     }
 }
