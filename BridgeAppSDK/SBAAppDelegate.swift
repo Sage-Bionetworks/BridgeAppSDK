@@ -35,8 +35,13 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
+public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
+    var currentUser: SBAUserWrapper { get }
+    func showAppropriateViewController(animated: Bool)
+}
+
 @UIApplicationMain
-public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresenter, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, ORKPasscodeDelegate  {
+public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
     
     public var window: UIWindow?
     
@@ -135,7 +140,7 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresent
     // MARK: RootViewController management
     // ------------------------------------------------
     
-    func showAppropriateViewController(animated: Bool) {
+    public func showAppropriateViewController(animated: Bool) {
         if (self.catastrophicStartupError != nil) {
             showCatastrophicStartupErrorViewController(animated)
         }
@@ -154,7 +159,6 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresent
     }
     
     public func showReconsentIfNecessary() {
-        // TODO: syoung 03/29/2016 Implement default method
         assertionFailure("Not implemented")
     }
     
@@ -162,7 +166,6 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresent
     * Abstract method for showing the study overview (onboarding) for a user who is not signed in
     */
     public func showOnboardingViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 Implement default method
         assertionFailure("Not implemented")
     }
     
@@ -171,7 +174,6 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresent
      * but not signed in
      */
     public func showEmailVerificationViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 Implement default method
         assertionFailure("Not implemented")
     }
     
@@ -179,7 +181,6 @@ public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAlertPresent
      * Abstract method for showing the main view controller for a user who signed in
      */
     public func showMainViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 Implement default method
         assertionFailure("Not implemented")
     }
     

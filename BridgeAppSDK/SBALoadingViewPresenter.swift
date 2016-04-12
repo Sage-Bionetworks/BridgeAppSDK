@@ -1,5 +1,5 @@
 //
-//  SequenceType+Utilities.swift
+//  SBALoadingViewPresenter.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,43 +33,26 @@
 
 import Foundation
 
-extension SequenceType {
-    
-    /**
-    Returns an `Array` containing the results of mapping and filtered `transform`
-    over `self`.
-    */
-    @warn_unused_result
-    public func mapAndFilter<T>(@noescape transform: (Self.Generator.Element) throws -> T?) rethrows -> [T] {
-        var result = [T]()
-        for element in self {
-            if let t = try transform(element) {
-                result += [t]
-            }
-        }
-        return result
-    }
-    
-    @warn_unused_result
-    public func findObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
-        for element in self {
-            if try transform(element) {
-                return element
-            }
-        }
-        return nil
-    }
-    
-    @warn_unused_result
-    public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
-        for element in self {
-            if let obj = element as? NSObject,
-                let id = obj.valueForKey("identifier") as? String
-                where (id == identifier) {
-                return element
-            }
-        }
-        return nil
-    }
+public protocol SBALoadingViewPresenter: class {
+    var loadingView: UIView! { get }
+}
 
+public extension SBALoadingViewPresenter {
+    
+    public func showLoadingView() {
+        loadingView.alpha = 0.0
+        loadingView.hidden = false
+        UIView.animateWithDuration(0.2, animations: {
+            self.loadingView.alpha = 1.0
+        })
+    }
+    
+    public func hideLoadingView(completion: (() -> Void)?) {
+        UIView.animateWithDuration(0.2, animations: {
+            self.loadingView.alpha = 0.0
+            }, completion: {_ in
+                self.loadingView.hidden = true
+                completion?()
+        })
+    }
 }

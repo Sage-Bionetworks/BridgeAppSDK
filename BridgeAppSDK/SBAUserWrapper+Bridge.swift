@@ -44,6 +44,9 @@ let SBAHiddenTestEmailString = "+test"
  */
 let SBATestDataGroup = SBAAppDelegate.sharedDelegate?.bridgeInfo.testUserDataGroup ?? "test_user"
 
+/**
+ * Error domin for user errors
+ */
 let SBAUserErrorDomain = "SBAUserError"
 
 extension SBBUserDataSharingScope {
@@ -64,7 +67,7 @@ public extension SBAUserWrapper {
     /**
      * Register a user with an externalId *only*
      */
-    public func registerUser(externalId: String, dataGroups: [String]?, completion: ((NSError?) -> Void)?) {
+    public func registerUser(externalId externalId: String, dataGroups: [String]?, completion: ((NSError?) -> Void)?) {
         let (email, password) = emailAndPasswordForExternalId(externalId)
         guard (email != nil) && (password != nil) else {
             return
@@ -126,7 +129,7 @@ public extension SBAUserWrapper {
     /**
      * Login a user on this device via externalId where registration was handled on a different device
      */
-    public func loginUser(externalId: String, completion: ((NSError?) -> Void)?) {
+    public func loginUser(externalId externalId: String, completion: ((NSError?) -> Void)?) {
         let (email, password) = emailAndPasswordForExternalId(externalId)
         guard (email != nil) && (password != nil) else {
             return
@@ -157,7 +160,7 @@ public extension SBAUserWrapper {
         let name = consentSignature.signatureName ?? self.name ?? "First Last"
         let birthdate = consentSignature.signatureBirthdate?.startOfDay() ?? NSDate(timeIntervalSince1970: 0)
         let consentImage = consentSignature.signatureImage
-        let subpopGuid = self.subpopulationGuid ?? SBAAppDelegate.sharedDelegate?.bridgeInfo.studyIdentifier ?? "unknown"
+        let subpopGuid = self.subpopulationGuid ?? self.bridgeInfo?.studyIdentifier ?? "unknown"
         
         SBAUserBridgeManager.sendUserConsented(name, birthDate: birthdate, consentImage: consentImage, sharingScope: self.dataSharingScope, subpopulationGuid: subpopGuid) { [weak self] (_, error) in
             guard (self != nil) else { return }
@@ -202,7 +205,7 @@ public extension SBAUserWrapper {
             
             // If there was an error and it is *not* the consent error then call completion and exit
             let requiresConsent = (error != nil) && error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue
-            guard ((error != nil) && !requiresConsent) else {
+            guard ((error == nil) || requiresConsent) else {
                 self!.callCompletionOnMain(error, completion: completion)
                 return
             }
@@ -247,11 +250,11 @@ public extension SBAUserWrapper {
     
     private func emailAndPasswordForExternalId(externalId: String) -> (String?, String?) {
         
-        guard let emailFormat = SBAAppDelegate.sharedDelegate?.bridgeInfo.emailFormatForRegistrationViaExternalId else {
+        guard let emailFormat = self.bridgeInfo?.emailFormatForLoginViaExternalId else {
             assertionFailure("'emailFormatForRegistrationViaExternalId' key missing from BridgeInfo")
             return (nil, nil)
         }
-        let passwordFormat = SBAAppDelegate.sharedDelegate?.bridgeInfo.passwordFormatForRegistrationViaExternalId ?? "%@"
+        let passwordFormat = self.bridgeInfo?.passwordFormatForLoginViaExternalId ?? "%@"
         
         let email = NSString(format: emailFormat, externalId) as String
         let password = NSString(format: passwordFormat, externalId) as String
