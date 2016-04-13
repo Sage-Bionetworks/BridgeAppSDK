@@ -52,7 +52,7 @@ public extension SBAExternalIDOnboardingController {
     public func registerUser() {
         
         guard let text: String = self.registrationCodeTextField.text
-            where text.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 0 else {
+            where text.characters.count > 0 else {
                 let message = NSLocalizedString("Please enter a valid registration code.", comment: "Message for invalid registration code")
                 showAlertWithOk(nil, message: message, actionHandler: nil)
                 return
