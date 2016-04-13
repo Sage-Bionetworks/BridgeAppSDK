@@ -33,7 +33,7 @@
 
 import Foundation
 
-public protocol SBALoadingViewPresenter: class {
+public protocol SBALoadingViewPresenter {
     var loadingView: UIView! { get }
 }
 

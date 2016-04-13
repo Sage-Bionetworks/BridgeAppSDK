@@ -68,6 +68,9 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
 
 + (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
 
++ (void) updateDataGroups:(NSArray<NSString *> *)dataGroups
+               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

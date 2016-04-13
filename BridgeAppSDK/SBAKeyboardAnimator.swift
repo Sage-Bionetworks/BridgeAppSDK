@@ -33,7 +33,7 @@
 
 import UIKit
 
-public protocol SBAKeyboardAnimator: class {
+public protocol SBAKeyboardAnimator {
     var view: UIView! { get }
     var keyboardHeightLayoutConstraint: NSLayoutConstraint! { get }
 }

@@ -37,6 +37,7 @@ import ResearchKit
 
 public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
     var currentUser: SBAUserWrapper { get }
+    var bridgeInfo: SBABridgeInfo { get }
     func showAppropriateViewController(animated: Bool)
 }
 

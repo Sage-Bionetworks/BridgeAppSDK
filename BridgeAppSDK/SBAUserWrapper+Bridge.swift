@@ -65,6 +65,46 @@ extension SBBUserDataSharingScope {
 public extension SBAUserWrapper {
     
     /**
+     * Returns whether or not the data group is contained in the user's data groups
+     */
+    public func containsDataGroup(dataGroup: String) -> Bool {
+        return self.dataGroups?.contains(dataGroup) ?? false
+    }
+    
+    /**
+     * Add dataGroup to the user's data groups
+     */
+    public func addDataGroup(dataGroup: String, completion: ((NSError?) -> Void)?) {
+        let dataGroups = (self.dataGroups ?? []) + [dataGroup]
+        updateDataGroups(dataGroups, completion: completion)
+    }
+    
+    /**
+     * Remove dataGroup from the user's data groups
+     */
+    public func removeDataGroup(dataGroup: String, completion: ((NSError?) -> Void)?) {
+        guard let idx = self.dataGroups?.indexOf(dataGroup) else {
+            completion?(nil)
+            return
+        }
+        var dataGroups = self.dataGroups!
+        dataGroups.removeAtIndex(idx)
+        updateDataGroups(dataGroups, completion: completion)
+    }
+    
+    /**
+     * Update the user's data groups
+     */
+    public func updateDataGroups(dataGroups: [String], completion: ((NSError?) -> Void)?) {
+        SBAUserBridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
+            guard (self != nil) else { return }
+
+            self!.dataGroups = dataGroups
+            self!.callCompletionOnMain(error, completion: completion)
+        })
+    }
+    
+    /**
      * Register a user with an externalId *only*
      */
     public func registerUser(externalId externalId: String, dataGroups: [String]?, completion: ((NSError?) -> Void)?) {
@@ -134,19 +174,24 @@ public extension SBAUserWrapper {
         guard (email != nil) && (password != nil) else {
             return
         }
-        signInUser(email!, password: password!, completion: completion)
+        loginUser(email: email!, password: password!, externalId: externalId, completion: completion)
     }
     
     /**
      * Login a user on this device who has previously completed registration on a different device.
      */
     public func loginUser(email email: String, password: String, completion: ((NSError?) -> Void)?) {
+        loginUser(email: email, password: password, externalId: nil, completion: completion)
+    }
+    
+    private func loginUser(email email: String, password: String, externalId: String?, completion: ((NSError?) -> Void)?) {
         signInUser(email, password: password) { [weak self] (error) in
             guard (self != nil) else { return }
             
             if ((error == nil) || error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue) {
                 self!.email = email
                 self!.password = password
+                self!.externalId = externalId
             }
             self!.callCompletionOnMain(error, completion: completion)
         }

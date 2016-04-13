@@ -1,5 +1,5 @@
 //
-//  NSDictionary+Utilities.swift
+//  SBAUIController.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,23 +31,22 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
-extension NSDictionary {
+public protocol SBAUIController {
+}
+
+extension SBAUIController {
     
-    func objectWithResourceDictionary() -> AnyObject? {
-        guard let resourceName = self["resourceName"] as? String else {
-                return nil
-        }
-        let bundleName = self["resourceBundle"] as? String
-        let bundle = (bundleName != nil) ? NSBundle(identifier: bundleName!) : nil
-        guard let json = SBAResourceFinder.sharedResourceFinder.jsonNamed(resourceName, bundle: bundle) else {
-            return nil
-        }
-        guard let classType = self["classType"] as? String else {
-            return json
-        }
-        return SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(json as [NSObject : AnyObject], classType: classType)
+    public var sharedAppDelegate: SBASharedAppDelegate {
+        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
     }
     
+    public var user: SBAUserWrapper {
+        return self.sharedAppDelegate.currentUser
+    }
+    
+    public var bridgeInfo: SBABridgeInfo {
+        return self.sharedAppDelegate.bridgeInfo
+    }
 }

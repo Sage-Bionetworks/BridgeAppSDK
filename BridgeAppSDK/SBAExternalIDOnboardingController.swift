@@ -31,27 +31,19 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
 /**
  * Allow for any controller that implements this protocol to use the shared implementation for
  * registering a user via an external id rather than an email/password.
  */
-public protocol SBAExternalIDOnboardingController: class, SBALoadingViewPresenter, SBAAlertPresenter, UITextFieldDelegate {
+public protocol SBAExternalIDOnboardingController: class, SBAUIController, SBALoadingViewPresenter, SBAAlertPresenter, UITextFieldDelegate {
     
     // Text field that is used to enter the registration code
     var registrationCodeTextField: UITextField! { get }
 }
 
 public extension SBAExternalIDOnboardingController {
-    
-    var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
-    
-    public var user: SBAUserWrapper {
-        return self.sharedAppDelegate.currentUser
-    }
     
     public func handleViewDidAppear() {
         registrationCodeTextField.becomeFirstResponder()
