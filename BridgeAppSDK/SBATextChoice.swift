@@ -40,6 +40,12 @@ public protocol SBATextChoice  {
     var exclusive: Bool { get }
 }
 
+extension SBATextChoice {
+    func createORKTextChoice() -> ORKTextChoice {
+        return ORKTextChoice(text: self.choiceText, detailText: self.choiceDetail, value: self.choiceValue, exclusive: self.exclusive)
+    }
+}
+
 extension NSDictionary: SBATextChoice {
     
     public var choiceText: String {

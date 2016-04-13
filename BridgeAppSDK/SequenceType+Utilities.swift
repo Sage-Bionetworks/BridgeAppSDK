@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SequenceType+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,45 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+import Foundation
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
-
-class DeprecationTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+extension SequenceType {
+    
+    /**
+    Returns an `Array` containing the results of mapping and filtered `transform`
+    over `self`.
+    */
+    @warn_unused_result
+    public func mapAndFilter<T>(@noescape transform: (Self.Generator.Element) throws -> T?) rethrows -> [T] {
+        var result = [T]()
+        for element in self {
+            if let t = try transform(element) {
+                result += [t]
+            }
+        }
+        return result
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    @warn_unused_result
+    public func findObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+        for element in self {
+            if try transform(element) {
+                return element
+            }
+        }
+        return nil
     }
-
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
-
+    
+    @warn_unused_result
+    public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
+        for element in self {
+            if let obj = element as? NSObject,
+                let id = obj.valueForKey("identifier") as? String
+                where (id == identifier) {
+                return element
+            }
+        }
+        return nil
+    }
 
 }

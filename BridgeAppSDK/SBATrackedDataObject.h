@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBATrackedDataObject.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,41 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+#import <Foundation/Foundation.h>
+#import "SBADataObject.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface SBATrackedDataObject : SBADataObject
 
 /**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
+ * Is this data object being tracked with follow-up questions?
  */
+@property (nonatomic) BOOL tracking;
 
-class DeprecationTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
+/**
+ * Frequency of taking/doing (if applicable)
+ */
+@property (nonatomic) NSUInteger frequency;
 
 
-}
+#pragma mark - Subclasses should override the following methods and provide implementation
+
+/**
+ * Whether or not the frequency range should be used. Default = NO
+ */
+@property (nonatomic, readonly) BOOL usesFrequencyRange;
+
+/**
+ * Localized text to display as the full descriptor. Default = identifier.
+ */
+@property (nonatomic, readonly) NSString * text;
+
+/**
+ * Localized shortened text to display when used in a sentence. Default = identifier.
+ */
+@property (nonatomic, readonly) NSString * shortText;
+
+@end
+
+NS_ASSUME_NONNULL_END

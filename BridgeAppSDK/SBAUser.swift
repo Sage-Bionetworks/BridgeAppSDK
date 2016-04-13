@@ -47,6 +47,10 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
+    lazy public var bridgeInfo: SBABridgeInfo? = {
+       return SBAAppDelegate.sharedDelegate?.bridgeInfo
+    }()
+    
     // --------------------------------------------------
     // MARK: Memory-only storage
     // --------------------------------------------------

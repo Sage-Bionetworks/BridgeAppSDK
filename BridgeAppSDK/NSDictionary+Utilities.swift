@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  NSDictionary+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+import Foundation
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
-
-class DeprecationTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+extension NSDictionary {
+    
+    func objectWithResourceDictionary() -> AnyObject? {
+        guard let resourceName = self["resourceName"] as? String else {
+                return nil
+        }
+        let bundleName = self["resourceBundle"] as? String
+        let bundle = (bundleName != nil) ? NSBundle(identifier: bundleName!) : nil
+        guard let json = SBAResourceFinder.sharedResourceFinder.jsonNamed(resourceName, bundle: bundle) else {
+            return nil
+        }
+        guard let classType = self["classType"] as? String else {
+            return json
+        }
+        return SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(json as [NSObject : AnyObject], classType: classType)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
-
-
 }

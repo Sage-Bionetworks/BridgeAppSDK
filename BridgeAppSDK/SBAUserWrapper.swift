@@ -36,6 +36,8 @@ import Foundation
 // Wrapper support for reverse compatiblility to AppCore. syoung 03/28/2016
 
 public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
+    
+    var bridgeInfo: SBABridgeInfo? { get }
 
     /**
      * SessionToken is stored in memory only

@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBATrackedDataObjectCollection.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,21 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+#import "SBATrackedDataObject.h"
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+@class SBATrackedDataStore;
 
-class DeprecationTests: XCTestCase {
+@interface SBATrackedDataObjectCollection : SBADataObject
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+@property (nonatomic, copy) NSString *taskIdentifier;
+@property (nonatomic, copy) NSString *schemaIdentifier;
+@property (nonatomic, copy) NSNumber *schemaRevision;
 
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
+@property (nonatomic, copy) NSString *itemsClassType;
+@property (nonatomic, copy) NSArray <SBATrackedDataObject *> *items;
+@property (nonatomic, copy) NSArray *steps;
 
+@property (nonatomic) SBATrackedDataStore *dataStore;
+@property (nonatomic) NSNumber *repeatTimeInterval;
 
-}
+@end

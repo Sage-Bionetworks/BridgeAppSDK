@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  MockTrackedDataStore.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,15 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+#import <UIKit/UIKit.h>
+@import BridgeAppSDK;
 
-class DeprecationTests: XCTestCase {
+@interface MockTrackedDataStore : SBATrackedDataStore
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+@property (nonatomic) NSDate *mockLastCompletionDate;
 
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
+@property (nonatomic) BOOL commitChanges_called;
+@property (nonatomic) BOOL reset_called;
 
-
-}
+@end

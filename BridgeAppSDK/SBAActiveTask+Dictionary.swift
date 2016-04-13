@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBAActiveTask+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+import Foundation
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+extension NSDictionary: SBAActiveTask {
+    
+    var taskTypeName: String? {
+        return self["taskType"] as? String
+    }
 
-class DeprecationTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    public var taskType: SBAActiveTaskType {
+        return SBAActiveTaskType(name: taskTypeName)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    public var intendedUseDescription: String? {
+        return self["intendedUseDescription"] as? String
     }
 
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
+    public var taskOptions: [String : AnyObject]? {
+        return self["taskOptions"] as? [String : AnyObject]
+    }
+    
+    public var predefinedExclusions: ORKPredefinedTaskOption? {
+        guard let exclusions = self["predefinedExclusions"] as? UInt else { return nil }
+        return ORKPredefinedTaskOption(rawValue: exclusions)
+    }
 
+    public var localizedSteps: [SBASurveyItem]? {
+        guard let steps = self["localizedSteps"] as? [AnyObject] else { return nil }
+        return steps.map({ return ($0 as? SBASurveyItem) ?? NSDictionary() })
+    }
 
 }
+
+
+
+

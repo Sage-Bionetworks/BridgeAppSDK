@@ -133,4 +133,23 @@
     }];
 }
 
++ (void) updateDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock
+{
+    SBBDataGroups *groups = [SBBDataGroups new];
+    groups.dataGroups = [NSSet setWithArray:dataGroups];
+    
+    [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups
+                                                  completion: ^(id responseObject,
+                                                                NSError *error) {
+#if DEBUG
+         if (error != nil) {
+             NSLog(@"Error with updating data groups: %@", error);
+         }
+#endif
+         if (completionBlock) {
+             completionBlock(responseObject, error);
+         }
+     }];
+}
+
 @end

@@ -44,3 +44,6 @@ FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 #import <BridgeAppSDK/SBAUserBridgeManager.h>
 #import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
 #import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
+#import <BridgeAppSDK/SBADataObject.h>
+#import <BridgeAppSDK/SBAMedication.h>
+#import <BridgeAppSDK/SBATrackedDataStore.h>

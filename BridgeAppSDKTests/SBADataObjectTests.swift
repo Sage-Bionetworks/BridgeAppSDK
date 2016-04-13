@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBADataObjectTests.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -32,13 +32,10 @@
 //
 
 import XCTest
+import ResearchKit
+import BridgeAppSDK
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
-
-class DeprecationTests: XCTestCase {
+class SBADataObjectTests: ResourceTestCase {
 
     override func setUp() {
         super.setUp()
@@ -50,20 +47,39 @@ class DeprecationTests: XCTestCase {
         super.tearDown()
     }
 
-    /** Test of understanding of deprecated range init method
-    func testRange() {
+    func testClassTypeMap_AutomaticallyMappedBridgeAppObject() {
         
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
+        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("SBAMedication")
+        XCTAssertNotNil(result)
+        guard let classType = result as? SBATrackedDataObject.Type else {
+            XCTAssert(false, "\(result) not of expected class type")
+            return
+        }
         
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
+        let obj = classType.init(identifier: "abc123")
+        XCTAssertNotNil(obj)
+        XCTAssertEqual(obj.identifier, "abc123")
         
-    }*/
+        guard let _ = obj as? SBAMedication else {
+            XCTAssert(false, "\(obj) not of expected class type")
+            return
+        }
+    }
+    
+    func testClassTypeMap_AutomaticallyMappedBundleObject() {
+        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("MockORKTaskWithoutOptionals")
+        XCTAssertNotNil(result)
+    }
+    
+    func testClassTypeMap_PlistMappedBridgeAppObjects() {
 
+        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("Medication")
+        XCTAssertNotNil(result)
+        guard let _ = result as? SBAMedication.Type else {
+            XCTAssert(false, "\(result) not of expected class type")
+            return
+        }
+        
+    }
 
 }

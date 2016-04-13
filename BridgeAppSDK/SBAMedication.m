@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBAMedication.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,43 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+#import "SBAMedication.h"
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+@implementation SBAMedication
 
-class DeprecationTests: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
-
-
++ (NSString *)classType {
+    return @"Medication";
 }
+
+- (BOOL)usesFrequencyRange {
+    return !self.injection;
+}
+
+- (NSString *)defaultIdentifierIfNil {
+    return self.brand ?: self.name;
+}
+
+- (NSArray <NSString *> *)dictionaryRepresentationKeys {
+    NSArray *additionalKeys = @[NSStringFromSelector(@selector(name)),
+                                NSStringFromSelector(@selector(brand)),
+                                NSStringFromSelector(@selector(detail)),
+                                NSStringFromSelector(@selector(injection))];
+    return [[super dictionaryRepresentationKeys] arrayByAddingObjectsFromArray:additionalKeys];
+}
+
+- (NSString *)text {
+    NSMutableString *result = [self.name mutableCopy];
+    if (self.detail.length > 0) {
+        [result appendFormat:@" %@", self.detail];
+    }
+    if (self.brand.length > 0) {
+        [result appendFormat:@" (%@)", self.brand];
+    }
+    return result;
+}
+
+- (NSString *)shortText {
+    return self.brand ?: self.name;
+}
+
+@end

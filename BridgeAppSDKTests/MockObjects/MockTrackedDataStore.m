@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  MockTrackedDataStore.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,37 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+#import "MockTrackedDataStore.h"
 
-class DeprecationTests: XCTestCase {
+@implementation MockTrackedDataStore
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
-
-
+- (instancetype)init {
+    return [self initWithUserDefaultsWithSuiteName:[[NSUUID UUID] UUIDString]];
 }
+
+- (NSArray *)momentInDayResultDefaultIdMap {
+    return @[@[@"momentInDay", @"momentInDayFormat"],
+             @[@"medicationActivityTiming", @"medicationActivityTiming"]];
+}
+
+- (NSDate *)lastCompletionDate {
+    // Override the drop thru to look at the current user
+    return self.mockLastCompletionDate;
+}
+
+- (void)setLastCompletionDate:(NSDate *)lastCompletionDate {
+    self.mockLastCompletionDate = lastCompletionDate;
+}
+
+- (void)commitChanges {
+    self.commitChanges_called = YES;
+    [super commitChanges];
+}
+
+- (void)reset {
+    self.reset_called = YES;
+    [super reset];
+}
+
+@end

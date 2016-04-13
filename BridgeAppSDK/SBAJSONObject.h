@@ -1,5 +1,5 @@
 //
-//  DeprecationTests.swift
+//  SBAJSONObject.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,53 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+#import <Foundation/Foundation.h>
+#import <BridgeSDK/BridgeSDK.h>
 
-/**
- * Swift is a young language that is constantly changing. Things get deprecated and sometimes 
- * it is unclear how to update your code.
- */
+NS_ASSUME_NONNULL_BEGIN
 
-class DeprecationTests: XCTestCase {
+@protocol SBAJSONObject <NSObject>
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter;
 
-    /** Test of understanding of deprecated range init method
-    func testRange() {
-        
-        let string = "abcdefghijklmnopqrstuvwxyz"
-        let range = string.rangeOfString("defg")!
-        let deprecatedRange = Range(start: range.endIndex, end: string.endIndex)
-        let spliceRange = range.endIndex ..< string.endIndex
-        
-        let deprecatedRangeString = string.substringWithRange(deprecatedRange)
-        let spliceRangeString = string.substringWithRange(spliceRange)
-        XCTAssertEqual(deprecatedRangeString, "hijklmnopqrstuvwxyz")
-        XCTAssertEqual(spliceRangeString, deprecatedRangeString)
-        
-    }*/
+@end
 
+@protocol SBAJSONDictionaryRepresentableObject <NSObject>
 
-}
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionaryRepresentation;
+
+@end
+
+@interface NSArray (SBAJSONObject)
+
+- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap;
+
+@end
+
+@interface NSDictionary (SBAJSONObject)
+
+- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap;
+
+@end
+
+@interface NSString (SBAJSONObject) <SBAJSONObject>
+
+- (NSNumber * _Nullable)boolNumber;
+- (NSNumber * _Nullable)intNumber;
+
+@end
+
+@interface NSNumber (SBAJSONObject) <SBAJSONObject>
+@end
+
+@interface NSNull (SBAJSONObject) <SBAJSONObject>
+@end
+
+@interface NSDate (SBAJSONObject) <SBAJSONObject>
+@end
+
+@interface NSDateComponents (SBAJSONObject) <SBAJSONObject>
+@end
+
+NS_ASSUME_NONNULL_END

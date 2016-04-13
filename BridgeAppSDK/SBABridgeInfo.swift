@@ -49,18 +49,17 @@ public protocol SBABridgeInfo: class {
     /**
      * App store link for this application. By default, this returns the value pulled from the main bundle
      */
-    var appStoreLinkURL: NSURL! { get }
+    var appStoreLinkURLString: String? { get }
     
     /**
-     * Email format to use for registration via externalId should be in the form
-     * "name+%@@company.org"
+     * Email to use for registration or login via externalId
      */
-    var emailFormatForRegistrationViaExternalId: String? { get }
+    var emailForLoginViaExternalId: String? { get }
     
     /**
-     * Password format for use for registration via externalId. (optional)
+     * Password format for use for registration or login via externalId. (optional)
      */
-    var passwordFormatForRegistrationViaExternalId: String? { get }
+    var passwordFormatForLoginViaExternalId: String? { get }
     
     /**
      * Data group for the test user. (optional)
@@ -93,27 +92,38 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
         self.plist = plist
     }
     
-    public var appStoreLinkURL: NSURL! {
-        guard let appStoreLinkURLString = self.plist["appStoreLinkURL"] as? String,
-            let url = NSURL(string: appStoreLinkURLString)
-        else {
-            return NSBundle.mainBundle().appStoreLinkURL()
-        }
-        return url
+    public var appStoreLinkURLString: String? {
+        return  self.plist["appStoreLinkURL"] as? String
     }
     
-    public var emailFormatForRegistrationViaExternalId: String? {
-        return self.plist["emailFormatForRegistrationViaExternalId"] as? String
+    public var emailForLoginViaExternalId: String? {
+        return self.plist["emailForLoginViaExternalId"] as? String
     }
     
-    public var passwordFormatForRegistrationViaExternalId: String? {
-        return self.plist["passwordFormatForRegistrationViaExternalId"] as? String
+    public var passwordFormatForLoginViaExternalId: String? {
+        return self.plist["passwordFormatForLoginViaExternalId"] as? String
     }
     
     public var testUserDataGroup: String? {
         return self.plist["testUserDataGroup"] as? String
     }
+}
 
+extension SBABridgeInfo {
     
+    public var emailFormatForLoginViaExternalId: String? {
+        guard let email = self.emailForLoginViaExternalId, let range = email.rangeOfString("@") else {
+            return nil
+        }
+        return email.stringByReplacingCharactersInRange(range, withString: "+%@@")
+    }
+    
+    public var appStoreLinkURL: NSURL! {
+        guard let appStoreLinkURLString = self.appStoreLinkURLString,
+            let url = NSURL(string: appStoreLinkURLString) else {
+                return NSBundle.mainBundle().appStoreLinkURL()
+        }
+        return url
+    }
 }
 

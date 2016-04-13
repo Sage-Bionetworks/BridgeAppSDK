@@ -34,7 +34,11 @@
 import ResearchKit
 import BridgeSDK
 
-public protocol SBASurveyItem: class {
+public protocol SBAStepTransformer: class {
+    func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep
+}
+
+public protocol SBASurveyItem: SBAStepTransformer {
     var identifier: String! { get }
     var surveyItemType: SBASurveyItemType { get }
     var stepTitle: String? { get }
@@ -91,6 +95,7 @@ public enum SBASurveyItemType {
         case Integer                // ORKNumericAnswerFormat of style Integer
         case Decimal                // ORKNumericAnswerFormat of style Decimal
         case Scale                  // ORKScaleAnswerFormat
+        case TimingRange            // Timing Range: ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
     }
 
     case Consent(ConsentSubtype)
@@ -111,6 +116,7 @@ public enum SBASurveyItemType {
         case "boolean"               : self = .Form(.Boolean)
         case "singleChoiceText"      : self = .Form(.SingleChoice)
         case "multipleChoiceText"    : self = .Form(.MultipleChoice)
+        case "timingRange"           : self = .Form(.TimingRange)
         case "consentSharingOptions" : self = .Consent(.SharingOptions)
         case "consentReview"         : self = .Consent(.Review)
         case "consentVisual"         : self = .Consent(.Visual)
@@ -130,6 +136,13 @@ public enum SBASurveyItemType {
             return subtype
         }
         return nil
+    }
+    
+    func isNilType() -> Bool {
+        if case .Custom(let customType) = self {
+            return (customType == nil)
+        }
+        return false
     }
 }
 
