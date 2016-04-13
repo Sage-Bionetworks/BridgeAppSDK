@@ -42,9 +42,9 @@
 @implementation SBADataObject
 
 - (instancetype)init {
-    [NSException exceptionWithName: NSInternalInconsistencyException
-                            reason: @"method unavailable"
-                          userInfo: nil];
+    @throw [NSException exceptionWithName: NSInternalInconsistencyException
+                                   reason: @"method unavailable"
+                                 userInfo: nil];
     return nil;
 }
 
