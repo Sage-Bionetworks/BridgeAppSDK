@@ -32,18 +32,7 @@
 //
 
 #import "SBAJSONObject.h"
-
-
-/**
- Sage requires our dates to be in "ISO 8601" format,
- like this:
- 
- 2015-02-25T16:42:11+00:00
- 
- Got the rules from http://en.wikipedia.org/wiki/ISO_8601
- Date-formatting rules from http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
- */
-static NSString * const kDateFormatISO8601 = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+@import BridgeSDK;
 
 @implementation NSString (SBAJSONObject)
 
@@ -113,25 +102,12 @@ static NSString * const kDateFormatISO8601 = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 @implementation NSDate (SBAJSONObject)
 
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
-    NSDateFormatter *dateFormatter = [formatter isKindOfClass:[NSDateFormatter class]] ? (NSDateFormatter *)formatter : [self defaultFormatter];
-    return [dateFormatter stringFromDate:self];
-}
-
-- (NSDateFormatter *)defaultFormatter {
-    NSDateFormatter *formatter = [NSDateFormatter new];
-    [formatter setDateFormat: kDateFormatISO8601];
-    
-    /*
-     Set the formatter's locale.  Otherwise, the result will
-     come out in the user's local language, not in English; and
-     we wanna be able to generate it in English, since that's
-     how Sage is expecting it.  For the reason to set the POSIX
-     locale ("en_US_POSIX"), instead of the simpler "en-US",
-     see:  http://blog.gregfiumara.com/archives/245
-     */
-    [formatter setLocale: [[NSLocale alloc] initWithLocaleIdentifier: @"en_US_POSIX"]];
-    
-    return formatter;
+    if ([formatter isKindOfClass:[NSDateFormatter class]]) {
+        return [(NSDateFormatter*)formatter stringFromDate:self];
+    }
+    else {
+        return [self ISO8601String];
+    }
 }
 
 @end
