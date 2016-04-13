@@ -120,8 +120,7 @@ extension SBABridgeInfo {
     
     public var appStoreLinkURL: NSURL! {
         guard let appStoreLinkURLString = self.appStoreLinkURLString,
-            let url = NSURL(string: appStoreLinkURLString)
-            else {
+            let url = NSURL(string: appStoreLinkURLString) else {
                 return NSBundle.mainBundle().appStoreLinkURL()
         }
         return url
