@@ -57,6 +57,13 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
         // Override point for customization before application launch.
         
         self.initializeBridgeServerConnection()
+        
+        // Set the window tint color if applicable
+        if let tintColor = UIColor.primaryTintColor() {
+            self.window?.tintColor = tintColor
+        }
+        
+        // Setup the view controller
         self.showAppropriateViewController(false)
         
         return true

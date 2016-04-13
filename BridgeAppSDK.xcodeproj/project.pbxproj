@@ -61,6 +61,7 @@
 		FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */; };
 		FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */; };
 		FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */; };
+		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
@@ -310,6 +311,7 @@
 		FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedStep.swift; sourceTree = "<group>"; };
 		FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Utilities.swift"; sourceTree = "<group>"; };
 		FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataObjectTests.swift; sourceTree = "<group>"; };
+		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBARootViewControllerProtocol.h; sourceTree = "<group>"; };
 		FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAUserBridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
@@ -599,6 +601,7 @@
 		FBAE3CE61C86157E003CEC4A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */,
 				FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */,
 				FB0C9EF21CAA52F700BA5B44 /* NSDate+Utilities.swift */,
 				FF23799E1CBC2E5900F3A943 /* NSDictionary+Utilities.swift */,
@@ -1067,6 +1070,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */,
 				FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */,
 				FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
