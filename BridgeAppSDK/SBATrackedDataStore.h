@@ -76,6 +76,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)commitChanges;
 - (void)reset;
 
+// Keys exposed to keep compatibility with existing implementations
++ (NSString *)keyPrefix;
++ (NSString *)momentInDayResultKey;
++ (NSString *)skippedSelectionSurveyQuestionKey;
++ (NSString *)lastTrackingSurveyDateKey;
++ (NSString *)selectedItemsKey;
++ (NSString *)noTrackedItemsAnswer;
++ (NSString *)skippedAnswer;
+
 @end
 
 NS_ASSUME_NONNULL_END
