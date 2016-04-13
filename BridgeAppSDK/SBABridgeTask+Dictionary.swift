@@ -36,10 +36,14 @@ import Foundation
 extension NSDictionary: SBABridgeTask {
     
     public var taskIdentifier: String! {
-        return _nullableTaskIdentifier ?? NSUUID().UUIDString
-    }
-    private var _nullableTaskIdentifier: String? {
-        return self["taskIdentifier"] as? String
+        guard let taskIdentifier = self["taskIdentifier"] as? String else {
+            // If this is determined to be an SBABridgeTask dictionary and it does not have a
+            // "taskIdentifier" key then throw an assertion, but return a UUID so that a production
+            // app will not crash.
+            assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
+            return NSUUID().UUIDString
+        }
+        return taskIdentifier
     }
     
     public var schemaIdentifier: String! {

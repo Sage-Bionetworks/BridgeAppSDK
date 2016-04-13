@@ -55,7 +55,7 @@ extension NSDictionary: SBAStepTransformer {
 extension NSDictionary: SBASurveyItem {
     
     public var identifier: String! {
-        return (self["identifier"] as? String) ?? (self["schemaIdentifier"] as? String) ?? NSUUID().UUIDString
+        return (self["identifier"] as? String) ?? self.schemaIdentifier
     }
     
     public var surveyItemType: SBASurveyItemType {
