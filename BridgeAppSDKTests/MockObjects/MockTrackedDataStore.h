@@ -43,3 +43,9 @@
 @property (nonatomic) BOOL reset_called;
 
 @end
+
+@interface MockTrackedDataStore (PrivateTest)
+
+@property (nonatomic, copy, readwrite) NSArray * momentInDayResultDefaultIdMap;
+
+@end

@@ -40,11 +40,6 @@
     return [self initWithUserDefaultsWithSuiteName:[[NSUUID UUID] UUIDString]];
 }
 
-- (NSArray *)momentInDayResultDefaultIdMap {
-    return @[@[@"momentInDay", @"momentInDayFormat"],
-             @[@"medicationActivityTiming", @"medicationActivityTiming"]];
-}
-
 - (NSDate *)lastCompletionDate {
     // Override the drop thru to look at the current user
     return self.mockLastCompletionDate;

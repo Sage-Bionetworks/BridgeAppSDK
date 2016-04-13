@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL hasChanges;
 
 @property (nonatomic, readonly) NSUserDefaults *storedDefaults;
-@property (nonatomic, copy, readonly) NSArray *momentInDayResultDefaultIdMap;
+@property (nonatomic, copy, readonly) NSArray * _Nullable momentInDayResultDefaultIdMap;
 
 /**
  * Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
@@ -72,6 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
                                     result:(ORKTaskResult *)result;
+
+- (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps;
 
 - (void)commitChanges;
 - (void)reset;

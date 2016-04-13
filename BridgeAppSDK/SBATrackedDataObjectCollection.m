@@ -61,7 +61,7 @@ static NSString *kTrackedItemsKey = @"items";
 
 - (SBATrackedDataStore *)dataStore {
     if (_dataStore == nil) {
-        return [SBATrackedDataStore defaultStore];
+        _dataStore = [SBATrackedDataStore defaultStore];
     }
     return _dataStore;
 }

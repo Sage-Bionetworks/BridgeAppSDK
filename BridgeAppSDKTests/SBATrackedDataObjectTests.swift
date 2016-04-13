@@ -509,6 +509,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataCollection.dataStore = dataStore
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: true)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -528,6 +529,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = []
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -548,6 +550,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -567,6 +570,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.lastTrackingSurveyDate = NSDate()
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -586,6 +590,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -605,6 +610,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = []
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -612,6 +618,20 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         
         checkChangedAndActivitySteps(task.steps, expectedSkipIdentifier: "nextSection", dataCollection: dataCollection)
+    }
+    
+    func checkDataStoreDefaultIDMap(dataStore: SBATrackedDataStore) {
+
+        guard let defaultMap = dataStore.momentInDayResultDefaultIdMap as? [[String]] else {
+            XCTAssert(false, "\(dataStore.momentInDayResultDefaultIdMap) not of expected type")
+            return
+        }
+        
+        let expectedMap =
+            [["momentInDay", "momentInDayFormat"],
+             ["medicationActivityTiming", "medicationActivityTiming"]];
+        
+        XCTAssertEqual(defaultMap, expectedMap);
     }
     
     // Mark: convenience methods
