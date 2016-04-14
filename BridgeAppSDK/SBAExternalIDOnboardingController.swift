@@ -37,7 +37,7 @@ import UIKit
  * Allow for any controller that implements this protocol to use the shared implementation for
  * registering a user via an external id rather than an email/password.
  */
-public protocol SBAExternalIDOnboardingController: class, SBAUIController, SBALoadingViewPresenter, SBAAlertPresenter, UITextFieldDelegate {
+public protocol SBAExternalIDOnboardingController: class, SBASharedInfoController, SBALoadingViewPresenter, SBAAlertPresenter, UITextFieldDelegate {
     
     // Text field that is used to enter the registration code
     var registrationCodeTextField: UITextField! { get }

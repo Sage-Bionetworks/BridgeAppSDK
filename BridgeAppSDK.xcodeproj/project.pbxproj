@@ -61,7 +61,7 @@
 		FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */; };
 		FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
-		FF3A359D1CBEB2D400F44E6E /* SBAUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBAUIController.swift */; };
+		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
@@ -93,6 +93,8 @@
 		FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */; };
 		FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */; };
 		FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4B41CBD903000ED5399 /* SBAKeyboardAnimator.swift */; };
+		FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */; };
+		FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */; };
 		FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */; };
 		FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */; };
 		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
@@ -312,7 +314,7 @@
 		FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Utilities.swift"; sourceTree = "<group>"; };
 		FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataObjectTests.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
-		FF3A359C1CBEB2D400F44E6E /* SBAUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUIController.swift; sourceTree = "<group>"; };
+		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBARootViewControllerProtocol.h; sourceTree = "<group>"; };
 		FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAUserBridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
@@ -343,6 +345,8 @@
 		FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDOnboardingController.swift; sourceTree = "<group>"; };
 		FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoadingViewPresenter.swift; sourceTree = "<group>"; };
 		FFA8E4B41CBD903000ED5399 /* SBAKeyboardAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAKeyboardAnimator.swift; sourceTree = "<group>"; };
+		FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewController.swift; sourceTree = "<group>"; };
+		FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewCell.swift; sourceTree = "<group>"; };
 		FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+Dictionary.swift"; sourceTree = "<group>"; };
 		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
@@ -439,8 +443,8 @@
 		16BF5B611BE29643007C79C6 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				FBF1B6AD1CAAED0F007C1082 /* UI */,
 				FBF1B6A31CAAED02007C1082 /* Consent */,
+				FBF1B6AD1CAAED0F007C1082 /* UI */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -458,6 +462,8 @@
 		16BF5B671BE29676007C79C6 /* Activities */ = {
 			isa = PBXGroup;
 			children = (
+				FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */,
+				FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -634,10 +640,10 @@
 		FBC45E711C758DBA007AA424 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBAD114E1CADA34C005611D0 /* DataModel */,
 				FFC68EED1CA4778D00FF7B07 /* Encryption */,
 				FBC45E721C758DC9007AA424 /* Localization */,
+				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBAE3CE61C86157E003CEC4A /* Utilities */,
 			);
 			name = Library;
@@ -806,7 +812,7 @@
 		FFA8E4AD1CBD7CB700ED5399 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				FF3A359C1CBEB2D400F44E6E /* SBAUIController.swift */,
+				FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */,
 				FFA8E4B41CBD903000ED5399 /* SBAKeyboardAnimator.swift */,
 				FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */,
 			);
@@ -1096,6 +1102,7 @@
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
+				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
@@ -1110,7 +1117,7 @@
 				FBAD116E1CADE55C005611D0 /* SBABridgeTask.swift in Sources */,
 				FF2379AC1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m in Sources */,
 				FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */,
-				FF3A359D1CBEB2D400F44E6E /* SBAUIController.swift in Sources */,
+				FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */,
 				FBE551691C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift in Sources */,
 				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
 				FF64111C1CB34766007FB9E1 /* SBAMedication.m in Sources */,
@@ -1118,6 +1125,7 @@
 				FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
+				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

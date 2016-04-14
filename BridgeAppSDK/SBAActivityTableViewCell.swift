@@ -1,5 +1,5 @@
 //
-//  SBAUIController.swift
+//  SBAActivityTableViewCell.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,20 +33,29 @@
 
 import UIKit
 
-public protocol SBAUIController {
-}
+public class SBAActivityTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var uncheckedView: UIView!
+    @IBOutlet weak var checkmarkImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    internal var complete: Bool = false {
+        didSet {
+            self.uncheckedView.hidden = complete
+            self.checkmarkImageView.hidden = !complete
+        }
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.uncheckedView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        self.uncheckedView.layer.borderWidth = 1
+        self.uncheckedView.layer.cornerRadius = self.uncheckedView.bounds.size.height / 2
+        
+        self.timeLabel.textColor = self.tintColor
+    }
 
-extension SBAUIController {
-    
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
-    
-    public var user: SBAUserWrapper {
-        return self.sharedAppDelegate.currentUser
-    }
-    
-    public var bridgeInfo: SBABridgeInfo {
-        return self.sharedAppDelegate.bridgeInfo
-    }
 }

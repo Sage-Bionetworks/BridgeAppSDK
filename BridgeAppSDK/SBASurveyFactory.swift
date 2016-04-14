@@ -39,7 +39,7 @@ import BridgeSDK
  * that are not recognized by this factory and to allow usage by Obj-c classes that
  * do not recognize protocol extensions.
  */
-public class SBASurveyFactory : NSObject, SBAUIController {
+public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     public var steps: [ORKStep]?
     
@@ -79,8 +79,11 @@ public class SBASurveyFactory : NSObject, SBAUIController {
         return activeTask.createDefaultORKActiveTask(taskOptions)
     }
     
+    /**
+     * Factory method for creating an ORKTask from a given task reference Identifier
+     */
     public func createTaskWithTaskReference(taskIdentifier: String) -> ORKTask? {
-        guard let taskRef = self.bridgeInfo.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier}) else {
+        guard let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(taskIdentifier) else {
             return nil
         }
         return taskRef.transformToTask(self, isLastStep: true)
