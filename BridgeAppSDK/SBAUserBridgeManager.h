@@ -68,8 +68,12 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
 
 + (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
 
-+ (void) updateDataGroups:(NSArray<NSString *> *)dataGroups
-               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
++ (void)updateDataGroups:(NSArray<NSString *> *)dataGroups
+              completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
++ (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
+                                todayOnly:(BOOL)todayOnly
+                               completion:(SBAUserBridgeManagerCompletionBlock)completionBlock;
 
 @end
 

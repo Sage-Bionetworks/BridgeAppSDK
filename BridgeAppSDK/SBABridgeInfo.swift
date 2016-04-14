@@ -134,5 +134,9 @@ extension SBABridgeInfo {
         }
         return url
     }
+    
+    public func taskReferenceWithIdentifier(taskIdentifier: String) -> NSDictionary? {
+        return self.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier})
+    }
 }
 

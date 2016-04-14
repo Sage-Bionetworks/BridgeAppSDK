@@ -152,4 +152,55 @@
      }];
 }
 
++ (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
+                                todayOnly:(BOOL)todayOnly
+                               completion:(SBAUserBridgeManagerCompletionBlock)completionBlock
+{
+    // TODO: syoung 04/14/2016 - Erin Mounts: please replace stubbed out implement
+    
+    // Intended design is to allow for the server to win in getting updates to the current list of scheduled
+    // activities, but this will also *send* what is already known and may include a finishedOn date that is
+    // more recent than what is available from the server. syoung 04/14/2016
+    
+    id responseObject = scheduledActivities;
+    if (scheduledActivities.count == 0) {
+    
+        // Add in training
+        SBBScheduledActivity *training = [[SBBScheduledActivity alloc] init];
+        training.scheduledOn = [NSDate date];
+        training.guid = [NSUUID UUID].UUIDString;
+        training.activity = [[SBBActivity alloc] init];
+        training.activity.label = @"Training Session";
+        training.activity.labelDetail = @"15 minutes";
+        training.activity.task = [[SBBTaskReference alloc] init];
+        training.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
+    
+        // Add in medication tracker task
+        SBBScheduledActivity *medTracking = [[SBBScheduledActivity alloc] init];
+        medTracking.scheduledOn = [NSDate date];
+        medTracking.guid = [NSUUID UUID].UUIDString;
+        medTracking.activity = [[SBBActivity alloc] init];
+        medTracking.activity.label = @"Medication Tracker";
+        medTracking.activity.labelDetail = @"5 minutes";
+        medTracking.activity.task = [[SBBTaskReference alloc] init];
+        medTracking.activity.task.identifier = @"1-MedicationTracker-20EF8ED2-E461-4C20-9024-F43FCAAAF4C3";
+        
+        // Add in session 1
+        SBBScheduledActivity *activity1 = [[SBBScheduledActivity alloc] init];
+        activity1.scheduledOn = [NSDate dateWithTimeIntervalSinceNow: 2*60*60];
+        activity1.guid = [NSUUID UUID].UUIDString;
+        activity1.activity = [[SBBActivity alloc] init];
+        activity1.activity.label = @"Activity Session 1";
+        activity1.activity.labelDetail = @"15 minutes";
+        activity1.activity.task = [[SBBTaskReference alloc] init];
+        activity1.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
+        
+        responseObject = @[training, medTracking, activity1];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completionBlock(responseObject, nil);
+    });
+}
+
 @end
