@@ -33,7 +33,9 @@
 
 #import <XCTest/XCTest.h>
 #import "MockTrackedDataStore.h"
+#import <ResearchKit/ResearchKit.h>
 @import BridgeAppSDK;
+
 
 NSString  *const kSelectedItemsKey                              = @"selectedItems";
 NSString  *const kSkippedSelectionSurveyQuestionKey             = @"skippedSelectionSurveyQuestion";
@@ -330,17 +332,138 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
     XCTAssertTrue(dataStore.shouldIncludeChangedQuestion);
 }
 
+- (void)testUpdateSelectedItems
+{
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    // Create task result
+    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
+    
+    NSString *selectionIdentifier = @"selection";
+    ORKChoiceQuestionResult *questionResult = [[ORKChoiceQuestionResult alloc] initWithIdentifier:selectionIdentifier];
+    questionResult.choiceAnswers = @[@"Carbidopa"];
+    ORKStepResult *selectionStepResult = [[ORKStepResult alloc] initWithStepIdentifier:selectionIdentifier results:@[questionResult]];
+
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    result.results = @[introStepResult, selectionStepResult];
+    
+    // Create list of possible answers
+    
+    SBAMedication *levodopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Levodopa"}];
+    SBAMedication *carbidopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Carbidopa"}];
+    SBAMedication *rytary = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Rytary"}];
+    NSArray *items = @[levodopa, carbidopa, rytary];
+    
+    // -- call method under test
+    [dataStore updateSelectedItems:items
+                    stepIdentifier:selectionIdentifier
+                            result:result];
+    
+    SBAMedication *item = (SBAMedication *)dataStore.selectedItems.firstObject;
+    XCTAssertEqual(dataStore.selectedItems.count, 1);
+    XCTAssertEqual(item.identifier, @"Carbidopa");
+    XCTAssertEqual(item, carbidopa);
+}
+
+- (void)testUpdateFrequencyItems
+{
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    SBAMedication *levodopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Levodopa"}];
+    SBAMedication *carbidopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Carbidopa"}];
+    SBAMedication *apokyn = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Apokyn", @"injection" : @(YES)}];
+    dataStore.selectedItems = @[levodopa, carbidopa, apokyn];
+    
+    // Create task result
+    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
+    ORKChoiceQuestionResult *questionResult = [[ORKChoiceQuestionResult alloc] initWithIdentifier:@"selection"];
+    questionResult.choiceAnswers = @[@"Levodopa", @"Carbidopa", @"Apokyn"];
+    ORKStepResult *selectionStepResult = [[ORKStepResult alloc] initWithStepIdentifier:@"selection" results:@[questionResult]];
+    
+    
+    // Add frequency question result
+    ORKScaleQuestionResult *levodopaResult = [[ORKScaleQuestionResult alloc] initWithIdentifier:@"Levodopa"];
+    levodopaResult.scaleAnswer = @(4);
+    ORKScaleQuestionResult *symmetrelResult = [[ORKScaleQuestionResult alloc] initWithIdentifier:@"Carbidopa"];
+    symmetrelResult.scaleAnswer = @(7);
+    ORKStepResult *frequencyStepResult = [[ORKStepResult alloc] initWithStepIdentifier:@"frequency"
+                                                                               results:@[levodopaResult, symmetrelResult]];
+    
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    result.results = @[introStepResult, selectionStepResult, frequencyStepResult];
+    
+    // -- call method under test
+    [dataStore updateFrequencyForStepIdentifier:@"frequency"
+                                         result:result];
+    
+    NSDictionary *expectedItems = @{ @"Levodopa"    : @(4),
+                                     @"Carbidopa"   : @(7),
+                                     @"Apokyn"      : @(0)};
+    
+    NSArray *selectedItems = dataStore.selectedItems;
+    XCTAssertEqual(selectedItems.count, 3);
+    for (SBAMedication *med in selectedItems) {
+        XCTAssertEqual(med.frequency, [expectedItems[med.identifier] unsignedIntegerValue], @"%@", med.identifier);
+    }
+    
+}
+
+- (void)testUpdateMomentInDayForStepIdentifier_NoInitialResults {
+
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
+    ORKStepResult *stepResult = [[self createMomentInDayStepResult] firstObject];
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    result.results = @[introStepResult, stepResult];
+    
+    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
+                                           result:result];
+    
+    NSArray *momentInDayResults = dataStore.momentInDayResult;
+    ORKStepResult *first = momentInDayResults.firstObject;
+    XCTAssertEqual(first, stepResult);
+}
+
+- (void)testUpdateMomentInDayForStepIdentifier_ChangeResults {
+    
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    dataStore.momentInDayResult = [self createMomentInDayStepResult];
+    [dataStore commitChanges];
+    
+    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
+    ORKStepResult *stepResult = [[self createMomentInDayStepResultWithAnswers:@[@"After Parkinson medication", @"0-30 minutes"]] firstObject];
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    result.results = @[introStepResult, stepResult];
+    
+    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
+                                           result:result];
+    
+    NSArray *momentInDayResults = dataStore.momentInDayResult;
+    ORKStepResult *stored = nil;
+    for (ORKStepResult *sr in momentInDayResults) {
+        if ([sr.identifier isEqualToString:@"momentInDay"]) {
+            stored = sr; break;
+        }
+    }
+    XCTAssertEqual(stored, stepResult);
+}
+
 #pragma mark - helper methods
 
 - (MockTrackedDataStore *)createDataStore
 {
     MockTrackedDataStore *dataStore = [MockTrackedDataStore new];
+    dataStore.momentInDayResultDefaultIdMap  =
+        @[@[@"momentInDay", @"momentInDayFormat"],
+          @[@"medicationActivityTiming", @"medicationActivityTiming"]];
     
     // Check assumptions
     XCTAssertFalse(dataStore.hasChanges);
     XCTAssertFalse(dataStore.skippedSelectionSurveyQuestion);
     XCTAssertNil(dataStore.trackedItems);
     XCTAssertNil(dataStore.momentInDayResult);
+    XCTAssertNotNil(dataStore.momentInDayResultDefaultIdMap);
     XCTAssertNil([dataStore.storedDefaults objectForKey:kSelectedItemsKey]);
     XCTAssertNil([dataStore.storedDefaults objectForKey:kSkippedSelectionSurveyQuestionKey]);
     
@@ -349,19 +472,24 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
 
 - (NSArray <ORKStepResult *> *)createMomentInDayStepResult
 {
+    return [self createMomentInDayStepResultWithAnswers:@[@"Immediately before Parkinson medication", @"0-30 minutes"]];
+}
+
+- (NSArray <ORKStepResult *> *)createMomentInDayStepResultWithAnswers:(NSArray*)answers
+{
     ORKChoiceQuestionResult *inputA = [[ORKChoiceQuestionResult alloc] initWithIdentifier:[[NSUUID UUID] UUIDString]];
     inputA.startDate = [NSDate dateWithTimeIntervalSinceNow:-2*60];
     inputA.endDate = [inputA.startDate dateByAddingTimeInterval:30];
     inputA.questionType = ORKQuestionTypeSingleChoice;
-    inputA.choiceAnswers = @[@"Immediately before Parkinson medication"];
+    inputA.choiceAnswers = @[answers.firstObject];
     ORKStepResult *stepResultA = [[ORKStepResult alloc] initWithStepIdentifier:@"momentInDay" results:@[inputA]];
     
     ORKChoiceQuestionResult *inputB = [[ORKChoiceQuestionResult alloc] initWithIdentifier:[[NSUUID UUID] UUIDString]];
     inputB.startDate = [NSDate dateWithTimeIntervalSinceNow:-2*60];
     inputB.endDate = [inputB.startDate dateByAddingTimeInterval:30];
     inputB.questionType = ORKQuestionTypeSingleChoice;
-    inputB.choiceAnswers = @[@"0-30 minutes"];
-    ORKStepResult *stepResultB = [[ORKStepResult alloc] initWithStepIdentifier:@"momentInDay" results:@[inputB]];
+    inputB.choiceAnswers = @[answers.lastObject];
+    ORKStepResult *stepResultB = [[ORKStepResult alloc] initWithStepIdentifier:@"activityTiming" results:@[inputB]];
     
     return @[stepResultA, stepResultB];
 }

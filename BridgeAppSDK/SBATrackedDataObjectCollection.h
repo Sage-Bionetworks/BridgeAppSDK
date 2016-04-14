@@ -41,6 +41,7 @@
 @property (nonatomic, copy) NSString *schemaIdentifier;
 @property (nonatomic, copy) NSNumber *schemaRevision;
 
+@property (nonatomic) BOOL alwaysIncludeActivitySteps;
 @property (nonatomic, copy) NSString *itemsClassType;
 @property (nonatomic, copy) NSArray <SBATrackedDataObject *> *items;
 @property (nonatomic, copy) NSArray *steps;

@@ -38,7 +38,7 @@ import ResearchKit
  */
 public class SBASubtaskStep: ORKStep {
     
-    public var subtask: ORKTask {
+    public var subtask: protocol <ORKTask, NSCopying, NSSecureCoding> {
         return _subtask
     }
     private var _subtask: protocol <ORKTask, NSCopying, NSSecureCoding>

@@ -55,6 +55,13 @@ public enum SBAActiveTaskType {
         default         : self = .Custom(name)
         }
     }
+    
+    func isNilType() -> Bool {
+        if case .Custom(let customType) = self {
+            return (customType == nil)
+        }
+        return false
+    }
 }
 
 extension ORKPredefinedTaskHandOption {

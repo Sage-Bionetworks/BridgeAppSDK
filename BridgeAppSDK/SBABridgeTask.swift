@@ -43,11 +43,11 @@ public protocol SBABridgeTask: class {
 
 public extension SBABridgeTask {
     
-    public func createORKTask() -> ORKTask? {
+    public func createORKTask() -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
         return createORKTask(factory: SBASurveyFactory())
     }
     
-    public func createORKTask(factory factory: SBASurveyFactory) -> ORKTask? {
+    public func createORKTask(factory factory: SBASurveyFactory) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
         let steps = self.taskSteps
         guard steps.count > 0 else { return nil }
 

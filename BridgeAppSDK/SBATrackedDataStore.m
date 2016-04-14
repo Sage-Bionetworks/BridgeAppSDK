@@ -50,6 +50,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 @interface SBATrackedDataStore ()
 
 @property (nonatomic) NSMutableDictionary *changesDictionary;
+@property (nonatomic, copy, readwrite) NSArray * momentInDayResultDefaultIdMap;
 
 @end
 
@@ -252,7 +253,38 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 
 - (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
                                     result:(ORKTaskResult *)result {
-    // TODO: syoung 04/11/2016 implement 
+    
+    // Look for previous result
+    NSString *momentInDayResultKey = [[self class] momentInDayResultKey];
+    NSArray *previous = [self.changesDictionary objectForKey:momentInDayResultKey] ?: _momentInDayResult ?: @[];
+    
+    // Remove previous result
+    NSMutableArray *momentInDayResults = [previous mutableCopy];
+    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", identifierKey, stepIdentifier];
+    NSPredicate *notPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:predicate];
+    [momentInDayResults filterUsingPredicate:notPredicate];
+    
+    // Add new result
+    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
+    if (stepResult != nil) {
+        [momentInDayResults addObject:stepResult];
+    }
+    
+    self.momentInDayResult = momentInDayResults;
+}
+
+- (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps {
+    NSMutableArray *idMap = [NSMutableArray new];
+    for (ORKFormStep *step in activitySteps) {
+        if ([step isKindOfClass:[ORKFormStep class]]) {
+            ORKFormItem *formItem = [step.formItems firstObject];
+            if (formItem != nil) {
+                [idMap addObject:@[step.identifier, formItem.identifier]];
+            }
+        }
+    }
+    self.momentInDayResultDefaultIdMap = idMap;
 }
 
 - (NSDate *)lastTrackingSurveyDate {

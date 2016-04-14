@@ -40,8 +40,7 @@ extension NSDictionary: SBAStepTransformer {
     // need to look to see which is the more likely form to result in a valid result.
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
         if (self.surveyItemType.isNilType()) {
-            let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion
-            guard let subtask = factory.createTaskWithActiveTask(self, taskOptions:taskOptions) else {
+            guard let subtask = self.transformToTask(factory, isLastStep: isLastStep) else {
                 return ORKStep(identifier: self.schemaIdentifier)
             }
             return SBASubtaskStep(subtask: subtask)

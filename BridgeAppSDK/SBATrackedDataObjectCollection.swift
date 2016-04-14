@@ -49,8 +49,13 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
         
-        var steps: [ORKStep]!
+        // Check the dataStore to determine if the momentInDay id map has been setup and do so if needed
+        if (self.dataStore.momentInDayResultDefaultIdMap == nil) {
+            self.dataStore.updateMomentInDayIdMap(filteredSteps(.ActivityOnly, factory: factory))
+        }
         
+        // Build the approproate steps
+        var steps: [ORKStep]!
         if (isLastStep) {
             // If this is the last step then it is not being inserted into another task activity
             steps = filteredSteps(.StandAloneSurvey, factory: factory)
@@ -66,7 +71,8 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 steps = filteredSteps(.ChangedAndActivity, factory: factory)
             }
         }
-        else if (!self.dataStore.hasNoTrackedItems) {
+        else if (self.dataStore.shouldIncludeMomentInDayStep ||
+                (self.alwaysIncludeActivitySteps && !self.dataStore.hasNoTrackedItems)) {
             steps = filteredSteps(.ActivityOnly, factory: factory)
         }
         else {

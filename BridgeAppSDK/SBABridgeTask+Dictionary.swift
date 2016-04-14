@@ -35,6 +35,23 @@ import Foundation
 
 extension NSDictionary: SBABridgeTask {
     
+    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+        if !self.taskType.isNilType() {
+            // If the task type is non-nil, then create an active task
+            let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion
+            return factory.createTaskWithActiveTask(self, taskOptions:taskOptions)
+        }
+        guard let taskId = self["taskIdentifier"] as? String,
+            let bridgeTask = self.objectWithResourceDictionary() as? SBABridgeTask
+            where bridgeTask.taskIdentifier == taskId else {
+            // If this isn't a resource task or the task identifiers dont match then
+            // return nil (otherwise, could end up in a wacky loop of infinite madness
+            return nil
+        }
+        
+        return bridgeTask.createORKTask(factory: factory)
+    }
+    
     public var taskIdentifier: String! {
         guard let taskIdentifier = self["taskIdentifier"] as? String else {
             // If this is determined to be an SBABridgeTask dictionary and it does not have a
@@ -80,6 +97,4 @@ extension NSDictionary: SBABridgeTask {
         }
         return transformer
     }
-    
-
 }

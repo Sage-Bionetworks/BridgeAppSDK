@@ -65,6 +65,11 @@ public protocol SBABridgeInfo: class {
      * Data group for the test user. (optional)
      */
     var testUserDataGroup: String? { get }
+    
+    /**
+     * Mapping of task identifier and associated info for creating a task
+     */
+    var taskMap: [NSDictionary]? { get }
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -106,6 +111,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var testUserDataGroup: String? {
         return self.plist["testUserDataGroup"] as? String
+    }
+    
+    public var taskMap: [NSDictionary]? {
+        return self.plist["taskMapping"] as? [NSDictionary]
     }
 }
 
