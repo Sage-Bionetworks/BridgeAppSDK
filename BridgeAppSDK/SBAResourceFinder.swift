@@ -100,7 +100,9 @@ class SBAResourceFinder: NSObject {
             }
         }
         catch let error as NSError {
-            print("Failed to read json file: \(error)")
+            // Throw an assertion rather than throwing an exception (or rethrow)
+            // so that production apps don't crash.
+            assertionFailure("Failed to read json file: \(error)")
         }
         return nil
     }
