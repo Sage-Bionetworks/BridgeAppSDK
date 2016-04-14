@@ -93,9 +93,14 @@ class SBAResourceFinder: NSObject {
     }
     
     func jsonNamed(resourceNamed: String, bundle: NSBundle?) -> NSDictionary? {
-        if let data = self.dataNamed(resourceNamed, ofType: "json", bundle: bundle),
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers){
+        do {
+            if let data = self.dataNamed(resourceNamed, ofType: "json", bundle: bundle) {
+                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
                 return json as? NSDictionary
+            }
+        }
+        catch let error as NSError {
+            print("Failed to read json file: \(error)")
         }
         return nil
     }

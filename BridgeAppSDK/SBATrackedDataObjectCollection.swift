@@ -71,7 +71,8 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 steps = filteredSteps(.ChangedAndActivity, factory: factory)
             }
         }
-        else if (!self.dataStore.hasNoTrackedItems) {
+        else if (self.dataStore.shouldIncludeMomentInDayStep ||
+                (self.alwaysIncludeActivitySteps && !self.dataStore.hasNoTrackedItems)) {
             steps = filteredSteps(.ActivityOnly, factory: factory)
         }
         else {

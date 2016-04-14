@@ -69,6 +69,7 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var emailForLoginViaExternalId: String? = "test@sagebase.org"
     var passwordFormatForLoginViaExternalId: String?
     var testUserDataGroup: String?
+    var taskMap: [NSDictionary]?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

@@ -83,6 +83,7 @@ static NSString *kTrackedItemsKey = @"items";
     NSArray *subkeys = @[NSStringFromSelector(@selector(taskIdentifier)),
                          NSStringFromSelector(@selector(schemaIdentifier)),
                          NSStringFromSelector(@selector(schemaRevision)),
+                         NSStringFromSelector(@selector(alwaysIncludeActivitySteps)),
                          NSStringFromSelector(@selector(itemsClassType)),
                          kTrackedItemsKey,
                          NSStringFromSelector(@selector(steps))];
