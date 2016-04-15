@@ -59,6 +59,16 @@ extension UIColor {
         return SBAColorInfo.defaultColorInfo.colorForKey("primaryTintColor")
     }
     
+    static public func greenTintColor() -> UIColor? {
+        // For certain cases, we want to use a green checkmark and will override the default color
+        return SBAColorInfo.defaultColorInfo.colorForKey("greenTintColor") ?? UIColor(hexString: "#44d24e")
+    }
+    
+    static public func blueTintColor() -> UIColor? {
+        // For certain cases, we want to use a blue tint and will override the default color
+        return SBAColorInfo.defaultColorInfo.colorForKey("blueTintColor") ?? UIColor(red:0.132, green:0.684, blue:0.959, alpha:1.000)
+    }
+    
     public convenience init?(hexString: String) {
         let r, g, b: CGFloat
         

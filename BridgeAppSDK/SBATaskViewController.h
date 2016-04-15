@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBATaskViewController.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
-
 #import <UIKit/UIKit.h>
-#import "SBATaskReminderManagerProtocol.h"
+#import <ResearchKit/ResearchKit.h>
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
-
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// manager pointers
-- (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
+@interface SBATaskViewController : ORKTaskViewController
 
 @end
-
-#endif /* BridgeAppSDKDelegate_h */

@@ -38,6 +38,7 @@ import ResearchKit
 public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
     var currentUser: SBAUserWrapper { get }
     var bridgeInfo: SBABridgeInfo { get }
+    var requiredPermissions: [SBAPermissionsType] { get }
     func showAppropriateViewController(animated: Bool)
 }
 
@@ -103,6 +104,10 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
         lockScreen()
     }
     
+    public func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        SBAPermissionsManager.sharedManager().appDidRegisterForRemoteNotifications(notificationSettings)
+    }
+    
     // ------------------------------------------------
     // MARK: Optional property overrides
     // ------------------------------------------------
@@ -137,6 +142,13 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
         return _currentUser
     }
     private let _currentUser = SBAUser()
+    
+    /**
+     * Override to set the permissions for this application.
+     */
+    public var requiredPermissions: [SBAPermissionsType] {
+        return []
+    }
     
     func initializeBridgeServerConnection() {
         BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, environment: bridgeInfo.environment)
@@ -270,6 +282,10 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
         return self.resourceBundle().pathForResource(resourceName, ofType: resourceType)
     }
     
+    public func taskReminderManager() -> SBATaskReminderManagerProtocol? {
+        // TODO: syoung 04/14/2016 - Erin Mounts: please replace stubbed out implementation
+        return nil
+    }
     
     // ------------------------------------------------
     // MARK: Passcode Display Handling

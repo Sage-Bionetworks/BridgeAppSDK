@@ -1,5 +1,5 @@
-//
-//  BridgeAppSDKDelegate.h
+// 
+//  SBAPermissionsManager.h 
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -30,22 +30,51 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
-
+ 
 #import <UIKit/UIKit.h>
-#import "SBATaskReminderManagerProtocol.h"
+#import <HealthKit/HealthKit.h>
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
+NS_ASSUME_NONNULL_BEGIN
 
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
+typedef NS_ENUM(NSUInteger, SBAPermissionsType) {
+    SBAPermissionsTypeNone = 0,
+    SBAPermissionsTypeHealthKit,
+    SBAPermissionsTypeLocation,
+    SBAPermissionsTypeLocalNotifications,
+    SBAPermissionsTypeCoremotion,
+    SBAPermissionsTypeMicrophone,
+    SBAPermissionsTypeCamera,
+    SBAPermissionsTypePhotoLibrary
+};
 
-// manager pointers
-- (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
+typedef NS_ENUM(NSUInteger, SBAPermissionStatus) {
+    SBAPermissionStatusNotDetermined = 0,
+    SBAPermissionStatusDenied,
+    SBAPermissionStatusAuthorized,
+};
+
+typedef void(^SBAPermissionsBlock)(BOOL granted, NSError * _Nullable error);
+
+@interface SBAPermissionsManager : NSObject
+
+@property (nonatomic, readonly) HKHealthStore * _Nullable healthStore;
+
++ (instancetype)sharedManager;
+
+- (BOOL)isPermissionsGrantedForType:(SBAPermissionsType)type;
+
+- (void)requestPermissionForType:(SBAPermissionsType)type
+                  withCompletion:(SBAPermissionsBlock _Nullable)completion;
+
+- (void)setupHealthKitCharacteristicTypesToRead:(NSArray * _Nullable)characteristicTypesToRead
+                   healthKitQuantityTypesToRead:(NSArray * _Nullable)quantityTypesToRead
+                  healthKitQuantityTypesToWrite:(NSArray * _Nullable)QuantityTypesToWrite;
+
+- (void)appDidRegisterForRemoteNotifications:(UIUserNotificationSettings *)settings;
+
+- (NSString *)permissionTitleForType:(SBAPermissionsType)type;
+- (NSString *)permissionDescriptionForType:(SBAPermissionsType)type;
 
 @end
 
-#endif /* BridgeAppSDKDelegate_h */
+NS_ASSUME_NONNULL_END

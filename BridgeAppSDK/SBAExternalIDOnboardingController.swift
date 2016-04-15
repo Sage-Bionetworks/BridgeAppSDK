@@ -41,6 +41,8 @@ public protocol SBAExternalIDOnboardingController: class, SBASharedInfoControlle
     
     // Text field that is used to enter the registration code
     var registrationCodeTextField: UITextField! { get }
+    
+    func goNext()
 }
 
 public extension SBAExternalIDOnboardingController {
@@ -70,7 +72,7 @@ public extension SBAExternalIDOnboardingController {
                 })
             }
             else {
-                self?.sharedAppDelegate.showAppropriateViewController(true)
+                self?.goNext()
             }
         }
     }

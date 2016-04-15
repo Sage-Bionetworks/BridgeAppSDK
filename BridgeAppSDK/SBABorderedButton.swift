@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBABorderedButton.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
 
-#import <UIKit/UIKit.h>
-#import "SBATaskReminderManagerProtocol.h"
+import UIKit
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
-
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// manager pointers
-- (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
-
-@end
-
-#endif /* BridgeAppSDKDelegate_h */
+@IBDesignable
+public class SBABorderedButton: UIButton {
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.layer.borderColor = self.titleLabel?.textColor.CGColor
+        self.layer.borderWidth = 1
+        self.layer.cornerRadius = 4
+    }
+    
+    override public var enabled: Bool {
+        didSet {
+            self.layer.borderColor = self.titleLabel?.textColor.CGColor
+        }
+    }
+}

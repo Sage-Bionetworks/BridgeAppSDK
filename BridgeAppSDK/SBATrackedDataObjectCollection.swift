@@ -89,6 +89,11 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     public func shouldSkipStep(step: ORKStep?, previousStep: ORKStep?, result: ORKTaskResult) -> Bool {
         
+        if (step == nil) {
+            // All steps have been completed. Commit changes to the dataStore.
+            self.dataStore.commitChanges()
+        }
+        
         // Check if this step is a tracked step
         let trackedStep = step as? SBATrackedFormStep
         

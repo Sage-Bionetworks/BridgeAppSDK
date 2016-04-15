@@ -116,7 +116,7 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             return
         }
         
-        let taskViewController = ORKTaskViewController(task: task, taskRunUUID: NSUUID(UUIDString: schedule.guid))
+        let taskViewController = SBATaskViewController(task: task, taskRunUUID: NSUUID(UUIDString: schedule.guid))
         taskViewController.delegate = self
         self.presentViewController(taskViewController, animated: true, completion: nil)
     }
