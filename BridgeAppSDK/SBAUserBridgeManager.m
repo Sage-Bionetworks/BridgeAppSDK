@@ -187,7 +187,9 @@
         
         // Add in session 1
         SBBScheduledActivity *activity1 = [[SBBScheduledActivity alloc] init];
-        activity1.scheduledOn = [NSDate dateWithTimeIntervalSinceNow: 2*60*60];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier: NSCalendarIdentifierGregorian];
+        NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
+        activity1.scheduledOn = [calendar dateBySettingHour:10 minute:0 second:0 ofDate:tomorrow options:0];
         activity1.guid = [NSUUID UUID].UUIDString;
         activity1.activity = [[SBBActivity alloc] init];
         activity1.activity.label = @"Activity Session 1";
@@ -195,7 +197,37 @@
         activity1.activity.task = [[SBBTaskReference alloc] init];
         activity1.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
         
-        responseObject = @[training, medTracking, activity1];
+        // Add in session 2
+        SBBScheduledActivity *activity2 = [[SBBScheduledActivity alloc] init];
+        activity2.scheduledOn = [activity1.scheduledOn dateByAddingTimeInterval:2*60*60];
+        activity2.guid = [NSUUID UUID].UUIDString;
+        activity2.activity = [[SBBActivity alloc] init];
+        activity2.activity.label = @"Activity Session 2";
+        activity2.activity.labelDetail = @"15 minutes";
+        activity2.activity.task = [[SBBTaskReference alloc] init];
+        activity2.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
+        
+        // Add in session 3
+        SBBScheduledActivity *activity3 = [[SBBScheduledActivity alloc] init];
+        activity3.scheduledOn = [activity2.scheduledOn dateByAddingTimeInterval:2*60*60];
+        activity3.guid = [NSUUID UUID].UUIDString;
+        activity3.activity = [[SBBActivity alloc] init];
+        activity3.activity.label = @"Activity Session 3";
+        activity3.activity.labelDetail = @"15 minutes";
+        activity3.activity.task = [[SBBTaskReference alloc] init];
+        activity3.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
+        
+        // Add in session 3
+        SBBScheduledActivity *activity4 = [[SBBScheduledActivity alloc] init];
+        activity4.scheduledOn = [activity3.scheduledOn dateByAddingTimeInterval:2*60*60];
+        activity4.guid = [NSUUID UUID].UUIDString;
+        activity4.activity = [[SBBActivity alloc] init];
+        activity4.activity.label = @"Activity Session 4";
+        activity4.activity.labelDetail = @"15 minutes";
+        activity4.activity.task = [[SBBTaskReference alloc] init];
+        activity4.activity.task.identifier = @"1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780";
+        
+        responseObject = @[training, medTracking, activity1, activity2, activity3, activity4];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
