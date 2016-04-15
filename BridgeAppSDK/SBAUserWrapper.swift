@@ -105,6 +105,11 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
      * The sharing scope set by the user during consent
      */
     var dataSharingScope: SBBUserDataSharingScope { get set }
+    
+    /**
+     * Tracking that can be set by the app to track the user's onboarding progress
+     */
+    var onboardingStepIdentifier: String? { get set }
 
     /**
      * Log the user out and reset

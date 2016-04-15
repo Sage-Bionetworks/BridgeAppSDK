@@ -34,6 +34,17 @@
 #import "SBALocalizationMacroWrapper.h"
 @import ResearchKit;
 
+NSBundle *SBABundle() {
+    static NSBundle *__bundle;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __bundle = [NSBundle bundleForClass:[SBALocalizationMacroWrapper class]];
+    });
+    
+    return __bundle;
+}
+
 @implementation SBALocalizationMacroWrapper
 
 + (NSString *)localizedORKString:(NSString *)orkStringKey {

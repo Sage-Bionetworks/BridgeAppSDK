@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDKDelegate.h
+//  SBATaskReminderManagerProtocol.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,16 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef BridgeAppSDKDelegate_h
-#define BridgeAppSDKDelegate_h
+#ifndef SBATaskReminderManagerProtocol_h
+#define SBATaskReminderManagerProtocol_h
 
-#import <UIKit/UIKit.h>
-#import "SBATaskReminderManagerProtocol.h"
+#import <UIKIt/UIKIt.h>
 
-@protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
+@protocol SBATaskReminderManagerProtocol <NSObject>
 
-// Resource handling
-- (NSBundle * _Nonnull)resourceBundle;
-- (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
-
-// manager pointers
-- (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
+@property (nonatomic) BOOL reminderOn;
+@property (nonatomic, readonly) NSSet <UIUserNotificationCategory *> *categories;
 
 @end
 
-#endif /* BridgeAppSDKDelegate_h */
+#endif /* SBATaskReminderManagerProtocol_h */

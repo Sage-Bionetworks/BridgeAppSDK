@@ -33,7 +33,17 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef SBA_EXTERN
+#if defined(__cplusplus)
+#define SBA_EXTERN extern "C" __attribute__((visibility("default")))
+#else
+#define SBA_EXTERN extern __attribute__((visibility("default")))
+#endif
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
+
+SBA_EXTERN NSBundle * _Nonnull SBABundle();
 
 @interface SBALocalizationMacroWrapper : NSObject
 

@@ -172,6 +172,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kSavedDataGroupsKey = "SavedDataGroups"
     let kDataSharingEnabledKey = "dataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
+    let kOnboardingStepIdentifier = "onboardingStepIdentifier"
     
     public var hasRegistered: Bool {
         get {
@@ -224,6 +225,15 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
         set (newValue) {
             syncSetObject(newValue, forKey: kSavedDataGroupsKey)
+        }
+    }
+    
+    public var onboardingStepIdentifier: String? {
+        get {
+            return syncObjectForKey(kOnboardingStepIdentifier) as? String
+        }
+        set (newValue) {
+            syncSetObject(newValue, forKey: kOnboardingStepIdentifier)
         }
     }
     
