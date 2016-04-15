@@ -62,6 +62,8 @@
 		FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
+		FF3A429C1CC0B7E400B8623A /* SBATaskViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF3A429D1CC0B7E400B8623A /* SBATaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */; };
 		FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
@@ -319,6 +321,8 @@
 		FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataObjectTests.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
+		FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATaskViewController.h; sourceTree = "<group>"; };
+		FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATaskViewController.m; sourceTree = "<group>"; };
 		FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBARootViewControllerProtocol.h; sourceTree = "<group>"; };
 		FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAUserBridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
@@ -692,6 +696,8 @@
 				FBAD116D1CADE55C005611D0 /* SBABridgeTask.swift */,
 				FBAD116F1CADE79E005611D0 /* SBABridgeTask+Dictionary.swift */,
 				FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */,
+				FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */,
+				FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */,
 			);
 			name = Task;
 			sourceTree = "<group>";
@@ -882,6 +888,7 @@
 				FFAAF61E1CC0267E00500929 /* SBAPermissionsManager.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */,
 				FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */,
+				FF3A429C1CC0B7E400B8623A /* SBATaskViewController.h in Headers */,
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
 				FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */,
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
@@ -1173,6 +1180,7 @@
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
+				FF3A429D1CC0B7E400B8623A /* SBATaskViewController.m in Sources */,
 				FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
