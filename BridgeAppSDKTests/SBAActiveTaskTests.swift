@@ -193,12 +193,12 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.identifier, "Voice Activity")
         
-        guard let task = result as? ORKOrderedTask else {
+        guard let task = result as? ORKNavigableOrderedTask else {
             XCTAssert(false, "\(result) not of expect class")
             return
         }
         
-        let expectedCount = 5
+        let expectedCount = 6
         XCTAssertEqual(task.steps.count, expectedCount, "\(task.steps)")
         guard task.steps.count == expectedCount else { return }
         
@@ -224,10 +224,25 @@ class SBAActiveTaskTests: XCTestCase {
             return
         }
         XCTAssertEqual(countStep.identifier, "countdown")
+        let audioRule = task.navigationRuleForTriggerStepIdentifier(countStep.identifier)
+        XCTAssertNotNil(audioRule)
         
-        // Step 4 - Audio
-        guard let audioStep = task.steps[3] as? ORKAudioStep else {
+        // Step 4 - audio too loud
+        guard let tooLoudStep = task.steps[3] as? ORKInstructionStep else {
             XCTAssert(false, "\(task.steps[3]) not of expect class")
+            return
+        }
+        XCTAssertEqual(tooLoudStep.identifier, "audio.tooloud")
+        if let navTooLoudRule = task.navigationRuleForTriggerStepIdentifier(tooLoudStep.identifier) as? ORKDirectStepNavigationRule {
+            XCTAssertEqual(navTooLoudRule.destinationStepIdentifier, countStep.identifier)
+        }
+        else {
+            XCTAssert(false, "\(tooLoudStep.identifier) navigation rule missing or not expected type")
+        }
+        
+        // Step 5 - Audio
+        guard let audioStep = task.steps[4] as? ORKAudioStep else {
+            XCTAssert(false, "\(task.steps[4]) not of expect class")
             return
         }
         XCTAssertEqual(audioStep.identifier, "audio")

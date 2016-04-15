@@ -39,7 +39,7 @@
 - (NSURL *)outputDirectory {
     NSURL *outputDirectory = [super outputDirectory];
     if (outputDirectory == nil) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
         NSString * path = [[paths lastObject] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", self.taskRunUUID.UUIDString]];
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -67,6 +67,10 @@
     if ([stepViewController.step isKindOfClass:[ORKCompletionStep class]]) {
         stepViewController.view.tintColor = [UIColor greenTintColor];
     }
+    else if ([stepViewController.step isKindOfClass:[ORKAudioStep class]]) {
+        stepViewController.view.tintColor = [UIColor blueTintColor];
+    }
+    
 }
 
 @end
