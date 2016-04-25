@@ -117,6 +117,7 @@ public enum SBASurveyItemType {
         case "singleChoiceText"      : self = .Form(.SingleChoice)
         case "multipleChoiceText"    : self = .Form(.MultipleChoice)
         case "timingRange"           : self = .Form(.TimingRange)
+        case "timePicker"            : self = .Form(.Time)
         case "consentSharingOptions" : self = .Consent(.SharingOptions)
         case "consentReview"         : self = .Consent(.Review)
         case "consentVisual"         : self = .Consent(.Visual)
