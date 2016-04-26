@@ -33,7 +33,7 @@
 
 import UIKit
 
-class SBAResourceFinder: NSObject {
+public class SBAResourceFinder: NSObject {
     
     static let sharedResourceFinder = SBAResourceFinder()
     
@@ -55,7 +55,7 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
-    func imageNamed(named: String) -> UIImage? {
+    public func imageNamed(named: String) -> UIImage? {
         if let resourceDelegate = self.sharedResourceDelegate(),
             let image = UIImage(named: named, inBundle: resourceDelegate.resourceBundle(), compatibleWithTraitCollection: nil) {
             return image
@@ -81,7 +81,7 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
-    func htmlNamed(resourceNamed: String) -> String? {
+    public func htmlNamed(resourceNamed: String) -> String? {
         if let data = self.dataNamed(resourceNamed, ofType: "html") {
             return String(data: data, encoding: NSUTF8StringEncoding)
         }
@@ -107,7 +107,7 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
-    func plistNamed(resourceNamed: String) -> NSDictionary? {
+    public func plistNamed(resourceNamed: String) -> NSDictionary? {
         if let path = self.pathForResource(resourceNamed, ofType: "plist"),
             let dictionary = NSDictionary(contentsOfFile: path) {
                 return dictionary
@@ -115,7 +115,7 @@ class SBAResourceFinder: NSObject {
         return nil
     }
     
-    func urlNamed(resourceNamed: String, withExtension: String) -> NSURL? {
+    public func urlNamed(resourceNamed: String, withExtension: String) -> NSURL? {
         if let resourceDelegate = self.sharedResourceDelegate(),
             let url = resourceDelegate.resourceBundle().URLForResource(resourceNamed, withExtension: withExtension)
             where url.checkResourceIsReachableAndReturnError(nil) {
