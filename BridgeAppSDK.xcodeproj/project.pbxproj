@@ -68,6 +68,7 @@
 		FF45F84B1CA5D61900EE0562 /* SBAUserBridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
 		FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */; };
+		FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */; };
 		FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */; };
 		FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF6411001CB2DC21007FB9E1 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
@@ -327,6 +328,7 @@
 		FF45F8491CA5D61900EE0562 /* SBAUserBridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAUserBridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
 		FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAUserWrapper+Bridge.swift"; sourceTree = "<group>"; };
+		FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAWebViewController.swift; sourceTree = "<group>"; };
 		FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Utilities.swift"; sourceTree = "<group>"; };
 		FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAJSONObject.h; sourceTree = "<group>"; };
 		FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAJSONObject.m; sourceTree = "<group>"; };
@@ -746,6 +748,14 @@
 			name = Registration;
 			sourceTree = "<group>";
 		};
+		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 		FF6410ED1CAF3795007FB9E1 /* MedicationTracking */ = {
 			isa = PBXGroup;
 			children = (
@@ -830,6 +840,7 @@
 			children = (
 				FFAAF63A1CC0A85900500929 /* Protocols */,
 				FFAAF63B1CC0A86800500929 /* Views */,
+				FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1153,6 +1164,7 @@
 				FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */,
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
+				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
 				FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
