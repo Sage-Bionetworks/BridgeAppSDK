@@ -39,11 +39,15 @@ public class Localization: NSObject {
      * Locale bundle is defined as a variable rather than a singleton so that it can be 
      * changed to a different bundle from the default localized bundle.
      */
-    public static var localeBundle = {
+    static var localizationBundleForClass = {
         return NSBundle.init(forClass: Localization.classForCoder())
     }()
+    
+    public class var localeBundle: NSBundle {
+        return localizationBundleForClass
+    }
         
-    static func localizedString(key: String) -> String {
+    public static func localizedString(key: String) -> String {
         var str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
         if (str == key) {
             if let defaultStr = listOfAllLocalizedStrings[key] {
@@ -134,7 +138,11 @@ public class Localization: NSObject {
     }
     
     // MARK: List of the strings used in this module.
-    private static var listOfAllLocalizedStrings: [String : String] = {
+    public class var listOfAllLocalizedStrings: [String : String] {
+        return listOfMyLocalizedStrings
+    }
+    
+    private static var listOfMyLocalizedStrings: [String : String] = {
         return [
             
             // Consent
