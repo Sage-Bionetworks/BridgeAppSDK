@@ -154,8 +154,8 @@ extension SBBScheduledActivity {
         }
         else {
             let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "HH:mm a"
-            return dateFormatter.stringFromDate(self.scheduledOn)
+            dateFormatter.dateFormat = "h:mm a"
+            return dateFormatter.stringFromDate(self.scheduledOn).lowercaseString
         }
     }
 }
