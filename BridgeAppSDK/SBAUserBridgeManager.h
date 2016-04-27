@@ -75,6 +75,8 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
                                 todayOnly:(BOOL)todayOnly
                                completion:(SBAUserBridgeManagerCompletionBlock)completionBlock;
 
++ (void)updateScheduledActivity:(SBBScheduledActivity *)scheduledActivity;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -164,4 +164,8 @@
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:completionBlock];
 }
 
++ (void)updateScheduledActivity:(SBBScheduledActivity *)scheduledActivity {
+    [SBBComponent(SBBActivityManager) updateScheduledActivities:@[scheduledActivity] withCompletion:nil];
+}
+
 @end

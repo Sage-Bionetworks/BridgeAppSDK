@@ -36,4 +36,6 @@
 
 @interface SBATaskViewController : ORKTaskViewController
 
+@property (nonatomic, readonly) NSDate * _Nullable finishedOn;
+
 @end
