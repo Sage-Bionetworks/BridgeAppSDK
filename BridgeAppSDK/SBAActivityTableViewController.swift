@@ -37,14 +37,12 @@ import BridgeSDK
 
 public class SBAActivityTableViewController: UITableViewController, SBASharedInfoController, ORKTaskViewControllerDelegate {
     
-    var activities: [SBBScheduledActivity] = []
-    var taskReferenceMap: [String : NSDictionary] = [:]
+    private var activities: [SBBScheduledActivity] = []
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.reloadData()
     }
-    
     
     // MARK: Customizable implementations
     
@@ -61,11 +59,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             // to be able to handle. Currently, that means only taskReference activities with an identifier that
             // maps to a known task.
             self.activities = scheduledActivities.filter({ (activity) -> Bool in
-                guard (activity.activity.task != nil), let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) else {
-                    return false
-                }
-                self.taskReferenceMap[activity.guid] = taskRef
-                return true
+                return (activity.activity.task != nil) &&
+                       (self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) != nil)
             })
             
             // reload table
@@ -75,6 +70,10 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     
     public func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity? {
         return activities[indexPath.row]
+    }
+    
+    public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
+        return activities.findObject({$0.guid == taskViewController.taskRunUUID.UUIDString})
     }
     
     public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -126,16 +125,44 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     
     public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         
-        let guid = taskViewController.taskRunUUID.UUIDString
         if reason == ORKTaskViewControllerFinishReason.Completed,
-            let schedule = activities.findObject({$0.guid == guid}) {
-            // If completed, the update the finishedOn data 
-            schedule.finishedOn = NSDate()
+            let schedule = scheduledActivityForTaskViewController(taskViewController)
+            where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
-            // TODO: syoung 04/12/2016 Archive the result and send to server (spin on a background thread)
+            updateScheduledActivity(schedule, taskViewController: taskViewController)
+            archiveResults(schedule, taskViewController: taskViewController)
         }
         
         taskViewController.dismissViewControllerAnimated(true) {}
+    }
+    
+    // MARK: Protected subclass methods
+    
+    public func shouldRecordResult(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+        return true
+    }
+    
+    public func updateScheduledActivity(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
+        
+        // Set finish and start timestamps
+        schedule.finishedOn = {
+            if let sbaTaskViewController = taskViewController as? SBATaskViewController,
+                let finishedOn = sbaTaskViewController.finishedOn {
+                return finishedOn
+            }
+            else {
+                return taskViewController.result.endDate ?? NSDate()
+            }
+        }()
+        
+        schedule.startedOn = taskViewController.result.startDate ?? schedule.finishedOn
+        
+        // Send message to server
+        SBAUserBridgeManager.updateScheduledActivity(schedule)
+    }
+    
+    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
+        // TODO: implement syoung 04/27/2016
     }
 }
 

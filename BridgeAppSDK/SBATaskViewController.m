@@ -62,12 +62,16 @@
 - (void)stepViewControllerWillAppear:(ORKStepViewController *)stepViewController {
     [super stepViewControllerWillAppear:stepViewController];
     
-    // If this is a completion step, then change the tint color for the view
-    // to the app green tint color.
     if ([stepViewController.step isKindOfClass:[ORKCompletionStep class]]) {
+        // Set timestamp for when the scheduled activity finished
+        _finishedOn = [NSDate date];
+        // If this is a completion step, then change the tint color for the view
+        // to the app green tint color.
         stepViewController.view.tintColor = [UIColor greenTintColor];
     }
     else if ([stepViewController.step isKindOfClass:[ORKAudioStep class]]) {
+        // If this is an audio step, then change the tint color for the view
+        // to the app blue tint color.
         stepViewController.view.tintColor = [UIColor blueTintColor];
     }
     
