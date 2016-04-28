@@ -159,7 +159,7 @@ public extension SBAUserWrapper {
      * Verify registration to check that the user has verified their email address.
      */
     public func verifyRegistration(completion: ((NSError?) -> Void)?) {
-        guard let username = self.usernameForAuthManager?(nil), let password = self.passwordForAuthManager?(nil) else {
+        guard let username = self.emailForAuthManager?(nil), let password = self.passwordForAuthManager?(nil) else {
             assertionFailure("Attempting to login without a stored username and password")
             return
         }
