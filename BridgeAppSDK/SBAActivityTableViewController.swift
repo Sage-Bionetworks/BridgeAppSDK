@@ -37,14 +37,12 @@ import BridgeSDK
 
 public class SBAActivityTableViewController: UITableViewController, SBASharedInfoController, ORKTaskViewControllerDelegate {
     
-    var activities: [SBBScheduledActivity] = []
-    var taskReferenceMap: [String : NSDictionary] = [:]
+    private var activities: [SBBScheduledActivity] = []
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.reloadData()
     }
-    
     
     // MARK: Customizable implementations
     
@@ -61,11 +59,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             // to be able to handle. Currently, that means only taskReference activities with an identifier that
             // maps to a known task.
             self.activities = scheduledActivities.filter({ (activity) -> Bool in
-                guard (activity.activity.task != nil), let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) else {
-                    return false
-                }
-                self.taskReferenceMap[activity.guid] = taskRef
-                return true
+                return (activity.activity.task != nil) &&
+                       (self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) != nil)
             })
             
             // reload table
@@ -75,6 +70,10 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     
     public func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity? {
         return activities[indexPath.row]
+    }
+    
+    public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
+        return activities.findObject({$0.guid == taskViewController.taskRunUUID.UUIDString})
     }
     
     public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -127,7 +126,7 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         
         if reason == ORKTaskViewControllerFinishReason.Completed,
-            let schedule = activities.findObject({$0.guid == taskViewController.taskRunUUID.UUIDString})
+            let schedule = scheduledActivityForTaskViewController(taskViewController)
             where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
@@ -152,13 +151,11 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
                 return finishedOn
             }
             else {
-                return NSDate()
+                return taskViewController.result.endDate ?? NSDate()
             }
         }()
         
-        if (schedule.startedOn == nil) {
-            schedule.startedOn = taskViewController.result.results?.first?.startDate ?? schedule.finishedOn
-        }
+        schedule.startedOn = taskViewController.result.startDate ?? schedule.finishedOn
         
         // Send message to server
         SBAUserBridgeManager.updateScheduledActivity(schedule)
