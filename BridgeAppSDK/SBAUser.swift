@@ -308,7 +308,7 @@ extension SBAUser : SBBAuthManagerDelegateProtocol {
         self.sessionToken = sessionToken
     }
     
-    public func usernameForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
+    public func emailForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
         return self.email
     }
     

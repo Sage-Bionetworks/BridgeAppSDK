@@ -69,15 +69,15 @@
      }];
 }
 
-+ (void)signIn:(NSString *)username password:(NSString *)password completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)signIn:(NSString *)email password:(NSString *)password completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     
-    NSParameterAssert(username);
+    NSParameterAssert(email);
     NSParameterAssert(password);
-    [SBBComponent(SBBAuthManager) signInWithUsername: username
-                                            password: password
-                                          completion:^(NSURLSessionDataTask * __unused task,
-                                                                 id responseObject,
-                                                                 NSError *error) {
+    [SBBComponent(SBBAuthManager) signInWithEmail: email
+                                         password: password
+                                       completion:^(NSURLSessionDataTask * __unused task,
+                                                    id responseObject,
+                                                    NSError *error) {
 #if DEBUG
         if (error != nil) {
             NSLog(@"Error with signup: %@", error);

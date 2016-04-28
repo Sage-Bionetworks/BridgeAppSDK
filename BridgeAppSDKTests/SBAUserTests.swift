@@ -87,7 +87,7 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
         return NSURLSessionDataTask()
     }
     
-    func signInWithUsername(username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionDataTask {
+    func signInWithEmail(email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionDataTask {
         return NSURLSessionDataTask()
     }
     
