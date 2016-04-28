@@ -223,7 +223,7 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
         case SBAPermissionsTypeHealthKit:
             return NSLocalizedStringWithDefaultValue(@"SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Press “Allow” to individually specify which general health information the app may read from and write to HealthKit", @"");
         case SBAPermissionsTypeLocalNotifications:
-            return NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Allowing notifications enables the app to show you reminders.", @"");
+            return NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Allowing notifications enables the app to show you reminders for activity sessions.", @"");
         case SBAPermissionsTypeLocation:
             return NSLocalizedStringWithDefaultValue(@"SBA_LOCATION_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared.", @"");
         case SBAPermissionsTypeCoremotion:
