@@ -151,7 +151,7 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
     }
     
     func initializeBridgeServerConnection() {
-        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, environment: bridgeInfo.environment)
+        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, useCache:bridgeInfo.useCache, environment: bridgeInfo.environment)
         SBAUserBridgeManager.setAuthDelegate(self.currentUser)
     }
     

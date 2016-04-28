@@ -42,6 +42,11 @@ public protocol SBABridgeInfo: class {
     var studyIdentifier: String! { get }
     
     /**
+     * Whether to use BridgeSDK's built-in caching
+     */
+    var useCache: Bool { get }
+    
+    /**
      * Environment to load
      */
     var environment: SBBEnvironment! { get }
@@ -75,6 +80,7 @@ public protocol SBABridgeInfo: class {
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var studyIdentifier: String!
+    public var useCache: Bool = false
     public var environment: SBBEnvironment! = .Prod
     
     var plist: NSDictionary!
@@ -94,6 +100,7 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
             return nil
         }
         self.studyIdentifier = studyIdentifier
+        self.useCache = plist["useCache"] as? Bool ?? false
         self.plist = plist
     }
     
