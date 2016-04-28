@@ -159,21 +159,9 @@
     // Intended design is to allow for the server to win in getting updates to the current list of scheduled
     // activities, but this will also *send* what is already known and may include a finishedOn date that is
     // more recent than what is available from the server. syoung 04/14/2016
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:1 cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(id activitiesList, NSError *error) {
-        id retval = activitiesList;
-        if ([activitiesList isKindOfClass:[SBBResourceList class]]) {
-            retval = [((SBBResourceList *)activitiesList).items copy];
-            if (todayOnly) {
-                NSString *today = [[NSDate date] ISO8601DateOnlyString];
-                NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-                    SBBScheduledActivity *sa = (SBBScheduledActivity *)evaluatedObject;
-                    return [[sa.scheduledOn ISO8601DateOnlyString] isEqualToString:today];
-                }];
-                retval = [retval filteredArrayUsingPredicate:predicate];
-            }
-        }
-        completionBlock(activitiesList, error);
-    }];
+    NSInteger daysAhead = todayOnly ? 0 : 4;
+    NSInteger daysBehind = todayOnly ? 0 : 1;
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:completionBlock];
 }
 
 @end
