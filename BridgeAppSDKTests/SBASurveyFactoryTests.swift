@@ -446,7 +446,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "checkbox"
         inputStep.prompt = "Do you live alone?"
         inputStep.constraints = SBBBooleanConstraints();
-        
+    
         let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
             "value" : NSNumber(bool: true),
             "operator" : "ne",
@@ -459,7 +459,9 @@ class SBASurveyFactoryTests: XCTestCase {
             "skipTo" : "video-usage",
             "type" : "SurveyRule"
             ])
-        inputStep.constraints.rules = [ruleNotEqual, ruleSkip]
+        
+        inputStep.constraints.addRulesObject(ruleNotEqual)
+        inputStep.constraints.addRulesObject(ruleSkip)
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -503,19 +505,21 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_MultiValueConstraints() {
 
         let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
-        inputStep.constraints.rules = [
+        
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:[
                                                     "value" : "false",
                                                     "operator" : "eq",
                                                     "skipTo" : "video-usage",
                                                     "type" : "SurveyRule"
-                                                    ]),
+                                                    ]))
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:[
                                                     "value" : "true",
                                                     "operator" : "de",
                                                     "skipTo" : "video-usage",
                                                     "type" : "SurveyRule"
-                                                    ])]
+                                                    ]))
 
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -571,13 +575,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_MultiValueConstraints_NotEqual() {
         
         let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:[
                 "value" : "true",
                 "operator" : "ne",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -604,13 +608,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_MultiValueConstraints_OtherThan() {
         
         let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: false)
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:[
                 "value" : "true",
                 "operator" : "ot",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -909,19 +913,20 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "lt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ]),
+                ]))
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : "true",
                 "operator" : "de",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -972,13 +977,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_Equal() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "eq",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1004,13 +1009,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_NotEqual() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "ne",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1036,13 +1041,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_GreaterThan() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "gt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1068,13 +1073,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_GreaterThanOrEqual() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "ge",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1100,13 +1105,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_LessThanOrEqual() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "le",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1132,13 +1137,13 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_IntegerConstraints_OtherThan() {
         
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(int: 50),
                 "operator" : "ot",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1175,19 +1180,20 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.maxValue = NSNumber(double: 100.2)
         constraints.unit = "years"
         
-        inputStep.constraints.rules = [
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : NSNumber(double: 50.0),
                 "operator" : "lt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ]),
+                ]))
+        inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
                 "value" : "true",
                 "operator" : "de",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
-                ])]
+                ]))
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
@@ -1342,25 +1348,24 @@ class SBASurveyFactoryTests: XCTestCase {
         let constraints = SBBMultiValueConstraints()
         constraints.allowMultiple = NSNumber(bool: allowMultiple)
         constraints.dataType = "string"
-        constraints.enumeration = [
+        constraints.addEnumerationObject(
             SBBSurveyQuestionOption(dictionaryRepresentation:[
                 "label" : "Yes, I have done this",
                 "value" : "true",
                 "type" : "SurveyQuestionOption"
-                ]),
-            
+                ]))
+        constraints.addEnumerationObject(
             SBBSurveyQuestionOption(dictionaryRepresentation:[
                 "label" : "No, I have never done this",
                 "value" : "false",
                 "type" : "SurveyQuestionOption"
-                ]),
-            
+                ]))
+        constraints.addEnumerationObject(
             SBBSurveyQuestionOption(dictionaryRepresentation:[
                 "label" : "Maybe",
                 "value" : "maybe",
                 "type" : "SurveyQuestionOption"
-                ]),
-        ]
+                ]))
         inputStep.constraints = constraints
         
         return inputStep

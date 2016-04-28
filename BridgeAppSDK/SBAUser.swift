@@ -40,7 +40,6 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let lockQueue = dispatch_queue_create("org.sagebase.UserLockQueue", nil)
 
     public func logout() {
-        self.sessionToken = nil
         dispatch_async(lockQueue) {
             self.resetUserDefaults()
             self.resetKeychain()
@@ -52,22 +51,25 @@ public class SBAUser: NSObject, SBAUserWrapper {
     }()
     
     // --------------------------------------------------
-    // MARK: Memory-only storage
-    // --------------------------------------------------
-    
-    public var sessionToken: String?
-    
-    
-    // --------------------------------------------------
     // MARK: Keychain storage
     // --------------------------------------------------
     
+    let kSessionTokenKey = "sessionToken"
     let kNamePropertyKey = "name"
     let kEmailPropertyKey = "email"
     let kPasswordPropertyKey = "password"
     let kSubpopulationGuidKey = "SavedSubpopulationGuid"
     let kConsentSignatureKey = "ConsentSignature"
     let kExternalIdKey = "externalId"
+    
+    public var sessionToken: String? {
+        get {
+            return getKeychainObject(kSessionTokenKey) as? String
+        }
+        set (newValue) {
+            setKeychainObject(newValue, key: kSessionTokenKey)
+        }
+    }
     
     public var name: String? {
         get {

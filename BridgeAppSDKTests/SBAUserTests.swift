@@ -64,6 +64,7 @@ class SBAUserTests: XCTestCase {
 
 class MockBridgeInfo : NSObject, SBABridgeInfo {
     var studyIdentifier: String! = "study"
+    var useCache: Bool = false
     var environment: SBBEnvironment! = .Staging
     var appStoreLinkURLString: String?
     var emailForLoginViaExternalId: String? = "test@sagebase.org"

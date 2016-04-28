@@ -87,18 +87,29 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAConditionalRule
     
-    public func shouldSkipStep(step: ORKStep?, previousStep: ORKStep?, result: ORKTaskResult) -> Bool {
+    public func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool {
+
+        // Check if this step is a tracked step. If the tracked step is nil then should *not* skip the step
+        guard let trackedStep = step as? SBATrackedFormStep else { return false }
         
-        if (step == nil) {
+        // Otherwise, update the step with the selected items and then determine if it should be skipped
+        trackedStep.updateWithSelectedItems(self.dataStore.selectedItems ?? [])
+        return trackedStep.shouldSkipStep
+    }
+    
+    public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
+        
+        if (previousStep == nil) && (nextStep == nil) {
             // All steps have been completed. Commit changes to the dataStore.
-            self.dataStore.commitChanges()
+            if let results = result.results where results.count > 0 {
+                self.dataStore.commitChanges()
+            }
+            return nil
         }
         
-        // Check if this step is a tracked step
-        let trackedStep = step as? SBATrackedFormStep
-        
-        // update the previous step with the result
         if let previous = previousStep as? SBATrackedFormStep {
+            
+            // update the previous step with the result
             switch (previous.trackingType!) {
             case .Selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
@@ -109,16 +120,31 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             default:
                 break
             }
+            
+            // If this step is a trackEach, then split into multiple steps
+            if previous.trackEach,
+                let previousTrackedId = previous.trackedItemIdentifier,
+                let selectedItems = self.dataStore.selectedItems
+            {
+                guard let nextItem = selectedItems.nextObject({ $0.identifier == previousTrackedId })
+                else {
+                    // the previous item was the last tracked item so return nil
+                    return nil
+                }
+                // create a copy of the step with the next item to be tracked
+                return previous.copyWithTrackedItem(nextItem)
+            }
+        }
+        else if let next = nextStep as? SBATrackedFormStep
+                where next.trackEach && next.trackedItemIdentifier == nil,
+                let firstItem = self.dataStore.selectedItems?.first {
+            // If this is the first step in a step where each item is tracked separately, then 
+            // replace the next step with a copy that includes the first selected item
+            return next.copyWithTrackedItem(firstItem)
         }
         
-        // If the tracked step is nil then should *not* skip the step
-        if trackedStep == nil { return false }
-        
-        // Otherwise, update the step with the selected items and then determine if it should be skipped
-        trackedStep!.updateWithSelectedItems(self.dataStore.selectedItems ?? [])
-        return trackedStep!.shouldSkipStep
+        return nextStep
     }
-    
     
     // MARK: Functions for transforming and recording results
     

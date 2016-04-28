@@ -42,7 +42,8 @@ public protocol SBANavigationRule: class, NSSecureCoding {
 }
 
 public protocol SBAConditionalRule: class, NSSecureCoding {
-    func shouldSkipStep(step: ORKStep?, previousStep: ORKStep?, result: ORKTaskResult) -> Bool
+    func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool
+    func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep?
 }
 
 /**
@@ -77,6 +78,12 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     
     func superStepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         
+        // Check the conditional rule to see if it returns a next step for the given previous
+        // step and return that with an early exit if applicable.
+        if let nextStep = self.conditionalRule?.nextStep(step, nextStep: nil, result: result) {
+            return nextStep
+        }
+        
         var returnStep: ORKStep?
         var previousStep: ORKStep? = step
         var shouldSkip = false
@@ -102,12 +109,17 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             }
             
             // Check to see if this is a conditional step that *should* be skipped
-            shouldSkip = conditionalRule?.shouldSkipStep(returnStep, previousStep: previousStep, result: result) ?? false
+            shouldSkip = conditionalRule?.shouldSkipStep(returnStep, result: result) ?? false
             if (shouldSkip) {
                 previousStep = returnStep
             }
             
         } while(shouldSkip)
+        
+        // If there is a conditionalRule, then check to see if the step should be mutated or replaced
+        if let conditionalRule = self.conditionalRule {
+            returnStep = conditionalRule.nextStep(nil, nextStep: returnStep, result: result)
+        }
         
         return returnStep;
     }
@@ -214,6 +226,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         guard let task = copy as? SBANavigableOrderedTask else { return copy }
         task.additionalTaskResults = self.additionalTaskResults
         task.orderedStepIdentifiers = self.orderedStepIdentifiers
+        task.conditionalRule = self.conditionalRule
         return task
     }
     
@@ -222,6 +235,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     required public init(coder aDecoder: NSCoder) {
         self.additionalTaskResults = aDecoder.decodeObjectForKey("additionalTaskResults") as? [ORKTaskResult]
         self.orderedStepIdentifiers = aDecoder.decodeObjectForKey("orderedStepIdentifiers") as! [String]
+        self.conditionalRule = aDecoder.decodeObjectForKey("conditionalRule") as? SBAConditionalRule
         super.init(coder: aDecoder);
     }
     
@@ -229,6 +243,9 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         super.encodeWithCoder(aCoder)
         if let additionalTaskResults = self.additionalTaskResults {
             aCoder.encodeObject(additionalTaskResults, forKey: "additionalTaskResults")
+        }
+        if let conditionalRule = self.conditionalRule {
+            aCoder.encodeObject(conditionalRule, forKey: "conditionalRule")
         }
         aCoder.encodeObject(self.orderedStepIdentifiers, forKey: "orderedStepIdentifiers")
     }
