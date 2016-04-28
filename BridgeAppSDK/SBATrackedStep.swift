@@ -35,6 +35,7 @@ import ResearchKit
 
 public protocol SBATrackedStepSurveyItem: SBASurveyItem {
     var trackingType: SBATrackingStepType? { get }
+    var trackEach: Bool { get }
     var textFormat: String? { get }
 }
 
@@ -106,6 +107,10 @@ extension NSDictionary : SBATrackedStepSurveyItem {
         return self["textFormat"] as? String
     }
     
+    public var trackEach: Bool {
+        return self["trackEach"] as? Bool ?? false
+    }
+    
 }
 
 extension SBATrackedDataObject: SBATextChoice {
@@ -128,6 +133,22 @@ public class SBATrackedFormStep: ORKFormStep {
     var textFormat: String?
     var trackingType: SBATrackingStepType!
     var frequencyAnswerFormat: ORKAnswerFormat?
+    var trackEach: Bool = false
+    
+    var trackedItemIdentifier: String? {
+        return _trackedItemIdentifier
+    }
+    private var _trackedItemIdentifier: String?
+    
+    var baseIdentifier: String {
+        // If this *only* has the base then return that
+        guard let suffix = identifierSuffix() where self.identifier.hasSuffix(suffix),
+              let range = self.identifier.rangeOfString(suffix, options: .BackwardsSearch, range: nil, locale: nil)
+        else {
+            return self.identifier
+        }
+        return self.identifier.substringToIndex(range.startIndex)
+    }
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
@@ -137,6 +158,7 @@ public class SBATrackedFormStep: ORKFormStep {
         super.init(identifier: surveyItem.identifier)
         self.trackingType = surveyItem.trackingType
         self.textFormat = surveyItem.textFormat
+        self.trackEach = surveyItem.trackEach
         if let formSurvey = surveyItem as? SBAFormStepSurveyItem {
             formSurvey.mapStepValues(self)
             if (self.trackingType == .Activity) {
@@ -157,6 +179,8 @@ public class SBATrackedFormStep: ORKFormStep {
             self.trackingType = trackingType
         }
         self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
+        self.trackEach = aDecoder.decodeBoolForKey("trackEach")
+        self._trackedItemIdentifier = aDecoder.decodeObjectForKey("trackedItemIdentifier") as? String
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
@@ -164,6 +188,8 @@ public class SBATrackedFormStep: ORKFormStep {
         aCoder.encodeObject(self.textFormat, forKey: "textFormat")
         aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
         aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
+        aCoder.encodeBool(self.trackEach, forKey: "trackEach")
+        aCoder.encodeObject(self.trackedItemIdentifier, forKey: "trackedItemIdentifier")
     }
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
@@ -172,6 +198,16 @@ public class SBATrackedFormStep: ORKFormStep {
         copy.trackingType = self.trackingType
         copy.textFormat = self.textFormat
         copy.frequencyAnswerFormat = self.frequencyAnswerFormat
+        copy.trackEach = self.trackEach
+        copy._trackedItemIdentifier = self.trackedItemIdentifier
+        return copy
+    }
+    
+    public func copyWithTrackedItem(trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
+        let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
+        let copy = self.copyWithIdentifier(identifier)
+        copy._trackedItemIdentifier = trackedItem.identifier
+        copy.updateWithSelectedItems([trackedItem])
         return copy
     }
     
@@ -235,11 +271,27 @@ public class SBATrackedFormStep: ORKFormStep {
     }
     
     private func updateActivityFormStep(selectedItems:[SBATrackedDataObject]) {
-        let trackedItems = selectedItems.filter({ $0.tracking }).map({ $0.shortText })
+        let trackedItems = selectedItems.filter({ $0.tracking && matchesTrackedItem($0)}).map({ $0.shortText })
         _shouldSkipStep = (trackedItems.count == 0)
         if let textFormat = self.textFormat where (trackedItems.count > 0) {
             self.text = String(format: textFormat, Localization.localizedJoin(trackedItems))
         }
+    }
+    
+    private func matchesTrackedItem(item: SBATrackedDataObject) -> Bool {
+        if let trackedId = self.trackedItemIdentifier {
+            return (trackedId == item.identifier)
+        }
+        else {
+            return true
+        }
+    }
+    
+    private func identifierSuffix() -> String? {
+        guard let trackedId = self.trackedItemIdentifier else {
+            return nil
+        }
+        return ".\(trackedId)"
     }
 }
 
