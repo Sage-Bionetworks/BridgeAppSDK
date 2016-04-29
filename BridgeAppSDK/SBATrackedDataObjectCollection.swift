@@ -124,7 +124,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             // If this step is a trackEach, then split into multiple steps
             if previous.trackEach,
                 let previousTrackedId = previous.trackedItemIdentifier,
-                let selectedItems = self.dataStore.selectedItems
+                let selectedItems = self.dataStore.selectedItems?.filter({ $0.tracking })
             {
                 guard let nextItem = selectedItems.nextObject({ $0.identifier == previousTrackedId })
                 else {
@@ -137,7 +137,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }
         else if let next = nextStep as? SBATrackedFormStep
                 where next.trackEach && next.trackedItemIdentifier == nil,
-                let firstItem = self.dataStore.selectedItems?.first {
+                let firstItem = self.dataStore.selectedItems?.filter({ $0.tracking }).first {
             // If this is the first step in a step where each item is tracked separately, then 
             // replace the next step with a copy that includes the first selected item
             return next.copyWithTrackedItem(firstItem)

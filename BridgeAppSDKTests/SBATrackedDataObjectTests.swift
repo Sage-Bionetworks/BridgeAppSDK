@@ -634,6 +634,121 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(defaultMap, expectedMap);
     }
     
+    // Mark: Navigation tests
+    
+    func testNavigation_NoMedsSelected() {
+        let (task, dataStore, selectionStep, taskResult) = stepToSelection(["None"])
+        guard task != nil else { return }
+
+        // make selection
+        let nextStep = task!.stepAfterStep(selectionStep, withResult: taskResult!)
+        XCTAssertNil(nextStep)
+        XCTAssertNotNil(dataStore!.selectedItems)
+        
+        guard let selectedItems = dataStore!.selectedItems else { return }
+        XCTAssertEqual(selectedItems.count, 0)
+    }
+    
+    func testNavigation_MedsSelected_Grouped() {
+        
+        // Check shared functionality
+        let (retTask, retDataStore, selectionStep, retTaskResult) = stepToSelection(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
+        guard let task = retTask, let dataStore = retDataStore, let taskResult = retTaskResult,
+              let timingStep = checkMedsSelectedSteps(task, dataStore, selectionStep!, taskResult, trackEach: false)
+        else {
+            return
+        }
+        
+        XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
+    }
+    
+    func testNavigation_MedsSelected_TrackEach() {
+        
+        // Check shared functionality
+        let (retTask, retDataStore, selectionStep, retTaskResult) = stepToSelection(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
+        guard let task = retTask, let dataStore = retDataStore, let taskResult = retTaskResult,
+            let timingStep = checkMedsSelectedSteps(task, dataStore, selectionStep!, taskResult, trackEach: true)
+            else {
+                return
+        }
+        
+        XCTAssertEqual(timingStep.identifier, "medicationActivityTiming.Levodopa")
+
+        // Add the timing result
+        guard let formItem = timingStep.formItems?.first else { return }
+        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
+        questionResult.choiceAnswers = ["0-30 minutes"]
+        let momentResult = ORKStepResult(stepIdentifier: timingStep.identifier, results: [questionResult])
+        taskResult.results! += [momentResult]
+        
+        let nextStep = task.stepAfterStep(timingStep, withResult: taskResult)
+        XCTAssertNotNil(dataStore.momentInDayResult)
+        XCTAssertEqual(dataStore.momentInDayResult!.count, 2)
+        
+        XCTAssertEqual(nextStep!.identifier, "medicationActivityTiming.Rytary")
+    }
+    
+    func checkMedsSelectedSteps(task: ORKTask, _ dataStore: SBATrackedDataStore, _ selectionStep: SBATrackedFormStep, _ taskResult: ORKTaskResult, trackEach: Bool) -> SBATrackedFormStep? {
+        
+        // setup last question for trackEach
+        if  let orderedTask = task as? ORKOrderedTask,
+            let lastStep = orderedTask.steps.last as? SBATrackedFormStep {
+            lastStep.trackEach = trackEach
+        }
+    
+        // get the next step
+        let nextStep = task.stepAfterStep(selectionStep, withResult: taskResult)
+        XCTAssertNotNil(nextStep)
+        XCTAssertNotNil(dataStore.selectedItems)
+        
+        // check that the selected items is set in the data store
+        guard let selectedItems = dataStore.selectedItems else { return nil }
+        XCTAssertEqual(selectedItems.count, 4)
+        
+        // Check that the next step is the frequency step
+        guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .Frequency,
+            let formItems = frequencyStep.formItems  else {
+            XCTAssert(false, "\(nextStep) not of expected type")
+            return nil
+        }
+        XCTAssertEqual(formItems.count, 3)
+        
+        // Build frequency results and add to the task results
+        let frequencyResults = formItems.map { (formItem) -> ORKScaleQuestionResult in
+            let result = ORKScaleQuestionResult(identifier: formItem.identifier)
+            result.scaleAnswer = formItem.identifier.characters.count
+            return result
+        }
+        let frequencyStepResult = ORKStepResult(stepIdentifier: frequencyStep.identifier, results: frequencyResults)
+        taskResult.results! += [frequencyStepResult]
+        
+        // Get the moment in day step
+        let step2 = task.stepAfterStep(frequencyStep, withResult: taskResult)
+        for item in dataStore.selectedItems! {
+            if (item.usesFrequencyRange) {
+                XCTAssertEqual(item.frequency, UInt(item.identifier.characters.count), "\(item.identifier)")
+            }
+        }
+        
+        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .Activity,
+            let formItem = momentStep.formItems?.first  else {
+                XCTAssert(false, "\(nextStep) not of expected type")
+                return nil
+        }
+        
+        // Add the moment in day result
+        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
+        questionResult.choiceAnswers = ["Another time"]
+        let momentResult = ORKStepResult(stepIdentifier: momentStep.identifier, results: [questionResult])
+        taskResult.results! += [momentResult]
+        
+        let step3 = task.stepAfterStep(momentStep, withResult: taskResult)
+        XCTAssertNotNil(dataStore.momentInDayResult)
+        XCTAssertEqual(dataStore.momentInDayResult!.count, 1)
+        
+        return step3 as? SBATrackedFormStep
+    }
+    
     // Mark: convenience methods
     
     func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
@@ -653,4 +768,49 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         return SBATrackedDataObjectCollection(dictionaryRepresentation: json)
     }
 
+    func stepToSelection(choiceAnswers: [String]) -> (task: ORKTask?, dataStore: SBATrackedDataStore?, selectionStep: SBATrackedFormStep?, taskResult: ORKTaskResult?) {
+        
+        guard let dataCollection = self.dataCollectionForMedicationTracking(),
+            let dataStore = self.dataStoreForMedicationTracking() else { return (nil,nil,nil, nil) }
+        dataCollection.dataStore = dataStore
+        
+        let transformedStep = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        guard let subtaskStep = transformedStep as? SBASubtaskStep
+            else {
+                XCTAssert(false, "\(transformedStep) not of expected type")
+                return (nil,nil,nil, nil)
+        }
+        
+        // Iterate through the steps before the selection step
+        let task = subtaskStep.subtask
+        let taskResult = ORKTaskResult(identifier: task.identifier)
+        taskResult.results = []
+        var step: ORKStep? = nil
+        repeat {
+            if let previousStep = step {
+                let stepResult = ORKStepResult(stepIdentifier: previousStep.identifier, results: nil)
+                taskResult.results! += [stepResult]
+            }
+            guard let nextStep = task.stepAfterStep(step, withResult: taskResult) else {
+                XCTAssert(false, "\(step) after not expected to be nil")
+                return (nil,nil,nil, nil)
+            }
+            step = nextStep
+        } while (step!.identifier != "medicationSelection")
+        
+        guard let selectionStep = step as? SBATrackedFormStep,
+              let formItem = selectionStep.formItems?.first
+        else {
+            XCTAssert(false, "\(transformedStep) not of expected type")
+            return (nil,nil,nil, nil)
+        }
+        
+        // Add a question answer to the selection step
+        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
+        questionResult.choiceAnswers = choiceAnswers
+        let selectionResult = ORKStepResult(stepIdentifier: selectionStep.identifier, results: [questionResult])
+        taskResult.results! += [selectionResult]
+        
+        return (task, dataStore, selectionStep, taskResult)
+    }
 }

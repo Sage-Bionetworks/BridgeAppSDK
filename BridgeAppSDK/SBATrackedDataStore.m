@@ -240,9 +240,9 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
         // If there are frequency results to map, then map them into the returned results
         // (which may be a different object from the med list in the data store)
         for (SBATrackedDataObject *item in selectedItems) {
-            ORKScaleQuestionResult *result = (ORKScaleQuestionResult *)[frequencyResult resultForIdentifier:item.identifier];
-            if ([result isKindOfClass:[ORKScaleQuestionResult class]]) {
-                item.frequency = [result.scaleAnswer unsignedIntegerValue];
+            ORKScaleQuestionResult *scaleResult = (ORKScaleQuestionResult *)[frequencyResult resultForIdentifier:item.identifier];
+            if ([scaleResult isKindOfClass:[ORKScaleQuestionResult class]]) {
+                item.frequency = [scaleResult.scaleAnswer unsignedIntegerValue];
             }
         }
         
