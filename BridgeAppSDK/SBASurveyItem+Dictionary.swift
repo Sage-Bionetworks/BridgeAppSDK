@@ -43,7 +43,11 @@ extension NSDictionary: SBAStepTransformer {
             guard let subtask = self.transformToTask(factory, isLastStep: isLastStep) else {
                 return ORKStep(identifier: self.schemaIdentifier)
             }
-            return SBASubtaskStep(subtask: subtask)
+            let step = SBASubtaskStep(subtask: subtask)
+            step.taskIdentifier = self.taskIdentifier
+            step.schemaIdentifier = self.schemaIdentifier
+            step.schemaRevision = self.schemaRevision.integerValue
+            return step
         }
         else {
             return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)

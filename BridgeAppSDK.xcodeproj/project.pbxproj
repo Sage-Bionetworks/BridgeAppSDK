@@ -124,6 +124,7 @@
 		FFCB98AD1CAC9A63005078EF /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207411BECBA8B0051D9D8 /* WithdrawViewController.swift */; };
 		FFCB98AE1CAC9A6D005078EF /* HealthClientType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */; };
 		FFCB98AF1CAC9A6D005078EF /* AnimatableChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2074F1BECCB1A0051D9D8 /* AnimatableChart.swift */; };
+		FFCF37741CD41A920090452F /* SBAActivityTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAActivityTableViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -364,6 +365,7 @@
 		FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+Dictionary.swift"; sourceTree = "<group>"; };
 		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
+		FFCF37731CD41A920090452F /* SBAActivityTableViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -500,6 +502,7 @@
 				801040C41C5A843D00D26E19 /* Info.plist */,
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
 				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
+				FFCF37731CD41A920090452F /* SBAActivityTableViewControllerTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
 				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
 				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
@@ -1205,6 +1208,7 @@
 				FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */,
 				FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */,
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
+				FFCF37741CD41A920090452F /* SBAActivityTableViewControllerTests.swift in Sources */,
 				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FF8DDFE31CB63E92006D1AFA /* SBATrackedDataStoreTests.m in Sources */,

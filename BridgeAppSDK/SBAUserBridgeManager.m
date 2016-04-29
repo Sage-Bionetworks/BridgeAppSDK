@@ -185,8 +185,8 @@
     }];
 }
 
-+ (void)updateScheduledActivity:(SBBScheduledActivity *)scheduledActivity {
-    [SBBComponent(SBBActivityManager) updateScheduledActivities:@[scheduledActivity] withCompletion:nil];
++ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities {
+    [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:nil];
 }
 
 @end

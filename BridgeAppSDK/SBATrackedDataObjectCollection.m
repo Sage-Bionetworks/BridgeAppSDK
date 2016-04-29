@@ -54,7 +54,7 @@ static NSString *kTrackedItemsKey = @"items";
 
 - (NSNumber *)schemaRevision {
     if (_schemaRevision == nil) {
-        _schemaRevision = @(1);
+        _schemaRevision = @(0);
     }
     return _schemaRevision;
 }
