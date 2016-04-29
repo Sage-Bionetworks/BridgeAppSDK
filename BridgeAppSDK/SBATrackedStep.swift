@@ -130,25 +130,26 @@ extension SBATrackedDataObject: SBATextChoice {
 
 public class SBATrackedFormStep: ORKFormStep {
     
-    var textFormat: String?
-    var trackingType: SBATrackingStepType!
-    var frequencyAnswerFormat: ORKAnswerFormat?
-    var trackEach: Bool = false
+    public var trackingType: SBATrackingStepType!
+    public var trackEach: Bool = false
     
-    var trackedItemIdentifier: String? {
+    public var trackedItemIdentifier: String? {
         return _trackedItemIdentifier
     }
     private var _trackedItemIdentifier: String?
     
-    var baseIdentifier: String {
+    public var baseIdentifier: String {
         // If this *only* has the base then return that
         guard let suffix = identifierSuffix() where self.identifier.hasSuffix(suffix),
-              let range = self.identifier.rangeOfString(suffix, options: .BackwardsSearch, range: nil, locale: nil)
-        else {
-            return self.identifier
+            let range = self.identifier.rangeOfString(suffix, options: .BackwardsSearch, range: nil, locale: nil)
+            else {
+                return self.identifier
         }
         return self.identifier.substringToIndex(range.startIndex)
     }
+    
+    private var textFormat: String?
+    private var frequencyAnswerFormat: ORKAnswerFormat?
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
