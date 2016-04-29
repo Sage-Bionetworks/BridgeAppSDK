@@ -78,7 +78,12 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     }
     
     public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
-        return activities.findObject({$0.guid == taskViewController.taskRunUUID.UUIDString})
+        guard let vc = taskViewController as? SBATaskViewControllerProtocol,
+              let guid = vc.scheduledActivityGUID
+        else {
+            return nil
+        }
+        return activities.findObject({ $0.guid == guid })
     }
     
     public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -120,7 +125,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             return
         }
         
-        let taskViewController = SBATaskViewController(task: task, taskRunUUID: NSUUID(UUIDString: schedule.guid))
+        let taskViewController = SBATaskViewController(task: task, taskRunUUID: nil)
+        taskViewController.scheduledActivityGUID = schedule.guid
         taskViewController.delegate = self
         self.presentViewController(taskViewController, animated: true, completion: nil)
     }

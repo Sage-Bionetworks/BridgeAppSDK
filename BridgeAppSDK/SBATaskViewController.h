@@ -34,7 +34,13 @@
 #import <UIKit/UIKit.h>
 #import <ResearchKit/ResearchKit.h>
 
-@interface SBATaskViewController : ORKTaskViewController
+@protocol SBATaskViewControllerProtocol <NSObject>
+
+@property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
+
+@end
+
+@interface SBATaskViewController : ORKTaskViewController <SBATaskViewControllerProtocol>
 
 @property (nonatomic, readonly) NSDate * _Nullable finishedOn;
 
