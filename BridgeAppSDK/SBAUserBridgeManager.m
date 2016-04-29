@@ -164,6 +164,8 @@
     UIApplication *app = [UIApplication sharedApplication];
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
         [app cancelAllLocalNotifications];
+        // TODO: emm 2016-04-29 move notification handling into a Swift function that checks permission,
+        // allows other schedules/patterns à la mPower, handles localization, etc.
         for (SBBScheduledActivity *sa in activitiesList) {
             UILocalNotification *notif = [UILocalNotification new];
             notif.fireDate = sa.scheduledOn;
