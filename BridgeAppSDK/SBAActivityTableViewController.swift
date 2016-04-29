@@ -51,21 +51,26 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     // activities *and* includes surveys that are build server-side (currently not supported by this implementation)
     
     public func reloadData() {
-        
-        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, todayOnly: true) { (obj, error) in
+        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, todayOnly: true) { [weak self] (obj, error) in
             guard (error == nil), let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
-            // filter the scheduled activities to only include those that *this* version of the app is designed
-            // to be able to handle. Currently, that means only taskReference activities with an identifier that
-            // maps to a known task.
-            self.activities = scheduledActivities.filter({ (activity) -> Bool in
-                return (activity.activity.task != nil) &&
-                       (self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) != nil)
+            dispatch_async(dispatch_get_main_queue(), { 
+                self?.loadActivities(scheduledActivities)
             })
-            
-            // reload table
-            self.tableView.reloadData()
         }
+    }
+    
+    private func loadActivities(scheduledActivities: [SBBScheduledActivity]) {
+        // filter the scheduled activities to only include those that *this* version of the app is designed
+        // to be able to handle. Currently, that means only taskReference activities with an identifier that
+        // maps to a known task.
+        self.activities = scheduledActivities.filter({ (activity) -> Bool in
+            return (activity.activity.task != nil) &&
+                (self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) != nil)
+        })
+        
+        // reload table
+        self.tableView.reloadData()
     }
     
     public func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity? {
