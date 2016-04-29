@@ -32,6 +32,7 @@
 //
 
 #import "SBAUserBridgeManager.h"
+#import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
 @implementation SBAUserBridgeManager
 
@@ -161,19 +162,10 @@
     // more recent than what is available from the server. syoung 04/14/2016
     NSInteger daysBehind = todayOnly ? 0 : 1;
     // Always get max daysAhead (4) so we can update local notifications, and then filter to today if necessary.
-    UIApplication *app = [UIApplication sharedApplication];
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
-        [app cancelAllLocalNotifications];
-        // TODO: emm 2016-04-29 move notification handling into a Swift function that checks permission,
-        // allows other schedules/patterns à la mPower, handles localization, etc.
-        for (SBBScheduledActivity *sa in activitiesList) {
-            UILocalNotification *notif = [UILocalNotification new];
-            notif.fireDate = sa.scheduledOn;
-            notif.soundName = UILocalNotificationDefaultSoundName;
-            // TODO: emm 2016-04-28 make this localizable
-            notif.alertBody = [NSString stringWithFormat:@"Time for %@", sa.activity.label];
-            [app scheduleLocalNotification:notif];
-        }
+        // set up local notifications for scheduled activities
+        [SBANotificationsManager setupNotificationsForScheduledActivities:activitiesList];
+        
         if (todayOnly) {
             NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@",

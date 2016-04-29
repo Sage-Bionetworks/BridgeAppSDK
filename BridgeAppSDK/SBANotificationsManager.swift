@@ -1,0 +1,64 @@
+//
+//  SBANotificationsManager.swift
+//  BridgeAppSDK
+//
+//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+//
+// 1.  Redistributions of source code must retain the above copyright notice, this
+// list of conditions and the following disclaimer.
+//
+// 2.  Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation and/or
+// other materials provided with the distribution.
+//
+// 3.  Neither the name of the copyright holder(s) nor the names of any contributors
+// may be used to endorse or promote products derived from this software without
+// specific prior written permission. No license is granted to the trademarks of
+// the copyright holders even if such marks are included in this software.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+
+import UIKit
+
+public class SBANotificationsManager: NSObject {
+    
+    static var notificationsRegistered = false
+    
+    public class func registerForNotifications() {
+        let types: UIUserNotificationType = [.Badge, .Sound, .Alert]
+        let mySettings = UIUserNotificationSettings.init(forTypes: types, categories: nil);
+        UIApplication.sharedApplication().registerUserNotificationSettings(mySettings)
+        notificationsRegistered = true
+    }
+
+    public class func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
+        // TODO: emm 2016-04-29 check permissions, handle mPower-style notification scheduling, etc.
+        if !notificationsRegistered {
+            return
+        }
+        
+        let app = UIApplication.sharedApplication()
+        app.cancelAllLocalNotifications()
+        for sa in activities {
+            let notif = UILocalNotification.init()
+            notif.fireDate = sa.scheduledOn
+            notif.soundName = UILocalNotificationDefaultSoundName
+            let format = Localization.localizedString("SBA_TIME_FOR_%@")
+            notif.alertBody = String(format: format, sa.activity.label)
+            app.scheduleLocalNotification(notif)
+        }
+    }
+}
