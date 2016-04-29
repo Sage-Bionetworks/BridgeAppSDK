@@ -36,6 +36,8 @@
 
 @implementation SBATaskViewController
 
+@synthesize scheduledActivityGUID = _scheduledActivityGUID;
+
 - (NSURL *)outputDirectory {
     NSURL *outputDirectory = [super outputDirectory];
     if (outputDirectory == nil) {
@@ -74,7 +76,18 @@
         // to the app blue tint color.
         stepViewController.view.tintColor = [UIColor blueTintColor];
     }
-    
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        _scheduledActivityGUID = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder setValue:_scheduledActivityGUID forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
 }
 
 @end
