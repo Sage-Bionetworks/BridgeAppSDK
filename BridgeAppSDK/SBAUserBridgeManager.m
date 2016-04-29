@@ -159,9 +159,30 @@
     // Intended design is to allow for the server to win in getting updates to the current list of scheduled
     // activities, but this will also *send* what is already known and may include a finishedOn date that is
     // more recent than what is available from the server. syoung 04/14/2016
-    NSInteger daysAhead = todayOnly ? 0 : 4;
     NSInteger daysBehind = todayOnly ? 0 : 1;
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:completionBlock];
+    // Always get max daysAhead (4) so we can update local notifications, and then filter to today if necessary.
+    UIApplication *app = [UIApplication sharedApplication];
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
+        [app cancelAllLocalNotifications];
+        // TODO: emm 2016-04-29 move notification handling into a Swift function that checks permission,
+        // allows other schedules/patterns à la mPower, handles localization, etc.
+        for (SBBScheduledActivity *sa in activitiesList) {
+            UILocalNotification *notif = [UILocalNotification new];
+            notif.fireDate = sa.scheduledOn;
+            notif.soundName = UILocalNotificationDefaultSoundName;
+            // TODO: emm 2016-04-28 make this localizable
+            notif.alertBody = [NSString stringWithFormat:@"Time for %@", sa.activity.label];
+            [app scheduleLocalNotification:notif];
+        }
+        if (todayOnly) {
+            NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@",
+                                      NSStringFromSelector(@selector(scheduledOn)),
+                                      [[NSCalendar currentCalendar] startOfDayForDate:tomorrow]];
+            activitiesList = [activitiesList filteredArrayUsingPredicate:predicate];
+        }
+        completionBlock(activitiesList, error);
+    }];
 }
 
 + (void)updateScheduledActivity:(SBBScheduledActivity *)scheduledActivity {
