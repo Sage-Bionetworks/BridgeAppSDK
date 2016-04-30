@@ -40,7 +40,6 @@ public class SBASubtaskStep: ORKStep {
     
     public var taskIdentifier: String?
     public var schemaIdentifier: String?
-    public var schemaRevision: Int = 0
     
     public var subtask: protocol <ORKTask, NSCopying, NSSecureCoding> {
         return _subtask
@@ -118,7 +117,6 @@ public class SBASubtaskStep: ORKStep {
         subtaskStep._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
         subtaskStep.taskIdentifier = taskIdentifier
         subtaskStep.schemaIdentifier = schemaIdentifier
-        subtaskStep.schemaRevision = schemaRevision
         return subtaskStep
     }
     
@@ -128,7 +126,6 @@ public class SBASubtaskStep: ORKStep {
         _subtask = aDecoder.decodeObjectForKey("subtask") as! protocol <ORKTask, NSCopying, NSSecureCoding>
         taskIdentifier = aDecoder.decodeObjectForKey("taskIdentifier") as? String
         schemaIdentifier = aDecoder.decodeObjectForKey("schemaIdentifier") as? String
-        schemaRevision = aDecoder.decodeIntegerForKey("schemaRevision")
         super.init(coder: aDecoder);
     }
     
@@ -137,7 +134,6 @@ public class SBASubtaskStep: ORKStep {
         aCoder.encodeObject(_subtask, forKey: "subtask")
         aCoder.encodeObject(taskIdentifier, forKey: "taskIdentifier")
         aCoder.encodeObject(schemaIdentifier, forKey: "schemaIdentifier")
-        aCoder.encodeInteger(schemaRevision, forKey: "schemaRevision")
     }
     
     // MARK: Equality
@@ -147,14 +143,13 @@ public class SBASubtaskStep: ORKStep {
         return super.isEqual(object) &&
             _subtask.isEqual(object._subtask) &&
             (self.taskIdentifier == object.taskIdentifier) &&
-            (self.schemaIdentifier == object.schemaIdentifier) &&
-            (self.schemaRevision == object.schemaRevision)
+            (self.schemaIdentifier == object.schemaIdentifier)
     }
     
     override public var hash: Int {
         let hashTaskIdentifier = self.taskIdentifier?.hash ?? 0
         let hashSchemaIdentifier = self.schemaIdentifier?.hash ?? 0
-        return super.hash | schemaRevision | hashTaskIdentifier | hashSchemaIdentifier | _subtask.hash
+        return super.hash | hashTaskIdentifier | hashSchemaIdentifier | _subtask.hash
     }
     
 }

@@ -46,7 +46,6 @@ extension NSDictionary: SBAStepTransformer {
             let step = SBASubtaskStep(subtask: subtask)
             step.taskIdentifier = self.taskIdentifier
             step.schemaIdentifier = self.schemaIdentifier
-            step.schemaRevision = self.schemaRevision.integerValue
             return step
         }
         else {

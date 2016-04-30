@@ -178,12 +178,12 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         // Add any additional schedules
         var scheduledActivities = [schedule]
         
-        // Look at top-level steps for a subtask that might have it's own schedule
+        // Look at top-level steps for a subtask that might have its own schedule
         if let navTask = taskViewController.task as? SBANavigableOrderedTask {
             for step in navTask.steps {
                 if let subtaskStep = step as? SBASubtaskStep, let taskId = subtaskStep.taskIdentifier,
                    let subschedule = scheduledActivityForTaskIdentifier(taskId) where !subschedule.isCompleted {
-                    // If schedule is found then set it's start/stop time and add to list to update
+                    // If schedule is found then set its start/stop time and add to list to update
                     subschedule.startedOn = schedule.startedOn
                     subschedule.finishedOn = schedule.finishedOn
                     scheduledActivities += [subschedule]

@@ -85,7 +85,6 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         let subtaskStep = SBASubtaskStep(subtask: task)
         subtaskStep.taskIdentifier = self.taskIdentifier
         subtaskStep.schemaIdentifier = self.schemaIdentifier
-        subtaskStep.schemaRevision = self.schemaRevision.integerValue
         
         return subtaskStep
     }

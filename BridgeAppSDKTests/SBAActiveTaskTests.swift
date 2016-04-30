@@ -52,7 +52,6 @@ class SBAActiveTaskTests: XCTestCase {
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Tapping-ABCD-1234",
             "schemaIdentifier"          : "Tapping Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "tapping",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
@@ -119,7 +118,6 @@ class SBAActiveTaskTests: XCTestCase {
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Memory-ABCD-1234",
             "schemaIdentifier"          : "Memory Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "memory",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
@@ -179,7 +177,6 @@ class SBAActiveTaskTests: XCTestCase {
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Voice-ABCD-1234",
             "schemaIdentifier"          : "Voice Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "voice",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
@@ -261,7 +258,6 @@ class SBAActiveTaskTests: XCTestCase {
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Walking-ABCD-1234",
             "schemaIdentifier"          : "Walking Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "walking",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
@@ -334,7 +330,6 @@ class SBAActiveTaskTests: XCTestCase {
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Tremor-ABCD-1234",
             "schemaIdentifier"          : "Tremor Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "tremor",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
@@ -406,14 +401,12 @@ class SBAActiveTaskTests: XCTestCase {
             "taskIdentifier"            : "1-Tapping-ABCD-1234",
             "schemaIdentifier"          : "Tapping Activity",
             "surveyItemType"            : "activeTask",
-            "schemaRevision"            : 2,
             "taskType"                  : "tapping",
         ]
         
         let voiceTask: NSDictionary = [
             "taskIdentifier"            : "1-Voice-ABCD-1234",
             "schemaIdentifier"          : "Voice Activity",
-            "schemaRevision"            : 2,
             "taskType"                  : "voice",
             "intendedUseDescription"    : "intended Use Description Text",
             "predefinedExclusions"      : 0,
@@ -423,7 +416,6 @@ class SBAActiveTaskTests: XCTestCase {
             "taskIdentifier"            : "1-Walking-ABCD-1234",
             "schemaIdentifier"          : "Walking Activity",
             "surveyItemType"            : "activeTask",
-            "schemaRevision"            : 2,
             "taskType"                  : "walking",
             ]
         
