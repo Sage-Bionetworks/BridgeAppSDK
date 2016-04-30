@@ -35,18 +35,9 @@ import UIKit
 
 public class SBANotificationsManager: NSObject {
     
-    static var notificationsRegistered = false
-    
-    public class func registerForNotifications() {
-        let types: UIUserNotificationType = [.Badge, .Sound, .Alert]
-        let mySettings = UIUserNotificationSettings.init(forTypes: types, categories: nil);
-        UIApplication.sharedApplication().registerUserNotificationSettings(mySettings)
-        notificationsRegistered = true
-    }
-
     public class func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        // TODO: emm 2016-04-29 check permissions, handle mPower-style notification scheduling, etc.
-        if !notificationsRegistered {
+        // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
+        if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {
             return
         }
         
