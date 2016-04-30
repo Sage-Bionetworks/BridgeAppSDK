@@ -37,7 +37,7 @@ import BridgeSDK
 
 public class SBAActivityTableViewController: UITableViewController, SBASharedInfoController, ORKTaskViewControllerDelegate {
     
-    private var activities: [SBBScheduledActivity] = []
+    public var activities: [SBBScheduledActivity] = []
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -60,7 +60,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         }
     }
     
-    private func loadActivities(scheduledActivities: [SBBScheduledActivity]) {
+    public func loadActivities(scheduledActivities: [SBBScheduledActivity]) {
+        
         // filter the scheduled activities to only include those that *this* version of the app is designed
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
@@ -84,6 +85,12 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             return nil
         }
         return activities.findObject({ $0.guid == guid })
+    }
+    
+    public func scheduledActivityForTaskIdentifier(taskIdentifier: String) -> SBBScheduledActivity? {
+        return activities.findObject({ (schedule) -> Bool in
+            return (schedule.activity.task != nil) && (schedule.activity.task.identifier == taskIdentifier)
+        })
     }
     
     public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -168,8 +175,28 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         
         schedule.startedOn = taskViewController.result.startDate ?? schedule.finishedOn
         
+        // Add any additional schedules
+        var scheduledActivities = [schedule]
+        
+        // Look at top-level steps for a subtask that might have its own schedule
+        if let navTask = taskViewController.task as? SBANavigableOrderedTask {
+            for step in navTask.steps {
+                if let subtaskStep = step as? SBASubtaskStep, let taskId = subtaskStep.taskIdentifier,
+                   let subschedule = scheduledActivityForTaskIdentifier(taskId) where !subschedule.isCompleted {
+                    // If schedule is found then set its start/stop time and add to list to update
+                    subschedule.startedOn = schedule.startedOn
+                    subschedule.finishedOn = schedule.finishedOn
+                    scheduledActivities += [subschedule]
+                }
+            }
+        }
+        
         // Send message to server
-        SBAUserBridgeManager.updateScheduledActivity(schedule)
+        sendUpdatedScheduledActivities(scheduledActivities)
+    }
+    
+    public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
+        SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
     
     public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {

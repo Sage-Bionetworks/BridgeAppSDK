@@ -36,7 +36,6 @@ import ResearchKit
 public protocol SBABridgeTask: class {
     var taskIdentifier: String! { get }
     var schemaIdentifier: String! { get }
-    var schemaRevision: NSNumber! { get }
     var taskSteps: [SBAStepTransformer] { get }
     var insertSteps: [SBAStepTransformer]? { get }
 }

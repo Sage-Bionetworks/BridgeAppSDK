@@ -52,13 +52,6 @@ static NSString *kTrackedItemsKey = @"items";
     return _schemaIdentifier;
 }
 
-- (NSNumber *)schemaRevision {
-    if (_schemaRevision == nil) {
-        _schemaRevision = @(1);
-    }
-    return _schemaRevision;
-}
-
 - (SBATrackedDataStore *)dataStore {
     if (_dataStore == nil) {
         _dataStore = [SBATrackedDataStore defaultStore];
@@ -82,7 +75,6 @@ static NSString *kTrackedItemsKey = @"items";
     [superKeys removeObject:NSStringFromSelector(@selector(identifier))];
     NSArray *subkeys = @[NSStringFromSelector(@selector(taskIdentifier)),
                          NSStringFromSelector(@selector(schemaIdentifier)),
-                         NSStringFromSelector(@selector(schemaRevision)),
                          NSStringFromSelector(@selector(alwaysIncludeActivitySteps)),
                          NSStringFromSelector(@selector(itemsClassType)),
                          kTrackedItemsKey,

@@ -38,6 +38,9 @@ import ResearchKit
  */
 public class SBASubtaskStep: ORKStep {
     
+    public var taskIdentifier: String?
+    public var schemaIdentifier: String?
+    
     public var subtask: protocol <ORKTask, NSCopying, NSSecureCoding> {
         return _subtask
     }
@@ -112,6 +115,8 @@ public class SBASubtaskStep: ORKStep {
         let copy = super.copyWithZone(zone)
         guard let subtaskStep = copy as? SBASubtaskStep else { return copy }
         subtaskStep._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
+        subtaskStep.taskIdentifier = taskIdentifier
+        subtaskStep.schemaIdentifier = schemaIdentifier
         return subtaskStep
     }
     
@@ -119,12 +124,33 @@ public class SBASubtaskStep: ORKStep {
     
     required public init(coder aDecoder: NSCoder) {
         _subtask = aDecoder.decodeObjectForKey("subtask") as! protocol <ORKTask, NSCopying, NSSecureCoding>
+        taskIdentifier = aDecoder.decodeObjectForKey("taskIdentifier") as? String
+        schemaIdentifier = aDecoder.decodeObjectForKey("schemaIdentifier") as? String
         super.init(coder: aDecoder);
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
         aCoder.encodeObject(_subtask, forKey: "subtask")
+        aCoder.encodeObject(taskIdentifier, forKey: "taskIdentifier")
+        aCoder.encodeObject(schemaIdentifier, forKey: "schemaIdentifier")
     }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object as? SBASubtaskStep else { return false }
+        return super.isEqual(object) &&
+            _subtask.isEqual(object._subtask) &&
+            (self.taskIdentifier == object.taskIdentifier) &&
+            (self.schemaIdentifier == object.schemaIdentifier)
+    }
+    
+    override public var hash: Int {
+        let hashTaskIdentifier = self.taskIdentifier?.hash ?? 0
+        let hashSchemaIdentifier = self.schemaIdentifier?.hash ?? 0
+        return super.hash | hashTaskIdentifier | hashSchemaIdentifier | _subtask.hash
+    }
+    
 }
 

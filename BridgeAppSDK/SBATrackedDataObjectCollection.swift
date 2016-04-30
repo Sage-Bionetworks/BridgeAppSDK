@@ -82,7 +82,11 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
         task.conditionalRule = self
         
-        return SBASubtaskStep(subtask: task)
+        let subtaskStep = SBASubtaskStep(subtask: task)
+        subtaskStep.taskIdentifier = self.taskIdentifier
+        subtaskStep.schemaIdentifier = self.schemaIdentifier
+        
+        return subtaskStep
     }
     
     // MARK: SBAConditionalRule

@@ -66,10 +66,6 @@ extension NSDictionary: SBABridgeTask {
     public var schemaIdentifier: String! {
         return self["schemaIdentifier"] as? String ?? self.taskIdentifier
     }
-
-    public var schemaRevision: NSNumber! {
-        return self["schemaRevision"] as? NSNumber ?? NSNumber(integer:1)
-    }
     
     public var taskSteps: [SBAStepTransformer] {
         guard let steps = self["taskSteps"] as? [AnyObject] else {

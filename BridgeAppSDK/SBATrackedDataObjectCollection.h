@@ -39,7 +39,6 @@
 
 @property (nonatomic, copy) NSString *taskIdentifier;
 @property (nonatomic, copy) NSString *schemaIdentifier;
-@property (nonatomic, copy) NSNumber *schemaRevision;
 
 @property (nonatomic) BOOL alwaysIncludeActivitySteps;
 @property (nonatomic, copy) NSString *itemsClassType;

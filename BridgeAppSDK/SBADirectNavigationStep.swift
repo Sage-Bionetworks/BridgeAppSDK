@@ -98,4 +98,16 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
             aCoder.encodeObject(nextStepIdentifier, forKey: "nextStepIdentifier")
         }
     }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object as? SBADirectNavigationStep else { return false }
+        return super.isEqual(object) && (self.nextStepIdentifier == object.nextStepIdentifier)
+    }
+    
+    override public var hash: Int {
+        let hashNextStepIdentifier = self.nextStepIdentifier?.hash ?? 0
+        return super.hash | hashNextStepIdentifier
+    }
 }

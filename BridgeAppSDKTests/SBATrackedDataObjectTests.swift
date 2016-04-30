@@ -89,7 +89,6 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         XCTAssertEqual(dataCollection.taskIdentifier, "1-APHMedicationTracker-20EF8ED2-E461-4C20-9024-F43FCAAAF4C3")
         XCTAssertEqual(dataCollection.schemaIdentifier, "Medication Tracker")
-        XCTAssertEqual(dataCollection.schemaRevision, 8)
     }
     
     func testMedicationTrackerFromResourceFile_Items() {
