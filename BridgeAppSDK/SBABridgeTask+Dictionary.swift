@@ -33,7 +33,7 @@
 
 import Foundation
 
-extension NSDictionary: SBABridgeTask {
+extension NSDictionary: SBATaskReference {
     
     public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
         if !self.taskType.isNilType() {
@@ -41,16 +41,20 @@ extension NSDictionary: SBABridgeTask {
             let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion
             return factory.createTaskWithActiveTask(self, taskOptions:taskOptions)
         }
-        guard let taskId = self["taskIdentifier"] as? String,
-            let bridgeTask = self.objectWithResourceDictionary() as? SBABridgeTask
-            where bridgeTask.taskIdentifier == taskId else {
-            // If this isn't a resource task or the task identifiers dont match then
-            // return nil (otherwise, could end up in a wacky loop of infinite madness
+        guard let bridgeTask = self.objectWithResourceDictionary() as? SBABridgeTask
+        else {
+            // If this isn't a resource task then return nil
             return nil
         }
-        
         return bridgeTask.createORKTask(factory: factory)
     }
+    
+    public var cancelDisabled: Bool {
+        return self["cancelDisabled"] as? Bool ?? false
+    }
+}
+
+extension NSDictionary: SBABridgeTask {
     
     public var taskIdentifier: String! {
         guard let taskIdentifier = self["taskIdentifier"] as? String else {

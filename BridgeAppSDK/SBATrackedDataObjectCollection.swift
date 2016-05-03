@@ -47,7 +47,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAStepTransformer
     
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
         
         // Check the dataStore to determine if the momentInDay id map has been setup and do so if needed
         if (self.dataStore.momentInDayResultDefaultIdMap == nil) {
@@ -82,6 +82,12 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
         task.conditionalRule = self
         
+        return task
+    }
+    
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+        
+        let task = transformToTask(factory, isLastStep: isLastStep)!
         let subtaskStep = SBASubtaskStep(subtask: task)
         subtaskStep.taskIdentifier = self.taskIdentifier
         subtaskStep.schemaIdentifier = self.schemaIdentifier

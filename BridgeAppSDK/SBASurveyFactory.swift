@@ -78,16 +78,6 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         protocol <ORKTask, NSCopying, NSSecureCoding>? {
         return activeTask.createDefaultORKActiveTask(taskOptions)
     }
-    
-    /**
-     * Factory method for creating an ORKTask from a given task reference Identifier
-     */
-    public func createTaskWithTaskReference(taskIdentifier: String) -> ORKTask? {
-        guard let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(taskIdentifier) else {
-            return nil
-        }
-        return taskRef.transformToTask(self, isLastStep: true)
-    }
 
     /**
      * Factory method for creating a survey step with a dictionary

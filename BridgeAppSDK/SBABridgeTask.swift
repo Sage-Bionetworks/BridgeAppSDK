@@ -33,6 +33,11 @@
 
 import ResearchKit
 
+public protocol SBATaskReference: class {
+    func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
+    var cancelDisabled: Bool { get }
+}
+
 public protocol SBABridgeTask: class {
     var taskIdentifier: String! { get }
     var schemaIdentifier: String! { get }
