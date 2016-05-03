@@ -65,9 +65,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         // filter the scheduled activities to only include those that *this* version of the app is designed
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
-        self.activities = scheduledActivities.filter({ (activity) -> Bool in
-            return (activity.activity.task != nil) &&
-                (self.bridgeInfo.taskReferenceWithIdentifier(activity.activity.task.identifier) != nil)
+        self.activities = scheduledActivities.filter({ (schedule) -> Bool in
+            return taskReferenceForSchedule(schedule) != nil
         })
         
         // reload table
@@ -79,7 +78,7 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     }
     
     public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
-        guard let vc = taskViewController as? SBATaskViewControllerProtocol,
+        guard let vc = taskViewController as? SBATaskViewController,
               let guid = vc.scheduledActivityGUID
         else {
             return nil
@@ -124,17 +123,29 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         return cell
     }
     
+    override public func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        guard let schedule = scheduledActivityAtIndexPath(indexPath) where shouldShowTaskForSchedule(schedule)
+        else {
+            return nil
+        }
+        return indexPath
+    }
+    
     override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath),
-            let task = SBASurveyFactory().createTaskWithTaskReference(schedule.activity.task.identifier) else {
+            let taskRef = taskReferenceForSchedule(schedule),
+            let task = taskRef.transformToTask(SBASurveyFactory(), isLastStep: true),
+            let taskViewController = createTaskViewController(task, schedule: schedule, taskRef: taskRef)
+        else {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
             return
         }
         
-        let taskViewController = SBATaskViewController(task: task, taskRunUUID: nil)
-        taskViewController.scheduledActivityGUID = schedule.guid
-        taskViewController.delegate = self
+        // Once we have a view controller, then present it
+        setupTaskViewController(taskViewController, schedule: schedule, taskRef: taskRef)
+        
         self.presentViewController(taskViewController, animated: true, completion: nil)
     }
     
@@ -155,6 +166,28 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     }
     
     // MARK: Protected subclass methods
+    
+    public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
+        return true
+    }
+    
+    public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
+        if (schedule.activity.task != nil),
+            let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(schedule.activity.task.identifier) {
+            return taskRef as SBATaskReference
+        }
+        return nil
+    }
+    
+    public func createTaskViewController(task: ORKTask, schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBATaskViewController? {
+         return SBATaskViewController(task: task, taskRunUUID: nil)
+    }
+    
+    public func setupTaskViewController(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
+        taskViewController.scheduledActivityGUID = schedule.guid
+        taskViewController.delegate = self
+        taskViewController.cancelDisabled = taskRef.cancelDisabled
+    }
     
     public func shouldRecordResult(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
         return true

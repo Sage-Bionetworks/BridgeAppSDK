@@ -1,5 +1,5 @@
 //
-//  SBATaskViewController.h
+//  ORKOrderedTask+SBAExtension.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,15 +31,15 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
 #import <ResearchKit/ResearchKit.h>
 
-@interface SBATaskViewController : ORKTaskViewController
+@protocol SBATaskExtension <ORKTask>
 
-@property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
+- (NSUInteger)stepCount;
+- (NSUInteger)indexOfStep:(ORKStep *)step;
 
-@property (nonatomic, readwrite) BOOL cancelDisabled;
+@end
 
-@property (nonatomic, readonly) NSDate * _Nullable finishedOn;
+@interface ORKOrderedTask (SBATaskExtension) <SBATaskExtension>
 
 @end
