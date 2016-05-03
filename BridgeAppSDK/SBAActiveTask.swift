@@ -119,11 +119,17 @@ extension SBAActiveTask {
         if let items = self.localizedSteps {
             for item in items {
                 if let step = task.steps.filter({ return $0.identifier == item.identifier }).first {
-                    step.title = item.stepTitle ?? step.title
+                    if let stepTitle = item.stepTitle {
+                        if let activeStep = step as? ORKActiveStep where activeStep.spokenInstruction == step.title {
+                            activeStep.spokenInstruction = stepTitle
+                        }
+                        step.title = stepTitle
+                    }
                     step.text = item.stepText ?? step.text
                     if let detail = item.stepDetail, let instructionStep = step as? ORKInstructionStep {
                         instructionStep.detailText = detail
                     }
+                    
                 }
             }
         }
