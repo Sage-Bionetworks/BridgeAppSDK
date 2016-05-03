@@ -176,6 +176,10 @@ public class Localization: NSObject {
             "SBA_LESS_THAN_%@_AGO" : NSLocalizedString("SBA_LESS_THAN_%@_AGO", tableName: nil, bundle: localeBundle, value:"Less than %@ ago", comment:"Less than %@ time interval in the past"),
             "SBA_MORE_THAN_%@_AGO" : NSLocalizedString("SBA_MORE_THAN_%@_AGO", tableName: nil, bundle: localeBundle, value:"More than %@ ago", comment:"More than %@ time interval in the past"),
             "SBA_RANGE_%@_AGO" : NSLocalizedString("SBA_RANGE_%@_AGO", tableName: nil, bundle: localeBundle, value:"%@ ago", comment:"Range time interval in the past (Ex. '0-30 minutes ago'"),
+            
+            // Scheduling
+            "SBA_NOW" : NSLocalizedString("SBA_NOW", tableName: nil, bundle: localeBundle, value:"Now", comment:"Time if now"),
+            "SBA_EXPIRED" : NSLocalizedString("SBA_EXPIRED", tableName: nil, bundle: localeBundle, value:"Expired", comment:"Time if expired"),
 
         ]
     }()
