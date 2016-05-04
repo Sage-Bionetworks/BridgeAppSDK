@@ -169,7 +169,11 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
+            taskViewController.task?.updateTrackedDataStores(true)
             archiveResults(schedule, taskViewController: taskViewController)
+        }
+        else {
+            taskViewController.task?.updateTrackedDataStores(false)
         }
         
         taskViewController.dismissViewControllerAnimated(true) {}
@@ -247,6 +251,31 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         // TODO: implement syoung 04/27/2016
     }
+}
+
+extension ORKTask {
+    
+    func updateTrackedDataStores(shouldCommit: Bool) {
+        guard let navTask = self as? SBANavigableOrderedTask else { return }
+        
+        // If this task has a conditional rule then update it
+        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection where collection.dataStore.hasChanges {
+            if (shouldCommit) {
+                collection.dataStore.commitChanges()
+            }
+            else {
+                collection.dataStore.reset()
+            }
+        }
+        
+        // recursively search for subtask with a data store
+        for step in navTask.steps {
+            if let subtaskStep = step as? SBASubtaskStep {
+                subtaskStep.subtask.updateTrackedDataStores(shouldCommit)
+            }
+        }
+    }
+    
 }
 
 extension SBBScheduledActivity {

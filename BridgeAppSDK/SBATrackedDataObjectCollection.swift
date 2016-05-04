@@ -109,14 +109,6 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
         
-        if (previousStep == nil) && (nextStep == nil) {
-            // All steps have been completed. Commit changes to the dataStore.
-            if let results = result.results where results.count > 0 {
-                self.dataStore.commitChanges()
-            }
-            return nil
-        }
-        
         if let previous = previousStep as? SBATrackedFormStep {
             
             // update the previous step with the result
