@@ -62,9 +62,8 @@ public extension SBABridgeTask {
         }
         
         // Map the insert steps
-        if let insertSteps = self.insertSteps?.enumerate().map({ (index, item) in
-            return item.transformToStep(factory, isLastStep: false)
-        }) where insertSteps.count > 0 {
+        if let insertSteps = self.insertSteps?.map({ $0.transformToStep(factory, isLastStep: false) })
+            where insertSteps.count > 0 {
             
             var introStep: ORKStep!
             if let subtaskStep = subtaskSteps.first as? SBASubtaskStep,
