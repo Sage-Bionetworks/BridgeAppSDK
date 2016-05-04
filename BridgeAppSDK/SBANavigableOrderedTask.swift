@@ -104,8 +104,15 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             }
             
             // If the superclass returns a step of type subtask step, then get the first step from the subtask
+            // Since it is possible that the subtask will return an empty task (all steps are invalid) then 
+            // need to also check that the return is non-nil
             if let subtaskStep = returnStep as? SBASubtaskStep {
-                returnStep = subtaskStep.stepAfterStep(nil, withResult: result)
+                if let subtaskReturnStep = subtaskStep.stepAfterStep(nil, withResult: result) {
+                    returnStep = subtaskReturnStep
+                }
+                else {
+                    returnStep = super.stepAfterStep(subtaskStep, withResult: result)
+                }
             }
             
             // Check to see if this is a conditional step that *should* be skipped

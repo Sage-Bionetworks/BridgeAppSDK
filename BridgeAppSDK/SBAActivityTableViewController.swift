@@ -109,9 +109,15 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         activityCell.subtitleLabel.text = activity.labelDetail
         activityCell.timeLabel.text = schedule.scheduledTime
         
-        // Show the time label as gray if expired and *not* completed
-        if (schedule.isExpired && !schedule.isCompleted) {
-            activityCell.timeLabel.textColor = UIColor.grayColor()
+        // Modify the label colors if disabled
+        let tintColor = UIColor.primaryTintColor() ?? self.view.tintColor
+        if (shouldShowTaskForSchedule(schedule)) {
+            activityCell.titleLabel.textColor = UIColor.blackColor()
+            activityCell.timeLabel.textColor = tintColor
+        }
+        else {
+            activityCell.titleLabel.textColor = UIColor.grayColor()
+            activityCell.timeLabel.textColor = UIColor.disabledPrimaryTintColor() ?? tintColor?.colorWithAlphaComponent(0.8)
         }
     }
     
@@ -163,7 +169,11 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
             where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
+            taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
             archiveResults(schedule, taskViewController: taskViewController)
+        }
+        else {
+            taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
         }
         
         taskViewController.dismissViewControllerAnimated(true) {}
@@ -241,6 +251,31 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         // TODO: implement syoung 04/27/2016
     }
+}
+
+extension ORKTask {
+    
+    func updateTrackedDataStores(shouldCommit shouldCommit: Bool) {
+        guard let navTask = self as? SBANavigableOrderedTask else { return }
+        
+        // If this task has a conditional rule then update it
+        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection where collection.dataStore.hasChanges {
+            if (shouldCommit) {
+                collection.dataStore.commitChanges()
+            }
+            else {
+                collection.dataStore.reset()
+            }
+        }
+        
+        // recursively search for subtask with a data store
+        for step in navTask.steps {
+            if let subtaskStep = step as? SBASubtaskStep {
+                subtaskStep.subtask.updateTrackedDataStores(shouldCommit: shouldCommit)
+            }
+        }
+    }
+    
 }
 
 extension SBBScheduledActivity {

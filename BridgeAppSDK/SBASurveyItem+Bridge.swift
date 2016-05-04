@@ -66,11 +66,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
-    public func createCustomStep() -> ORKStep {
-        return self.createInstructionStep()
-    }
-    
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
     }
 }
@@ -194,11 +190,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
-    public func createCustomStep() -> ORKStep {
-        return ORKStep(identifier: self.identifier)
-    }
-    
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
     }
 }

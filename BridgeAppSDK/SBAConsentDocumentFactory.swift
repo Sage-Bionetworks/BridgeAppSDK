@@ -73,7 +73,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
         self.mapSteps(dictionary)
     }
     
-    override public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
+    override public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
         guard let subtype = inputItem.surveyItemType.consentSubtype() else {
             return super.createSurveyStepWithCustomType(inputItem)
         }

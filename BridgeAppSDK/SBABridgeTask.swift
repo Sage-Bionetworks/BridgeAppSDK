@@ -56,15 +56,16 @@ public extension SBABridgeTask {
         let steps = self.taskSteps
         guard steps.count > 0 else { return nil }
 
+        // Map to ORKSteps
         let lastIndex = steps.count - 1
-        var subtaskSteps: [ORKStep] = steps.enumerate().map(){ (index, item) in
+        var subtaskSteps: [ORKStep] = steps.enumerate().mapAndFilter(){ (index, item) in
             return item.transformToStep(factory, isLastStep:(lastIndex == index))
         }
+        guard subtaskSteps.count > 0 else { return nil }
         
         // Map the insert steps
-        if let insertSteps = self.insertSteps?.enumerate().map({ (index, item) in
-            return item.transformToStep(factory, isLastStep: false)
-        }) where insertSteps.count > 0 {
+        if let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
+            where insertSteps.count > 0 {
             
             var introStep: ORKStep!
             if let subtaskStep = subtaskSteps.first as? SBASubtaskStep,

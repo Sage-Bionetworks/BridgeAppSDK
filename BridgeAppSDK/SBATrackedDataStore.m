@@ -172,27 +172,23 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 - (void)updateSelectedItems:(NSArray<SBATrackedDataObject *> *)items
              stepIdentifier:(NSString *)stepIdentifier
                      result:(ORKTaskResult*)result {
-    self.selectedItems = [self filterSelectedItems:items selectionStepIdentifier:stepIdentifier result:result];
-}
-- (NSArray<SBATrackedDataObject *> *)filterSelectedItems:(NSArray<SBATrackedDataObject *> *)items
-                                 selectionStepIdentifier:(NSString *)selectionStepIdentifier
-                                                  result:(ORKTaskResult*)result {
 
-    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:selectionStepIdentifier];
+    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
     ORKChoiceQuestionResult *selectionResult = (ORKChoiceQuestionResult *)[stepResult.results firstObject];
     
     if (selectionResult == nil) {
-        return nil;
+        return;
     }
     if (![selectionResult isKindOfClass:[ORKChoiceQuestionResult class]]) {
         NSAssert(NO, @"The Medication selection result was not of the expected class of ORKChoiceQuestionResult");
-        return nil;
+        return;
     }
     
     // If skipped return nil
     if ((selectionResult.choiceAnswers == nil) ||
         ([selectionResult.choiceAnswers isEqualToArray:@[kSkippedAnswer]])) {
-        return nil;
+        self.selectedItems = nil;
+        return;
     }
     
     // Get the selected ids
@@ -224,7 +220,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
         }
     }
     
-    return  selectedItems;
+    self.selectedItems = selectedItems;
 }
 
 - (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
@@ -254,6 +250,11 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 - (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
                                     result:(ORKTaskResult *)result {
     
+    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
+    if (stepResult == nil) {
+        return;
+    }
+    
     // Look for previous result
     NSString *momentInDayResultKey = [[self class] momentInDayResultKey];
     NSArray *previous = [self.changesDictionary objectForKey:momentInDayResultKey] ?: _momentInDayResult ?: @[];
@@ -266,10 +267,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
     [momentInDayResults filterUsingPredicate:notPredicate];
     
     // Add new result
-    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
-    if (stepResult != nil) {
-        [momentInDayResults addObject:stepResult];
-    }
+    [momentInDayResults addObject:stepResult];
     
     self.momentInDayResult = momentInDayResults;
 }
