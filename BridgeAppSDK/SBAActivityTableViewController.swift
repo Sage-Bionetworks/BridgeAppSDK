@@ -108,6 +108,11 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         activityCell.titleLabel.text = activity.label
         activityCell.subtitleLabel.text = activity.labelDetail
         activityCell.timeLabel.text = schedule.scheduledTime
+        
+        // Show the time label as gray if expired and *not* completed
+        if (schedule.isExpired && !schedule.isCompleted) {
+            activityCell.timeLabel.textColor = UIColor.grayColor()
+        }
     }
     
     
@@ -149,7 +154,6 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         self.presentViewController(taskViewController, animated: true, completion: nil)
     }
     
-    
     // MARK: ORKTaskViewControllerDelegate
     
     public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
@@ -168,7 +172,9 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     // MARK: Protected subclass methods
     
     public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
-        return true
+        // Allow user to perform a task again as long as the task is not expired
+        guard let taskRef = taskReferenceForSchedule(schedule) else { return false }
+        return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
     }
     
     public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
@@ -243,12 +249,16 @@ extension SBBScheduledActivity {
         return self.finishedOn != nil
     }
     
+    var isExpired: Bool {
+        return (self.expiresOn != nil) && (NSDate().earlierDate(self.expiresOn) == self.expiresOn)
+    }
+    
     var scheduledTime: String {
         if (isCompleted) {
             return ""
         }
-        else if (self.scheduledOn.timeIntervalSinceNow < 5*60) {
-            return NSLocalizedString("Now", comment: "Time if now")
+        else if (self.scheduledOn.timeIntervalSinceNow < 5*60) && !isExpired {
+            return Localization.localizedString("SBA_NOW")
         }
         else {
             let dateFormatter = NSDateFormatter()

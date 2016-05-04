@@ -52,6 +52,11 @@ extension NSDictionary: SBATaskReference {
     public var cancelDisabled: Bool {
         return self["cancelDisabled"] as? Bool ?? false
     }
+    
+    public var allowMultipleRun: Bool {
+        return self["allowMultipleRun"] as? Bool ?? true
+    }
+
 }
 
 extension NSDictionary: SBABridgeTask {
