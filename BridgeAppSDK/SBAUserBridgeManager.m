@@ -168,9 +168,10 @@
         
         if (todayOnly) {
             NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@",
-                                      NSStringFromSelector(@selector(scheduledOn)),
-                                      [[NSCalendar currentCalendar] startOfDayForDate:tomorrow]];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@ AND (%K == nil OR %K > %@)",
+                                      NSStringFromSelector(@selector(scheduledOn)), [[NSCalendar currentCalendar] startOfDayForDate:tomorrow],
+                                      NSStringFromSelector(@selector(finishedOn)),
+                                      NSStringFromSelector(@selector(finishedOn)), [[NSCalendar currentCalendar] startOfDayForDate:[NSDate date]]];
             activitiesList = [activitiesList filteredArrayUsingPredicate:predicate];
         }
         completionBlock(activitiesList, error);
