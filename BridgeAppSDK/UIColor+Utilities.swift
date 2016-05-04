@@ -69,6 +69,10 @@ extension UIColor {
         return SBAColorInfo.defaultColorInfo.colorForKey("blueTintColor") ?? UIColor(red:0.132, green:0.684, blue:0.959, alpha:1.000)
     }
     
+    static public func disabledPrimaryTintColor() -> UIColor? {
+        return SBAColorInfo.defaultColorInfo.colorForKey("disabledPrimaryTintColor")
+    }
+    
     public convenience init?(hexString: String) {
         let r, g, b: CGFloat
         

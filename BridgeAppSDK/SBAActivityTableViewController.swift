@@ -109,9 +109,15 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         activityCell.subtitleLabel.text = activity.labelDetail
         activityCell.timeLabel.text = schedule.scheduledTime
         
-        // Show the time label as gray if expired and *not* completed
-        if (schedule.isExpired && !schedule.isCompleted) {
-            activityCell.timeLabel.textColor = UIColor.grayColor()
+        // Modify the label colors if disabled
+        let tintColor = UIColor.primaryTintColor() ?? self.view.tintColor
+        if (shouldShowTaskForSchedule(schedule)) {
+            activityCell.titleLabel.textColor = UIColor.blackColor()
+            activityCell.timeLabel.textColor = tintColor
+        }
+        else {
+            activityCell.titleLabel.textColor = UIColor.grayColor()
+            activityCell.timeLabel.textColor = UIColor.disabledPrimaryTintColor() ?? tintColor?.colorWithAlphaComponent(0.8)
         }
     }
     
