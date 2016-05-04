@@ -365,6 +365,26 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
     XCTAssertEqual(item, carbidopa);
 }
 
+- (void)testUpdateSelectedItemsCalledWithNoResult
+{
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    
+    SBAMedication *levodopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Levodopa"}];
+    SBAMedication *carbidopa = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Carbidopa"}];
+    SBAMedication *rytary = [[SBAMedication alloc] initWithDictionaryRepresentation:@{@"name": @"Rytary"}];
+    NSArray *items = @[levodopa, carbidopa, rytary];
+    
+    // -- call method under test
+    [dataStore updateSelectedItems:items
+                    stepIdentifier:@"selection"
+                            result:result];
+    
+    XCTAssertEqual(dataStore.selectedItems.count, 0);
+    XCTAssertFalse(dataStore.hasChanges);
+}
+
 - (void)testUpdateFrequencyItems
 {
     MockTrackedDataStore *dataStore = [self createDataStore];
@@ -408,6 +428,19 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
     
 }
 
+- (void)testUpdateFrequencyItemsCalledWithNoResult
+{
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    
+    // -- call method under test
+    [dataStore updateFrequencyForStepIdentifier:@"frequency"
+                                         result:result];
+    
+    XCTAssertFalse(dataStore.hasChanges);
+}
+
 - (void)testUpdateMomentInDayForStepIdentifier_NoInitialResults {
 
     MockTrackedDataStore *dataStore = [self createDataStore];
@@ -447,6 +480,19 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
         }
     }
     XCTAssertEqual(stored, stepResult);
+}
+
+- (void)testUpdateMomentInDayCalledWithNoResult
+{
+    MockTrackedDataStore *dataStore = [self createDataStore];
+    
+    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
+    
+    // -- call method under test
+    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
+                                           result:result];
+    
+    XCTAssertFalse(dataStore.hasChanges);
 }
 
 #pragma mark - helper methods
