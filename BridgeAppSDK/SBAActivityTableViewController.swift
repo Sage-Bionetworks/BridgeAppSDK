@@ -50,12 +50,20 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     // works for Lilly but is not complete for Parkinsons (which include a separate section for "keep going"
     // activities *and* includes surveys that are build server-side (currently not supported by this implementation)
     
+    private var reloading: Bool = false
     public func reloadData() {
+        
+        // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from 
+        // this tab to another tab.
+        if (reloading) { return }
+        reloading = true
+        
         SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, todayOnly: true) { [weak self] (obj, error) in
             guard (error == nil), let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
             dispatch_async(dispatch_get_main_queue(), { 
                 self?.loadActivities(scheduledActivities)
+                self?.reloading = false
             })
         }
     }
@@ -66,7 +74,7 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
         self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return taskReferenceForSchedule(schedule) != nil
+            return self.taskReferenceForSchedule(schedule) != nil
         })
         
         // reload table
@@ -87,9 +95,7 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     }
     
     public func scheduledActivityForTaskIdentifier(taskIdentifier: String) -> SBBScheduledActivity? {
-        return activities.findObject({ (schedule) -> Bool in
-            return (schedule.activity.task != nil) && (schedule.activity.task.identifier == taskIdentifier)
-        })
+        return activities.findObject({ $0.matchesTaskIdentifier(taskIdentifier) })
     }
     
     public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -300,5 +306,9 @@ extension SBBScheduledActivity {
             dateFormatter.dateFormat = "h:mm a"
             return dateFormatter.stringFromDate(self.scheduledOn).lowercaseString
         }
+    }
+    
+    func matchesTaskIdentifier(taskIdentifier: String) -> Bool {
+        return (self.activity.task != nil) && (self.activity.task.identifier == taskIdentifier)
     }
 }
