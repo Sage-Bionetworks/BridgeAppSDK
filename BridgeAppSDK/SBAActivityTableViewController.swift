@@ -173,7 +173,8 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     
     public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
-        return !schedule.isExpired
+        guard let taskRef = taskReferenceForSchedule(schedule) else { return false }
+        return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
     }
     
     public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
