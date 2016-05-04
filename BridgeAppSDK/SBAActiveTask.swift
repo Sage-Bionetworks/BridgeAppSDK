@@ -124,6 +124,11 @@ extension SBAActiveTask {
                     if let detail = item.stepDetail, let instructionStep = step as? ORKInstructionStep {
                         instructionStep.detailText = detail
                     }
+                    if let activeStep = step as? ORKActiveStep,
+                        let activeItem = item as? SBAActiveStepSurveyItem,
+                        let spokenInstruction = activeItem.stepSpokenInstruction {
+                        activeStep.spokenInstruction = spokenInstruction
+                    }
                 }
             }
         }

@@ -82,7 +82,13 @@ extension NSDictionary: SBASurveyItem {
     public func createCustomStep() -> ORKStep {
         return self.createInstructionStep()
     }
+}
 
+extension NSDictionary: SBAActiveStepSurveyItem {
+    
+    public var stepSpokenInstruction: String? {
+        return self["spokenInstruction"] as? String
+    }
 }
 
 extension NSDictionary: SBAInstructionStepSurveyItem {

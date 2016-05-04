@@ -47,6 +47,10 @@ public protocol SBASurveyItem: SBAStepTransformer {
     func createCustomStep() -> ORKStep
 }
 
+public protocol SBAActiveStepSurveyItem: SBASurveyItem {
+    var stepSpokenInstruction: String? { get }
+}
+
 public protocol SBAFormStepSurveyItem: SBASurveyItem {
     var optional: Bool { get }
     var items: [AnyObject]? { get }
