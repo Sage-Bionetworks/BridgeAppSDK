@@ -143,7 +143,7 @@ extension SBAInstructionStepSurveyItem {
     
     func createInstructionStep() -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
-        let learnMoreHTMLContent = self.learnMoreHTMLContent
+        let learnMore = self.learnMoreAction
         var nextIdentifier: String? = nil
         if let directStep = self as? SBADirectNavigationRule {
             nextIdentifier = directStep.nextStepIdentifier
@@ -151,9 +151,9 @@ extension SBAInstructionStepSurveyItem {
         if case .Completion = self.surveyItemType {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
-        else if (nextIdentifier != nil) || (learnMoreHTMLContent != nil) {
+        else if (nextIdentifier != nil) || (learnMore != nil) {
             let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
-            step.learnMoreHTMLContent = learnMoreHTMLContent;
+            step.learnMoreAction = learnMore
             instructionStep = step
         }
         else {

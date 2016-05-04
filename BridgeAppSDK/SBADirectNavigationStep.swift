@@ -65,7 +65,20 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     /**
      * HTML Content for the "learn more" for this step
      */
-    public var learnMoreHTMLContent: String?
+    @available(*, deprecated, message="use learnMoreAction: instead")
+    public var learnMoreHTMLContent: String? {
+        guard let learnMore = self.learnMoreAction as? SBAURLLearnMoreAction,
+            let data = NSData(contentsOfURL: learnMore.learnMoreURL)
+        else {
+            return nil
+        }
+        return String(data: data, encoding: NSUTF8StringEncoding)
+    }
+    
+    /**
+     * The learn more action for this step
+     */
+    public var learnMoreAction: SBALearnMoreAction?
     
     override public init(identifier: String) {
         super.init(identifier: identifier)

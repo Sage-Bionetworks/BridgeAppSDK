@@ -1,5 +1,5 @@
 //
-//  SBAConsentSharingOptions.swift
+//  UIView+LayoutExtensions.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import UIKit
 
-public protocol SBAConsentSharingOptions: class {
-    var investigatorShortDescription: String { get }
-    var investigatorLongDescription: String { get }
-    var localizedLearnMoreHTMLContent: String { get }
-}
-
-extension NSDictionary: SBAConsentSharingOptions {
+extension UIView {
     
-    public var investigatorShortDescription: String {
-        return self["investigatorShortDescription"] as? String ?? ""
-    }
-    
-    public var investigatorLongDescription: String {
-        return self["investigatorLongDescription"] as? String ?? ""
-    }
-    
-    public var localizedLearnMoreHTMLContent: String {
-        return self["learnMoreHTMLContentURL"] as? String ?? ""
+    func constrainToFillSuperview(insets: UIEdgeInsets = UIEdgeInsets()) {
+        guard let superview = self.superview else {
+            assertionFailure("Trying to set constraints without first setting superview")
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        let topConstraint = NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: superview, attribute: .TopMargin, multiplier: 1.0, constant: insets.top)
+        let bottomConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: superview, attribute: .BottomMargin, multiplier: 1.0, constant: insets.bottom)
+        let leftConstraint = NSLayoutConstraint(item: self, attribute: .Leading, relatedBy: .Equal, toItem: superview, attribute: .LeadingMargin, multiplier: 1.0, constant: insets.left)
+        let rightConstraint = NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: superview, attribute: .TrailingMargin, multiplier: 1.0, constant: insets.right)
+        
+        superview.addConstraints([topConstraint, bottomConstraint, leftConstraint, rightConstraint])
     }
 }
-

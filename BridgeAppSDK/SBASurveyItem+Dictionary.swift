@@ -98,12 +98,13 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
         return SBAResourceFinder().imageNamed(imageNamed)
     }
     
-    public var learnMoreHTMLContent: String? {
-        guard let html = self["learnMoreHTMLContentURL"] as? String,
-            let htmlContent = SBAResourceFinder().htmlNamed(html) else {
-                return nil;
+    public var learnMoreAction: SBALearnMoreAction? {
+        // Keep reverse-compatibility to previous dictionary key
+        if let html = self["learnMoreHTMLContentURL"] as? String {
+            return SBAURLLearnMoreAction(identifier: html)
         }
-        return htmlContent
+
+        return nil
     }
 }
 

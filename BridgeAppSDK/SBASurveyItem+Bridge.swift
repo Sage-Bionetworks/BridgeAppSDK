@@ -62,7 +62,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
-    public var learnMoreHTMLContent: String? {
+    public var learnMoreAction: SBALearnMoreAction? {
         return nil
     }
     
