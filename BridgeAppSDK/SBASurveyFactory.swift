@@ -59,7 +59,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     func mapSteps(dictionary: NSDictionary) {
         if let steps = dictionary["steps"] as? [NSDictionary] {
-            self.steps = steps.map({ self.createSurveyStepWithDictionary($0) })
+            self.steps = steps.mapAndFilter({ self.createSurveyStepWithDictionary($0) })
         }
     }
     
@@ -67,7 +67,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      * Factory method for creating an ORKTask from an SBBSurvey
      */
     public func createTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
-        let steps: [ORKStep] = survey.elements.map({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
+        let steps: [ORKStep] = survey.elements.mapAndFilter({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
         return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
     }
     
@@ -82,42 +82,35 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     /**
      * Factory method for creating a survey step with a dictionary
      */
-    public func createSurveyStepWithDictionary(dictionary: NSDictionary) -> ORKStep {
+    public func createSurveyStepWithDictionary(dictionary: NSDictionary) -> ORKStep? {
         return self.createSurveyStep(dictionary, isSubtaskStep: false)
-    }
-    
-    /**
-     * Factory method for creating a custom type of survey question that is not 
-     * defined by this class. Note: Only swift can subclass this method directly
-     */
-    public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep {
-        return inputItem.createCustomStep()
     }
     
     /**
      * Factory method for creating a survey step with an SBBSurveyElement
      */
-    public func createSurveyStepWithSurveyElement(inputItem: SBBSurveyElement) -> ORKStep {
-        if let surveyItem = inputItem as? SBASurveyItem {
-            return self.createSurveyStep(surveyItem, isSubtaskStep: false)
-        }
-        else {
-            let step = ORKStep(identifier: inputItem.identifier)
-            step.title = inputItem.prompt
-            step.text = inputItem.promptDetail
-            return step
-        }
+    public func createSurveyStepWithSurveyElement(inputItem: SBBSurveyElement) -> ORKStep? {
+        guard let surveyItem = inputItem as? SBASurveyItem else { return nil }
+        return self.createSurveyStep(surveyItem, isSubtaskStep: false)
     }
     
-    func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep {
+    /**
+     * Factory method for creating a custom type of survey question that is not
+     * defined by this class. Note: Only swift can subclass this method directly
+     */
+    public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
+        return nil
+    }
+    
+    final func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep? {
         return self.createSurveyStep(inputItem, isSubtaskStep: nil, isLastStep: nil)
     }
 
-    func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?) -> ORKStep {
+    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?) -> ORKStep? {
         return self.createSurveyStep(inputItem, isSubtaskStep: isSubtaskStep, isLastStep: nil)
     }
     
-    func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep {
+    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep? {
         switch (inputItem.surveyItemType) {
         case .Instruction, .Completion:
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
@@ -134,10 +127,10 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         default:
             break;
         }
-        return self.createSurveyStepWithCustomType(inputItem)
+        return nil
     }
     
-    func createSurveyStep(inputItem: SBATrackedStepSurveyItem, trackedItems: [SBATrackedDataObject]) -> ORKStep {
+    final func createSurveyStep(inputItem: SBATrackedStepSurveyItem, trackedItems: [SBATrackedDataObject]) -> ORKStep? {
         guard let trackingType = inputItem.trackingType where trackingType.isTrackedFormStepType() else {
             return self.createSurveyStep(inputItem)
         }
@@ -178,7 +171,7 @@ extension SBAFormStepSurveyItem {
     
     func createSubtaskStep(factory:SBASurveyFactory) -> SBASubtaskStep {
         assert(self.items?.count > 0, "A subtask step requires items")
-        let steps = self.items?.map({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
+        let steps = self.items?.mapAndFilter({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
         let step = self.usesNavigation() ?
             SBASurveySubtaskStep(surveyItem: self, steps: steps) :
             SBASubtaskStep(identifier: self.identifier, steps: steps)

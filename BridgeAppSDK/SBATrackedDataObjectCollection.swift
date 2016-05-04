@@ -76,7 +76,8 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             steps = filteredSteps(.ActivityOnly, factory: factory)
         }
         else {
-            steps = []
+            // Exit early with nil if there are no steps to return
+            return nil
         }
         
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
@@ -85,9 +86,10 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         return task
     }
     
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep {
+    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         
-        let task = transformToTask(factory, isLastStep: isLastStep)!
+        guard let task = transformToTask(factory, isLastStep: isLastStep) else { return nil }
+        
         let subtaskStep = SBASubtaskStep(subtask: task)
         subtaskStep.taskIdentifier = self.taskIdentifier
         subtaskStep.schemaIdentifier = self.schemaIdentifier
@@ -169,10 +171,12 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 let trackingType = trackingItem.trackingType {
                 
                 // If should not include the tracking item then just return nil
-                guard include.shouldInclude(trackingType) else { return nil }
-                
-                // Let the factory create the step
-                let step = factory.createSurveyStep(trackingItem, trackedItems: self.items)
+                // and let the factory create the step
+                guard include.shouldInclude(trackingType),
+                    let step = factory.createSurveyStep(trackingItem, trackedItems: self.items)
+                else {
+                    return nil
+                }
 
                 // Keep a pointer to the first activity step
                 if (trackingType == .Activity) && (firstActivityStepIdentifier == nil) {

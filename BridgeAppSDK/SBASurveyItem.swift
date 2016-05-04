@@ -35,7 +35,7 @@ import ResearchKit
 import BridgeSDK
 
 public protocol SBAStepTransformer: class {
-    func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep
+    func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep?
 }
 
 public protocol SBASurveyItem: SBAStepTransformer {
@@ -44,7 +44,6 @@ public protocol SBASurveyItem: SBAStepTransformer {
     var stepTitle: String? { get }
     var stepText: String? { get }
     var stepDetail: String? { get }
-    func createCustomStep() -> ORKStep
 }
 
 public protocol SBAActiveStepSurveyItem: SBASurveyItem {

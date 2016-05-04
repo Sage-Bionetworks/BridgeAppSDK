@@ -157,7 +157,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkStandAloneSurveySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
     
-        let expectedCount = 5
+        let expectedCount = 4
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
@@ -170,19 +170,13 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(introStep.title, "Diagnosis and Medication")
         XCTAssertEqual(introStep.text, "We want to understand how certain medications affect the app activities. To do that we need more information from all study participants.\n\nPlease tell us if you have PD and if you take medications from the proposed list. We’ll ask you again from time to time to track any changes.\n\nThis survey should take about 5 minutes.")
         
-        // Step 2
-        let dataGroupsStep = steps[1]
-        XCTAssertEqual(dataGroupsStep.identifier, "dataGroups")
-        
-        // Step 3
-        let selectionStep = steps[2]
+        let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
         XCTAssertEqual(selectionStep.text, "Do you take any of these medications?\n(Please select all that apply)")
         checkMedicationSelectionStep(selectionStep, optional: true)
         
-        // Step 4
-        guard let frequencyStep = steps[3] as? SBATrackedFormStep else {
-            XCTAssert(false, "\(steps[3]) not of expected type")
+        guard let frequencyStep = steps[2] as? SBATrackedFormStep else {
+            XCTAssert(false, "\(steps[2]) not of expected type")
             return
         }
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
@@ -191,7 +185,6 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkMedicationFrequencyStep(frequencyStep, idList: ["Levodopa", "Carbex", "Duopa"], expectedFrequencyIds: ["Levodopa", "Carbex"], items: dataCollection.items)
         checkMedicationFrequencyStep(frequencyStep, idList: ["Duopa"], expectedFrequencyIds: [], items: dataCollection.items)
         
-        // Step 5
         guard let conclusionStep = steps.last as? ORKInstructionStep else {
             XCTAssert(false, "\(steps.last) not of expected type")
             return
@@ -402,7 +395,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkChangedAndActivitySteps(steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
         
-        let expectedCount = 6
+        let expectedCount = 5
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
@@ -428,24 +421,16 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         questionResult.booleanAnswer = true
         XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
         
-        // Step 2
-        let dataGroupsStep = steps[1]
-        XCTAssertEqual(dataGroupsStep.identifier, "dataGroups")
-        
-        // Step 3
-        let selectionStep = steps[2]
+        let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
         
-        // Step 4
-        let frequencyStep = steps[3]
+        let frequencyStep = steps[2]
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
         
-        // Step 5
-        let momentInDayStep = steps[4]
+        let momentInDayStep = steps[3]
         XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
         
-        // Step 6
-        let timingStep = steps[5]
+        let timingStep = steps[4]
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
     }
     
@@ -471,7 +456,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkSurveyAndActivitySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
         
-        let expectedCount = 6
+        let expectedCount = 5
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
@@ -479,24 +464,20 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let stepIntro = steps[0]
         XCTAssertEqual(stepIntro.identifier, "medicationIntroduction")
         
-        // Step 2
-        let dataGroupsStep = steps[1]
-        XCTAssertEqual(dataGroupsStep.identifier, "dataGroups")
-        
         // Step 3
-        let selectionStep = steps[2]
+        let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
         
         // Step 4
-        let frequencyStep = steps[3]
+        let frequencyStep = steps[2]
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
         
         // Step 5
-        let momentInDayStep = steps[4]
+        let momentInDayStep = steps[3]
         XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
         
         // Step 6
-        let timingStep = steps[5]
+        let timingStep = steps[4]
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
     }
     
@@ -528,14 +509,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = []
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        XCTAssertNil(step)
         checkDataStoreDefaultIDMap(dataStore)
-        
-        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
-            XCTAssert(false, "\(step) not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(task.steps.count, 0)
     }
     
     func testTransformToStep_InjectionOnlySet_LastSurveyToday() {
@@ -549,14 +524,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        XCTAssertNil(step)
         checkDataStoreDefaultIDMap(dataStore)
-        
-        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
-            XCTAssert(false, "\(step) not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(task.steps.count, 0)
     }
     
     func testTransformToStep_ActivityOnly() {

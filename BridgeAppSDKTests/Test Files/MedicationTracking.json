@@ -105,10 +105,6 @@
          "skipIdentifier"   : "nextSection",
      },
      {
-         "identifier" : "dataGroups",
-         "type"       : "dataGroups",
-     },
-     {
          "identifier"   : "medicationSelection",
          "trackingType" : "selection",
          "type"         : "trackingSelection",
