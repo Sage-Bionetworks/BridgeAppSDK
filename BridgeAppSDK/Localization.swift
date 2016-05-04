@@ -177,6 +177,9 @@ public class Localization: NSObject {
             "SBA_MORE_THAN_%@_AGO" : NSLocalizedString("SBA_MORE_THAN_%@_AGO", tableName: nil, bundle: localeBundle, value:"More than %@ ago", comment:"More than %@ time interval in the past"),
             "SBA_RANGE_%@_AGO" : NSLocalizedString("SBA_RANGE_%@_AGO", tableName: nil, bundle: localeBundle, value:"%@ ago", comment:"Range time interval in the past (Ex. '0-30 minutes ago'"),
             
+            // Local notifications
+            "SBA_TIME_FOR_%@" : NSLocalizedString("SBA_TIME_FOR_%@", tableName: nil, bundle: localeBundle, value:"Time for %@", comment:"Alert body for local notification that it's time to perform a scheduled activity"),
+            
             // Scheduling
             "SBA_NOW" : NSLocalizedString("SBA_NOW", tableName: nil, bundle: localeBundle, value:"Now", comment:"Time if now"),
             "SBA_EXPIRED" : NSLocalizedString("SBA_EXPIRED", tableName: nil, bundle: localeBundle, value:"Expired", comment:"Time if expired"),
