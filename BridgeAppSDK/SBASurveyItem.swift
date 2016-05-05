@@ -62,7 +62,7 @@ public protocol SBAFormStepSurveyItem: SBASurveyItem {
 
 public protocol SBAInstructionStepSurveyItem: SBASurveyItem {
     var stepImage: UIImage? { get }
-    var learnMoreHTMLContent: String? { get }
+    func learnMoreAction() -> SBALearnMoreAction?
 }
 
 public protocol SBADateRange: class {

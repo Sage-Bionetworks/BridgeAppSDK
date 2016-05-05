@@ -162,6 +162,30 @@ public class SBAActivityTableViewController: UITableViewController, SBASharedInf
     
     // MARK: ORKTaskViewControllerDelegate
     
+    public func taskViewController(taskViewController: ORKTaskViewController, hasLearnMoreForStep step: ORKStep) -> Bool {
+        if let learnMoreStep = step as? SBADirectNavigationStep where learnMoreStep.learnMoreAction != nil {
+            return true
+        }
+        return false
+    }
+    
+    public func taskViewController(taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
+        guard let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+            let learnMore = learnMoreStep.learnMoreAction else {
+            return
+        }
+        learnMore.learnMoreAction(learnMoreStep, taskViewController: taskViewController)
+    }
+    
+    public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        
+        // If this is a learn more step then set the button title
+        if let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+            let learnMore = learnMoreStep.learnMoreAction {
+            stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
+        }
+    }
+    
     public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         
         if reason == ORKTaskViewControllerFinishReason.Completed,

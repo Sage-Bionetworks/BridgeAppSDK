@@ -183,6 +183,10 @@ public class Localization: NSObject {
             // Scheduling
             "SBA_NOW" : NSLocalizedString("SBA_NOW", tableName: nil, bundle: localeBundle, value:"Now", comment:"Time if now"),
             "SBA_EXPIRED" : NSLocalizedString("SBA_EXPIRED", tableName: nil, bundle: localeBundle, value:"Expired", comment:"Time if expired"),
+            
+            // Skip step or activity
+            "SBA_SKIP_STEP" : NSLocalizedString("SBA_SKIP_STEP", tableName: nil, bundle: localeBundle, value:"Skip", comment:"Skip button text"),
+            "SBA_SKIP_ACTIVITY" : NSLocalizedString("SBA_SKIP_ACTIVITY", tableName: nil, bundle: localeBundle, value:"Skip this activity", comment:"Skip button text for skipping an activity."),
 
         ]
     }()

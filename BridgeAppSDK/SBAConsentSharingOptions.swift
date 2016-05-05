@@ -50,7 +50,7 @@ extension NSDictionary: SBAConsentSharingOptions {
     }
     
     public var localizedLearnMoreHTMLContent: String {
-        return self.learnMoreHTMLContent ?? ""
+        return self["learnMoreHTMLContentURL"] as? String ?? ""
     }
 }
 

@@ -40,9 +40,22 @@ public class SBAWebViewController: UIViewController, UIWebViewDelegate {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if (webView == nil) {
+            let subview = UIWebView(frame: self.view.bounds)
+            self.view.addSubview(subview)
+            subview.constrainToFillSuperview()
+            subview.delegate = self
+            subview.dataDetectorTypes = .All
+            self.webView = subview
+        }
     
         let request = NSURLRequest(URL: url)
         webView.loadRequest(request)
+    }
+    
+    public func dismissViewController() {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // MARK: - UIWebViewDelegate

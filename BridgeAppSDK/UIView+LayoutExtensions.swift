@@ -1,5 +1,5 @@
 //
-//  SBAClassTypeMap.h
+//  UIView+LayoutExtensions.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
+import UIKit
 
-NS_ASSUME_NONNULL_BEGIN
-
-@protocol SBAObjectWithIdentifier <NSObject>
-
-- (id)initWithIdentifier:(NSString *)identifier;
-
-@end
-
-@interface SBAClassTypeMap : NSObject
-
-+ (instancetype)sharedMap;
-
-- (Class _Nullable)classForClassType:(NSString *)classType;
-
-- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary*)dictionary;
-- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary *)dictionary classType:(NSString *)classType;
-- (id _Nullable)objectWithIdentifier:(NSString *)identifier classType:(NSString *)classType;
-
-@end
-
-NS_ASSUME_NONNULL_END
+extension UIView {
+    
+    func constrainToFillSuperview(insets: UIEdgeInsets = UIEdgeInsets()) {
+        guard let superview = self.superview else {
+            assertionFailure("Trying to set constraints without first setting superview")
+            return
+        }
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        let topConstraint = NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: superview, attribute: .TopMargin, multiplier: 1.0, constant: insets.top)
+        let bottomConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: superview, attribute: .BottomMargin, multiplier: 1.0, constant: insets.bottom)
+        let leftConstraint = NSLayoutConstraint(item: self, attribute: .Leading, relatedBy: .Equal, toItem: superview, attribute: .LeadingMargin, multiplier: 1.0, constant: insets.left)
+        let rightConstraint = NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: superview, attribute: .TrailingMargin, multiplier: 1.0, constant: insets.right)
+        
+        superview.addConstraints([topConstraint, bottomConstraint, leftConstraint, rightConstraint])
+    }
+}

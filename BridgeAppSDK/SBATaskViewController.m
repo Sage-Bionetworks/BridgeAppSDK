@@ -103,6 +103,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         _scheduledActivityGUID = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
+        _cancelDisabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(cancelDisabled))];
     }
     return self;
 }
@@ -110,6 +111,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
     [aCoder setValue:_scheduledActivityGUID forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
+    [aCoder setValue:@(_cancelDisabled) forKey:NSStringFromSelector(@selector(cancelDisabled))];
 }
 
 @end
