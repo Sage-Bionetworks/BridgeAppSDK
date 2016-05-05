@@ -48,6 +48,7 @@ public protocol SBASurveyItem: SBAStepTransformer {
 
 public protocol SBAActiveStepSurveyItem: SBASurveyItem {
     var stepSpokenInstruction: String? { get }
+    var stepFinishedSpokenInstruction: String? { get }
 }
 
 public protocol SBAFormStepSurveyItem: SBASurveyItem {
