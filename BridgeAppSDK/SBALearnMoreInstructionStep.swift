@@ -11,7 +11,7 @@ import ResearchKit
 public class SBALearnMoreAction: SBADataObject {
     
     let learnMoreButtonTextKey = "learnMoreButtonText"
-    dynamic public var learnMoreButtonText: String?
+    public dynamic var learnMoreButtonText: String?
     
     override public func dictionaryRepresentationKeys() -> [String] {
         return super.dictionaryRepresentationKeys() + [learnMoreButtonTextKey]
@@ -50,5 +50,23 @@ public class SBAURLLearnMoreAction: SBALearnMoreAction {
         let navVC = UINavigationController(rootViewController: vc)
         taskViewController.presentViewController(navVC, animated: true, completion: nil)
     }
+}
+
+public class SBASkipAction: SBALearnMoreAction {
+    
+    override public var learnMoreButtonText: String? {
+        get {
+            return super.learnMoreButtonText ?? Localization.localizedString("SBA_SKIP_STEP")
+        }
+        set(newValue) {
+            super.learnMoreButtonText = newValue
+        }
+    }
+    
+    override public func learnMoreAction(step: SBADirectNavigationStep, taskViewController: ORKTaskViewController) {
+        step.nextStepIdentifier = self.identifier
+        taskViewController.goForward()
+    }
+    
 }
 

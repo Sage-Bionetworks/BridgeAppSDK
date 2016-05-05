@@ -85,8 +85,8 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     }
     
     public init(identifier: String, nextStepIdentifier: String?) {
-        self.nextStepIdentifier = nextStepIdentifier
         super.init(identifier: identifier)
+        self.nextStepIdentifier = nextStepIdentifier
     }
     
     // MARK: NSCopy
@@ -95,6 +95,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         let copy = super.copyWithZone(zone)
         guard let step = copy as? SBADirectNavigationStep else { return copy }
         step.nextStepIdentifier = self.nextStepIdentifier
+        step.learnMoreAction = self.learnMoreAction
         return step
     }
     
@@ -103,24 +104,27 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
         self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as? String
+        self.learnMoreAction = aDecoder.decodeObjectForKey("learnMoreAction") as? SBALearnMoreAction
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
-        if let nextStepIdentifier = self.nextStepIdentifier {
-            aCoder.encodeObject(nextStepIdentifier, forKey: "nextStepIdentifier")
-        }
+        aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
+        aCoder.encodeObject(self.learnMoreAction, forKey: "learnMoreAction")
     }
     
     // MARK: Equality
     
     override public func isEqual(object: AnyObject?) -> Bool {
         guard let object = object as? SBADirectNavigationStep else { return false }
-        return super.isEqual(object) && (self.nextStepIdentifier == object.nextStepIdentifier)
+        return super.isEqual(object) &&
+            (self.nextStepIdentifier == object.nextStepIdentifier) &&
+            (self.learnMoreAction == object.learnMoreAction)
     }
     
     override public var hash: Int {
         let hashNextStepIdentifier = self.nextStepIdentifier?.hash ?? 0
-        return super.hash | hashNextStepIdentifier
+        let hashLearnMoreAction = self.learnMoreAction?.hash ?? 0
+        return super.hash | hashNextStepIdentifier | hashLearnMoreAction
     }
 }

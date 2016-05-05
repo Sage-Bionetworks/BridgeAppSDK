@@ -98,12 +98,15 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
         return SBAResourceFinder().imageNamed(imageNamed)
     }
     
-    public var learnMoreAction: SBALearnMoreAction? {
+    public func learnMoreAction() -> SBALearnMoreAction? {
         // Keep reverse-compatibility to previous dictionary key
         if let html = self["learnMoreHTMLContentURL"] as? String {
             return SBAURLLearnMoreAction(identifier: html)
         }
-
+        // Look for a dictionary that matches the learnMoreActionKey
+        if let learnMoreAction = self["learnMoreAction"] as? [NSObject : AnyObject] {
+            return SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(learnMoreAction) as? SBALearnMoreAction
+        }
         return nil
     }
 }

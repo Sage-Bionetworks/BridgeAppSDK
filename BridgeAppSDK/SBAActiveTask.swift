@@ -81,6 +81,7 @@ public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskOptions: [String : AnyObject]? { get }
     var predefinedExclusions: ORKPredefinedTaskOption? { get }
     var localizedSteps: [SBASurveyItem]? { get }
+    var optional: Bool { get }
 }
 
 extension SBAActiveTask {
@@ -110,7 +111,36 @@ extension SBAActiveTask {
         // map the localized steps
         mapLocalizedSteps(task)
         
+        if self.optional {
+            task = taskWithSkipAction(task)
+        }
+        
         return task
+    }
+    
+    func taskWithSkipAction(task: ORKOrderedTask) -> ORKOrderedTask {
+        
+        guard task.dynamicType === ORKOrderedTask.self else {
+            assertionFailure("Handling of optional tasks are not implemented for any class other than ORKOrderedTask")
+            return task
+        }
+        guard let introStep = task.steps.first as? ORKInstructionStep else {
+            assertionFailure("Handling of optional tasks are not implemented for tasks that do not start with ORKIntructionStep")
+            return task
+        }
+        
+        // Replace the intro step with a direct navigation step that has a skip button 
+        // to skip to the conclusion
+        let replaceStep = SBADirectNavigationStep(identifier: introStep.identifier)
+        replaceStep.title = introStep.title
+        replaceStep.text = introStep.text
+        replaceStep.detailText = introStep.detailText
+        replaceStep.learnMoreAction = SBASkipAction(identifier: "conclusion")
+        replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
+        let steps: [ORKStep] = [replaceStep] + task.steps[1..<task.steps.count]
+        
+        // Return a navigable ordered task
+        return SBANavigableOrderedTask(identifier: task.identifier, steps: steps)
     }
     
     func mapLocalizedSteps(task: ORKOrderedTask) {

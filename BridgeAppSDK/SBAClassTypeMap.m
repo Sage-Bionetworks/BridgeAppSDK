@@ -87,6 +87,14 @@ static NSString * const kClassTypeMapPListName = @"ClassTypeMap";
     return NSClassFromString(className);
 }
 
+- (id)objectWithDictionaryRepresentation:(NSDictionary*)dictionary {
+    NSString *classType = dictionary[@"classType"];
+    if (![classType isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    return [self objectWithDictionaryRepresentation:dictionary classType:classType];
+}
+
 - (id)objectWithDictionaryRepresentation:(NSDictionary*)dictionary classType:(NSString *)classType {
     id allocatedObject = [[self classForClassType:classType] alloc];
     if (![allocatedObject respondsToSelector:@selector(initWithDictionaryRepresentation:)]) {
