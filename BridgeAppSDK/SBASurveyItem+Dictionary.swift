@@ -85,6 +85,10 @@ extension NSDictionary: SBAActiveStepSurveyItem {
     public var stepSpokenInstruction: String? {
         return self["spokenInstruction"] as? String
     }
+    
+    public var stepFinishedSpokenInstruction: String? {
+        return self["finishedSpokenInstruction"] as? String
+    }
 }
 
 extension NSDictionary: SBAInstructionStepSurveyItem {
