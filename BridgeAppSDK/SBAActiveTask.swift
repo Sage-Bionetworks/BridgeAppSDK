@@ -137,7 +137,7 @@ extension SBAActiveTask {
         replaceStep.detailText = introStep.detailText
         replaceStep.learnMoreAction = SBASkipAction(identifier: "conclusion")
         replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
-        let steps: [ORKStep] = [replaceStep] + task.steps[1..<task.steps.count]
+        let steps: [ORKStep] = [replaceStep] + task.steps.dropFirst()
         
         // Return a navigable ordered task
         return SBANavigableOrderedTask(identifier: task.identifier, steps: steps)

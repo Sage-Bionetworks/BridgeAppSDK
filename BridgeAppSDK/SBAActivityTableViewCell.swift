@@ -39,7 +39,7 @@ public class SBAActivityTableViewCell: UITableViewCell {
     @IBOutlet weak var checkmarkImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel?
     
     internal var complete: Bool = false {
         didSet {
@@ -55,7 +55,12 @@ public class SBAActivityTableViewCell: UITableViewCell {
         self.uncheckedView.layer.borderWidth = 1
         self.uncheckedView.layer.cornerRadius = self.uncheckedView.bounds.size.height / 2
         
-        self.timeLabel.textColor = self.tintColor
+        self.timeLabel?.textColor = self.tintColor
+    }
+    
+    public override func tintColorDidChange() {
+        super.tintColorDidChange()
+        self.timeLabel?.textColor = self.tintColor
     }
 
 }
