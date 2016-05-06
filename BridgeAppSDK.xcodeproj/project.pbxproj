@@ -494,6 +494,7 @@
 			children = (
 				FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */,
 				FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */,
+				FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -722,7 +723,6 @@
 				FBAD116D1CADE55C005611D0 /* SBABridgeTask.swift */,
 				FBAD116F1CADE79E005611D0 /* SBABridgeTask+Dictionary.swift */,
 				FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */,
-				FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */,
 				FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */,
 				FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */,
 				FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */,
