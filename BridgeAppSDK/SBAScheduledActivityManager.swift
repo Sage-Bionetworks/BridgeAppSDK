@@ -141,7 +141,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func filterPredicateForScheduledActivitySection(section: SBAScheduledActivitySection) -> NSPredicate? {
         
-        // syoung 05/06/2016 As of Swift 2.2, there is no equivilent to NSStringFromSelector
+        // syoung 05/06/2016 As of Swift 2.2, there is no equivalent to NSStringFromSelector
         let expiredKey = "expiresOn"
         let scheduledKey = "scheduledOn"
         let finishedKey = "finishedOn"
@@ -153,11 +153,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         let optionalFilter = NSPredicate(format: "%K == 1", optionalKey)
         let unfinishedOrFinishedToday = NSCompoundPredicate(orPredicateWithSubpredicates: [unfinished, finishedToday])
         let expiredYesterday = NSPredicate(day: NSDate().dateByAddingTimeInterval(-24*60*60), dateKey: expiredKey)
-        let notExpired = NSCompoundPredicate(notPredicateWithSubpredicate: expiredYesterday)
         let notOptional = NSCompoundPredicate(notPredicateWithSubpredicate: optionalFilter)
         let calendar = NSCalendar.currentCalendar()
         let tomorrow = calendar.startOfDayForDate(NSDate().dateByAddingTimeInterval(24*60*60))
+        let today = calendar.startOfDayForDate(NSDate())
         let notFuture = NSPredicate(format: "%K == nil OR %K < %@", scheduledKey, scheduledKey, tomorrow)
+        let notExpired = NSPredicate(format: "%K == nil OR %K > %@", expiredKey, expiredKey, today)
         
         switch section {
             
@@ -170,7 +171,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
         case .KeepGoing:
             // Keep going section includes optional tasks that are either unfinished or were finished today
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [optionalFilter, notFuture,unfinishedOrFinishedToday, notExpired])
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [optionalFilter, notFuture, unfinished, notExpired])
         
         case .Tomorrow:
             // scheduled for tomorrow only
