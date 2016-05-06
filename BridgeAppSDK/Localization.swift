@@ -187,6 +187,14 @@ public class Localization: NSObject {
             // Skip step or activity
             "SBA_SKIP_STEP" : NSLocalizedString("SBA_SKIP_STEP", tableName: nil, bundle: localeBundle, value:"Skip", comment:"Skip button text"),
             "SBA_SKIP_ACTIVITY" : NSLocalizedString("SBA_SKIP_ACTIVITY", tableName: nil, bundle: localeBundle, value:"Skip this activity", comment:"Skip button text for skipping an activity."),
+            
+            // Activity section titles
+            "SBA_ACTIVITY_YESTERDAY" : NSLocalizedString("SBA_ACTIVITY_YESTERDAY", tableName: nil, bundle: localeBundle, value:"Yesterday", comment:"Title of activity section for expired tasks from the previous day"),
+            "SBA_ACTIVITY_TODAY" : NSLocalizedString("SBA_ACTIVITY_TODAY", tableName: nil, bundle: localeBundle, value:"Today", comment:"Title of activity section for today's tasks"),
+            "SBA_ACTIVITY_UNSCHEDULED" : NSLocalizedString("SBA_ACTIVITY_UNSCHEDULED", tableName: nil, bundle: localeBundle, value:"Keep Going", comment:"Title of activity section for unscheduled tasks"),
+            "SBA_ACTIVITY_TOMORROW" : NSLocalizedString("SBA_ACTIVITY_TOMORROW", tableName: nil, bundle: localeBundle, value:"Tomorrow", comment:"Title of activity section for tomorrow's tasks"),
+            "SBA_ACTIVITY_SCHEDULE_MESSAGE" : NSLocalizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE", tableName: nil, bundle: localeBundle, value:"This activity is not available until %@", comment:"Message for when a participant tries to do an activity ahead of schedule"),
+            
 
         ]
     }()
