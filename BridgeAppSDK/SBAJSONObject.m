@@ -36,6 +36,10 @@
 
 @implementation NSString (SBAJSONObject)
 
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
+
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter numberFromString:self];
@@ -80,6 +84,10 @@
 
 @implementation NSNumber (SBAJSONObject)
 
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
+
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter stringFromNumber:self];
@@ -93,13 +101,17 @@
 
 @implementation NSNull (SBAJSONObject)
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) __unused formatter  {
+- (id)jsonObject {
     return self;
 }
 
 @end
 
 @implementation NSDate (SBAJSONObject)
+
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
 
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
     if ([formatter isKindOfClass:[NSDateFormatter class]]) {
@@ -167,7 +179,7 @@
 
 @implementation NSUUID (SBAJSONObject)
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) __unused formatter  {
+- (id)jsonObject {
     return self.UUIDString;
 }
 
@@ -196,6 +208,10 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
 
 @implementation NSArray (SBAJSONObject)
 
+- (id)jsonObject {
+    return [self jsonObjectWithFormatterMap:nil];
+}
+
 - (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
     
     NSMutableArray *result = [NSMutableArray new];
@@ -211,6 +227,10 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
 @end
 
 @implementation NSDictionary (SBAJSONObject)
+
+- (id)jsonObject {
+    return [self jsonObjectWithFormatterMap:nil];
+}
 
 - (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
     
