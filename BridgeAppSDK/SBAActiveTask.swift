@@ -134,7 +134,9 @@ extension SBAActiveTask {
         let replaceStep = SBADirectNavigationStep(identifier: introStep.identifier)
         replaceStep.title = introStep.title
         replaceStep.text = introStep.text
-        replaceStep.detailText = introStep.detailText
+        let skipExplanation = Localization.localizedString("SBA_SKIP_ACTIVITY_INSTRUCTION")
+        let detail = introStep.detailText ?? ""
+        replaceStep.detailText = "\(detail)\n\(skipExplanation)\n"
         replaceStep.learnMoreAction = SBASkipAction(identifier: "conclusion")
         replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
         let steps: [ORKStep] = [replaceStep] + task.steps.dropFirst()

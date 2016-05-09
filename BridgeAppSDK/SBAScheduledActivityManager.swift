@@ -189,7 +189,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
-        guard schedule.isNow else {
+        guard schedule.isNow || schedule.isCompleted else {
             // Block performing a task that is scheduled for the future
             let message = String(format: Localization.localizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE"), schedule.scheduledTime)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)

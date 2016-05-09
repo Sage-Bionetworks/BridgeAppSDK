@@ -187,6 +187,7 @@ public class Localization: NSObject {
             // Skip step or activity
             "SBA_SKIP_STEP" : NSLocalizedString("SBA_SKIP_STEP", tableName: nil, bundle: localeBundle, value:"Skip", comment:"Skip button text"),
             "SBA_SKIP_ACTIVITY" : NSLocalizedString("SBA_SKIP_ACTIVITY", tableName: nil, bundle: localeBundle, value:"Skip this activity", comment:"Skip button text for skipping an activity."),
+            "SBA_SKIP_ACTIVITY_INSTRUCTION" : NSLocalizedString("SBA_SKIP_ACTIVITY_INSTRUCTION", tableName: nil, bundle: localeBundle, value:"If you need to skip this activity, then tap the \"Skip this activity\" link below. Otherwise, tap Next to begin.", comment:"Skip activity explanation text for skipping an activity."),
             
             // Activity section titles
             "SBA_ACTIVITY_YESTERDAY" : NSLocalizedString("SBA_ACTIVITY_YESTERDAY", tableName: nil, bundle: localeBundle, value:"Yesterday", comment:"Title of activity section for expired tasks from the previous day"),
@@ -194,6 +195,7 @@ public class Localization: NSObject {
             "SBA_ACTIVITY_KEEP_GOING" : NSLocalizedString("SBA_ACTIVITY_KEEP_GOING", tableName: nil, bundle: localeBundle, value:"Keep Going", comment:"Title of activity section for unscheduled tasks"),
             "SBA_ACTIVITY_TOMORROW" : NSLocalizedString("SBA_ACTIVITY_TOMORROW", tableName: nil, bundle: localeBundle, value:"Tomorrow", comment:"Title of activity section for tomorrow's tasks"),
             "SBA_ACTIVITY_SCHEDULE_MESSAGE" : NSLocalizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE", tableName: nil, bundle: localeBundle, value:"This activity is not available until %@", comment:"Message for when a participant tries to do an activity ahead of schedule"),
+            
             
 
         ]
