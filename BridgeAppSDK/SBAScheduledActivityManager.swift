@@ -145,7 +145,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
         case .ExpiredYesterday:
             // expired yesterday section only showns those expired tasks that are also unfinished
-            return SBBScheduledActivity.expiredYesterday()
+            return SBBScheduledActivity.expiredYesterdayPredicate()
             
         case .Today:
             return NSCompoundPredicate(andPredicateWithSubpredicates: [
