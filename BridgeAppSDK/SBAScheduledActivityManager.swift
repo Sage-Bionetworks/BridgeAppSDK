@@ -140,42 +140,28 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func filterPredicateForScheduledActivitySection(section: SBAScheduledActivitySection) -> NSPredicate? {
-        
-        // syoung 05/06/2016 As of Swift 2.2, there is no equivalent to NSStringFromSelector
-        let expiredKey = "expiresOn"
-        let scheduledKey = "scheduledOn"
-        let finishedKey = "finishedOn"
-        let optionalKey = "persistent"
-        
-        // For unscheduled we need to also filter out those tasks that were finished prior to today
-        let finishedToday = NSPredicate(day: NSDate(), dateKey: finishedKey)
-        let unfinished = NSPredicate(format: "%K == nil", finishedKey)
-        let optionalFilter = NSPredicate(format: "%K == 1", optionalKey)
-        let unfinishedOrFinishedToday = NSCompoundPredicate(orPredicateWithSubpredicates: [unfinished, finishedToday])
-        let expiredYesterday = NSPredicate(day: NSDate().dateByAddingTimeInterval(-24*60*60), dateKey: expiredKey)
-        let notOptional = NSCompoundPredicate(notPredicateWithSubpredicate: optionalFilter)
-        let calendar = NSCalendar.currentCalendar()
-        let tomorrow = calendar.startOfDayForDate(NSDate().dateByAddingTimeInterval(24*60*60))
-        let today = calendar.startOfDayForDate(NSDate())
-        let notFuture = NSPredicate(format: "%K == nil OR %K < %@", scheduledKey, scheduledKey, tomorrow)
-        let notExpired = NSPredicate(format: "%K == nil OR %K > %@", expiredKey, expiredKey, today)
-        
+
         switch section {
             
         case .ExpiredYesterday:
             // expired yesterday section only showns those expired tasks that are also unfinished
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [unfinished, expiredYesterday])
+            return SBBScheduledActivity.expiredYesterday()
             
         case .Today:
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [notOptional, notFuture, unfinishedOrFinishedToday, notExpired])
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [
+                NSCompoundPredicate(notPredicateWithSubpredicate: SBBScheduledActivity.optionalPredicate()),
+                SBBScheduledActivity.availableTodayPredicate()])
             
         case .KeepGoing:
             // Keep going section includes optional tasks that are either unfinished or were finished today
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [optionalFilter, notFuture, unfinished, notExpired])
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [
+                SBBScheduledActivity.optionalPredicate(),
+                SBBScheduledActivity.unfinishedPredicate(),
+                SBBScheduledActivity.availableTodayPredicate()])
         
         case .Tomorrow:
             // scheduled for tomorrow only
-            return NSPredicate(day: NSDate().dateByAddingTimeInterval(24*60*60), dateKey: scheduledKey)
+            return SBBScheduledActivity.scheduledTomorrowPredicate()
             
         default:
             return nil
@@ -355,16 +341,6 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         // TODO: implement syoung 04/27/2016
-    }
-}
-
-public extension NSPredicate {
-    
-    public convenience init(day: NSDate, dateKey: String) {
-        let calendar = NSCalendar.currentCalendar()
-        let start = calendar.startOfDayForDate(day)
-        let end = start.dateByAddingTimeInterval(24*60*60)
-        self.init(format: "%K <> nil AND %K >= %@ AND %K < %@", dateKey, dateKey, start, dateKey, end)
     }
 }
 

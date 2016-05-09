@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  NSPredicate+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,22 +31,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
-
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATaskViewController.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
+public extension NSPredicate {
+    
+    public convenience init(day: NSDate, dateKey: String) {
+        let calendar = NSCalendar.currentCalendar()
+        let start = calendar.startOfDayForDate(day)
+        let end = start.dateByAddingTimeInterval(24*60*60)
+        self.init(format: "%K <> nil AND %K >= %@ AND %K < %@", dateKey, dateKey, start, dateKey, end)
+    }
+}
