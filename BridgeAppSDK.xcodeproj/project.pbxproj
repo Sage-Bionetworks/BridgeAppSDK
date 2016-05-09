@@ -70,6 +70,12 @@
 		FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */; };
 		FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */; };
 		FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */; };
+		FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */ = {isa = PBXBuildFile; fileRef = FF63D0F61CD032B4007ADEE5 /* SBALog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0F71CD032B4007ADEE5 /* SBALog.m */; };
+		FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */; };
+		FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */; };
+		FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */; };
 		FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */; };
 		FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF6411001CB2DC21007FB9E1 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
@@ -142,6 +148,7 @@
 		FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */; };
 		FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF390D1CE26DE40090452F /* SBAActivityResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
+		FFF043011CD097B1009E4538 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF042F41CD09798009E4538 /* ZipZap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -242,6 +249,55 @@
 			proxyType = 1;
 			remoteGlobalIDString = B183A4731A8535D100C76870;
 			remoteInfo = ResearchKit;
+		};
+		FFF042F31CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D87BA1F81B3D6DEA00ED7EB3;
+			remoteInfo = "ZipZap (iOS Framework)";
+		};
+		FFF042F51CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CFB0162C5EEB00112F49;
+			remoteInfo = "ZipZap (iOS Static Library)";
+		};
+		FFF042F71CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8D140D31B423B1100C411B0;
+			remoteInfo = "ZipZap (OS X Framework)";
+		};
+		FFF042F91CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CF82162C5EC100112F49;
+			remoteInfo = "ZipZap (OS X Static Library)";
+		};
+		FFF042FB1CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8624CB1BB7495200C12EEE;
+			remoteInfo = "ZipZap (tvOS Framework)";
+		};
+		FFF042FD1CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8624EF1BB74B1F00C12EEE;
+			remoteInfo = "ZipZap (tvOS Static Library)";
+		};
+		FFF042FF1CD09798009E4538 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CF96162C5EC100112F49;
+			remoteInfo = ZipZapTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -348,6 +404,12 @@
 		FF45F84A1CA5D61900EE0562 /* SBAUserBridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAUserBridgeManager.m; sourceTree = "<group>"; };
 		FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAUserWrapper+Bridge.swift"; sourceTree = "<group>"; };
 		FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAWebViewController.swift; sourceTree = "<group>"; };
+		FF63D0F61CD032B4007ADEE5 /* SBALog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBALog.h; sourceTree = "<group>"; };
+		FF63D0F71CD032B4007ADEE5 /* SBALog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBALog.m; sourceTree = "<group>"; };
+		FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBADataArchive.h; sourceTree = "<group>"; };
+		FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBADataArchive.m; sourceTree = "<group>"; };
+		FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License_BridgeSDK.txt; sourceTree = "<group>"; };
+		FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License_ZipZap.txt; sourceTree = "<group>"; };
 		FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Utilities.swift"; sourceTree = "<group>"; };
 		FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAJSONObject.h; sourceTree = "<group>"; };
 		FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAJSONObject.m; sourceTree = "<group>"; };
@@ -400,6 +462,7 @@
 		FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Utilities.swift"; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
 		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
+		FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -417,6 +480,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF043011CD097B1009E4538 /* ZipZap.framework in Frameworks */,
 				FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */,
 				809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */,
 			);
@@ -463,6 +527,7 @@
 				16BF5B671BE29676007C79C6 /* Activities */,
 				FF6410ED1CAF3795007FB9E1 /* MedicationTracking */,
 				80F554CB1CD3F21D00C38053 /* Notifications */,
+				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
 				FBC45E711C758DBA007AA424 /* Library */,
@@ -633,9 +698,10 @@
 		FB14FFE51C7686CC00E0D5AF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FF63D0FE1CD03EEF007ADEE5 /* Licenses */,
 				FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */,
 			);
-			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		FB6817381C6B00F3006C8FC9 /* TasksAndSteps */ = {
@@ -680,6 +746,7 @@
 				FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */,
 				FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */,
 				FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */,
+				FF63D0F51CD03297007ADEE5 /* Logging */,
 				FBAE3CF01C861587003CEC4A /* PDF */,
 			);
 			name = Utilities;
@@ -740,6 +807,7 @@
 		FBE1A9391CAB212F00F1F584 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -810,6 +878,34 @@
 				FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		FF63D0E81CD02F66007ADEE5 /* Data Archiving */ = {
+			isa = PBXGroup;
+			children = (
+				FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */,
+				FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */,
+			);
+			name = "Data Archiving";
+			path = DataArchiving;
+			sourceTree = "<group>";
+		};
+		FF63D0F51CD03297007ADEE5 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				FF63D0F61CD032B4007ADEE5 /* SBALog.h */,
+				FF63D0F71CD032B4007ADEE5 /* SBALog.m */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		FF63D0FE1CD03EEF007ADEE5 /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */,
+				FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */,
+			);
+			path = Licenses;
 			sourceTree = "<group>";
 		};
 		FF6410ED1CAF3795007FB9E1 /* MedicationTracking */ = {
@@ -973,6 +1069,20 @@
 			name = Result;
 			sourceTree = "<group>";
 		};
+		FFF042E11CD09797009E4538 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFF042F41CD09798009E4538 /* ZipZap.framework */,
+				FFF042F61CD09798009E4538 /* libZipZap.a */,
+				FFF042F81CD09798009E4538 /* ZipZap.framework */,
+				FFF042FA1CD09798009E4538 /* libZipZap.a */,
+				FFF042FC1CD09798009E4538 /* ZipZap.framework */,
+				FFF042FE1CD09798009E4538 /* libZipZap.a */,
+				FFF043001CD09798009E4538 /* ZipZapTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -992,6 +1102,8 @@
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
+				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
+				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
 				FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */,
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
@@ -1113,6 +1225,10 @@
 					ProductGroup = 809D4E0A1C7E886900EC9EC6 /* Products */;
 					ProjectRef = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
 				},
+				{
+					ProductGroup = FFF042E11CD09797009E4538 /* Products */;
+					ProjectRef = FFF042E01CD09797009E4538 /* ZipZap.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1166,6 +1282,55 @@
 			remoteRef = 809D4E111C7E886900EC9EC6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FFF042F41CD09798009E4538 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FFF042F31CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF042F61CD09798009E4538 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FFF042F51CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF042F81CD09798009E4538 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FFF042F71CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF042FA1CD09798009E4538 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FFF042F91CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF042FC1CD09798009E4538 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FFF042FB1CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF042FE1CD09798009E4538 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FFF042FD1CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFF043001CD09798009E4538 /* ZipZapTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZipZapTests.xctest;
+			remoteRef = FFF042FF1CD09798009E4538 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1184,6 +1349,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */,
+				FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */,
 				FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1271,6 +1438,7 @@
 				FFCF37DE1CDA91520090452F /* SBALearnMoreInstructionStep.swift in Sources */,
 				FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */,
+				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
 				FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
 				FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */,
@@ -1292,6 +1460,7 @@
 				FF6411161CB341D0007FB9E1 /* SBATrackedDataObject.m in Sources */,
 				FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
+				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
