@@ -108,12 +108,13 @@ extension SBAActiveTask {
             return nil
         }
         
-        // map the localized steps
-        mapLocalizedSteps(task)
-        
+        // Modify the instruction step if this is an optional task
         if self.optional {
             task = taskWithSkipAction(task)
         }
+        
+        // map the localized steps
+        mapLocalizedSteps(task)
         
         return task
     }
