@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAActivityResult.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,23 +31,13 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <ResearchKit/ResearchKit.h>
+#import <BridgeSDK/BridgeSDK.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+@interface SBAActivityResult : ORKTaskResult
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@property (nonatomic, readwrite) SBBScheduledActivity *schedule;
+@property (nonatomic, readwrite, copy) NSNumber *schemaRevision;
+@property (nonatomic, readwrite, copy) NSString *schemaIdentifier;
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATaskViewController.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
+@end

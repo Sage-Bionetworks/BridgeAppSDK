@@ -134,6 +134,8 @@
 		FFCF384F1CE113FC0090452F /* SBBScheduledActivity+Filters.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFCF38501CE113FC0090452F /* SBBScheduledActivity+Filters.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */; };
 		FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */; };
+		FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF390D1CE26DE40090452F /* SBAActivityResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -384,6 +386,8 @@
 		FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBBScheduledActivity+Filters.h"; sourceTree = "<group>"; };
 		FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBBScheduledActivity+Filters.m"; sourceTree = "<group>"; };
 		FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Utilities.swift"; sourceTree = "<group>"; };
+		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
+		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -468,6 +472,7 @@
 		168F25701BE05281001D2D65 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
+				FFCF38FF1CE267630090452F /* Result */,
 				FBE1A9701CAB328800F1F584 /* Step */,
 				FBE1A96F1CAB327700F1F584 /* Task */,
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
@@ -925,6 +930,15 @@
 			name = Encryption;
 			sourceTree = "<group>";
 		};
+		FFCF38FF1CE267630090452F /* Result */ = {
+			isa = PBXGroup;
+			children = (
+				FFCF390D1CE26DE40090452F /* SBAActivityResult.h */,
+				FFCF390E1CE26DE40090452F /* SBAActivityResult.m */,
+			);
+			name = Result;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -944,6 +958,7 @@
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
+				FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */,
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
 				FFAAF6221CC03B2300500929 /* SBATaskReminderManagerProtocol.h in Headers */,
@@ -1205,6 +1220,7 @@
 				FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */,
 				FFCF37E01CDA99120090452F /* UIView+LayoutExtensions.swift in Sources */,
 				FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */,
+				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,

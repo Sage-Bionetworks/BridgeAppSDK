@@ -340,7 +340,21 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
-        // TODO: implement syoung 04/27/2016
+        
+        let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
+        print(results)
+        
+        // TODO: implement syoung 04/27/2016 Stubbed out accessor
+    }
+    
+    public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
+        
+        // TODO: implement syoung 04/27/2016 Stubbed out accessor
+        let taskResult = taskViewController.result
+        let result = SBAActivityResult(taskIdentifier: taskResult.identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
+        result.results = taskResult.results
+        result.schedule = schedule
+        return [result]
     }
 }
 
