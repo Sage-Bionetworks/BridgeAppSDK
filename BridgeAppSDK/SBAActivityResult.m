@@ -34,4 +34,60 @@
 
 @implementation SBAActivityResult
 
+// Include the schema revision in the user info dictionary
+- (NSNumber *)schemaRevision {
+    return self.userInfo[NSStringFromSelector(@selector(schemaRevision))] ?: @(1);
+}
+
+- (void)setSchemaRevision:(NSNumber *)schemaRevision {
+    NSParameterAssert(schemaRevision);
+    if (schemaRevision == nil) { return; }
+    NSMutableDictionary *userInfo = [self.userInfo mutableCopy] ?: [NSMutableDictionary new];
+    userInfo[NSStringFromSelector(@selector(schemaRevision))] = schemaRevision;
+    self.userInfo = userInfo;
+}
+
+// Schema identifier is a drop through to identifier
+- (NSString *)schemaIdentifier {
+    return self.identifier;
+}
+
+- (void)setSchemaIdentifier:(NSString *)schemaIdentifier {
+    NSParameterAssert(schemaIdentifier);
+    if (schemaIdentifier == nil) { return; }
+    self.identifier = schemaIdentifier;
+}
+
+#pragma mark - NSCoding
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        _schedule = [aDecoder decodeObjectOfClass:[SBBScheduledActivity class] forKey:NSStringFromSelector(@selector(schedule))];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeObject:self.schedule forKey:NSStringFromSelector(@selector(schedule))];
+}
+
+#pragma mark - NSCopy
+
+- (id)copyWithZone:(NSZone *)zone {
+    SBAActivityResult *copy = [super copyWithZone:zone];
+    copy.schedule = self.schedule;
+    return copy;
+}
+
+#pragma mark - Equality
+
+- (BOOL)isEqual:(id)object {
+    return [super isEqual:object] && [self.schedule isEqual:[object schedule]];
+}
+
+- (NSUInteger)hash {
+    return [super hash] | [self.schedule hash];
+}
+
 @end
