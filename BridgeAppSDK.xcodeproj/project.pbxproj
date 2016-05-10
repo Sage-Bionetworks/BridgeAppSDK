@@ -1102,6 +1102,7 @@
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
 				FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
+				FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */,
 				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
 				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
 				FFCF390F1CE26DE40090452F /* SBAActivityResult.h in Headers */,
