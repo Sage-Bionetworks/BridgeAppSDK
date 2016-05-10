@@ -57,6 +57,9 @@ extension NSDictionary: SBATaskReference {
         return self["allowMultipleRun"] as? Bool ?? true
     }
 
+    public var scheduleNotification: Bool {
+        return self["scheduleNotification"] as? Bool ?? false
+    }
 }
 
 extension NSDictionary: SBABridgeTask {

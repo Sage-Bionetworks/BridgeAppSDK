@@ -1,5 +1,5 @@
 //
-//  SBANotificationsManager.swift
+//  SBBScheduledActivity+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,38 +31,37 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import BridgeSDK
 
-public class SBANotificationsManager: NSObject, SBASharedInfoController {
+public extension SBBScheduledActivity {
     
-    public static let sharedManager = SBANotificationsManager()
+    public var isCompleted: Bool {
+        return self.finishedOn != nil
+    }
     
-    public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
-        if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {
-            return
+    public var isExpired: Bool {
+        return (self.expiresOn != nil) && (NSDate().earlierDate(self.expiresOn) == self.expiresOn)
+    }
+    
+    public var isNow: Bool {
+        return !isCompleted && ((self.scheduledOn == nil) || ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired))
+    }
+    
+    var scheduledTime: String {
+        if isCompleted {
+            return ""
         }
-        
-        let app = UIApplication.sharedApplication()
-        app.cancelAllLocalNotifications()
-        
-        // Add a notification for the scheduled activities that should include one
-        for sa in activities {
-            if let taskRef = self.bridgeInfo.taskReferenceForSchedule(sa)
-                where taskRef.scheduleNotification  {
-                let notif = UILocalNotification.init()
-                notif.fireDate = sa.scheduledOn
-                notif.soundName = UILocalNotificationDefaultSoundName
-                let format = Localization.localizedString("SBA_TIME_FOR_%@")
-                notif.alertBody = String(format: format, sa.activity.label)
-                app.scheduleLocalNotification(notif)
-            }
+        else if isNow {
+            return Localization.localizedString("SBA_NOW")
         }
-        
-        // reschedule any notifications defined by the appDelegate
-        for notif in self.sharedAppDelegate.createLocalNotifications() {
-             app.scheduleLocalNotification(notif)
+        else {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "h:mm a"
+            return dateFormatter.stringFromDate(self.scheduledOn).lowercaseString
         }
     }
     
+    public dynamic var taskIdentifier: String? {
+        return (self.activity.task != nil) ? self.activity.task.identifier : nil
+    }
 }

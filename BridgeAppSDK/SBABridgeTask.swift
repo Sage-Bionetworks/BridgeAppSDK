@@ -37,6 +37,7 @@ public protocol SBATaskReference: class {
     func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
     var cancelDisabled: Bool { get }
     var allowMultipleRun: Bool { get }
+    var scheduleNotification: Bool { get }
 }
 
 public protocol SBABridgeTask: class {

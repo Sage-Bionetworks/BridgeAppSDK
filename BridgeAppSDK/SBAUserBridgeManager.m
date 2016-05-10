@@ -164,7 +164,7 @@
     // Always get max daysAhead (4) so we can update local notifications, and then filter to today if necessary.
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
         // set up local notifications for scheduled activities
-        [SBANotificationsManager setupNotificationsForScheduledActivities:activitiesList];
+        [[SBANotificationsManager sharedManager] setupNotificationsForScheduledActivities:activitiesList];
         
         if (todayOnly) {
             NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
