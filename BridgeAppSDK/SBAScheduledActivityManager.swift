@@ -87,7 +87,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
         self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return taskReferenceForSchedule(schedule) != nil && includedSections.evaluateWithObject(schedule)
+            return self.bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluateWithObject(schedule)
         })
         
         // reload table
@@ -197,7 +197,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
         
         // If this is a valid schedule then create the task view controller
-        guard let taskRef = taskReferenceForSchedule(schedule),
+        guard let taskRef = self.bridgeInfo.taskReferenceForSchedule(schedule),
             let task = taskRef.transformToTask(SBASurveyFactory(), isLastStep: true),
             let taskViewController = createTaskViewController(task, schedule: schedule, taskRef: taskRef)
         else {
@@ -274,16 +274,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
-        guard let taskRef = taskReferenceForSchedule(schedule) else { return false }
+        guard let taskRef = self.bridgeInfo.taskReferenceForSchedule(schedule) else { return false }
         return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
-    }
-    
-    public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
-        if (schedule.activity.task != nil),
-            let taskRef = self.bridgeInfo.taskReferenceWithIdentifier(schedule.activity.task.identifier) {
-            return taskRef as SBATaskReference
-        }
-        return nil
     }
     
     public func createTaskViewController(task: ORKTask, schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBATaskViewController? {
@@ -383,38 +375,7 @@ extension ORKTask {
     
 }
 
-public extension SBBScheduledActivity {
-    
-    public var isCompleted: Bool {
-        return self.finishedOn != nil
-    }
-    
-    public var isExpired: Bool {
-        return (self.expiresOn != nil) && (NSDate().earlierDate(self.expiresOn) == self.expiresOn)
-    }
-    
-    public var isNow: Bool {
-        return !isCompleted && ((self.scheduledOn == nil) || ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired))
-    }
-    
-    var scheduledTime: String {
-        if isCompleted {
-            return ""
-        }
-        else if isNow {
-            return Localization.localizedString("SBA_NOW")
-        }
-        else {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "h:mm a"
-            return dateFormatter.stringFromDate(self.scheduledOn).lowercaseString
-        }
-    }
-    
-    public dynamic var taskIdentifier: String? {
-        return (self.activity.task != nil) ? self.activity.task.identifier : nil
-    }
-}
+
 
 
 

@@ -145,5 +145,11 @@ extension SBABridgeInfo {
     public func taskReferenceWithIdentifier(taskIdentifier: String) -> NSDictionary? {
         return self.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier})
     }
+    
+    public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
+        guard let taskId = schedule.taskIdentifier else { return nil }
+        return taskReferenceWithIdentifier(taskId)
+    }
+    
 }
 

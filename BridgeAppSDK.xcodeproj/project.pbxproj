@@ -87,6 +87,7 @@
 		FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */; };
 		FF8DDFE31CB63E92006D1AFA /* SBATrackedDataStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */; };
+		FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9055A01CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
 		FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */; };
@@ -358,6 +359,7 @@
 		FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATrackedDataStore.h; sourceTree = "<group>"; };
 		FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataStore.m; sourceTree = "<group>"; };
 		FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataStoreTests.m; sourceTree = "<group>"; };
+		FF9055A01CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBBScheduledActivity+Utilities.swift"; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppDelegate.swift; sourceTree = "<group>"; };
 		FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
@@ -506,8 +508,6 @@
 				FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */,
 				FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */,
 				FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */,
-				FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */,
-				FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -694,6 +694,7 @@
 		FBC45E711C758DBA007AA424 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				FF90559E1CE286EA0049D12A /* BridgeExtensions */,
 				FBAD114E1CADA34C005611D0 /* DataModel */,
 				FFC68EED1CA4778D00FF7B07 /* Encryption */,
 				FBC45E721C758DC9007AA424 /* Localization */,
@@ -843,6 +844,16 @@
 				16BF5B6B1BE2BD1C007C79C6 /* Protocols */,
 			);
 			name = Library;
+			sourceTree = "<group>";
+		};
+		FF90559E1CE286EA0049D12A /* BridgeExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */,
+				FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */,
+				FF9055A01CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift */,
+			);
+			name = BridgeExtensions;
 			sourceTree = "<group>";
 		};
 		FF9D4C501CA2172C001C293C /* Startup */ = {
@@ -1207,6 +1218,7 @@
 				FBC45E7A1C759040007AA424 /* Localization.swift in Sources */,
 				FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */,
 				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
+				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
 				FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */,
 				FF6411001CB2DC21007FB9E1 /* SBAJSONObject.m in Sources */,

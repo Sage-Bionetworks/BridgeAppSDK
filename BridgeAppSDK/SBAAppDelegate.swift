@@ -40,6 +40,7 @@ public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeApp
     var bridgeInfo: SBABridgeInfo { get }
     var requiredPermissions: [SBAPermissionsType] { get }
     func showAppropriateViewController(animated: Bool)
+    func createLocalNotifications() -> [UILocalNotification]
 }
 
 @UIApplicationMain
@@ -147,6 +148,10 @@ public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresente
      * Override to set the permissions for this application.
      */
     public var requiredPermissions: [SBAPermissionsType] {
+        return []
+    }
+    
+    public func createLocalNotifications() -> [UILocalNotification] {
         return []
     }
     
