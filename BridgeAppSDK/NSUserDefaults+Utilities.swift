@@ -1,5 +1,5 @@
 //
-//  SBANotificationsManager.swift
+//  NSUserDefaults+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,38 +31,15 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import Foundation
 
-public class SBANotificationsManager: NSObject, SBASharedInfoController {
+public extension NSUserDefaults {
     
-    public static let sharedManager = SBANotificationsManager()
-    
-    public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
-        if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {
-            return
+    public func flushUserDefaults() {
+        for (key, _) in self.dictionaryRepresentation() {
+            self.removeObjectForKey(key)
         }
-        
-        let app = UIApplication.sharedApplication()
-        app.cancelAllLocalNotifications()
-        
-        // Add a notification for the scheduled activities that should include one
-        for sa in activities {
-            if let taskRef = self.sharedBridgeInfo.taskReferenceForSchedule(sa)
-                where taskRef.scheduleNotification  {
-                let notif = UILocalNotification.init()
-                notif.fireDate = sa.scheduledOn
-                notif.soundName = UILocalNotificationDefaultSoundName
-                let format = Localization.localizedString("SBA_TIME_FOR_%@")
-                notif.alertBody = String(format: format, sa.activity.label)
-                app.scheduleLocalNotification(notif)
-            }
-        }
-        
-        // reschedule any notifications defined by the appDelegate
-        for notif in self.sharedAppDelegate.createLocalNotifications() {
-             app.scheduleLocalNotification(notif)
-        }
+        self.synchronize()
     }
-    
+
 }

@@ -47,7 +47,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAStepTransformer
     
-    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+    func transformToTaskAndIncludes(factory: SBASurveyFactory, isLastStep: Bool) -> (task: SBANavigableOrderedTask?, include: SBATrackingStepIncludes?)  {
         
         // Check the dataStore to determine if the momentInDay id map has been setup and do so if needed
         if (self.dataStore.momentInDayResultDefaultIdMap == nil) {
@@ -55,44 +55,49 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }
         
         // Build the approproate steps
-        var steps: [ORKStep]!
+        
+        var include: SBATrackingStepIncludes!
         if (isLastStep) {
             // If this is the last step then it is not being inserted into another task activity
-            steps = filteredSteps(.StandAloneSurvey, factory: factory)
+            include = .StandAloneSurvey
         }
         else if (!self.dataStore.hasSelectedOrSkipped) {
-            steps = filteredSteps(.SurveyAndActivity, factory: factory)
+            include = .SurveyAndActivity
         }
         else if (self.shouldShowChangedStep()) {
             if (self.dataStore.hasNoTrackedItems) {
-                steps = filteredSteps(.ChangedOnly, factory: factory)
+                include = .ChangedOnly
             }
             else {
-                steps = filteredSteps(.ChangedAndActivity, factory: factory)
+                include = .ChangedAndActivity
             }
         }
         else if (self.dataStore.shouldIncludeMomentInDayStep ||
                 (self.alwaysIncludeActivitySteps && !self.dataStore.hasNoTrackedItems)) {
-            steps = filteredSteps(.ActivityOnly, factory: factory)
+            include = .ActivityOnly
         }
         else {
             // Exit early with nil if there are no steps to return
-            return nil
+            return (nil, nil)
         }
         
+        let steps = filteredSteps(include, factory: factory)
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
         task.conditionalRule = self
         
-        return task
+        return (task, include)
     }
     
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
-        
-        guard let task = transformToTask(factory, isLastStep: isLastStep) else { return nil }
+        let (retTask, retInclude) = transformToTaskAndIncludes(factory, isLastStep: isLastStep)
+        guard let task = retTask, let include = retInclude else { return nil }
         
         let subtaskStep = SBASubtaskStep(subtask: task)
-        subtaskStep.taskIdentifier = self.taskIdentifier
-        subtaskStep.schemaIdentifier = self.schemaIdentifier
+        if (include.includeSurvey()) {
+            // Only set the task and schema identifier if the full survey is included
+            subtaskStep.taskIdentifier = self.taskIdentifier
+            subtaskStep.schemaIdentifier = self.schemaIdentifier
+        }
         
         return subtaskStep
     }

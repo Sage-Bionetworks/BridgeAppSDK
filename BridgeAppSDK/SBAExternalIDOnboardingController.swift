@@ -63,7 +63,7 @@ public extension SBAExternalIDOnboardingController {
         registrationCodeTextField.resignFirstResponder()
         showLoadingView()
         
-        user.loginUser(externalId: text) { [weak self] error in
+        sharedUser.loginUser(externalId: text) { [weak self] error in
             if let error = error {
                 self?.hideLoadingView({
                     let title = NSLocalizedString("Registration Failed", comment: "Title for error when registration fails")

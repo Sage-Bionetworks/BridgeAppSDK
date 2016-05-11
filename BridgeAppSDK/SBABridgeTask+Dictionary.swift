@@ -44,6 +44,11 @@ extension NSDictionary: SBATaskReference {
         guard let bridgeTask = self.objectWithResourceDictionary() as? SBABridgeTask
         else {
             // If this isn't a resource task then return nil
+            assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
+            return nil
+        }
+        if let dictionary = bridgeTask as? NSDictionary where !dictionary.isValidBridgeTask() {
+            // If the object returned is a dictionary, check validity and return nil if failed
             return nil
         }
         return bridgeTask.createORKTask(factory: factory)
@@ -62,7 +67,36 @@ extension NSDictionary: SBATaskReference {
     }
 }
 
+extension NSDictionary: SBASchemaReference {
+    
+    public var schemaRevision: NSNumber! {
+        return self["schemaRevision"] as? NSNumber ?? 1
+    }
+    
+}
+
 extension NSDictionary: SBABridgeTask {
+    
+    func isValidBridgeTask() -> Bool {
+        
+        // Check that the task Identifier is non-nil
+        guard self["taskIdentifier"] as? String != nil else {
+            assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
+            return false
+        }
+        
+        // If the task steps returns self as the only step, then need that it has a task type
+        // otherwise, can end up in a wacky loop of infinite madness
+        if self.taskSteps.first as? NSDictionary == self {
+            guard !self.taskType.isNilType() else {
+                assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
+                return false
+            }
+        }
+        
+        // Passed validity check
+        return true
+    }
     
     public var taskIdentifier: String! {
         guard let taskIdentifier = self["taskIdentifier"] as? String else {
