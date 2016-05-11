@@ -231,6 +231,10 @@ static NSString * const SBALogTagUpload  = @"SBA_UPLOAD ";
 	 Objective-C disables all NSLog() statements in
 	 a "release" build, so this is safe to leave as-is.
 	 */
+    
+    // Although the above statement is not in fact true, this wouldn't be the right place
+    // to handle it anyway, as error- and exception-level log messages are still useful
+    // in release builds.
 	NSLog (@"%@ %@ => %@", tag, methodInfo, message);
 }
 

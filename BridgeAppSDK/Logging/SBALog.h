@@ -60,12 +60,21 @@
 #define SBALogError( ... )                              [SBALog methodInfo: SBALogMethodInfo ()  errorMessage: __VA_ARGS__]
 #define SBALogError2( nsErrorObject )                   [SBALog methodInfo: SBALogMethodInfo ()  error: nsErrorObject]
 #define SBALogException( nsException )                  [SBALog methodInfo: SBALogMethodInfo ()  exception: nsException]
+#if DEBUG
 #define SBALogDebug( ... )                              [SBALog methodInfo: SBALogMethodInfo ()  debug: __VA_ARGS__]
 #define SBALogEvent( ... )                              [SBALog methodInfo: SBALogMethodInfo ()  event: __VA_ARGS__]
 #define SBALogEventWithData( name, dictionary )         [SBALog methodInfo: SBALogMethodInfo ()  eventName: name  data: dictionary]
 #define SBALogViewControllerAppeared()                  [SBALog methodInfo: SBALogMethodInfo ()  viewControllerAppeared: self]
 #define SBALogFilenameBeingArchived( filenameOrPath )   [SBALog methodInfo: SBALogMethodInfo ()  filenameBeingArchived: filenameOrPath]
 #define SBALogFilenameBeingUploaded( filenameOrPath )   [SBALog methodInfo: SBALogMethodInfo ()  filenameBeingUploaded: filenameOrPath]
+#else
+#define SBALogDebug( ... )
+#define SBALogEvent( ... )
+#define SBALogEventWithData( name, dictionary )
+#define SBALogViewControllerAppeared()
+#define SBALogFilenameBeingArchived( filenameOrPath )
+#define SBALogFilenameBeingUploaded( filenameOrPath )
+#endif
 
 
 
