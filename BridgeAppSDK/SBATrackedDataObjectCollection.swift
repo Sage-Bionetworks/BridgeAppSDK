@@ -56,7 +56,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         
         // Build the approproate steps
         
-        var include: SBATrackingStepIncludes!
+        var include: SBATrackingStepIncludes = .None
         if (isLastStep) {
             // If this is the last step then it is not being inserted into another task activity
             include = .StandAloneSurvey
@@ -75,10 +75,6 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         else if (self.dataStore.shouldIncludeMomentInDayStep ||
                 (self.alwaysIncludeActivitySteps && !self.dataStore.hasNoTrackedItems)) {
             include = .ActivityOnly
-        }
-        else {
-            // Exit early with nil if there are no steps to return
-            return (nil, nil)
         }
         
         let steps = filteredSteps(include, factory: factory)

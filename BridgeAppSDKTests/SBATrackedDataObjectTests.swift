@@ -509,8 +509,15 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = []
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
-        XCTAssertNil(step)
         checkDataStoreDefaultIDMap(dataStore)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        // Task should be empty
+        XCTAssertEqual(task.steps.count, 0)
     }
     
     func testTransformToStep_InjectionOnlySet_LastSurveyToday() {
@@ -524,8 +531,15 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
-        XCTAssertNil(step)
         checkDataStoreDefaultIDMap(dataStore)
+        
+        guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(step) not of expected class type")
+            return
+        }
+        
+        // Task should be empty
+        XCTAssertEqual(task.steps.count, 0)
     }
     
     func testTransformToStep_ActivityOnly() {

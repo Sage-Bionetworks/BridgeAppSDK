@@ -313,6 +313,39 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
     }
     
+    func testActivityResultsForSchedule_SingleTaskWithNoMedsPreviouslySelected() {
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, tappingTaskId])
+        
+        let schedule = manager.activities[1]
+        
+        // run through the task steps to setup the data store with previous values
+        let (previousTask, _) = manager.createTask(schedule)
+        buildTaskResult(previousTask!)
+        
+        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+            let task = taskVC.task
+            else {
+                XCTAssert(false, "Failed to create a task view controller of expected type")
+                return
+        }
+        taskVC.taskResult = buildTaskResult(task)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 1)
+        
+        guard let tappingResult = splitResults.first else { return }
+        
+        // check that the data store results was added to the other tasks
+        let momentInDay = tappingResult.stepResultForStepIdentifier("momentInDay")
+        XCTAssertNotNil(momentInDay)
+        
+        // check the schema
+        XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
+        XCTAssertEqual(tappingResult.schemaRevision, 5)
+        
+    }
+    
     func testActivityResultsForSchedule_SingleTask() {
         
         let manager = TestScheduledActivityManager()
@@ -376,7 +409,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         var step: ORKStep?
         repeat {
             step = task.stepAfterStep(step, withResult: taskResult)
-            if let activeStep = step as? ORKActiveStep {
+            if let _ = step as? ORKInstructionStep {
+                // Do nothing. Instructions to not have a result
+            }
+            else if let activeStep = step as? ORKActiveStep {
                 let stepResult = ORKStepResult(identifier: activeStep.identifier)
                 taskResult.results! += [stepResult]
             }
@@ -420,7 +456,13 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     break
                 }
             }
+            else if step != nil {
+                assertionFailure("Test case not setup to handle \(step)")
+            }
         } while (step != nil)
+        
+        // Check assumptions
+        XCTAssertGreaterThan(taskResult.results!.count, 0)
         
         return taskResult
     }

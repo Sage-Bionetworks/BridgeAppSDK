@@ -86,6 +86,7 @@ public struct SBATrackingStepIncludes {
     public static let SurveyAndActivity = SBATrackingStepIncludes(includes: [.Introduction, .Selection, .Frequency, .Activity])
     public static let ChangedAndActivity = SBATrackingStepIncludes(includes: [.Changed, .Selection, .Frequency, .Activity])
     public static let ChangedOnly = SBATrackingStepIncludes(includes: [.Changed])
+    public static let None = SBATrackingStepIncludes(includes: [])
     
     func includeSurvey() -> Bool {
         return includes.contains(.Introduction) || includes.contains(.Changed)
