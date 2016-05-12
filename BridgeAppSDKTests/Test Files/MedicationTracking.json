@@ -1,5 +1,5 @@
 {
-    "taskIdentifier"    : "1-APHMedicationTracker-20EF8ED2-E461-4C20-9024-F43FCAAAF4C3",
+    "taskIdentifier"    : "Medication Task",
     "schemaIdentifier"  : "Medication Tracker",
     "itemsClassType"    : "Medication",
     "items": [

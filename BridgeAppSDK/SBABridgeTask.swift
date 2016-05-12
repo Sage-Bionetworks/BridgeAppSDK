@@ -40,6 +40,11 @@ public protocol SBATaskReference: class {
     var scheduleNotification: Bool { get }
 }
 
+public protocol SBASchemaReference: class {
+    var schemaIdentifier: String! { get }
+    var schemaRevision: NSNumber! { get }
+}
+
 public protocol SBABridgeTask: class {
     var taskIdentifier: String! { get }
     var schemaIdentifier: String! { get }

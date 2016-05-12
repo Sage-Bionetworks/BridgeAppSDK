@@ -72,15 +72,28 @@ public class SBASubtaskStep: ORKStep {
     func filteredTaskResult(inputResult: ORKTaskResult) -> ORKTaskResult {
         // create a mutated copy of the results that includes only the subtask results
         let subtaskResult: ORKTaskResult = inputResult.copy() as! ORKTaskResult
-        let prefix = "\(self.subtask.identifier)."
-        let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
-        subtaskResult.results = subtaskResult.results?.filter() { predicate.evaluateWithObject($0) }
-        if let stepResults = subtaskResult.results {
-            for stepResult in stepResults {
-                stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
-            }
+        if let stepResults = subtaskResult.results as? [ORKStepResult] {
+            let (subtaskResults, _) = filteredStepResults(stepResults)
+            subtaskResult.results = subtaskResults
         }
         return subtaskResult;
+    }
+    
+    func filteredStepResults(inputResults: [ORKStepResult]) -> (subtaskResults:[ORKStepResult], remainingResults:[ORKStepResult]) {
+        let prefix = "\(self.subtask.identifier)."
+        let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
+        var subtaskResults:[ORKStepResult] = []
+        var remainingResults:[ORKStepResult] = []
+        for stepResult in inputResults {
+            if (predicate.evaluateWithObject(stepResult)) {
+                stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
+                subtaskResults += [stepResult]
+            }
+            else {
+                remainingResults += [stepResult]
+            }
+        }
+        return (subtaskResults, remainingResults)
     }
     
     func stepWithIdentifier(identifier: String) -> ORKStep? {

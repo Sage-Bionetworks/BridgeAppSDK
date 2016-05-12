@@ -1,0 +1,19 @@
+{
+     "taskIdentifier"            : "Tapping",
+     "schemaIdentifier"          : "Tapping Activity",
+     "taskType"                  : "tapping",
+     "intendedUseDescription"    : "In this activity we ask you to tap your fingers. It is an activity that tells us about your fine motor coordination.",
+     "localizedSteps"            : [{
+                                    "identifier" : "instruction1.right",
+                                    "detailText" : "Tap Next to begin."
+                                    },
+                                    {
+                                    "identifier" : "instruction1.left",
+                                    "detailText" : "Tap Next to begin."
+                                    }],
+    "insertSteps"               : [{
+                                   "resourceName"      : "MedicationTracking",
+                                   "resourceBundle"    : "org.sagebase.BridgeAppSDKTests",
+                                   "classType"         : "TrackedDataObjectCollection"
+                                   }]
+}

@@ -42,11 +42,11 @@ extension SBASharedInfoController {
         return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
     }
     
-    public var user: SBAUserWrapper {
+    public var sharedUser: SBAUserWrapper {
         return self.sharedAppDelegate.currentUser
     }
     
-    public var bridgeInfo: SBABridgeInfo {
+    public var sharedBridgeInfo: SBABridgeInfo {
         return self.sharedAppDelegate.bridgeInfo
     }
 }

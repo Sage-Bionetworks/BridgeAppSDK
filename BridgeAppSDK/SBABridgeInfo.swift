@@ -72,9 +72,15 @@ public protocol SBABridgeInfo: class {
     var testUserDataGroup: String? { get }
     
     /**
+     * Mapping of schema identifier and associated info for creating an archive
+     */
+    var schemaMap: [NSDictionary]? { get }
+    
+    /**
      * Mapping of task identifier and associated info for creating a task
      */
     var taskMap: [NSDictionary]? { get }
+
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -85,11 +91,11 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     var plist: NSDictionary!
 
-    convenience override init() {
+    public convenience override init() {
         self.init(name: "BridgeInfo")!
     }
     
-    init?(name: String) {
+    public init?(name: String) {
         super.init()
         guard let plist = SBAResourceFinder().plistNamed(name) else {
             assertionFailure("\(name) plist file not found in the resource bundle")
@@ -123,6 +129,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var taskMap: [NSDictionary]? {
         return self.plist["taskMapping"] as? [NSDictionary]
     }
+    
+    public var schemaMap: [NSDictionary]? {
+        return self.plist["schemaMapping"] as? [NSDictionary]
+    }
 }
 
 extension SBABridgeInfo {
@@ -142,7 +152,11 @@ extension SBABridgeInfo {
         return url
     }
     
-    public func taskReferenceWithIdentifier(taskIdentifier: String) -> NSDictionary? {
+    public func schemaReferenceWithIdentifier(schemaIdentifier: String) -> SBASchemaReference? {
+        return self.schemaMap?.findObject({ $0.schemaIdentifier == schemaIdentifier})
+    }
+    
+    public func taskReferenceWithIdentifier(taskIdentifier: String) -> SBATaskReference? {
         return self.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier})
     }
     

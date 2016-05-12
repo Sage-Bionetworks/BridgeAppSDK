@@ -71,6 +71,7 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var passwordFormatForLoginViaExternalId: String?
     var testUserDataGroup: String?
     var taskMap: [NSDictionary]?
+    var schemaMap: [NSDictionary]?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

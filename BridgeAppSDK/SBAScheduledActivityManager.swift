@@ -56,6 +56,10 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public weak var delegate: SBAScheduledActivityManagerDelegate?
     
+    public var bridgeInfo: SBABridgeInfo {
+        return self.sharedBridgeInfo
+    }
+    
     public var sections: [SBAScheduledActivitySection] = [.Today, .KeepGoing]
     public var activities: [SBBScheduledActivity] = []
     
@@ -87,7 +91,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
         self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return self.bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluateWithObject(schedule)
+            return bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluateWithObject(schedule)
         })
         
         // reload table
@@ -197,7 +201,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
         
         // If this is a valid schedule then create the task view controller
-        guard let taskRef = self.bridgeInfo.taskReferenceForSchedule(schedule),
+        guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule),
             let task = taskRef.transformToTask(SBASurveyFactory(), isLastStep: true),
             let taskViewController = createTaskViewController(task, schedule: schedule, taskRef: taskRef)
         else {
@@ -274,8 +278,14 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
-        guard let taskRef = self.bridgeInfo.taskReferenceForSchedule(schedule) else { return false }
+        guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) else { return false }
         return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
+    }
+    
+    public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
+        let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
+        let task = taskRef?.transformToTask(SBASurveyFactory(), isLastStep: true)
+        return (task, taskRef)
     }
     
     public func createTaskViewController(task: ORKTask, schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBATaskViewController? {
@@ -341,12 +351,77 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
         
-        // TODO: implement syoung 04/27/2016 Stubbed out accessor
+        // If no results, return empty array
+        guard taskViewController.result.results != nil else { return [] }
+        
         let taskResult = taskViewController.result
-        let result = SBAActivityResult(taskIdentifier: taskResult.identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
-        result.results = taskResult.results
-        result.schedule = schedule
-        return [result]
+        func createActivityResult(identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
+            let result = SBAActivityResult(taskIdentifier: identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
+            result.results = stepResults
+            result.schedule = schedule
+            result.schemaRevision = bridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision ?? 1
+            return result
+        }
+        
+        var topLevelResults:[ORKStepResult] = taskViewController.result.results! as! [ORKStepResult]
+        var allResults:[SBAActivityResult] = []
+        var dataStores:[SBATrackedDataStore] = []
+        
+        if let task = taskViewController.task as? SBANavigableOrderedTask {
+            for step in task.steps {
+                if let subtaskStep = step as? SBASubtaskStep {
+                    
+                    var isDataCollection = false
+                    if let subtask = subtaskStep.subtask as? SBANavigableOrderedTask,
+                        let dataCollection = subtask.conditionalRule as? SBATrackedDataObjectCollection {
+                        // But keep a pointer to the dataStore
+                        dataStores += [dataCollection.dataStore]
+                        isDataCollection = true
+                    }
+                    
+                    if  let taskId = subtaskStep.taskIdentifier,
+                        let schemaId = subtaskStep.schemaIdentifier {
+
+                        // If this is a subtask step with a schemaIdentifier and taskIdentifier
+                        // then split out the result
+                        let (subResults, filteredResults) = subtaskStep.filteredStepResults(topLevelResults)
+                        topLevelResults = filteredResults
+                
+                        // Add filtered results to each collection as appropriate
+                        let subschedule = scheduledActivityForTaskIdentifier(taskId) ?? schedule
+                        if subResults.count > 0 {
+                            
+                            // add dataStore results
+                            var subsetResults = subResults
+                            for dataStore in dataStores {
+                                if let momentInDayResult = dataStore.momentInDayResult {
+                                    subsetResults += momentInDayResult
+                                }
+                            }
+                            
+                            // create the subresult and add to list
+                            let substepResult: SBAActivityResult = createActivityResult(schemaId, schedule: subschedule, stepResults: subsetResults)
+                            allResults += [substepResult]
+                        }
+                    }
+                    else if isDataCollection {
+                        
+                        // Otherwise, filter out the tracked object collection but do not create results
+                        // because this is tracked via the dataStore
+                        let (_, filteredResults) = subtaskStep.filteredStepResults(topLevelResults)
+                        topLevelResults = filteredResults
+                    }
+                }
+            }
+        }
+        
+        // If there are any results that were not filtered into a subgroup then include them at the top level
+        if topLevelResults.count > 0 {
+            let topResult = createActivityResult(taskResult.identifier, schedule: schedule, stepResults: topLevelResults)
+            allResults =  [topResult] + allResults
+        }
+        
+        return allResults
     }
 }
 

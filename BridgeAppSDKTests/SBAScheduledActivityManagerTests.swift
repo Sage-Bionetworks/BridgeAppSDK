@@ -34,65 +34,290 @@
 import XCTest
 import BridgeAppSDK
 import BridgeSDK
+import ResearchKit
+
+let medicationTrackingTaskId = "Medication Task"
+let comboTaskId = "Combo Task"
+let tappingTaskId = "tapping Task"
 
 class SBAScheduledActivityManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        // flush the defaults
+        SBATrackedDataStore.defaultStore().reset()
+        SBATrackedDataStore.defaultStore().storedDefaults.flushUserDefaults()
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        
+        SBATrackedDataStore.defaultStore().reset()
+        SBATrackedDataStore.defaultStore().storedDefaults.flushUserDefaults()
+        
         super.tearDown()
     }
+    
+    func testCreateTask_MedicationTask() {
+        let manager = TestScheduledActivityManager()
+        let schedule = createScheduledActivity(medicationTrackingTaskId)
+        let (task, taskRef) = manager.createTask(schedule)
+        XCTAssertNotNil(task)
+        XCTAssertNotNil(taskRef)
+    }
+    
+    func testCreateTask_ComboTask() {
+        let manager = TestScheduledActivityManager()
+        let schedule = createScheduledActivity(comboTaskId)
+        let (task, taskRef) = manager.createTask(schedule)
+        XCTAssertNotNil(task)
+        XCTAssertNotNil(taskRef)
+    }
 
+    func testCreateTask_TappingTask() {
+        let manager = TestScheduledActivityManager()
+        let schedule = createScheduledActivity(tappingTaskId)
+        let (task, taskRef) = manager.createTask(schedule)
+        XCTAssertNotNil(task)
+        XCTAssertNotNil(taskRef)
+    }
+    
     func testUpdateSchedules() {
 
-        let vc = TestScheduledActivityManager()
-        vc.activities = createScheduledActivities()
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
-        let step1 = ORKInstructionStep(identifier: "instruction")
-        let subtask = ORKOrderedTask(identifier: "Subtask", steps: [ORKInstructionStep(identifier: "instruction")])
-        let step2 = SBASubtaskStep(subtask: subtask)
-        step2.taskIdentifier = "Med Task"
-        let step3 = ORKCompletionStep(identifier: "conclusion")
-        let task = SBANavigableOrderedTask(identifier: "Main Task", steps: [step1, step2, step3])
+        let (task, _) = manager.createTask(manager.activities[1])
+        let taskVC = TestTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.taskResult = buildTaskResult(task!)
         
-        let taskVC = SBATaskViewController(task: task, taskRunUUID: nil)
-        taskVC.scheduledActivityGUID = vc.activities[1].guid
+        manager.updateScheduledActivity(manager.activities[1], taskViewController: taskVC)
         
-        vc.updateScheduledActivity(vc.activities[1], taskViewController: taskVC)
+        XCTAssertNotNil(manager.updatedScheduledActivities)
+        XCTAssertEqual(manager.updatedScheduledActivities!.count, 2)
         
-        XCTAssertNotNil(vc.updatedScheduledActivities)
-        XCTAssertEqual(vc.updatedScheduledActivities!.count, 2)
+    }
+    
+    func testActivityResultsForSchedule_MedTrackingOnly() {
         
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
+        
+        let schedule = manager.activities[0]
+        let (task, _) = manager.createTask(schedule)
+        let taskVC = TestTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.taskResult = buildTaskResult(task!)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 1)
+        guard let results = splitResults.first?.results, taskResults = taskVC.result.results else {
+            XCTAssert(false, "\(splitResults) or \(taskVC.result.results) does not match expected")
+            return
+        }
+        XCTAssertEqual(results, taskResults)
+        XCTAssertEqual(splitResults[0].schedule, schedule)
+    }
+    
+    func testActivityResultsForSchedule_ComboWithNoMedsSelected() {
+        
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
+        
+        let schedule = manager.activities[1]
+        let (task, _) = manager.createTask(schedule)
+        let taskVC = TestTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.taskResult = buildTaskResult(task!)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 5)
+        
+        // check that the data store results were added to the other tasks
+        for result in splitResults {
+            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
+            XCTAssertNotNil(momentInDay)
+        }
+
+    }
+    
+    func testActivityResultsForSchedule_ComboWithMedsSelected() {
+        
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
+        
+        let schedule = manager.activities[1]
+        let (task, _) = manager.createTask(schedule)
+        let taskVC = TestTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.taskResult = buildTaskResult(task!, selectedMeds: ["Levodopa":3])
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 5)
+        
+        // check that the data store results were added to the other tasks
+        for result in splitResults {
+            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
+            XCTAssertNotNil(momentInDay)
+        }
+    }
+    
+    func testActivityResultsForSchedule_ComboWithMedsSelectedPreviously() {
+        
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
+        
+        let schedule = manager.activities[1]
+        
+        // run through the task steps to setup the data store with previous values
+        let (previousTask, _) = manager.createTask(schedule)
+        buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
+        
+        // run again with updated steps
+        let (task, _) = manager.createTask(schedule)
+        let taskVC = TestTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.taskResult = buildTaskResult(task!)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 4)
+        
+        // check that the data store results were added to the other tasks
+        for result in splitResults {
+            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
+            XCTAssertNotNil(momentInDay)
+        }
     }
     
     // MARK: helper methods
     
-    func createScheduledActivities() -> [SBBScheduledActivity] {
+    func createScheduledActivities(taskIds:[String]) -> [SBBScheduledActivity] {
         
         var ret: [SBBScheduledActivity] = []
         
-        for taskId in ["Med Task", "Combo Task", "Combo Task"] {
-    
-            let schedule = SBBScheduledActivity()
-            schedule.guid = NSUUID().UUIDString
-            schedule.activity = SBBActivity()
-            schedule.activity.guid = NSUUID().UUIDString
-            schedule.activity.task = SBBTaskReference()
-            schedule.activity.task.identifier = taskId
+        for taskId in taskIds {
+            let schedule = createScheduledActivity(taskId)
             ret += [schedule]
         }
         
         return ret
     }
+    
+    func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {
+        
+        let schedule = SBBScheduledActivity()
+        schedule.guid = NSUUID().UUIDString
+        schedule.activity = SBBActivity()
+        schedule.activity.guid = NSUUID().UUIDString
+        schedule.activity.task = SBBTaskReference()
+        schedule.activity.task.identifier = taskId
+        schedule.scheduledOn = scheduledOn
+        schedule.expiresOn = expiresOn
+        schedule.finishedOn = finishedOn
+        schedule.persistentValue = optional
+        return schedule
+    }
 
+    func buildTaskResult(task: ORKTask,
+                         selectedMeds: [String : NSNumber]? = nil,
+                         outputDirectory: NSURL? = nil) -> ORKTaskResult {
+        
+        let taskResult = ORKTaskResult(taskIdentifier: task.identifier, taskRunUUID: NSUUID(), outputDirectory: outputDirectory)
+        taskResult.results = []
+        
+        var step: ORKStep?
+        repeat {
+            step = task.stepAfterStep(step, withResult: taskResult)
+            if let activeStep = step as? ORKActiveStep {
+                let stepResult = ORKStepResult(identifier: activeStep.identifier)
+                taskResult.results! += [stepResult]
+            }
+            else if let formStep = step as? SBATrackedFormStep, let formItems = formStep.formItems {
+                
+                switch formStep.trackingType! {
+                case .Selection:
+                    // Add a question answer to the selection step
+                    let questionResult = ORKChoiceQuestionResult(identifier: formItems[0].identifier)
+                    if let meds = selectedMeds {
+                        questionResult.choiceAnswers = Array(meds.keys)
+                    }
+                    else {
+                        questionResult.choiceAnswers = ["None"]
+                    }
+                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: [questionResult])
+                    taskResult.results! += [stepResult]
+                    
+                case .Frequency:
+                    let formItemResults = formItems.map({ (formItem) -> ORKResult in
+                        let questionResult = ORKScaleQuestionResult(identifier: formItem.identifier)
+                        questionResult.scaleAnswer = selectedMeds?[formItem.identifier]
+                        return questionResult
+                    })
+                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
+                    taskResult.results! += [stepResult]
+                    
+                case .Activity:
+                    let formItemResults = formItems.map({ (formItem) -> ORKResult in
+                        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
+                        if let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat,
+                            let answer = answerFormat.textChoices.first {
+                            questionResult.choiceAnswers = [answer]
+                        }
+                        return questionResult
+                    })
+                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
+                    taskResult.results! += [stepResult]
+                    
+                default:
+                    break
+                }
+            }
+        } while (step != nil)
+        
+        return taskResult
+    }
 }
 
-class TestScheduledActivityManager: SBAScheduledActivityManager {
+class TestTaskViewController: SBATaskViewController {
     
+    var taskResult: ORKTaskResult!
+    
+    override var result: ORKTaskResult {
+        return taskResult
+    }
+    
+}
+
+class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
+    
+    // MARK: bridge info
+    override var bridgeInfo: SBABridgeInfo {
+        return self
+    }
+    
+    var studyIdentifier: String!
+    var useCache: Bool = false
+    var environment: SBBEnvironment!
+    var appStoreLinkURLString: String?
+    var emailForLoginViaExternalId: String?
+    var passwordFormatForLoginViaExternalId: String?
+    var testUserDataGroup: String?
+    var schemaMap: [NSDictionary]?
+    var taskMap: [NSDictionary]? {
+        return [medTaskRef, comboTaskRef, tappingTaskRef]
+    }
+    
+    var medTaskRef = [
+        "taskIdentifier"    : medicationTrackingTaskId,
+        "resourceName"      : "MedicationTracking",
+        "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? "",
+        "classType"         : "TrackedDataObjectCollection"]
+    var comboTaskRef = [
+        "taskIdentifier"    : comboTaskId,
+        "resourceName"      : "CombinedTask",
+        "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? ""]
+    var tappingTaskRef = [
+        "taskIdentifier"    : tappingTaskId,
+        "resourceName"      : "TappingTask",
+        "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? ""]
+    
+    // MARK: test function overrrides
     var updatedScheduledActivities:[SBBScheduledActivity]?
     
     override func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
