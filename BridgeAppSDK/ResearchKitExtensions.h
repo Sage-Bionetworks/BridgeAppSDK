@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  ResearckKitEntensions.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,24 +31,4 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
-
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
-
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBAUserBridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBALocalizationMacroWrapper.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATaskViewController.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/ResearchKitExtensions.h>
+#import "ORKOrderedTask+SBAExtension.h"
