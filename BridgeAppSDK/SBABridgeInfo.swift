@@ -80,6 +80,11 @@ public protocol SBABridgeInfo: class {
      * Mapping of task identifier and associated info for creating a task
      */
     var taskMap: [NSDictionary]? { get }
+    
+    /**
+     * Mapping of internal identifier to final filename for archiving a step result
+     */
+    var filenameMap: NSDictionary? { get }
 
 }
 
@@ -133,6 +138,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var schemaMap: [NSDictionary]? {
         return self.plist["schemaMapping"] as? [NSDictionary]
     }
+    
+    public var filenameMap: NSDictionary? {
+        return self.plist["filenameMapping"] as? NSDictionary
+    }
 }
 
 extension SBABridgeInfo {
@@ -163,6 +172,13 @@ extension SBABridgeInfo {
     public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
         guard let taskId = schedule.taskIdentifier else { return nil }
         return taskReferenceWithIdentifier(taskId)
+    }
+    
+    public func filenameForInternalName(internalName: String) -> String? {
+        guard let filename = self.filenameMap?[internalName] as? String else {
+            return nil
+        }
+        return filename
     }
     
 }

@@ -19,6 +19,8 @@
 		809D4E1B1C7E88AC00EC9EC6 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
 		809D4E1C1C7E88AC00EC9EC6 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
+		80D5F1451CE3E338002A39DF /* ORKResult+SBAExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D5F1431CE3E338002A39DF /* ORKResult+SBAExtension.h */; };
+		80D5F1461CE3E338002A39DF /* ORKResult+SBAExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1441CE3E338002A39DF /* ORKResult+SBAExtension.m */; };
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
 		80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */; };
 		80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */; };
@@ -338,6 +340,9 @@
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = ../../BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
 		809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ../../ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
+		80D5F1431CE3E338002A39DF /* ORKResult+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ORKResult+SBAExtension.h"; path = "Logging/ORKResult+SBAExtension.h"; sourceTree = "<group>"; };
+		80D5F1441CE3E338002A39DF /* ORKResult+SBAExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ORKResult+SBAExtension.m"; path = "Logging/ORKResult+SBAExtension.m"; sourceTree = "<group>"; };
+		80D5F1591CE4F400002A39DF /* SBA-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SBA-Bridging-Header.h"; sourceTree = "<group>"; };
 		80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = BridgeAppSDKSample.entitlements; sourceTree = "<group>"; };
 		80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKSample-Bridging-Header.h"; sourceTree = "<group>"; };
 		80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -522,6 +527,7 @@
 			isa = PBXGroup;
 			children = (
 				801040B41C5A843D00D26E19 /* BridgeAppSDK.h */,
+				80D5F1591CE4F400002A39DF /* SBA-Bridging-Header.h */,
 				FF9D4C501CA2172C001C293C /* Startup */,
 				16BF5B611BE29643007C79C6 /* Onboarding */,
 				16BF5B671BE29676007C79C6 /* Activities */,
@@ -1065,6 +1071,8 @@
 			children = (
 				FFCF390D1CE26DE40090452F /* SBAActivityResult.h */,
 				FFCF390E1CE26DE40090452F /* SBAActivityResult.m */,
+				80D5F1431CE3E338002A39DF /* ORKResult+SBAExtension.h */,
+				80D5F1441CE3E338002A39DF /* ORKResult+SBAExtension.m */,
 			);
 			name = Result;
 			sourceTree = "<group>";
@@ -1113,6 +1121,7 @@
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
 				FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */,
 				FF9055DE1CE501290049D12A /* ResearchKitExtensions.h in Headers */,
+				80D5F1451CE3E338002A39DF /* ORKResult+SBAExtension.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1430,6 +1439,7 @@
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
+				80D5F1461CE3E338002A39DF /* ORKResult+SBAExtension.m in Sources */,
 				FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
@@ -1693,6 +1703,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDK/SBA-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1715,6 +1726,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDK/SBA-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

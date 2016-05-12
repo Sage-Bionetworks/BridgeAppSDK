@@ -388,7 +388,38 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
         print(results)
         
-        // TODO: implement syoung 04/27/2016 Stubbed out accessor
+        let archive = SBADataArchive.init(reference: schedule.guid)
+        for activityResult in results {
+            if let activityResultResults = activityResult.results as? [ORKStepResult] {
+                for stepResult in activityResultResults {
+                    if let stepResultResults = stepResult.results {
+                        for result in stepResultResults {
+                            
+                            //Update date if needed
+                            if (result.startDate == nil) {
+                                result.startDate = stepResult.startDate;
+                                result.endDate = stepResult.endDate;
+                            }
+                            
+                            var filename = result.identifier
+                            if let _ = result as? ORKFileResult {
+                                filename += stepResult.identifier
+                                filename = bridgeInfo.filenameForInternalName(filename) ?? filename
+                            } else {
+                                filename += ".json"
+                            }
+                            archive.insertDataIntoArchive(result.sba_bridgeData(), filename: filename)
+                        }
+                    }
+                }
+            }
+        }
+        archive.completeArchiveWithErrorHandler { (error) in
+            // TODO: emm 2016-05-12 do more than print error?
+            print("Error completing archive:\n\(error)");
+        }
+        
+        // now encrypt and upload
     }
     
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
