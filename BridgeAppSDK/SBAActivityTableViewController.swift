@@ -42,11 +42,26 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     }
     private let _scheduledActivityManager : SBAScheduledActivityManager = SBAScheduledActivityManager()
     
+    private var foregroundNotification: NSObjectProtocol?
+    
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         self.scheduledActivityManager.delegate = self
         self.scheduledActivityManager.reloadData()
+        
+        foregroundNotification = NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
+            [weak self] _ in
+            self?.scheduledActivityManager.reloadData()
+        }
+    }
+    
+    override public func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let notificationHandler = foregroundNotification {
+            NSNotificationCenter.defaultCenter().removeObserver(notificationHandler)
+        }
     }
     
     // MARK: data refresh
