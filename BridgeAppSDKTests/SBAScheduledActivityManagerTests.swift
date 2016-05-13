@@ -59,6 +59,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         super.tearDown()
     }
     
+    // MARK: createTask
+
     func testCreateTask_MedicationTask() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(medicationTrackingTaskId)
@@ -96,6 +98,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         XCTAssert(orderedTask.dynamicType === ORKOrderedTask.self)
     }
+
+    // MARK: updateScheduledActivity
     
     func testUpdateSchedules() {
 
@@ -117,6 +121,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         XCTAssertEqual(manager.updatedScheduledActivities!.count, 2)
         
     }
+
+    // MARK: activityResultsForSchedule
     
     func testActivityResultsForSchedule_MedTrackingOnly() {
         
@@ -370,6 +376,22 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
     }
     
+    // MARK: schedule filtering
+    
+    func testAllDefaultSectionFilters() {
+        let manager = TestScheduledActivityManager()
+        let (schedules, sections, expectedTaskIdPerSection) = createFullSchedule()
+        manager.sections = sections
+        manager.activities = schedules
+        
+        for (section, expectedTaskIds) in expectedTaskIdPerSection.enumerate() {
+            let filteredSchedules = manager.scheduledActivitiesForSection(section)
+            let taskIds = filteredSchedules.mapAndFilter({ $0.taskIdentifier })
+            XCTAssertEqual(filteredSchedules.count, expectedTaskIds.count)
+            XCTAssertEqual(taskIds, expectedTaskIds, "\(section)")
+        }
+    }
+    
     // MARK: helper methods
     
     func createScheduledActivities(taskIds:[String]) -> [SBBScheduledActivity] {
@@ -382,6 +404,68 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         
         return ret
+    }
+    
+    func createFullSchedule() -> ([SBBScheduledActivity], [SBAScheduledActivitySection], [[String]]) {
+        
+        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+        let hour: NSTimeInterval = 60 * 60
+        let day: NSTimeInterval = 24 * hour
+        
+        let twoDaysAgo = NSDate(timeIntervalSinceNow: -2 * day)
+        let yesterday = NSDate(timeIntervalSinceNow: -1 * day)
+        let now = NSDate()
+        let midnightToday = calendar.startOfDayForDate(now)
+        let fourAM = midnightToday.dateByAddingTimeInterval(4 * hour)
+        let tenPM = midnightToday.dateByAddingTimeInterval(22 * hour)
+        let tomorrow = NSDate(timeIntervalSinceNow: day)
+        let twoDaysFromNow = NSDate(timeIntervalSinceNow: 2 * day)
+        
+        var schedules: [SBBScheduledActivity] = []
+        var sections: [[String]] = []
+
+        // Section - Expired Yesterday
+        schedules.append(createScheduledActivity("2 Days Ago - Expired Yesterday",
+            scheduledOn: twoDaysAgo, expiresOn: yesterday, finishedOn: nil, optional: false))
+        sections.append(["2 Days Ago - Expired Yesterday"])
+        
+        // Section - Today
+        schedules.append(createScheduledActivity("2 Days Ago - Incomplete",
+            scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: nil, optional: false))
+        schedules.append(createScheduledActivity("2 Days Ago - Completed Today",
+            scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: now, optional: false))
+        schedules.append(createScheduledActivity("4AM - Incomplete",
+            scheduledOn: fourAM, expiresOn: fourAM.dateByAddingTimeInterval(hour), finishedOn: nil, optional: false))
+        schedules.append(createScheduledActivity("4AM - Complete",
+            scheduledOn: fourAM, expiresOn: fourAM.dateByAddingTimeInterval(hour), finishedOn: fourAM.dateByAddingTimeInterval(0.5 * hour), optional: false))
+        schedules.append(createScheduledActivity("10PM - Incomplete",
+            scheduledOn: tenPM, expiresOn: tenPM.dateByAddingTimeInterval(hour), finishedOn: nil, optional: false))
+        sections.append(
+            ["2 Days Ago - Incomplete",
+            "2 Days Ago - Completed Today",
+            "4AM - Incomplete",
+            "4AM - Complete",
+            "10PM - Incomplete",])
+        
+        // Section - Tomorrow
+        schedules.append(createScheduledActivity("Tomorrow",
+            scheduledOn: tomorrow, expiresOn: nil, finishedOn: nil, optional: false))
+        sections.append(["Tomorrow"])
+        
+        // Section - Keep Going
+        schedules.append(createScheduledActivity("2 Days Ago - Incomplete - Optional",
+            scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: nil, optional: true))
+        sections.append(["2 Days Ago - Incomplete - Optional"])
+        
+        // Section - None
+        schedules.append(createScheduledActivity("2 Days Ago - Completed Yesterday",
+            scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: yesterday, optional: false))
+        schedules.append(createScheduledActivity("2 Days Ago - Completed Today - Optional",
+            scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: now, optional: true))
+        schedules.append(createScheduledActivity("Two Days From Now",
+            scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+        
+        return (schedules, [.ExpiredYesterday, .Today, .Tomorrow, .KeepGoing], sections)
     }
     
     func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {

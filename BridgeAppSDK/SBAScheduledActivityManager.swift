@@ -114,7 +114,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return sections[section]
     }
     
-    private func scheduledActivitiesForSection(section: Int) ->[SBBScheduledActivity] {
+    public func scheduledActivitiesForSection(section: Int) ->[SBBScheduledActivity] {
         let scheduledActivitySection = scheduledActivitySectionForTableSection(section)
         guard let predicate = filterPredicateForScheduledActivitySection(scheduledActivitySection) else { return [] }
         return activities.filter({ predicate.evaluateWithObject($0) })
