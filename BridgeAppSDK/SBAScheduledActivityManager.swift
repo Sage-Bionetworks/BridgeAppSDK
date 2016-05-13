@@ -114,7 +114,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return sections[section]
     }
     
-    private func scheduledActivitiesForSection(section: Int) ->[SBBScheduledActivity] {
+    public func scheduledActivitiesForSection(section: Int) ->[SBBScheduledActivity] {
         let scheduledActivitySection = scheduledActivitySectionForTableSection(section)
         guard let predicate = filterPredicateForScheduledActivitySection(scheduledActivitySection) else { return [] }
         return activities.filter({ predicate.evaluateWithObject($0) })
@@ -201,16 +201,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
         
         // If this is a valid schedule then create the task view controller
-        guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule),
-            let task = taskRef.transformToTask(SBASurveyFactory(), isLastStep: true),
-            let taskViewController = createTaskViewController(task, schedule: schedule, taskRef: taskRef)
+        guard let taskViewController = createTaskViewControllerForSchedule(schedule)
         else {
             assertionFailure("Failed to create task view controller for \(schedule)")
             return
         }
-        
-        // Once we have a view controller, then present it
-        setupTaskViewController(taskViewController, schedule: schedule, taskRef: taskRef)
         
         self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
     }
@@ -255,6 +250,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             let learnMore = learnMoreStep.learnMoreAction {
             stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
         }
+        
+        // If cancel is disabled then hide on all but the first step
+        if let step = stepViewController.step
+            where shouldHideCancelForStep(step, taskViewController: taskViewController) {
+            stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .Plain, target: nil, action: nil)
+        }
     }
     
     public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
@@ -274,12 +275,45 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         taskViewController.dismissViewControllerAnimated(true) {}
     }
     
-    // MARK: Protected subclass methods
+    // MARK: Convenience methods
     
+    public final func createTaskViewControllerForSchedule(schedule: SBBScheduledActivity) -> SBATaskViewController? {
+        let (inTask, inTaskRef) = createTask(schedule)
+        guard let task = inTask, let taskRef = inTaskRef else { return nil }
+        let taskViewController = instantiateTaskViewController(schedule, task: task, taskRef: taskRef)
+        setupTaskViewController(taskViewController, schedule: schedule, taskRef: taskRef)
+        return taskViewController
+    }
+    
+    // MARK: Protected subclass methods
+
+    public func shouldHideCancelForStep(step: ORKStep, taskViewController: ORKTaskViewController) -> Bool {
+        
+        // Return false if cancel is *not* disabled
+        guard let schedule = scheduledActivityForTaskViewController(taskViewController),
+            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) where taskRef.cancelDisabled
+        else {
+            return false
+        }
+        
+        // If the task does not respond then assume that cancel should be hidden for all steps
+        guard let task = taskViewController.task as? SBATaskExtension
+        else {
+            return true
+        }
+
+        // Otherwise, do not disable the first step IF and ONLY IF there are more than 1 steps.
+        return task.stepCount() == 1 || task.indexOfStep(step) > 0;
+    }
+
     public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
         guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) else { return false }
         return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
+    }
+    
+    public func instantiateTaskViewController(schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
+        return SBATaskViewController(task: task, taskRunUUID: nil)
     }
     
     public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
@@ -288,17 +322,13 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return (task, taskRef)
     }
     
-    public func createTaskViewController(task: ORKTask, schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBATaskViewController? {
-        return SBATaskViewController(task: task, taskRunUUID: nil)
-    }
-    
     public func setupTaskViewController(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
         taskViewController.scheduledActivityGUID = schedule.guid
         taskViewController.delegate = self
-        taskViewController.cancelDisabled = taskRef.cancelDisabled
     }
     
     public func shouldRecordResult(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+        // Subclass can override to provide custom implementation. By default, will return true.
         return true
     }
     

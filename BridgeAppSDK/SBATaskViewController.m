@@ -75,35 +75,11 @@
         // to the app blue tint color.
         stepViewController.view.tintColor = [UIColor blueTintColor];
     }
-    
-    if ([self shouldHideCancelForStep: stepViewController.step]) {
-        // If cancel is disabled then hide on all but the first step
-        stepViewController.cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:nil style:0 target:nil action:nil];
-    }
-}
-
-- (BOOL)shouldHideCancelForStep:(ORKStep *)step {
-    // Should hide the cancel button if cancel is disabled AND either there is only one
-    // step in the task OR this is NOT the first step
-    
-    if (!self.cancelDisabled) {
-        // If not disabled then exit early with NO answer
-        return NO;
-    }
-    if (![self.task conformsToProtocol:@protocol(SBATaskExtension)]) {
-        // If the task does not respond then assume that cancel should be hidden for all steps
-        return YES;
-    }
-    
-    // Otherwise, do not disable the first step IF and ONLY IF there are more than 1 steps.
-    id <SBATaskExtension> task = (id <SBATaskExtension>)self.task;
-    return [task indexOfStep:step] > 0 || [task stepCount] == 1;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         _scheduledActivityGUID = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
-        _cancelDisabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(cancelDisabled))];
     }
     return self;
 }
@@ -111,7 +87,6 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
     [aCoder setValue:_scheduledActivityGUID forKey:NSStringFromSelector(@selector(scheduledActivityGUID))];
-    [aCoder setValue:@(_cancelDisabled) forKey:NSStringFromSelector(@selector(cancelDisabled))];
 }
 
 @end

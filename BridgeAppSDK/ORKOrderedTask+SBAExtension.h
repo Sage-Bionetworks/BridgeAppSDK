@@ -36,7 +36,9 @@
 @protocol SBATaskExtension <ORKTask>
 
 - (NSUInteger)stepCount;
-- (NSUInteger)indexOfStep:(ORKStep *)step;
+- (NSUInteger)indexOfStep:(ORKStep * _Nonnull)step;
+- (BOOL)isActiveTask;
+- (ORKStep * _Nullable)stepAtIndex:(NSUInteger)index;
 
 @end
 

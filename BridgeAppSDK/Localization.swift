@@ -196,8 +196,10 @@ public class Localization: NSObject {
             "SBA_ACTIVITY_TOMORROW" : NSLocalizedString("SBA_ACTIVITY_TOMORROW", tableName: nil, bundle: localeBundle, value:"Tomorrow", comment:"Title of activity section for tomorrow's tasks"),
             "SBA_ACTIVITY_SCHEDULE_MESSAGE" : NSLocalizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE", tableName: nil, bundle: localeBundle, value:"This activity is not available until %@", comment:"Message for when a participant tries to do an activity ahead of schedule"),
             
-            
-
+            // Progress step
+            "SBA_PROGRESS_STEP_TITLE" : NSLocalizedString("SBA_PROGRESS_STEP_TITLE", tableName: nil, bundle: localeBundle, value:"Progress so far:", comment:"Title of a progress step."),
+            "SBA_PROGRESS_CHECKMARK" : NSLocalizedString("SBA_PROGRESS_CHECKMARK", tableName: nil, bundle: localeBundle, value:"\u{2705}", comment:"Character to use for a step progress check mark"),
+            "SBA_PROGRESS_UNCHECKED" : NSLocalizedString("SBA_PROGRESS_UNCHECKED", tableName: nil, bundle: localeBundle, value:"\u{2003}\u{2002}", comment:"Character to use for a step progress for unchecked"),
         ]
     }()
     

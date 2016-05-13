@@ -38,8 +38,6 @@
 
 @property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
 
-@property (nonatomic, readwrite) BOOL cancelDisabled;
-
 @property (nonatomic, readonly) NSDate * _Nullable finishedOn;
 
 @end

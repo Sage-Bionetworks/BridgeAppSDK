@@ -40,4 +40,20 @@
     return self.steps.count;
 }
 
+- (BOOL)isActiveTask {
+    for (id step in self.steps) {
+        if ([step isKindOfClass:[ORKActiveStep class]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (ORKStep*)stepAtIndex:(NSUInteger)index {
+    if (index >= self.steps.count) {
+        return nil;
+    }
+    return self.steps[index];
+}
+
 @end

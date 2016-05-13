@@ -63,11 +63,36 @@ public extension SBABridgeTask {
         guard steps.count > 0 else { return nil }
 
         // Map to ORKSteps
+        var activeSteps:[ORKStep] = []
         let lastIndex = steps.count - 1
-        var subtaskSteps: [ORKStep] = steps.enumerate().mapAndFilter(){ (index, item) in
-            return item.transformToStep(factory, isLastStep:(lastIndex == index))
-        }
+        var subtaskSteps: [ORKStep] = steps.enumerate().mapAndFilter({ (index, item) in
+            let step = item.transformToStep(factory, isLastStep:(lastIndex == index))
+            if let activeStep = step as? SBASubtaskStep,
+                let task = activeStep.subtask as? SBATaskExtension,
+                let firstStep = task.stepAtIndex(0),
+                let taskTitle = firstStep.title
+                where task.isActiveTask() {
+                // If this is an active task AND the title is available, then track it
+                activeStep.title = taskTitle
+                activeSteps += [activeStep]
+            }
+            return step
+        })
         guard subtaskSteps.count > 0 else { return nil }
+        
+        // Check for progress steps
+        if activeSteps.count > 1 {
+            let stepTitles = activeSteps.map({ $0.title! })
+            subtaskSteps = subtaskSteps.map({ (step) -> [ORKStep] in
+                if let idx = activeSteps.indexOf(step) where idx != activeSteps.count - 1 {
+                    let progressStep = SBAProgressStep(identifier: "progress", stepTitles: stepTitles, index: idx)
+                    return [step, progressStep]
+                }
+                else {
+                    return [step]
+                }
+            }).flatMap({$0})
+        }
         
         // Map the insert steps
         if let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
