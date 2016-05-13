@@ -201,11 +201,15 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return true
     }
     
+    public func isScheduleAvailableYet(schedule: SBBScheduledActivity) -> Bool {
+        return schedule.isNow || schedule.isCompleted
+    }
+    
     public func didSelectRowAtIndexPath(indexPath: NSIndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
-        guard schedule.isNow || schedule.isCompleted else {
+        guard isScheduleAvailableYet(schedule) else {
             // Block performing a task that is scheduled for the future
             let message = String(format: Localization.localizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE"), schedule.scheduledTime)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
