@@ -37,6 +37,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class ORKResult;
+
 @interface SBADataArchive : NSObject
 
 @property (nonatomic, readonly) NSURL *unencryptedURL;
@@ -61,6 +63,17 @@ NS_ASSUME_NONNULL_BEGIN
  @param     key                 Key for the json object to be included
  */
 - (void)setArchiveInfoObject:(id <SBAJSONObject>)object forKey:(NSString*)key;
+
+/**
+ Converts an ORKResult into json data and inserts into the archive.
+ This is a "convenience" m
+ 
+ @param     result                  ORKResult to be inserted into the zip archive.
+ 
+ @param     filename                Filename for the json data to be included without path extension
+ */
+- (void)insertORKResultIntoArchive:(ORKResult *)result filename:(NSString *)filename;
+
 
 /**
  Converts a dictionary into json data and inserts into the archive.
@@ -96,6 +109,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param     errorHandler            Called to pass in the error. Take action based on the error.
  */
 - (void)completeArchiveWithErrorHandler: (void(^)(NSError * _Nullable error))errorHandler;
+
+/**
+ Completes the archive, encrypts it, and uploads it to Bridge, then removes the archive.
+
+ @param     completion              Completion handler. Receives an NSError object or nil; returns void.
+ */
+-(void)encryptAndUploadArchiveWithCompletion:(void (^)(NSError * _Nullable error))completion;
 
 /**
  Guarantees to delete the archive and its working directory container.

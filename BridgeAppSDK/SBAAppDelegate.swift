@@ -44,7 +44,7 @@ public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeApp
 }
 
 @UIApplicationMain
-public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
+@objc public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
     
     public var window: UIWindow?
     

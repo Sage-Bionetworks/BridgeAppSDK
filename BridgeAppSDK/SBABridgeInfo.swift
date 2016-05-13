@@ -85,6 +85,11 @@ public protocol SBABridgeInfo: class {
      * Mapping of internal identifier to final filename for archiving a step result
      */
     var filenameMap: NSDictionary? { get }
+    
+    /**
+     * Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
+     */
+    var certificateName: String? { get }
 
 }
 
@@ -142,6 +147,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var filenameMap: NSDictionary? {
         return self.plist["filenameMapping"] as? NSDictionary
     }
+    
+    public var certificateName: String? {
+        return self.plist["certificateName"] as? String
+    }
 }
 
 extension SBABridgeInfo {
@@ -160,7 +169,7 @@ extension SBABridgeInfo {
         }
         return url
     }
-    
+        
     public func schemaReferenceWithIdentifier(schemaIdentifier: String) -> SBASchemaReference? {
         return self.schemaMap?.findObject({ $0.schemaIdentifier == schemaIdentifier})
     }
@@ -180,6 +189,6 @@ extension SBABridgeInfo {
         }
         return filename
     }
-    
+
 }
 

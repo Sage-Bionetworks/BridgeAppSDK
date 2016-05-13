@@ -36,6 +36,9 @@
 #import <objc/runtime.h>
 #import <ZipZap/ZipZap.h>
 #import "SBALog.h"
+#import "SBAEncryption.h"
+#import "ORKResult+SBAExtension.h"
+@import ResearchKit;
 
 static NSString * kFileInfoNameKey                  = @"filename";
 static NSString * kUnencryptedArchiveFilename       = @"unencrypted.zip";
@@ -132,6 +135,11 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     [self insertDataIntoArchive:dataToInsert filename:filename];
 }
 
+- (void)insertORKResultIntoArchive:(ORKResult *)result filename:(NSString *)filename
+{
+    [self insertDataIntoArchive:result.sba_bridgeData filename:filename];
+}
+
 - (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename
 {
     NSError * serializationError;
@@ -201,6 +209,30 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         errorHandler(error);
     }
 }
+
+-(void)encryptAndUploadArchiveWithCompletion:(void (^)(NSError * error))completion
+{
+    SBAEncryption *encryptor = [SBAEncryption new];
+    
+    [encryptor encryptFileAtURL:_unencryptedURL withCompletion:^(NSURL *url, NSError *error) {
+        if (!error) {
+            //remove the archive after encryption
+            [self removeArchive];
+            
+            //upload the encrypted archive
+            [SBBComponent(SBBUploadManager) uploadFileToBridge:url contentType:@"application/zip" completion:^(NSError *error) {
+                if (!error) {
+                    SBALogEventWithData(@"NetworkEvent", (@{@"event_detail":[NSString stringWithFormat:@"SBADataArchive uploaded file: %@", url.relativePath.lastPathComponent]}));
+                    [encryptor removeDirectory];
+                } else {
+                    SBALogDebug(@"SBADataArchive error returned from SBBUploadManager:\n%@\n%@", error.localizedDescription, error.localizedFailureReason);
+                }
+
+            }];
+        }
+    }];
+}
+
 
 //delete the workingDirectoryPath, and therefore its contents.
 -(void)removeArchive

@@ -278,7 +278,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
-            archiveResults(schedule, taskViewController: taskViewController)
+            let archive = archiveResults(schedule, taskViewController: taskViewController)
+            archive.encryptAndUploadArchiveWithCompletion({ (error) in
+                if error != nil {
+                    print("Error encrypting and uploading archive:\n\(error)")
+                }
+            })
         }
         else {
             taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
@@ -383,7 +388,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
     
-    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
+    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> SBADataArchive {
         
         let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
         print(results)
@@ -408,18 +413,14 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                             } else {
                                 filename += ".json"
                             }
-                            archive.insertDataIntoArchive(result.sba_bridgeData(), filename: filename)
+                            archive.insertDataIntoArchive(result.sba_bridgeData()!, filename: filename)
                         }
                     }
                 }
             }
         }
-        archive.completeArchiveWithErrorHandler { (error) in
-            // TODO: emm 2016-05-12 do more than print error?
-            print("Error completing archive:\n\(error)");
-        }
         
-        // now encrypt and upload
+        return archive
     }
     
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {

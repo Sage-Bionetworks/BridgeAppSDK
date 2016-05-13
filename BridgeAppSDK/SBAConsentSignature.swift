@@ -33,7 +33,7 @@
 
 import Foundation
 
-public protocol SBAConsentSignature : class, NSSecureCoding {
+@objc public protocol SBAConsentSignature : class, NSSecureCoding {
     
     /**
      * Age verification stored with consent

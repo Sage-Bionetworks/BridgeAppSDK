@@ -85,7 +85,7 @@ static  NSString  *const  kSpatialSpanMemoryTouchSampleIsCorrectKey     = @"Memo
 - (NSData *)dataFromDictionary:(NSDictionary *)dictionary
 {
     NSError * serializationError;
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&serializationError];
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&serializationError];
     
     if (jsonData == nil) {
         SBALogError2(serializationError);

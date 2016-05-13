@@ -1,8 +1,9 @@
 //
-//  SBA-Bridging-Header.h
+//  SBAEncryption.h
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015 Apple, Inc. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,4 +32,22 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "ORKResult+SBAExtension.h"
+#import <Foundation/Foundation.h>
+
+@interface SBAEncryption : NSObject
+
+/*!
+ *  Encrypt data using CMS. See https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax and https://tools.ietf.org/html/rfc5652 for details.
+ *  Uses the .pem file whose name is given in certificateName in BridgeInfo.plist.
+ *
+ *  @param url          URL of a file containing data to be encrypted.
+ *  @param completion   Completion handler, called with a URL to a temporary file containing the encrypted data, and an error object or nil.
+ *
+ *  @return The CMS-encrypted data.
+ */
+- (void)encryptFileAtURL:(NSURL *)url withCompletion:(void (^)(NSURL *url, NSError *error))completion;
+
+- (void)removeDirectory;
+
+
+@end
