@@ -282,7 +282,10 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
-            let archive = archiveResults(schedule, taskViewController: taskViewController)
+            guard let archive = archiveResults(schedule, taskViewController: taskViewController) else {
+                print("Archiving results failed")
+                return
+            }
             archive.encryptAndUploadArchiveWithCompletion({ (error) in
                 if error != nil {
                     print("Error encrypting and uploading archive:\n\(error)")
@@ -391,8 +394,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
         SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
-    
-    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> SBADataArchive {
+        
+    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> SBADataArchive? {
         
         let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
         print(results)
@@ -410,14 +413,20 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                                 result.endDate = stepResult.endDate;
                             }
                             
-                            var filename = result.identifier
-                            if let _ = result as? ORKFileResult {
-                                filename += stepResult.identifier
-                                filename = bridgeInfo.filenameForInternalName(filename) ?? filename
-                            } else {
-                                filename += ".json"
+                            guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
+                                assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")
+                                archive.removeArchive()
+                                return nil
                             }
-                            archive.insertDataIntoArchive(result.sba_bridgeData()!, filename: filename)
+                            
+                            switch archiveableResult.resultType {
+                            case .URL:
+                                archive.insertURLIntoArchive(archiveableResult.result as! NSURL, fileName: archiveableResult.filename)
+                            case .Dictionary:
+                                archive.insertDictionaryIntoArchive(archiveableResult.result as! Dictionary, filename: archiveableResult.filename)
+                            case .Data:
+                                archive.insertDataIntoArchive(archiveableResult.result as! NSData, filename: archiveableResult.filename)
+                            }
                         }
                     }
                 }

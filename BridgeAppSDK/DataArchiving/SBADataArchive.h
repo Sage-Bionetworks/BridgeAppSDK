@@ -64,16 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setArchiveInfoObject:(id <SBAJSONObject>)object forKey:(NSString*)key;
 
-/**
- Converts an ORKResult into json data and inserts into the archive.
- This is a "convenience" m
- 
- @param     result                  ORKResult to be inserted into the zip archive.
- 
- @param     filename                Filename for the json data to be included without path extension
- */
-- (void)insertORKResultIntoArchive:(ORKResult *)result filename:(NSString *)filename;
-
 
 /**
  Converts a dictionary into json data and inserts into the archive.

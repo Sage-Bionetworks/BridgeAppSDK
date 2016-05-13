@@ -73,16 +73,33 @@ private var kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSample
 private var kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
 private var kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
 
+enum ResultType: Int {
+    case URL, Dictionary, Data
+}
+
+class ArchiveableResult : NSObject {
+    var result: AnyObject
+    var resultType: ResultType
+    var filename: String
+    
+    init(result: AnyObject, resultType: ResultType, filename: String) {
+        self.result = result
+        self.resultType = resultType
+        self.filename = filename
+    }
+}
+
 protocol BridgeUploadableData {
-    func sba_bridgeData() -> NSData?
+    // returns result object, result type, and filename
+    func bridgeData(stepIdentifier: String) -> ArchiveableResult?
 }
 
 extension ORKResult: BridgeUploadableData {
-    func sba_dataFromFile(fileURL: NSURL) -> NSData? {
+    func dataFromFile(fileURL: NSURL) -> NSData? {
         return NSData.init(contentsOfURL: fileURL)
     }
     
-    func sba_dataFromDictionary(dictionary: Dictionary<String, AnyObject>) -> NSData? {
+    func dataFromDictionary(dictionary: Dictionary<String, AnyObject>) -> NSData? {
         let jsonData: NSData
         do {
             jsonData = try NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions.init(rawValue: 0))
@@ -93,37 +110,45 @@ extension ORKResult: BridgeUploadableData {
         return jsonData
     }
     
-    func sba_bridgeData() -> NSData? {
+    func bridgifyFilename(filename: String) -> String {
+        return filename.stringByReplacingOccurrencesOfString(".", withString: "_")
+    }
+    
+    func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
         // extend subclasses individually to override this
         return nil
     }
 }
 
 extension ORKFileResult {
-    override func sba_bridgeData() -> NSData? {
-        guard let url = self.fileURL, let data = sba_dataFromFile(url) else {
+    override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+        guard let url = self.fileURL else {
             return nil
         }
-        return data
+        var ext = url.pathExtension
+        if ext == nil || ext == "" {
+            ext = "json"
+        }
+        return ArchiveableResult.init(result: url, resultType: .URL, filename: bridgifyFilename(self.identifier + "_" + stepIdentifier) + "." + ext!)
     }
 }
 
 extension ORKTappingIntervalResult {
     
-    override func sba_bridgeData() -> NSData? {
-        var rawTappingResults: Dictionary<String, AnyObject> = [:]
+    override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+        var tappingResults: Dictionary<String, AnyObject> = [:]
     
         let tappingViewSize = NSStringFromCGSize(self.stepViewSize)
-        rawTappingResults[kTappingViewSizeKey] = tappingViewSize
+        tappingResults[kTappingViewSizeKey] = tappingViewSize
     
-        rawTappingResults[kStartDateKey] = self.startDate
-        rawTappingResults[kEndDateKey]   = self.endDate
+        tappingResults[kStartDateKey] = self.startDate
+        tappingResults[kEndDateKey]   = self.endDate
     
         let leftButtonRect = NSStringFromCGRect(self.buttonRect1)
-        rawTappingResults[kButtonRectLeftKey] = leftButtonRect;
+        tappingResults[kButtonRectLeftKey] = leftButtonRect;
     
         let rightButtonRect = NSStringFromCGRect(self.buttonRect2)
-        rawTappingResults[kButtonRectRightKey] = rightButtonRect
+        tappingResults[kButtonRectRightKey] = rightButtonRect
     
         var sampleResults: [[String: AnyObject]] = []
         for sample in self.samples! {
@@ -142,15 +167,16 @@ extension ORKTappingIntervalResult {
             }
             sampleResults += [aSampleDictionary]
         }
-        rawTappingResults[kTappingSamplesKey] = sampleResults
-        rawTappingResults[kItemKey] = self.identifier + ".json";
+        tappingResults[kTappingSamplesKey] = sampleResults
+        let filename = bridgifyFilename(self.identifier) + ".json"
+        tappingResults[kItemKey] = filename
         
-        return sba_dataFromDictionary(rawTappingResults);
+        return ArchiveableResult.init(result: (tappingResults as NSDictionary).jsonObject(), resultType: .Dictionary, filename: filename)
     }
 }
 
 extension ORKSpatialSpanMemoryResult {
-    override func sba_bridgeData() -> NSData? {
+    override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
         let gameStatusKeys = [ kSpatialSpanMemoryGameStatusUnknownKey, kSpatialSpanMemoryGameStatusSuccessKey, kSpatialSpanMemoryGameStatusFailureKey, kSpatialSpanMemoryGameStatusTimeoutKey ]
         
         var memoryGameResults = [String: AnyObject]();
@@ -177,7 +203,7 @@ extension ORKSpatialSpanMemoryResult {
             
             var aGameRecord = [String: AnyObject]();
             
-            aGameRecord[kSpatialSpanMemoryGameRecordSeedKey]      = Int(aRecord.seed)
+            aGameRecord[kSpatialSpanMemoryGameRecordSeedKey]      = NSNumber(unsignedInt: aRecord.seed)
             aGameRecord[kSpatialSpanMemoryGameRecordGameSizeKey]  = aRecord.gameSize
             aGameRecord[kSpatialSpanMemoryGameRecordGameScoreKey] = aRecord.score
             aGameRecord[kSpatialSpanMemoryGameRecordSequenceKey]  = aRecord.sequence
@@ -192,8 +218,9 @@ extension ORKSpatialSpanMemoryResult {
             gameRecords += [aGameRecord]
         }
         memoryGameResults[kSpatialSpanMemorySummaryGameRecordsKey] = gameRecords
-        memoryGameResults[kItemKey] = self.identifier + ".json"
-        return sba_dataFromDictionary(memoryGameResults)
+        let filename = bridgifyFilename(self.identifier) + ".json"
+        memoryGameResults[kItemKey] = filename
+        return ArchiveableResult.init(result: (memoryGameResults as NSDictionary).jsonize(), resultType: .Dictionary, filename: filename)
     }
     
     

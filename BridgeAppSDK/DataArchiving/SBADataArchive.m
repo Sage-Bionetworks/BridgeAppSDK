@@ -135,11 +135,6 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     [self insertDataIntoArchive:dataToInsert filename:filename];
 }
 
-- (void)insertORKResultIntoArchive:(ORKResult *)result filename:(NSString *)filename
-{
-    [self insertDataIntoArchive:result.sba_bridgeData filename:filename];
-}
-
 - (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename
 {
     NSError * serializationError;

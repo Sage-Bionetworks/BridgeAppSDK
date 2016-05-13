@@ -105,7 +105,7 @@ static  NSString  *const  kSpatialSpanMemoryTouchSampleIsCorrectKey     = @"Memo
 
 @implementation ORKFileResult (SBAExtension)
 
-- (NSData *)sba_bridgeData
+- (NSData *)bridgeData
 {
     return [self dataFromFile:self.fileURL];
 }
@@ -114,7 +114,7 @@ static  NSString  *const  kSpatialSpanMemoryTouchSampleIsCorrectKey     = @"Memo
 
 @implementation ORKTappingIntervalResult (SBAExtension)
 
-- (NSData *)sba_bridgeData
+- (NSData *)bridgeData
 {
     NSMutableDictionary  *rawTappingResults = [NSMutableDictionary dictionary];
     
@@ -158,7 +158,7 @@ static  NSString  *const  kSpatialSpanMemoryTouchSampleIsCorrectKey     = @"Memo
 
 @implementation ORKSpatialSpanMemoryResult (SBAExtension)
 
-- (NSData *)sba_bridgeData
+- (NSData *)bridgeData
 {
     NSString  *gameStatusKeys[] = { kSpatialSpanMemoryGameStatusUnknownKey, kSpatialSpanMemoryGameStatusSuccessKey, kSpatialSpanMemoryGameStatusFailureKey, kSpatialSpanMemoryGameStatusTimeoutKey };
     

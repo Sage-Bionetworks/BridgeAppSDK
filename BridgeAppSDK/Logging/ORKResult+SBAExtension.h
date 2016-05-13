@@ -10,6 +10,6 @@
 
 @interface ORKResult (SBAExtension)
 
-- (NSData *)sba_bridgeData;
+- (NSData *)bridgeData;
 
 @end
