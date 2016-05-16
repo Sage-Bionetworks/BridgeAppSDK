@@ -70,8 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
                                   result:(ORKTaskResult *)result;
 
-- (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
-                                    result:(ORKTaskResult *)result;
+- (void)updateMomentInDayForStepResult:(ORKStepResult * _Nullable)result;
 
 - (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps;
 

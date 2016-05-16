@@ -445,13 +445,8 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
 
     MockTrackedDataStore *dataStore = [self createDataStore];
     
-    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
     ORKStepResult *stepResult = [[self createMomentInDayStepResult] firstObject];
-    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
-    result.results = @[introStepResult, stepResult];
-    
-    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
-                                           result:result];
+    [dataStore updateMomentInDayForStepResult:stepResult];
     
     NSArray *momentInDayResults = dataStore.momentInDayResult;
     ORKStepResult *first = momentInDayResults.firstObject;
@@ -464,13 +459,8 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
     dataStore.momentInDayResult = [self createMomentInDayStepResult];
     [dataStore commitChanges];
     
-    ORKStepResult *introStepResult = [[ORKStepResult alloc] initWithIdentifier:@"instruction"];
     ORKStepResult *stepResult = [[self createMomentInDayStepResultWithAnswers:@[@"After Parkinson medication", @"0-30 minutes"]] firstObject];
-    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
-    result.results = @[introStepResult, stepResult];
-    
-    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
-                                           result:result];
+    [dataStore updateMomentInDayForStepResult:stepResult];
     
     NSArray *momentInDayResults = dataStore.momentInDayResult;
     ORKStepResult *stored = nil;
@@ -480,19 +470,6 @@ NSString  *const kActivityTimingStepIdentifier                  = @"medicationAc
         }
     }
     XCTAssertEqual(stored, stepResult);
-}
-
-- (void)testUpdateMomentInDayCalledWithNoResult
-{
-    MockTrackedDataStore *dataStore = [self createDataStore];
-    
-    ORKTaskResult *result = [[ORKTaskResult alloc] initWithIdentifier:@"test"];
-    
-    // -- call method under test
-    [dataStore updateMomentInDayForStepIdentifier:@"momentInDay"
-                                           result:result];
-    
-    XCTAssertFalse(dataStore.hasChanges);
 }
 
 #pragma mark - helper methods

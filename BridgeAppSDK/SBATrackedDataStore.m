@@ -247,10 +247,9 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
     }
 }
 
-- (void)updateMomentInDayForStepIdentifier:(NSString *)stepIdentifier
-                                    result:(ORKTaskResult *)result {
+- (void)updateMomentInDayForStepResult:(ORKStepResult * _Nullable)stepResult {
     
-    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
+    NSString *stepIdentifier = stepResult.identifier;
     if (stepResult == nil) {
         return;
     }
