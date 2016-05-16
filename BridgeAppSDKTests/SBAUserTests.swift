@@ -72,6 +72,8 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var testUserDataGroup: String?
     var taskMap: [NSDictionary]?
     var schemaMap: [NSDictionary]?
+    var filenameMap: NSDictionary?
+    var certificateName: String?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

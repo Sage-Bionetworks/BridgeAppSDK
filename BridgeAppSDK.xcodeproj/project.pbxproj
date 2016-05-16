@@ -112,6 +112,7 @@
 		FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */; };
 		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
+		FF9F4B581CEA735F00B5343B /* TaskResult_Combo.archive in Resources */ = {isa = PBXBuildFile; fileRef = FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */; };
 		FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */; };
 		FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */; };
 		FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */; };
@@ -480,6 +481,7 @@
 		FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Queries.swift"; sourceTree = "<group>"; };
 		FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeInfo.swift; sourceTree = "<group>"; };
 		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
+		FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TaskResult_Combo.archive; sourceTree = "<group>"; };
 		FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserTests.swift; sourceTree = "<group>"; };
 		FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+SBBTranslation.swift"; sourceTree = "<group>"; };
 		FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDOnboardingController.swift; sourceTree = "<group>"; };
@@ -873,6 +875,7 @@
 		FBC45E7B1C75B069007AA424 /* Test Files */ = {
 			isa = PBXGroup;
 			children = (
+				FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */,
 				FF9055C91CE3A8860049D12A /* CombinedTask.json */,
 				FF6484161CB617790055B9E7 /* MedicationTracking.json */,
 				FF9055D81CE3B1880049D12A /* TappingTask.json */,
@@ -1173,7 +1176,6 @@
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
 				FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */,
 				FF9055DE1CE501290049D12A /* ResearchKitExtensions.h in Headers */,
-				80D5F1451CE3E338002A39DF /* ORKResult+SBAExtension.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1443,6 +1445,7 @@
 			files = (
 				FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */,
 				FF9055D91CE3B1880049D12A /* TappingTask.json in Resources */,
+				FF9F4B581CEA735F00B5343B /* TaskResult_Combo.archive in Resources */,
 				FF9055CA1CE3A8860049D12A /* CombinedTask.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
