@@ -73,6 +73,10 @@ private var kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSample
 private var kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
 private var kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
 
+private var QuestionResultQuestionTextKey = "questionText"
+private var QuestionResultQuestionTypeKey = "questionType"
+private var QuestionResultUserInfoKey = "userInfo"
+
 enum ResultType: Int {
     case URL, Dictionary, Data
 }
@@ -115,8 +119,8 @@ extension ORKResult: BridgeUploadableData {
     }
     
     func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
-        // extend subclasses individually to override this
-        return nil
+        // extend subclasses individually to override this as needed
+        return ArchiveableResult.init(result: self.jsonObject(), resultType: .Dictionary, filename: bridgifyFilename(self.identifier) + ".json")
     }
 }
 
@@ -179,14 +183,14 @@ extension ORKSpatialSpanMemoryResult {
     override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
         let gameStatusKeys = [ kSpatialSpanMemoryGameStatusUnknownKey, kSpatialSpanMemoryGameStatusSuccessKey, kSpatialSpanMemoryGameStatusFailureKey, kSpatialSpanMemoryGameStatusTimeoutKey ]
         
-        var memoryGameResults = [String: AnyObject]();
+        var memoryGameResults = [String: AnyObject]()
         
         //
         //    ORK Result
         //
-        memoryGameResults[kIdentifierKey] = self.identifier;
-        memoryGameResults[kStartDateKey]  = self.startDate;
-        memoryGameResults[kEndDateKey]    = self.endDate;
+        memoryGameResults[kIdentifierKey] = self.identifier
+        memoryGameResults[kStartDateKey]  = self.startDate
+        memoryGameResults[kEndDateKey]    = self.endDate
         //
         //    ORK ORKSpatialSpanMemoryResult
         //
@@ -197,11 +201,11 @@ extension ORKSpatialSpanMemoryResult {
         //
         //    Memory Game Records
         //
-        var gameRecords = [[String: AnyObject]]();
+        var gameRecords = [[String: AnyObject]]()
         
         for aRecord: ORKSpatialSpanMemoryGameRecord in self.gameRecords! {
             
-            var aGameRecord = [String: AnyObject]();
+            var aGameRecord = [String: AnyObject]()
             
             aGameRecord[kSpatialSpanMemoryGameRecordSeedKey]      = NSNumber(unsignedInt: aRecord.seed)
             aGameRecord[kSpatialSpanMemoryGameRecordGameSizeKey]  = aRecord.gameSize
@@ -209,7 +213,7 @@ extension ORKSpatialSpanMemoryResult {
             aGameRecord[kSpatialSpanMemoryGameRecordSequenceKey]  = aRecord.sequence
             aGameRecord[kSpatialSpanMemoryGameStatusKey]          = gameStatusKeys[aRecord.gameStatus.rawValue]
             
-            let touchSamples = makeTouchSampleRecords(aRecord.touchSamples!)
+            let touchSamples = makeTouchSampleRecords(aRecord.touchSamples)
             aGameRecord[kSpatialSpanMemoryGameRecordTouchSamplesKey] = touchSamples
             
             let rectangles = makeTargetRectangleRecords(aRecord.targetRects!)
@@ -220,15 +224,18 @@ extension ORKSpatialSpanMemoryResult {
         memoryGameResults[kSpatialSpanMemorySummaryGameRecordsKey] = gameRecords
         let filename = bridgifyFilename(self.identifier) + ".json"
         memoryGameResults[kItemKey] = filename
-        return ArchiveableResult.init(result: (memoryGameResults as NSDictionary).jsonize(), resultType: .Dictionary, filename: filename)
+        return ArchiveableResult.init(result: (memoryGameResults as NSDictionary).jsonObject(), resultType: .Dictionary, filename: filename)
     }
     
     
-    func makeTouchSampleRecords(touchSamples: [ORKSpatialSpanMemoryGameTouchSample]) -> NSArray
+    func makeTouchSampleRecords(touchSamples: [ORKSpatialSpanMemoryGameTouchSample]?) -> NSArray
     {
         var samples = [[String: AnyObject]]()
         
-        for sample: ORKSpatialSpanMemoryGameTouchSample in touchSamples {
+        guard touchSamples != nil else {
+            return samples
+        }
+        for sample: ORKSpatialSpanMemoryGameTouchSample in touchSamples! {
             
             var aTouchSample = [String: AnyObject]()
             
@@ -252,6 +259,83 @@ extension ORKSpatialSpanMemoryResult {
             rectangles += [stringified]
         }
         return  rectangles
+    }
+}
+
+class AnswerKeyAndValue: NSObject {
+    var key: String
+    var value: AnyObject?
+    
+    init(key: String, value: AnyObject?) {
+        self.key = key
+        self.value = value
+    }
+}
+
+protocol ORKQuestionResultAnswerJSON {
+    func jsonSerializedAnswer() -> (AnswerKeyAndValue)?
+}
+
+private var _timeOnlyFormatter: NSDateFormatter? = nil
+
+extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
+    
+    func timeOnlyFormatter() -> NSDateFormatter {
+        if _timeOnlyFormatter == nil {
+            _timeOnlyFormatter = NSDateFormatter.init()
+            _timeOnlyFormatter!.dateFormat = "HH:mm:ss.SSS"
+            let enUSPOSIXLocale = NSLocale.init(localeIdentifier: "en_US_POSIX");
+            _timeOnlyFormatter!.locale = enUSPOSIXLocale
+        }
+        
+        return _timeOnlyFormatter!
+    }
+    override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+        let filename = bridgifyFilename(self.identifier) + ".json"
+        return ArchiveableResult.init(result: self.jsonObject(), resultType: .Dictionary, filename: filename)
+    }
+    
+    public override func jsonObject() -> AnyObject {
+        var ChoiceQuestionResult = [String: AnyObject]()
+        ChoiceQuestionResult[QuestionResultQuestionTextKey] = self.questionText
+        ChoiceQuestionResult[QuestionResultQuestionTypeKey] = self.questionType.rawValue
+        ChoiceQuestionResult[kIdentifierKey] = self.identifier
+        ChoiceQuestionResult[kStartDateKey] = self.startDate
+        ChoiceQuestionResult[kEndDateKey] = self.endDate
+        ChoiceQuestionResult[QuestionResultUserInfoKey] = self.userInfo
+        if let answer = self.jsonSerializedAnswer() {
+            ChoiceQuestionResult[answer.key] = answer.value
+        }
+        return (ChoiceQuestionResult as NSDictionary).jsonObject()
+    }
+    
+    func jsonSerializedAnswer() -> (AnswerKeyAndValue)? {
+        let className = NSStringFromClass(self.classForCoder)
+        fatalError("jsonSerializedAnswer not implemented for \(className)")
+    }
+    
+    func jsonForAnswer(answer: AnyObject) -> AnyObject {
+        let dateTime = answer as? NSDate
+        switch self.questionType {
+        case .TimeOfDay:
+            return timeOnlyFormatter().stringFromDate(dateTime!)
+        case .DateAndTime:
+            return dateTime!.ISO8601String()
+        case .Date:
+            return dateTime!.ISO8601DateOnlyString()
+        default:
+            // TODO: Implement specific formatters for other questionTypes as needed
+            return answer.jsonObject()
+        }
+    }
+}
+
+extension ORKChoiceQuestionResult {
+    override func jsonSerializedAnswer() -> (AnswerKeyAndValue)? {
+        let choiceAnswers = self.choiceAnswers?.map { (answer) -> AnyObject in
+            return jsonForAnswer(answer)
+        }
+        return AnswerKeyAndValue.init(key: "choiceAnswers", value: choiceAnswers)
     }
 }
 

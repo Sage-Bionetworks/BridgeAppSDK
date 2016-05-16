@@ -72,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSObject (SBAJSONObject) <SBAJSONObject>
+@end
+
 @interface NSNumber (SBAJSONObject) <SBAJSONObject>
 @end
 

@@ -34,6 +34,18 @@
 #import "SBAJSONObject.h"
 @import BridgeSDK;
 
+@implementation NSObject (SBAJSONObject)
+
+- (id)jsonObject {
+    if ([self respondsToSelector:@selector(dictionaryRepresentation)]) {
+        return [[(id)self dictionaryRepresentation] jsonObject];
+    }
+    NSAssert(@"jsonObject method not implemented for class %@", NSStringFromClass([self class]));
+    return @{};
+}
+
+@end
+
 @implementation NSString (SBAJSONObject)
 
 - (id)jsonObject {

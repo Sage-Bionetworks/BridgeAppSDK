@@ -37,7 +37,6 @@
 #import <ZipZap/ZipZap.h>
 #import "SBALog.h"
 #import "SBAEncryption.h"
-#import "ORKResult+SBAExtension.h"
 @import ResearchKit;
 
 static NSString * kFileInfoNameKey                  = @"filename";

@@ -16,12 +16,13 @@
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
 		8032220B1CE642CD001D5281 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803221F41CE64232001D5281 /* ZipZap.framework */; };
 		803222281CE64A82001D5281 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803222251CE64A73001D5281 /* openssl.framework */; };
-		803222371CE680F7001D5281 /* SBAJSONObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803222361CE680F7001D5281 /* SBAJSONObject.swift */; };
+		804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
 		809D4E171C7E88A900EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
 		809D4E181C7E88A900EC9EC6 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		809D4E1B1C7E88AC00EC9EC6 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
 		809D4E1C1C7E88AC00EC9EC6 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
+		80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D5F1911CE51C40002A39DF /* SBAEncryption.h */; };
 		80D5F1941CE51C40002A39DF /* SBAEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1921CE51C40002A39DF /* SBAEncryption.m */; };
 		80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */; };
@@ -85,8 +86,6 @@
 		FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */; };
 		FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */; };
 		FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */; };
-		FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FF6411001CB2DC21007FB9E1 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
 		FF6411161CB341D0007FB9E1 /* SBATrackedDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6411151CB341D0007FB9E1 /* SBATrackedDataObject.m */; };
 		FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6411171CB341EC007FB9E1 /* SBATrackedDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6411191CB34766007FB9E1 /* SBAMedication.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -373,11 +372,8 @@
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		803221E91CE64232001D5281 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ../ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
 		8032221E1CE64A73001D5281 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = ../CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
-		803222361CE680F7001D5281 /* SBAJSONObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAJSONObject.swift; sourceTree = "<group>"; };
 		809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = ../../BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
 		809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ../../ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
-		80D5F1431CE3E338002A39DF /* ORKResult+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ORKResult+SBAExtension.h"; path = "Logging/ORKResult+SBAExtension.h"; sourceTree = "<group>"; };
-		80D5F1441CE3E338002A39DF /* ORKResult+SBAExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ORKResult+SBAExtension.m"; path = "Logging/ORKResult+SBAExtension.m"; sourceTree = "<group>"; };
 		80D5F1911CE51C40002A39DF /* SBAEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAEncryption.h; sourceTree = "<group>"; };
 		80D5F1921CE51C40002A39DF /* SBAEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEncryption.m; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
@@ -796,7 +792,6 @@
 			children = (
 				FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */,
 				FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */,
-				803222361CE680F7001D5281 /* SBAJSONObject.swift */,
 				FF6411371CB436B6007FB9E1 /* SBAClassTypeMap.h */,
 				FF6411381CB436B6007FB9E1 /* SBAClassTypeMap.m */,
 				FBAD11571CADB2F0005611D0 /* SBADataObject.h */,
@@ -1139,8 +1134,6 @@
 			children = (
 				FFCF390D1CE26DE40090452F /* SBAActivityResult.h */,
 				FFCF390E1CE26DE40090452F /* SBAActivityResult.m */,
-				80D5F1431CE3E338002A39DF /* ORKResult+SBAExtension.h */,
-				80D5F1441CE3E338002A39DF /* ORKResult+SBAExtension.m */,
 				80D5F1D21CE557BA002A39DF /* ORKResult+SBAExtension.swift */,
 			);
 			name = Result;
@@ -1163,10 +1156,10 @@
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
 				FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */,
 				FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */,
-				FF6410FF1CB2DC21007FB9E1 /* SBAJSONObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
 				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
 				80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */,
+				80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */,
 				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
@@ -1491,6 +1484,7 @@
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FBAD11671CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
+				804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */,
 				FF64113A1CB436B6007FB9E1 /* SBAClassTypeMap.m in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
 				FBC45E7A1C759040007AA424 /* Localization.swift in Sources */,
@@ -1499,7 +1493,6 @@
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
 				FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */,
-				FF6411001CB2DC21007FB9E1 /* SBAJSONObject.m in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
@@ -1537,7 +1530,6 @@
 				FFCF37B31CD94EC80090452F /* ORKOrderedTask+SBAExtension.m in Sources */,
 				FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */,
 				FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */,
-				803222371CE680F7001D5281 /* SBAJSONObject.swift in Sources */,
 				FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */,
 				FFAAF61F1CC0267E00500929 /* SBAPermissionsManager.m in Sources */,
 				FBE551691C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift in Sources */,
