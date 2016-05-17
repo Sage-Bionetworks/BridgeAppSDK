@@ -131,4 +131,9 @@ public class SBAProgressStepViewController: ORKTableStepViewController {
         
         return cell!
     }
+    
+    override public func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        // Do not highlight the cell
+        return nil
+    }
 }

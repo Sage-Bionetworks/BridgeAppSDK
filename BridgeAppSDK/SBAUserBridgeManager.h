@@ -72,7 +72,8 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
-                                todayOnly:(BOOL)todayOnly
+                                daysAhead:(NSInteger)daysAhead
+                               daysBehind:(NSInteger)daysBehind
                                completion:(SBAUserBridgeManagerCompletionBlock)completionBlock;
 
 + (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities;
