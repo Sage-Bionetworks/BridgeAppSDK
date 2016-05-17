@@ -286,9 +286,15 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                 print("Archiving results failed")
                 return
             }
-            archive.encryptAndUploadArchiveWithCompletion({ (error) in
+            archive.completeArchiveWithErrorHandler({ (error) in
                 if error != nil {
-                    print("Error encrypting and uploading archive:\n\(error)")
+                    print("Completing the archive failed:\n\(error)")
+                } else {
+                    archive.encryptAndUploadArchiveWithCompletion({ (error) in
+                        if error != nil {
+                            print("Error encrypting and uploading archive:\n\(error)")
+                        }
+                    })
                 }
             })
         }
