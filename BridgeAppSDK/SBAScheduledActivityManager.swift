@@ -282,21 +282,18 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
-            guard let archive = archiveResults(schedule, taskViewController: taskViewController) else {
+            guard let archives = archiveResults(schedule, taskViewController: taskViewController) else {
                 print("Archiving results failed")
                 return
             }
-            archive.completeArchiveWithErrorHandler({ (error) in
-                if error != nil {
-                    print("Completing the archive failed:\n\(error)")
-                } else {
-                    archive.encryptAndUploadArchiveWithCompletion({ (error) in
-                        if error != nil {
-                            print("Error encrypting and uploading archive:\n\(error)")
-                        }
-                    })
-                }
-            })
+            for archive in archives {
+                archive.encryptAndUploadArchiveWithCompletion({ (error) in
+                    if error != nil {
+                        print("Error encrypting and uploading archive:\n\(error)")
+                    }
+                })
+            }
+
         }
         else {
             taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
@@ -401,14 +398,15 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
         
-    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> SBADataArchive? {
+    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBADataArchive]? {
         
         let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
         print(results)
         
-        let archive = SBADataArchive.init(reference: schedule.guid)
+        var archives = [SBADataArchive]()
         for activityResult in results {
             if let activityResultResults = activityResult.results as? [ORKStepResult] {
+                let archive = SBADataArchive.init(reference: activityResult.schemaIdentifier, schemaRevision: activityResult.schemaRevision)
                 for stepResult in activityResultResults {
                     if let stepResultResults = stepResult.results {
                         for result in stepResultResults {
@@ -436,10 +434,17 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                         }
                     }
                 }
+                
+                let error = archive.completeArchive()
+                if error != nil {
+                    print("Completing the archive failed:\n\(error)")
+                } else {
+                    archives += [archive]
+                }
             }
         }
         
-        return archive
+        return archives
     }
     
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {

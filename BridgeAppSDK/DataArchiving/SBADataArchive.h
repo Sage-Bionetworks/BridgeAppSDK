@@ -56,6 +56,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ Task Archive Initializer
+ 
+ @param     reference           Reference for the archive used as a directory name in temp directory
+ @param     schemaRevision      Schema revision to use for validating archived results when uploaded to Bridge
+ 
+ @return    APCDataArchive      An instance of APCDataArchive
+ */
+- (id)initWithReference:(NSString *)reference schemaRevision:(NSNumber *)schemaRevision;
+
+
+/**
  Add a json serializable object to the info dictionary
  
  @param     object              JSON serializable object to be added to the info dictionary
@@ -96,9 +107,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Inserts an info.json file into the archive.
  
- @param     errorHandler            Called to pass in the error. Take action based on the error.
+ @returns NSError indicating a problem completing the archive, or nil.
  */
-- (void)completeArchiveWithErrorHandler: (void(^)(NSError * _Nullable error))errorHandler;
+- (NSError * _Nullable)completeArchive;
 
 /**
  Completes the archive, encrypts it, and uploads it to Bridge, then removes the archive.

@@ -58,6 +58,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 @interface SBADataArchive ()
 
 @property (nonatomic, strong) NSString *reference;
+@property (nonatomic, strong) NSNumber *schemaRevision;
 @property (nonatomic, strong) ZZArchive *zipArchive;
 @property (nonatomic, strong) NSMutableArray *zipEntries;
 @property (nonatomic, strong) NSMutableArray *filesList;
@@ -81,6 +82,15 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     if (self) {
         _reference = reference;
         [self commonInit];
+    }
+    
+    return self;
+}
+
+- (id)initWithReference:(NSString *)reference schemaRevision:(NSNumber *)schemaRevision
+{
+    if (self = [self initWithReference:reference]) {
+        _schemaRevision = schemaRevision;
     }
     
     return self;
@@ -169,9 +179,9 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 }
 
 //Compiles the final info.json file and inserts it into the zip archive.
--(void)completeArchiveWithErrorHandler:(void (^)(NSError *))errorHandler
+-(NSError *)completeArchive
 {
-    
+    NSError *error = nil;
     if (self.filesList.count) {
         [self.infoDict setObject:self.filesList forKey:kFilesKey];
         
@@ -183,9 +193,9 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         // TODO: syoung 04/26/2016 Implement using setArchiveInfoObject: to add these values
 
 //        [self.infoDict setObject:[NSUUID new].UUIDString forKey:kTaskRunKey];
-//        if (self.schemaRevision) {
-//            [self.infoDict setObject:self.schemaRevision forKey:kSchemaRevisionKey];
-//        }
+        if (self.schemaRevision) {
+            [self.infoDict setObject:self.schemaRevision forKey:kSchemaRevisionKey];
+        }
 //        if ([self.task.taskType isEqualToNumber:@(APCTaskTypeSurveyTask)]) {
 //            // Survey schema is better matched by created date and survey guid
 //            [self.infoDict setObject:self.task.taskVersionName forKey:kSurveyGuidKey];
@@ -195,13 +205,12 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         
         [self insertDictionaryIntoArchive:self.infoDict filename:kJsonInfoFilename];
         
-        NSError * error;
         if (![self.zipArchive updateEntries:self.zipEntries error:&error]) {
             SBALogError2(error);
         }
-        
-        errorHandler(error);
     }
+    
+    return error;
 }
 
 -(void)encryptAndUploadArchiveWithCompletion:(void (^)(NSError * error))completion
