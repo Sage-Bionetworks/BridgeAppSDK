@@ -437,7 +437,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                 
                 let error = archive.completeArchive()
                 if error != nil {
-                    print("Completing the archive failed:\n\(error)")
+                    print("Completing the archive of \(activityResult.schemaIdentifier) failed:\n\(error)")
                 } else {
                     archives += [archive]
                 }
