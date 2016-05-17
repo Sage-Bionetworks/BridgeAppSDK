@@ -392,6 +392,37 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
     }
     
+    func testExpiredTodaySectionFilter() {
+        
+        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+        let hour: NSTimeInterval = 60 * 60
+        let day: NSTimeInterval = 24 * hour
+        
+        let now = NSDate()
+        let midnightToday = calendar.startOfDayForDate(now)
+        let midnightTomorrow = midnightToday.dateByAddingTimeInterval(day)
+
+        // Do not attempt to run the test within 5 minutes of midnight.
+        // This is a much less complicated (and fairly reliable) than mocking the current date.
+        guard (midnightTomorrow.timeIntervalSinceNow < 5 * 60) else {
+            return
+        }
+        
+        let past = now.dateByAddingTimeInterval(-15*60) // 15 minutes ago
+        let expiredPast = now.dateByAddingTimeInterval(-10*60) // 10 minutes ago
+        
+        let manager = TestScheduledActivityManager()
+        let expiredTodaySchedule = createScheduledActivity("Expired Today", scheduledOn: past, expiresOn: expiredPast, finishedOn: nil, optional: false)
+        
+        let (schedules, _, _) = createFullSchedule()
+        manager.sections = [.Today]
+        manager.activities = schedules + [expiredTodaySchedule]
+        
+        let filteredSchedules = manager.scheduledActivitiesForSection(0)
+        XCTAssertTrue(filteredSchedules.contains(expiredTodaySchedule))
+        
+    }
+    
     // MARK: helper methods
     
     func createScheduledActivities(taskIds:[String]) -> [SBBScheduledActivity] {
