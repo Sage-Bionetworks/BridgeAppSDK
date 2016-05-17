@@ -32,7 +32,6 @@
 //
 
 #import "SBAUserBridgeManager.h"
-#import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
 @implementation SBAUserBridgeManager
 
@@ -154,26 +153,14 @@
 }
 
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
-                                todayOnly:(BOOL)todayOnly
+                                daysAhead:(NSInteger)daysAhead
+                               daysBehind:(NSInteger)daysBehind
                                completion:(SBAUserBridgeManagerCompletionBlock)completionBlock
 {
     // Intended design is to allow for the server to win in getting updates to the current list of scheduled
     // activities, but this will also *send* what is already known and may include a finishedOn date that is
     // more recent than what is available from the server. syoung 04/14/2016
-    NSInteger daysBehind = todayOnly ? 0 : 1;
-    // Always get max daysAhead (4) so we can update local notifications, and then filter to today if necessary.
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:4 daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
-        // set up local notifications for scheduled activities
-        [[SBANotificationsManager sharedManager] setupNotificationsForScheduledActivities:activitiesList];
-        
-        if (todayOnly) {
-            NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow:24*60*60];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@ AND (%K == nil OR %K > %@)",
-                                      NSStringFromSelector(@selector(scheduledOn)), [[NSCalendar currentCalendar] startOfDayForDate:tomorrow],
-                                      NSStringFromSelector(@selector(finishedOn)),
-                                      NSStringFromSelector(@selector(finishedOn)), [[NSCalendar currentCalendar] startOfDayForDate:[NSDate date]]];
-            activitiesList = [activitiesList filteredArrayUsingPredicate:predicate];
-        }
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
         completionBlock(activitiesList, error);
     }];
 }

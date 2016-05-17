@@ -63,6 +63,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public var sections: [SBAScheduledActivitySection] = [.Today, .KeepGoing]
     public var activities: [SBBScheduledActivity] = []
     
+    public var daysAhead = 4
+    public var daysBehind = 1
+    
     private var reloading: Bool = false
     public func reloadData() {
         
@@ -71,7 +74,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         if (reloading) { return }
         reloading = true
         
-        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, todayOnly: false) { [weak self] (obj, error) in
+        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
+            [weak self] (obj, error) in
             guard (error == nil), let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
             dispatch_async(dispatch_get_main_queue(), {
@@ -82,6 +86,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func loadActivities(scheduledActivities: [SBBScheduledActivity]) {
+        
+        // schedule notifications
+        setupNotificationsForScheduledActivities(scheduledActivities)
         
         // Filter out any sections that aren't shown
         let filters = sections.mapAndFilter({ filterPredicateForScheduledActivitySection($0) })
@@ -96,6 +103,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         // reload table
         self.delegate?.reloadTable(self)
+    }
+    
+    public func setupNotificationsForScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
+        // schedule notifications
+        SBANotificationsManager.sharedManager.setupNotificationsForScheduledActivities(scheduledActivities)
     }
     
     
