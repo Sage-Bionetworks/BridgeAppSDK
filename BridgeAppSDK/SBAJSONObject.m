@@ -34,18 +34,6 @@
 #import "SBAJSONObject.h"
 @import BridgeSDK;
 
-@implementation NSObject (SBAJSONObject)
-
-- (id)jsonObject {
-    if ([self respondsToSelector:@selector(dictionaryRepresentation)]) {
-        return [[(id)self dictionaryRepresentation] jsonObject];
-    }
-    NSAssert(@"jsonObject method not implemented for class %@", NSStringFromClass([self class]));
-    return @{};
-}
-
-@end
-
 @implementation NSString (SBAJSONObject)
 
 - (id)jsonObject {
@@ -197,23 +185,24 @@
 
 @end
 
-id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, NSFormatter *> *formatterMap) {
-    if ([object respondsToSelector:@selector(jsonObjectWithFormatterMap:)]) {
-        return [object jsonObjectWithFormatterMap:formatterMap];
+id SBAJSONObjectForObject(id <NSObject> object) {
+    if ([object conformsToProtocol:@protocol(SBAJSONObject) ]) {
+        // If this is an objec that conforms to the jsonObject protocol then return that
+        return [(id <SBAJSONObject>)object jsonObject];
     }
     else if ([object respondsToSelector:@selector(dictionaryRepresentation)]) {
-        NSDictionary *dictionary = [object dictionaryRepresentation];
+        // Otherwise, if this has a dictionary representation then return that
+        NSDictionary *dictionary = [(id)object dictionaryRepresentation];
         if ([NSJSONSerialization isValidJSONObject:dictionary]) {
             return dictionary;
         }
         else {
-            return [dictionary jsonObjectWithFormatterMap:formatterMap];
+            return [dictionary jsonObject];
         }
     }
-    else if ([object respondsToSelector:@selector(jsonObjectWithFormatter:)]) {
-        return [object jsonObjectWithFormatter:formatterMap[key]];
-    }
     else {
+        // Finally, drop through to the description but throw an assert
+        NSAssert1(NO, @"jsonObject method not implemented for class %@", NSStringFromClass([object class]));
         return [object description];
     }
 }
@@ -221,16 +210,12 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
 @implementation NSArray (SBAJSONObject)
 
 - (id)jsonObject {
-    return [self jsonObjectWithFormatterMap:nil];
-}
 
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
-    
     NSMutableArray *result = [NSMutableArray new];
     
     // Recursively convert objects to valid json objects
     for (id object in self) {
-        [result addObject:sba_JSONObjectForObject(object, nil, formatterMap)];
+        [result addObject:SBAJSONObjectForObject(object)];
     }
     
     return [result copy];
@@ -241,11 +226,7 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
 @implementation NSDictionary (SBAJSONObject)
 
 - (id)jsonObject {
-    return [self jsonObjectWithFormatterMap:nil];
-}
 
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
-    
     NSMutableDictionary *result = [NSMutableDictionary new];
     
     // Recursively convert objects to valid json objects
@@ -256,7 +237,7 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
         id object = self[keyObject];
         
         // Set the value
-        result[key] = sba_JSONObjectForObject(object, key, formatterMap);
+        result[key] = SBAJSONObjectForObject(object);
     }
     
     return [result copy];
