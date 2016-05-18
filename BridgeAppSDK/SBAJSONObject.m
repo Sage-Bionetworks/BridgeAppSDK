@@ -202,7 +202,8 @@ id SBAJSONObjectForObject(id <NSObject> object) {
     }
     else {
         // Finally, drop through to the description but throw an assert
-        NSAssert1(NO, @"jsonObject method not implemented for class %@", NSStringFromClass([object class]));
+        NSLog(@"jsonObject method not implemented for class %@", NSStringFromClass([object class]));
+        assert(false);
         return [object description];
     }
 }

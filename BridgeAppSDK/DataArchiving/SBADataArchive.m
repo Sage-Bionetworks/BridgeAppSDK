@@ -44,9 +44,6 @@ static NSString * kUnencryptedArchiveFilename       = @"unencrypted.zip";
 static NSString * kFileInfoTimeStampKey             = @"timestamp";
 static NSString * kFileInfoContentTypeKey           = @"contentType";
 static NSString * kTaskRunKey                       = @"taskRun";
-static NSString * kSurveyCreatedOnKey               = @"surveyCreatedOn";
-static NSString * kSurveyGuidKey                    = @"surveyGuid";
-static NSString * kSchemaRevisionKey                = @"schemaRevision";
 static NSString * kFilesKey                         = @"files";
 static NSString * kAppNameKey                       = @"appName";
 static NSString * kAppVersionKey                    = @"appVersion";
@@ -58,7 +55,6 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 @interface SBADataArchive ()
 
 @property (nonatomic, strong) NSString *reference;
-@property (nonatomic, strong) NSNumber *schemaRevision;
 @property (nonatomic, strong) ZZArchive *zipArchive;
 @property (nonatomic, strong) NSMutableArray *zipEntries;
 @property (nonatomic, strong) NSMutableArray *filesList;
@@ -82,15 +78,6 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     if (self) {
         _reference = reference;
         [self commonInit];
-    }
-    
-    return self;
-}
-
-- (id)initWithReference:(NSString *)reference schemaRevision:(NSNumber *)schemaRevision
-{
-    if (self = [self initWithReference:reference]) {
-        _schemaRevision = schemaRevision;
     }
     
     return self;
@@ -207,15 +194,6 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         // TODO: syoung 04/26/2016 Implement using setArchiveInfoObject: to add these values
 
 //        [self.infoDict setObject:[NSUUID new].UUIDString forKey:kTaskRunKey];
-        if (self.schemaRevision) {
-            [self.infoDict setObject:self.schemaRevision forKey:kSchemaRevisionKey];
-        }
-//        if ([self.task.taskType isEqualToNumber:@(APCTaskTypeSurveyTask)]) {
-//            // Survey schema is better matched by created date and survey guid
-//            [self.infoDict setObject:self.task.taskVersionName forKey:kSurveyGuidKey];
-//            NSString *isoCreatedString = [self.task.taskVersionDate ISO8601String];
-//            [self.infoDict setObject:isoCreatedString forKey:kSurveyCreatedOnKey];
-//        }
         
         [self insertDictionaryIntoArchive:self.infoDict filename:kJsonInfoFilename];
         
@@ -227,7 +205,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     return error;
 }
 
--(void)encryptAndUploadArchiveWithCompletion:(void (^)(NSError * error))completion
+- (void)encryptAndUploadArchive
 {
     SBAEncryption *encryptor = [SBAEncryption new];
     
@@ -241,6 +219,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
                 if (!error) {
                     SBALogEventWithData(@"NetworkEvent", (@{@"event_detail":[NSString stringWithFormat:@"SBADataArchive uploaded file: %@", url.relativePath.lastPathComponent]}));
                     [encryptor removeDirectory];
+                    // TODO: emm 2016-05-18 Fire off a delayed validation check and output the response
                 } else {
                     SBALogDebug(@"SBADataArchive error returned from SBBUploadManager:\n%@\n%@", error.localizedDescription, error.localizedFailureReason);
                 }
@@ -250,6 +229,12 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     }];
 }
 
++ (void)encryptAndUploadArchives:(NSArray<SBADataArchive *> *)archives
+{
+    for (SBADataArchive *archive in archives) {
+        [archive encryptAndUploadArchive];
+    }
+}
 
 //delete the workingDirectoryPath, and therefore its contents.
 -(void)removeArchive

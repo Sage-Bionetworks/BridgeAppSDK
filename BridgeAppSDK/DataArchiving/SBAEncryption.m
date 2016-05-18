@@ -181,9 +181,6 @@ err:
 + (NSString*) pemPath
 {
     return [SBAEncryptionHelper pemPath];
-//    SBAAppDelegate *appDelegate = (SBAAppDelegate *)[UIApplication sharedApplication].delegate;
-//    NSString *path = [[NSBundle mainBundle] pathForResource:appDelegate. ofType:@"pem"];
-//    return path;
 }
 
 - (NSString *)workingDirectoryPath

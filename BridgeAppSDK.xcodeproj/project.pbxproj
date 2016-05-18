@@ -17,6 +17,7 @@
 		8032220B1CE642CD001D5281 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803221F41CE64232001D5281 /* ZipZap.framework */; };
 		803222281CE64A82001D5281 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803222251CE64A73001D5281 /* openssl.framework */; };
 		804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
+		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
 		809D4E171C7E88A900EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
 		809D4E181C7E88A900EC9EC6 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		809D4E1B1C7E88AC00EC9EC6 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
@@ -372,6 +373,7 @@
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		803221E91CE64232001D5281 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ../ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
 		8032221E1CE64A73001D5281 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = ../CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
+		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
 		809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = ../../BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
 		809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ../../ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		80D5F1911CE51C40002A39DF /* SBAEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAEncryption.h; sourceTree = "<group>"; };
@@ -951,6 +953,7 @@
 			children = (
 				FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */,
 				FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */,
+				805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */,
 				80D5F1911CE51C40002A39DF /* SBAEncryption.h */,
 				80D5F1921CE51C40002A39DF /* SBAEncryption.m */,
 				80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */,
@@ -1492,6 +1495,7 @@
 				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
+				805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */,
 				FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */,

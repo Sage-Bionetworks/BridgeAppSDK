@@ -82,11 +82,6 @@ public protocol SBABridgeInfo: class {
     var taskMap: [NSDictionary]? { get }
     
     /**
-     * Mapping of internal identifier to final filename for archiving a step result
-     */
-    var filenameMap: NSDictionary? { get }
-    
-    /**
      * Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
      */
     var certificateName: String? { get }
@@ -144,10 +139,6 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
         return self.plist["schemaMapping"] as? [NSDictionary]
     }
     
-    public var filenameMap: NSDictionary? {
-        return self.plist["filenameMapping"] as? NSDictionary
-    }
-    
     public var certificateName: String? {
         return self.plist["certificateName"] as? String
     }
@@ -183,12 +174,5 @@ extension SBABridgeInfo {
         return taskReferenceWithIdentifier(taskId)
     }
     
-    public func filenameForInternalName(internalName: String) -> String? {
-        guard let filename = self.filenameMap?[internalName] as? String else {
-            return nil
-        }
-        return filename
-    }
-
 }
 

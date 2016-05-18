@@ -36,34 +36,9 @@ import UIKit
 @objc public class SBAEncryptionHelper: NSObject {
     
     public class func pemPath() -> String? {
-        let sharedAppDelegate = UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+        guard let sharedAppDelegate = UIApplication.sharedApplication().delegate as? SBASharedAppDelegate else { return nil }
         let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
         return certificatePath
     }
-//    
-//    public func encryptFile(url: NSURL, completion: (encryptedUrl: NSURL, error: NSError?) -> Void) -> NSURL? {
-//        let unencryptedData = NSData.init(contentsOfURL: url)
-//        let sharedAppDelegate = UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-//        let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
-//        let encryptedData: NSData
-//        do {
-//            encryptedData = try SBAEncryption.cmsEncrypt(unencryptedData, identityPath: certificatePath)
-//        } catch let error as NSError {
-//            print("Error trying to cmsEncrypt the file at \(url.relativePath):\n\(error.description)")
-//            return nil
-//        }
-//        if (encryptedData) {
-//            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:kEncryptedDataFilename];
-//            
-//            if ([encryptedZipData writeToFile:encryptedPath options:NSDataWritingAtomic error:&encryptionError]) {
-//                url = [[NSURL alloc] initFileURLWithPath:encryptedPath];
-//            }
-//        }
-//        
-//        if (completion) {
-//            completion(url, encryptionError);
-//        }
-//
-//    }
 
 }
