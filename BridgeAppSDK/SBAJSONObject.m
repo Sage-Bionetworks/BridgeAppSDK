@@ -185,18 +185,14 @@
 
 @end
 
-id SBAJSONObjectForObject(id object) {
-    if (![object isKindOfClass:[NSObject class]]){
-        // If this is not an object that inherits from NSObject class then return NSNull
-        return [NSNull null];
-    }
-    else if ([object conformsToProtocol:@protocol(SBAJSONObject) ]) {
+id SBAJSONObjectForObject(id <NSObject> object) {
+    if ([object conformsToProtocol:@protocol(SBAJSONObject) ]) {
         // If this is an objec that conforms to the jsonObject protocol then return that
-        return [object jsonObject];
+        return [(id <SBAJSONObject>)object jsonObject];
     }
     else if ([object respondsToSelector:@selector(dictionaryRepresentation)]) {
         // Otherwise, if this has a dictionary representation then return that
-        NSDictionary *dictionary = [object dictionaryRepresentation];
+        NSDictionary *dictionary = [(id)object dictionaryRepresentation];
         if ([NSJSONSerialization isValidJSONObject:dictionary]) {
             return dictionary;
         }
@@ -205,7 +201,8 @@ id SBAJSONObjectForObject(id object) {
         }
     }
     else {
-        // Finally, drop through to the description
+        // Finally, drop through to the description but throw an assert
+        NSAssert1(NO, @"jsonObject method not implemented for class %@", NSStringFromClass([object class]));
         return [object description];
     }
 }

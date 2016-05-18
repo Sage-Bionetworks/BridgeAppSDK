@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-id SBAJSONObjectForObject(id object);
+id SBAJSONObjectForObject(id <NSObject> object);
 
 @protocol SBAJSONDictionaryRepresentableObject <NSObject>
 
