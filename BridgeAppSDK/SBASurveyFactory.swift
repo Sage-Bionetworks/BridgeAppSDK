@@ -125,9 +125,9 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
                 return form.createFormStep(isSubtaskStep ?? false)
             } else { break }
         default:
-            break;
+            break
         }
-        return nil
+        return createSurveyStepWithCustomType(inputItem)
     }
     
     final func createSurveyStep(inputItem: SBATrackedStepSurveyItem, trackedItems: [SBATrackedDataObject]) -> ORKStep? {
