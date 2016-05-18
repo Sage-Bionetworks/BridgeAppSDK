@@ -46,7 +46,7 @@ private var kTapTimeStampKey = "TapTimeStamp"
 private var kTapCoordinateKey = "TapCoordinate"
 private var kTappedButtonIdKey = "TappedButtonId"
 private var kTappedButtonNoneKey = "TappedButtonNone"
-private var kTappedButtonLeftKey = "kTappedButtonLeftKey"
+private var kTappedButtonLeftKey = "TappedButtonLeft"
 private var kTappedButtonRightKey = "TappedButtonRight"
 private var kTappingSamplesKey = "TappingSamples"
 

@@ -178,6 +178,20 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 }
 
++ (NSString *)appVersion
+{
+    static NSString *appVersion = nil;
+    if (!appVersion)
+    {
+        NSString *version = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSString *build   = NSBundle.mainBundle.appVersion;
+        appVersion	= [NSString stringWithFormat: @"version %@, build %@", version, build];
+    }
+    
+    return appVersion;
+}
+
+
 //Compiles the final info.json file and inserts it into the zip archive.
 -(NSError *)completeArchive
 {
@@ -187,7 +201,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         
         [self.infoDict setObject:self.reference forKey:kItemKey];
         [self.infoDict setObject:[[NSBundle mainBundle] appName] forKey:kAppNameKey];
-        [self.infoDict setObject:[[NSBundle mainBundle] appVersion] forKey:kAppVersionKey];
+        [self.infoDict setObject:[self.class appVersion] forKey:kAppVersionKey];
         [self.infoDict setObject:[[UIDevice currentDevice] deviceInfo] forKey:kPhoneInfoKey];
 
         // TODO: syoung 04/26/2016 Implement using setArchiveInfoObject: to add these values
