@@ -178,13 +178,17 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     return appVersion;
 }
 
+- (BOOL)isEmpty
+{
+    return self.filesList.count == 0;
+}
 
 //Compiles the final info.json file and inserts it into the zip archive.
 - (BOOL)completeArchive:(NSError **)error
 {
     BOOL success = YES;
     NSError *internalError = nil;
-    if (self.filesList.count) {
+    if (!self.isEmpty) {
         [self.infoDict setObject:self.filesList forKey:kFilesKey];
         
         [self.infoDict setObject:self.reference forKey:kItemKey];

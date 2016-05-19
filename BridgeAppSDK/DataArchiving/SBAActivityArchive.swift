@@ -12,27 +12,33 @@ private let kSchemaRevisionKey                = "schemaRevision"
 private let kTaskIdentifierKey                = "taskIdentifier"
 private let kScheduledActivityGuidKey         = "scheduledActivityGuid"
 private let kTaskRunUUIDKey                   = "taskRunUUID"
+private let kMetadataFilename                 = "metadata.json"
 
 public class SBAActivityArchive: SBADataArchive {
+    private var metadata = [String: AnyObject]()
     
     public init?(result: SBAActivityResult) {
         super.init(reference: result.schemaIdentifier)
         
-        // always set the schema revision, scheduled activity guid, and task run UUID
-        self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
-        self.setArchiveInfoObject(result.schedule.guid, forKey: kScheduledActivityGuidKey)
-        self.setArchiveInfoObject(result.taskRunUUID.UUIDString, forKey: kTaskRunUUIDKey)
+        // set up the activity metadata
+        // -- always set scheduledActivityGuid and taskRunUUID
+        self.metadata[kScheduledActivityGuidKey] = result.schedule.guid
+        self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.UUIDString
         
-        // if it's a survey, also set the survey's guid and createdOn
+        // -- if it's a task, also set the taskIdentifier
+        if let taskReference = result.schedule.activity.task {
+            self.metadata[kTaskIdentifierKey] = taskReference.identifier
+        }
+        
+        // set up the info.json
+        // -- always set the schemaRevision
+        self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
+
+        // -- if it's a survey, also set the survey's guid and createdOn
         if let surveyReference = result.schedule.activity.survey {
             // Survey schema is better matched by created date and survey guid
             self.setArchiveInfoObject(surveyReference.guid, forKey: kSurveyGuidKey)
             self.setArchiveInfoObject(surveyReference.createdOn.ISO8601String(), forKey: kSurveyCreatedOnKey)
-        }
-        
-        // if it's a task, also set the taskIdentifier
-        if let taskReference = result.schedule.activity.task {
-            self.setArchiveInfoObject(taskReference.identifier, forKey: kTaskIdentifierKey)
         }
         
         if !self.buildArchiveForResult(result) {
@@ -50,6 +56,7 @@ public class SBAActivityArchive: SBADataArchive {
             return false
         }
         
+        // (although there _still_ might be nothing to archive, if none of the stepResults have any results.)
         for stepResult in activityResultResults {
             if let stepResultResults = stepResult.results {
                 for result in stepResultResults {
@@ -59,8 +66,14 @@ public class SBAActivityArchive: SBADataArchive {
                 }
             }
         }
+        
+        // don't insert the metadata if the archive is otherwise empty
+        let builtArchive = !isEmpty()
+        if builtArchive {
+            insertDictionaryIntoArchive(self.metadata, filename: kMetadataFilename)
+        }
 
-        return true
+        return builtArchive
     }
     
     /**
