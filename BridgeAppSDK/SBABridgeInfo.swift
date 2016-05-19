@@ -80,6 +80,11 @@ public protocol SBABridgeInfo: class {
      * Mapping of task identifier and associated info for creating a task
      */
     var taskMap: [NSDictionary]? { get }
+    
+    /**
+     * Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
+     */
+    var certificateName: String? { get }
 
 }
 
@@ -133,6 +138,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var schemaMap: [NSDictionary]? {
         return self.plist["schemaMapping"] as? [NSDictionary]
     }
+    
+    public var certificateName: String? {
+        return self.plist["certificateName"] as? String
+    }
 }
 
 extension SBABridgeInfo {
@@ -151,7 +160,7 @@ extension SBABridgeInfo {
         }
         return url
     }
-    
+        
     public func schemaReferenceWithIdentifier(schemaIdentifier: String) -> SBASchemaReference? {
         return self.schemaMap?.findObject({ $0.schemaIdentifier == schemaIdentifier})
     }

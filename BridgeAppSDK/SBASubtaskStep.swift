@@ -87,6 +87,13 @@ public class SBASubtaskStep: ORKStep {
         for stepResult in inputResults {
             if (predicate.evaluateWithObject(stepResult)) {
                 stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
+                if let stepResults = stepResult.results {
+                    for result in stepResults {
+                        if result.identifier.hasPrefix(prefix) {
+                            result.identifier = result.identifier.substringFromIndex(prefix.endIndex)
+                        }
+                    }
+                }
                 subtaskResults += [stepResult]
             }
             else {

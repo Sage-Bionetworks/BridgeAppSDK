@@ -36,6 +36,10 @@
 
 @implementation NSString (SBAJSONObject)
 
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
+
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter numberFromString:self];
@@ -80,6 +84,10 @@
 
 @implementation NSNumber (SBAJSONObject)
 
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
+
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter stringFromNumber:self];
@@ -93,13 +101,17 @@
 
 @implementation NSNull (SBAJSONObject)
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) __unused formatter  {
+- (id)jsonObject {
     return self;
 }
 
 @end
 
 @implementation NSDate (SBAJSONObject)
+
+- (id)jsonObject {
+    return [self jsonObjectWithFormatter:nil];
+}
 
 - (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
     if ([formatter isKindOfClass:[NSDateFormatter class]]) {
@@ -167,42 +179,44 @@
 
 @implementation NSUUID (SBAJSONObject)
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) __unused formatter  {
+- (id)jsonObject {
     return self.UUIDString;
 }
 
 @end
 
-id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, NSFormatter *> *formatterMap) {
-    if ([object respondsToSelector:@selector(jsonObjectWithFormatterMap:)]) {
-        return [object jsonObjectWithFormatterMap:formatterMap];
+id SBAJSONObjectForObject(id <NSObject> object) {
+    if ([object conformsToProtocol:@protocol(SBAJSONObject) ]) {
+        // If this is an objec that conforms to the jsonObject protocol then return that
+        return [(id <SBAJSONObject>)object jsonObject];
     }
     else if ([object respondsToSelector:@selector(dictionaryRepresentation)]) {
-        NSDictionary *dictionary = [object dictionaryRepresentation];
+        // Otherwise, if this has a dictionary representation then return that
+        NSDictionary *dictionary = [(id)object dictionaryRepresentation];
         if ([NSJSONSerialization isValidJSONObject:dictionary]) {
             return dictionary;
         }
         else {
-            return [dictionary jsonObjectWithFormatterMap:formatterMap];
+            return [dictionary jsonObject];
         }
     }
-    else if ([object respondsToSelector:@selector(jsonObjectWithFormatter:)]) {
-        return [object jsonObjectWithFormatter:formatterMap[key]];
-    }
     else {
+        // Finally, drop through to the description but throw an assert
+        NSLog(@"jsonObject method not implemented for class %@", NSStringFromClass([object class]));
+        assert(false);
         return [object description];
     }
 }
 
 @implementation NSArray (SBAJSONObject)
 
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
-    
+- (id)jsonObject {
+
     NSMutableArray *result = [NSMutableArray new];
     
     // Recursively convert objects to valid json objects
     for (id object in self) {
-        [result addObject:sba_JSONObjectForObject(object, nil, formatterMap)];
+        [result addObject:SBAJSONObjectForObject(object)];
     }
     
     return [result copy];
@@ -212,8 +226,8 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
 
 @implementation NSDictionary (SBAJSONObject)
 
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap {
-    
+- (id)jsonObject {
+
     NSMutableDictionary *result = [NSMutableDictionary new];
     
     // Recursively convert objects to valid json objects
@@ -224,7 +238,7 @@ id sba_JSONObjectForObject(id object, NSString * key, NSDictionary <NSString *, 
         id object = self[keyObject];
         
         // Set the value
-        result[key] = sba_JSONObjectForObject(object, key, formatterMap);
+        result[key] = SBAJSONObjectForObject(object);
     }
     
     return [result copy];

@@ -201,11 +201,15 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return true
     }
     
+    public func isScheduleAvailable(schedule: SBBScheduledActivity) -> Bool {
+        return schedule.isNow || schedule.isCompleted
+    }
+    
     public func didSelectRowAtIndexPath(indexPath: NSIndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
-        guard schedule.isNow || schedule.isCompleted else {
+        guard isScheduleAvailable(schedule) else {
             // Block performing a task that is scheduled for the future
             let message = String(format: Localization.localizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE"), schedule.scheduledTime)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
@@ -278,7 +282,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             
             updateScheduledActivity(schedule, taskViewController: taskViewController)
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
-            archiveResults(schedule, taskViewController: taskViewController)
+            let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
+
+            guard let archives = SBAActivityArchive.buildResultArchives(results) else { return }
+            SBADataArchive.encryptAndUploadArchives(archives)
+
         }
         else {
             taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
@@ -382,15 +390,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
         SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
-    
-    public func archiveResults(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         
-        let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
-        print(results)
-        
-        // TODO: implement syoung 04/27/2016 Stubbed out accessor
-    }
-    
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
         
         // If no results, return empty array

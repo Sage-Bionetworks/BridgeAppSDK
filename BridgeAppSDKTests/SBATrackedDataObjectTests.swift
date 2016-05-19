@@ -649,25 +649,46 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         // Check shared functionality
         let (retTask, retDataStore, selectionStep, retTaskResult) = stepToSelection(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
         guard let task = retTask, let dataStore = retDataStore, let taskResult = retTaskResult,
-            let timingStep = checkMedsSelectedSteps(task, dataStore, selectionStep!, taskResult, trackEach: true)
+            let levodopaStep = checkMedsSelectedSteps(task, dataStore, selectionStep!, taskResult, trackEach: true)
             else {
                 return
         }
         
-        XCTAssertEqual(timingStep.identifier, "medicationActivityTiming.Levodopa")
-
-        // Add the timing result
-        guard let formItem = timingStep.formItems?.first else { return }
+        XCTAssertEqual(levodopaStep.identifier, "medicationActivityTiming.Levodopa")
+        taskResult.results! += [createTimingStepResult(levodopaStep, answer: "0-30 minutes")]
+        
+        let rytaryStep = task.stepAfterStep(levodopaStep, withResult: taskResult) as! SBATrackedFormStep
+        XCTAssertEqual(rytaryStep.identifier, "medicationActivityTiming.Rytary")
+        taskResult.results! += [createTimingStepResult(rytaryStep, answer: "30-60 minutes")]
+        
+        // progress to next step to set results
+        task.stepAfterStep(rytaryStep, withResult: taskResult)
+        
+        let momentInDayResults = dataStore.momentInDayResult
+        XCTAssertNotNil(momentInDayResults)
+        guard momentInDayResults != nil else { return }
+        
+        XCTAssertEqual(momentInDayResults!.count, 2)
+        
+        let timingResult = momentInDayResults?.last
+        XCTAssertNotNil(timingResult)
+        XCTAssertNotNil(timingResult?.results)
+        guard timingResult != nil && timingResult?.results != nil else { return }
+        
+        XCTAssertEqual(timingResult!.results!.count, 2)
+        XCTAssertEqual(timingResult!.results!.first!.identifier, "Levodopa")
+        XCTAssertEqual(timingResult!.results!.last!.identifier, "Rytary")
+        
+        print(momentInDayResults)
+        
+    }
+    
+    func createTimingStepResult(timingStep:SBATrackedFormStep, answer: String) -> ORKStepResult {
+        let formItem = timingStep.formItems!.first!
         let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
-        questionResult.choiceAnswers = ["0-30 minutes"]
+        questionResult.choiceAnswers = [answer]
         let momentResult = ORKStepResult(stepIdentifier: timingStep.identifier, results: [questionResult])
-        taskResult.results! += [momentResult]
-        
-        let nextStep = task.stepAfterStep(timingStep, withResult: taskResult)
-        XCTAssertNotNil(dataStore.momentInDayResult)
-        XCTAssertEqual(dataStore.momentInDayResult!.count, 2)
-        
-        XCTAssertEqual(nextStep!.identifier, "medicationActivityTiming.Rytary")
+        return momentResult
     }
     
     func checkMedsSelectedSteps(task: ORKTask, _ dataStore: SBATrackedDataStore, _ selectionStep: SBATrackedFormStep, _ taskResult: ORKTaskResult, trackEach: Bool) -> SBATrackedFormStep? {

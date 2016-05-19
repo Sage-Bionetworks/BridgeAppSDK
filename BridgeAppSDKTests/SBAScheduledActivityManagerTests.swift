@@ -146,6 +146,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         XCTAssertEqual(results, taskResults)
         XCTAssertEqual(splitResults[0].schedule, schedule)
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
+        
     }
     
     func testActivityResultsForSchedule_ComboWithNoMedsSelected() {
@@ -170,6 +174,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             let momentInDay = result.stepResultForStepIdentifier("momentInDay")
             XCTAssertNotNil(momentInDay)
         }
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelected() {
@@ -194,6 +201,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             let momentInDay = result.stepResultForStepIdentifier("momentInDay")
             XCTAssertNotNil(momentInDay)
         }
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelectedPreviously() {
@@ -232,6 +242,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             let expectedSchemaRev = expectedSchema[idx].last
             XCTAssertEqual(result.schemaRevision, expectedSchemaRev)
         }
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithNoMeds() {
@@ -255,6 +268,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             let momentInDay = result.stepResultForStepIdentifier("momentInDay")
             XCTAssertNotNil(momentInDay)
         }
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsSelected() {
@@ -284,6 +300,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // check the schema
         XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
         XCTAssertEqual(tappingResult.schemaRevision, 5)
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsPreviouslySelected() {
@@ -316,6 +335,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // check the schema
         XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
         XCTAssertEqual(tappingResult.schemaRevision, 5)
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
         
     }
     
@@ -350,6 +372,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
         XCTAssertEqual(tappingResult.schemaRevision, 5)
         
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
+        
     }
     
     func testActivityResultsForSchedule_SingleTask() {
@@ -374,6 +399,66 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         XCTAssertEqual(result.schemaIdentifier, "Memory Activity")
         XCTAssertEqual(result.schemaRevision, 3)
         
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
+        
+    }
+    
+    func testComboTaskResult_SimRun() {
+        let manager = TestScheduledActivityManager()
+        let schedule = createScheduledActivity(comboTaskId)
+        manager.activities = [schedule]
+        
+        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController
+        else {
+            XCTAssert(false, "Failed to create a task view controller of expected type")
+            return
+        }
+        
+        guard let url = NSBundle(forClass: self.classForCoder).URLForResource("TaskResult_Combo", withExtension: "archive"),
+            let data = NSData(contentsOfURL: url)
+        else {
+            XCTAssert(false, "Failed to get archive data")
+            return
+        }
+        
+        let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
+        guard let root = unarchiver.decodeObjectForKey("root") as? [ORKTaskResult],
+        let taskResult = root.first
+        else {
+            let rootObj = unarchiver.decodeObjectForKey("root")
+            XCTAssert(false, "Failed to unarchive task result. ROOT:\(rootObj)")
+            return
+        }
+        unarchiver.finishDecoding()
+        
+        taskVC.taskResult = taskResult
+        print(taskResult)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        print(splitResults)
+    
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
+    }
+    
+    func checkResultIdentifiers(splitResults: [SBAActivityResult])
+    {
+        // Check that the subtask step identifier is stripped
+        for activityResult in splitResults {
+            for sResult in activityResult.results! {
+                guard let stepResult = sResult as? ORKStepResult else {
+                    XCTAssert(false, "\(sResult) does not match expected")
+                    return
+                }
+                XCTAssertFalse(stepResult.identifier.hasPrefix(activityResult.schemaIdentifier))
+                if let results = stepResult.results {
+                    for result in results {
+                        XCTAssertFalse(result.identifier.hasPrefix(activityResult.schemaIdentifier))
+                    }
+                }
+            }
+        }
     }
     
     // MARK: schedule filtering
@@ -559,7 +644,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     let formItemResults = formItems.map({ (formItem) -> ORKResult in
                         let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
                         if let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat,
-                            let answer = answerFormat.textChoices.first {
+                            let answer = answerFormat.textChoices.first?.value {
                             questionResult.choiceAnswers = [answer]
                         }
                         return questionResult
@@ -613,6 +698,8 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var taskMap: [NSDictionary]? {
         return [medTaskRef, comboTaskRef, tappingTaskRef, memoryTaskRef]
     }
+    var filenameMap: NSDictionary?
+    var certificateName: String?
     
     var medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,

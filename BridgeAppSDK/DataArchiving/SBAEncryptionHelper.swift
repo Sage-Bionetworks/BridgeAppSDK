@@ -1,8 +1,8 @@
 //
-//  SBAConsentSignature.swift
+//  SBAEncryptionHelper.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,23 +31,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
-@objc public protocol SBAConsentSignature : class, NSSecureCoding {
+@objc public class SBAEncryptionHelper: NSObject {
     
-    /**
-     * Age verification stored with consent
-     */
-    var signatureBirthdate: NSDate? { get set }
-    
-    /**
-     * Name used to sign consent
-     */
-    var signatureName: String? { get set }
-    
-    /**
-     * UIImage representation of consent signature
-     */
-    var signatureImage: UIImage?  { get set }
+    public class func pemPath() -> String? {
+        guard let sharedAppDelegate = UIApplication.sharedApplication().delegate as? SBASharedAppDelegate else { return nil }
+        let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
+        return certificatePath
+    }
+
 }
-

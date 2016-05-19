@@ -38,9 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SBAJSONObject <NSObject>
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter;
+@required
+- (id)jsonObject;
+
+@optional
+- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter;
 
 @end
+
+id SBAJSONObjectForObject(id <NSObject> object);
 
 @protocol SBAJSONDictionaryRepresentableObject <NSObject>
 
@@ -49,16 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSArray (SBAJSONObject)
-
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap;
-
+@interface NSArray (SBAJSONObject) <SBAJSONObject>
 @end
 
-@interface NSDictionary (SBAJSONObject)
-
-- (id)jsonObjectWithFormatterMap:(NSDictionary <NSString *, NSFormatter *> * _Nullable)formatterMap;
-
+@interface NSDictionary (SBAJSONObject) <SBAJSONObject>
 @end
 
 @interface NSString (SBAJSONObject) <SBAJSONObject>
