@@ -96,9 +96,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Inserts an info.json file into the archive.
  
- @returns NSError indicating a problem completing the archive, or nil.
+ @param error will be pointed at an actual NSError object if there was a problem completing the archive, or nil.
+ 
+ @return YES if succeeds, NO if fails.
  */
-- (NSError * _Nullable)completeArchive;
+- (BOOL)completeArchive:(NSError * _Nullable *)error;
 
 /**
  Completes the archive, encrypts it, and uploads it to Bridge, then removes the archive.

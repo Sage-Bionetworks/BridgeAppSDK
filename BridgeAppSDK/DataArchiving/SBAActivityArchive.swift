@@ -66,9 +66,10 @@ public class SBAActivityArchive: SBADataArchive {
                     }
                 }
                 
-                if archive.completeArchive() == nil {
+                do {
+                    try archive.completeArchive()
                     archives += [archive]
-                }
+                } catch {}
             }
         }
         
