@@ -94,6 +94,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)insertDataIntoArchive :(NSData *)data filename:(NSString *)filename;
 
 /**
+ Checks if the archive is empty (contains no files).
+ 
+ @return false if the archive contains one or more files, true if not.
+ */
+- (BOOL)isEmpty;
+
+/**
  Inserts an info.json file into the archive.
  
  @param error will be pointed at an actual NSError object if there was a problem completing the archive, or nil.
@@ -113,7 +120,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param     archives                The data archives to be encrypted and sent
  */
 + (void)encryptAndUploadArchives:(NSArray<SBADataArchive *> *) archives;
-
 
 /**
  Guarantees to delete the archive and its working directory container.
