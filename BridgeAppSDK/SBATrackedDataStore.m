@@ -33,6 +33,7 @@
 
 #import "SBATrackedDataStore.h"
 #import "SBATrackedDataObject.h"
+#import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
 NSString * kSkippedAnswer           = @"Skipped";
 NSString * kNoTrackedData           = @"No Tracked Data";
@@ -51,6 +52,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 
 @property (nonatomic) NSMutableDictionary *changesDictionary;
 @property (nonatomic, copy, readwrite) NSArray * momentInDayResultDefaultIdMap;
+@property (nonatomic, copy, readwrite) NSDictionary * momentInDayResultTrackEachMap;
 
 @end
 
@@ -127,7 +129,10 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
                 input.startDate = startDate;
                 input.endDate = startDate;
                 input.questionType = ORKQuestionTypeSingleChoice;
-                input.choiceAnswers = @[defaultAnswer];
+                if (![self.momentInDayResultTrackEachMap[map.firstObject] boolValue]) {
+                    // Only include the default answer if *not* trackEach
+                    input.choiceAnswers = @[defaultAnswer];
+                }
                 ORKStepResult *stepResult = [[ORKStepResult alloc] initWithStepIdentifier:map.firstObject
                                                                                   results:@[input]];
                 [results addObject:stepResult];
@@ -273,15 +278,20 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 
 - (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps {
     NSMutableArray *idMap = [NSMutableArray new];
+    NSMutableDictionary *trackEachMap = [NSMutableDictionary new];
     for (ORKFormStep *step in activitySteps) {
         if ([step isKindOfClass:[ORKFormStep class]]) {
             ORKFormItem *formItem = [step.formItems firstObject];
             if (formItem != nil) {
+                if ([step isKindOfClass:[SBATrackedFormStep class]]) {
+                    trackEachMap[step.identifier] = @(((SBATrackedFormStep*)step).trackEach);
+                }
                 [idMap addObject:@[step.identifier, formItem.identifier]];
             }
         }
     }
     self.momentInDayResultDefaultIdMap = idMap;
+    self.momentInDayResultTrackEachMap = trackEachMap;
 }
 
 - (NSDate *)lastTrackingSurveyDate {

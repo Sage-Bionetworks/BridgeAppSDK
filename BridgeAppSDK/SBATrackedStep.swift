@@ -236,11 +236,11 @@ public class SBATrackedFormStep: ORKFormStep {
         }
     }
     
-    public func consolidateResult(taskResult: ORKTaskResult) -> ORKStepResult? {
+    public func consolidatedResult(items:[SBATrackedDataObject], taskResult: ORKTaskResult) -> ORKStepResult? {
         if self.trackingType == .Activity && self.trackEach {
             return consolidatedResultIfTrackEach(taskResult)
         }
-        return nil
+        return taskResult.stepResultForStepIdentifier(self.baseIdentifier)
     }
     
     private func consolidatedResultIfTrackEach(taskResult: ORKTaskResult) -> ORKStepResult? {

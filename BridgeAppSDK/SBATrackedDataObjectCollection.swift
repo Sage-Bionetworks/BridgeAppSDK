@@ -137,7 +137,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 else {
                     
                     // consolidate the results and add to data store
-                    let momentResult = previous.consolidateResult(result)
+                    let momentResult = previous.consolidatedResult(self.items, taskResult: result)
                     self.dataStore.updateMomentInDayForStepResult(momentResult)
                     
                     // the previous item was the last tracked item so return nil
