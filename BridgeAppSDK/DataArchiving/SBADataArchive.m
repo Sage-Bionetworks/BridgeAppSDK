@@ -191,10 +191,6 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         [self.infoDict setObject:[self.class appVersion] forKey:kAppVersionKey];
         [self.infoDict setObject:[[UIDevice currentDevice] deviceInfo] forKey:kPhoneInfoKey];
 
-        // TODO: syoung 04/26/2016 Implement using setArchiveInfoObject: to add these values
-
-//        [self.infoDict setObject:[NSUUID new].UUIDString forKey:kTaskRunKey];
-        
         [self insertDictionaryIntoArchive:self.infoDict filename:kJsonInfoFilename];
         
         if (![self.zipArchive updateEntries:self.zipEntries error:&error]) {

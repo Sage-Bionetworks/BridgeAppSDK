@@ -59,19 +59,27 @@ static NSString * kEncryptedDataFilename            = @"encrypted.zip";
 - (void)encryptFileAtURL:(NSURL *)url withCompletion:(void (^)(NSURL *url, NSError *error))completion
 {
     NSError * encryptionError = nil;
+    NSURL *encryptedUrl = url; // fall back to using the file as-is
     NSData * unencryptedZipData = [NSData dataWithContentsOfFile:url.relativePath];
-    NSData * encryptedZipData = [self.class cmsEncrypt:unencryptedZipData identityPath:[SBAEncryptionHelper pemPath] error:&encryptionError];
-    
-    if (encryptedZipData) {
-        NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:kEncryptedDataFilename];
+    NSString *pemPath = [SBAEncryptionHelper pemPath];
+    if (pemPath) {
+        NSData * encryptedZipData = [self.class cmsEncrypt:unencryptedZipData identityPath:pemPath error:&encryptionError];
         
-        if ([encryptedZipData writeToFile:encryptedPath options:NSDataWritingAtomic error:&encryptionError]) {
-            url = [[NSURL alloc] initFileURLWithPath:encryptedPath];
+        if (encryptedZipData) {
+            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:kEncryptedDataFilename];
+            
+            if ([encryptedZipData writeToFile:encryptedPath options:NSDataWritingAtomic error:&encryptionError]) {
+                encryptedUrl = [[NSURL alloc] initFileURLWithPath:encryptedPath];
+            }
         }
     }
     
+    if ([encryptedUrl isEqual:url]) {
+        SBALogDebug(@"WARNING: Private health data not encrypted while awaiting upload. Please add your study's X.509 public key to your app's resources, and set its filename (without the path or extension) as the certificateName in the BridgeInfo.plist file.");
+    }
+    
     if (completion) {
-        completion(url, encryptionError);
+        completion(encryptedUrl, encryptionError);
     }
 }
 
@@ -177,11 +185,6 @@ err:
 }
 
 #pragma mark - helpers
-
-+ (NSString*) pemPath
-{
-    return [SBAEncryptionHelper pemPath];
-}
 
 - (NSString *)workingDirectoryPath
 {

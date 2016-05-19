@@ -6,26 +6,38 @@
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 
-private let kSurveyCreatedOnKey               = "surveyCreatedOn";
-private let kSurveyGuidKey                    = "surveyGuid";
-private let kSchemaRevisionKey                = "schemaRevision";
+private let kSurveyCreatedOnKey               = "surveyCreatedOn"
+private let kSurveyGuidKey                    = "surveyGuid"
+private let kSchemaRevisionKey                = "schemaRevision"
+private let kTaskIdentifierKey                = "taskIdentifier"
+private let kScheduledActivityGuidKey         = "scheduledActivityGuid"
+private let kTaskRunUUIDKey                   = "taskRunUUID"
 
-class SBAActivityArchive: SBADataArchive {
+public class SBAActivityArchive: SBADataArchive {
     
-    init(reference: String, result: SBAActivityResult) {
+    public init(reference: String, result: SBAActivityResult) {
         super.init(reference: reference)
         
-        if (result.schemaRevision != nil) {
-            self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
-        }
+        // always set the schema revision, scheduled activity guid, and task run UUID
+        self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
+        self.setArchiveInfoObject(result.schedule.guid, forKey: kScheduledActivityGuidKey)
+        self.setArchiveInfoObject(result.taskRunUUID.UUIDString, forKey: kTaskRunUUIDKey)
+        
+        // if it's a survey, also set the survey's guid and createdOn
         if let surveyReference = result.schedule.activity.survey {
             // Survey schema is better matched by created date and survey guid
             self.setArchiveInfoObject(surveyReference.guid, forKey: kSurveyGuidKey)
             self.setArchiveInfoObject(surveyReference.createdOn.ISO8601String(), forKey: kSurveyCreatedOnKey)
         }
+        
+        // if it's a task, also set the taskIdentifier
+        if let taskReference = result.schedule.activity.task {
+            self.setArchiveInfoObject(taskReference.identifier, forKey: kTaskIdentifierKey)
+        }
+        
     }
     
-    class func buildResultArchives(results: [SBAActivityResult]) -> [SBADataArchive]? {
+    public class func buildResultArchives(results: [SBAActivityResult]) -> [SBADataArchive]? {
         
         var archives = [SBADataArchive]()
         for activityResult in results {
@@ -48,15 +60,13 @@ class SBAActivityArchive: SBADataArchive {
                                 archive.insertDataIntoArchive(dataResult, filename: archiveableResult.filename)
                             } else {
                                 let className = NSStringFromClass(archiveableResult.result.classForCoder)
-                                fatalError("Unsupported archiveable result type: \(className)")
+                                assertionFailure("Unsupported archiveable result type: \(className)")
                             }
                         }
                     }
                 }
                 
-                if let error = archive.completeArchive() {
-                    print("Completing the archive of \(activityResult.schemaIdentifier) failed:\n\(error)")
-                } else {
+                if archive.completeArchive() == nil {
                     archives += [archive]
                 }
             }

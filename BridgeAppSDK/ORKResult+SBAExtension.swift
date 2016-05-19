@@ -79,7 +79,7 @@ private var QuestionResultUserInfoKey = "userInfo"
 
 private var SurveyAnswerKey = "answer"
 
-class ArchiveableResult : NSObject {
+public class ArchiveableResult : NSObject {
     let result: AnyObject
     let filename: String
     
@@ -90,7 +90,7 @@ class ArchiveableResult : NSObject {
     }
 }
 
-protocol BridgeUploadableData {
+public protocol BridgeUploadableData {
     // returns result object, result type, and filename
     func bridgeData(stepIdentifier: String) -> ArchiveableResult?
 }
@@ -130,7 +130,7 @@ extension ORKResult: BridgeUploadableData {
         return bridgifyFilename(self.identifier) + ".json"
     }
     
-    func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+    public func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
         // extend subclasses individually to override this as needed
         return ArchiveableResult(result: self.resultAsDictionary().jsonObject(), filename: self.filenameForArchive())
     }
@@ -139,7 +139,7 @@ extension ORKResult: BridgeUploadableData {
 
 extension ORKFileResult {
     
-    override func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+    override public func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
         guard let url = self.fileURL else {
             return nil
         }
@@ -269,7 +269,7 @@ extension ORKSpatialSpanMemoryResult {
     
 }
 
-class AnswerKeyAndValue: NSObject {
+public class AnswerKeyAndValue: NSObject {
     let key: String
     let value: AnyObject?
     
@@ -280,11 +280,9 @@ class AnswerKeyAndValue: NSObject {
     }
 }
 
-protocol ORKQuestionResultAnswerJSON {
+public protocol ORKQuestionResultAnswerJSON {
     func jsonSerializedAnswer() -> AnswerKeyAndValue?
 }
-
-private var _timeOnlyFormatter: NSDateFormatter? = nil
 
 extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
     
@@ -302,7 +300,7 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
         return choiceQuestionResult
     }
     
-    func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         let className = NSStringFromClass(self.classForCoder)
         fatalError("jsonSerializedAnswer not implemented for \(className)")
     }
@@ -311,7 +309,7 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
 
 extension ORKChoiceQuestionResult {
     
-    override func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let choiceAnswers = self.choiceAnswers else { return nil }
         return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject())
     }
@@ -320,7 +318,7 @@ extension ORKChoiceQuestionResult {
 
 extension ORKScaleQuestionResult {
     
-    override func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
         return AnswerKeyAndValue(key: "scaleAnswer", value: (answer as NSNumber).jsonObject())
     }
