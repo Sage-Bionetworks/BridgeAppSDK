@@ -280,11 +280,15 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             let schedule = scheduledActivityForTaskViewController(taskViewController)
             where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
+            // Update the schedule on the server
             updateScheduledActivity(schedule, taskViewController: taskViewController)
+            
+            // Update any data stores associated with this task
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
+            
+            // Archive the results
             let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
-
-            guard let archives = SBAActivityArchive.buildResultArchives(results) else { return }
+            let archives = results.mapAndFilter({ archiveForActivityResult($0) })
             SBADataArchive.encryptAndUploadArchives(archives)
 
         }
@@ -390,7 +394,20 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
         SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
     }
-        
+    
+    // Expose method for building archive to allow for testing and subclass override
+    public func archiveForActivityResult(activityResult: SBAActivityResult) -> SBAActivityArchive? {
+        if let archive = SBAActivityArchive(result: activityResult) {
+            do {
+                try archive.completeArchive()
+                return archive
+            }
+            catch {}
+        }
+        return nil
+    }
+    
+    // Expose method for building results to allow for testing and subclass override
     public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
         
         // If no results, return empty array
