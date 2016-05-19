@@ -15,8 +15,8 @@ private let kTaskRunUUIDKey                   = "taskRunUUID"
 
 public class SBAActivityArchive: SBADataArchive {
     
-    public init(reference: String, result: SBAActivityResult) {
-        super.init(reference: reference)
+    public init?(result: SBAActivityResult) {
+        super.init(reference: result.schemaIdentifier)
         
         // always set the schema revision, scheduled activity guid, and task run UUID
         self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
@@ -35,45 +35,57 @@ public class SBAActivityArchive: SBADataArchive {
             self.setArchiveInfoObject(taskReference.identifier, forKey: kTaskIdentifierKey)
         }
         
+        if !self.buildArchiveForResult(result) {
+            self.removeArchive()
+            return nil
+        }
     }
-    
-    public class func buildResultArchives(results: [SBAActivityResult]) -> [SBADataArchive]? {
+
+    func buildArchiveForResult(activityResult: SBAActivityResult) -> Bool {
         
-        var archives = [SBADataArchive]()
-        for activityResult in results {
-            if let activityResultResults = activityResult.results as? [ORKStepResult] {
-                let archive = SBAActivityArchive(reference: activityResult.schemaIdentifier, result: activityResult)
-                for stepResult in activityResultResults {
-                    if let stepResultResults = stepResult.results {
-                        for result in stepResultResults {
-                            guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
-                                assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")
-                                archive.removeArchive()
-                                return nil
-                            }
-                            
-                            if let urlResult = archiveableResult.result as? NSURL {
-                                archive.insertURLIntoArchive(urlResult, fileName: archiveableResult.filename)
-                            } else if let dictResult = archiveableResult.result as? [NSObject : AnyObject] {
-                                archive.insertDictionaryIntoArchive(dictResult, filename: archiveableResult.filename)
-                            } else if let dataResult = archiveableResult.result as? NSData {
-                                archive.insertDataIntoArchive(dataResult, filename: archiveableResult.filename)
-                            } else {
-                                let className = NSStringFromClass(archiveableResult.result.classForCoder)
-                                assertionFailure("Unsupported archiveable result type: \(className)")
-                            }
-                        }
-                    }
-                }
-                
-                do {
-                    try archive.completeArchive()
-                    archives += [archive]
-                } catch {}
-            }
+        // exit early with false if nothing to archive
+        guard let activityResultResults = activityResult.results as? [ORKStepResult]
+            where activityResultResults.count > 0
+        else {
+            return false
         }
         
-        return archives
+        for stepResult in activityResultResults {
+            if let stepResultResults = stepResult.results {
+                for result in stepResultResults {
+                    if !insertResult(result, stepResult: stepResult, activityResult: activityResult) {
+                        return false
+                    }
+                }
+            }
+        }
+
+        return true
+    }
+    
+    /**
+    * Method for inserting a result into an archive. Allows for override by subclasses
+    */
+    public func insertResult(result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
+        
+        guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
+            assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")
+            return false
+        }
+        
+        if let urlResult = archiveableResult.result as? NSURL {
+            self.insertURLIntoArchive(urlResult, fileName: archiveableResult.filename)
+        } else if let dictResult = archiveableResult.result as? [NSObject : AnyObject] {
+            self.insertDictionaryIntoArchive(dictResult, filename: archiveableResult.filename)
+        } else if let dataResult = archiveableResult.result as? NSData {
+            self.insertDataIntoArchive(dataResult, filename: archiveableResult.filename)
+        } else {
+            let className = NSStringFromClass(archiveableResult.result.classForCoder)
+            assertionFailure("Unsupported archiveable result type: \(className)")
+            return false
+        }
+        
+        return true
     }
     
 }
