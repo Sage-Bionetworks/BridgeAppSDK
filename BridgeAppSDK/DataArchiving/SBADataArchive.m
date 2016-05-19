@@ -180,9 +180,10 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 
 //Compiles the final info.json file and inserts it into the zip archive.
--(NSError *)completeArchive
+- (BOOL)completeArchive:(NSError **)error
 {
-    NSError *error = nil;
+    BOOL success = YES;
+    NSError *internalError = nil;
     if (self.filesList.count) {
         [self.infoDict setObject:self.filesList forKey:kFilesKey];
         
@@ -191,18 +192,18 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         [self.infoDict setObject:[self.class appVersion] forKey:kAppVersionKey];
         [self.infoDict setObject:[[UIDevice currentDevice] deviceInfo] forKey:kPhoneInfoKey];
 
-        // TODO: syoung 04/26/2016 Implement using setArchiveInfoObject: to add these values
-
-//        [self.infoDict setObject:[NSUUID new].UUIDString forKey:kTaskRunKey];
-        
         [self insertDictionaryIntoArchive:self.infoDict filename:kJsonInfoFilename];
         
-        if (![self.zipArchive updateEntries:self.zipEntries error:&error]) {
-            SBALogError2(error);
+        if (![self.zipArchive updateEntries:self.zipEntries error:&internalError]) {
+            SBALogError2(internalError);
+            success = NO;
+            if (error) {
+                *error = internalError;
+            }
         }
     }
     
-    return error;
+    return success;
 }
 
 - (void)encryptAndUploadArchive
