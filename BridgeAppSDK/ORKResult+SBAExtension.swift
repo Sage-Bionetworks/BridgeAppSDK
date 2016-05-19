@@ -271,9 +271,9 @@ extension ORKSpatialSpanMemoryResult {
 
 public class AnswerKeyAndValue: NSObject {
     let key: String
-    let value: AnyObject?
+    let value: AnyObject
     
-    init(key: String, value: AnyObject?) {
+    init(key: String, value: AnyObject) {
         self.key = key
         self.value = value
         super.init()
