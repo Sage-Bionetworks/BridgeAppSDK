@@ -136,24 +136,9 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 guard let nextItem = selectedItems.nextObject({ $0.identifier == previousTrackedId })
                 else {
                     
-                    // Strip out the results and add to a single data store step
-                    if let taskResults = result.results {
-                        let prefix = "\(previous.baseIdentifier)."
-                        var results: [ORKResult] = []
-                        for sResult in taskResults {
-                            if let stepResult = sResult as? ORKStepResult where stepResult.identifier.hasPrefix(prefix),
-                                let formResults = stepResult.results {
-                                if let formResult = formResults.first where formResult.identifier == previous.baseIdentifier {
-                                    formResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
-                                }
-                                results += formResults
-                            }
-                        }
-                        if results.count > 0 {
-                            let momentResult = ORKStepResult(stepIdentifier: previous.baseIdentifier, results: results)
-                            self.dataStore.updateMomentInDayForStepResult(momentResult)
-                        }
-                    }
+                    // consolidate the results and add to data store
+                    let momentResult = previous.consolidateResult(result)
+                    self.dataStore.updateMomentInDayForStepResult(momentResult)
                     
                     // the previous item was the last tracked item so return nil
                     return nil

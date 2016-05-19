@@ -673,14 +673,25 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let timingResult = momentInDayResults?.last
         XCTAssertNotNil(timingResult)
         XCTAssertNotNil(timingResult?.results)
-        guard timingResult != nil && timingResult?.results != nil else { return }
+        guard let timingResults = timingResult?.results else { return }
+    
+        XCTAssertEqual(timingResult!.identifier, "medicationActivityTiming")
+        XCTAssertEqual(timingResults.count, 1)
         
-        XCTAssertEqual(timingResult!.results!.count, 2)
-        XCTAssertEqual(timingResult!.results!.first!.identifier, "Levodopa")
-        XCTAssertEqual(timingResult!.results!.last!.identifier, "Rytary")
+        guard let questionResult = timingResults.first as? ORKChoiceQuestionResult,
+        let choiceAnswers = questionResult.choiceAnswers as? [[String: String]]
+        else {
+            XCTAssert(false, "\(timingResults) not of expected type")
+            return
+        }
         
-        print(momentInDayResults)
+        XCTAssertEqual(choiceAnswers.count, 2)
+        guard choiceAnswers.count == 2 else { return }
         
+        XCTAssertEqual(choiceAnswers.first!["identifier"], "Levodopa")
+        XCTAssertEqual(choiceAnswers.first!["answer"], "0-30 minutes")
+        XCTAssertEqual(choiceAnswers.last!["identifier"], "Rytary")
+        XCTAssertEqual(choiceAnswers.last!["answer"], "30-60 minutes")
     }
     
     func createTimingStepResult(timingStep:SBATrackedFormStep, answer: String) -> ORKStepResult {

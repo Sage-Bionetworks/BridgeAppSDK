@@ -236,6 +236,68 @@ public class SBATrackedFormStep: ORKFormStep {
         }
     }
     
+    public func consolidateResult(taskResult: ORKTaskResult) -> ORKStepResult? {
+        if self.trackingType == .Activity && self.trackEach {
+            return consolidatedResultIfTrackEach(taskResult)
+        }
+        return nil
+    }
+    
+    private func consolidatedResultIfTrackEach(taskResult: ORKTaskResult) -> ORKStepResult? {
+    
+        var startDate: NSDate!
+        var endDate: NSDate!
+        let resultIdentifier = self.baseIdentifier
+        let prefix = "\(resultIdentifier)."
+        
+        let choiceAnswers = taskResult.results?.mapAndFilter({ (sResult) -> AnyObject? in
+            
+            // Filter out results that are not part of this step grouping
+            guard let stepResult = sResult as? ORKStepResult where stepResult.identifier.hasPrefix(prefix),
+                let formResults = stepResult.results where formResults.count == 1,
+                let formResult = formResults.first as? ORKQuestionResultAnswerJSON,
+                let answer = formResult.jsonSerializedAnswer()
+            else {
+                return nil
+            }
+            
+            // get timestamps
+            if (startDate == nil) {
+                startDate = stepResult.startDate
+            }
+            endDate = stepResult.endDate
+            
+            // create and return a mapping of identifier to value
+            let identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
+            var value = answer.value
+            if let array = value as? NSArray where array.count == 1 {
+                value = array.firstObject!
+            }
+            return ["identifier" : identifier, "answer" : value] as NSDictionary
+        })
+        
+        // If nothing was found and mapped then return nil
+        guard choiceAnswers != nil && choiceAnswers!.count > 0 else {
+            return nil
+        }
+        
+        // Create and return a step result for the consolidated steps
+        let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
+        questionResult.startDate = startDate
+        questionResult.endDate = endDate
+        questionResult.questionText = self.textFormat ?? self.text
+        questionResult.questionType = ORKQuestionType.MultipleChoice
+        questionResult.choiceAnswers = choiceAnswers
+        
+        let stepResult = ORKStepResult(stepIdentifier: resultIdentifier, results: [questionResult])
+        stepResult.startDate = startDate
+        stepResult.endDate = endDate
+        
+        return stepResult
+    }
+    
+    // MARK: private consolidation
+    
     private func buildSelectionFormItem(selectedItems:[SBATrackedDataObject]) {
         
         var choices = selectedItems.map { (item) -> ORKTextChoice in
