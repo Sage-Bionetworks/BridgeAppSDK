@@ -322,7 +322,7 @@ public class SBATrackedFormStep: ORKFormStep {
         }
         
         let answerFormat = ORKTextChoiceAnswerFormat(style: .MultipleChoice, textChoices: choices)
-        let formItem = ORKFormItem(identifier: self.identifier, text: nil, answerFormat: answerFormat)
+        let formItem = ORKFormItem(identifier: self.identifier + ".choices", text: nil, answerFormat: answerFormat)
         self.formItems = [formItem]
     }
     
