@@ -1,5 +1,5 @@
 //
-//  ORKFormStep+ResultCreation.swift
+//  ORKFormStep+Result.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.

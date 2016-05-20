@@ -719,6 +719,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         guard let selectedItems = dataStore.selectedItems else { return nil }
         XCTAssertEqual(selectedItems.count, 4)
         
+        checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
+        
         // Check that the next step is the frequency step
         guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .Frequency,
             let formItems = frequencyStep.formItems  else {
@@ -744,6 +746,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             }
         }
         
+        checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
+        
         guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .Activity,
             let formItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(nextStep) not of expected type")
@@ -761,6 +765,24 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(dataStore.momentInDayResult!.count, 1)
         
         return step3 as? SBATrackedFormStep
+    }
+    
+    func checkSelectionItemsInserted(selectedItems: [SBATrackedDataObject], taskResult: ORKTaskResult) {
+        // Check that the task result includes items
+        guard let selectionStepResults = taskResult.stepResultForStepIdentifier("medicationSelection")?.results
+            else {
+                XCTAssert(false, "Selection step results not found in \(taskResult)")
+                return
+        }
+        
+        XCTAssertEqual(selectionStepResults.count, 2)
+        guard let resultItems = (selectionStepResults.last as? ORKChoiceQuestionResult)?.choiceAnswers as? [[NSObject : AnyObject]] else {
+            XCTAssert(false, "Selection step results do not match expected \(selectionStepResults)")
+            return
+        }
+        
+        let dictionaryItems = selectedItems.map { $0.dictionaryRepresentation() }
+        XCTAssertEqual(resultItems, dictionaryItems)
     }
     
     // Mark: convenience methods
