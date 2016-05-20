@@ -240,16 +240,14 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             return
         }
         
-        let resultIdentifier = "\(selectionItem).items"
-        
         // Create and return a step result for the consolidated steps
-        let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
-        questionResult.startDate = stepResult.startDate
-        questionResult.endDate = stepResult.endDate
-        questionResult.questionType = ORKQuestionType.MultipleChoice
-        questionResult.choiceAnswers = self.dataStore.selectedItems?.map({ $0.dictionaryRepresentation() })
+        let trackedResult = SBATrackedDataSelectionResult(identifier: selectionItem.identifier)
+        trackedResult.selectedItems = self.dataStore.selectedItems
+        trackedResult.startDate = stepResult.startDate
+        trackedResult.endDate = stepResult.endDate
+        trackedResult.questionText = selectionItem.textFormat ?? selectionItem.stepText
         
         // Add the consolidated result to the step results
-        stepResult.results = [firstResult, questionResult]
+        stepResult.results = [firstResult, trackedResult]
     }
 }

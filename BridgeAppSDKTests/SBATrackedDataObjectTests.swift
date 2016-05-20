@@ -769,20 +769,22 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkSelectionItemsInserted(selectedItems: [SBATrackedDataObject], taskResult: ORKTaskResult) {
         // Check that the task result includes items
-        guard let selectionStepResults = taskResult.stepResultForStepIdentifier("medicationSelection")?.results
+        guard let selectionStepResults = taskResult.stepResultForStepIdentifier("medicationSelection")?.results,
+            let lastResult = selectionStepResults.last
             else {
                 XCTAssert(false, "Selection step results not found in \(taskResult)")
                 return
         }
         
         XCTAssertEqual(selectionStepResults.count, 2)
-        guard let resultItems = (selectionStepResults.last as? ORKChoiceQuestionResult)?.choiceAnswers as? [[NSObject : AnyObject]] else {
-            XCTAssert(false, "Selection step results do not match expected \(selectionStepResults)")
+        guard let formResult = lastResult as? SBATrackedDataSelectionResult,
+            let resultItems = formResult.selectedItems else {
+            XCTAssert(false, "Selection step results do not match expected \(lastResult)")
             return
         }
         
-        let dictionaryItems = selectedItems.map { $0.dictionaryRepresentation() }
-        XCTAssertEqual(resultItems, dictionaryItems)
+        XCTAssertEqual(resultItems, selectedItems)
+        XCTAssertEqual(formResult.identifier, "medicationSelection")
     }
     
     // Mark: convenience methods
