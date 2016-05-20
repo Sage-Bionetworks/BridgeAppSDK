@@ -240,7 +240,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             return
         }
         
-        let resultIdentifier = "\(selectionItem).items"
+        let resultIdentifier = "\(selectionItem.identifier).items"
         
         // Create and return a step result for the consolidated steps
         let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
