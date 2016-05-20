@@ -118,8 +118,10 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             switch (previous.trackingType!) {
             case .Selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
+                mutateSelectionStepResult(result)
             case .Frequency:
                 self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
+                mutateSelectionStepResult(result)
             case .Activity:
                 if !previous.trackEach, let stepResult = result.stepResultForStepIdentifier(previous.identifier) {
                     self.dataStore.updateMomentInDayForStepResult(stepResult)
@@ -137,7 +139,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 else {
                     
                     // consolidate the results and add to data store
-                    let momentResult = previous.consolidateResult(result)
+                    let momentResult = previous.consolidatedResult(self.items, taskResult: result)
                     self.dataStore.updateMomentInDayForStepResult(momentResult)
                     
                     // the previous item was the last tracked item so return nil
@@ -227,5 +229,27 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         else {
             return false
         }
+    }
+    
+    func mutateSelectionStepResult(taskResult: ORKTaskResult) {
+        guard let selectionItem = self.findStep(.Selection),
+              let stepResult = taskResult.stepResultForStepIdentifier(selectionItem.identifier),
+              let firstResult = stepResult.results?.first
+        else {
+            // Only create the step for a task result that includes selection
+            return
+        }
+        
+        let resultIdentifier = "\(selectionItem).items"
+        
+        // Create and return a step result for the consolidated steps
+        let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
+        questionResult.startDate = stepResult.startDate
+        questionResult.endDate = stepResult.endDate
+        questionResult.questionType = ORKQuestionType.MultipleChoice
+        questionResult.choiceAnswers = self.dataStore.selectedItems?.map({ $0.dictionaryRepresentation() })
+        
+        // Add the consolidated result to the step results
+        stepResult.results = [firstResult, questionResult]
     }
 }
