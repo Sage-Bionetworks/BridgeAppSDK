@@ -118,8 +118,20 @@ public class SBASubtaskStep: ORKStep {
         guard let substepIdentifier = substepIdentifier(step.identifier) else {
             return nil
         }
+        
+        // get the next step
         let substep = step.copyWithIdentifier(substepIdentifier)
-        return replacementStep(self.subtask.stepAfterStep(substep, withResult: filteredTaskResult(result)))
+        let replacementTaskResult = filteredTaskResult(result)
+        let nextStep = self.subtask.stepAfterStep(substep, withResult: replacementTaskResult)
+        
+        // If the task result was mutated, need to add any changes back into the result set
+        if let thisStepResult = replacementTaskResult.stepResultForStepIdentifier(substepIdentifier),
+            let parentStepResult = result.stepResultForStepIdentifier(step.identifier) {
+            parentStepResult.results = thisStepResult.results
+        }
+        
+        // And finally return the replacement step
+        return replacementStep(nextStep)
     }
     
     override public var requestedPermissions: ORKPermissionMask {

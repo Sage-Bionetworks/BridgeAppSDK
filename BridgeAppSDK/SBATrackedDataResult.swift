@@ -37,6 +37,10 @@ public class SBATrackedDataSelectionResult: ORKQuestionResult {
     
     public var selectedItems: [SBATrackedDataObject]?
     
+    override init() {
+        super.init()
+    }
+    
     public override init(identifier: String) {
         super.init(identifier: identifier)
         self.questionType = .MultipleChoice
