@@ -33,7 +33,7 @@
 
 import Foundation
 
-public protocol SBAConsentSignature : class, NSSecureCoding {
+public protocol SBAConsentSignatureWrapper : class {
     
     /**
      * Age verification stored with consent
@@ -49,5 +49,98 @@ public protocol SBAConsentSignature : class, NSSecureCoding {
      * UIImage representation of consent signature
      */
     var signatureImage: UIImage?  { get set }
+    
+    /**
+     * Date of consent
+     */
+    var signatureDate: NSDate? { get set }
+}
+
+public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecureCoding, NSCopying {
+    
+    public let identifier: String
+    public var signatureBirthdate: NSDate?
+    public var signatureName: String?
+    public var signatureImage: UIImage?
+    public var signatureDate: NSDate?
+    
+    public required init(identifier: String) {
+        self.identifier = identifier
+        super.init()
+    }
+    
+    public convenience init(signature: ORKConsentSignature) {
+        self.init(identifier: signature.identifier)
+        // Assume given name first
+        if signature.givenName != nil || signature.familyName != nil {
+            let firstName = signature.givenName ?? ""
+            let lastName = signature.familyName ?? ""
+            self.signatureName = (firstName + " " + lastName).trim()
+        }
+        self.signatureImage = signature.signatureImage
+        if let dateString = signature.signatureDate, let dateFormat = signature.signatureDateFormatString {
+            let formatter = NSDateFormatter()
+            formatter.dateFormat = dateFormat
+            self.signatureDate = formatter.dateFromString(dateString)
+        }
+    }
+    
+    // MARK: NSSecureCoding
+    
+    public static func supportsSecureCoding() -> Bool {
+        return true
+    }
+    
+    public required convenience init?(coder aDecoder: NSCoder) {
+        guard let identifier = aDecoder.decodeObjectForKey("identifier") as? String else {
+            return nil
+        }
+        self.init(identifier: identifier)
+        self.signatureBirthdate = aDecoder.decodeObjectForKey("signatureBirthdate") as? NSDate
+        self.signatureName = aDecoder.decodeObjectForKey("signatureName") as? String
+        self.signatureImage = aDecoder.decodeObjectForKey("signatureImage") as? UIImage
+        self.signatureDate = aDecoder.decodeObjectForKey("signatureDate") as? NSDate
+    }
+    
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(self.identifier, forKey: "identifier")
+        aCoder.encodeObject(self.signatureBirthdate, forKey: "signatureBirthdate")
+        aCoder.encodeObject(self.signatureName, forKey: "signatureName")
+        aCoder.encodeObject(self.signatureImage, forKey: "signatureImage")
+        aCoder.encodeObject(self.signatureDate, forKey: "signatureDate")
+    }
+    
+    // MARK: Copying
+    
+    public func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = self.dynamicType.init(identifier: self.identifier)
+        copy.signatureBirthdate = self.signatureBirthdate
+        copy.signatureName = self.signatureName
+        copy.signatureImage = self.signatureImage
+        copy.signatureDate = self.signatureDate
+        return copy
+    }
+    
+    // MARK: Equality
+    
+    public override func isEqual(object: AnyObject?) -> Bool {
+        guard super.isEqual(object),
+            let obj = object as? SBAConsentSignature else {
+            return false
+        }
+        return SBAObjectEquality(self.signatureBirthdate, obj.signatureBirthdate) &&
+                SBAObjectEquality(self.signatureName, obj.signatureName) &&
+                SBAObjectEquality(self.signatureImage, obj.signatureImage) &&
+                SBAObjectEquality(self.signatureDate, obj.signatureDate)
+    }
+    
+    public override var hash: Int {
+        return self.identifier.hash |
+            SBAObjectHash(self.signatureBirthdate) |
+            SBAObjectHash(self.signatureName) |
+            SBAObjectHash(self.signatureImage) |
+            SBAObjectHash(self.signatureDate)
+    }
+    
 }
 

@@ -200,7 +200,7 @@ public extension SBAUserWrapper {
     /**
      * Send user consent signature (if server precondition not met and reconsenting user)
      */
-    public func sendUserConsented(consentSignature: SBAConsentSignature, completion: ((NSError?) -> Void)?) {
+    public func sendUserConsented(consentSignature: SBAConsentSignatureWrapper, completion: ((NSError?) -> Void)?) {
         
         let name = consentSignature.signatureName ?? self.name ?? "First Last"
         let birthdate = consentSignature.signatureBirthdate?.startOfDay() ?? NSDate(timeIntervalSince1970: 0)

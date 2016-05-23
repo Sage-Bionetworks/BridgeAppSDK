@@ -117,12 +117,19 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var consentSignature: SBAConsentSignature? {
+    public var consentSignature: SBAConsentSignatureWrapper? {
         get {
             return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignature
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kConsentSignatureKey)
+            var signature = newValue as? SBAConsentSignature
+            if newValue != nil && signature == nil {
+                signature = SBAConsentSignature(identifier: kConsentSignatureKey)
+                signature!.signatureBirthdate = newValue!.signatureBirthdate
+                signature!.signatureImage = newValue!.signatureImage
+                signature!.signatureName = newValue!.signatureName
+            }
+            setKeychainObject(signature, key: kConsentSignatureKey)
         }
     }
     

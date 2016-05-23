@@ -72,7 +72,7 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     /**
      * Consent signature should be stored in keychain.
      */
-    var consentSignature: SBAConsentSignature? { get set }
+    var consentSignature: SBAConsentSignatureWrapper? { get set }
 
     /**
      * Data groups associated with this user.
