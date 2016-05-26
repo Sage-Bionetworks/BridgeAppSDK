@@ -82,10 +82,39 @@ public class SBAResourceFinder: NSObject {
     }
     
     public func htmlNamed(resourceNamed: String) -> String? {
-        if let data = self.dataNamed(resourceNamed, ofType: "html") {
-            return String(data: data, encoding: NSUTF8StringEncoding)
+        if let data = self.dataNamed(resourceNamed, ofType: "html"),
+            let html = String(data: data, encoding: NSUTF8StringEncoding) {
+            return importHTML(html)
         }
         return nil
+    }
+    
+    func importHTML(input: String) -> String {
+        
+        // setup string
+        var html = input
+        func search(str: String, _ range: Range<String.Index>?) -> Range<String.Index>? {
+            return html.rangeOfString(str, options: .CaseInsensitiveSearch, range: range, locale: nil)
+        }
+        
+        // search for <import href="resourceName.html" /> and replace with contents of resource file
+        var keepGoing = true
+        while keepGoing {
+            keepGoing = false
+            if let startRange = search("<import", html.startIndex..<html.endIndex),
+                let endRange = search("/>", startRange.endIndex..<html.endIndex),
+                let hrefRange = search("href", startRange.endIndex..<endRange.endIndex),
+                let fileStartRange = search("\"", hrefRange.endIndex..<endRange.endIndex),
+                let fileEndRange = search(".html\"", fileStartRange.endIndex..<endRange.endIndex) {
+                let resourceName = html.substringWithRange(fileStartRange.endIndex..<fileEndRange.startIndex)
+                if let importText = htmlNamed(resourceName) {
+                    keepGoing = true
+                    html.replaceRange(startRange.startIndex..<endRange.endIndex, with: importText)
+                }
+            }
+        }
+        
+        return html
     }
     
     func jsonNamed(resourceNamed: String) -> NSDictionary? {
