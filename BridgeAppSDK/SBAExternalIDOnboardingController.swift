@@ -45,6 +45,31 @@ public protocol SBAExternalIDOnboardingController: class, SBASharedInfoControlle
     func goNext()
 }
 
+public protocol SBAExternalIDOnboardingControllerWithVerification: SBAExternalIDOnboardingController {
+    
+    var registrationStep: SBAExternalIDRegistrationStep? { get }
+    
+    func goInitialStep()
+    func goVerificationStep()
+    
+}
+
+extension SBAExternalIDOnboardingControllerWithVerification {
+    
+    func setupInitialEntry() {
+        self.goInitialStep()
+        self.registrationCodeTextField.text = nil
+        self.registrationCodeTextField.becomeFirstResponder()
+    }
+    
+    func setupVerification() {
+        self.goVerificationStep()
+        self.registrationCodeTextField.text = nil
+        self.registrationCodeTextField.becomeFirstResponder()
+    }
+    
+}
+
 public extension SBAExternalIDOnboardingController {
     
     public func handleViewDidAppear() {
@@ -53,11 +78,32 @@ public extension SBAExternalIDOnboardingController {
 
     public func registerUser() {
         
-        guard let text: String = self.registrationCodeTextField.text
+        // Check if the text string is valid
+        guard let text: String = self.registrationCodeTextField.text?.trim()
             where text.characters.count > 0 else {
-                let message = NSLocalizedString("Please enter a valid registration code.", comment: "Message for invalid registration code")
+                let message = Localization.localizedString("SBA_REGISTRATION_INVALID_CODE")
                 showAlertWithOk(nil, message: message, actionHandler: nil)
                 return
+        }
+        
+        // Check if this is a step view controller with verification
+        if let stepVC = self as? SBAExternalIDOnboardingControllerWithVerification,
+            let step = stepVC.registrationStep where step.shouldConfirmExternalID {
+            if step.externalID == nil {
+                // If the external ID for this step is nil then goto verify step and exit early
+                step.externalID = text
+                stepVC.setupVerification()
+                return
+            }
+            else if text != step.externalID! {
+                // If the text does not match the text for a registration then show failed message and exit early
+                step.externalID = nil
+                let message = Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED")
+                showAlertWithOk(nil, message: message, actionHandler: { (_) in
+                    stepVC.setupInitialEntry()
+                })
+                return
+            }
         }
         
         registrationCodeTextField.resignFirstResponder()
@@ -66,9 +112,12 @@ public extension SBAExternalIDOnboardingController {
         sharedUser.loginUser(externalId: text) { [weak self] error in
             if let error = error {
                 self?.hideLoadingView({
-                    let title = NSLocalizedString("Registration Failed", comment: "Title for error when registration fails")
+                    let title = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
                     let message = error.localizedBridgeErrorMessage
-                    self?.showAlertWithOk(title, message: message, actionHandler: nil)
+                    self?.showAlertWithOk(title, message: message, actionHandler: { (_) in
+                        (self as? SBAExternalIDOnboardingControllerWithVerification)?.setupInitialEntry()
+                    })
+
                 })
             }
             else {
