@@ -85,10 +85,11 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             
         case .SharingOptions:
             let share = inputItem as! SBAConsentSharingOptions
+            let learnMore = SBAResourceFinder.sharedResourceFinder.htmlNamed(share.localizedLearnMoreHTMLContent) ?? ""
             let step = ORKConsentSharingStep(identifier: inputItem.identifier,
                 investigatorShortDescription: share.investigatorShortDescription,
                 investigatorLongDescription: share.investigatorLongDescription,
-                localizedLearnMoreHTMLContent: share.localizedLearnMoreHTMLContent)
+                localizedLearnMoreHTMLContent: learnMore)
             
             if let additionalText = inputItem.stepText, let text = step.text {
                 step.text = "\(text)\n\n\(additionalText)"
@@ -101,8 +102,12 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .Review:
+            let review = inputItem as! SBAConsentReviewOptions
+            let signature: ORKConsentSignature? = self.consentDocument.signatures?.first
+            signature?.requiresName = review.requiresName
+            signature?.requiresSignatureImage = review.requiresSignature
             let step = ORKConsentReviewStep(identifier: inputItem.identifier,
-                signature: self.consentDocument.signatures?.first,
+                signature: signature,
                 inDocument: self.consentDocument)
             step.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
             return step;

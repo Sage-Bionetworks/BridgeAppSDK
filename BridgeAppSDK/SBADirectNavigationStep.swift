@@ -67,12 +67,10 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
      */
     @available(*, deprecated, message="use learnMoreAction: instead")
     public var learnMoreHTMLContent: String? {
-        guard let learnMore = self.learnMoreAction as? SBAURLLearnMoreAction,
-            let data = NSData(contentsOfURL: learnMore.learnMoreURL)
-        else {
+        guard let learnMore = self.learnMoreAction?.identifier else {
             return nil
         }
-        return String(data: data, encoding: NSUTF8StringEncoding)
+        return SBAResourceFinder.sharedResourceFinder.htmlNamed(learnMore)
     }
     
     /**
