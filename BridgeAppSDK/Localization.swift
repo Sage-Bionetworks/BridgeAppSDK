@@ -200,6 +200,12 @@ public class Localization: NSObject {
             "SBA_PROGRESS_STEP_TITLE" : NSLocalizedString("SBA_PROGRESS_STEP_TITLE", tableName: nil, bundle: localeBundle, value:"Progress so far:", comment:"Title of a progress step."),
             "SBA_PROGRESS_CHECKMARK" : NSLocalizedString("SBA_PROGRESS_CHECKMARK", tableName: nil, bundle: localeBundle, value:"\u{2705}", comment:"Character to use for a step progress check mark"),
             "SBA_PROGRESS_UNCHECKED" : NSLocalizedString("SBA_PROGRESS_UNCHECKED", tableName: nil, bundle: localeBundle, value:"\u{2003}\u{2002}", comment:"Character to use for a step progress for unchecked"),
+            
+            // Registration
+            "SBA_REGISTRATION_INVALID_CODE" : NSLocalizedString("SBA_REGISTRATION_INVALID_CODE", tableName: nil, bundle: localeBundle, value:"Please enter a valid registration code.", comment:"Message for invalid registration code"),
+            "SBA_REGISTRATION_MATCH_FAILED" : NSLocalizedString("SBA_REGISTRATION_MATCH_FAILED", tableName: nil, bundle: localeBundle, value:"The registration code you entered does not match.", comment:"Message for registration codes that do not match"),
+            "SBA_REGISTRATION_FAILED_TITLE" : NSLocalizedString("SBA_REGISTRATION_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Registration Failed", comment:"Title for error when registration fails"),
+            
         ]
     }()
     
