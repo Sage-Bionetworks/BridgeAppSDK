@@ -14,14 +14,8 @@
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F11C5AD29300D26E19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EE1C5AD29300D26E19 /* Main.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
-		8032220B1CE642CD001D5281 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803221F41CE64232001D5281 /* ZipZap.framework */; };
-		803222281CE64A82001D5281 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803222251CE64A73001D5281 /* openssl.framework */; };
 		804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
-		809D4E171C7E88A900EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
-		809D4E181C7E88A900EC9EC6 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		809D4E1B1C7E88AC00EC9EC6 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
-		809D4E1C1C7E88AC00EC9EC6 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
 		80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D5F1911CE51C40002A39DF /* SBAEncryption.h */; };
@@ -61,6 +55,15 @@
 		FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */; };
 		FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */; };
+		FF0396141CFE289B00245DE3 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396071CFE284D00245DE3 /* ZipZap.framework */; };
+		FF0396151CFE289B00245DE3 /* ZipZap.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396071CFE284D00245DE3 /* ZipZap.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF0396181CFE28A300245DE3 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395F91CFE283F00245DE3 /* ResearchKit.framework */; };
+		FF0396191CFE28A300245DE3 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395F91CFE283F00245DE3 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF0396261CFE28D300245DE3 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; };
+		FF0396271CFE28D300245DE3 /* openssl.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF0396391CFE2BC600245DE3 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */; };
+		FF03963A1CFE2BC600245DE3 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF03963D1CFE317B00245DE3 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; };
 		FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF08E0BF1C9A6A120082D530 /* SBASurveyItem+Dictionary.swift */; };
 		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
 		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
@@ -186,83 +189,6 @@
 			remoteGlobalIDString = 801040B11C5A843D00D26E19;
 			remoteInfo = BridgeAppSDK;
 		};
-		803221F31CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D87BA1F81B3D6DEA00ED7EB3;
-			remoteInfo = "ZipZap (iOS Framework)";
-		};
-		803221F51CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CFB0162C5EEB00112F49;
-			remoteInfo = "ZipZap (iOS Static Library)";
-		};
-		803221F71CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D8D140D31B423B1100C411B0;
-			remoteInfo = "ZipZap (OS X Framework)";
-		};
-		803221F91CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CF82162C5EC100112F49;
-			remoteInfo = "ZipZap (OS X Static Library)";
-		};
-		803221FB1CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF8624CB1BB7495200C12EEE;
-			remoteInfo = "ZipZap (tvOS Framework)";
-		};
-		803221FD1CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF8624EF1BB74B1F00C12EEE;
-			remoteInfo = "ZipZap (tvOS Static Library)";
-		};
-		803221FF1CE64232001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CF96162C5EC100112F49;
-			remoteInfo = ZipZapTests;
-		};
-		8032220C1CE642D3001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D87BA1F71B3D6DEA00ED7EB3;
-			remoteInfo = "ZipZap (iOS Framework)";
-		};
-		803222241CE64A73001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8032221E1CE64A73001D5281 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AE31B30A93900A1917D;
-			remoteInfo = openssl;
-		};
-		803222261CE64A73001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8032221E1CE64A73001D5281 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
-			remoteInfo = opensslTests;
-		};
-		803222291CE64A8E001D5281 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8032221E1CE64A73001D5281 /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 60674AE21B30A93900A1917D;
-			remoteInfo = openssl;
-		};
 		809D4E011C7E885300EC9EC6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
@@ -305,20 +231,6 @@
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
 		};
-		809D4E131C7E888900EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		809D4E151C7E888900EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 80855F4F19BE258C006601C7;
-			remoteInfo = BridgeSDK;
-		};
 		809D4E191C7E88AA00EC9EC6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
@@ -340,6 +252,139 @@
 			remoteGlobalIDString = B183A4731A8535D100C76870;
 			remoteInfo = ResearchKit;
 		};
+		FF0395EA1CFE283700245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 80855F5019BE258C006601C7;
+			remoteInfo = BridgeSDK;
+		};
+		FF0395EC1CFE283700245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 80855F5B19BE258C006601C7;
+			remoteInfo = BridgeSDKTests;
+		};
+		FF0395EE1CFE283700245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE2871B603309002588BB;
+			remoteInfo = BridgeSDKIntegration;
+		};
+		FF0395F01CFE283700245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE29F1B60330C002588BB;
+			remoteInfo = BridgeSDKIntegrationTests;
+		};
+		FF0395F81CFE283F00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B183A5951A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
+		FF0395FA1CFE283F00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
+			remoteInfo = ResearchKitTests;
+		};
+		FF0396061CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D87BA1F81B3D6DEA00ED7EB3;
+			remoteInfo = "ZipZap (iOS Framework)";
+		};
+		FF0396081CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CFB0162C5EEB00112F49;
+			remoteInfo = "ZipZap (iOS Static Library)";
+		};
+		FF03960A1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8D140D31B423B1100C411B0;
+			remoteInfo = "ZipZap (OS X Framework)";
+		};
+		FF03960C1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CF82162C5EC100112F49;
+			remoteInfo = "ZipZap (OS X Static Library)";
+		};
+		FF03960E1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8624CB1BB7495200C12EEE;
+			remoteInfo = "ZipZap (tvOS Framework)";
+		};
+		FF0396101CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8624EF1BB74B1F00C12EEE;
+			remoteInfo = "ZipZap (tvOS Static Library)";
+		};
+		FF0396121CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D899CF96162C5EC100112F49;
+			remoteInfo = ZipZapTests;
+		};
+		FF0396161CFE289B00245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D87BA1F71B3D6DEA00ED7EB3;
+			remoteInfo = "ZipZap (iOS Framework)";
+		};
+		FF03961A1CFE28A300245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B183A4731A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
+		FF0396221CFE28C800245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 60674AE31B30A93900A1917D;
+			remoteInfo = openssl;
+		};
+		FF0396241CFE28C800245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
+			remoteInfo = opensslTests;
+		};
+		FF0396281CFE28D300245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 60674AE21B30A93900A1917D;
+			remoteInfo = openssl;
+		};
+		FF03963B1CFE2BC600245DE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 80855F4F19BE258C006601C7;
+			remoteInfo = BridgeSDK;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -349,9 +394,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				809D4E181C7E88A900EC9EC6 /* ResearchKit.framework in Embed Frameworks */,
+				FF0396151CFE289B00245DE3 /* ZipZap.framework in Embed Frameworks */,
+				FF03963A1CFE2BC600245DE3 /* BridgeSDK.framework in Embed Frameworks */,
+				FF0396271CFE28D300245DE3 /* openssl.framework in Embed Frameworks */,
 				801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */,
-				809D4E1C1C7E88AC00EC9EC6 /* BridgeSDK.framework in Embed Frameworks */,
+				FF0396191CFE28A300245DE3 /* ResearchKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,8 +424,6 @@
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040EF1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		803221E91CE64232001D5281 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ../ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
-		8032221E1CE64A73001D5281 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = ../CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
 		809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = ../../BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
 		809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ../../ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
@@ -432,6 +477,10 @@
 		FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Utilities.swift"; sourceTree = "<group>"; };
 		FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBALocalizationMacroWrapper.h; sourceTree = "<group>"; };
 		FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBALocalizationMacroWrapper.m; sourceTree = "<group>"; };
+		FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
+		FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
+		FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
+		FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
 		FF08E0BF1C9A6A120082D530 /* SBASurveyItem+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Dictionary.swift"; sourceTree = "<group>"; };
 		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
 		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
@@ -524,9 +573,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				809D4E171C7E88A900EC9EC6 /* ResearchKit.framework in Frameworks */,
+				FF0396141CFE289B00245DE3 /* ZipZap.framework in Frameworks */,
+				FF0396391CFE2BC600245DE3 /* BridgeSDK.framework in Frameworks */,
+				FF0396261CFE28D300245DE3 /* openssl.framework in Frameworks */,
 				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
-				809D4E1B1C7E88AC00EC9EC6 /* BridgeSDK.framework in Frameworks */,
+				FF0396181CFE28A300245DE3 /* ResearchKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,8 +585,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				803222281CE64A82001D5281 /* openssl.framework in Frameworks */,
-				8032220B1CE642CD001D5281 /* ZipZap.framework in Frameworks */,
+				FF03963D1CFE317B00245DE3 /* openssl.framework in Frameworks */,
 				FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */,
 				809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */,
 			);
@@ -718,33 +768,12 @@
 		803221DE1CE64207001D5281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8032221E1CE64A73001D5281 /* openssl.xcodeproj */,
-				803221E91CE64232001D5281 /* ZipZap.xcodeproj */,
+				FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */,
+				FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */,
+				FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */,
+				FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		803221EA1CE64232001D5281 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				803221F41CE64232001D5281 /* ZipZap.framework */,
-				803221F61CE64232001D5281 /* libZipZap.a */,
-				803221F81CE64232001D5281 /* ZipZap.framework */,
-				803221FA1CE64232001D5281 /* libZipZap.a */,
-				803221FC1CE64232001D5281 /* ZipZap.framework */,
-				803221FE1CE64232001D5281 /* libZipZap.a */,
-				803222001CE64232001D5281 /* ZipZapTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8032221F1CE64A73001D5281 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				803222251CE64A73001D5281 /* openssl.framework */,
-				803222271CE64A73001D5281 /* opensslTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		809D4DF71C7E885300EC9EC6 /* Products */ = {
@@ -954,6 +983,49 @@
 				FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */,
 			);
 			name = Registration;
+			sourceTree = "<group>";
+		};
+		FF0395DD1CFE283600245DE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */,
+				FF0395ED1CFE283700245DE3 /* BridgeSDKTests.xctest */,
+				FF0395EF1CFE283700245DE3 /* BridgeSDKIntegration.app */,
+				FF0395F11CFE283700245DE3 /* BridgeSDKIntegrationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF0395F31CFE283F00245DE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF0395F91CFE283F00245DE3 /* ResearchKit.framework */,
+				FF0395FB1CFE283F00245DE3 /* ResearchKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF0395FD1CFE284D00245DE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF0396071CFE284D00245DE3 /* ZipZap.framework */,
+				FF0396091CFE284D00245DE3 /* libZipZap.a */,
+				FF03960B1CFE284D00245DE3 /* ZipZap.framework */,
+				FF03960D1CFE284D00245DE3 /* libZipZap.a */,
+				FF03960F1CFE284D00245DE3 /* ZipZap.framework */,
+				FF0396111CFE284D00245DE3 /* libZipZap.a */,
+				FF0396131CFE284D00245DE3 /* ZipZapTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF03961D1CFE28C800245DE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF0396231CFE28C800245DE3 /* openssl.framework */,
+				FF0396251CFE28C800245DE3 /* opensslTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
@@ -1208,11 +1280,13 @@
 			buildRules = (
 			);
 			dependencies = (
-				809D4E141C7E888900EC9EC6 /* PBXTargetDependency */,
-				809D4E161C7E888900EC9EC6 /* PBXTargetDependency */,
 				801040C61C5A843D00D26E19 /* PBXTargetDependency */,
 				809D4E1A1C7E88AA00EC9EC6 /* PBXTargetDependency */,
 				809D4E1E1C7E88AE00EC9EC6 /* PBXTargetDependency */,
+				FF0396171CFE289B00245DE3 /* PBXTargetDependency */,
+				FF03961B1CFE28A300245DE3 /* PBXTargetDependency */,
+				FF0396291CFE28D300245DE3 /* PBXTargetDependency */,
+				FF03963C1CFE2BC600245DE3 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1231,8 +1305,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				8032222A1CE64A8E001D5281 /* PBXTargetDependency */,
-				8032220D1CE642D3001D5281 /* PBXTargetDependency */,
 				809D4E211C7E89F200EC9EC6 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDK;
@@ -1298,20 +1370,28 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = FF0395DD1CFE283600245DE3 /* Products */;
+					ProjectRef = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+				},
+				{
 					ProductGroup = 809D4DF71C7E885300EC9EC6 /* Products */;
 					ProjectRef = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
 				},
 				{
-					ProductGroup = 8032221F1CE64A73001D5281 /* Products */;
-					ProjectRef = 8032221E1CE64A73001D5281 /* openssl.xcodeproj */;
+					ProductGroup = FF03961D1CFE28C800245DE3 /* Products */;
+					ProjectRef = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
 				},
 				{
 					ProductGroup = 809D4E0A1C7E886900EC9EC6 /* Products */;
 					ProjectRef = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
 				},
 				{
-					ProductGroup = 803221EA1CE64232001D5281 /* Products */;
-					ProjectRef = 803221E91CE64232001D5281 /* ZipZap.xcodeproj */;
+					ProductGroup = FF0395F31CFE283F00245DE3 /* Products */;
+					ProjectRef = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+				},
+				{
+					ProductGroup = FF0395FD1CFE284D00245DE3 /* Products */;
+					ProjectRef = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1324,69 +1404,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		803221F41CE64232001D5281 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = 803221F31CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803221F61CE64232001D5281 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = 803221F51CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803221F81CE64232001D5281 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = 803221F71CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803221FA1CE64232001D5281 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = 803221F91CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803221FC1CE64232001D5281 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = 803221FB1CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803221FE1CE64232001D5281 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = 803221FD1CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803222001CE64232001D5281 /* ZipZapTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ZipZapTests.xctest;
-			remoteRef = 803221FF1CE64232001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803222251CE64A73001D5281 /* openssl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = openssl.framework;
-			remoteRef = 803222241CE64A73001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		803222271CE64A73001D5281 /* opensslTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = opensslTests.xctest;
-			remoteRef = 803222261CE64A73001D5281 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1427,6 +1444,111 @@
 			fileType = wrapper.cfbundle;
 			path = ResearchKitTests.xctest;
 			remoteRef = 809D4E111C7E886900EC9EC6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BridgeSDK.framework;
+			remoteRef = FF0395EA1CFE283700245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395ED1CFE283700245DE3 /* BridgeSDKTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BridgeSDKTests.xctest;
+			remoteRef = FF0395EC1CFE283700245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395EF1CFE283700245DE3 /* BridgeSDKIntegration.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = BridgeSDKIntegration.app;
+			remoteRef = FF0395EE1CFE283700245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395F11CFE283700245DE3 /* BridgeSDKIntegrationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BridgeSDKIntegrationTests.xctest;
+			remoteRef = FF0395F01CFE283700245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395F91CFE283F00245DE3 /* ResearchKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ResearchKit.framework;
+			remoteRef = FF0395F81CFE283F00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0395FB1CFE283F00245DE3 /* ResearchKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ResearchKitTests.xctest;
+			remoteRef = FF0395FA1CFE283F00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396071CFE284D00245DE3 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FF0396061CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396091CFE284D00245DE3 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FF0396081CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF03960B1CFE284D00245DE3 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FF03960A1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF03960D1CFE284D00245DE3 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FF03960C1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF03960F1CFE284D00245DE3 /* ZipZap.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZipZap.framework;
+			remoteRef = FF03960E1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396111CFE284D00245DE3 /* libZipZap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZipZap.a;
+			remoteRef = FF0396101CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396131CFE284D00245DE3 /* ZipZapTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZipZapTests.xctest;
+			remoteRef = FF0396121CFE284D00245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396231CFE28C800245DE3 /* openssl.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = openssl.framework;
+			remoteRef = FF0396221CFE28C800245DE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0396251CFE28C800245DE3 /* opensslTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = opensslTests.xctest;
+			remoteRef = FF0396241CFE28C800245DE3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1616,26 +1738,6 @@
 			target = 801040B11C5A843D00D26E19 /* BridgeAppSDK */;
 			targetProxy = 801040C51C5A843D00D26E19 /* PBXContainerItemProxy */;
 		};
-		8032220D1CE642D3001D5281 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ZipZap (iOS Framework)";
-			targetProxy = 8032220C1CE642D3001D5281 /* PBXContainerItemProxy */;
-		};
-		8032222A1CE64A8E001D5281 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = openssl;
-			targetProxy = 803222291CE64A8E001D5281 /* PBXContainerItemProxy */;
-		};
-		809D4E141C7E888900EC9EC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = 809D4E131C7E888900EC9EC6 /* PBXContainerItemProxy */;
-		};
-		809D4E161C7E888900EC9EC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BridgeSDK;
-			targetProxy = 809D4E151C7E888900EC9EC6 /* PBXContainerItemProxy */;
-		};
 		809D4E1A1C7E88AA00EC9EC6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ResearchKit;
@@ -1650,6 +1752,26 @@
 			isa = PBXTargetDependency;
 			name = ResearchKit;
 			targetProxy = 809D4E201C7E89F200EC9EC6 /* PBXContainerItemProxy */;
+		};
+		FF0396171CFE289B00245DE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ZipZap (iOS Framework)";
+			targetProxy = FF0396161CFE289B00245DE3 /* PBXContainerItemProxy */;
+		};
+		FF03961B1CFE28A300245DE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchKit;
+			targetProxy = FF03961A1CFE28A300245DE3 /* PBXContainerItemProxy */;
+		};
+		FF0396291CFE28D300245DE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = openssl;
+			targetProxy = FF0396281CFE28D300245DE3 /* PBXContainerItemProxy */;
+		};
+		FF03963C1CFE2BC600245DE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BridgeSDK;
+			targetProxy = FF03963B1CFE2BC600245DE3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
