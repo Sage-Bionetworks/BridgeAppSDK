@@ -1,0 +1,12 @@
+[submodule "BridgeSDK"]
+	path = BridgeSDK
+	url = https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git
+[submodule "ResearchKit"]
+	path = ResearchKit
+	url = https://github.com/Sage-Bionetworks/ResearchKit.git
+[submodule "CMSSupport"]
+	path = CMSSupport
+	url = https://github.com/Sage-Bionetworks/CMSSupport.git
+[submodule "ZipZap"]
+	path = ZipZap
+	url = https://github.com/pixelglow/ZipZap.git
