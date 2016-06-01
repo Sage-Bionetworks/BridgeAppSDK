@@ -153,7 +153,7 @@
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; };
 		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
-		FFC160B41CFE6BB500C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160B31CFE6BB500C29AF7 /* openssl.framework */; };
+		FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; };
 		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -279,6 +279,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
+		};
+		FFC160CD1CFE6DC300C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 60674AE31B30A93900A1917D;
+			remoteInfo = openssl;
+		};
+		FFC160CF1CFE6DC300C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
+			remoteInfo = opensslTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -470,7 +484,6 @@
 		FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_19sharing_rsch.html; sourceTree = "<group>"; };
 		FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_contact.html; sourceTree = "<group>"; };
 		FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_irb.html; sourceTree = "<group>"; };
-		FFC160B31CFE6BB500C29AF7 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "CMSSupport/openssl/build/Debug-iphoneos/openssl.framework"; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORKOrderedTask+SBAExtension.h"; sourceTree = "<group>"; };
@@ -498,7 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFC160B41CFE6BB500C29AF7 /* openssl.framework in Frameworks */,
+				FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */,
 				FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */,
 				FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */,
 				FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */,
@@ -674,7 +687,6 @@
 		803221DE1CE64207001D5281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FFC160B31CFE6BB500C29AF7 /* openssl.framework */,
 				FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */,
 				FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */,
 				FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */,
@@ -1173,6 +1185,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FFC160BE1CFE6DC300C29AF7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFC160CE1CFE6DC300C29AF7 /* openssl.framework */,
+				FFC160D01CFE6DC300C29AF7 /* opensslTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FFC68EED1CA4778D00FF7B07 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -1326,6 +1347,10 @@
 					ProjectRef = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
 				},
 				{
+					ProductGroup = FFC160BE1CFE6DC300C29AF7 /* Products */;
+					ProjectRef = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+				},
+				{
 					ProductGroup = FFC160991CFE672100C29AF7 /* Products */;
 					ProjectRef = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
 				},
@@ -1433,6 +1458,20 @@
 			fileType = wrapper.cfbundle;
 			path = ResearchKitTests.xctest;
 			remoteRef = FFC160A01CFE672100C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC160CE1CFE6DC300C29AF7 /* openssl.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = openssl.framework;
+			remoteRef = FFC160CD1CFE6DC300C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC160D01CFE6DC300C29AF7 /* opensslTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = opensslTests.xctest;
+			remoteRef = FFC160CF1CFE6DC300C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
