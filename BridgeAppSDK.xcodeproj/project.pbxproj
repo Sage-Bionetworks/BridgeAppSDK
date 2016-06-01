@@ -12,11 +12,9 @@
 		801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
-		801040F11C5AD29300D26E19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EE1C5AD29300D26E19 /* Main.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
 		804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
-		809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E101C7E886900EC9EC6 /* ResearchKit.framework */; };
 		80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FF6410FD1CB2DC21007FB9E1 /* SBAJSONObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D5F1911CE51C40002A39DF /* SBAEncryption.h */; };
 		80D5F1941CE51C40002A39DF /* SBAEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1921CE51C40002A39DF /* SBAEncryption.m */; };
@@ -55,15 +53,6 @@
 		FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */; };
 		FBF1B6C61CAB0273007C1082 /* SBALocalizationMacroWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = FBF1B6C41CAB0273007C1082 /* SBALocalizationMacroWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF1B6C51CAB0273007C1082 /* SBALocalizationMacroWrapper.m */; };
-		FF0396141CFE289B00245DE3 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396071CFE284D00245DE3 /* ZipZap.framework */; };
-		FF0396151CFE289B00245DE3 /* ZipZap.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396071CFE284D00245DE3 /* ZipZap.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF0396181CFE28A300245DE3 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395F91CFE283F00245DE3 /* ResearchKit.framework */; };
-		FF0396191CFE28A300245DE3 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395F91CFE283F00245DE3 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF0396261CFE28D300245DE3 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; };
-		FF0396271CFE28D300245DE3 /* openssl.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF0396391CFE2BC600245DE3 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */; };
-		FF03963A1CFE2BC600245DE3 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF03963D1CFE317B00245DE3 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0396231CFE28C800245DE3 /* openssl.framework */; };
 		FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF08E0BF1C9A6A120082D530 /* SBASurveyItem+Dictionary.swift */; };
 		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
 		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
@@ -104,7 +93,6 @@
 		FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */; };
 		FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */; };
 		FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF6484161CB617790055B9E7 /* MedicationTracking.json */; };
-		FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */; };
 		FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */; };
 		FF8DDFE31CB63E92006D1AFA /* SBATrackedDataStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */; };
@@ -116,7 +104,6 @@
 		FF9055EC1CE527890049D12A /* SBAProgressStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9055EB1CE527890049D12A /* SBAProgressStep.swift */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
-		FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C4B1CA20EAF001C293C /* HKHealthStore+Queries.swift */; };
 		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
 		FF9E48961CF3A2F1005EE7E0 /* StaticUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E48951CF3A2F1005EE7E0 /* StaticUtilities.swift */; };
@@ -135,26 +122,39 @@
 		FFB5830C1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */; };
 		FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */; };
 		FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */; };
+		FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD31CFE439500C29AF7 /* Main.storyboard */; };
+		FFC15FD61CFE452C00C29AF7 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD51CFE452C00C29AF7 /* Onboarding.storyboard */; };
+		FFC15FD81CFE4C7100C29AF7 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC15FD71CFE4C7100C29AF7 /* MainTabViewController.swift */; };
+		FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */; };
+		FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */; };
+		FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDE1CFE513200C29AF7 /* sample-study.pem */; };
+		FFC15FE31CFE56EA00C29AF7 /* Consent.json in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE21CFE56EA00C29AF7 /* Consent.json */; };
+		FFC15FFC1CFE57BF00C29AF7 /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */; };
+		FFC15FFD1CFE57BF00C29AF7 /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */; };
+		FFC15FFE1CFE57BF00C29AF7 /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */; };
+		FFC15FFF1CFE57BF00C29AF7 /* consent_4sensordata.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */; };
+		FFC160001CFE57BF00C29AF7 /* consent_5dataprocessing.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */; };
+		FFC160011CFE57BF00C29AF7 /* consent_6protectingdata.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */; };
+		FFC160021CFE57BF00C29AF7 /* consent_7datause.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */; };
+		FFC160031CFE57BF00C29AF7 /* consent_8time.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */; };
+		FFC160041CFE57BF00C29AF7 /* consent_9study_survey.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */; };
+		FFC160051CFE57BF00C29AF7 /* consent_10study_task.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */; };
+		FFC160061CFE57BF00C29AF7 /* consent_11potential_risk.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */; };
+		FFC160071CFE57BF00C29AF7 /* consent_12medical_care.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */; };
+		FFC160081CFE57BF00C29AF7 /* consent_13follow_up.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */; };
+		FFC160091CFE57BF00C29AF7 /* consent_14withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */; };
+		FFC1600A1CFE57BF00C29AF7 /* consent_15think.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */; };
+		FFC1600B1CFE57BF00C29AF7 /* consent_16future.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */; };
+		FFC1600C1CFE57BF00C29AF7 /* consent_17data_sharing.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */; };
+		FFC1600D1CFE57BF00C29AF7 /* consent_18researchers.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */; };
+		FFC1600E1CFE57BF00C29AF7 /* consent_19sharing_rsch.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */; };
+		FFC1600F1CFE57BF00C29AF7 /* consent_contact.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */; };
+		FFC160101CFE57BF00C29AF7 /* consent_irb.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */; };
+		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
+		FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; };
+		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
+		FFC160B41CFE6BB500C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160B31CFE6BB500C29AF7 /* openssl.framework */; };
 		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
-		FFCB989D1CAC9A3A005078EF /* ResearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */; };
-		FFCB989E1CAC9A3A005078EF /* ResearchContainerSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */; };
-		FFCB989F1CAC9A47005078EF /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161479C51BD6CE8F0099A068 /* OnboardingViewController.swift */; };
-		FFCB98A01CAC9A47005078EF /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E6D1BD9AEF800B6D223 /* IntroductionViewController.swift */; };
-		FFCB98A11CAC9A4D005078EF /* DashboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C366B31BE7ADBA0036112D /* DashboardTableViewController.swift */; };
-		FFCB98A21CAC9A4D005078EF /* PieChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D117571BE8D12000D7F153 /* PieChartDataSource.swift */; };
-		FFCB98A31CAC9A4D005078EF /* DiscreteGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175B1BE8D15400D7F153 /* DiscreteGraphDataSource.swift */; };
-		FFCB98A41CAC9A4D005078EF /* LineGraphDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1175D1BE8D17E00D7F153 /* LineGraphDataSource.swift */; };
-		FFCB98A51CAC9A53005078EF /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16147A0E1BD83F700099A068 /* ActivityViewController.swift */; };
-		FFCB98A61CAC9A53005078EF /* StudyTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A7E651BD99DBA00B6D223 /* StudyTasks.swift */; };
-		FFCB98A71CAC9A58005078EF /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */; };
-		FFCB98A81CAC9A58005078EF /* ProfileStaticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B701BE2C989007C79C6 /* ProfileStaticTableViewCell.swift */; };
-		FFCB98A91CAC9A58005078EF /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D35FC61BEA363F004CBB06 /* ProfileHeaderView.swift */; };
-		FFCB98AA1CAC9A5E005078EF /* HealthDataStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FA92E81BF13D98001E46C0 /* HealthDataStep.swift */; };
-		FFCB98AB1CAC9A5E005078EF /* HealthDataStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168F25711BE052AD001D2D65 /* HealthDataStepViewController.swift */; };
-		FFCB98AC1CAC9A5E005078EF /* ConsentDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207551BECED750051D9D8 /* ConsentDocument.swift */; };
-		FFCB98AD1CAC9A63005078EF /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C207411BECBA8B0051D9D8 /* WithdrawViewController.swift */; };
-		FFCB98AE1CAC9A6D005078EF /* HealthClientType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */; };
-		FFCB98AF1CAC9A6D005078EF /* AnimatableChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C2074F1BECCB1A0051D9D8 /* AnimatableChart.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFCF37B31CD94EC80090452F /* ORKOrderedTask+SBAExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37B11CD94EC80090452F /* ORKOrderedTask+SBAExtension.m */; };
@@ -189,201 +189,96 @@
 			remoteGlobalIDString = 801040B11C5A843D00D26E19;
 			remoteInfo = BridgeAppSDK;
 		};
-		809D4E011C7E885300EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80855F5019BE258C006601C7;
-			remoteInfo = BridgeSDK;
-		};
-		809D4E031C7E885300EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80855F5B19BE258C006601C7;
-			remoteInfo = BridgeSDKTests;
-		};
-		809D4E051C7E885300EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 807AE2871B603309002588BB;
-			remoteInfo = BridgeSDKIntegration;
-		};
-		809D4E071C7E885300EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 807AE29F1B60330C002588BB;
-			remoteInfo = BridgeSDKIntegrationTests;
-		};
-		809D4E0F1C7E886900EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B183A5951A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		809D4E111C7E886900EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
-			remoteInfo = ResearchKitTests;
-		};
-		809D4E191C7E88AA00EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		809D4E1D1C7E88AE00EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 80855F4F19BE258C006601C7;
-			remoteInfo = BridgeSDK;
-		};
-		809D4E201C7E89F200EC9EC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		FF0395EA1CFE283700245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80855F5019BE258C006601C7;
-			remoteInfo = BridgeSDK;
-		};
-		FF0395EC1CFE283700245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80855F5B19BE258C006601C7;
-			remoteInfo = BridgeSDKTests;
-		};
-		FF0395EE1CFE283700245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 807AE2871B603309002588BB;
-			remoteInfo = BridgeSDKIntegration;
-		};
-		FF0395F01CFE283700245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 807AE29F1B60330C002588BB;
-			remoteInfo = BridgeSDKIntegrationTests;
-		};
-		FF0395F81CFE283F00245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B183A5951A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		FF0395FA1CFE283F00245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
-			remoteInfo = ResearchKitTests;
-		};
-		FF0396061CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC160771CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D87BA1F81B3D6DEA00ED7EB3;
 			remoteInfo = "ZipZap (iOS Framework)";
 		};
-		FF0396081CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC160791CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D899CFB0162C5EEB00112F49;
 			remoteInfo = "ZipZap (iOS Static Library)";
 		};
-		FF03960A1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC1607B1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D8D140D31B423B1100C411B0;
 			remoteInfo = "ZipZap (OS X Framework)";
 		};
-		FF03960C1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC1607D1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D899CF82162C5EC100112F49;
 			remoteInfo = "ZipZap (OS X Static Library)";
 		};
-		FF03960E1CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC1607F1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BF8624CB1BB7495200C12EEE;
 			remoteInfo = "ZipZap (tvOS Framework)";
 		};
-		FF0396101CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC160811CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BF8624EF1BB74B1F00C12EEE;
 			remoteInfo = "ZipZap (tvOS Static Library)";
 		};
-		FF0396121CFE284D00245DE3 /* PBXContainerItemProxy */ = {
+		FFC160831CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D899CF96162C5EC100112F49;
 			remoteInfo = ZipZapTests;
 		};
-		FF0396161CFE289B00245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D87BA1F71B3D6DEA00ED7EB3;
-			remoteInfo = "ZipZap (iOS Framework)";
-		};
-		FF03961A1CFE28A300245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		FF0396221CFE28C800245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AE31B30A93900A1917D;
-			remoteInfo = openssl;
-		};
-		FF0396241CFE28C800245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
-			remoteInfo = opensslTests;
-		};
-		FF0396281CFE28D300245DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 60674AE21B30A93900A1917D;
-			remoteInfo = openssl;
-		};
-		FF03963B1CFE2BC600245DE3 /* PBXContainerItemProxy */ = {
+		FFC160911CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 80855F4F19BE258C006601C7;
+			proxyType = 2;
+			remoteGlobalIDString = 80855F5019BE258C006601C7;
 			remoteInfo = BridgeSDK;
+		};
+		FFC160931CFE672100C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 80855F5B19BE258C006601C7;
+			remoteInfo = BridgeSDKTests;
+		};
+		FFC160951CFE672100C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE2871B603309002588BB;
+			remoteInfo = BridgeSDKIntegration;
+		};
+		FFC160971CFE672100C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE29F1B60330C002588BB;
+			remoteInfo = BridgeSDKIntegrationTests;
+		};
+		FFC1609E1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B183A5951A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
+		FFC160A01CFE672100C29AF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
+			remoteInfo = ResearchKitTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -394,11 +289,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FF0396151CFE289B00245DE3 /* ZipZap.framework in Embed Frameworks */,
-				FF03963A1CFE2BC600245DE3 /* BridgeSDK.framework in Embed Frameworks */,
-				FF0396271CFE28D300245DE3 /* openssl.framework in Embed Frameworks */,
 				801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */,
-				FF0396191CFE28A300245DE3 /* ResearchKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,11 +313,8 @@
 		801040C41C5A843D00D26E19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		801040E61C5AD18100D26E19 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		801040EF1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
-		809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = ../../BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
-		809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ../../ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		80D5F1911CE51C40002A39DF /* SBAEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAEncryption.h; sourceTree = "<group>"; };
 		80D5F1921CE51C40002A39DF /* SBAEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEncryption.m; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
@@ -554,6 +442,35 @@
 		FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentReviewOptions.swift; sourceTree = "<group>"; };
 		FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+Dictionary.swift"; sourceTree = "<group>"; };
 		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
+		FFC15FD21CFE439500C29AF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FFC15FD51CFE452C00C29AF7 /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
+		FFC15FD71CFE4C7100C29AF7 /* MainTabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
+		FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
+		FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ColorInfo.plist; sourceTree = "<group>"; };
+		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
+		FFC15FE21CFE56EA00C29AF7 /* Consent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Consent.json; sourceTree = "<group>"; };
+		FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_1welcome.html; sourceTree = "<group>"; };
+		FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_2quiz_headsup.html; sourceTree = "<group>"; };
+		FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_3activities.html; sourceTree = "<group>"; };
+		FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_4sensordata.html; sourceTree = "<group>"; };
+		FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_5dataprocessing.html; sourceTree = "<group>"; };
+		FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_6protectingdata.html; sourceTree = "<group>"; };
+		FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_7datause.html; sourceTree = "<group>"; };
+		FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_8time.html; sourceTree = "<group>"; };
+		FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_9study_survey.html; sourceTree = "<group>"; };
+		FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_10study_task.html; sourceTree = "<group>"; };
+		FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_11potential_risk.html; sourceTree = "<group>"; };
+		FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_12medical_care.html; sourceTree = "<group>"; };
+		FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_13follow_up.html; sourceTree = "<group>"; };
+		FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_14withdrawl.html; sourceTree = "<group>"; };
+		FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_15think.html; sourceTree = "<group>"; };
+		FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_16future.html; sourceTree = "<group>"; };
+		FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_17data_sharing.html; sourceTree = "<group>"; };
+		FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_18researchers.html; sourceTree = "<group>"; };
+		FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_19sharing_rsch.html; sourceTree = "<group>"; };
+		FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_contact.html; sourceTree = "<group>"; };
+		FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_irb.html; sourceTree = "<group>"; };
+		FFC160B31CFE6BB500C29AF7 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "CMSSupport/openssl/build/Debug-iphoneos/openssl.framework"; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORKOrderedTask+SBAExtension.h"; sourceTree = "<group>"; };
@@ -573,11 +490,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF0396141CFE289B00245DE3 /* ZipZap.framework in Frameworks */,
-				FF0396391CFE2BC600245DE3 /* BridgeSDK.framework in Frameworks */,
-				FF0396261CFE28D300245DE3 /* openssl.framework in Frameworks */,
 				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
-				FF0396181CFE28A300245DE3 /* ResearchKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,9 +498,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF03963D1CFE317B00245DE3 /* openssl.framework in Frameworks */,
-				FF7D6EBA1C98B43900A0466D /* BridgeSDK.framework in Frameworks */,
-				809D4E1F1C7E89E300EC9EC6 /* ResearchKit.framework in Frameworks */,
+				FFC160B41CFE6BB500C29AF7 /* openssl.framework in Frameworks */,
+				FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */,
+				FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */,
+				FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -728,15 +642,10 @@
 			isa = PBXGroup;
 			children = (
 				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
-				86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */,
-				B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */,
-				FF6B39331CA1E4DB00BF1413 /* Onboarding */,
-				FF6B39341CA1E5A000BF1413 /* Dashboard */,
-				FF6B39351CA1E61A00BF1413 /* Activities */,
-				16BF5B641BE2964F007C79C6 /* Profile */,
-				FB6817381C6B00F3006C8FC9 /* TasksAndSteps */,
-				B5C207401BECBA710051D9D8 /* Withdrawal */,
-				FF6B39361CA1E74900BF1413 /* Library */,
+				FFC15FD71CFE4C7100C29AF7 /* MainTabViewController.swift */,
+				FFC15FDD1CFE503100C29AF7 /* Resources */,
+				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
+				FFC15FAF1CFE3DB300C29AF7 /* Apple Sample Code */,
 				801040F51C5AD57E00D26E19 /* Frameworks */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
 			);
@@ -746,10 +655,9 @@
 		801040F41C5AD55800D26E19 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */,
+				FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */,
 				80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */,
-				801040F21C5AD2D700D26E19 /* Assets.xcassets */,
-				801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */,
-				801040EE1C5AD29300D26E19 /* Main.storyboard */,
 				801040E61C5AD18100D26E19 /* Info.plist */,
 				80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */,
 			);
@@ -759,8 +667,6 @@
 		801040F51C5AD57E00D26E19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */,
-				809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -768,32 +674,13 @@
 		803221DE1CE64207001D5281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FFC160B31CFE6BB500C29AF7 /* openssl.framework */,
 				FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */,
 				FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */,
 				FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */,
 				FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		809D4DF71C7E885300EC9EC6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */,
-				809D4E041C7E885300EC9EC6 /* BridgeSDKTests.xctest */,
-				809D4E061C7E885300EC9EC6 /* BridgeSDKIntegration.app */,
-				809D4E081C7E885300EC9EC6 /* BridgeSDKIntegrationTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		809D4E0A1C7E886900EC9EC6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				809D4E101C7E886900EC9EC6 /* ResearchKit.framework */,
-				809D4E121C7E886900EC9EC6 /* ResearchKitTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		80F554CB1CD3F21D00C38053 /* Notifications */ = {
@@ -985,49 +872,6 @@
 			name = Registration;
 			sourceTree = "<group>";
 		};
-		FF0395DD1CFE283600245DE3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */,
-				FF0395ED1CFE283700245DE3 /* BridgeSDKTests.xctest */,
-				FF0395EF1CFE283700245DE3 /* BridgeSDKIntegration.app */,
-				FF0395F11CFE283700245DE3 /* BridgeSDKIntegrationTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		FF0395F31CFE283F00245DE3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FF0395F91CFE283F00245DE3 /* ResearchKit.framework */,
-				FF0395FB1CFE283F00245DE3 /* ResearchKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		FF0395FD1CFE284D00245DE3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FF0396071CFE284D00245DE3 /* ZipZap.framework */,
-				FF0396091CFE284D00245DE3 /* libZipZap.a */,
-				FF03960B1CFE284D00245DE3 /* ZipZap.framework */,
-				FF03960D1CFE284D00245DE3 /* libZipZap.a */,
-				FF03960F1CFE284D00245DE3 /* ZipZap.framework */,
-				FF0396111CFE284D00245DE3 /* libZipZap.a */,
-				FF0396131CFE284D00245DE3 /* ZipZapTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		FF03961D1CFE28C800245DE3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FF0396231CFE28C800245DE3 /* openssl.framework */,
-				FF0396251CFE28C800245DE3 /* opensslTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1214,6 +1058,121 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		FFC15FAF1CFE3DB300C29AF7 /* Apple Sample Code */ = {
+			isa = PBXGroup;
+			children = (
+				86CCDFF51C1B50970042AA39 /* ResearchContainerViewController.swift */,
+				B5C2073E1BEC16F00051D9D8 /* ResearchContainerSegue.swift */,
+				FF6B39331CA1E4DB00BF1413 /* Onboarding */,
+				FF6B39341CA1E5A000BF1413 /* Dashboard */,
+				FF6B39351CA1E61A00BF1413 /* Activities */,
+				16BF5B641BE2964F007C79C6 /* Profile */,
+				FB6817381C6B00F3006C8FC9 /* TasksAndSteps */,
+				B5C207401BECBA710051D9D8 /* Withdrawal */,
+				FF6B39361CA1E74900BF1413 /* Library */,
+			);
+			name = "Apple Sample Code";
+			sourceTree = "<group>";
+		};
+		FFC15FD41CFE43BE00C29AF7 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				FFC15FD31CFE439500C29AF7 /* Main.storyboard */,
+				801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */,
+				FFC15FD51CFE452C00C29AF7 /* Onboarding.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		FFC15FDD1CFE503100C29AF7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FFC15FE41CFE579600C29AF7 /* HTML */,
+				FFC15FE11CFE569100C29AF7 /* JSON */,
+				FFC15FE01CFE567900C29AF7 /* Certificates */,
+				801040F21C5AD2D700D26E19 /* Assets.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		FFC15FE01CFE567900C29AF7 /* Certificates */ = {
+			isa = PBXGroup;
+			children = (
+				FFC15FDE1CFE513200C29AF7 /* sample-study.pem */,
+			);
+			name = Certificates;
+			sourceTree = "<group>";
+		};
+		FFC15FE11CFE569100C29AF7 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				FFC15FE21CFE56EA00C29AF7 /* Consent.json */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+		FFC15FE41CFE579600C29AF7 /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */,
+				FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */,
+				FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */,
+				FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */,
+				FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */,
+				FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */,
+				FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */,
+				FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */,
+				FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */,
+				FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */,
+				FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */,
+				FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */,
+				FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */,
+				FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */,
+				FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */,
+				FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */,
+				FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */,
+				FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */,
+				FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */,
+				FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */,
+				FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */,
+			);
+			name = HTML;
+			sourceTree = "<group>";
+		};
+		FFC1606E1CFE672100C29AF7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFC160781CFE672100C29AF7 /* ZipZap.framework */,
+				FFC1607A1CFE672100C29AF7 /* libZipZap.a */,
+				FFC1607C1CFE672100C29AF7 /* ZipZap.framework */,
+				FFC1607E1CFE672100C29AF7 /* libZipZap.a */,
+				FFC160801CFE672100C29AF7 /* ZipZap.framework */,
+				FFC160821CFE672100C29AF7 /* libZipZap.a */,
+				FFC160841CFE672100C29AF7 /* ZipZapTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FFC160851CFE672100C29AF7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFC160921CFE672100C29AF7 /* BridgeSDK.framework */,
+				FFC160941CFE672100C29AF7 /* BridgeSDKTests.xctest */,
+				FFC160961CFE672100C29AF7 /* BridgeSDKIntegration.app */,
+				FFC160981CFE672100C29AF7 /* BridgeSDKIntegrationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FFC160991CFE672100C29AF7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */,
+				FFC160A11CFE672100C29AF7 /* ResearchKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FFC68EED1CA4778D00FF7B07 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -1281,12 +1240,6 @@
 			);
 			dependencies = (
 				801040C61C5A843D00D26E19 /* PBXTargetDependency */,
-				809D4E1A1C7E88AA00EC9EC6 /* PBXTargetDependency */,
-				809D4E1E1C7E88AE00EC9EC6 /* PBXTargetDependency */,
-				FF0396171CFE289B00245DE3 /* PBXTargetDependency */,
-				FF03961B1CFE28A300245DE3 /* PBXTargetDependency */,
-				FF0396291CFE28D300245DE3 /* PBXTargetDependency */,
-				FF03963C1CFE2BC600245DE3 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1305,7 +1258,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				809D4E211C7E89F200EC9EC6 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDK;
 			productName = BridgeAppSDK;
@@ -1370,27 +1322,15 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = FF0395DD1CFE283600245DE3 /* Products */;
+					ProductGroup = FFC160851CFE672100C29AF7 /* Products */;
 					ProjectRef = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
 				},
 				{
-					ProductGroup = 809D4DF71C7E885300EC9EC6 /* Products */;
-					ProjectRef = 809D4DF61C7E885300EC9EC6 /* BridgeSDK.xcodeproj */;
-				},
-				{
-					ProductGroup = FF03961D1CFE28C800245DE3 /* Products */;
-					ProjectRef = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-				},
-				{
-					ProductGroup = 809D4E0A1C7E886900EC9EC6 /* Products */;
-					ProjectRef = 809D4E091C7E886900EC9EC6 /* ResearchKit.xcodeproj */;
-				},
-				{
-					ProductGroup = FF0395F31CFE283F00245DE3 /* Products */;
+					ProductGroup = FFC160991CFE672100C29AF7 /* Products */;
 					ProjectRef = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
 				},
 				{
-					ProductGroup = FF0395FD1CFE284D00245DE3 /* Products */;
+					ProductGroup = FFC1606E1CFE672100C29AF7 /* Products */;
 					ProjectRef = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 				},
 			);
@@ -1404,151 +1344,95 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		809D4E021C7E885300EC9EC6 /* BridgeSDK.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BridgeSDK.framework;
-			remoteRef = 809D4E011C7E885300EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		809D4E041C7E885300EC9EC6 /* BridgeSDKTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = BridgeSDKTests.xctest;
-			remoteRef = 809D4E031C7E885300EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		809D4E061C7E885300EC9EC6 /* BridgeSDKIntegration.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = BridgeSDKIntegration.app;
-			remoteRef = 809D4E051C7E885300EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		809D4E081C7E885300EC9EC6 /* BridgeSDKIntegrationTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = BridgeSDKIntegrationTests.xctest;
-			remoteRef = 809D4E071C7E885300EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		809D4E101C7E886900EC9EC6 /* ResearchKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ResearchKit.framework;
-			remoteRef = 809D4E0F1C7E886900EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		809D4E121C7E886900EC9EC6 /* ResearchKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ResearchKitTests.xctest;
-			remoteRef = 809D4E111C7E886900EC9EC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395EB1CFE283700245DE3 /* BridgeSDK.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BridgeSDK.framework;
-			remoteRef = FF0395EA1CFE283700245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395ED1CFE283700245DE3 /* BridgeSDKTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = BridgeSDKTests.xctest;
-			remoteRef = FF0395EC1CFE283700245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395EF1CFE283700245DE3 /* BridgeSDKIntegration.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = BridgeSDKIntegration.app;
-			remoteRef = FF0395EE1CFE283700245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395F11CFE283700245DE3 /* BridgeSDKIntegrationTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = BridgeSDKIntegrationTests.xctest;
-			remoteRef = FF0395F01CFE283700245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395F91CFE283F00245DE3 /* ResearchKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ResearchKit.framework;
-			remoteRef = FF0395F81CFE283F00245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0395FB1CFE283F00245DE3 /* ResearchKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ResearchKitTests.xctest;
-			remoteRef = FF0395FA1CFE283F00245DE3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF0396071CFE284D00245DE3 /* ZipZap.framework */ = {
+		FFC160781CFE672100C29AF7 /* ZipZap.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ZipZap.framework;
-			remoteRef = FF0396061CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC160771CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF0396091CFE284D00245DE3 /* libZipZap.a */ = {
+		FFC1607A1CFE672100C29AF7 /* libZipZap.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libZipZap.a;
-			remoteRef = FF0396081CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC160791CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF03960B1CFE284D00245DE3 /* ZipZap.framework */ = {
+		FFC1607C1CFE672100C29AF7 /* ZipZap.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ZipZap.framework;
-			remoteRef = FF03960A1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC1607B1CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF03960D1CFE284D00245DE3 /* libZipZap.a */ = {
+		FFC1607E1CFE672100C29AF7 /* libZipZap.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libZipZap.a;
-			remoteRef = FF03960C1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC1607D1CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF03960F1CFE284D00245DE3 /* ZipZap.framework */ = {
+		FFC160801CFE672100C29AF7 /* ZipZap.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ZipZap.framework;
-			remoteRef = FF03960E1CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC1607F1CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF0396111CFE284D00245DE3 /* libZipZap.a */ = {
+		FFC160821CFE672100C29AF7 /* libZipZap.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libZipZap.a;
-			remoteRef = FF0396101CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC160811CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF0396131CFE284D00245DE3 /* ZipZapTests.xctest */ = {
+		FFC160841CFE672100C29AF7 /* ZipZapTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ZipZapTests.xctest;
-			remoteRef = FF0396121CFE284D00245DE3 /* PBXContainerItemProxy */;
+			remoteRef = FFC160831CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF0396231CFE28C800245DE3 /* openssl.framework */ = {
+		FFC160921CFE672100C29AF7 /* BridgeSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = openssl.framework;
-			remoteRef = FF0396221CFE28C800245DE3 /* PBXContainerItemProxy */;
+			path = BridgeSDK.framework;
+			remoteRef = FFC160911CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FF0396251CFE28C800245DE3 /* opensslTests.xctest */ = {
+		FFC160941CFE672100C29AF7 /* BridgeSDKTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = opensslTests.xctest;
-			remoteRef = FF0396241CFE28C800245DE3 /* PBXContainerItemProxy */;
+			path = BridgeSDKTests.xctest;
+			remoteRef = FFC160931CFE672100C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC160961CFE672100C29AF7 /* BridgeSDKIntegration.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = BridgeSDKIntegration.app;
+			remoteRef = FFC160951CFE672100C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC160981CFE672100C29AF7 /* BridgeSDKIntegrationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BridgeSDKIntegrationTests.xctest;
+			remoteRef = FFC160971CFE672100C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ResearchKit.framework;
+			remoteRef = FFC1609E1CFE672100C29AF7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FFC160A11CFE672100C29AF7 /* ResearchKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ResearchKitTests.xctest;
+			remoteRef = FFC160A01CFE672100C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1558,10 +1442,36 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFC1600E1CFE57BF00C29AF7 /* consent_19sharing_rsch.html in Resources */,
+				FFC1600D1CFE57BF00C29AF7 /* consent_18researchers.html in Resources */,
+				FFC15FFE1CFE57BF00C29AF7 /* consent_3activities.html in Resources */,
+				FFC160041CFE57BF00C29AF7 /* consent_9study_survey.html in Resources */,
+				FFC160051CFE57BF00C29AF7 /* consent_10study_task.html in Resources */,
+				FFC15FFD1CFE57BF00C29AF7 /* consent_2quiz_headsup.html in Resources */,
+				FFC160001CFE57BF00C29AF7 /* consent_5dataprocessing.html in Resources */,
+				FFC160091CFE57BF00C29AF7 /* consent_14withdrawl.html in Resources */,
+				FFC15FE31CFE56EA00C29AF7 /* Consent.json in Resources */,
+				FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */,
 				80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */,
-				801040F11C5AD29300D26E19 /* Main.storyboard in Resources */,
+				FFC160071CFE57BF00C29AF7 /* consent_12medical_care.html in Resources */,
+				FFC1600B1CFE57BF00C29AF7 /* consent_16future.html in Resources */,
+				FFC15FFF1CFE57BF00C29AF7 /* consent_4sensordata.html in Resources */,
+				FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */,
+				FFC1600A1CFE57BF00C29AF7 /* consent_15think.html in Resources */,
+				FFC160011CFE57BF00C29AF7 /* consent_6protectingdata.html in Resources */,
+				FFC1600F1CFE57BF00C29AF7 /* consent_contact.html in Resources */,
+				FFC160061CFE57BF00C29AF7 /* consent_11potential_risk.html in Resources */,
+				FFC15FD61CFE452C00C29AF7 /* Onboarding.storyboard in Resources */,
+				FFC160031CFE57BF00C29AF7 /* consent_8time.html in Resources */,
+				FFC160081CFE57BF00C29AF7 /* consent_13follow_up.html in Resources */,
 				801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */,
 				801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */,
+				FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */,
+				FFC160101CFE57BF00C29AF7 /* consent_irb.html in Resources */,
+				FFC15FFC1CFE57BF00C29AF7 /* consent_1welcome.html in Resources */,
+				FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */,
+				FFC1600C1CFE57BF00C29AF7 /* consent_17data_sharing.html in Resources */,
+				FFC160021CFE57BF00C29AF7 /* consent_7datause.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1593,27 +1503,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFCB98A11CAC9A4D005078EF /* DashboardTableViewController.swift in Sources */,
-				FFCB98AC1CAC9A5E005078EF /* ConsentDocument.swift in Sources */,
-				FFCB989E1CAC9A3A005078EF /* ResearchContainerSegue.swift in Sources */,
-				FFCB98AB1CAC9A5E005078EF /* HealthDataStepViewController.swift in Sources */,
-				FFCB98AE1CAC9A6D005078EF /* HealthClientType.swift in Sources */,
-				FFCB98A31CAC9A4D005078EF /* DiscreteGraphDataSource.swift in Sources */,
-				FFCB98A41CAC9A4D005078EF /* LineGraphDataSource.swift in Sources */,
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
-				FFCB989F1CAC9A47005078EF /* OnboardingViewController.swift in Sources */,
-				FFCB989D1CAC9A3A005078EF /* ResearchContainerViewController.swift in Sources */,
-				FFCB98AF1CAC9A6D005078EF /* AnimatableChart.swift in Sources */,
-				FFCB98A91CAC9A58005078EF /* ProfileHeaderView.swift in Sources */,
-				FFCB98A01CAC9A47005078EF /* IntroductionViewController.swift in Sources */,
-				FFCB98A21CAC9A4D005078EF /* PieChartDataSource.swift in Sources */,
-				FF9D4C4C1CA20EAF001C293C /* HKHealthStore+Queries.swift in Sources */,
-				FFCB98AA1CAC9A5E005078EF /* HealthDataStep.swift in Sources */,
-				FFCB98A81CAC9A58005078EF /* ProfileStaticTableViewCell.swift in Sources */,
-				FFCB98A71CAC9A58005078EF /* ProfileViewController.swift in Sources */,
-				FFCB98AD1CAC9A63005078EF /* WithdrawViewController.swift in Sources */,
-				FFCB98A61CAC9A53005078EF /* StudyTasks.swift in Sources */,
-				FFCB98A51CAC9A53005078EF /* ActivityViewController.swift in Sources */,
+				FFC15FD81CFE4C7100C29AF7 /* MainTabViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1738,41 +1629,6 @@
 			target = 801040B11C5A843D00D26E19 /* BridgeAppSDK */;
 			targetProxy = 801040C51C5A843D00D26E19 /* PBXContainerItemProxy */;
 		};
-		809D4E1A1C7E88AA00EC9EC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = 809D4E191C7E88AA00EC9EC6 /* PBXContainerItemProxy */;
-		};
-		809D4E1E1C7E88AE00EC9EC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BridgeSDK;
-			targetProxy = 809D4E1D1C7E88AE00EC9EC6 /* PBXContainerItemProxy */;
-		};
-		809D4E211C7E89F200EC9EC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = 809D4E201C7E89F200EC9EC6 /* PBXContainerItemProxy */;
-		};
-		FF0396171CFE289B00245DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ZipZap (iOS Framework)";
-			targetProxy = FF0396161CFE289B00245DE3 /* PBXContainerItemProxy */;
-		};
-		FF03961B1CFE28A300245DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = FF03961A1CFE28A300245DE3 /* PBXContainerItemProxy */;
-		};
-		FF0396291CFE28D300245DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = openssl;
-			targetProxy = FF0396281CFE28D300245DE3 /* PBXContainerItemProxy */;
-		};
-		FF03963C1CFE2BC600245DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BridgeSDK;
-			targetProxy = FF03963B1CFE2BC600245DE3 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1784,10 +1640,10 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		801040EE1C5AD29300D26E19 /* Main.storyboard */ = {
+		FFC15FD31CFE439500C29AF7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				801040EF1C5AD29300D26E19 /* Base */,
+				FFC15FD21CFE439500C29AF7 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1928,6 +1784,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CMSSupport/openssl/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = BridgeAppSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1950,6 +1810,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CMSSupport/openssl/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = BridgeAppSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

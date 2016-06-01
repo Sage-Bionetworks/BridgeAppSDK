@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>emailForLoginViaExternalId</key>
+	<string>not_supported</string>
+	<key>studyIdentifier</key>
+	<string>sample-study-ios</string>
+	<key>useCache</key>
+	<true/>
+	<key>certificateName</key>
+	<string>sample-study</string>
+	<key>schemaMapping</key>
+	<array>
+		<dict>
+			<key>schemaIdentifier</key>
+			<string>Tapping Activity</string>
+			<key>schemaRevision</key>
+			<integer>4</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
+			<string>Voice Activity</string>
+			<key>schemaRevision</key>
+			<integer>4</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
+			<string>Memory Activity</string>
+			<key>schemaRevision</key>
+			<integer>6</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
+			<string>Walking Activity</string>
+			<key>schemaRevision</key>
+			<integer>4</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
+			<string>Medication Tracker</string>
+			<key>schemaRevision</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>taskMapping</key>
+	<array>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>1-MedicationTracker-20EF8ED2-E461-4C20-9024-F43FCAAAF4C3</string>
+			<key>resourceName</key>
+			<string>MedicationTracking</string>
+			<key>classType</key>
+			<string>TrackedDataObjectCollection</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>1-StudyTracker-408C5ED4-AB61-41d3-AF37-7f44C6A16BBF</string>
+			<key>resourceName</key>
+			<string>StudyTracker</string>
+			<key>cancelDisabled</key>
+			<true/>
+			<key>allowMultipleRun</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>1-Training-295f81EF-13CB-4DB4-8223-10A173AA0780</string>
+			<key>resourceName</key>
+			<string>CombinedTask</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780</string>
+			<key>resourceName</key>
+			<string>CombinedTask</string>
+			<key>cancelDisabled</key>
+			<true/>
+			<key>allowMultipleRun</key>
+			<false/>
+			<key>scheduleNotification</key>
+			<true/>
+		</dict>
+	</array>
+</dict>
+</plist>
