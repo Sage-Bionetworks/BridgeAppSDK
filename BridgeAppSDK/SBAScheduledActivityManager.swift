@@ -76,7 +76,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
             [weak self] (obj, error) in
-            guard (error == nil), let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
+            // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
+            // if not, obj will be nil if error is not nil, so we don't need to check error
+            guard let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
             dispatch_async(dispatch_get_main_queue(), {
                 self?.loadActivities(scheduledActivities)
