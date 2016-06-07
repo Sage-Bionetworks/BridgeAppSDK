@@ -515,5 +515,55 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertEqual(lastMemoryStep.identifier, "conclusion")
         
     }
+    
+    func testSurveyTask() {
+        
+        let inputTask: NSDictionary = [
+            "taskIdentifier"    : "1-StudyTracker-1234",
+            "schemaIdentifier"  : "Study Drug Tracker",
+            "taskSteps"         : [
+                [
+                    "identifier"   : "studyDrugTiming",
+                    "type"         : "singleChoiceText",
+                    "title"        : "Study Drug Timing",
+                    "text"         : "Indicate when the patient takes the Study Drug",
+                    "items"        : [
+                        [
+                            "prompt" : "The patient has taken the drug now",
+                            "value"   : true
+                        ],
+                        [
+                            "prompt" : "Cancel",
+                            "value"   : false
+                        ]
+                    ],
+                ]
+            ]
+        ]
+    
+        let result = inputTask.createORKTask()
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.identifier, "Study Drug Tracker")
+        
+        guard let task = result as? ORKOrderedTask else {
+            XCTAssert(false, "\(result) not of expect class")
+            return
+        }
+        
+        let expectedCount = 1
+        XCTAssertEqual(task.steps.count, expectedCount, "\(task.steps)")
+        guard task.steps.count == expectedCount else { return }
+        
+        // Step 1 - Overview
+        guard let formStep = task.steps.first as? ORKFormStep,
+            let formItem = formStep.formItems?.first,
+            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat
+        else {
+            XCTAssert(false, "\(task.steps.first) not of expect class")
+            return
+        }
+        XCTAssertEqual(formStep.identifier, "studyDrugTiming")
+        XCTAssertEqual(answerFormat.textChoices.count, 2)
+    }
 
 }
