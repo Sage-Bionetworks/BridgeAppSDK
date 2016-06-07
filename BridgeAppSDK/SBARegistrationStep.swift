@@ -100,8 +100,8 @@ public class SBARegistrationStep: ORKFormStep {
     
     static let kPasswordConfirmationKey = "passwordConfirmation"
     
-    public override init(identifier: String) {
-        super.init(identifier: identifier)
+    public convenience override init(identifier: String) {
+        self.init(identifier: identifier, options: nil, title: nil, text: nil)
     }
     
     public convenience init?(inputItem: SBAFormStepSurveyItem) {
@@ -204,7 +204,7 @@ public class SBARegistrationStep: ORKFormStep {
     }
     
     public func validateOptions(options: [SBARegistrationOption]?) throws {
-        guard let options = self.options else {
+        guard let options = options else {
             throw SBARegistrationOptionsError.MissingRequiredOptions
         }
         guard options.contains(.EmailAndPassword) || options.contains(.ExternalID) else {

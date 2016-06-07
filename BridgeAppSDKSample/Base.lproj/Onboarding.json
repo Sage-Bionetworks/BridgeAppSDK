@@ -1,0 +1,64 @@
+{
+    "sections" : [
+                  
+                  {
+                  "onboardingType" : "login",
+                  "taskIdentifier" : "login",
+                  "steps" : [
+                             {
+                             "identifier"   : "login",
+                             "type"         : "login"
+                             }
+                             ]
+                  },
+                  
+                  {
+                  "onboardingType" : "eligibility",
+                  "resourceName"   : "EligibilityRequirements.json"
+                  },
+                  
+                  {
+                  "onboardingType" : "consent",
+                  "resourceName"   : "Consent.json"
+                  },
+                  
+                  {
+                  "onboardingType" : "passcode",
+                  "taskIdentifier" : "passcode",
+                  "steps" : [
+                             {
+                             "identifier"   : "passcode",
+                             "type"         : "passcode.4",
+                             "title"        : "Identification",
+                             "text"         : "Select a 4-digit passcode. Setting up a passcode will help provide quick and secure access to this application."
+                             }
+                             ]
+                  },
+                  
+                  {
+                  "onboardingType" : "emailVerification",
+                  "taskIdentifier" : "emailVerification",
+                  "steps" : [
+                             {
+                             "identifier"   : "emailVerification",
+                             "type"         : "emailVerification"
+                             }
+                             ]
+                  },
+                  
+                  
+                  {
+                  "onboardingType" : "completion",
+                  "taskIdentifier" : "onboardingCompletion",
+                  "steps" : [
+                             {
+                             "identifier"   : "onboardingCompletion",
+                             "type"         : "completion",
+                             "title"        : "Thank You!",
+                             "text"         : "You are all set."
+                             }
+                             ]
+                  },
+                  
+                  ]
+}

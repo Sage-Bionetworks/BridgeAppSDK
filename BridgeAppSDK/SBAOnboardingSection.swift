@@ -1,5 +1,5 @@
 //
-//  ResourceTestCase.swift
+//  SBAOnboardingSection.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,32 +31,48 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
+import Foundation
+import ResearchKit
 
-class ResourceTestCase: XCTestCase {
+public enum SBAOnboardingSectionType {
     
-    func jsonForResource(resourceName: String) -> NSDictionary? {
-        
-        let resourcePath = NSBundle(forClass: self.classForCoder).pathForResource(resourceName, ofType:"json") ??
-            NSBundle.mainBundle().pathForResource(resourceName, ofType: "json")
+    case Login
+    case Introduction
+    case Eligibility
+    case Consent
+    case Registration
+    case Passcode
+    case EmailVerification
+    case Permissions
+    case Profile
+    case Completion
+    case Custom(String)
     
-        guard let path = resourcePath, let jsonData = NSData(contentsOfFile: path) else {
-                XCTAssert(false, "Resource not found: \(resourceName)")
-                return nil
+    public init(rawValue: String) {
+        switch(rawValue) {
+        case "introduction"         : self = .Introduction
+        case "eligibility"          : self = .Eligibility
+        case "login"                : self = .Login
+        case "consent"              : self = .Consent
+        case "registration"         : self = .Registration
+        case "passcode"             : self = .Passcode
+        case "emailVerification"    : self = .EmailVerification
+        case "permissions"          : self = .Permissions
+        case "profile"              : self = .Profile
+        case "completion"           : self = .Completion
+        default                     : self = .Custom(rawValue)
         }
-        
-        do {
-            guard let json = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(rawValue: 0)) as? NSDictionary else {
-                XCTAssert(false, "Resource not an NSDictionary: \(resourceName)")
-                return nil
-            }
-            return json
-        }
-        catch let err as NSError {
-            XCTAssert(false, "Failed to parse json. \(err)")
-        }
-        
-        return nil
     }
+}
+
+public protocol SBAOnboardingSection: SBATaskTransformable {
+    var onboardingSectionType: SBAOnboardingSectionType? { get }
+}
+
+extension NSDictionary: SBAOnboardingSection {
     
+    public var onboardingSectionType: SBAOnboardingSectionType? {
+        guard let onboardingType = self["onboardingType"] as? String else { return nil }
+        return SBAOnboardingSectionType(rawValue: onboardingType);
+    }
 }

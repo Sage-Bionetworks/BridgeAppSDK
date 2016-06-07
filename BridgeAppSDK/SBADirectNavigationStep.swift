@@ -54,7 +54,12 @@ extension NSDictionary: SBADirectNavigationRule {
  * pointer to something other than the next step in the sequencial order defined by
  * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
  */
-public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigationRule {
+public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
+    
+    /**
+    * For cases where this type of step is created as a placeholder for a custom step.
+    */
+    public var customTypeIdentifier: String?
     
     /**
      * Pointer to the next step to show after this one. If nil, then the next step
@@ -87,6 +92,11 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         self.nextStepIdentifier = nextStepIdentifier
     }
     
+    public init(identifier: String, customTypeIdentifier: String?) {
+        super.init(identifier: identifier)
+        self.customTypeIdentifier = customTypeIdentifier
+    }
+    
     // MARK: NSCopy
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
@@ -94,6 +104,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         guard let step = copy as? SBADirectNavigationStep else { return copy }
         step.nextStepIdentifier = self.nextStepIdentifier
         step.learnMoreAction = self.learnMoreAction
+        step.customTypeIdentifier = self.customTypeIdentifier
         return step
     }
     
@@ -103,12 +114,14 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         super.init(coder: aDecoder);
         self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as? String
         self.learnMoreAction = aDecoder.decodeObjectForKey("learnMoreAction") as? SBALearnMoreAction
+        self.customTypeIdentifier = aDecoder.decodeObjectForKey("customTypeIdentifier") as? String
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
         aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
         aCoder.encodeObject(self.learnMoreAction, forKey: "learnMoreAction")
+        aCoder.encodeObject(self.customTypeIdentifier, forKey: "customTypeIdentifier")
     }
     
     // MARK: Equality
@@ -116,13 +129,15 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     override public func isEqual(object: AnyObject?) -> Bool {
         guard let object = object as? SBADirectNavigationStep else { return false }
         return super.isEqual(object) &&
-            (self.nextStepIdentifier == object.nextStepIdentifier) &&
-            (self.learnMoreAction == object.learnMoreAction)
+            SBAObjectEquality(self.nextStepIdentifier, object.nextStepIdentifier) &&
+            SBAObjectEquality(self.learnMoreAction, object.learnMoreAction) &&
+            SBAObjectEquality(self.customTypeIdentifier, object.customTypeIdentifier)
     }
     
     override public var hash: Int {
-        let hashNextStepIdentifier = self.nextStepIdentifier?.hash ?? 0
-        let hashLearnMoreAction = self.learnMoreAction?.hash ?? 0
-        return super.hash | hashNextStepIdentifier | hashLearnMoreAction
+        return super.hash |
+            SBAObjectHash(self.nextStepIdentifier) |
+            SBAObjectHash(learnMoreAction) |
+            SBAObjectHash(self.customTypeIdentifier)
     }
 }

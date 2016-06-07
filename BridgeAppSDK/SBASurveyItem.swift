@@ -153,5 +153,7 @@ public enum SBASurveyItemType {
     }
 }
 
-
+public protocol SBACustomTypeStep: class {
+    var customTypeIdentifier: String? { get }
+}
 

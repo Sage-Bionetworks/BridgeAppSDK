@@ -103,7 +103,18 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      * defined by this class. Note: Only swift can subclass this method directly
      */
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
-        return nil
+        switch (inputItem.surveyItemType) {
+        case .Custom(let customType):
+            if let instruction = inputItem as? SBAInstructionStepSurveyItem {
+                return instruction.createInstructionStep(customType)
+            }
+            else {
+                return SBADirectNavigationStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
+            }
+            
+        default:
+            return nil
+        }
     }
     
     final func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep? {
@@ -149,7 +160,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
 
 extension SBAInstructionStepSurveyItem {
     
-    func createInstructionStep() -> ORKInstructionStep {
+    func createInstructionStep(customType: String? = nil) -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
         let learnMore = self.learnMoreAction()
         var nextIdentifier: String? = nil
@@ -159,9 +170,10 @@ extension SBAInstructionStepSurveyItem {
         if case .Completion = self.surveyItemType {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
-        else if (nextIdentifier != nil) || (learnMore != nil) {
+        else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
             let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
             step.learnMoreAction = learnMore
+            step.customTypeIdentifier = customType
             instructionStep = step
         }
         else {
