@@ -51,7 +51,7 @@
                                          username: externalId ?: email
                                          password: password
                                        dataGroups: dataGroups
-                                       completion: ^(NSURLSessionDataTask * __unused task,
+                                       completion: ^(NSURLSessionTask * __unused task,
                                                      id responseObject,
                                                      NSError *error)
      {
@@ -75,7 +75,7 @@
     NSParameterAssert(password);
     [SBBComponent(SBBAuthManager) signInWithEmail: email
                                          password: password
-                                       completion:^(NSURLSessionDataTask * __unused task,
+                                       completion:^(NSURLSessionTask * __unused task,
                                                     id responseObject,
                                                     NSError *error) {
 #if DEBUG
@@ -119,7 +119,7 @@
 
 + (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     
-    [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask * __unused task,
+    [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionTask * __unused task,
                                                                  id responseObject,
                                                                  NSError *error) {
 #if DEBUG
