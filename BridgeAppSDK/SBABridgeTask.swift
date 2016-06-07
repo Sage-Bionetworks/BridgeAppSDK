@@ -120,7 +120,7 @@ public extension SBABridgeTask {
         }
         else {
             // Create a navigable ordered task for the steps
-            return SBANavigableOrderedTask(identifier: self.taskIdentifier, steps: subtaskSteps)
+            return SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: subtaskSteps)
         }
     }
     
