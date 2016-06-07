@@ -1,0 +1,31 @@
+{
+     "taskIdentifier"            : "Walking",
+     "schemaIdentifier"          : "Walking Activity",
+     "taskType"                  : "walking",
+     "intendedUseDescription"    : "In this activity we ask you to walk back and forth. Then we ask you to turn in a full circle and stand still.",
+     "optional"                  : true,
+     "localizedSteps"            : [{
+                                    "identifier" : "instruction",
+                                    "detailText" : "This activity measures your gait and balance as you walk and stand still.\nIf you cannot safely walk unassisted, then tap the “Skip this activity” link in red below.  Otherwise, tap Next to begin."
+                                    },
+                                    {
+                                     "identifier" : "instruction1",
+                                     "text"       : "Find a place where you can walk safely back and forth in a straight line. Turn the volume on your phone all the way up.",
+                                     "detailText" : "Tap Next to begin.\nThen put the phone upside down in the front pocket of your pants and follow the audio instructions."
+                                    },
+                                    {
+                                     "identifier" : "walking.rest",
+                                     "finishedSpokenInstruction" : "You've completed the activity session.",
+                                    },
+                                    {
+                                     "identifier" : "conclusion",
+                                     "title"      : "Thank You!",
+                                     "text"       : "You’ve completed the activity session. Select done in top right hand corner.",
+                                     "detailText" : "",
+                                    },
+                                    ],
+    "insertSteps"               : [{
+                                   "resourceName"            : "MedicalSurvey",
+                                   "classType"               : "TrackedDataObjectCollection",
+                                   }]
+}

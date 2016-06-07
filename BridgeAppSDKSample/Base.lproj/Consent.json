@@ -6,7 +6,7 @@
              "title": "Thank you for participating in the SAMPLE study.",
              "text": "We heard your requests and updated the study. We added new features, new surveys and new activities.",
              "detailText": "The next screens describe the study. Please review the study information and re-affirm that you want to participate.",
-             "type": "instruction",
+             "type": "reconsent",
          },
          {
              "identifier": "consentVisual",
@@ -30,7 +30,7 @@
                   "title": "What is the purpose of this study?",
                   "type": "singleChoiceText",
                   "items":[
-                           {"text" :"Understand the fluctuations of Parkinson disease symptoms", "value" : true},
+                           {"text" :"Understand the fluctuations of SAMPLE symptoms", "value" : true},
                            {"text" :"Give medical advice and diagnose people with Parkinson disease", "value": false},
                            ],
                   "expectedAnswer": true,
@@ -90,8 +90,16 @@
                       ],
          },
          {
-             "identifier": "consentReview",
-             "type": "consentReview",
+             "identifier"   : "consentReview",
+             "type"         : "consentReview",
+             "items"        : ["name", "birthdate", "signature"]
+         },
+         {
+         "identifier"    : "registration",
+         "type"          : "registration",
+         "title"         : "Registration",
+         "text"          : "Sage Bionetworks, a non-profit biomedical research institute, is helping to collect data for this study and distribute it to the study investigators and other researchers. Please provide a unique email address and password to create a secure account.",
+         "items"         : ["email", "password"]
          },
          {
              "identifier": "consentCompletion",
@@ -104,7 +112,7 @@
     [
      {
          "sectionType" : "onlyInDocument",
-         "sectionHtmlContent" : "PD_fullconsent"
+         "sectionHtmlContent" : "consent_full"
      },
      {
          "sectionType" : "overview",

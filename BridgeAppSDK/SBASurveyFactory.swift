@@ -43,6 +43,10 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     public var steps: [ORKStep]?
     
+    public var sharedAppDelegate: SBASharedAppDelegate {
+        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+    }
+    
     public override init() {
         super.init()
     }
@@ -123,6 +127,10 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         case .Form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createFormStep(isSubtaskStep ?? false)
+            } else { break }
+        case .Registration:
+            if let form = inputItem as? SBAFormStepSurveyItem {
+                return SBARegistrationStep(inputItem: form)
             } else { break }
         default:
             break

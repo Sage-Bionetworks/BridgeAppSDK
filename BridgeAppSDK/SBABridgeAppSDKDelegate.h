@@ -44,6 +44,7 @@
 - (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
 
 // manager pointers
+@optional
 - (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
 
 @end

@@ -93,6 +93,37 @@
 		FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */; };
 		FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */; };
 		FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF6484161CB617790055B9E7 /* MedicationTracking.json */; };
+		FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CEF81D00B5C4002C456D /* consent_1welcome.html */; };
+		FF78CF101D00B617002C456D /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */; };
+		FF78CF131D00B620002C456D /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF151D00B620002C456D /* consent_3activities.html */; };
+		FF78CF161D00B628002C456D /* consent_4sensordata.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF181D00B628002C456D /* consent_4sensordata.html */; };
+		FF78CF191D00B630002C456D /* consent_5dataprocessing.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF1B1D00B630002C456D /* consent_5dataprocessing.html */; };
+		FF78CF1C1D00B636002C456D /* consent_6protectingdata.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF1E1D00B636002C456D /* consent_6protectingdata.html */; };
+		FF78CF1F1D00B63E002C456D /* consent_7datause.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF211D00B63E002C456D /* consent_7datause.html */; };
+		FF78CF221D00B646002C456D /* consent_8time.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF241D00B646002C456D /* consent_8time.html */; };
+		FF78CF251D00B64D002C456D /* consent_9study_survey.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF271D00B64D002C456D /* consent_9study_survey.html */; };
+		FF78CF281D00B655002C456D /* consent_10study_task.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF2A1D00B655002C456D /* consent_10study_task.html */; };
+		FF78CF2B1D00B65C002C456D /* consent_11potential_risk.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF2D1D00B65C002C456D /* consent_11potential_risk.html */; };
+		FF78CF2E1D00B663002C456D /* consent_12medical_care.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF301D00B663002C456D /* consent_12medical_care.html */; };
+		FF78CF311D00B669002C456D /* consent_13follow_up.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF331D00B669002C456D /* consent_13follow_up.html */; };
+		FF78CF341D00B670002C456D /* consent_14withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF361D00B670002C456D /* consent_14withdrawl.html */; };
+		FF78CF371D00B675002C456D /* consent_15think.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF391D00B675002C456D /* consent_15think.html */; };
+		FF78CF3A1D00B67B002C456D /* consent_16future.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF3C1D00B67B002C456D /* consent_16future.html */; };
+		FF78CF3D1D00B680002C456D /* consent_17data_sharing.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF3F1D00B680002C456D /* consent_17data_sharing.html */; };
+		FF78CF401D00B686002C456D /* consent_18researchers.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF421D00B686002C456D /* consent_18researchers.html */; };
+		FF78CF431D00B68B002C456D /* consent_19sharing_rsch.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF451D00B68B002C456D /* consent_19sharing_rsch.html */; };
+		FF78CF461D00B691002C456D /* consent_contact.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF481D00B691002C456D /* consent_contact.html */; };
+		FF78CF491D00B698002C456D /* consent_irb.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF4B1D00B698002C456D /* consent_irb.html */; };
+		FF78CF4C1D00B6C9002C456D /* Consent.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF4E1D00B6C9002C456D /* Consent.json */; };
+		FF78CF511D00BDAE002C456D /* MedicalSurvey.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF531D00BDAE002C456D /* MedicalSurvey.json */; };
+		FF78CF5E1D00C125002C456D /* Memory.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF601D00C125002C456D /* Memory.json */; };
+		FF78CF611D00C12A002C456D /* Tapping.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF631D00C12A002C456D /* Tapping.json */; };
+		FF78CF641D00C130002C456D /* Voice.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF661D00C130002C456D /* Voice.json */; };
+		FF78CF671D00C135002C456D /* Walking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF691D00C135002C456D /* Walking.json */; };
+		FF78CF6B1D00C1B7002C456D /* consent_full.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF6A1D00C1B7002C456D /* consent_full.html */; };
+		FF78CF891D00F3DB002C456D /* EligibilityRequirements.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */; };
+		FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */; };
+		FF80920F1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */; };
 		FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */; };
 		FF8DDFE31CB63E92006D1AFA /* SBATrackedDataStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */; };
@@ -128,28 +159,6 @@
 		FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */; };
 		FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */; };
 		FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDE1CFE513200C29AF7 /* sample-study.pem */; };
-		FFC15FE31CFE56EA00C29AF7 /* Consent.json in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE21CFE56EA00C29AF7 /* Consent.json */; };
-		FFC15FFC1CFE57BF00C29AF7 /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */; };
-		FFC15FFD1CFE57BF00C29AF7 /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */; };
-		FFC15FFE1CFE57BF00C29AF7 /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */; };
-		FFC15FFF1CFE57BF00C29AF7 /* consent_4sensordata.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */; };
-		FFC160001CFE57BF00C29AF7 /* consent_5dataprocessing.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */; };
-		FFC160011CFE57BF00C29AF7 /* consent_6protectingdata.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */; };
-		FFC160021CFE57BF00C29AF7 /* consent_7datause.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */; };
-		FFC160031CFE57BF00C29AF7 /* consent_8time.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */; };
-		FFC160041CFE57BF00C29AF7 /* consent_9study_survey.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */; };
-		FFC160051CFE57BF00C29AF7 /* consent_10study_task.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */; };
-		FFC160061CFE57BF00C29AF7 /* consent_11potential_risk.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */; };
-		FFC160071CFE57BF00C29AF7 /* consent_12medical_care.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */; };
-		FFC160081CFE57BF00C29AF7 /* consent_13follow_up.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */; };
-		FFC160091CFE57BF00C29AF7 /* consent_14withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */; };
-		FFC1600A1CFE57BF00C29AF7 /* consent_15think.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */; };
-		FFC1600B1CFE57BF00C29AF7 /* consent_16future.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */; };
-		FFC1600C1CFE57BF00C29AF7 /* consent_17data_sharing.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */; };
-		FFC1600D1CFE57BF00C29AF7 /* consent_18researchers.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */; };
-		FFC1600E1CFE57BF00C29AF7 /* consent_19sharing_rsch.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */; };
-		FFC1600F1CFE57BF00C29AF7 /* consent_contact.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */; };
-		FFC160101CFE57BF00C29AF7 /* consent_irb.html in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */; };
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; };
 		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
@@ -165,6 +174,8 @@
 		FFCF38501CE113FC0090452F /* SBBScheduledActivity+Filters.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */; };
 		FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
+		FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */; };
+		FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -426,6 +437,37 @@
 		FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
 		FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
 		FF6484161CB617790055B9E7 /* MedicationTracking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MedicationTracking.json; sourceTree = "<group>"; };
+		FF78CEF71D00B5C4002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_1welcome.html; sourceTree = "<group>"; };
+		FF78CF111D00B617002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_2quiz_headsup.html; sourceTree = "<group>"; };
+		FF78CF141D00B620002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_3activities.html; sourceTree = "<group>"; };
+		FF78CF171D00B628002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_4sensordata.html; sourceTree = "<group>"; };
+		FF78CF1A1D00B630002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_5dataprocessing.html; sourceTree = "<group>"; };
+		FF78CF1D1D00B636002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_6protectingdata.html; sourceTree = "<group>"; };
+		FF78CF201D00B63E002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_7datause.html; sourceTree = "<group>"; };
+		FF78CF231D00B646002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_8time.html; sourceTree = "<group>"; };
+		FF78CF261D00B64D002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_9study_survey.html; sourceTree = "<group>"; };
+		FF78CF291D00B655002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_10study_task.html; sourceTree = "<group>"; };
+		FF78CF2C1D00B65C002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_11potential_risk.html; sourceTree = "<group>"; };
+		FF78CF2F1D00B663002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_12medical_care.html; sourceTree = "<group>"; };
+		FF78CF321D00B669002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_13follow_up.html; sourceTree = "<group>"; };
+		FF78CF351D00B670002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_14withdrawl.html; sourceTree = "<group>"; };
+		FF78CF381D00B675002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_15think.html; sourceTree = "<group>"; };
+		FF78CF3B1D00B67B002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_16future.html; sourceTree = "<group>"; };
+		FF78CF3E1D00B680002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_17data_sharing.html; sourceTree = "<group>"; };
+		FF78CF411D00B686002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_18researchers.html; sourceTree = "<group>"; };
+		FF78CF441D00B68B002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_19sharing_rsch.html; sourceTree = "<group>"; };
+		FF78CF471D00B691002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_contact.html; sourceTree = "<group>"; };
+		FF78CF4A1D00B698002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_irb.html; sourceTree = "<group>"; };
+		FF78CF4D1D00B6C9002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Consent.json; sourceTree = "<group>"; };
+		FF78CF521D00BDAE002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/MedicalSurvey.json; sourceTree = "<group>"; };
+		FF78CF5F1D00C125002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Memory.json; sourceTree = "<group>"; };
+		FF78CF621D00C12A002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tapping.json; sourceTree = "<group>"; };
+		FF78CF651D00C130002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Voice.json; sourceTree = "<group>"; };
+		FF78CF681D00C135002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Walking.json; sourceTree = "<group>"; };
+		FF78CF6A1D00C1B7002C456D /* consent_full.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_full.html; sourceTree = "<group>"; };
+		FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EligibilityRequirements.json; sourceTree = "<group>"; };
+		FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBARegistrationStep.swift; sourceTree = "<group>"; };
+		FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKAnswerFormat+KeyboardUtilities.swift"; sourceTree = "<group>"; };
 		FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATrackedDataStore.h; sourceTree = "<group>"; };
 		FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataStore.m; sourceTree = "<group>"; };
 		FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataStoreTests.m; sourceTree = "<group>"; };
@@ -462,28 +504,6 @@
 		FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ColorInfo.plist; sourceTree = "<group>"; };
 		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
-		FFC15FE21CFE56EA00C29AF7 /* Consent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Consent.json; sourceTree = "<group>"; };
-		FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_1welcome.html; sourceTree = "<group>"; };
-		FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_2quiz_headsup.html; sourceTree = "<group>"; };
-		FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_3activities.html; sourceTree = "<group>"; };
-		FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_4sensordata.html; sourceTree = "<group>"; };
-		FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_5dataprocessing.html; sourceTree = "<group>"; };
-		FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_6protectingdata.html; sourceTree = "<group>"; };
-		FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_7datause.html; sourceTree = "<group>"; };
-		FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_8time.html; sourceTree = "<group>"; };
-		FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_9study_survey.html; sourceTree = "<group>"; };
-		FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_10study_task.html; sourceTree = "<group>"; };
-		FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_11potential_risk.html; sourceTree = "<group>"; };
-		FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_12medical_care.html; sourceTree = "<group>"; };
-		FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_13follow_up.html; sourceTree = "<group>"; };
-		FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_14withdrawl.html; sourceTree = "<group>"; };
-		FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_15think.html; sourceTree = "<group>"; };
-		FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_16future.html; sourceTree = "<group>"; };
-		FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_17data_sharing.html; sourceTree = "<group>"; };
-		FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_18researchers.html; sourceTree = "<group>"; };
-		FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_19sharing_rsch.html; sourceTree = "<group>"; };
-		FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_contact.html; sourceTree = "<group>"; };
-		FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_irb.html; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORKOrderedTask+SBAExtension.h"; sourceTree = "<group>"; };
@@ -496,6 +516,8 @@
 		FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Utilities.swift"; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
 		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
+		FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingManager.swift; sourceTree = "<group>"; };
+		FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -592,9 +614,10 @@
 		16BF5B611BE29643007C79C6 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */,
 				FFAAF62A1CC0916800500929 /* Permissions */,
 				FBF1B6A31CAAED02007C1082 /* Consent */,
-				FBF1B6AD1CAAED0F007C1082 /* Registration */,
+				FBF1B6AD1CAAED0F007C1082 /* Account */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -656,6 +679,7 @@
 			children = (
 				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
 				FFC15FD71CFE4C7100C29AF7 /* MainTabViewController.swift */,
+				FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */,
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
 				FFC15FAF1CFE3DB300C29AF7 /* Apple Sample Code */,
@@ -698,6 +722,7 @@
 		80F554CB1CD3F21D00C38053 /* Notifications */ = {
 			isa = PBXGroup;
 			children = (
+				FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */,
 				80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */,
 			);
 			name = Notifications;
@@ -793,7 +818,6 @@
 				FBAD114E1CADA34C005611D0 /* DataModel */,
 				FFC68EED1CA4778D00FF7B07 /* Encryption */,
 				FBC45E721C758DC9007AA424 /* Localization */,
-				FFAAF6201CC03B0100500929 /* Notifications */,
 				FF9055DC1CE500D40049D12A /* RKExtensions */,
 				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBAE3CE61C86157E003CEC4A /* Utilities */,
@@ -870,18 +894,19 @@
 			children = (
 				FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */,
 				FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */,
-				FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */,
 				FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */,
+				FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */,
 			);
 			name = Consent;
 			sourceTree = "<group>";
 		};
-		FBF1B6AD1CAAED0F007C1082 /* Registration */ = {
+		FBF1B6AD1CAAED0F007C1082 /* Account */ = {
 			isa = PBXGroup;
 			children = (
 				FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */,
+				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
 			);
-			name = Registration;
+			name = Account;
 			sourceTree = "<group>";
 		};
 		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
@@ -988,6 +1013,7 @@
 				FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */,
 				FFCF37B11CD94EC80090452F /* ORKOrderedTask+SBAExtension.m */,
 				FF4F06871CEE3604007BD273 /* ORKFormStep+Result.swift */,
+				FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */,
 			);
 			name = RKExtensions;
 			sourceTree = "<group>";
@@ -1032,14 +1058,6 @@
 				FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */,
 			);
 			name = UI;
-			sourceTree = "<group>";
-		};
-		FFAAF6201CC03B0100500929 /* Notifications */ = {
-			isa = PBXGroup;
-			children = (
-				FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */,
-			);
-			name = Notifications;
 			sourceTree = "<group>";
 		};
 		FFAAF62A1CC0916800500929 /* Permissions */ = {
@@ -1118,7 +1136,13 @@
 		FFC15FE11CFE569100C29AF7 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
-				FFC15FE21CFE56EA00C29AF7 /* Consent.json */,
+				FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */,
+				FF78CF4E1D00B6C9002C456D /* Consent.json */,
+				FF78CF601D00C125002C456D /* Memory.json */,
+				FF78CF631D00C12A002C456D /* Tapping.json */,
+				FF78CF661D00C130002C456D /* Voice.json */,
+				FF78CF691D00C135002C456D /* Walking.json */,
+				FF78CF531D00BDAE002C456D /* MedicalSurvey.json */,
 			);
 			name = JSON;
 			sourceTree = "<group>";
@@ -1126,27 +1150,28 @@
 		FFC15FE41CFE579600C29AF7 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
-				FFC15FE51CFE57BF00C29AF7 /* consent_1welcome.html */,
-				FFC15FE61CFE57BF00C29AF7 /* consent_2quiz_headsup.html */,
-				FFC15FE71CFE57BF00C29AF7 /* consent_3activities.html */,
-				FFC15FE81CFE57BF00C29AF7 /* consent_4sensordata.html */,
-				FFC15FE91CFE57BF00C29AF7 /* consent_5dataprocessing.html */,
-				FFC15FEA1CFE57BF00C29AF7 /* consent_6protectingdata.html */,
-				FFC15FEB1CFE57BF00C29AF7 /* consent_7datause.html */,
-				FFC15FEC1CFE57BF00C29AF7 /* consent_8time.html */,
-				FFC15FED1CFE57BF00C29AF7 /* consent_9study_survey.html */,
-				FFC15FEE1CFE57BF00C29AF7 /* consent_10study_task.html */,
-				FFC15FEF1CFE57BF00C29AF7 /* consent_11potential_risk.html */,
-				FFC15FF01CFE57BF00C29AF7 /* consent_12medical_care.html */,
-				FFC15FF11CFE57BF00C29AF7 /* consent_13follow_up.html */,
-				FFC15FF21CFE57BF00C29AF7 /* consent_14withdrawl.html */,
-				FFC15FF31CFE57BF00C29AF7 /* consent_15think.html */,
-				FFC15FF41CFE57BF00C29AF7 /* consent_16future.html */,
-				FFC15FF51CFE57BF00C29AF7 /* consent_17data_sharing.html */,
-				FFC15FF61CFE57BF00C29AF7 /* consent_18researchers.html */,
-				FFC15FF71CFE57BF00C29AF7 /* consent_19sharing_rsch.html */,
-				FFC15FF81CFE57BF00C29AF7 /* consent_contact.html */,
-				FFC15FF91CFE57BF00C29AF7 /* consent_irb.html */,
+				FF78CEF81D00B5C4002C456D /* consent_1welcome.html */,
+				FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */,
+				FF78CF151D00B620002C456D /* consent_3activities.html */,
+				FF78CF181D00B628002C456D /* consent_4sensordata.html */,
+				FF78CF1B1D00B630002C456D /* consent_5dataprocessing.html */,
+				FF78CF1E1D00B636002C456D /* consent_6protectingdata.html */,
+				FF78CF211D00B63E002C456D /* consent_7datause.html */,
+				FF78CF241D00B646002C456D /* consent_8time.html */,
+				FF78CF271D00B64D002C456D /* consent_9study_survey.html */,
+				FF78CF2A1D00B655002C456D /* consent_10study_task.html */,
+				FF78CF2D1D00B65C002C456D /* consent_11potential_risk.html */,
+				FF78CF301D00B663002C456D /* consent_12medical_care.html */,
+				FF78CF331D00B669002C456D /* consent_13follow_up.html */,
+				FF78CF361D00B670002C456D /* consent_14withdrawl.html */,
+				FF78CF391D00B675002C456D /* consent_15think.html */,
+				FF78CF3C1D00B67B002C456D /* consent_16future.html */,
+				FF78CF3F1D00B680002C456D /* consent_17data_sharing.html */,
+				FF78CF421D00B686002C456D /* consent_18researchers.html */,
+				FF78CF451D00B68B002C456D /* consent_19sharing_rsch.html */,
+				FF78CF6A1D00C1B7002C456D /* consent_full.html */,
+				FF78CF481D00B691002C456D /* consent_contact.html */,
+				FF78CF4B1D00B698002C456D /* consent_irb.html */,
 			);
 			name = HTML;
 			sourceTree = "<group>";
@@ -1481,36 +1506,43 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFC1600E1CFE57BF00C29AF7 /* consent_19sharing_rsch.html in Resources */,
-				FFC1600D1CFE57BF00C29AF7 /* consent_18researchers.html in Resources */,
-				FFC15FFE1CFE57BF00C29AF7 /* consent_3activities.html in Resources */,
-				FFC160041CFE57BF00C29AF7 /* consent_9study_survey.html in Resources */,
-				FFC160051CFE57BF00C29AF7 /* consent_10study_task.html in Resources */,
-				FFC15FFD1CFE57BF00C29AF7 /* consent_2quiz_headsup.html in Resources */,
-				FFC160001CFE57BF00C29AF7 /* consent_5dataprocessing.html in Resources */,
-				FFC160091CFE57BF00C29AF7 /* consent_14withdrawl.html in Resources */,
-				FFC15FE31CFE56EA00C29AF7 /* Consent.json in Resources */,
+				FF78CF431D00B68B002C456D /* consent_19sharing_rsch.html in Resources */,
+				FF78CF611D00C12A002C456D /* Tapping.json in Resources */,
+				FF78CF891D00F3DB002C456D /* EligibilityRequirements.json in Resources */,
+				FF78CF6B1D00C1B7002C456D /* consent_full.html in Resources */,
+				FF78CF401D00B686002C456D /* consent_18researchers.html in Resources */,
+				FF78CF131D00B620002C456D /* consent_3activities.html in Resources */,
+				FF78CF251D00B64D002C456D /* consent_9study_survey.html in Resources */,
+				FF78CF281D00B655002C456D /* consent_10study_task.html in Resources */,
+				FF78CF671D00C135002C456D /* Walking.json in Resources */,
+				FF78CF101D00B617002C456D /* consent_2quiz_headsup.html in Resources */,
+				FF78CF191D00B630002C456D /* consent_5dataprocessing.html in Resources */,
+				FF78CF341D00B670002C456D /* consent_14withdrawl.html in Resources */,
+				FF78CF4C1D00B6C9002C456D /* Consent.json in Resources */,
 				FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */,
 				80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */,
-				FFC160071CFE57BF00C29AF7 /* consent_12medical_care.html in Resources */,
-				FFC1600B1CFE57BF00C29AF7 /* consent_16future.html in Resources */,
-				FFC15FFF1CFE57BF00C29AF7 /* consent_4sensordata.html in Resources */,
+				FF78CF2E1D00B663002C456D /* consent_12medical_care.html in Resources */,
+				FF78CF5E1D00C125002C456D /* Memory.json in Resources */,
+				FF78CF641D00C130002C456D /* Voice.json in Resources */,
+				FF78CF3A1D00B67B002C456D /* consent_16future.html in Resources */,
+				FF78CF161D00B628002C456D /* consent_4sensordata.html in Resources */,
 				FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */,
-				FFC1600A1CFE57BF00C29AF7 /* consent_15think.html in Resources */,
-				FFC160011CFE57BF00C29AF7 /* consent_6protectingdata.html in Resources */,
-				FFC1600F1CFE57BF00C29AF7 /* consent_contact.html in Resources */,
-				FFC160061CFE57BF00C29AF7 /* consent_11potential_risk.html in Resources */,
+				FF78CF371D00B675002C456D /* consent_15think.html in Resources */,
+				FF78CF1C1D00B636002C456D /* consent_6protectingdata.html in Resources */,
+				FF78CF461D00B691002C456D /* consent_contact.html in Resources */,
+				FF78CF2B1D00B65C002C456D /* consent_11potential_risk.html in Resources */,
+				FF78CF511D00BDAE002C456D /* MedicalSurvey.json in Resources */,
 				FFC15FD61CFE452C00C29AF7 /* Onboarding.storyboard in Resources */,
-				FFC160031CFE57BF00C29AF7 /* consent_8time.html in Resources */,
-				FFC160081CFE57BF00C29AF7 /* consent_13follow_up.html in Resources */,
+				FF78CF221D00B646002C456D /* consent_8time.html in Resources */,
+				FF78CF311D00B669002C456D /* consent_13follow_up.html in Resources */,
 				801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */,
 				801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */,
 				FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */,
-				FFC160101CFE57BF00C29AF7 /* consent_irb.html in Resources */,
-				FFC15FFC1CFE57BF00C29AF7 /* consent_1welcome.html in Resources */,
+				FF78CF491D00B698002C456D /* consent_irb.html in Resources */,
+				FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */,
 				FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */,
-				FFC1600C1CFE57BF00C29AF7 /* consent_17data_sharing.html in Resources */,
-				FFC160021CFE57BF00C29AF7 /* consent_7datause.html in Resources */,
+				FF78CF3D1D00B680002C456D /* consent_17data_sharing.html in Resources */,
+				FF78CF1F1D00B63E002C456D /* consent_7datause.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1544,6 +1576,7 @@
 			files = (
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
 				FFC15FD81CFE4C7100C29AF7 /* MainTabViewController.swift in Sources */,
+				FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1594,6 +1627,7 @@
 				FFCF37DE1CDA91520090452F /* SBALearnMoreInstructionStep.swift in Sources */,
 				FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */,
+				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
 				FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
@@ -1613,6 +1647,7 @@
 				FF4F06881CEE3604007BD273 /* ORKFormStep+Result.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
 				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
+				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
 				FF64111C1CB34766007FB9E1 /* SBAMedication.m in Sources */,
 				FF9055EC1CE527890049D12A /* SBAProgressStep.swift in Sources */,
 				FF6411161CB341D0007FB9E1 /* SBATrackedDataObject.m in Sources */,
@@ -1620,6 +1655,7 @@
 				FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
+				FF80920F1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift in Sources */,
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
@@ -1677,6 +1713,222 @@
 				801040ED1C5AD29300D26E19 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FF78CEF81D00B5C4002C456D /* consent_1welcome.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CEF71D00B5C4002C456D /* Base */,
+			);
+			name = consent_1welcome.html;
+			sourceTree = "<group>";
+		};
+		FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF111D00B617002C456D /* Base */,
+			);
+			name = consent_2quiz_headsup.html;
+			sourceTree = "<group>";
+		};
+		FF78CF151D00B620002C456D /* consent_3activities.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF141D00B620002C456D /* Base */,
+			);
+			name = consent_3activities.html;
+			sourceTree = "<group>";
+		};
+		FF78CF181D00B628002C456D /* consent_4sensordata.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF171D00B628002C456D /* Base */,
+			);
+			name = consent_4sensordata.html;
+			sourceTree = "<group>";
+		};
+		FF78CF1B1D00B630002C456D /* consent_5dataprocessing.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF1A1D00B630002C456D /* Base */,
+			);
+			name = consent_5dataprocessing.html;
+			sourceTree = "<group>";
+		};
+		FF78CF1E1D00B636002C456D /* consent_6protectingdata.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF1D1D00B636002C456D /* Base */,
+			);
+			name = consent_6protectingdata.html;
+			sourceTree = "<group>";
+		};
+		FF78CF211D00B63E002C456D /* consent_7datause.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF201D00B63E002C456D /* Base */,
+			);
+			name = consent_7datause.html;
+			sourceTree = "<group>";
+		};
+		FF78CF241D00B646002C456D /* consent_8time.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF231D00B646002C456D /* Base */,
+			);
+			name = consent_8time.html;
+			sourceTree = "<group>";
+		};
+		FF78CF271D00B64D002C456D /* consent_9study_survey.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF261D00B64D002C456D /* Base */,
+			);
+			name = consent_9study_survey.html;
+			sourceTree = "<group>";
+		};
+		FF78CF2A1D00B655002C456D /* consent_10study_task.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF291D00B655002C456D /* Base */,
+			);
+			name = consent_10study_task.html;
+			sourceTree = "<group>";
+		};
+		FF78CF2D1D00B65C002C456D /* consent_11potential_risk.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF2C1D00B65C002C456D /* Base */,
+			);
+			name = consent_11potential_risk.html;
+			sourceTree = "<group>";
+		};
+		FF78CF301D00B663002C456D /* consent_12medical_care.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF2F1D00B663002C456D /* Base */,
+			);
+			name = consent_12medical_care.html;
+			sourceTree = "<group>";
+		};
+		FF78CF331D00B669002C456D /* consent_13follow_up.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF321D00B669002C456D /* Base */,
+			);
+			name = consent_13follow_up.html;
+			sourceTree = "<group>";
+		};
+		FF78CF361D00B670002C456D /* consent_14withdrawl.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF351D00B670002C456D /* Base */,
+			);
+			name = consent_14withdrawl.html;
+			sourceTree = "<group>";
+		};
+		FF78CF391D00B675002C456D /* consent_15think.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF381D00B675002C456D /* Base */,
+			);
+			name = consent_15think.html;
+			sourceTree = "<group>";
+		};
+		FF78CF3C1D00B67B002C456D /* consent_16future.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF3B1D00B67B002C456D /* Base */,
+			);
+			name = consent_16future.html;
+			sourceTree = "<group>";
+		};
+		FF78CF3F1D00B680002C456D /* consent_17data_sharing.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF3E1D00B680002C456D /* Base */,
+			);
+			name = consent_17data_sharing.html;
+			sourceTree = "<group>";
+		};
+		FF78CF421D00B686002C456D /* consent_18researchers.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF411D00B686002C456D /* Base */,
+			);
+			name = consent_18researchers.html;
+			sourceTree = "<group>";
+		};
+		FF78CF451D00B68B002C456D /* consent_19sharing_rsch.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF441D00B68B002C456D /* Base */,
+			);
+			name = consent_19sharing_rsch.html;
+			sourceTree = "<group>";
+		};
+		FF78CF481D00B691002C456D /* consent_contact.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF471D00B691002C456D /* Base */,
+			);
+			name = consent_contact.html;
+			sourceTree = "<group>";
+		};
+		FF78CF4B1D00B698002C456D /* consent_irb.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF4A1D00B698002C456D /* Base */,
+			);
+			name = consent_irb.html;
+			sourceTree = "<group>";
+		};
+		FF78CF4E1D00B6C9002C456D /* Consent.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF4D1D00B6C9002C456D /* Base */,
+			);
+			name = Consent.json;
+			sourceTree = "<group>";
+		};
+		FF78CF531D00BDAE002C456D /* MedicalSurvey.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF521D00BDAE002C456D /* Base */,
+			);
+			name = MedicalSurvey.json;
+			sourceTree = "<group>";
+		};
+		FF78CF601D00C125002C456D /* Memory.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF5F1D00C125002C456D /* Base */,
+			);
+			name = Memory.json;
+			sourceTree = "<group>";
+		};
+		FF78CF631D00C12A002C456D /* Tapping.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF621D00C12A002C456D /* Base */,
+			);
+			name = Tapping.json;
+			sourceTree = "<group>";
+		};
+		FF78CF661D00C130002C456D /* Voice.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF651D00C130002C456D /* Base */,
+			);
+			name = Voice.json;
+			sourceTree = "<group>";
+		};
+		FF78CF691D00C135002C456D /* Walking.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF78CF681D00C135002C456D /* Base */,
+			);
+			name = Walking.json;
 			sourceTree = "<group>";
 		};
 		FFC15FD31CFE439500C29AF7 /* Main.storyboard */ = {

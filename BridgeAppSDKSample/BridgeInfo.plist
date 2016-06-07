@@ -16,29 +16,29 @@
 			<key>schemaIdentifier</key>
 			<string>Tapping Activity</string>
 			<key>schemaRevision</key>
-			<integer>4</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Voice Activity</string>
 			<key>schemaRevision</key>
-			<integer>4</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Memory Activity</string>
 			<key>schemaRevision</key>
-			<integer>6</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Walking Activity</string>
 			<key>schemaRevision</key>
-			<integer>4</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
-			<string>Medication Tracker</string>
+			<string>Medical Survey</string>
 			<key>schemaRevision</key>
 			<integer>2</integer>
 		</dict>
@@ -47,9 +47,9 @@
 	<array>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-MedicationTracker-20EF8ED2-E461-4C20-9024-F43FCAAAF4C3</string>
+			<string>Medical Survey</string>
 			<key>resourceName</key>
-			<string>MedicationTracking</string>
+			<string>MedicalSurvey</string>
 			<key>classType</key>
 			<string>TrackedDataObjectCollection</string>
 		</dict>

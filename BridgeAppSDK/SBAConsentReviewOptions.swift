@@ -33,19 +33,70 @@
 
 import ResearchKit
 
-public protocol SBAConsentReviewOptions: class {
-    var requiresSignature: Bool { get }
-    var requiresName: Bool { get }
+public enum SBAConsentSignatureItemType : String {
+    case Name         = "name"
+    case Signature    = "signature"
+    case Birthdate    = "birthdate"
 }
 
-extension NSDictionary: SBAConsentReviewOptions {
+extension SBAConsentSignatureItemType: Equatable {
+}
+
+public func ==(lhs: SBAConsentSignatureItemType, rhs: SBAConsentSignatureItemType) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+}
+
+public struct SBAConsentReviewOptions {
+    public let includes: [SBAConsentSignatureItemType]
     
-    public var requiresSignature: Bool {
-        return self["requiresSignature"] as? Bool ?? true
+    public init(includes: [SBAConsentSignatureItemType]) {
+        self.includes = includes
     }
+    
+    public init(items: [String]) {
+        self.includes = items.mapAndFilter({ SBAConsentSignatureItemType(rawValue: $0) })
+    }
+    
+    public init(inputItem: SBASurveyItem) {
+        // start with the default includes
+        var includes: [SBAConsentSignatureItemType] = [.Name, .Signature]
+
+        if let input = inputItem as? SBAFormStepSurveyItem, let items = input.items {
+            // Map the items to a consent signature type
+            includes = items.mapAndFilter({ (item) -> SBAConsentSignatureItemType? in
+                if let type = item as? SBAConsentSignatureItemType {
+                    return type
+                }
+                else if let key = item as? String {
+                    return SBAConsentSignatureItemType(rawValue: key)
+                }
+                else {
+                    return nil
+                }
+            })
+        }
+        else if let input = inputItem as? NSDictionary {
+            // Include check of "requires" keys for reverse-compatibility. syoung 06/02/2016
+            if let requiresName = input["requiresName"] as? Bool where !requiresName {
+                includes.removeFirst()
+            }
+            if let requiresSignature = input["requiresSignature"] as? Bool where !requiresSignature {
+                includes.removeLast()
+            }
+        }
+        self.includes = includes
+    }
+    
     
     public var requiresName: Bool {
-        return self["requiresName"] as? Bool ?? true
+        return includes.contains(.Name)
     }
     
+    public var requiresSignature: Bool {
+        return includes.contains(.Signature)
+    }
+    
+    public var requiresBirthdate: Bool {
+        return includes.contains(.Birthdate)
+    }
 }

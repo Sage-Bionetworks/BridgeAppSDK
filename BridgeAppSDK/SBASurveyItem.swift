@@ -84,6 +84,7 @@ public enum SBASurveyItemType {
     case Completion                 // ORKCompletionStep
     case Subtask                    // SBASubtaskStep
     case DataGroups                 // data groups step
+    case Registration               // SBARegistrationStep
     
     case Form(FormSubtype)          // ORKFormStep
     public enum FormSubtype {
@@ -125,6 +126,7 @@ public enum SBASurveyItemType {
         case "consentSharingOptions" : self = .Consent(.SharingOptions)
         case "consentReview"         : self = .Consent(.Review)
         case "consentVisual"         : self = .Consent(.Visual)
+        case "registration"          : self = .Registration
         default                      : self = .Custom(type)
         }
     }

@@ -421,7 +421,7 @@ class SBAActiveTaskTests: XCTestCase {
         
         let inputTask: NSDictionary = [
             "taskIdentifier"            : "1-Combo-ABCD-1234",
-            "taskSteps"                 :[
+            "steps"                 :[
                 [
                     "identifier" : "introduction",
                     "text" : "This is a combo task",

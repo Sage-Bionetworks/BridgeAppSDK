@@ -102,7 +102,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .Review:
-            let review = inputItem as! SBAConsentReviewOptions
+            let review = SBAConsentReviewOptions(inputItem: inputItem)
             let signature: ORKConsentSignature? = self.consentDocument.signatures?.first
             signature?.requiresName = review.requiresName
             signature?.requiresSignatureImage = review.requiresSignature
