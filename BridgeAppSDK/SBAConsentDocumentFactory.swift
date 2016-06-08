@@ -102,14 +102,8 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .Review:
-            let review = SBAConsentReviewOptions(inputItem: inputItem)
-            let signature: ORKConsentSignature? = self.consentDocument.signatures?.first
-            signature?.requiresName = review.requiresName
-            signature?.requiresSignatureImage = review.requiresSignature
-            let step = ORKConsentReviewStep(identifier: inputItem.identifier,
-                signature: signature,
-                inDocument: self.consentDocument)
-            step.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
+            let review = inputItem as! SBAFormStepSurveyItem
+            let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
             return step;
         }
     }

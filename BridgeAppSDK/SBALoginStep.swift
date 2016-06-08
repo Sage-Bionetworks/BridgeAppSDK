@@ -1,5 +1,5 @@
 //
-//  SBAOnboardingManager.swift
+//  SBALoginStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
 import ResearchKit
 
-public class SBAOnboardingManager: NSObject, SBASharedInfoController {
+public class SBALoginStep: ORKLoginStep {
+    // TODO: syoung 06/08/2016 Implement
     
-    public var sections: [SBAOnboardingSection]?
-    
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+    public override init(identifier: String, title: String?, text: String?, loginViewControllerClass: AnyClass) {
+        super.init(identifier: identifier, title: title, text: text, loginViewControllerClass: loginViewControllerClass)
     }
     
-    public override init() {
-        super.init()
+    public required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
-    public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
-        self.init(dictionary: json)
-    }
-    
-    public convenience init(dictionary: NSDictionary) {
-        self.init()
-        self.sections = (dictionary["sections"] as? [AnyObject])?.map({ (obj) -> SBAOnboardingSection in
-            return obj as! SBAOnboardingSection
-        })
-    }
-    
-    public func sectionForOnboardingSectionType(sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
-        return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
-    }
-    
-    public func factoryForSection(section: SBAOnboardingSection) -> SBASurveyFactory {
-        return section.defaultOnboardingSurveyFactory()
+    public convenience init(inputItem: SBAFormStepSurveyItem) {
+        self.init(identifier: inputItem.identifier,
+                  title: inputItem.stepTitle,
+                  text: inputItem.stepText,
+                  loginViewControllerClass: SBALoginStepViewController.classForCoder())
     }
 
+}
+
+public class SBALoginStepViewController: ORKLoginStepViewController {
+    
 }

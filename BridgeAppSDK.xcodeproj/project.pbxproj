@@ -150,7 +150,6 @@
 		FFAAF61F1CC0267E00500929 /* SBAPermissionsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */; };
 		FFAAF6221CC03B2300500929 /* SBATaskReminderManagerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */; };
-		FFB5830C1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */; };
 		FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */; };
 		FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */; };
 		FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD31CFE439500C29AF7 /* Main.storyboard */; };
@@ -179,6 +178,12 @@
 		FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDF71D0758C700434001 /* SBAOnboardingSection.swift */; };
 		FFDECDFB1D0774EE00434001 /* Onboarding.json in Resources */ = {isa = PBXBuildFile; fileRef = FFDECDF91D0774EE00434001 /* Onboarding.json */; };
 		FFDECDFD1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */; };
+		FFDECDFF1D0796D200434001 /* SBAOnboardingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */; };
+		FFDECE011D07DDED00434001 /* Dictionary+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE001D07DDED00434001 /* Dictionary+Utilities.swift */; };
+		FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE031D088FA600434001 /* SBALoginStep.swift */; };
+		FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */; };
+		FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */; };
+		FFDECE0A1D08D0F600434001 /* SBAProfileInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -469,7 +474,7 @@
 		FF78CF681D00C135002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Walking.json; sourceTree = "<group>"; };
 		FF78CF6A1D00C1B7002C456D /* consent_full.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_full.html; sourceTree = "<group>"; };
 		FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EligibilityRequirements.json; sourceTree = "<group>"; };
-		FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBARegistrationStep.swift; sourceTree = "<group>"; };
+		FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBARegistrationStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKAnswerFormat+KeyboardUtilities.swift"; sourceTree = "<group>"; };
 		FF8DDFD31CB62280006D1AFA /* SBATrackedDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATrackedDataStore.h; sourceTree = "<group>"; };
 		FF8DDFD41CB62280006D1AFA /* SBATrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataStore.m; sourceTree = "<group>"; };
@@ -498,7 +503,6 @@
 		FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAPermissionsManager.m; sourceTree = "<group>"; };
 		FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATaskReminderManagerProtocol.h; sourceTree = "<group>"; };
 		FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABorderedButton.swift; sourceTree = "<group>"; };
-		FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentReviewOptions.swift; sourceTree = "<group>"; };
 		FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+Dictionary.swift"; sourceTree = "<group>"; };
 		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
 		FFC15FD21CFE439500C29AF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -524,6 +528,12 @@
 		FFDECDF71D0758C700434001 /* SBAOnboardingSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingSection.swift; sourceTree = "<group>"; };
 		FFDECDFA1D0774EE00434001 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Onboarding.json; sourceTree = "<group>"; };
 		FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentDocumentFactoryTests.swift; sourceTree = "<group>"; };
+		FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingManagerTests.swift; sourceTree = "<group>"; };
+		FFDECE001D07DDED00434001 /* Dictionary+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Utilities.swift"; sourceTree = "<group>"; };
+		FFDECE031D088FA600434001 /* SBALoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoginStep.swift; sourceTree = "<group>"; };
+		FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEmailVerificationStep.swift; sourceTree = "<group>"; };
+		FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAConsentReviewStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAProfileInfoForm.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -678,6 +688,7 @@
 				FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */,
 				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */,
+				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -786,6 +797,7 @@
 		FBAE3CE61C86157E003CEC4A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				FFDECE001D07DDED00434001 /* Dictionary+Utilities.swift */,
 				FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */,
 				FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */,
 				FB0C9EF21CAA52F700BA5B44 /* NSDate+Utilities.swift */,
@@ -871,8 +883,8 @@
 		FBE1A9701CAB328800F1F584 /* Step */ = {
 			isa = PBXGroup;
 			children = (
+				FFDECE021D088F6400434001 /* Account */,
 				FB6BA0941C7CDA6000C9903F /* SBADirectNavigationStep.swift */,
-				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */,
 				FFCF37DD1CDA91520090452F /* SBALearnMoreAction.swift */,
 				FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */,
 				FB84392E1C7519340086E961 /* SBASurveyItem.swift */,
@@ -902,7 +914,6 @@
 			children = (
 				FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */,
 				FB14FFDD1C766DF100E0D5AF /* SBAConsentSection.swift */,
-				FFB5830B1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift */,
 				FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */,
 			);
 			name = Consent;
@@ -912,7 +923,6 @@
 			isa = PBXGroup;
 			children = (
 				FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */,
-				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
 			);
 			name = Account;
 			sourceTree = "<group>";
@@ -1244,6 +1254,19 @@
 				FF4F06D11CEED20D007BD273 /* SBATrackedDataResult.swift */,
 			);
 			name = Result;
+			sourceTree = "<group>";
+		};
+		FFDECE021D088F6400434001 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */,
+				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
+				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */,
+				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
+				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
+				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
+			);
+			name = Account;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1597,6 +1620,7 @@
 			files = (
 				FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */,
 				FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */,
+				FFDECE011D07DDED00434001 /* Dictionary+Utilities.swift in Sources */,
 				FF4F06D21CEED20D007BD273 /* SBATrackedDataResult.swift in Sources */,
 				FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
@@ -1620,6 +1644,7 @@
 				FFCF38501CE113FC0090452F /* SBBScheduledActivity+Filters.m in Sources */,
 				FB14FFE91C769F9E00E0D5AF /* SBAConsentSharingOptions.swift in Sources */,
 				80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */,
+				FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */,
 				FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */,
 				FFCF37E01CDA99120090452F /* UIView+LayoutExtensions.swift in Sources */,
 				FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */,
@@ -1627,9 +1652,9 @@
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
-				FFB5830C1CF66B4F005F9EB8 /* SBAConsentReviewOptions.swift in Sources */,
 				FBF1B6C71CAB0273007C1082 /* SBALocalizationMacroWrapper.m in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
+				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
@@ -1653,10 +1678,12 @@
 				FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */,
 				FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */,
 				FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */,
+				FFDECE0A1D08D0F600434001 /* SBAProfileInfoForm.swift in Sources */,
 				FFAAF61F1CC0267E00500929 /* SBAPermissionsManager.m in Sources */,
 				FBE551691C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift in Sources */,
 				FF4F06881CEE3604007BD273 /* ORKFormStep+Result.swift in Sources */,
 				FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */,
+				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
 				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
@@ -1682,6 +1709,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */,
+				FFDECDFF1D0796D200434001 /* SBAOnboardingManagerTests.swift in Sources */,
 				FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */,
 				FF4F06E81CEF7DE5007BD273 /* SBASubtaskStepTests.swift in Sources */,
 				FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  SBAOnboardingManager.swift
+//  Dictionary+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,12 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+
 import Foundation
-import ResearchKit
 
-public class SBAOnboardingManager: NSObject, SBASharedInfoController {
+extension Dictionary where Value : Equatable {
     
-    public var sections: [SBAOnboardingSection]?
-    
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+    public func keyForValue(val : Value) -> Key? {
+        return self.filter { $1 == val }.map { $0.0 }.first
     }
-    
-    public override init() {
-        super.init()
-    }
-    
-    public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
-        self.init(dictionary: json)
-    }
-    
-    public convenience init(dictionary: NSDictionary) {
-        self.init()
-        self.sections = (dictionary["sections"] as? [AnyObject])?.map({ (obj) -> SBAOnboardingSection in
-            return obj as! SBAOnboardingSection
-        })
-    }
-    
-    public func sectionForOnboardingSectionType(sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
-        return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
-    }
-    
-    public func factoryForSection(section: SBAOnboardingSection) -> SBASurveyFactory {
-        return section.defaultOnboardingSurveyFactory()
-    }
-
 }

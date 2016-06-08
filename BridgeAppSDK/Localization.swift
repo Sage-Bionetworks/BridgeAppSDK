@@ -210,6 +210,8 @@ public class Localization: NSObject {
             "SBA_REGISTRATION_FAILED_TITLE" : NSLocalizedString("SBA_REGISTRATION_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Registration Failed", comment:"Title for error when registration fails"),
             "SBA_REGISTRATION_EXTERNALID_TITLE" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Participant ID", comment:"Title for the external ID during registration."),
             "SBA_REGISTRATION_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID", comment:"Placeholder for the external ID during registration."),
+            "SBA_REGISTRATION_FULLNAME_TITLE" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_TITLE", tableName: nil, bundle: localeBundle, value:"Name", comment:"Title for the full name field during registration."),
+            "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter full name", comment:"Placeholder for the full name during registration."),
             
         ]
     }()

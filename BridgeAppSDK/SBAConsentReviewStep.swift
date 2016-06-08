@@ -1,5 +1,5 @@
 //
-//  SBARegistrationStep.swift
+//  SBAConsentReviewStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,27 +33,28 @@
 
 import ResearchKit
 
-public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
+public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     
-    static let kPasswordConfirmationKey = "passwordConfirmation"
+    public var formItems: [ORKFormItem]?
     
     public var surveyItemType: SBASurveyItemType {
-        return .Account(.Registration)
+        return .Consent(.Review)
     }
     
     public override required init(identifier: String) {
         super.init(identifier: identifier)
     }
     
-    public init(inputItem: SBAFormStepSurveyItem) {
-        super.init(identifier: inputItem.identifier)
+    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument) {
+        super.init(identifier: inputItem.identifier, signature: nil, inDocument: consentDocument)
+        self.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
         commonInit(inputItem)
     }
     
     public func defaultOptions() -> [SBAProfileInfoOption] {
-        return [.EmailAndPassword]
+        return [.Name, .SignatureImage]   // by default
     }
-
+    
     public override func validateParameters() {
         super.validateParameters()
         try! validateOptions(self.options)
@@ -64,14 +65,29 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }
         
-        guard options.contains(.EmailAndPassword) || options.contains(.ExternalID) else {
-            throw SBAProfileInfoOptionsError.MissingEmailOrExternalID
+        guard options.contains(.Name) || options.contains(.ExternalID) else {
+            throw SBAProfileInfoOptionsError.MissingNameOrExternalID
         }
+    }
+    
+    // MARK: NSCopying
+    
+    public override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = super.copyWithZone(zone)
+        guard let step = copy as? SBAConsentReviewStep else { return copy }
+        step.formItems = self.formItems
+        return step
     }
     
     // MARK: NSCoding
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.formItems = aDecoder.decodeObjectForKey("formItems") as? [ORKFormItem]
+    }
+    
+    public override func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(self.formItems, forKey: "formItems")
     }
 }

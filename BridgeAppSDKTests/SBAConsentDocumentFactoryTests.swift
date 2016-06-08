@@ -58,7 +58,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                    SBADirectNavigationStep(identifier: "consentFailedQuiz"),
                                    ORKInstructionStep(identifier: "consentPassedQuiz"),
                                    ORKConsentSharingStep(identifier: "consentSharingOptions"),
-                                   ORKConsentReviewStep(identifier: "consentReview"),
+                                   SBAConsentReviewStep(identifier: "consentReview"),
                                    SBARegistrationStep(identifier: "registration"),
                                    ORKInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
@@ -87,7 +87,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBADirectNavigationStep(identifier: "consentFailedQuiz"),
                                         ORKInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
-                                        ORKConsentReviewStep(identifier: "consentReview"),
+                                        SBAConsentReviewStep(identifier: "consentReview"),
                                         ORKInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
@@ -114,7 +114,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBADirectNavigationStep(identifier: "consentFailedQuiz"),
                                         ORKInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
-                                        ORKConsentReviewStep(identifier: "consentReview"),
+                                        SBAConsentReviewStep(identifier: "consentReview"),
                                         SBARegistrationStep(identifier: "registration"),
                                         ORKInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)

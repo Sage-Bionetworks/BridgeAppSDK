@@ -34,39 +34,51 @@
 import Foundation
 import ResearchKit
 
+public enum SBAOnboardingSectionBaseType: String {
+    case Introduction       = "introduction"
+    case Login              = "login"
+    case Eligibility        = "eligibility"
+    case Consent            = "consent"
+    case Registration       = "registration"
+    case Passcode           = "passcode"
+    case EmailVerification  = "emailVerification"
+    case Permissions        = "permissions"
+    case Profile            = "profile"
+    case Completion         = "completion"
+}
+
 public enum SBAOnboardingSectionType {
     
-    case Login
-    case Introduction
-    case Eligibility
-    case Consent
-    case Registration
-    case Passcode
-    case EmailVerification
-    case Permissions
-    case Profile
-    case Completion
+    case Base(SBAOnboardingSectionBaseType)
     case Custom(String)
     
     public init(rawValue: String) {
-        switch(rawValue) {
-        case "introduction"         : self = .Introduction
-        case "eligibility"          : self = .Eligibility
-        case "login"                : self = .Login
-        case "consent"              : self = .Consent
-        case "registration"         : self = .Registration
-        case "passcode"             : self = .Passcode
-        case "emailVerification"    : self = .EmailVerification
-        case "permissions"          : self = .Permissions
-        case "profile"              : self = .Profile
-        case "completion"           : self = .Completion
-        default                     : self = .Custom(rawValue)
+        if let baseType = SBAOnboardingSectionBaseType(rawValue: rawValue) {
+            self = .Base(baseType)
+        }
+        else {
+            self = .Custom(rawValue)
         }
     }
 }
 
-public protocol SBAOnboardingSection: SBATaskTransformable {
+extension SBAOnboardingSectionType: Equatable {
+}
+
+public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> Bool {
+    switch (lhs, rhs) {
+    case (.Base(let lhsValue), .Base(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Custom(let lhsValue), .Custom(let rhsValue)):
+        return lhsValue == rhsValue;
+    default:
+        return false
+    }
+}
+
+public protocol SBAOnboardingSection {
     var onboardingSectionType: SBAOnboardingSectionType? { get }
+    func defaultOnboardingSurveyFactory() -> SBASurveyFactory
 }
 
 extension NSDictionary: SBAOnboardingSection {
@@ -74,5 +86,15 @@ extension NSDictionary: SBAOnboardingSection {
     public var onboardingSectionType: SBAOnboardingSectionType? {
         guard let onboardingType = self["onboardingType"] as? String else { return nil }
         return SBAOnboardingSectionType(rawValue: onboardingType);
+    }
+    
+    public func defaultOnboardingSurveyFactory() -> SBASurveyFactory {
+        let dictionary = self.objectWithResourceDictionary() as? NSDictionary ?? self
+        if onboardingSectionType == .Base(.Consent) {
+            return SBAConsentDocumentFactory(dictionary: dictionary)
+        }
+        else {
+            return SBASurveyFactory(dictionary: dictionary)
+        }
     }
 }

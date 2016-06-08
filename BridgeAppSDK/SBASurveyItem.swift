@@ -77,57 +77,87 @@ public protocol SBANumberRange: class {
     var stepInterval: Int { get }
 }
 
+extension ORKPasscodeType {
+    init?(key: String) {
+        guard let passcodeSuffix = key.parseSuffix(SBASurveyItemType.PasscodeKey) else { return nil }
+        self = (passcodeSuffix == SBASurveyItemType.PasscodeType6Digit) ? .Type6Digit : .Type4Digit
+    }
+}
+
 public enum SBASurveyItemType {
     
     case Custom(String?)
-    case Instruction                // ORKInstructionStep
-    case Completion                 // ORKCompletionStep
-    case Subtask                    // SBASubtaskStep
-    case DataGroups                 // data groups step
-    case Registration               // SBARegistrationStep
     
-    case Form(FormSubtype)          // ORKFormStep
-    public enum FormSubtype {
-        case Compound               // ORKFormItems > 1
-        case Boolean                // ORKBooleanAnswerFormat
-        case SingleChoice           // ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
-        case MultipleChoice         // ORKTextChoiceAnswerFormat of style MultipleChoiceTextQuestion
-        case Text                   // ORKTextAnswerFormat
-        case Date                   // ORKDateAnswerFormat of style Date
-        case DateTime               // ORKDateAnswerFormat of style DateTime
-        case Time                   // ORKTimeOfDayAnswerFormat
-        case Duration               // ORKTimeIntervalAnswerFormat
-        case Integer                // ORKNumericAnswerFormat of style Integer
-        case Decimal                // ORKNumericAnswerFormat of style Decimal
-        case Scale                  // ORKScaleAnswerFormat
-        case TimingRange            // Timing Range: ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
+    case Subtask                                        // SBASubtaskStep
+    public static let SubtaskKey = "subtask"
+    
+    case Instruction(InstructionSubtype)
+    public enum InstructionSubtype: String {
+        case Instruction        = "instruction"         // ORKInstructionStep
+        case Completion         = "completion"          // ORKCompletionStep
+    }
+
+    case Form(FormSubtype)                              // ORKFormStep
+    public enum FormSubtype: String {
+        case Compound           = "compound"            // ORKFormItems > 1
+        case Boolean            = "boolean"             // ORKBooleanAnswerFormat
+        case SingleChoice       = "singleChoiceText"    // ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
+        case MultipleChoice     = "multipleChoiceText"  // ORKTextChoiceAnswerFormat of style MultipleChoiceTextQuestion
+        case Text               = "textfield"           // ORKTextAnswerFormat
+        case Date               = "datePicker"          // ORKDateAnswerFormat of style Date
+        case DateTime           = "timeAndDatePicker"   // ORKDateAnswerFormat of style DateTime
+        case Time               = "timePicker"          // ORKTimeOfDayAnswerFormat
+        case Duration           = "timeInterval"        // ORKTimeIntervalAnswerFormat
+        case Integer            = "numericInteger"      // ORKNumericAnswerFormat of style Integer
+        case Decimal            = "numericDecimal"      // ORKNumericAnswerFormat of style Decimal
+        case Scale              = "scaleInteger"        // ORKScaleAnswerFormat
+        case TimingRange        = "timingRange"         // Timing Range: ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
     }
 
     case Consent(ConsentSubtype)
-    public enum ConsentSubtype {
-        case SharingOptions         // ORKConsentSharingStep
-        case Review                 // ORKConsentReviewStep
-        case Visual                 // ORKVisualConsentStep
+    public enum ConsentSubtype: String {
+        case SharingOptions     = "consentSharingOptions"   // ORKConsentSharingStep
+        case Review             = "consentReview"           // ORKConsentReviewStep
+        case Visual             = "consentVisual"           // ORKVisualConsentStep
     }
+    
+    case Account(AccountSubtype)
+    public enum AccountSubtype: String {
+        case Registration       = "registration"            // SBARegistrationStep
+        case Login              = "login"                   // SBALoginStep
+        case EmailVerification  = "emailVerification"       // SBAEmailVerificationStep
+        //TODO: Implement syoung 06/08/2016
+        //case DataGroups         = "dataGroups"              // data groups step
+    }
+    
+    case Passcode(ORKPasscodeType)
+    public static let PasscodeKey = "passcode"
+    public static let PasscodeType6Digit = "Type6Digit"
+    public static let PasscodeType4Digit = "Type4Digit"
     
     init(rawValue: String?) {
         guard let type = rawValue else { self = .Custom(nil); return }
-        switch(type) {
-        case "instruction"           : self = .Instruction
-        case "completion"            : self = .Completion
-        case "subtask"               : self = .Subtask
-        case "dataGroups"            : self = .DataGroups
-        case "compound"              : self = .Form(.Compound)
-        case "boolean"               : self = .Form(.Boolean)
-        case "singleChoiceText"      : self = .Form(.SingleChoice)
-        case "multipleChoiceText"    : self = .Form(.MultipleChoice)
-        case "timingRange"           : self = .Form(.TimingRange)
-        case "timePicker"            : self = .Form(.Time)
-        case "consentSharingOptions" : self = .Consent(.SharingOptions)
-        case "consentReview"         : self = .Consent(.Review)
-        case "consentVisual"         : self = .Consent(.Visual)
-        case "registration"          : self = .Registration
-        default                      : self = .Custom(type)
+        
+        if let subtype = InstructionSubtype(rawValue: type) {
+            self = .Instruction(subtype)
+        }
+        else if let subtype = FormSubtype(rawValue: type) {
+            self = .Form(subtype)
+        }
+        else if let subtype = ConsentSubtype(rawValue: type) {
+            self = .Consent(subtype)
+        }
+        else if let subtype = AccountSubtype(rawValue: type) {
+            self = .Account(subtype)
+        }
+        else if let subtype = ORKPasscodeType(key: type) {
+            self = .Passcode(subtype)
+        }
+        else if type == SBASurveyItemType.SubtaskKey {
+            self = .Subtask
+        }
+        else {
+            self = .Custom(type)
         }
     }
         
@@ -153,7 +183,40 @@ public enum SBASurveyItemType {
     }
 }
 
-public protocol SBACustomTypeStep: class {
+extension SBASurveyItemType {
+}
+
+public func ==(lhs: SBASurveyItemType, rhs: SBASurveyItemType) -> Bool {
+    switch (lhs, rhs) {
+    case (.Instruction(let lhsValue), .Instruction(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Form(let lhsValue), .Form(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Consent(let lhsValue), .Consent(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Account(let lhsValue), .Account(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Passcode(let lhsValue), .Passcode(let rhsValue)):
+        return lhsValue == rhsValue;
+    case (.Subtask, .Subtask):
+        return true
+    case (.Custom(let lhsValue), .Custom(let rhsValue)):
+        return lhsValue == rhsValue;
+    default:
+        return false
+    }
+}
+
+public protocol SBACustomTypeStep {
     var customTypeIdentifier: String? { get }
+}
+
+extension SBASurveyItemType: SBACustomTypeStep {
+    public var customTypeIdentifier: String? {
+        if case .Custom(let type) = self {
+            return type
+        }
+        return nil
+    }
 }
 
