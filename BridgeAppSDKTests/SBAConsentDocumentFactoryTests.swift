@@ -183,8 +183,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         XCTAssertNotNil(reviewStep.formItems)
         
-        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat",
-                                           "signature"   : "BridgeAppSDK.SBASignatureImageAnswerFormat"]
+        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
         for (identifier, expectedClassName) in expected {
             let formItem = reviewStep.formItemForIdentifier(identifier)
             XCTAssertNotNil(formItem)
@@ -194,6 +193,47 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
             }
         }
     }
+    
+    func testConsentReview_NameAndBirthdate() {
+        guard let consentFactory = createConsentFactory() else { return }
+        
+        let inputStep: NSDictionary = [
+            "identifier"   : "consentReview",
+            "type"         : "consentReview",
+            "items"        : ["name", "birthdate"]
+        ]
+        
+        let step = consentFactory.createSurveyStepWithDictionary(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let reviewStep = step as? SBAConsentReviewStep else {
+            XCTAssert(false, "\(step) not of expected type")
+            return
+        }
+        
+        XCTAssertNotNil(reviewStep.reasonForConsent)
+        XCTAssertNotNil(reviewStep.signature)
+        
+        if let signature = reviewStep.signature {
+            XCTAssertTrue(signature.requiresName)
+            XCTAssertTrue(signature.requiresSignatureImage)
+        }
+        
+        XCTAssertNotNil(reviewStep.formItems)
+        
+        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat",
+                                           "birthdate"   : "ORKDateAnswerFormat"
+                                           ]
+        for (identifier, expectedClassName) in expected {
+            let formItem = reviewStep.formItemForIdentifier(identifier)
+            XCTAssertNotNil(formItem)
+            if let classForCoder = formItem?.answerFormat?.classForCoder {
+                let className = NSStringFromClass(classForCoder)
+                XCTAssertEqual(className, expectedClassName)
+            }
+        }
+    }
+    
     
     func testConsentReview_ExternalID() {
         guard let consentFactory = createConsentFactory() else { return }

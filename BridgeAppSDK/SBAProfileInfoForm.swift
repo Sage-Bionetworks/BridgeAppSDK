@@ -39,7 +39,6 @@ public enum SBAProfileInfoOption : String {
     case Name             = "name"
     case Birthdate        = "birthdate"
     case Gender           = "gender"
-    case SignatureImage   = "signature"
 }
 
 public enum SBARegistrationGender: String {
@@ -96,9 +95,6 @@ public struct SBAProfileInfoOptions {
         self.externalIDOptions = externalIDOptions
     }
     
-}
-
-public class SBASignatureImageAnswerFormat : ORKAnswerFormat {
 }
 
 public protocol SBAFormProtocol : class {
@@ -241,14 +237,6 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("GENDER_FORM_ITEM_PLACEHOLDER")
-                self.formItems! += [formItem]
-                
-            case .SignatureImage:
-                let answerFormat = SBASignatureImageAnswerFormat()
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: nil,
-                                           answerFormat: answerFormat,
-                                           optional: false)
                 self.formItems! += [formItem]
                 
             }

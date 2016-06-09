@@ -58,12 +58,13 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
         commonInit(inputItem)
         
         // Copy options from commonInit back into the signature for this document
-        self.signature?.requiresName = (self.formItemForIdentifier(SBAProfileInfoOption.Name.rawValue) != nil)
-        self.signature?.requiresSignatureImage = (self.formItemForIdentifier(SBAProfileInfoOption.SignatureImage.rawValue) != nil)
+        let requiresNameAndSignature = (self.formItemForIdentifier(SBAProfileInfoOption.Name.rawValue) != nil)
+        self.signature?.requiresName = requiresNameAndSignature
+        self.signature?.requiresSignatureImage = requiresNameAndSignature
     }
     
     public func defaultOptions() -> [SBAProfileInfoOption] {
-        return [.Name, .SignatureImage]   // by default
+        return [.Name]   // by default
     }
     
     public override func validateParameters() {
