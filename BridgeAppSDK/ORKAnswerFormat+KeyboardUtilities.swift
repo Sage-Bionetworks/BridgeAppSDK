@@ -54,7 +54,7 @@ extension UITextAutocapitalizationType {
     }
 }
 
-// Extend autocap to support keyword init
+// Extend UIKeyboardType to support keyword init
 extension UIKeyboardType {
     init(key: String?) {
         guard let key = key else {
