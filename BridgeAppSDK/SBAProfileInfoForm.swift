@@ -101,20 +101,22 @@ public struct SBAProfileInfoOptions {
 public class SBASignatureImageAnswerFormat : ORKAnswerFormat {
 }
 
-public protocol SBAProfileInfoForm : class {
-    
+public protocol SBAFormProtocol : class {
     var identifier: String { get }
-    
     var title: String? { get set }
-    
     var text: String? { get set }
-    
-    var surveyItemType: SBASurveyItemType { get }
-    
     var formItems: [ORKFormItem]? { get set }
-    
     init(identifier: String)
-    
+}
+
+extension SBAFormProtocol {
+    public func formItemForIdentifier(identifier: String) -> ORKFormItem? {
+        return self.formItems?.findObject({ $0.identifier == identifier })
+    }
+}
+
+public protocol SBAProfileInfoForm : SBAFormProtocol {
+    var surveyItemType: SBASurveyItemType { get }
     func defaultOptions() -> [SBAProfileInfoOption]
     func validateOptions(options: [SBAProfileInfoOption]?) throws
 }
@@ -138,7 +140,9 @@ extension SBAProfileInfoForm {
         try! validateOptions(options.includes)
         
         // Build the form items
-        var formItems: [ORKFormItem] = []
+        if self.formItems == nil {
+            self.formItems = []
+        }
         
         for option in options.includes {
             switch option {
@@ -150,7 +154,7 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("EMAIL_FORM_ITEM_PLACEHOLDER")
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
                 let passwordAnswerFormat = ORKAnswerFormat.textAnswerFormat()
                 passwordAnswerFormat.multipleLines = false
@@ -164,7 +168,7 @@ extension SBAProfileInfoForm {
                                                    answerFormat: passwordAnswerFormat,
                                                    optional: false)
                 passwordFormItem.placeholder = Localization.localizedString("PASSWORD_FORM_ITEM_PLACEHOLDER")
-                formItems += [passwordFormItem]
+                self.formItems! += [passwordFormItem]
                 
                 if (self.surveyItemType == .Account(.Registration)) {
                     // password confirmation
@@ -180,7 +184,7 @@ extension SBAProfileInfoForm {
                                                       answerFormat: confirmAnswerFormat,
                                                       optional: false)
                     confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
-                    formItems += [confirmFormItem]
+                    self.formItems! += [confirmFormItem]
                 }
                 
             case .ExternalID:
@@ -197,7 +201,7 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER")
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
             case .Name:
                 let answerFormat = ORKAnswerFormat.textAnswerFormat()
@@ -212,7 +216,7 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER")
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
             case .Birthdate:
                 // Calculate default date (20 years old).
@@ -223,7 +227,7 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("DOB_FORM_ITEM_PLACEHOLDER")
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
             case .Gender:
                 let textChoices = [
@@ -237,7 +241,7 @@ extension SBAProfileInfoForm {
                                            answerFormat: answerFormat,
                                            optional: false)
                 formItem.placeholder = Localization.localizedString("GENDER_FORM_ITEM_PLACEHOLDER")
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
             case .SignatureImage:
                 let answerFormat = SBASignatureImageAnswerFormat()
@@ -245,7 +249,7 @@ extension SBAProfileInfoForm {
                                            text: nil,
                                            answerFormat: answerFormat,
                                            optional: false)
-                formItems += [formItem]
+                self.formItems! += [formItem]
                 
             }
         }

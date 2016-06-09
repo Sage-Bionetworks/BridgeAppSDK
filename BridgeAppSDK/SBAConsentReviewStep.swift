@@ -46,9 +46,20 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     }
     
     public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument) {
-        super.init(identifier: inputItem.identifier, signature: nil, inDocument: consentDocument)
+        
+        // Initialize super
+        super.init(identifier: inputItem.identifier, signature: consentDocument.signatures?.first, inDocument: consentDocument)
+        
+        // Set default strings before commonInit
         self.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
+        self.title = Localization.localizedString("CONSENT_NAME_TITLE")
+        
+        // Initialize common
         commonInit(inputItem)
+        
+        // Copy options from commonInit back into the signature for this document
+        self.signature?.requiresName = (self.formItemForIdentifier(SBAProfileInfoOption.Name.rawValue) != nil)
+        self.signature?.requiresSignatureImage = (self.formItemForIdentifier(SBAProfileInfoOption.SignatureImage.rawValue) != nil)
     }
     
     public func defaultOptions() -> [SBAProfileInfoOption] {
@@ -65,7 +76,7 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }
         
-        guard options.contains(.Name) || options.contains(.ExternalID) else {
+        guard options.count == 0 || options.contains(.Name) || options.contains(.ExternalID) else {
             throw SBAProfileInfoOptionsError.MissingNameOrExternalID
         }
     }
