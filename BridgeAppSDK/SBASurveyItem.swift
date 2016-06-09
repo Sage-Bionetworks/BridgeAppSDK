@@ -183,7 +183,7 @@ public enum SBASurveyItemType {
     }
 }
 
-extension SBASurveyItemType {
+extension SBASurveyItemType: Equatable {
 }
 
 public func ==(lhs: SBASurveyItemType, rhs: SBASurveyItemType) -> Bool {
