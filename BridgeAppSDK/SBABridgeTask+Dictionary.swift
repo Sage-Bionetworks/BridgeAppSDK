@@ -114,7 +114,13 @@ extension NSDictionary: SBABridgeTask {
     }
     
     public var taskSteps: [SBAStepTransformer] {
-        guard let steps = self["taskSteps"] as? [AnyObject] else {
+        // For reverse-compatibility, allow both steps and taskSteps as the key
+        // but assert on "taskSteps" as deprecated.
+        let taskSteps = self["taskSteps"] as? [AnyObject]
+        if taskSteps != nil {
+            assertionFailure("Use of 'taskSteps' as a key into the dictionary is deprecated. Please replace with 'steps'")
+        }
+        guard let steps = taskSteps ?? self["steps"] as? [AnyObject] else {
             // return self if there are no taskSteps
             return [self as SBAStepTransformer]
         }

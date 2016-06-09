@@ -1,0 +1,15 @@
+{
+    "taskIdentifier"            : "Voice",
+    "schemaIdentifier"          : "Voice Activity",
+    "taskType"                  : "voice",
+    "intendedUseDescription"    : "In this activity we ask you to say, “Aaaah.”",
+    "localizedSteps"            : [{
+                                     "identifier" : "instruction1",
+                                     "text"       : "This activity uses your phone’s microphone. Hold your phone so you can easily see the screen. Take a deep breath and say, “Aaaah,” for as long as you can. Try to keep the volume of your voice steady so the audio bars remain blue.",
+                                     "detailText" : "Tap Next to begin."
+                                    }],
+    "insertSteps"               : [{
+                                        "resourceName"            : "MedicalSurvey",
+                                        "classType"               : "TrackedDataObjectCollection",
+                                        }]
+}

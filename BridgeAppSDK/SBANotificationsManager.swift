@@ -37,6 +37,10 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
     
     public static let sharedManager = SBANotificationsManager()
     
+    public var sharedAppDelegate: SBASharedAppDelegate {
+        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+    }
+    
     public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
         // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
         if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {

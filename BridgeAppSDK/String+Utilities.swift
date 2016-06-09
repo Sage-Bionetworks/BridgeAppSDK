@@ -41,4 +41,11 @@ extension String {
         return result
     }
     
+    func parseSuffix(prefix: String, separator: String = "") -> String? {
+        guard self.hasPrefix(prefix) else { return nil }
+        let prefixWithSeparator = prefix + separator
+        guard let range = self.rangeOfString(prefixWithSeparator) else { return "" }
+        return self.substringFromIndex(range.endIndex)
+    }
+    
 }

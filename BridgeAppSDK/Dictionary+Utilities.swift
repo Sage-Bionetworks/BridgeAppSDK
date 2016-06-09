@@ -1,5 +1,5 @@
 //
-//  SBAConsentReviewOptions.swift
+//  Dictionary+Utilities.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,21 +31,12 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
 
-public protocol SBAConsentReviewOptions: class {
-    var requiresSignature: Bool { get }
-    var requiresName: Bool { get }
-}
+import Foundation
 
-extension NSDictionary: SBAConsentReviewOptions {
+extension Dictionary where Value : Equatable {
     
-    public var requiresSignature: Bool {
-        return self["requiresSignature"] as? Bool ?? true
+    public func keyForValue(val : Value) -> Key? {
+        return self.filter { $1 == val }.map { $0.0 }.first
     }
-    
-    public var requiresName: Bool {
-        return self["requiresName"] as? Bool ?? true
-    }
-    
 }

@@ -78,6 +78,8 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
 
 + (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities;
 
++ (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

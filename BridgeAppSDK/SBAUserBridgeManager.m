@@ -169,4 +169,15 @@
     [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:nil];
 }
 
++ (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
+    [SBBComponent(SBBAuthManager) requestPasswordResetForEmail: emailAddress
+                                                    completion: ^(NSURLSessionTask * __unused task,
+                                                              id responseObject,
+                                                              NSError *error) {
+                                                        if (completionBlock) {
+                                                            completionBlock(responseObject, error);
+                                                        }
+                                                    }];
+}
+
 @end

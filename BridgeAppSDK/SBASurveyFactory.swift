@@ -43,6 +43,10 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     public var steps: [ORKStep]?
     
+    public var sharedAppDelegate: SBASharedAppDelegate {
+        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+    }
+    
     public override init() {
         super.init()
     }
@@ -99,7 +103,18 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      * defined by this class. Note: Only swift can subclass this method directly
      */
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
-        return nil
+        switch (inputItem.surveyItemType) {
+        case .Custom(let customType):
+            if let instruction = inputItem as? SBAInstructionStepSurveyItem {
+                return instruction.createInstructionStep(customType)
+            }
+            else {
+                return SBADirectNavigationStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
+            }
+            
+        default:
+            return nil
+        }
     }
     
     final func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep? {
@@ -112,18 +127,34 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep? {
         switch (inputItem.surveyItemType) {
-        case .Instruction, .Completion:
+            
+        case .Instruction(_):
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
                 return instruction.createInstructionStep()
             }
+            
         case .Subtask:
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createSubtaskStep(self)
             } else { break }
+            
         case .Form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createFormStep(isSubtaskStep ?? false)
             } else { break }
+            
+        case .Account(let subtype):
+            if let form = inputItem as? SBAFormStepSurveyItem {
+                return form.createAccountStep(subtype)
+            } else { break }
+            
+        case .Passcode(let passcodeType):
+            let step = ORKPasscodeStep(identifier: inputItem.identifier)
+            step.title = inputItem.stepTitle
+            step.text = inputItem.stepText
+            step.passcodeType = passcodeType
+            return step
+            
         default:
             break
         }
@@ -139,21 +170,26 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
 }
 
+extension SBASurveyItem {
+    
+}
+
 extension SBAInstructionStepSurveyItem {
     
-    func createInstructionStep() -> ORKInstructionStep {
+    func createInstructionStep(customType: String? = nil) -> ORKInstructionStep {
         var instructionStep: ORKInstructionStep!
         let learnMore = self.learnMoreAction()
         var nextIdentifier: String? = nil
         if let directStep = self as? SBADirectNavigationRule {
             nextIdentifier = directStep.nextStepIdentifier
         }
-        if case .Completion = self.surveyItemType {
+        if self.surveyItemType == .Instruction(.Completion) {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
-        else if (nextIdentifier != nil) || (learnMore != nil) {
+        else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
             let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
             step.learnMoreAction = learnMore
+            step.customTypeIdentifier = customType
             instructionStep = step
         }
         else {
@@ -185,6 +221,17 @@ extension SBAFormStepSurveyItem {
         buildFormItems(step, isSubtaskStep: isSubtaskStep)
         mapStepValues(step)
         return step
+    }
+    
+    func createAccountStep(subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
+        switch (subtype) {
+        case .Registration:
+            return SBARegistrationStep(inputItem: self)
+        case .Login:
+            return SBALoginStep(inputItem: self)
+        case .EmailVerification:
+            return SBAEmailVerificationStep(inputItem: self)
+        }
     }
     
     func mapStepValues(step:ORKFormStep) {

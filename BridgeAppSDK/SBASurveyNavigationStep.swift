@@ -108,6 +108,10 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
     public var skipToStepIdentifier: String = ORKNullStepIdentifier
     public var skipIfPassed: Bool = false
     
+    override public init(identifier: String) {
+        super.init(identifier: identifier)
+    }
+    
     override public init(identifier: String, steps: [ORKStep]?) {
         super.init(identifier: identifier, steps: steps)
     }

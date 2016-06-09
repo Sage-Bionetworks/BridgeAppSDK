@@ -1,0 +1,11 @@
+{
+    "taskIdentifier"            : "Tapping",
+    "schemaIdentifier"          : "Tapping Activity",
+    "taskType"                  : "tapping",
+    "intendedUseDescription"    : "In this activity we ask you to tap your fingers. It is an activity that tells us about your fine motor coordination.",
+    "localizedSteps"            : [],
+    "insertSteps"               : [{
+                                    "resourceName"            : "MedicalSurvey",
+                                    "classType"               : "TrackedDataObjectCollection",
+                                    }]
+}

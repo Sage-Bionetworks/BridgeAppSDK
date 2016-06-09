@@ -46,6 +46,11 @@ public class SBASubtaskStep: ORKStep {
     }
     private var _subtask: protocol <ORKTask, NSCopying, NSSecureCoding>
     
+    override public init(identifier: String) {
+        _subtask = ORKOrderedTask(identifier: identifier, steps: nil)
+        super.init(identifier: identifier)
+    }
+    
     public init(identifier: String, steps: [ORKStep]?) {
         _subtask = ORKOrderedTask(identifier: identifier, steps: steps)
         super.init(identifier: identifier);

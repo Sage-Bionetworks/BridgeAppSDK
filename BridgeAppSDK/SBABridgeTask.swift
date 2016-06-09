@@ -33,8 +33,11 @@
 
 import ResearchKit
 
-public protocol SBATaskReference: class {
+public protocol SBATaskTransformable: class {
     func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
+}
+
+public protocol SBATaskReference: SBATaskTransformable {
     var cancelDisabled: Bool { get }
     var allowMultipleRun: Bool { get }
     var scheduleNotification: Bool { get }

@@ -34,7 +34,7 @@
 import ResearchKit
 
 public protocol SBAConsentSection: class {
-    var sectionType: ORKConsentSectionType { get }
+    var consentSectionType: ORKConsentSectionType { get }
     var sectionTitle: String? { get }
     var sectionFormalTitle: String? { get }
     var sectionSummary: String? { get }
@@ -48,7 +48,7 @@ public protocol SBAConsentSection: class {
 extension SBAConsentSection {
     
     func createConsentSection() -> ORKConsentSection {
-        let section = ORKConsentSection(type: self.sectionType)
+        let section = ORKConsentSection(type: self.consentSectionType)
         section.title = self.sectionTitle
         section.formalTitle = self.sectionFormalTitle
         section.summary = self.sectionSummary
@@ -64,7 +64,7 @@ extension SBAConsentSection {
 
 extension NSDictionary: SBAConsentSection {
     
-    public var sectionType: ORKConsentSectionType {
+    public var consentSectionType: ORKConsentSectionType {
         guard let sectionType = self["sectionType"] as? String else { return .Custom }
         switch (sectionType) {
         case "overview"          : return .Overview

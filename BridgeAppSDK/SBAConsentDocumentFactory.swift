@@ -102,15 +102,33 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .Review:
-            let review = inputItem as! SBAConsentReviewOptions
-            let signature: ORKConsentSignature? = self.consentDocument.signatures?.first
-            signature?.requiresName = review.requiresName
-            signature?.requiresSignatureImage = review.requiresSignature
-            let step = ORKConsentReviewStep(identifier: inputItem.identifier,
-                signature: signature,
-                inDocument: self.consentDocument)
-            step.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
+            let review = inputItem as! SBAFormStepSurveyItem
+            let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
             return step;
         }
+    }
+    
+    /**
+    * Return only the steps required for reconsent
+    */
+    public func reconsentSteps() -> [ORKStep]? {
+        // Strip out the registration steps
+        return self.steps?.filter({ (($0 as? SBARegistrationStep) ?? ($0 as? ORKRegistrationStep)) == nil })
+    }
+    
+    /**
+    * Return only the steps required for initial registration
+    */
+    public func registrationSteps() -> [ORKStep]? {
+        // Strip out the reconsent steps
+        return self.steps?.filter({ (step) -> Bool in
+            // If this is a step that conforms to the custom step protocol and the custom step type is 
+            // a reconsent subtype, then this is not to be included in the registration steps
+            if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier
+                where customType.hasPrefix("reconsent") {
+                return false
+            }
+            return true
+        })
     }
 }

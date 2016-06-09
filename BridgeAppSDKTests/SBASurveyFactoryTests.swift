@@ -52,6 +52,27 @@ class SBASurveyFactoryTests: XCTestCase {
     // MARK: NSDictionary
     // -------------------------------------------------
     
+    func testCustomType() {
+        let inputStep: NSDictionary = [
+            "identifier"    : "customStep",
+            "type"          : "customStepType",
+            "title"         : "Title",
+            "text"          : "Text for this step",
+        ]
+        
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBADirectNavigationStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        XCTAssertEqual(surveyStep.identifier, "customStep")
+        XCTAssertEqual(surveyStep.customTypeIdentifier, "customStepType")
+        XCTAssertEqual(surveyStep.title, "Title")
+        XCTAssertEqual(surveyStep.text, "Text for this step")
+    }
+    
     func testFactory_CompoundSurveyQuestion_WithRule() {
         
         let inputStep: NSDictionary = [

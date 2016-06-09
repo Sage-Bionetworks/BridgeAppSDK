@@ -1,7 +1,7 @@
 {
     "taskIdentifier"    : "1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780",
     "identifier"        : "Activity Session",
-    "taskSteps"         :
+    "steps"         :
     [
      {
      "identifier"   : "introduction",

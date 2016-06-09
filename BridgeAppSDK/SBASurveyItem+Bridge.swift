@@ -41,7 +41,7 @@ import ResearchKit
 extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     
     public var surveyItemType: SBASurveyItemType {
-        return .Instruction
+        return .Instruction(.Instruction)
     }
     
     public var stepTitle: String? {

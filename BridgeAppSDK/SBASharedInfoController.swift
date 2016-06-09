@@ -34,13 +34,14 @@
 import UIKit
 
 public protocol SBASharedInfoController {
+    
+    var sharedAppDelegate: SBASharedAppDelegate { get }
+//    public var sharedAppDelegate: SBASharedAppDelegate {
+//        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
+//    }
 }
 
 extension SBASharedInfoController {
-    
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
     
     public var sharedUser: SBAUserWrapper {
         return self.sharedAppDelegate.currentUser
