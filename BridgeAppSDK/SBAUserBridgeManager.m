@@ -171,7 +171,7 @@
 
 + (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBAuthManager) requestPasswordResetForEmail: emailAddress
-                                                    completion: ^(NSURLSessionDataTask * __unused task,
+                                                    completion: ^(NSURLSessionTask * __unused task,
                                                               id responseObject,
                                                               NSError *error) {
                                                         if (completionBlock) {
