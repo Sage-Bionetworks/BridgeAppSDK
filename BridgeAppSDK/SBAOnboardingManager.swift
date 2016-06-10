@@ -102,7 +102,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         let factory = section.defaultOnboardingSurveyFactory()
         
         // For consent, need to filter out steps that should not be included and group the steps into a substep. 
-        // This is to facilitate skipping reconsent for a user who is logining in where it is unknown whether
+        // This is to facilitate skipping reconsent for a user who is logging in where it is unknown whether
         // or not the user needs to reconsent. Returned this way because the steps in a subclass of ORKOrderedTask 
         // are immutable but can be skipped using navigation rules.
         if let consentFactory = factory as? SBAConsentDocumentFactory {
@@ -127,7 +127,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
      are ordered as needed to ensure the proper sequence of login, consent and registration according
      to their ordinal position. All custom sections are left in the order they were included in the 
      original dictionary.
-     @return    `true` if left preceeds right in order, `false` if same or right preceeds left
+     @return    `true` if left precedes right in order, `false` if same or right precedes left
     */
     public func sortOrder(lhs: SBAOnboardingSection, _ rhs: SBAOnboardingSection) -> Bool {
         guard let lhsType = lhs.onboardingSectionType, let rhsType = rhs.onboardingSectionType else { return false }
