@@ -34,6 +34,7 @@
 import UIKit
 import BridgeSDK
 
+@objc
 public protocol SBABridgeInfo: class {
     
     /**
@@ -49,7 +50,7 @@ public protocol SBABridgeInfo: class {
     /**
      * Environment to load
      */
-    var environment: SBBEnvironment! { get }
+    var environment: SBBEnvironment { get }
     
     /**
      * App store link for this application. By default, this returns the value pulled from the main bundle
@@ -92,7 +93,7 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var studyIdentifier: String!
     public var useCache: Bool = false
-    public var environment: SBBEnvironment! = .Prod
+    public var environment: SBBEnvironment = .Prod
     
     var plist: NSDictionary!
 

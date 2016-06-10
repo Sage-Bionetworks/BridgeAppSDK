@@ -35,8 +35,9 @@ import Foundation
 import ResearchKit
 
 public enum SBAOnboardingSectionBaseType: String {
-    case Introduction       = "introduction"
+    
     case Login              = "login"
+    case Introduction       = "introduction"
     case Eligibility        = "eligibility"
     case Consent            = "consent"
     case Registration       = "registration"
@@ -45,6 +46,24 @@ public enum SBAOnboardingSectionBaseType: String {
     case Permissions        = "permissions"
     case Profile            = "profile"
     case Completion         = "completion"
+    
+    func ordinal() -> Int {
+        let order:[SBAOnboardingSectionBaseType] = [.Login,
+                                                   .Introduction,
+                                                   .Eligibility,
+                                                   .Consent,
+                                                   .Registration,
+                                                   .Passcode,
+                                                   .EmailVerification,
+                                                   .Permissions,
+                                                   .Profile,
+                                                   .Completion]
+        guard let ret = order.indexOf(self) else {
+            assertionFailure("\(self) ordinal value is unknown")
+            return (order.indexOf(.Completion)! - 1)
+        }
+        return ret
+    }
 }
 
 public enum SBAOnboardingSectionType {
@@ -58,6 +77,22 @@ public enum SBAOnboardingSectionType {
         }
         else {
             self = .Custom(rawValue)
+        }
+    }
+    
+    public func baseType() -> SBAOnboardingSectionBaseType? {
+        if case .Base(let baseType) = self {
+            return baseType
+        }
+        return nil
+    }
+    
+    public var identifier: String {
+        switch (self) {
+        case .Base(let baseType):
+            return baseType.rawValue
+        case .Custom(let customType):
+            return customType
         }
     }
 }

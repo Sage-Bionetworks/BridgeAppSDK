@@ -37,9 +37,9 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
     
     public static let sharedManager = SBANotificationsManager()
     
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
     
     public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
         // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
@@ -48,6 +48,8 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
         }
         
         let app = UIApplication.sharedApplication()
+        
+        // TODO: syoung 06/10/2016 Only cancel the notifications that are scheduled using this manager
         app.cancelAllLocalNotifications()
         
         // Add a notification for the scheduled activities that should include one
@@ -63,10 +65,6 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
             }
         }
         
-        // reschedule any notifications defined by the appDelegate
-        for notif in self.sharedAppDelegate.createLocalNotifications() {
-             app.scheduleLocalNotification(notif)
-        }
     }
     
 }

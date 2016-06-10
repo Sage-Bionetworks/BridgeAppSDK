@@ -37,7 +37,7 @@ import BridgeAppSDK
 @UIApplicationMain
 class AppDelegate: SBAAppDelegate {
     
-    override var requiredPermissions: [SBAPermissionsType] {
+    override var requiredPermissions: SBAPermissionsType {
         return [.Coremotion, .LocalNotifications, .Microphone]
     }
     

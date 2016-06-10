@@ -35,12 +35,12 @@ import UIKit
 
 public protocol SBASharedInfoController {
     
-    var sharedAppDelegate: SBASharedAppDelegate { get }
+    var sharedAppDelegate: SBAAppInfoDelegate { get }
 
     // Example Implementation:
-    //    public var sharedAppDelegate: SBASharedAppDelegate {
-    //        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    //    }
+    //    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+    //      return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    //    }()
 }
 
 extension SBASharedInfoController {

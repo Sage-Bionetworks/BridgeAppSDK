@@ -687,7 +687,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     
     var studyIdentifier: String!
     var useCache: Bool = false
-    var environment: SBBEnvironment!
+    var environment: SBBEnvironment = .Prod
     var appStoreLinkURLString: String?
     var emailForLoginViaExternalId: String?
     var passwordFormatForLoginViaExternalId: String?
