@@ -92,7 +92,7 @@
          {
              "identifier"   : "consentReview",
              "type"         : "consentReview",
-             "items"        : ["name", "birthdate", "signature"]
+             "items"        : ["name", "birthdate"]
          },
          {
          "identifier"    : "registration",
