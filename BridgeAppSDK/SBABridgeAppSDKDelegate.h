@@ -43,6 +43,9 @@
 - (NSBundle * _Nonnull)resourceBundle;
 - (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
 
+//
+- (void)showAppropriateViewController:(BOOL)animated;
+
 // manager pointers
 @optional
 - (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;

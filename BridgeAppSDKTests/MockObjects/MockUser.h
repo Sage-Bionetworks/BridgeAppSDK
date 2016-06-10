@@ -1,5 +1,5 @@
 //
-//  SBANotificationsManager.swift
+//  MockUser.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,40 +31,31 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+#import <Foundation/Foundation.h>
+@import BridgeAppSDK;
+@import BridgeSDK;
 
-public class SBANotificationsManager: NSObject, SBASharedInfoController {
-    
-    public static let sharedManager = SBANotificationsManager()
-    
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
-    }()
-    
-    public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
-        if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {
-            return
-        }
-        
-        let app = UIApplication.sharedApplication()
-        
-        // TODO: syoung 06/10/2016 Only cancel the notifications that are scheduled using this manager
-        app.cancelAllLocalNotifications()
-        
-        // Add a notification for the scheduled activities that should include one
-        for sa in activities {
-            if let taskRef = self.sharedBridgeInfo.taskReferenceForSchedule(sa)
-                where taskRef.scheduleNotification  {
-                let notif = UILocalNotification.init()
-                notif.fireDate = sa.scheduledOn
-                notif.soundName = UILocalNotificationDefaultSoundName
-                let format = Localization.localizedString("SBA_TIME_FOR_%@")
-                notif.alertBody = String(format: format, sa.activity.label)
-                app.scheduleLocalNotification(notif)
-            }
-        }
-        
-    }
-    
-}
+#import "MockBridgeInfo.h"
+
+@interface MockUser : NSObject <SBAUserWrapper>
+
+@property (nonatomic, readonly, strong) MockBridgeInfo * _Nonnull mockBridgeInfo;
+
+@property (nonatomic, copy) NSString * _Nullable sessionToken;
+@property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, copy) NSString * _Nullable email;
+@property (nonatomic, copy) NSString * _Nullable externalId;
+@property (nonatomic, copy) NSString * _Nullable password;
+@property (nonatomic, copy) NSString * _Nullable subpopulationGuid;
+@property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
+@property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
+@property (nonatomic) BOOL hasRegistered;
+@property (nonatomic) BOOL loginVerified;
+@property (nonatomic) BOOL consentVerified;
+@property (nonatomic) BOOL dataSharingEnabled;
+@property (nonatomic) SBBUserDataSharingScope dataSharingScope;
+@property (nonatomic, copy) NSString * _Nullable onboardingStepIdentifier;
+
+@property (nonatomic, readonly) NSUInteger logout_called_count;
+
+@end

@@ -35,8 +35,6 @@ import ResearchKit
 
 public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     
-    public var formItems: [ORKFormItem]?
-    
     public var surveyItemType: SBASurveyItemType {
         return .Consent(.Review)
     }
@@ -82,24 +80,9 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
         }
     }
     
-    // MARK: NSCopying
-    
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let step = copy as? SBAConsentReviewStep else { return copy }
-        step.formItems = self.formItems
-        return step
-    }
-    
     // MARK: NSCoding
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.formItems = aDecoder.decodeObjectForKey("formItems") as? [ORKFormItem]
-    }
-    
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.formItems, forKey: "formItems")
     }
 }

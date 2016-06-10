@@ -34,7 +34,7 @@
 import Foundation
 
 // Wrapper support for reverse compatiblility to AppCore. syoung 03/28/2016
-
+@objc
 public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     
     var bridgeInfo: SBABridgeInfo? { get }

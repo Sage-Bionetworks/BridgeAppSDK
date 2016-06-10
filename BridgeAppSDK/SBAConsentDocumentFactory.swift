@@ -109,19 +109,29 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
     }
     
     /**
-    * Return only the steps required for reconsent
-    */
-    public func reconsentSteps() -> [ORKStep]? {
-        // Strip out the registration steps
-        return self.steps?.filter({ (($0 as? SBARegistrationStep) ?? ($0 as? ORKRegistrationStep)) == nil })
+     * Return visual consent step
+     */
+    public func visualConsentStep() -> ORKVisualConsentStep {
+        return self.steps?.findObject({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
+            ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, document: self.consentDocument)
     }
     
     /**
-    * Return only the steps required for initial registration
+    * Return subtask step with only the steps required for reconsent
     */
-    public func registrationSteps() -> [ORKStep]? {
+    public func reconsentStep() -> SBASubtaskStep {
+        // Strip out the registration steps
+        let steps = self.steps?.filter({ !($0 is SBARegistrationStep) && !($0 is ORKRegistrationStep) })
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, steps: steps)
+        return SBASubtaskStep(subtask: task)
+    }
+    
+    /**
+    * Return subtask step with only the steps required for initial registration
+    */
+    public func registrationConsentStep() -> SBASubtaskStep {
         // Strip out the reconsent steps
-        return self.steps?.filter({ (step) -> Bool in
+        let steps = self.steps?.filter({ (step) -> Bool in
             // If this is a step that conforms to the custom step protocol and the custom step type is 
             // a reconsent subtype, then this is not to be included in the registration steps
             if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier
@@ -130,5 +140,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             }
             return true
         })
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, steps: steps)
+        return SBASubtaskStep(subtask: task)
     }
 }

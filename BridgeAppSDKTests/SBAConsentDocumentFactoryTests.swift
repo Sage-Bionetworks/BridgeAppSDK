@@ -77,9 +77,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
     func testReconsentSteps() {
         guard let consentFactory = createConsentFactory() else { return }
         
-        let reconsentSteps = consentFactory.reconsentSteps()
-        XCTAssertNotNil(reconsentSteps)
-        guard let steps = reconsentSteps else { return }
+        let steps = (consentFactory.reconsentStep().subtask as! SBANavigableOrderedTask).steps
         
         let expectedSteps: [ORKStep] = [SBADirectNavigationStep(identifier: "reconsentIntroduction"),
                                         ORKVisualConsentStep(identifier: "consentVisual"),
@@ -105,9 +103,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
     func testRegistrationSteps() {
         guard let consentFactory = createConsentFactory() else { return }
         
-        let registrationSteps = consentFactory.registrationSteps()
-        XCTAssertNotNil(registrationSteps)
-        guard let steps = registrationSteps else { return }
+        let steps = (consentFactory.registrationConsentStep().subtask as! SBANavigableOrderedTask).steps
         
         let expectedSteps: [ORKStep] = [ORKVisualConsentStep(identifier: "consentVisual"),
                                         SBASurveySubtaskStep(identifier: "consentQuiz"),

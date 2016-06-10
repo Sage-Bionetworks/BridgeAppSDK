@@ -33,6 +33,7 @@
 
 import Foundation
 
+@objc
 public protocol SBAConsentSignatureWrapper : class {
     
     /**

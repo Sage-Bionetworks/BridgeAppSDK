@@ -35,12 +35,14 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
-public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
+@objc
+public protocol SBAAppInfoDelegate: class {
     var currentUser: SBAUserWrapper { get }
     var bridgeInfo: SBABridgeInfo { get }
-    var requiredPermissions: [SBAPermissionsType] { get }
-    func showAppropriateViewController(animated: Bool)
-    func createLocalNotifications() -> [UILocalNotification]
+    var requiredPermissions: SBAPermissionsType { get }
+}
+
+public protocol SBASharedAppDelegate: UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
 }
 
 @UIApplicationMain
@@ -147,12 +149,8 @@ public protocol SBASharedAppDelegate: class, UIApplicationDelegate, SBABridgeApp
     /**
      * Override to set the permissions for this application.
      */
-    public var requiredPermissions: [SBAPermissionsType] {
-        return []
-    }
-    
-    public func createLocalNotifications() -> [UILocalNotification] {
-        return []
+    public var requiredPermissions: SBAPermissionsType {
+        return SBAPermissionsType.None
     }
     
     func initializeBridgeServerConnection() {

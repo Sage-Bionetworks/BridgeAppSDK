@@ -56,9 +56,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public weak var delegate: SBAScheduledActivityManagerDelegate?
     
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
     
     public var bridgeInfo: SBABridgeInfo {
         return self.sharedBridgeInfo

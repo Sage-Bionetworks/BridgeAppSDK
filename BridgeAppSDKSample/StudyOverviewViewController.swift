@@ -37,10 +37,10 @@ import BridgeAppSDK
 class StudyOverviewViewController: UIViewController {
 
     @IBAction func signUpTapped(sender: AnyObject) {
-        // TODO: implement
+        // TODO: syoung 06/09/2016 implement
     }
     
     @IBAction func loginTapped(sender: AnyObject) {
-        // TODO: implement
+        // TODO: syoung 06/09/2016 implement
     }
 }

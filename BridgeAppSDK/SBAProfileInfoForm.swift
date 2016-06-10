@@ -62,11 +62,13 @@ struct SBAExternalIDOptions {
 public struct SBAProfileInfoOptions {
     
     public let includes: [SBAProfileInfoOption]
+    public let customOptions: [AnyObject]
     let externalIDOptions: SBAExternalIDOptions
     
     public init(includes: [SBAProfileInfoOption]) {
         self.includes = includes
         self.externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .None, keyboardType: .Default)
+        self.customOptions = []
     }
     
     public init?(inputItem: SBAFormStepSurveyItem) {
@@ -76,6 +78,7 @@ public struct SBAProfileInfoOptions {
         
         // Map the includes, and if it is an external ID then also map the keyboard options
         var externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .None, keyboardType: .Default)
+        var customOptions: [AnyObject] = []
         self.includes = items.mapAndFilter({ (obj) -> SBAProfileInfoOption? in
             if let str = obj as? String {
                 return SBAProfileInfoOption(rawValue: str)
@@ -90,11 +93,14 @@ public struct SBAProfileInfoOptions {
                 }
                 return option
             }
+            else {
+                customOptions += [obj]
+            }
             return nil
         })
         self.externalIDOptions = externalIDOptions
+        self.customOptions = customOptions
     }
-    
 }
 
 public protocol SBAFormProtocol : class {

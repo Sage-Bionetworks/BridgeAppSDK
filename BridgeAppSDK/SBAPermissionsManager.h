@@ -36,15 +36,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, SBAPermissionsType) {
-    SBAPermissionsTypeNone = 0,
-    SBAPermissionsTypeHealthKit,
-    SBAPermissionsTypeLocation,
-    SBAPermissionsTypeLocalNotifications,
-    SBAPermissionsTypeCoremotion,
-    SBAPermissionsTypeMicrophone,
-    SBAPermissionsTypeCamera,
-    SBAPermissionsTypePhotoLibrary
+typedef NS_OPTIONS(NSUInteger, SBAPermissionsType) {
+    SBAPermissionsTypeNone                      = 0,
+    SBAPermissionsTypeHealthKit                 = 1 << 1,
+    SBAPermissionsTypeLocation                  = 1 << 2,
+    SBAPermissionsTypeLocalNotifications        = 1 << 3,
+    SBAPermissionsTypeCoremotion                = 1 << 4,
+    SBAPermissionsTypeMicrophone                = 1 << 5,
+    SBAPermissionsTypeCamera                    = 1 << 6,
+    SBAPermissionsTypePhotoLibrary              = 1 << 7,
 };
 
 typedef NS_ENUM(NSUInteger, SBAPermissionStatus) {

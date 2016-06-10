@@ -43,9 +43,9 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     
     public var steps: [ORKStep]?
     
-    public var sharedAppDelegate: SBASharedAppDelegate {
-        return UIApplication.sharedApplication().delegate as! SBASharedAppDelegate
-    }
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
     
     public override init() {
         super.init()
