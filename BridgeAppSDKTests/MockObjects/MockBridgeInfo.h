@@ -1,5 +1,5 @@
 //
-//  MockAppInfoDelegate.m
+//  MockBridgeInfo.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,20 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "MockAppInfoDelegate.h"
+#import <Foundation/Foundation.h>
+@import BridgeAppSDK;
 
-@implementation MockAppInfoDelegate
+@interface MockBridgeInfo : NSObject <SBABridgeInfo>
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _mockCurrentUser = [[MockUser alloc] init];
-    }
-    return self;
-}
-
-- (id <SBAUserWrapper>) currentUser {
-    return self.mockCurrentUser;
-}
-
-- (MockBridgeInfo *) mockBridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
-
-- (id <SBABridgeInfo>) bridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
+@property (nonatomic, readwrite, copy) NSString * _Null_unspecified studyIdentifier;
+@property (nonatomic, readwrite) BOOL useCache;
+@property (nonatomic, readwrite) SBBEnvironment environment;
+@property (nonatomic, readwrite, copy) NSString * _Nullable appStoreLinkURLString;
+@property (nonatomic, readwrite, copy) NSString * _Nullable emailForLoginViaExternalId;
+@property (nonatomic, readwrite, copy) NSString * _Nullable passwordFormatForLoginViaExternalId;
+@property (nonatomic, readwrite, copy) NSString * _Nullable testUserDataGroup;
+@property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable schemaMap;
+@property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable taskMap;
+@property (nonatomic, readwrite, copy) NSString * _Nullable certificateName;
 
 @end

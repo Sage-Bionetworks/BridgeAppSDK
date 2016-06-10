@@ -1,5 +1,5 @@
 //
-//  MockAppInfoDelegate.m
+//  MockUser.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,46 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "MockAppInfoDelegate.h"
+#import "MockUser.h"
 
-@implementation MockAppInfoDelegate
+@implementation MockUser
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _mockCurrentUser = [[MockUser alloc] init];
+@synthesize sessionToken;
+@synthesize name;
+@synthesize email;
+@synthesize externalId;
+@synthesize password;
+@synthesize subpopulationGuid;
+@synthesize consentSignature;
+@synthesize dataGroups;
+@synthesize hasRegistered;
+@synthesize loginVerified;
+@synthesize consentVerified;
+@synthesize dataSharingEnabled;
+@synthesize dataSharingScope;
+@synthesize onboardingStepIdentifier;
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _mockBridgeInfo = [[MockBridgeInfo alloc] init];
     }
     return self;
 }
 
-- (id <SBAUserWrapper>) currentUser {
-    return self.mockCurrentUser;
-}
-
-- (MockBridgeInfo *) mockBridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
-
 - (id <SBABridgeInfo>) bridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
+    return _mockBridgeInfo;
+}
+
+- (void)logout {
+    _logout_called_count++;
+}
+
+- (nullable NSString *)sessionTokenForAuthManager:(nonnull id<SBBAuthManagerProtocol>)authManager {
+    return self.sessionToken;
+}
+
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken {
+    // do nothing
 }
 
 @end

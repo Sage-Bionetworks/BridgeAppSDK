@@ -1,5 +1,5 @@
 //
-//  MockAppInfoDelegate.m
+//  MockBridgeInfo.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "MockAppInfoDelegate.h"
+#import "MockBridgeInfo.h"
 
-@implementation MockAppInfoDelegate
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _mockCurrentUser = [[MockUser alloc] init];
-    }
-    return self;
-}
-
-- (id <SBAUserWrapper>) currentUser {
-    return self.mockCurrentUser;
-}
-
-- (MockBridgeInfo *) mockBridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
-
-- (id <SBABridgeInfo>) bridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
+@implementation MockBridgeInfo
 
 @end

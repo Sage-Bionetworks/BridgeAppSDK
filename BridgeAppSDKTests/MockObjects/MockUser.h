@@ -1,5 +1,5 @@
 //
-//  MockAppInfoDelegate.m
+//  MockUser.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,31 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "MockAppInfoDelegate.h"
+#import <Foundation/Foundation.h>
+@import BridgeAppSDK;
+@import BridgeSDK;
 
-@implementation MockAppInfoDelegate
+#import "MockBridgeInfo.h"
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _mockCurrentUser = [[MockUser alloc] init];
-    }
-    return self;
-}
+@interface MockUser : NSObject <SBAUserWrapper>
 
-- (id <SBAUserWrapper>) currentUser {
-    return self.mockCurrentUser;
-}
+@property (nonatomic, readonly, strong) MockBridgeInfo * _Nonnull mockBridgeInfo;
 
-- (MockBridgeInfo *) mockBridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
+@property (nonatomic, copy) NSString * _Nullable sessionToken;
+@property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, copy) NSString * _Nullable email;
+@property (nonatomic, copy) NSString * _Nullable externalId;
+@property (nonatomic, copy) NSString * _Nullable password;
+@property (nonatomic, copy) NSString * _Nullable subpopulationGuid;
+@property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
+@property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
+@property (nonatomic) BOOL hasRegistered;
+@property (nonatomic) BOOL loginVerified;
+@property (nonatomic) BOOL consentVerified;
+@property (nonatomic) BOOL dataSharingEnabled;
+@property (nonatomic) SBBUserDataSharingScope dataSharingScope;
+@property (nonatomic, copy) NSString * _Nullable onboardingStepIdentifier;
 
-- (id <SBABridgeInfo>) bridgeInfo {
-    return self.mockCurrentUser.mockBridgeInfo;
-}
+@property (nonatomic, readonly) NSUInteger logout_called_count;
 
 @end
