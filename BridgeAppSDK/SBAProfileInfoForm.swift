@@ -119,7 +119,7 @@ extension SBAFormProtocol {
 
 public protocol SBAProfileInfoForm : SBAFormProtocol {
     var surveyItemType: SBASurveyItemType { get }
-    func defaultOptions() -> [SBAProfileInfoOption]
+    func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption]
     func validateOptions(options: [SBAProfileInfoOption]?) throws
 }
 
@@ -133,7 +133,7 @@ extension SBAProfileInfoForm {
         self.title = inputItem.stepTitle
         self.text = inputItem.stepText
         let options = SBAProfileInfoOptions(inputItem: inputItem)
-        makeFormItems(options ?? SBAProfileInfoOptions(includes: defaultOptions()))
+        makeFormItems(options ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem)))
     }
     
     func makeFormItems(options: SBAProfileInfoOptions) {

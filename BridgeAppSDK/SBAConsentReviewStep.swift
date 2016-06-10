@@ -61,7 +61,14 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
         self.signature?.requiresSignatureImage = requiresNameAndSignature
     }
     
-    public func defaultOptions() -> [SBAProfileInfoOption] {
+    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
+        if let dictionary = inputItem as? NSDictionary,
+            let requiresSignature = dictionary["requiresSignature"] as? Bool
+            where !requiresSignature {
+            // special-case the json key for requiresSignature and return empty set if signature is not required
+            // (json is more human-readable)
+            return []
+        }
         return [.Name]   // by default
     }
     

@@ -50,7 +50,7 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
         commonInit(inputItem)
     }
     
-    public func defaultOptions() -> [SBAProfileInfoOption] {
+    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
         return [.EmailAndPassword]
     }
 
