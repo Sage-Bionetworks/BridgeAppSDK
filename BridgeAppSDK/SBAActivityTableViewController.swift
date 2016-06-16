@@ -44,12 +44,22 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     
     private var foregroundNotification: NSObjectProtocol?
     
-    override public func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override public func viewDidLoad() {
+        super.viewDidLoad()
         
         self.scheduledActivityManager.delegate = self
         self.scheduledActivityManager.reloadData()
         
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self.scheduledActivityManager, action: #selector(self.scheduledActivityManager.reloadData), forControlEvents: .ValueChanged)
+        self.refreshControl = refreshControl
+    }
+    
+    override public func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
+
         foregroundNotification = NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
             [weak self] _ in
             self?.scheduledActivityManager.reloadData()
@@ -68,6 +78,7 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     
     public func reloadTable(scheduledActivityManager: SBAScheduledActivityManager) {
         // reload table
+        self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
     }
     

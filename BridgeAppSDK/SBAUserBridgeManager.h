@@ -76,7 +76,7 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
                                daysBehind:(NSInteger)daysBehind
                                completion:(SBAUserBridgeManagerCompletionBlock)completionBlock;
 
-+ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities;
++ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
 

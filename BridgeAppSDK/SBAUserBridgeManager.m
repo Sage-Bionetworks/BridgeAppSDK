@@ -165,8 +165,12 @@
     }];
 }
 
-+ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities {
-    [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:nil];
++ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
+    [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:^(id responseObject, NSError *error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
 }
 
 + (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {

@@ -42,11 +42,8 @@ public protocol SBAAppInfoDelegate: class {
     var requiredPermissions: SBAPermissionsType { get }
 }
 
-public protocol SBASharedAppDelegate: UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate {
-}
-
 @UIApplicationMain
-@objc public class SBAAppDelegate: UIResponder, SBASharedAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
+@objc public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
     
     public var window: UIWindow?
     
