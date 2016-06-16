@@ -398,7 +398,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
-        SBAUserBridgeManager.updateScheduledActivities(scheduledActivities)
+        SBAUserBridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
+            self?.reloadData()
+        }
     }
     
     // Expose method for building archive to allow for testing and subclass override
