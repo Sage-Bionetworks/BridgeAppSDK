@@ -205,14 +205,15 @@ public class Localization: NSObject {
             "SBA_PROGRESS_UNCHECKED" : NSLocalizedString("SBA_PROGRESS_UNCHECKED", tableName: nil, bundle: localeBundle, value:"\u{2003}\u{2002}", comment:"Character to use for a step progress for unchecked"),
             
             // Registration
-            "SBA_REGISTRATION_INVALID_CODE" : NSLocalizedString("SBA_REGISTRATION_INVALID_CODE", tableName: nil, bundle: localeBundle, value:"Please enter a valid registration code.", comment:"Message for invalid registration code"),
-            "SBA_REGISTRATION_MATCH_FAILED" : NSLocalizedString("SBA_REGISTRATION_MATCH_FAILED", tableName: nil, bundle: localeBundle, value:"The registration code you entered does not match.", comment:"Message for registration codes that do not match"),
+            "SBA_REGISTRATION_INVALID_CODE" : NSLocalizedString("SBA_REGISTRATION_INVALID_CODE", tableName: nil, bundle: localeBundle, value:"Please enter a valid Participant ID.", comment:"Message for invalid registration code"),
+            "SBA_REGISTRATION_MATCH_FAILED" : NSLocalizedString("SBA_REGISTRATION_MATCH_FAILED", tableName: nil, bundle: localeBundle, value:"The Participant ID you entered does not match.", comment:"Message for registration codes that do not match"),
             "SBA_REGISTRATION_FAILED_TITLE" : NSLocalizedString("SBA_REGISTRATION_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Registration Failed", comment:"Title for error when registration fails"),
             "SBA_REGISTRATION_EXTERNALID_TITLE" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Participant ID", comment:"Title for the external ID during registration."),
             "SBA_REGISTRATION_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID", comment:"Placeholder for the external ID during registration."),
             "SBA_REGISTRATION_FULLNAME_TITLE" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_TITLE", tableName: nil, bundle: localeBundle, value:"Name", comment:"Title for the full name field during registration."),
             "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter full name", comment:"Placeholder for the full name during registration."),
-            
+            "SBA_CONFIRM_EXTERNALID_TITLE" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Confirm", comment:"Title for the confirmation for registering via external ID"),
+            "SBA_CONFIRM_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID again", comment:"Placeholder for the confirmation for registering via external ID"),
         ]
     }()
     

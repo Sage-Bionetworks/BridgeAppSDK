@@ -35,7 +35,7 @@ import ResearchKit
 
 public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
-    static let kPasswordConfirmationKey = "passwordConfirmation"
+    static let confirmationIdentifier = "confirmation"
     
     public var surveyItemType: SBASurveyItemType {
         return .Account(.Registration)
@@ -51,7 +51,7 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
     
     public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
-        return [.EmailAndPassword]
+        return [.emailAndPassword]
     }
 
     public override func validateParameters() {
@@ -64,7 +64,7 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }
         
-        guard options.contains(.EmailAndPassword) || options.contains(.ExternalID) else {
+        guard options.contains(.emailAndPassword) || options.contains(.externalID) else {
             throw SBAProfileInfoOptionsError.MissingEmailOrExternalID
         }
     }
