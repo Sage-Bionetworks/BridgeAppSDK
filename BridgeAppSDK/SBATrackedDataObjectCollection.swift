@@ -116,13 +116,13 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             
             // update the previous step with the result
             switch (previous.trackingType!) {
-            case .Selection:
+            case .selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
                 mutateSelectionStepResult(result)
-            case .Frequency:
+            case .frequency:
                 self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
                 mutateSelectionStepResult(result)
-            case .Activity:
+            case .activity:
                 if !previous.trackEach, let stepResult = result.stepResultForStepIdentifier(previous.identifier) {
                     self.dataStore.updateMomentInDayForStepResult(stepResult)
                 }
@@ -189,7 +189,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 }
 
                 // Keep a pointer to the first activity step
-                if (trackingType == .Activity) && (firstActivityStepIdentifier == nil) {
+                if (trackingType == .activity) && (firstActivityStepIdentifier == nil) {
                     firstActivityStepIdentifier = step.identifier
                 }
                 
@@ -206,7 +206,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         // Map the next step identifier back into the changed step
         if let changedStep = steps.first as? SBASurveyFormStep,
             let nextStepIdentifier = firstActivityStepIdentifier
-            where include.nextStepIfNoChange == .Activity  {
+            where include.nextStepIfNoChange == .activity  {
             changedStep.skipToStepIdentifier = nextStepIdentifier
         }
         
@@ -222,7 +222,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     }
     
     func shouldShowChangedStep() -> Bool {
-        if let _ = self.findStep(.Changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
+        if let _ = self.findStep(.changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
             let interval = self.repeatTimeInterval as NSTimeInterval
             return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
         }
@@ -232,7 +232,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     }
     
     func mutateSelectionStepResult(taskResult: ORKTaskResult) {
-        guard let selectionItem = self.findStep(.Selection),
+        guard let selectionItem = self.findStep(.selection),
               let stepResult = taskResult.stepResultForStepIdentifier(selectionItem.identifier),
               let firstResult = stepResult.results?.first
         else {

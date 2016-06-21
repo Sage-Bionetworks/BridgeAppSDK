@@ -36,31 +36,31 @@ import ResearchKit
 
 public enum SBAOnboardingSectionBaseType: String {
     
-    case Login              = "login"
-    case Introduction       = "introduction"
-    case Eligibility        = "eligibility"
-    case Consent            = "consent"
-    case Registration       = "registration"
-    case Passcode           = "passcode"
-    case EmailVerification  = "emailVerification"
-    case Permissions        = "permissions"
-    case Profile            = "profile"
-    case Completion         = "completion"
+    case login              = "login"
+    case introduction       = "introduction"
+    case eligibility        = "eligibility"
+    case consent            = "consent"
+    case registration       = "registration"
+    case passcode           = "passcode"
+    case emailVerification  = "emailVerification"
+    case permissions        = "permissions"
+    case profile            = "profile"
+    case completion         = "completion"
     
     func ordinal() -> Int {
-        let order:[SBAOnboardingSectionBaseType] = [.Login,
-                                                   .Introduction,
-                                                   .Eligibility,
-                                                   .Consent,
-                                                   .Registration,
-                                                   .Passcode,
-                                                   .EmailVerification,
-                                                   .Permissions,
-                                                   .Profile,
-                                                   .Completion]
+        let order:[SBAOnboardingSectionBaseType] = [.login,
+                                                   .introduction,
+                                                   .eligibility,
+                                                   .consent,
+                                                   .registration,
+                                                   .passcode,
+                                                   .emailVerification,
+                                                   .permissions,
+                                                   .profile,
+                                                   .completion]
         guard let ret = order.indexOf(self) else {
             assertionFailure("\(self) ordinal value is unknown")
-            return (order.indexOf(.Completion)! - 1)
+            return (order.indexOf(.completion)! - 1)
         }
         return ret
     }
@@ -68,20 +68,20 @@ public enum SBAOnboardingSectionBaseType: String {
 
 public enum SBAOnboardingSectionType {
     
-    case Base(SBAOnboardingSectionBaseType)
-    case Custom(String)
+    case base(SBAOnboardingSectionBaseType)
+    case custom(String)
     
     public init(rawValue: String) {
         if let baseType = SBAOnboardingSectionBaseType(rawValue: rawValue) {
-            self = .Base(baseType)
+            self = .base(baseType)
         }
         else {
-            self = .Custom(rawValue)
+            self = .custom(rawValue)
         }
     }
     
     public func baseType() -> SBAOnboardingSectionBaseType? {
-        if case .Base(let baseType) = self {
+        if case .base(let baseType) = self {
             return baseType
         }
         return nil
@@ -89,9 +89,9 @@ public enum SBAOnboardingSectionType {
     
     public var identifier: String {
         switch (self) {
-        case .Base(let baseType):
+        case .base(let baseType):
             return baseType.rawValue
-        case .Custom(let customType):
+        case .custom(let customType):
             return customType
         }
     }
@@ -102,9 +102,9 @@ extension SBAOnboardingSectionType: Equatable {
 
 public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> Bool {
     switch (lhs, rhs) {
-    case (.Base(let lhsValue), .Base(let rhsValue)):
+    case (.base(let lhsValue), .base(let rhsValue)):
         return lhsValue == rhsValue;
-    case (.Custom(let lhsValue), .Custom(let rhsValue)):
+    case (.custom(let lhsValue), .custom(let rhsValue)):
         return lhsValue == rhsValue;
     default:
         return false
@@ -125,7 +125,7 @@ extension NSDictionary: SBAOnboardingSection {
     
     public func defaultOnboardingSurveyFactory() -> SBASurveyFactory {
         let dictionary = self.objectWithResourceDictionary() as? NSDictionary ?? self
-        if onboardingSectionType == .Base(.Consent) {
+        if onboardingSectionType == .base(.consent) {
             return SBAConsentDocumentFactory(dictionary: dictionary)
         }
         else {

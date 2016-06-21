@@ -79,11 +79,11 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
         }
         switch (subtype) {
             
-        case .Visual:
+        case .visual:
             return ORKVisualConsentStep(identifier: inputItem.identifier,
                 document: self.consentDocument)
             
-        case .SharingOptions:
+        case .sharingOptions:
             let share = inputItem as! SBAConsentSharingOptions
             let learnMore = SBAResourceFinder.sharedResourceFinder.htmlNamed(share.localizedLearnMoreHTMLContent) ?? ""
             let step = ORKConsentSharingStep(identifier: inputItem.identifier,
@@ -101,7 +101,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             
             return step;
             
-        case .Review:
+        case .review:
             let review = inputItem as! SBAFormStepSurveyItem
             let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
             return step;
@@ -113,7 +113,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
      */
     public func visualConsentStep() -> ORKVisualConsentStep {
         return self.steps?.findObject({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
-            ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, document: self.consentDocument)
+            ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, document: self.consentDocument)
     }
     
     /**
@@ -122,7 +122,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
     public func reconsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
         let steps = self.steps?.filter({ !($0 is SBARegistrationStep) && !($0 is ORKRegistrationStep) })
-        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, steps: steps)
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
         return SBASubtaskStep(subtask: task)
     }
     
@@ -140,7 +140,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             }
             return true
         })
-        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.Consent.rawValue, steps: steps)
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
         return SBASubtaskStep(subtask: task)
     }
 }

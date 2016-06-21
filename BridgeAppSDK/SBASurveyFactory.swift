@@ -104,7 +104,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      */
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
         switch (inputItem.surveyItemType) {
-        case .Custom(let customType):
+        case .custom(let customType):
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
                 return instruction.createInstructionStep(customType)
             }
@@ -128,27 +128,27 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
-        case .Instruction(_):
+        case .instruction(_):
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
                 return instruction.createInstructionStep()
             }
             
-        case .Subtask:
+        case .subtask:
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createSubtaskStep(self)
             } else { break }
             
-        case .Form(_):
+        case .form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createFormStep(isSubtaskStep ?? false)
             } else { break }
             
-        case .Account(let subtype):
+        case .account(let subtype):
             if let form = inputItem as? SBAFormStepSurveyItem {
                 return form.createAccountStep(subtype)
             } else { break }
             
-        case .Passcode(let passcodeType):
+        case .passcode(let passcodeType):
             let step = ORKPasscodeStep(identifier: inputItem.identifier)
             step.title = inputItem.stepTitle
             step.text = inputItem.stepText
@@ -183,7 +183,7 @@ extension SBAInstructionStepSurveyItem {
         if let directStep = self as? SBADirectNavigationRule {
             nextIdentifier = directStep.nextStepIdentifier
         }
-        if self.surveyItemType == .Instruction(.Completion) {
+        if self.surveyItemType == .instruction(.completion) {
             instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
         }
         else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
@@ -225,11 +225,11 @@ extension SBAFormStepSurveyItem {
     
     func createAccountStep(subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
         switch (subtype) {
-        case .Registration:
+        case .registration:
             return SBARegistrationStep(inputItem: self)
-        case .Login:
+        case .login:
             return SBALoginStep(inputItem: self)
-        case .EmailVerification:
+        case .emailVerification:
             return SBAEmailVerificationStep(inputItem: self)
         }
     }
@@ -241,7 +241,7 @@ extension SBAFormStepSurveyItem {
     }
     
     func buildFormItems(step:ORKFormStep, isSubtaskStep: Bool) {
-        if case SBASurveyItemType.Form(.Compound) = self.surveyItemType {
+        if case SBASurveyItemType.form(.compound) = self.surveyItemType {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
                 return formItem.createFormItem(formItem.stepText)
@@ -269,29 +269,29 @@ extension SBAFormStepSurveyItem {
     func createAnswerFormat() -> ORKAnswerFormat? {
         guard let subtype = self.surveyItemType.formSubtype() else { return nil }
         switch(subtype) {
-        case .Boolean:
+        case .boolean:
             return ORKBooleanAnswerFormat()
-        case .Text:
+        case .text:
             return ORKTextAnswerFormat()
-        case .SingleChoice, .MultipleChoice:
+        case .singleChoice, .multipleChoice:
             guard let textChoices = self.items?.map({createTextChoice($0)}) else { return nil }
-            let style: ORKChoiceAnswerStyle = (subtype == .SingleChoice) ? .SingleChoice : .MultipleChoice
+            let style: ORKChoiceAnswerStyle = (subtype == .singleChoice) ? .SingleChoice : .MultipleChoice
             return ORKTextChoiceAnswerFormat(style: style, textChoices: textChoices)
-        case .Date, .DateTime:
-            let style: ORKDateAnswerStyle = (subtype == .Date) ? .Date : .DateAndTime
+        case .date, .dateTime:
+            let style: ORKDateAnswerStyle = (subtype == .date) ? .Date : .DateAndTime
             let range = self.range as? SBADateRange
             return ORKDateAnswerFormat(style: style, defaultDate: nil, minimumDate: range?.minDate, maximumDate: range?.maxDate, calendar: nil)
-        case .Time:
+        case .time:
             return ORKTimeOfDayAnswerFormat()
-        case .Duration:
+        case .duration:
             return ORKTimeIntervalAnswerFormat()
-        case .Integer, .Decimal, .Scale:
+        case .integer, .decimal, .scale:
             guard let range = self.range as? SBANumberRange else {
                 assertionFailure("\(subtype) requires a valid number range")
                 return nil
             }
             return range.createAnswerFormat(subtype)
-        case .TimingRange:
+        case .timingRange:
             guard let textChoices = self.items?.mapAndFilter({ (obj) -> ORKTextChoice? in
                 guard let item = obj as? SBANumberRange else { return nil }
                 return item.createORKTextChoice()
@@ -332,7 +332,7 @@ extension SBANumberRange {
     
     func createAnswerFormat(subtype: SBASurveyItemType.FormSubtype) -> ORKAnswerFormat {
         
-        if (subtype == .Scale),
+        if (subtype == .scale),
             // If this is a scale subtype then check that the max, min and step interval are valid
             let min = self.minNumber?.integerValue, let max = self.maxNumber?.integerValue where
             (max > min) && ((max - min) % self.stepInterval) == 0
@@ -348,7 +348,7 @@ extension SBANumberRange {
         }
         
         // Fall through for non-scale or invalid scale type
-        let style: ORKNumericAnswerStyle = (subtype == .Decimal) ? .Decimal : .Integer
+        let style: ORKNumericAnswerStyle = (subtype == .decimal) ? .Decimal : .Integer
         return ORKNumericAnswerFormat(style: style, unit: self.unitLabel, minimum: self.minNumber, maximum: self.maxNumber)
     }
     

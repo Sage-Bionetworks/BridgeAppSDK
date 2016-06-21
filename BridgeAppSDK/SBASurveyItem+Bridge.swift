@@ -41,7 +41,7 @@ import ResearchKit
 extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     
     public var surveyItemType: SBASurveyItemType {
-        return .Instruction(.Instruction)
+        return .instruction(.instruction)
     }
     
     public var stepTitle: String? {
@@ -75,43 +75,43 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
     public var surveyItemType: SBASurveyItemType {
         if let _ = self.constraints as? SBBBooleanConstraints {
-            return .Form(.Boolean)
+            return .form(.boolean)
         }
         else if let _ = self.constraints as? SBBStringConstraints {
-            return .Form(.Text)
+            return .form(.text)
         }
         else if let multiConstraints = self.constraints as? SBBMultiValueConstraints {
             if (multiConstraints.allowMultipleValue) {
-                return .Form(.MultipleChoice)
+                return .form(.multipleChoice)
             }
             else {
-                return .Form(.SingleChoice)
+                return .form(.singleChoice)
             }
         }
         else if let _ = self.constraints as? SBBDateTimeConstraints {
-            return .Form(.DateTime)
+            return .form(.dateTime)
         }
         else if let _ = self.constraints as? SBBDateConstraints {
-            return .Form(.Date)
+            return .form(.date)
         }
         else if let _ = self.constraints as? SBBTimeConstraints {
-            return .Form(.Time)
+            return .form(.time)
         }
         else if let _ = self.constraints as? SBBDurationConstraints {
-            return .Form(.Duration)
+            return .form(.duration)
         }
         else if let _ = self.constraints as? SBBIntegerConstraints {
             if (self.uiHint == "slider") {
-                return .Form(.Scale)
+                return .form(.scale)
             }
             else {
-                return .Form(.Integer)
+                return .form(.integer)
             }
         }
         else if let _ = self.constraints as? SBBDecimalConstraints {
-            return .Form(.Decimal)
+            return .form(.decimal)
         }
-        return SBASurveyItemType.Custom(nil)
+        return SBASurveyItemType.custom(nil)
     }
     
     public var stepTitle: String? {
@@ -196,14 +196,14 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
 }
 
 enum SBBSurveyRuleOperator: String {
-    case Skip               = "de"
-    case Equal              = "eq"
-    case NotEqual           = "ne"
-    case LessThan           = "lt"
-    case GreaterThan        = "gt"
-    case LessThanEqual      = "le"
-    case GreaterThanEqual   = "ge"
-    case OtherThan          = "ot"
+    case skip               = "de"
+    case equal              = "eq"
+    case notEqual           = "ne"
+    case lessThan           = "lt"
+    case greaterThan        = "gt"
+    case lessThanEqual      = "le"
+    case greaterThanEqual   = "ge"
+    case otherThan          = "ot"
 }
 
 extension SBBSurveyRule {
@@ -219,18 +219,18 @@ extension SBBSurveyRule {
 
         // For the case where the answer format is a choice, then the answer
         // is returned as an array of choices
-        let isArray = (subtype == .SingleChoice) || (subtype == .MultipleChoice)
+        let isArray = (subtype == .singleChoice) || (subtype == .multipleChoice)
         
         switch(op) {
-        case .Skip:
+        case .skip:
             return NSPredicate(format: "answer = NULL")
-        case .Equal:
+        case .equal:
             let answer = isArray ? [value] : value
             return NSPredicate(format: "answer = %@", answer)
-        case .NotEqual:
+        case .notEqual:
             let answer = isArray ? [value] : value
             return NSPredicate(format: "answer <> %@", answer)
-        case .OtherThan:
+        case .otherThan:
             if (isArray) {
                 return NSCompoundPredicate(notPredicateWithSubpredicate:
                     NSPredicate(format: "%@ IN answer", value))
@@ -238,13 +238,13 @@ extension SBBSurveyRule {
             else {
                 return NSPredicate(format: "answer <> %@", value)
             }
-        case .GreaterThan:
+        case .greaterThan:
             return NSPredicate(format: "answer > %@", value)
-        case .GreaterThanEqual:
+        case .greaterThanEqual:
             return NSPredicate(format: "answer >= %@", value)
-        case .LessThan:
+        case .lessThan:
             return NSPredicate(format: "answer < %@", value)
-        case .LessThanEqual:
+        case .lessThanEqual:
             return NSPredicate(format: "answer <= %@", value)
         }
     }

@@ -64,7 +64,7 @@ extension NSDictionary: SBASurveyItem {
         if let type = self["type"] as? String {
             return SBASurveyItemType(rawValue: type)
         }
-        return .Custom(nil)
+        return .custom(nil)
     }
     
     public var stepTitle: String? {
@@ -137,12 +137,12 @@ extension NSDictionary: SBAFormStepSurveyItem {
     
     public var rulePredicate: NSPredicate? {
         if let subtype = self.surveyItemType.formSubtype() {
-            if case .Boolean = subtype,
+            if case .boolean = subtype,
                 let expectedAnswer = self.expectedAnswer as? Bool
             {
                 return NSPredicate(format: "answer = %@", expectedAnswer)
             }
-            else if case .SingleChoice = subtype,
+            else if case .singleChoice = subtype,
                 let expectedAnswer = self.expectedAnswer
             {
                 let answerArray = [expectedAnswer]

@@ -38,7 +38,7 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     static let confirmationIdentifier = "confirmation"
     
     public var surveyItemType: SBASurveyItemType {
-        return .Account(.Registration)
+        return .account(.registration)
     }
     
     public override required init(identifier: String) {

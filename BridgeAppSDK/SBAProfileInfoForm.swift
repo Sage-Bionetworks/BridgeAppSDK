@@ -171,7 +171,7 @@ extension SBAProfileInfoForm {
                 self.formItems! += [passwordFormItem]
                 
                 // confirmation
-                if (self.surveyItemType == .Account(.Registration)) {
+                if (self.surveyItemType == .account(.registration)) {
                     let confirmAnswerFormat = passwordAnswerFormat.confirmationAnswerFormatWithOriginalItemIdentifier(passwordFormItem.identifier, errorMessage: Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE"))
                     let confirmIdentifier = "\(formItem.identifier).\(SBARegistrationStep.confirmationIdentifier)"
                     let confirmFormItem = ORKFormItem(identifier: confirmIdentifier,
@@ -199,7 +199,7 @@ extension SBAProfileInfoForm {
                 self.formItems! += [formItem]
                 
                 // confirmation
-                if (self.surveyItemType == .Account(.Registration)) {
+                if (self.surveyItemType == .account(.registration)) {
                     let confirmAnswerFormat = answerFormat.confirmationAnswerFormatWithOriginalItemIdentifier(formItem.identifier, errorMessage: Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED"))
                     let confirmIdentifier = "\(formItem.identifier).\(SBARegistrationStep.confirmationIdentifier)"
                     let confirmFormItem = ORKFormItem(identifier: confirmIdentifier,
