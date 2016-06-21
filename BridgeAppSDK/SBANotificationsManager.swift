@@ -59,8 +59,7 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
                 let notif = UILocalNotification.init()
                 notif.fireDate = sa.scheduledOn
                 notif.soundName = UILocalNotificationDefaultSoundName
-                let format = Localization.localizedString("SBA_TIME_FOR_%@")
-                notif.alertBody = String(format: format, sa.activity.label)
+                notif.alertBody = Localization.localizedStringWithFormatKey("SBA_TIME_FOR_%@", sa.activity.label)
                 app.scheduleLocalNotification(notif)
             }
         }

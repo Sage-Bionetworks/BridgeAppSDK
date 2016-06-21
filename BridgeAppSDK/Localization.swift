@@ -60,6 +60,13 @@ public class Localization: NSObject {
         return str
     }
     
+    static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
+        return withVaList(arguments) {
+            //NSString.localizedStringWithFormat(localizedString(key), $0)
+            NSString(format: localizedString(key), locale: NSLocale.currentLocale(), arguments: $0)
+        } as String
+    }
+    
     static func localizedJoin(textList: [String]) -> String {
         switch (textList.count) {
         case 0:
@@ -67,9 +74,9 @@ public class Localization: NSObject {
         case 1:
             return textList[0]
         case 2:
-            return String(format: localizedString("SBA_TWO_ITEM_LIST_FORMAT"), textList[0], textList[1])
+            return String.localizedStringWithFormat(localizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@"), textList[0], textList[1])
         default:
-            let endText = String(format: localizedString("SBA_THREE_ITEM_LIST_FORMAT"),
+            let endText = String.localizedStringWithFormat(localizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@"),
                                  textList[textList.count - 3],
                                  textList[textList.count - 2],
                                  textList[textList.count - 1])
@@ -171,9 +178,9 @@ public class Localization: NSObject {
             "SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@" : NSLocalizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@", tableName: nil, bundle: localeBundle, value: "Based on your email address, we have detected you are a tester for %1$@.  If this is correct, select %2$@ so we can store your data separately.", comment: "Message informing user if and what happens if they are a tester"),
             
             // Joining items
-            "SBA_TWO_ITEM_LIST_FORMAT" : NSLocalizedString("SBA_TWO_ITEM_LIST_FORMAT", tableName: nil, bundle: localeBundle, value:"%@ or %@", comment:"Format of a list with two items (For example, 'Levodopa or Rytary')"),
-            "SBA_THREE_ITEM_LIST_FORMAT" : NSLocalizedString("SBA_THREE_ITEM_LIST_FORMAT", tableName: nil, bundle: localeBundle, value:"%@, %@, or %@", comment:"Format of a list with three items (For example, 'Levodopa, Simet, or Rytary')"),
-            "SBA_LIST_FORMAT_DELIMITER" : NSLocalizedString("SBA_LIST_FORMAT_DELIMITER", tableName: nil, bundle: localeBundle, value:", ", comment:"Delimiter for a list of more than 3 items. (For example, 'Foo, Levodopa, Simet, or Rytary')"),
+            "SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@" : NSLocalizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@", tableName: nil, bundle: localeBundle, value:"%1$@ or %2$@", comment:"Format of a list with two items (For example, 'Levodopa or Rytary')"),
+            "SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@" : NSLocalizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@", tableName: nil, bundle: localeBundle, value:"%1$@, %2$@, or %3$@", comment:"Format of a list with three items (For example, 'Levodopa, Simet, or Rytary')"),
+            "SBA_LIST_FORMAT_DELIMITER" : NSLocalizedString("SBA_LIST_FORMAT_DELIMITER", tableName: nil, bundle: localeBundle, value:", ", comment:"Delimiter for a list of more than 3 items. Include whitespace as appropriate. (For example, 'Foo, Levodopa, Simet, or Rytary')"),
             
             // Time interval
             "SBA_LESS_THAN_%@_AGO" : NSLocalizedString("SBA_LESS_THAN_%@_AGO", tableName: nil, bundle: localeBundle, value:"Less than %@ ago", comment:"Less than %@ time interval in the past"),

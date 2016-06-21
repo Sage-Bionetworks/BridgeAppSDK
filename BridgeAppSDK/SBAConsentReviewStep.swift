@@ -74,10 +74,10 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     
     public override func validateParameters() {
         super.validateParameters()
-        try! validateOptions(self.options)
+        try! validate(options: self.options)
     }
     
-    public func validateOptions(options: [SBAProfileInfoOption]?) throws {
+    public func validate(options options: [SBAProfileInfoOption]?) throws {
         guard let options = options else {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }

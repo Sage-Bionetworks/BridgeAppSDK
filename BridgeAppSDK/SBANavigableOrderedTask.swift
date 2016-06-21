@@ -63,7 +63,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         super.init(identifier: identifier, steps: steps)
     }
 
-    func subtaskStepWithIdentifier(identifier: String?) -> SBASubtaskStep? {
+    private func subtaskStep(identifier identifier: String?) -> SBASubtaskStep? {
         // Look for a period in the range of the string
         guard let range = identifier?.rangeOfString(".") where range.endIndex > identifier!.startIndex else {
             return nil
@@ -76,7 +76,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         return subtaskStep
     }
     
-    func superStepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    private func superStepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         
         // Check the conditional rule to see if it returns a next step for the given previous
         // step and return that with an early exit if applicable.
@@ -138,7 +138,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         var returnStep: ORKStep?
 
         // Look to see if this has a valid subtask step associated with this step
-        if let subtaskStep = subtaskStepWithIdentifier(step?.identifier) {
+        if let subtaskStep = subtaskStep(identifier: step?.identifier) {
             returnStep = subtaskStep.stepAfterStep(step, withResult: result)
             if (returnStep == nil) {
                 // If the subtask returns nil then it is at the last step
@@ -181,7 +181,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             return step
         }
         // If not found check to see if it is a substep
-        return subtaskStepWithIdentifier(identifier)?.stepWithIdentifier(identifier)
+        return subtaskStep(identifier: identifier)?.stepWithIdentifier(identifier)
     }
     
     override public func progressOfCurrentStep(step: ORKStep, withResult result: ORKTaskResult) -> ORKTaskProgress {

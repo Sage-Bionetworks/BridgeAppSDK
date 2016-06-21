@@ -217,7 +217,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
         guard isScheduleAvailable(schedule) else {
             // Block performing a task that is scheduled for the future
-            let message = String(format: Localization.localizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE"), schedule.scheduledTime)
+            let message = Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", schedule.scheduledTime)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
             return
         }
@@ -348,7 +348,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
-        let task = taskRef?.transformToTask(SBASurveyFactory(), isLastStep: true)
+        let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
         return (task, taskRef)
     }
     

@@ -106,7 +106,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         guard let trackedStep = step as? SBATrackedFormStep else { return false }
         
         // Otherwise, update the step with the selected items and then determine if it should be skipped
-        trackedStep.updateWithSelectedItems(self.dataStore.selectedItems ?? [])
+        trackedStep.update(selectedItems: self.dataStore.selectedItems ?? [])
         return trackedStep.shouldSkipStep
     }
     
@@ -146,7 +146,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                     return nil
                 }
                 // create a copy of the step with the next item to be tracked
-                return previous.copyWithTrackedItem(nextItem)
+                return previous.copy(trackedItem: nextItem)
             }
         }
         else if let next = nextStep as? SBATrackedFormStep
@@ -154,7 +154,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 let firstItem = self.dataStore.selectedItems?.filter({ $0.tracking }).first {
             // If this is the first step in a step where each item is tracked separately, then 
             // replace the next step with a copy that includes the first selected item
-            return next.copyWithTrackedItem(firstItem)
+            return next.copy(trackedItem: firstItem)
         }
         
         return nextStep

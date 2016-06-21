@@ -170,7 +170,7 @@ public class SBATrackedFormStep: ORKFormStep {
         if let range = surveyItem as? SBANumberRange where (self.trackingType == .frequency) {
             self.frequencyAnswerFormat = range.createAnswerFormat(.scale)
         }
-        updateWithSelectedItems(items)
+        update(selectedItems: items)
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -205,11 +205,11 @@ public class SBATrackedFormStep: ORKFormStep {
         return copy
     }
     
-    public func copyWithTrackedItem(trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
+    public func copy(trackedItem trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
         let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
         let copy = self.copyWithIdentifier(identifier)
         copy._trackedItemIdentifier = trackedItem.identifier
-        copy.updateWithSelectedItems([trackedItem])
+        copy.update(selectedItems:[trackedItem])
         return copy
     }
     
@@ -218,7 +218,7 @@ public class SBATrackedFormStep: ORKFormStep {
     }
     private var _shouldSkipStep = false
     
-    public func updateWithSelectedItems(selectedItems:[SBATrackedDataObject]) {
+    public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
         switch self.trackingType! {
 
         // For selection type, only care about building the form items for the first round
@@ -338,7 +338,7 @@ public class SBATrackedFormStep: ORKFormStep {
         let trackedItems = selectedItems.filter({ $0.tracking && matchesTrackedItem($0)}).map({ $0.shortText })
         _shouldSkipStep = (trackedItems.count == 0)
         if let textFormat = self.textFormat where (trackedItems.count > 0) {
-            self.text = String(format: textFormat, Localization.localizedJoin(trackedItems))
+            self.text = String.localizedStringWithFormat(textFormat, Localization.localizedJoin(trackedItems))
         }
     }
     

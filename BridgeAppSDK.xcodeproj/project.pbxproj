@@ -610,6 +610,7 @@
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
 				FBC45E711C758DBA007AA424 /* Library */,
+				FBC45E721C758DC9007AA424 /* Localization */,
 				FB14FFE51C7686CC00E0D5AF /* Resources */,
 				161479D51BD6CFB00099A068 /* Supporting Files */,
 			);
@@ -845,8 +846,6 @@
 			children = (
 				FF90559E1CE286EA0049D12A /* BridgeExtensions */,
 				FBAD114E1CADA34C005611D0 /* DataModel */,
-				FFC68EED1CA4778D00FF7B07 /* Encryption */,
-				FBC45E721C758DC9007AA424 /* Localization */,
 				FF9055DC1CE500D40049D12A /* RKExtensions */,
 				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBAE3CE61C86157E003CEC4A /* Utilities */,
@@ -892,7 +891,6 @@
 		FBE1A9701CAB328800F1F584 /* Step */ = {
 			isa = PBXGroup;
 			children = (
-				FFDECE021D088F6400434001 /* Account */,
 				FB6BA0941C7CDA6000C9903F /* SBADirectNavigationStep.swift */,
 				FFCF37DD1CDA91520090452F /* SBALearnMoreAction.swift */,
 				FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */,
@@ -937,6 +935,12 @@
 		FBF1B6AD1CAAED0F007C1082 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */,
+				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
+				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */,
+				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
+				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
+				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
 				FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */,
 			);
 			name = Account;
@@ -1253,13 +1257,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FFC68EED1CA4778D00FF7B07 /* Encryption */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Encryption;
-			sourceTree = "<group>";
-		};
 		FFCF38FF1CE267630090452F /* Result */ = {
 			isa = PBXGroup;
 			children = (
@@ -1269,19 +1266,6 @@
 				FF4F06D11CEED20D007BD273 /* SBATrackedDataResult.swift */,
 			);
 			name = Result;
-			sourceTree = "<group>";
-		};
-		FFDECE021D088F6400434001 /* Account */ = {
-			isa = PBXGroup;
-			children = (
-				FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */,
-				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
-				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */,
-				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
-				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
-				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
-			);
-			name = Account;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

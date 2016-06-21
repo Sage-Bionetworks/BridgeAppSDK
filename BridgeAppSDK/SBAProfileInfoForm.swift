@@ -118,7 +118,7 @@ extension SBAFormProtocol {
 public protocol SBAProfileInfoForm : SBAFormProtocol {
     var surveyItemType: SBASurveyItemType { get }
     func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption]
-    func validateOptions(options: [SBAProfileInfoOption]?) throws
+    func validate(options options: [SBAProfileInfoOption]?) throws
 }
 
 extension SBAProfileInfoForm {
@@ -137,7 +137,7 @@ extension SBAProfileInfoForm {
     func makeFormItems(options: SBAProfileInfoOptions) {
         
         // Validate the options
-        try! validateOptions(options.includes)
+        try! validate(options: options.includes)
         
         // Build the form items
         if self.formItems == nil {

@@ -61,12 +61,12 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     /**
      Returns an initialized task view controller for the given task type with this manager as its delegate.
     */
-    public func initializeTaskViewController(onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
+    public func initializeTaskViewController(onboardingTaskType onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
         guard let sections = self.sections else { return nil }
         
         // Get the steps from the sections
         let steps: [ORKStep] = sections.mapAndFilter({
-            stepsForSection($0, onboardingTaskType: onboardingTaskType)
+            self.steps(section: $0, onboardingTaskType: onboardingTaskType)
         }).flatMap({$0})
         
         // Create the task view controller
@@ -83,7 +83,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     /**
      Convenience method for getting the section for a given section type.
     */
-    public func sectionForOnboardingSectionType(sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
+    public func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
         return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
     }
     
@@ -93,10 +93,10 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
      or nil if the steps for that section should not be included for the given task.
      @return    Optional array of `ORKStep`
     */
-    public func stepsForSection(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
+    public func steps(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         // Check to see that the steps for this section should be included
-        guard shouldIncludeSection(section, onboardingTaskType) else { return nil }
+        guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
         
         // Get the default factory
         let factory = section.defaultOnboardingSurveyFactory()
@@ -143,7 +143,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
      Define the rules for including a given section in a given task type.
      @return    `true` if the `SBAOnboardingSection` should be included for this `SBAOnboardingTaskType`
     */
-    public func shouldIncludeSection(section: SBAOnboardingSection, _ onboardingTaskType: SBAOnboardingTaskType) -> Bool {
+    public func shouldInclude(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
             // By default, ONLY Registration should include any custom section

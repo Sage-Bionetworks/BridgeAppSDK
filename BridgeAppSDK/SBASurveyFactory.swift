@@ -365,18 +365,18 @@ extension SBANumberRange {
         if let max = dateComponents(self.maxNumber), let maxString = formatter.stringFromDateComponents(max) {
             let maxNum = self.maxNumber!.integerValue
             if let minNum = self.minNumber?.integerValue {
-                let maxText = String(format: Localization.localizedString("SBA_RANGE_%@_AGO"), maxString)
+                let maxText = Localization.localizedStringWithFormatKey("SBA_RANGE_%@_AGO", maxString)
                 return ORKTextChoice(text: "\(minNum)-\(maxText)",
                                      value: "\(minNum)-\(maxNum) \(unit) ago")
             }
             else {
-                let text = String(format: Localization.localizedString("SBA_LESS_THAN_%@_AGO"), maxString)
+                let text = Localization.localizedStringWithFormatKey("SBA_LESS_THAN_%@_AGO", maxString)
                 return ORKTextChoice(text: text, value: "Less than \(maxNum) \(unit) ago")
             }
         }
         else if let min = dateComponents(self.minNumber), let minString = formatter.stringFromDateComponents(min) {
             let minNum = self.minNumber!.integerValue
-            let text = String(format: Localization.localizedString("SBA_MORE_THAN_%@_AGO"), minString)
+            let text = Localization.localizedStringWithFormatKey("SBA_MORE_THAN_%@_AGO", minString)
             return ORKTextChoice(text: text, value: "More than \(minNum) \(unit) ago")
         }
         
