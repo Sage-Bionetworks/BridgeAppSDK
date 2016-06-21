@@ -722,7 +722,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
         
         // Check that the next step is the frequency step
-        guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .Frequency,
+        guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .frequency,
             let formItems = frequencyStep.formItems  else {
             XCTAssert(false, "\(nextStep) not of expected type")
             return nil
@@ -748,7 +748,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
         
-        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .Activity,
+        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .activity,
             let formItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(nextStep) not of expected type")
                 return nil
