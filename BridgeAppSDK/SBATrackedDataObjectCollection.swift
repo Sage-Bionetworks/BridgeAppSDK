@@ -106,7 +106,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         guard let trackedStep = step as? SBATrackedFormStep else { return false }
         
         // Otherwise, update the step with the selected items and then determine if it should be skipped
-        trackedStep.updateWithSelectedItems(self.dataStore.selectedItems ?? [])
+        trackedStep.update(selectedItems: self.dataStore.selectedItems ?? [])
         return trackedStep.shouldSkipStep
     }
     
@@ -116,13 +116,13 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             
             // update the previous step with the result
             switch (previous.trackingType!) {
-            case .Selection:
+            case .selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
                 mutateSelectionStepResult(result)
-            case .Frequency:
+            case .frequency:
                 self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
                 mutateSelectionStepResult(result)
-            case .Activity:
+            case .activity:
                 if !previous.trackEach, let stepResult = result.stepResultForStepIdentifier(previous.identifier) {
                     self.dataStore.updateMomentInDayForStepResult(stepResult)
                 }
@@ -146,7 +146,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                     return nil
                 }
                 // create a copy of the step with the next item to be tracked
-                return previous.copyWithTrackedItem(nextItem)
+                return previous.copy(trackedItem: nextItem)
             }
         }
         else if let next = nextStep as? SBATrackedFormStep
@@ -154,7 +154,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 let firstItem = self.dataStore.selectedItems?.filter({ $0.tracking }).first {
             // If this is the first step in a step where each item is tracked separately, then 
             // replace the next step with a copy that includes the first selected item
-            return next.copyWithTrackedItem(firstItem)
+            return next.copy(trackedItem: firstItem)
         }
         
         return nextStep
@@ -189,7 +189,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 }
 
                 // Keep a pointer to the first activity step
-                if (trackingType == .Activity) && (firstActivityStepIdentifier == nil) {
+                if (trackingType == .activity) && (firstActivityStepIdentifier == nil) {
                     firstActivityStepIdentifier = step.identifier
                 }
                 
@@ -206,7 +206,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         // Map the next step identifier back into the changed step
         if let changedStep = steps.first as? SBASurveyFormStep,
             let nextStepIdentifier = firstActivityStepIdentifier
-            where include.nextStepIfNoChange == .Activity  {
+            where include.nextStepIfNoChange == .activity  {
             changedStep.skipToStepIdentifier = nextStepIdentifier
         }
         
@@ -222,7 +222,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     }
     
     func shouldShowChangedStep() -> Bool {
-        if let _ = self.findStep(.Changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
+        if let _ = self.findStep(.changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
             let interval = self.repeatTimeInterval as NSTimeInterval
             return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
         }
@@ -232,7 +232,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     }
     
     func mutateSelectionStepResult(taskResult: ORKTaskResult) {
-        guard let selectionItem = self.findStep(.Selection),
+        guard let selectionItem = self.findStep(.selection),
               let stepResult = taskResult.stepResultForStepIdentifier(selectionItem.identifier),
               let firstResult = stepResult.results?.first
         else {

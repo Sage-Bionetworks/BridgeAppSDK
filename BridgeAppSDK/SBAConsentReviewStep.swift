@@ -36,7 +36,7 @@ import ResearchKit
 public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     
     public var surveyItemType: SBASurveyItemType {
-        return .Consent(.Review)
+        return .consent(.review)
     }
     
     public override required init(identifier: String) {
@@ -56,7 +56,7 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
         commonInit(inputItem)
         
         // Copy options from commonInit back into the signature for this document
-        let requiresNameAndSignature = (self.formItemForIdentifier(SBAProfileInfoOption.Name.rawValue) != nil)
+        let requiresNameAndSignature = (self.formItemForIdentifier(SBAProfileInfoOption.name.rawValue) != nil)
         self.signature?.requiresName = requiresNameAndSignature
         self.signature?.requiresSignatureImage = requiresNameAndSignature
     }
@@ -69,20 +69,20 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
             // (json is more human-readable)
             return []
         }
-        return [.Name]   // by default
+        return [.name]   // by default
     }
     
     public override func validateParameters() {
         super.validateParameters()
-        try! validateOptions(self.options)
+        try! validate(options: self.options)
     }
     
-    public func validateOptions(options: [SBAProfileInfoOption]?) throws {
+    public func validate(options options: [SBAProfileInfoOption]?) throws {
         guard let options = options else {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }
         
-        guard options.count == 0 || options.contains(.Name) || options.contains(.ExternalID) else {
+        guard options.count == 0 || options.contains(.name) || options.contains(.externalID) else {
             throw SBAProfileInfoOptionsError.MissingNameOrExternalID
         }
     }

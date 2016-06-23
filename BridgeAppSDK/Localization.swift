@@ -60,6 +60,13 @@ public class Localization: NSObject {
         return str
     }
     
+    static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
+        return withVaList(arguments) {
+            //NSString.localizedStringWithFormat(localizedString(key), $0)
+            NSString(format: localizedString(key), locale: NSLocale.currentLocale(), arguments: $0)
+        } as String
+    }
+    
     static func localizedJoin(textList: [String]) -> String {
         switch (textList.count) {
         case 0:
@@ -67,9 +74,9 @@ public class Localization: NSObject {
         case 1:
             return textList[0]
         case 2:
-            return String(format: localizedString("SBA_TWO_ITEM_LIST_FORMAT"), textList[0], textList[1])
+            return String.localizedStringWithFormat(localizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@"), textList[0], textList[1])
         default:
-            let endText = String(format: localizedString("SBA_THREE_ITEM_LIST_FORMAT"),
+            let endText = String.localizedStringWithFormat(localizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@"),
                                  textList[textList.count - 3],
                                  textList[textList.count - 2],
                                  textList[textList.count - 1])
@@ -171,9 +178,9 @@ public class Localization: NSObject {
             "SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@" : NSLocalizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@", tableName: nil, bundle: localeBundle, value: "Based on your email address, we have detected you are a tester for %1$@.  If this is correct, select %2$@ so we can store your data separately.", comment: "Message informing user if and what happens if they are a tester"),
             
             // Joining items
-            "SBA_TWO_ITEM_LIST_FORMAT" : NSLocalizedString("SBA_TWO_ITEM_LIST_FORMAT", tableName: nil, bundle: localeBundle, value:"%@ or %@", comment:"Format of a list with two items (For example, 'Levodopa or Rytary')"),
-            "SBA_THREE_ITEM_LIST_FORMAT" : NSLocalizedString("SBA_THREE_ITEM_LIST_FORMAT", tableName: nil, bundle: localeBundle, value:"%@, %@, or %@", comment:"Format of a list with three items (For example, 'Levodopa, Simet, or Rytary')"),
-            "SBA_LIST_FORMAT_DELIMITER" : NSLocalizedString("SBA_LIST_FORMAT_DELIMITER", tableName: nil, bundle: localeBundle, value:", ", comment:"Delimiter for a list of more than 3 items. (For example, 'Foo, Levodopa, Simet, or Rytary')"),
+            "SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@" : NSLocalizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@", tableName: nil, bundle: localeBundle, value:"%1$@ or %2$@", comment:"Format of a list with two items (For example, 'Levodopa or Rytary')"),
+            "SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@" : NSLocalizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@", tableName: nil, bundle: localeBundle, value:"%1$@, %2$@, or %3$@", comment:"Format of a list with three items (For example, 'Levodopa, Simet, or Rytary')"),
+            "SBA_LIST_FORMAT_DELIMITER" : NSLocalizedString("SBA_LIST_FORMAT_DELIMITER", tableName: nil, bundle: localeBundle, value:", ", comment:"Delimiter for a list of more than 3 items. Include whitespace as appropriate. (For example, 'Foo, Levodopa, Simet, or Rytary')"),
             
             // Time interval
             "SBA_LESS_THAN_%@_AGO" : NSLocalizedString("SBA_LESS_THAN_%@_AGO", tableName: nil, bundle: localeBundle, value:"Less than %@ ago", comment:"Less than %@ time interval in the past"),
@@ -205,14 +212,15 @@ public class Localization: NSObject {
             "SBA_PROGRESS_UNCHECKED" : NSLocalizedString("SBA_PROGRESS_UNCHECKED", tableName: nil, bundle: localeBundle, value:"\u{2003}\u{2002}", comment:"Character to use for a step progress for unchecked"),
             
             // Registration
-            "SBA_REGISTRATION_INVALID_CODE" : NSLocalizedString("SBA_REGISTRATION_INVALID_CODE", tableName: nil, bundle: localeBundle, value:"Please enter a valid registration code.", comment:"Message for invalid registration code"),
-            "SBA_REGISTRATION_MATCH_FAILED" : NSLocalizedString("SBA_REGISTRATION_MATCH_FAILED", tableName: nil, bundle: localeBundle, value:"The registration code you entered does not match.", comment:"Message for registration codes that do not match"),
+            "SBA_REGISTRATION_INVALID_CODE" : NSLocalizedString("SBA_REGISTRATION_INVALID_CODE", tableName: nil, bundle: localeBundle, value:"Please enter a valid Participant ID.", comment:"Message for invalid registration code"),
+            "SBA_REGISTRATION_MATCH_FAILED" : NSLocalizedString("SBA_REGISTRATION_MATCH_FAILED", tableName: nil, bundle: localeBundle, value:"The Participant ID you entered does not match.", comment:"Message for registration codes that do not match"),
             "SBA_REGISTRATION_FAILED_TITLE" : NSLocalizedString("SBA_REGISTRATION_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Registration Failed", comment:"Title for error when registration fails"),
             "SBA_REGISTRATION_EXTERNALID_TITLE" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Participant ID", comment:"Title for the external ID during registration."),
             "SBA_REGISTRATION_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID", comment:"Placeholder for the external ID during registration."),
             "SBA_REGISTRATION_FULLNAME_TITLE" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_TITLE", tableName: nil, bundle: localeBundle, value:"Name", comment:"Title for the full name field during registration."),
             "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter full name", comment:"Placeholder for the full name during registration."),
-            
+            "SBA_CONFIRM_EXTERNALID_TITLE" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Confirm", comment:"Title for the confirmation for registering via external ID"),
+            "SBA_CONFIRM_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID again", comment:"Placeholder for the confirmation for registering via external ID"),
         ]
     }()
     

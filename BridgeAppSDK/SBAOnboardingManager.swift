@@ -35,7 +35,7 @@ import Foundation
 import ResearchKit
 
 public enum SBAOnboardingTaskType: String {
-    case ConsentVisual, Reconsent, Login, Registration
+    case consentVisual, reconsent, login, registration
 }
 
 public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
@@ -61,12 +61,12 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     /**
      Returns an initialized task view controller for the given task type with this manager as its delegate.
     */
-    public func initializeTaskViewController(onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
+    public func initializeTaskViewController(onboardingTaskType onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
         guard let sections = self.sections else { return nil }
         
         // Get the steps from the sections
         let steps: [ORKStep] = sections.mapAndFilter({
-            stepsForSection($0, onboardingTaskType: onboardingTaskType)
+            self.steps(section: $0, onboardingTaskType: onboardingTaskType)
         }).flatMap({$0})
         
         // Create the task view controller
@@ -83,7 +83,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     /**
      Convenience method for getting the section for a given section type.
     */
-    public func sectionForOnboardingSectionType(sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
+    public func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
         return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
     }
     
@@ -93,10 +93,10 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
      or nil if the steps for that section should not be included for the given task.
      @return    Optional array of `ORKStep`
     */
-    public func stepsForSection(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
+    public func steps(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         // Check to see that the steps for this section should be included
-        guard shouldIncludeSection(section, onboardingTaskType) else { return nil }
+        guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
         
         // Get the default factory
         let factory = section.defaultOnboardingSurveyFactory()
@@ -107,11 +107,11 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // are immutable but can be skipped using navigation rules.
         if let consentFactory = factory as? SBAConsentDocumentFactory {
             switch (onboardingTaskType) {
-            case .ConsentVisual:
+            case .consentVisual:
                 return [consentFactory.visualConsentStep()]
-            case .Login, .Reconsent:
+            case .login, .reconsent:
                 return [consentFactory.reconsentStep()]
-            case .Registration:
+            case .registration:
                 return [consentFactory.registrationConsentStep()]
             }
         }
@@ -132,7 +132,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     public func sortOrder(lhs: SBAOnboardingSection, _ rhs: SBAOnboardingSection) -> Bool {
         guard let lhsType = lhs.onboardingSectionType, let rhsType = rhs.onboardingSectionType else { return false }
         switch (lhsType, rhsType) {
-        case (.Base(let lhsValue), .Base(let rhsValue)):
+        case (.base(let lhsValue), .base(let rhsValue)):
             return lhsValue.ordinal() < rhsValue.ordinal();
         default:
             return false
@@ -143,42 +143,42 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
      Define the rules for including a given section in a given task type.
      @return    `true` if the `SBAOnboardingSection` should be included for this `SBAOnboardingTaskType`
     */
-    public func shouldIncludeSection(section: SBAOnboardingSection, _ onboardingTaskType: SBAOnboardingTaskType) -> Bool {
+    public func shouldInclude(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
             // By default, ONLY Registration should include any custom section
-            return onboardingTaskType == .Registration
+            return onboardingTaskType == .registration
         }
         
         switch (baseType) {
             
-        case .Login:
+        case .login:
             // Only Login includes login
-            return  onboardingTaskType == .Login
+            return  onboardingTaskType == .login
             
-        case .Consent:
+        case .consent:
             // All types *except* email verification include consent
-            return (onboardingTaskType != .Registration) || !sharedUser.hasRegistered
+            return (onboardingTaskType != .registration) || !sharedUser.hasRegistered
             
-        case .Introduction, .Eligibility, .Registration:
+        case .introduction, .eligibility, .registration:
             // Intro, eligibility and registration are only included in registration
-            return (onboardingTaskType == .Registration) && !sharedUser.hasRegistered
+            return (onboardingTaskType == .registration) && !sharedUser.hasRegistered
         
-        case .Passcode:
+        case .passcode:
             // Passcode is included if it has not already been set
             return !hasPasscode
         
-        case .EmailVerification:
+        case .emailVerification:
             // Only registration where the login has not been verified includes verification
-            return (onboardingTaskType == .Registration) && !sharedUser.loginVerified
+            return (onboardingTaskType == .registration) && !sharedUser.loginVerified
         
-        case .Profile:
+        case .profile:
             // Additional profile information is included if this is a registration type
-            return (onboardingTaskType == .Registration)
+            return (onboardingTaskType == .registration)
         
-        case .Permissions, .Completion:
+        case .permissions, .completion:
             // Permissions and completion are included for login and registration
-            return onboardingTaskType == .Registration || onboardingTaskType == .Login
+            return onboardingTaskType == .registration || onboardingTaskType == .login
 
         }
     }

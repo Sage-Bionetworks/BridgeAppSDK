@@ -34,7 +34,7 @@
 import ResearchKit
 
 public protocol SBATaskTransformable: class {
-    func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
+    func transformToTask(factory factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
 }
 
 public protocol SBATaskReference: SBATaskTransformable {

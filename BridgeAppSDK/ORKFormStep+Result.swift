@@ -34,7 +34,7 @@
 import ResearchKit
 
 public enum SBADefaultFormItemAnswer {
-    case First, Last, Default, Skip
+    case first, last, defaultValue, skip
 }
 
 public extension ORKFormStep {
@@ -102,9 +102,9 @@ extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
         }
         else {
             switch defaultAnswer {
-            case .First:
+            case .first:
                 result.choiceAnswers = [self.textChoices.first!.value]
-            case .Last:
+            case .last:
                 result.choiceAnswers = [self.textChoices.last!.value]
             default:
                 result.choiceAnswers = nil
@@ -142,11 +142,11 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
         }
         else {
             switch defaultAnswer {
-            case .Default:
+            case .defaultValue:
                 result.scaleAnswer = self.defaultValue
-            case .First:
+            case .first:
                 result.scaleAnswer = self.minimum
-            case .Last:
+            case .last:
                 result.scaleAnswer = self.maximum
             default:
                 result.scaleAnswer = nil

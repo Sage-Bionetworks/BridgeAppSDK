@@ -151,7 +151,7 @@ public extension SBAUserWrapper {
         // and then on answering the question, complete the registration
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")
         let messageFormat = Localization.localizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@")
-        let message = String(format: messageFormat, Localization.localizedAppName, Localization.buttonYes())
+        let message = String.localizedStringWithFormat(messageFormat, Localization.localizedAppName, Localization.buttonYes())
         appDelegate.showAlertWithYesNo(title, message: message, actionHandler: completeRegistration)
     }
     

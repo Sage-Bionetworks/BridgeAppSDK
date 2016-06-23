@@ -35,7 +35,7 @@ import Foundation
 
 extension NSDictionary: SBATaskReference {
     
-    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+    public func transformToTask(factory factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
         if !self.taskType.isNilType() {
             // If the task type is non-nil, then create an active task
             let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion

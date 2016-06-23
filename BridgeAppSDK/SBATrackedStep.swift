@@ -41,16 +41,16 @@ public protocol SBATrackedStepSurveyItem: SBASurveyItem {
 
 public enum SBATrackingStepType: String {
     
-    case Introduction   = "introduction"
-    case Changed        = "changed"
-    case Completion     = "completion"
-    case Activity       = "activity"
-    case Selection      = "selection"
-    case Frequency      = "frequency"
+    case introduction   = "introduction"
+    case changed        = "changed"
+    case completion     = "completion"
+    case activity       = "activity"
+    case selection      = "selection"
+    case frequency      = "frequency"
     
     func isTrackedFormStepType() -> Bool {
         switch self {
-        case .Selection, .Frequency, .Activity:
+        case .selection, .frequency, .activity:
             return true
         default:
             return false
@@ -71,25 +71,25 @@ public struct SBATrackingStepIncludes {
     let includes:[SBATrackingStepType]
     
     private init(includes:[SBATrackingStepType]) {
-        if (includes.contains(.Changed) && !includes.contains(.Activity)) {
-            self.includes = [.Changed, .Selection, .Frequency, .Activity]
-            self.nextStepIfNoChange = .Completion
+        if (includes.contains(.changed) && !includes.contains(.activity)) {
+            self.includes = [.changed, .selection, .frequency, .activity]
+            self.nextStepIfNoChange = .completion
         }
         else {
             self.includes = includes
-            self.nextStepIfNoChange = .Activity
+            self.nextStepIfNoChange = .activity
         }
     }
     
-    public static let StandAloneSurvey = SBATrackingStepIncludes(includes: [.Introduction, .Selection, .Frequency, .Completion])
-    public static let ActivityOnly = SBATrackingStepIncludes(includes: [.Activity])
-    public static let SurveyAndActivity = SBATrackingStepIncludes(includes: [.Introduction, .Selection, .Frequency, .Activity])
-    public static let ChangedAndActivity = SBATrackingStepIncludes(includes: [.Changed, .Selection, .Frequency, .Activity])
-    public static let ChangedOnly = SBATrackingStepIncludes(includes: [.Changed])
+    public static let StandAloneSurvey = SBATrackingStepIncludes(includes: [.introduction, .selection, .frequency, .completion])
+    public static let ActivityOnly = SBATrackingStepIncludes(includes: [.activity])
+    public static let SurveyAndActivity = SBATrackingStepIncludes(includes: [.introduction, .selection, .frequency, .activity])
+    public static let ChangedAndActivity = SBATrackingStepIncludes(includes: [.changed, .selection, .frequency, .activity])
+    public static let ChangedOnly = SBATrackingStepIncludes(includes: [.changed])
     public static let None = SBATrackingStepIncludes(includes: [])
     
     func includeSurvey() -> Bool {
-        return includes.contains(.Introduction) || includes.contains(.Changed)
+        return includes.contains(.introduction) || includes.contains(.changed)
     }
     
     func shouldInclude(trackingType: SBATrackingStepType) -> Bool {
@@ -163,14 +163,14 @@ public class SBATrackedFormStep: ORKFormStep {
         self.trackEach = surveyItem.trackEach
         if let formSurvey = surveyItem as? SBAFormStepSurveyItem {
             formSurvey.mapStepValues(self)
-            if (self.trackingType == .Activity) {
+            if (self.trackingType == .activity) {
                 formSurvey.buildFormItems(self, isSubtaskStep: false)
             }
         }
-        if let range = surveyItem as? SBANumberRange where (self.trackingType == .Frequency) {
-            self.frequencyAnswerFormat = range.createAnswerFormat(.Scale)
+        if let range = surveyItem as? SBANumberRange where (self.trackingType == .frequency) {
+            self.frequencyAnswerFormat = range.createAnswerFormat(.scale)
         }
-        updateWithSelectedItems(items)
+        update(selectedItems: items)
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -205,11 +205,11 @@ public class SBATrackedFormStep: ORKFormStep {
         return copy
     }
     
-    public func copyWithTrackedItem(trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
+    public func copy(trackedItem trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
         let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
         let copy = self.copyWithIdentifier(identifier)
         copy._trackedItemIdentifier = trackedItem.identifier
-        copy.updateWithSelectedItems([trackedItem])
+        copy.update(selectedItems:[trackedItem])
         return copy
     }
     
@@ -218,17 +218,17 @@ public class SBATrackedFormStep: ORKFormStep {
     }
     private var _shouldSkipStep = false
     
-    public func updateWithSelectedItems(selectedItems:[SBATrackedDataObject]) {
+    public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
         switch self.trackingType! {
 
         // For selection type, only care about building the form items for the first round
-        case .Selection where (self.formItems == nil):
+        case .selection where (self.formItems == nil):
             buildSelectionFormItem(selectedItems)
             
-        case .Frequency:
+        case .frequency:
             updateFrequencyFormItems(selectedItems)
             
-        case .Activity:
+        case .activity:
             updateActivityFormStep(selectedItems)
             
         default:
@@ -237,7 +237,7 @@ public class SBATrackedFormStep: ORKFormStep {
     }
     
     public func consolidatedResult(items:[SBATrackedDataObject], taskResult: ORKTaskResult) -> ORKStepResult? {
-        if self.trackingType == .Activity && self.trackEach {
+        if self.trackingType == .activity && self.trackEach {
             return consolidatedResultIfTrackEach(taskResult)
         }
         return taskResult.stepResultForStepIdentifier(self.baseIdentifier)
@@ -338,7 +338,7 @@ public class SBATrackedFormStep: ORKFormStep {
         let trackedItems = selectedItems.filter({ $0.tracking && matchesTrackedItem($0)}).map({ $0.shortText })
         _shouldSkipStep = (trackedItems.count == 0)
         if let textFormat = self.textFormat where (trackedItems.count > 0) {
-            self.text = String(format: textFormat, Localization.localizedJoin(trackedItems))
+            self.text = String.localizedStringWithFormat(textFormat, Localization.localizedJoin(trackedItems))
         }
     }
     

@@ -265,7 +265,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func checkMedicationFrequencyStep(step: SBATrackedFormStep, idList:[String], expectedFrequencyIds: [String], items:[SBATrackedDataObject]) {
         
         let selectedItems = items.filter({ idList.contains($0.identifier) })
-        step.updateWithSelectedItems(selectedItems)
+        step.update(selectedItems: selectedItems)
         XCTAssertEqual(step.formItems?.count, expectedFrequencyIds.count)
         XCTAssertEqual(step.shouldSkipStep, expectedFrequencyIds.count == 0)
         
@@ -379,7 +379,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func checkMedicationActivityStep(step: SBATrackedFormStep, idList:[String], expectedSkipped: Bool, items:[SBATrackedDataObject]) {
         
         let selectedItems = items.filter({ idList.contains($0.identifier) })
-        step.updateWithSelectedItems(selectedItems)
+        step.update(selectedItems: selectedItems)
         XCTAssertEqual(step.shouldSkipStep, expectedSkipped, "\(idList)")
     }
     
@@ -722,7 +722,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
         
         // Check that the next step is the frequency step
-        guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .Frequency,
+        guard let frequencyStep = nextStep as? SBATrackedFormStep where frequencyStep.trackingType == .frequency,
             let formItems = frequencyStep.formItems  else {
             XCTAssert(false, "\(nextStep) not of expected type")
             return nil
@@ -748,7 +748,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
         
-        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .Activity,
+        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .activity,
             let formItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(nextStep) not of expected type")
                 return nil

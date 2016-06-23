@@ -37,27 +37,27 @@ import AVFoundation
 
 public enum SBAActiveTaskType {
     
-    case Custom(String?)
-    case Memory
-    case Tapping
-    case Voice
-    case Walking
-    case Tremor
+    case custom(String?)
+    case memory
+    case tapping
+    case voice
+    case walking
+    case tremor
     
     init(name: String?) {
-        guard let type = name else { self = .Custom(nil); return }
+        guard let type = name else { self = .custom(nil); return }
         switch(type) {
-        case "tapping"  : self = .Tapping
-        case "memory"   : self = .Memory
-        case "voice"    : self = .Voice
-        case "walking"  : self = .Walking
-        case "tremor"   : self = .Tremor
-        default         : self = .Custom(name)
+        case "tapping"  : self = .tapping
+        case "memory"   : self = .memory
+        case "voice"    : self = .voice
+        case "walking"  : self = .walking
+        case "tremor"   : self = .tremor
+        default         : self = .custom(name)
         }
     }
     
     func isNilType() -> Bool {
-        if case .Custom(let customType) = self {
+        if case .custom(let customType) = self {
             return (customType == nil)
         }
         return false
@@ -93,15 +93,15 @@ extension SBAActiveTask {
         // Map known active tasks
         var task: ORKOrderedTask!
         switch self.taskType {
-        case .Tapping:
+        case .tapping:
             task = tappingTask(predefinedExclusions)
-        case .Memory:
+        case .memory:
             task = memoryTask(predefinedExclusions)
-        case .Voice:
+        case .voice:
             task = voiceTask(predefinedExclusions)
-        case .Walking:
+        case .walking:
             task = walkingTask(predefinedExclusions)
-        case .Tremor:
+        case .tremor:
             task = tremorTask(predefinedExclusions)
         default:
             // exit early if not supported by base implementation

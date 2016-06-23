@@ -41,11 +41,11 @@ import BridgeSDK
 
 public enum SBAScheduledActivitySection {
     
-    case None
-    case ExpiredYesterday
-    case Today
-    case KeepGoing
-    case Tomorrow
+    case none
+    case expiredYesterday
+    case today
+    case keepGoing
+    case tomorrow
 }
 
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
@@ -64,7 +64,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return self.sharedBridgeInfo
     }
     
-    public var sections: [SBAScheduledActivitySection] = [.Today, .KeepGoing]
+    public var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
     public var activities: [SBBScheduledActivity] = []
     
     public var daysAhead = 4
@@ -128,7 +128,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     private func scheduledActivitySectionForTableSection(section: Int) -> SBAScheduledActivitySection {
-        guard section < sections.count else { return .None }
+        guard section < sections.count else { return .none }
         return sections[section]
     }
     
@@ -148,13 +148,13 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         // Return default localized string for each section
         switch scheduledActivitySectionForTableSection(section) {
-        case .ExpiredYesterday:
+        case .expiredYesterday:
             return Localization.localizedString("SBA_ACTIVITY_YESTERDAY")
-        case .Today:
+        case .today:
             return Localization.localizedString("SBA_ACTIVITY_TODAY")
-        case .KeepGoing:
+        case .keepGoing:
             return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
-        case .Tomorrow:
+        case .tomorrow:
             return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
         default:
             return nil
@@ -165,23 +165,23 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
 
         switch section {
             
-        case .ExpiredYesterday:
+        case .expiredYesterday:
             // expired yesterday section only showns those expired tasks that are also unfinished
             return SBBScheduledActivity.expiredYesterdayPredicate()
             
-        case .Today:
+        case .today:
             return NSCompoundPredicate(andPredicateWithSubpredicates: [
                 NSCompoundPredicate(notPredicateWithSubpredicate: SBBScheduledActivity.optionalPredicate()),
                 SBBScheduledActivity.availableTodayPredicate()])
             
-        case .KeepGoing:
+        case .keepGoing:
             // Keep going section includes optional tasks that are either unfinished or were finished today
             return NSCompoundPredicate(andPredicateWithSubpredicates: [
                 SBBScheduledActivity.optionalPredicate(),
                 SBBScheduledActivity.unfinishedPredicate(),
                 SBBScheduledActivity.availableTodayPredicate()])
         
-        case .Tomorrow:
+        case .tomorrow:
             // scheduled for tomorrow only
             return SBBScheduledActivity.scheduledTomorrowPredicate()
             
@@ -217,7 +217,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
         guard isScheduleAvailable(schedule) else {
             // Block performing a task that is scheduled for the future
-            let message = String(format: Localization.localizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE"), schedule.scheduledTime)
+            let message = Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", schedule.scheduledTime)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
             return
         }
@@ -348,7 +348,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
-        let task = taskRef?.transformToTask(SBASurveyFactory(), isLastStep: true)
+        let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
         return (task, taskRef)
     }
     

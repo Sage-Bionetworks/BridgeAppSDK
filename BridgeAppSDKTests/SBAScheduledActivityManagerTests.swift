@@ -500,7 +500,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let expiredTodaySchedule = createScheduledActivity("Expired Today", scheduledOn: past, expiresOn: expiredPast, finishedOn: nil, optional: false)
         
         let (schedules, _, _) = createFullSchedule()
-        manager.sections = [.Today]
+        manager.sections = [.today]
         manager.activities = schedules + [expiredTodaySchedule]
         
         let filteredSchedules = manager.scheduledActivitiesForSection(0)
@@ -581,7 +581,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         schedules.append(createScheduledActivity("Two Days From Now",
             scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
         
-        return (schedules, [.ExpiredYesterday, .Today, .Tomorrow, .KeepGoing], sections)
+        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing], sections)
     }
     
     func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {
@@ -619,7 +619,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             else if let formStep = step as? SBATrackedFormStep, let formItems = formStep.formItems {
                 
                 switch formStep.trackingType! {
-                case .Selection:
+                case .selection:
                     // Add a question answer to the selection step
                     let questionResult = ORKChoiceQuestionResult(identifier: formItems[0].identifier)
                     if let meds = selectedMeds {
@@ -631,7 +631,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: [questionResult])
                     taskResult.results! += [stepResult]
                     
-                case .Frequency:
+                case .frequency:
                     let formItemResults = formItems.map({ (formItem) -> ORKResult in
                         let questionResult = ORKScaleQuestionResult(identifier: formItem.identifier)
                         questionResult.scaleAnswer = selectedMeds?[formItem.identifier]
@@ -640,7 +640,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
                     taskResult.results! += [stepResult]
                     
-                case .Activity:
+                case .activity:
                     let formItemResults = formItems.map({ (formItem) -> ORKResult in
                         let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
                         if let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat,
