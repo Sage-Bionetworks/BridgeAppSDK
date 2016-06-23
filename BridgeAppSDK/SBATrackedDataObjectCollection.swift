@@ -245,7 +245,6 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         trackedResult.selectedItems = self.dataStore.selectedItems
         trackedResult.startDate = stepResult.startDate
         trackedResult.endDate = stepResult.endDate
-        trackedResult.questionText = selectionItem.textFormat ?? selectionItem.stepText
         
         // Add the consolidated result to the step results
         stepResult.results = [firstResult, trackedResult]

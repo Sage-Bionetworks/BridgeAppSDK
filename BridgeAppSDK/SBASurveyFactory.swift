@@ -184,7 +184,7 @@ extension SBAInstructionStepSurveyItem {
             nextIdentifier = directStep.nextStepIdentifier
         }
         if self.surveyItemType == .instruction(.completion) {
-            instructionStep = ORKInstructionStep.completionStep().copyWithIdentifier(self.identifier)
+            instructionStep = ORKCompletionStep(identifier: self.identifier)
         }
         else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
             let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)

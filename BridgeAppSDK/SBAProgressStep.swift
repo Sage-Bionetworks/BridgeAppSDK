@@ -57,7 +57,7 @@ public class SBAProgressStep: ORKInstructionStep {
     
     // MARK: Default view controller
     
-    override public func instantiateStepViewController() -> ORKStepViewController? {
+    override public func instantiateStepViewControllerWithResult(result: ORKResult) -> ORKStepViewController {
         return SBAProgressStepViewController(step: self)
     }
     

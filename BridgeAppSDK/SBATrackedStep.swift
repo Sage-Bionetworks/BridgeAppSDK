@@ -285,7 +285,6 @@ public class SBATrackedFormStep: ORKFormStep {
         let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
         questionResult.startDate = startDate
         questionResult.endDate = endDate
-        questionResult.questionText = self.textFormat ?? self.text
         questionResult.questionType = ORKQuestionType.MultipleChoice
         questionResult.choiceAnswers = choiceAnswers
         

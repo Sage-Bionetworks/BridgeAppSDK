@@ -71,7 +71,6 @@ extension ORKFormItem {
         else {
             return nil
         }
-        questionResult.questionText = self.text
         questionResult.questionType = answerFormat.questionType
         return questionResult
     }

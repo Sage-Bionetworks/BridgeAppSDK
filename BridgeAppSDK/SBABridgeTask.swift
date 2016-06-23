@@ -102,15 +102,20 @@ public extension SBABridgeTask {
             where insertSteps.count > 0 {
             
             var introStep: ORKStep!
-            if let subtaskStep = subtaskSteps.first as? SBASubtaskStep,
+            let firstStep = subtaskSteps.removeFirst()
+            if let subtaskStep = firstStep as? SBASubtaskStep,
                 let orderedTask = subtaskStep.subtask as? ORKOrderedTask {
                 // Pull out the first step from the ordered task and use that as the intro step
-                introStep = orderedTask.removeStepAtIndex(0)
+                var mutatableSteps = orderedTask.steps
+                introStep = mutatableSteps.removeFirst()
+                let mutatedTask = orderedTask.copyWithSteps(mutatableSteps)
+                let mutatedSubtaskStep = SBASubtaskStep(subtask: mutatedTask)
+                subtaskSteps.insert(mutatedSubtaskStep, atIndex: 0)
             }
             else {
                 // If the first step isn't of the subtask step type with an ordered task
                 // then use the first step as the intro step
-                introStep = subtaskSteps.removeAtIndex(0)
+                introStep = firstStep
             }
             
             // Insert the steps inside

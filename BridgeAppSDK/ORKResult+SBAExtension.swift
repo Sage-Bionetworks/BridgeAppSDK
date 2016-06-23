@@ -288,7 +288,6 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
     
     override func resultAsDictionary() -> NSMutableDictionary {
         let choiceQuestionResult = super.resultAsDictionary()
-        choiceQuestionResult[QuestionResultQuestionTextKey] = self.questionText
         choiceQuestionResult[QuestionResultQuestionTypeKey] = self.questionType.rawValue
         choiceQuestionResult[QuestionResultUserInfoKey] = self.userInfo
         if let answer = self.jsonSerializedAnswer() {
