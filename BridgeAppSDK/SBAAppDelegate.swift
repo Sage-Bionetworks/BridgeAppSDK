@@ -108,6 +108,12 @@ public protocol SBAAppInfoDelegate: class {
         SBAPermissionsManager.sharedManager().appDidRegisterForRemoteNotifications(notificationSettings)
     }
     
+    public func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+        if identifier == kBackgroundSessionIdentifier {
+            SBAUserBridgeManager.restoreBackgroundSession(identifier, completionHandler: completionHandler)
+        }
+    }
+    
     // ------------------------------------------------
     // MARK: Optional property overrides
     // ------------------------------------------------
