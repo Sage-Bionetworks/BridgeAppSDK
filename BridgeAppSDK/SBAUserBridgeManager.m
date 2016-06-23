@@ -39,6 +39,11 @@
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
 
++ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
+}
+
 + (void)signUp:(NSString *)email
       password:(NSString *)password
     externalId:(NSString *)externalId

@@ -49,6 +49,8 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
 
 + (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
 
++ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
+
 + (void)signUp:(NSString *)email
       password:(NSString *)password
     externalId:(NSString * _Nullable)externalId
