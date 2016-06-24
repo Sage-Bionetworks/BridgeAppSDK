@@ -565,5 +565,57 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertEqual(formStep.identifier, "studyDrugTiming")
         XCTAssertEqual(answerFormat.textChoices.count, 2)
     }
+    
+    func testTaskWithInsertSteps_Single() {
+        
+        let inputTask: NSDictionary = [
+            "taskIdentifier"            : "1-Tapping-ABCD-1234",
+            "schemaIdentifier"          : "Tapping Activity",
+            "surveyItemType"            : "activeTask",
+            "taskType"                  : "tapping",
+            "insertSteps"               :[
+                [
+                    "resourceName"      : "MedicationTracking",
+                    "resourceBundle"    : NSBundle(forClass: self.classForCoder).bundleIdentifier ?? "",
+                    "classType"         : "TrackedDataObjectCollection"
+                ]
+            ]
+        ]
+        
+        let result = inputTask.createORKTask()
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.identifier, "Tapping Activity")
+        
+        guard let task = result as? SBANavigableOrderedTask else {
+            XCTAssert(false, "\(result) not of expect class")
+            return
+        }
+        
+        let expectedCount = 3
+        XCTAssertEqual(task.steps.count, expectedCount, "\(task.steps)")
+        guard task.steps.count == expectedCount else { return }
+
+        // Step 1 - Overview
+        guard let instructionStep = task.steps.first as? ORKInstructionStep else {
+            XCTAssert(false, "\(task.steps.first) not of expect class")
+            return
+        }
+        XCTAssertEqual(instructionStep.identifier, "instruction")
+
+        // Step 2 - Medication tracking
+        let medStep = task.steps[1]
+        XCTAssertEqual(medStep.identifier, "Medication Tracker")
+
+        // Step 3 - Tapping Subtask
+        guard let tappingStep = task.steps[2] as? SBASubtaskStep,
+            let tapTask = tappingStep.subtask as? ORKOrderedTask else {
+                XCTAssert(false, "\(task.steps[2]) not of expect class")
+                return
+        }
+        
+        XCTAssertEqual(tappingStep.identifier, "Tapping Activity")
+        XCTAssertEqual(tapTask.identifier, "Tapping Activity")
+        
+    }
 
 }

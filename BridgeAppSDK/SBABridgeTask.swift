@@ -109,7 +109,7 @@ public extension SBABridgeTask {
                 var mutatableSteps = orderedTask.steps
                 introStep = mutatableSteps.removeFirst()
                 let mutatedTask = orderedTask.copyWithSteps(mutatableSteps)
-                let mutatedSubtaskStep = SBASubtaskStep(subtask: mutatedTask)
+                let mutatedSubtaskStep = subtaskStep.copyWithTask(mutatedTask)
                 subtaskSteps.insert(mutatedSubtaskStep, atIndex: 0)
             }
             else {
