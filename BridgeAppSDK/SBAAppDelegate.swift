@@ -330,7 +330,7 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     public func instantiateViewControllerForPasscode() -> UIViewController? {
-        return ORKPasscodeViewController.passcodeAuthenticationViewControllerWithText(nil, delegate: self) as? UIViewController
+        return ORKPasscodeViewController.passcodeAuthenticationViewControllerWithText(nil, delegate: self)
     }
     
     private weak var passcodeViewController: UIViewController?

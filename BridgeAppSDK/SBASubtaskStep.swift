@@ -148,13 +148,18 @@ public class SBASubtaskStep: ORKStep {
     
     // MARK: NSCopy
     
+    public func copyWithTask(subtask: protocol <ORKTask, NSCopying, NSSecureCoding>) -> SBASubtaskStep {
+        let copy = self.copyWithZone(nil) as! SBASubtaskStep
+        copy._subtask = subtask
+        return copy
+    }
+    
     override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let subtaskStep = copy as? SBASubtaskStep else { return copy }
-        subtaskStep._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
-        subtaskStep.taskIdentifier = taskIdentifier
-        subtaskStep.schemaIdentifier = schemaIdentifier
-        return subtaskStep
+        let copy = super.copyWithZone(zone) as! SBASubtaskStep
+        copy._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
+        copy.taskIdentifier = taskIdentifier
+        copy.schemaIdentifier = schemaIdentifier
+        return copy
     }
     
     // MARK: NSCoding

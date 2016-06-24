@@ -172,12 +172,11 @@ extension SBAProfileInfoForm {
                 
                 // confirmation
                 if (self.surveyItemType == .account(.registration)) {
-                    let confirmAnswerFormat = passwordAnswerFormat.confirmationAnswerFormatWithOriginalItemIdentifier(passwordFormItem.identifier, errorMessage: Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE"))
                     let confirmIdentifier = "\(formItem.identifier).\(SBARegistrationStep.confirmationIdentifier)"
-                    let confirmFormItem = ORKFormItem(identifier: confirmIdentifier,
-                                                      text: Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE"),
-                                                      answerFormat: confirmAnswerFormat,
-                                                      optional: false)
+                    let confirmFormItem = passwordFormItem.confirmationAnswerFormItemWithIdentifier(confirmIdentifier,
+                                              text: Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE"),
+                                              errorMessage: Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE"))
+                    
                     confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
                     self.formItems! += [confirmFormItem]
                 }
@@ -200,12 +199,10 @@ extension SBAProfileInfoForm {
                 
                 // confirmation
                 if (self.surveyItemType == .account(.registration)) {
-                    let confirmAnswerFormat = answerFormat.confirmationAnswerFormatWithOriginalItemIdentifier(formItem.identifier, errorMessage: Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED"))
                     let confirmIdentifier = "\(formItem.identifier).\(SBARegistrationStep.confirmationIdentifier)"
-                    let confirmFormItem = ORKFormItem(identifier: confirmIdentifier,
-                                                      text: Localization.localizedString("SBA_CONFIRM_EXTERNALID_TITLE"),
-                                                      answerFormat: confirmAnswerFormat,
-                                                      optional: false)
+                    let confirmFormItem = formItem.confirmationAnswerFormItemWithIdentifier(confirmIdentifier,
+                                            text: Localization.localizedString("SBA_CONFIRM_EXTERNALID_TITLE"),
+                                            errorMessage: Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED"))
                     confirmFormItem.placeholder = Localization.localizedString("SBA_CONFIRM_EXTERNALID_PLACEHOLDER")
                     self.formItems! += [confirmFormItem]
                 }
