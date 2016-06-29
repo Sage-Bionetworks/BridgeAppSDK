@@ -122,11 +122,15 @@ extension SBAActiveTask {
     func taskWithSkipAction(task: ORKOrderedTask) -> ORKOrderedTask {
         
         guard task.dynamicType === ORKOrderedTask.self else {
-            assertionFailure("Handling of optional tasks are not implemented for any class other than ORKOrderedTask")
+            assertionFailure("Handling of an optional task is not implemented for any class other than ORKOrderedTask")
             return task
         }
         guard let introStep = task.steps.first as? ORKInstructionStep else {
-            assertionFailure("Handling of optional tasks are not implemented for tasks that do not start with ORKIntructionStep")
+            assertionFailure("Handling of an optional task is not implemented for tasks that do not start with ORKIntructionStep")
+            return task
+        }
+        guard let conclusionStep = task.steps.last as? ORKInstructionStep else {
+            assertionFailure("Handling of an optional task is not implemented for tasks that do not end with ORKIntructionStep")
             return task
         }
         
@@ -138,7 +142,7 @@ extension SBAActiveTask {
         let skipExplanation = Localization.localizedString("SBA_SKIP_ACTIVITY_INSTRUCTION")
         let detail = introStep.detailText ?? ""
         replaceStep.detailText = "\(detail)\n\(skipExplanation)\n"
-        replaceStep.learnMoreAction = SBASkipAction(identifier: "conclusion")
+        replaceStep.learnMoreAction = SBASkipAction(identifier: conclusionStep.identifier)
         replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
         let steps: [ORKStep] = [replaceStep] + task.steps.dropFirst()
         

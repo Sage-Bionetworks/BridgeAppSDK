@@ -89,7 +89,15 @@ public class SBASkipAction: SBALearnMoreAction {
     }
     
     override public func learnMoreAction(step: SBADirectNavigationStep, taskViewController: ORKTaskViewController) {
+        // Set the next step identifier
         step.nextStepIdentifier = self.identifier
+        
+        // add a result to this step view controller to mark that the task was skipped
+        let skipResult = ORKTextQuestionResult(identifier: "skip")
+        skipResult.textAnswer = step.task?.identifier ?? self.identifier
+        taskViewController.currentStepViewController?.result?.addResult(skipResult)
+        
+        // go forward
         taskViewController.goForward()
     }
     
