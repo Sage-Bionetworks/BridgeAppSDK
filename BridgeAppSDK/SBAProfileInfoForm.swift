@@ -172,22 +172,22 @@ extension SBAProfileInfoForm {
                 passwordFormItem.placeholder = Localization.localizedString("PASSWORD_FORM_ITEM_PLACEHOLDER")
                 self.formItems! += [passwordFormItem]
                 
-                if (self.surveyItemType == .Account(.Registration)) {
-                    // password confirmation
-                    let confirmAnswerFormat = ORKConfirmTextAnswerFormat(originalItemIdentifier: passwordFormItem.identifier, errorMessage: Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE"))
-                    confirmAnswerFormat.multipleLines = false
-                    confirmAnswerFormat.secureTextEntry = true
-                    confirmAnswerFormat.autocapitalizationType = .None
-                    confirmAnswerFormat.autocorrectionType = .No
-                    confirmAnswerFormat.spellCheckingType = .No
-                    
-                    let confirmFormItem = ORKFormItem(identifier: SBARegistrationStep.kPasswordConfirmationKey,
-                                                      text: Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE"),
-                                                      answerFormat: confirmAnswerFormat,
-                                                      optional: false)
-                    confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
-                    self.formItems! += [confirmFormItem]
-                }
+//                if (self.surveyItemType == .Account(.Registration)) {
+//                    // password confirmation
+//                    let confirmAnswerFormat = ORKConfirmTextAnswerFormat(originalItemIdentifier: passwordFormItem.identifier, errorMessage: Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE"))
+//                    confirmAnswerFormat.multipleLines = false
+//                    confirmAnswerFormat.secureTextEntry = true
+//                    confirmAnswerFormat.autocapitalizationType = .None
+//                    confirmAnswerFormat.autocorrectionType = .No
+//                    confirmAnswerFormat.spellCheckingType = .No
+//                    
+//                    let confirmFormItem = ORKFormItem(identifier: SBARegistrationStep.kPasswordConfirmationKey,
+//                                                      text: Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE"),
+//                                                      answerFormat: confirmAnswerFormat,
+//                                                      optional: false)
+//                    confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
+//                    self.formItems! += [confirmFormItem]
+//                }
                 
             case .ExternalID:
                 let answerFormat = ORKAnswerFormat.textAnswerFormat()
