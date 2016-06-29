@@ -1,5 +1,5 @@
 //
-//  ResearckKitEntensions.h
+//  ORKCollectionResult+SBAExtensions.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,5 +31,18 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "ORKOrderedTask+SBAExtension.h"
-#import "ORKCollectionResult+SBAExtensions.h"
+#import <ResearchKit/ResearchKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface ORKCollectionResult (SBAExtensions)
+
+- (void)validateParameters;
+
+- (void)addResult:(ORKResult*)result;
+
+@property (nonatomic, readonly) BOOL hasResults;
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -1,5 +1,5 @@
 //
-//  ResearckKitEntensions.h
+//  ORKCollectionResult+SBAExtensions.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,5 +31,44 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "ORKOrderedTask+SBAExtension.h"
+
 #import "ORKCollectionResult+SBAExtensions.h"
+
+@implementation ORKCollectionResult (SBAExtensions)
+
+- (void)validateParameters {
+    NSArray *uniqueIdentifiers = [self.results valueForKeyPath:@"@distinctUnionOfObjects.identifier"];
+    BOOL itemsHaveNonUniqueIdentifiers = ( self.results.count != uniqueIdentifiers.count );
+    
+    if (itemsHaveNonUniqueIdentifiers) {
+        @throw [NSException exceptionWithName:NSGenericException reason:@"Each result should have a unique identifier" userInfo:nil];
+    }
+}
+
+- (BOOL)hasResults {
+    return self.results.count > 0;
+}
+
+- (void)addResult:(ORKResult*)result {
+    
+    NSMutableArray *results = [self.results mutableCopy] ?: [NSMutableArray new];
+    
+    __block NSUInteger index = NSNotFound;
+    [self.results enumerateObjectsUsingBlock:^(ORKResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.identifier isEqualToString:result.identifier]) {
+            index = idx;
+            *stop = YES;
+        }
+    }];
+    
+    if (index != NSNotFound) {
+        [results replaceObjectAtIndex:index withObject:result];
+    }
+    else {
+        [results addObject:result];
+    }
+    
+    self.results = results;
+}
+
+@end
