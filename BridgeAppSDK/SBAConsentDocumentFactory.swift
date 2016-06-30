@@ -85,7 +85,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             
         case .sharingOptions:
             let share = inputItem as! SBAConsentSharingOptions
-            let learnMore = SBAResourceFinder.sharedResourceFinder.htmlNamed(share.localizedLearnMoreHTMLContent) ?? ""
+            let learnMore = SBAResourceFinder.sharedResourceFinder.htmlNamed(share.localizedLearnMoreHTMLContent) ?? "PLACEHOLDER"
             let step = ORKConsentSharingStep(identifier: inputItem.identifier,
                 investigatorShortDescription: share.investigatorShortDescription,
                 investigatorLongDescription: share.investigatorLongDescription,
