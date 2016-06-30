@@ -124,7 +124,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
 
     // MARK: activityResultsForSchedule
     
-    func testActivityResultsForSchedule_MedTrackingOnly() {
+    func testActivityResultsForSchedule_MedTrackingOnly_NoMedsSelected() {
         
         let manager = TestScheduledActivityManager()
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
@@ -139,13 +139,68 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task)
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        
+        // check that the data store results were added to the other tasks
+        checkSchema(splitResults, expectedSchema:[["Medication Tracker", 1]])
+        
         XCTAssertEqual(splitResults.count, 1)
-        guard let results = splitResults.first?.results, taskResults = taskVC.result.results else {
-            XCTAssert(false, "\(splitResults) or \(taskVC.result.results) does not match expected")
+        guard let medResult = splitResults.first else { return }
+        
+        XCTAssertEqual(medResult.schedule, schedule)
+        
+        guard let selectionResult = medResult.resultForIdentifier("medicationSelection") as? ORKStepResult else {
+            XCTAssert(false, "\(medResult) does not include 'medicationSelection' of expected type")
             return
         }
-        XCTAssertEqual(results, taskResults)
-        XCTAssertEqual(splitResults[0].schedule, schedule)
+        guard let itemsResult = selectionResult.resultForIdentifier("medicationSelection") as? SBATrackedDataSelectionResult else {
+            XCTAssert(false, "\(selectionResult) does not include 'medicationSelection' of expected type")
+            return
+        }
+        
+        // Check that the tracked data result is added, non-nil and empty
+        XCTAssertNotNil(itemsResult.selectedItems)
+        XCTAssertEqual(itemsResult.selectedItems?.count ?? 0, 0)
+        
+        // Check that the subtask step identifier is stripped
+        checkResultIdentifiers(splitResults)
+        
+    }
+    
+    func testActivityResultsForSchedule_MedTrackingOnly_MedsSelected() {
+        
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
+        
+        let schedule = manager.activities[0]
+        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+            let task = taskVC.task
+            else {
+                XCTAssert(false, "Failed to create a task view controller of expected type")
+                return
+        }
+        taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        
+        // check that the data store results were added to the other tasks
+        checkSchema(splitResults, expectedSchema:[["Medication Tracker", 1]])
+
+        guard let medResult = splitResults.first else { return }
+        
+        XCTAssertEqual(medResult.schedule, schedule)
+        
+        guard let selectionResult = medResult.resultForIdentifier("medicationSelection") as? ORKStepResult else {
+            XCTAssert(false, "\(medResult) does not include 'medicationSelection' of expected type")
+            return
+        }
+        guard let itemsResult = selectionResult.resultForIdentifier("medicationSelection") as? SBATrackedDataSelectionResult else {
+            XCTAssert(false, "\(selectionResult) does not include 'medicationSelection' of expected type")
+            return
+        }
+        
+        // Check that the tracked data result is added, non-nil and equal to a count of 1
+        XCTAssertNotNil(itemsResult.selectedItems)
+        XCTAssertEqual(itemsResult.selectedItems?.count ?? 0, 1)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -167,13 +222,17 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task)
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 5)
         
         // check that the data store results were added to the other tasks
-        for result in splitResults {
-            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
-            XCTAssertNotNil(momentInDay)
-        }
+        checkSchema(splitResults, expectedSchema:[
+            ["Medication Tracker", 1],
+            ["Tapping Activity", 5],
+            ["Voice Activity", 1],
+            ["Memory Activity", 3],
+            ["Walking Activity", 7]])
+        
+        // check that the data store results were added to the other tasks
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -194,13 +253,17 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 5)
+
+        // check that the data store results were added to the other tasks
+        checkSchema(splitResults, expectedSchema:[
+            ["Medication Tracker", 1],
+            ["Tapping Activity", 5],
+            ["Voice Activity", 1],
+            ["Memory Activity", 3],
+            ["Walking Activity", 7]])
         
         // check that the data store results were added to the other tasks
-        for result in splitResults {
-            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
-            XCTAssertNotNil(momentInDay)
-        }
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -227,21 +290,16 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task)
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 4)
         
         // check that the data store results were added to the other tasks
-        let expectedSchema = [["Tapping Activity", 5],
-                              ["Voice Activity", 1],
-                              ["Memory Activity", 3],
-                              ["Walking Activity", 7]]
-        for (idx,result) in splitResults.enumerate() {
-            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
-            XCTAssertNotNil(momentInDay)
-            let expectedSchemaId = expectedSchema[idx].first
-            XCTAssertEqual(result.schemaIdentifier, expectedSchemaId)
-            let expectedSchemaRev = expectedSchema[idx].last
-            XCTAssertEqual(result.schemaRevision, expectedSchemaRev)
-        }
+        checkSchema(splitResults, expectedSchema:[
+            ["Tapping Activity", 5],
+            ["Voice Activity", 1],
+            ["Memory Activity", 3],
+            ["Walking Activity", 7]])
+        
+        // check that the data store results were added to the other tasks
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -261,13 +319,14 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task)
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 2)
+
+        // check that the data store results were added to the other tasks
+        checkSchema(splitResults, expectedSchema:[
+            ["Medication Tracker", 1],
+            ["Tapping Activity", 5]])
         
         // check that the data store results were added to the other tasks
-        for result in splitResults {
-            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
-            XCTAssertNotNil(momentInDay)
-        }
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -287,19 +346,14 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 2)
         
         // check that the data store results were added to the other tasks
-        for result in splitResults {
-            let momentInDay = result.stepResultForStepIdentifier("momentInDay")
-            XCTAssertNotNil(momentInDay)
-        }
+        checkSchema(splitResults, expectedSchema:[
+            ["Medication Tracker", 1],
+            ["Tapping Activity", 5]])
         
-        guard let tappingResult = splitResults.last else { return }
-
-        // check the schema
-        XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
-        XCTAssertEqual(tappingResult.schemaRevision, 5)
+        // check that the data store results were added to the other tasks
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -324,17 +378,12 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 1)
-        
-        guard let tappingResult = splitResults.first else { return }
-        
-        // check that the data store results was added to the other tasks
-        let momentInDay = tappingResult.stepResultForStepIdentifier("momentInDay")
-        XCTAssertNotNil(momentInDay)
         
         // check the schema
-        XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
-        XCTAssertEqual(tappingResult.schemaRevision, 5)
+        checkSchema(splitResults, expectedSchema:[["Tapping Activity", 5]])
+        
+        // check that the data store results were added to the other tasks
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -360,17 +409,12 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         taskVC.taskResult = buildTaskResult(task)
         
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        XCTAssertEqual(splitResults.count, 1)
-        
-        guard let tappingResult = splitResults.first else { return }
-        
-        // check that the data store results was added to the other tasks
-        let momentInDay = tappingResult.stepResultForStepIdentifier("momentInDay")
-        XCTAssertNotNil(momentInDay)
-        
+
         // check the schema
-        XCTAssertEqual(tappingResult.schemaIdentifier, "Tapping Activity")
-        XCTAssertEqual(tappingResult.schemaRevision, 5)
+        checkSchema(splitResults, expectedSchema:[["Tapping Activity", 5]])
+        
+        // check that the data store results were added to the other tasks
+        checkDataStoreResults(splitResults)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -442,6 +486,19 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         checkResultIdentifiers(splitResults)
     }
     
+    func checkSchema(splitResults: [SBAActivityResult], expectedSchema:[[NSObject]]) {
+        
+        XCTAssertEqual(splitResults.count, expectedSchema.count)
+        guard splitResults.count <= expectedSchema.count else { return }
+        
+        for (idx,result) in splitResults.enumerate() {
+            let expectedSchemaId = expectedSchema[idx].first
+            XCTAssertEqual(result.schemaIdentifier, expectedSchemaId)
+            let expectedSchemaRev = expectedSchema[idx].last
+            XCTAssertEqual(result.schemaRevision, expectedSchemaRev)
+        }
+    }
+    
     func checkResultIdentifiers(splitResults: [SBAActivityResult])
     {
         // Check that the subtask step identifier is stripped
@@ -459,6 +516,29 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                 }
             }
         }
+    }
+    
+    func checkDataStoreResults(splitResults: [SBAActivityResult]) {
+        
+        let expectedIdentifiers = ["momentInDay", "medicationActivityTiming", "medicationTrackEach"]
+        for result in splitResults {
+            for stepIdentifier in expectedIdentifiers {
+                let stepResult = result.stepResultForStepIdentifier(stepIdentifier)
+                XCTAssertNotNil(stepResult, "\(stepIdentifier)")
+                XCTAssertTrue(stepResult?.hasResults ?? false, "\(stepIdentifier)")
+                if let results = stepResult?.results {
+                    for questionResult in results {
+                        let bridgeData = questionResult.bridgeData(stepIdentifier)
+                        XCTAssertNotNil(bridgeData, "\(stepIdentifier) \(questionResult.identifier)")
+                        let dictionary = bridgeData?.result as? NSDictionary
+                        XCTAssertNotNil(dictionary, "\(stepIdentifier) \(questionResult.identifier)")
+                        let choiceAnswers = dictionary?["choiceAnswers"]
+                        XCTAssertNotNil(choiceAnswers, "\(stepIdentifier) \(questionResult.identifier)")
+                    }
+                }
+            }
+        }
+
     }
     
     // MARK: schedule filtering
@@ -606,15 +686,14 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let taskResult = ORKTaskResult(taskIdentifier: task.identifier, taskRunUUID: NSUUID(), outputDirectory: outputDirectory)
         taskResult.results = []
         
-        var step: ORKStep?
-        repeat {
-            step = task.stepAfterStep(step, withResult: taskResult)
-            if let _ = step as? ORKInstructionStep {
-                // Do nothing. Instructions to not have a result
-            }
-            else if let activeStep = step as? ORKActiveStep {
-                let stepResult = ORKStepResult(identifier: activeStep.identifier)
-                taskResult.results! += [stepResult]
+        var previousStep: ORKStep? = nil
+        while let step = task.stepAfterStep(previousStep, withResult: taskResult) {
+            
+            if let _ = step as? ORKActiveStep {
+                // add a result to the step (there should be *something* to show)
+                let activeResult = ORKFileResult(identifier: "file")
+                let stepResult = ORKStepResult(stepIdentifier: step.identifier, results: [activeResult])
+                taskResult.results?.append(stepResult)
             }
             else if let formStep = step as? SBATrackedFormStep, let formItems = formStep.formItems {
                 
@@ -629,7 +708,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                         questionResult.choiceAnswers = ["None"]
                     }
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: [questionResult])
-                    taskResult.results! += [stepResult]
+                    taskResult.results?.append(stepResult)
                     
                 case .frequency:
                     let formItemResults = formItems.map({ (formItem) -> ORKResult in
@@ -638,7 +717,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                         return questionResult
                     })
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
-                    taskResult.results! += [stepResult]
+                    taskResult.results?.append(stepResult)
                     
                 case .activity:
                     let formItemResults = formItems.map({ (formItem) -> ORKResult in
@@ -650,19 +729,24 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                         return questionResult
                     })
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
-                    taskResult.results! += [stepResult]
+                    taskResult.results?.append(stepResult)
                     
                 default:
                     break
                 }
             }
-            else if step != nil {
-                assertionFailure("Test case not setup to handle \(step)")
+            else {
+                let stepResult = ORKStepResult(identifier: step.identifier)
+                taskResult.results?.append(stepResult)
             }
-        } while (step != nil)
+            
+            // set the previous step to this step
+            previousStep = step
+        }
         
         // Check assumptions
         XCTAssertGreaterThan(taskResult.results!.count, 0)
+        taskResult.validateParameters()
         
         return taskResult
     }

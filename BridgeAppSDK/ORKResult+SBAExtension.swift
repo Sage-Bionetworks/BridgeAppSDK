@@ -80,8 +80,8 @@ private var QuestionResultUserInfoKey = "userInfo"
 private var SurveyAnswerKey = "answer"
 
 public class ArchiveableResult : NSObject {
-    let result: AnyObject
-    let filename: String
+    public let result: AnyObject
+    public let filename: String
     
     init(result: AnyObject, filename: String) {
         self.result = result

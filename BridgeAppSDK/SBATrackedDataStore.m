@@ -129,7 +129,11 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
                 input.startDate = startDate;
                 input.endDate = startDate;
                 input.questionType = ORKQuestionTypeSingleChoice;
-                if (![self.momentInDayResultTrackEachMap[map.firstObject] boolValue]) {
+                if ([self.momentInDayResultTrackEachMap[map.firstObject] boolValue]) {
+                    // if tracking each then use an empty array
+                    input.choiceAnswers = @[];
+                }
+                else {
                     // Only include the default answer if *not* trackEach
                     input.choiceAnswers = @[defaultAnswer];
                 }

@@ -483,7 +483,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
         
         // If there are any results that were not filtered into a subgroup then include them at the top level
-        if topLevelResults.count > 0 {
+        if topLevelResults.filter({ $0.hasResults }).count > 0 {
             let topResult = createActivityResult(taskResult.identifier, schedule: schedule, stepResults: topLevelResults)
             allResults =  [topResult] + allResults
         }
