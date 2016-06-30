@@ -218,13 +218,14 @@ extension SBAActiveTask {
         let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
         let recordingSettings: [String: AnyObject]? = taskOptions?["recordingSettings"] as? [String: AnyObject]
         
-        return ORKOrderedTask.audioLevelNavigableTaskWithIdentifier(self.schemaIdentifier,
-                                                      intendedUseDescription: self.intendedUseDescription,
-                                                      speechInstruction: speechInstruction,
-                                                      shortSpeechInstruction: shortSpeechInstruction,
-                                                      duration: duration,
-                                                      recordingSettings: recordingSettings,
-                                                      options: options)
+        return ORKOrderedTask.audioTaskWithIdentifier(self.schemaIdentifier,
+            intendedUseDescription: self.intendedUseDescription,
+            speechInstruction: speechInstruction,
+            shortSpeechInstruction: shortSpeechInstruction,
+            duration: duration,
+            recordingSettings: recordingSettings,
+            checkAudioLevel: true,
+            options: options)
     }
     
     func walkingTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
