@@ -75,6 +75,28 @@ extension ORKPredefinedTaskHandOption {
     }
 }
 
+extension ORKTremorActiveTaskOption {
+    init(excludes: [String]?) {
+        guard let excludes = excludes else {
+            self.init(rawValue: 0)
+            return
+        }
+        let rawValue: UInt = excludes.map({ (exclude) -> ORKTremorActiveTaskOption in
+            switch exclude {
+            case "inLap"            : return .ExcludeHandInLap
+            case "shoulderHeight"   : return .ExcludeHandAtShoulderHeight
+            case "elbowBent"        : return .ExcludeHandAtShoulderHeightElbowBent
+            case "touchNose"        : return .ExcludeHandToNose
+            case "queenWave"        : return .ExcludeQueenWave
+            default                 : return .None
+            }
+        }).reduce(0) { (raw, option) -> UInt in
+            return option.rawValue | raw
+        }
+        self.init(rawValue: rawValue)
+    }
+}
+
 public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskType: SBAActiveTaskType { get }
     var intendedUseDescription: String? { get }
@@ -180,10 +202,10 @@ extension SBAActiveTask {
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
         return ORKOrderedTask.twoFingerTappingIntervalTaskWithIdentifier(
             self.schemaIdentifier,
-            intendedUseDescription:self.intendedUseDescription,
-            duration:duration,
-            options:options,
-            handOptions:handOptions)
+            intendedUseDescription: self.intendedUseDescription,
+            duration: duration,
+            handOptions: handOptions,
+            options: options)
     }
     
     func memoryTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
@@ -249,7 +271,7 @@ extension SBAActiveTask {
         
         let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
-        let excludeOptions = ORKTremorActiveTaskOption(rawValue: (taskOptions?["excludeOptions"] as? UInt) ?? 0)
+        let excludeOptions = ORKTremorActiveTaskOption(excludes: taskOptions?["excludePostions"] as? [String])
         
         return ORKOrderedTask.tremorTestTaskWithIdentifier(self.schemaIdentifier,
                                                            intendedUseDescription: self.intendedUseDescription,

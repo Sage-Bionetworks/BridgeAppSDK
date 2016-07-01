@@ -1,5 +1,5 @@
 //
-//  SBAConsentSharingOptions.swift
+//  SBAConsentReviewOptions.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
-public protocol SBAConsentSharingOptions: SBASurveyItem {
-    var investigatorShortDescription: String { get }
-    var investigatorLongDescription: String { get }
-    var localizedLearnMoreHTMLContent: String { get }
+public protocol SBAConsentReviewOptions: SBAFormStepSurveyItem {
+    var usesDeprecatedOnboarding: Bool { get }
+    var requiresSignature: Bool { get }
 }
 
-extension NSDictionary: SBAConsentSharingOptions {
+extension NSDictionary: SBAConsentReviewOptions {
     
-    public var investigatorShortDescription: String {
-        return self["investigatorShortDescription"] as? String ?? ""
+    /// Default to false
+    public var usesDeprecatedOnboarding: Bool {
+        return self["usesDeprecatedOnboarding"] as? Bool ?? false
     }
     
-    public var investigatorLongDescription: String {
-        return self["investigatorLongDescription"] as? String ?? ""
+    /// Default to true
+    public var requiresSignature: Bool {
+        return self["requiresSignature"] as? Bool ?? true
     }
-    
-    public var localizedLearnMoreHTMLContent: String {
-        return self["learnMoreHTMLContentURL"] as? String ?? ""
-    }
-}
 
+}
