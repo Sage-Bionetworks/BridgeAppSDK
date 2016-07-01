@@ -35,7 +35,11 @@ import Foundation
 import ResearchKit
 
 public enum SBAOnboardingTaskType: String {
-    case consentVisual, reconsent, login, registration
+    case registration, login, reconsent
+    
+    public static var all: [SBAOnboardingTaskType] {
+        return [.registration, .login, .reconsent]
+    }
 }
 
 public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
@@ -107,8 +111,6 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // are immutable but can be skipped using navigation rules.
         if let consentFactory = factory as? SBAConsentDocumentFactory {
             switch (onboardingTaskType) {
-            case .consentVisual:
-                return [consentFactory.visualConsentStep()]
             case .login, .reconsent:
                 return [consentFactory.reconsentStep()]
             case .registration:
@@ -160,7 +162,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
             // All types *except* email verification include consent
             return (onboardingTaskType != .registration) || !sharedUser.hasRegistered
             
-        case .introduction, .eligibility, .registration:
+        case .eligibility, .registration:
             // Intro, eligibility and registration are only included in registration
             return (onboardingTaskType == .registration) && !sharedUser.hasRegistered
         
