@@ -58,13 +58,6 @@ public enum SBATrackingStepType: String {
     }
 }
 
-extension SBATrackingStepType: Equatable {
-}
-
-public func ==(lhs: SBATrackingStepType, rhs: SBATrackingStepType) -> Bool {
-    return lhs.rawValue == rhs.rawValue
-}
-
 public struct SBATrackingStepIncludes {
     
     let nextStepIfNoChange: SBATrackingStepType
@@ -171,46 +164,6 @@ public class SBATrackedFormStep: ORKFormStep {
             self.frequencyAnswerFormat = range.createAnswerFormat(.scale)
         }
         update(selectedItems: items)
-    }
-    
-    required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.textFormat = aDecoder.decodeObjectForKey("textFormat") as? String
-        if let trackingTypeValue = aDecoder.decodeObjectForKey("trackingType") as? String,
-        let trackingType = SBATrackingStepType(rawValue: trackingTypeValue) {
-            self.trackingType = trackingType
-        }
-        self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
-        self.trackEach = aDecoder.decodeBoolForKey("trackEach")
-        self._trackedItemIdentifier = aDecoder.decodeObjectForKey("trackedItemIdentifier") as? String
-    }
-    
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
-        aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
-        aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
-        aCoder.encodeBool(self.trackEach, forKey: "trackEach")
-        aCoder.encodeObject(self.trackedItemIdentifier, forKey: "trackedItemIdentifier")
-    }
-    
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBATrackedFormStep
-        copy._shouldSkipStep = self._shouldSkipStep
-        copy.trackingType = self.trackingType
-        copy.textFormat = self.textFormat
-        copy.frequencyAnswerFormat = self.frequencyAnswerFormat
-        copy.trackEach = self.trackEach
-        copy._trackedItemIdentifier = self.trackedItemIdentifier
-        return copy
-    }
-    
-    public func copy(trackedItem trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
-        let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
-        let copy = self.copyWithIdentifier(identifier)
-        copy._trackedItemIdentifier = trackedItem.identifier
-        copy.update(selectedItems:[trackedItem])
-        return copy
     }
     
     public var shouldSkipStep: Bool {
@@ -355,6 +308,73 @@ public class SBATrackedFormStep: ORKFormStep {
             return nil
         }
         return ".\(trackedId)"
+    }
+    
+    // MARK: NSCoding
+    
+    required public init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.textFormat = aDecoder.decodeObjectForKey("textFormat") as? String
+        if let trackingTypeValue = aDecoder.decodeObjectForKey("trackingType") as? String,
+            let trackingType = SBATrackingStepType(rawValue: trackingTypeValue) {
+            self.trackingType = trackingType
+        }
+        self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
+        self.trackEach = aDecoder.decodeBoolForKey("trackEach")
+        self._trackedItemIdentifier = aDecoder.decodeObjectForKey("trackedItemIdentifier") as? String
+    }
+    
+    override public func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
+        aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
+        aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
+        aCoder.encodeBool(self.trackEach, forKey: "trackEach")
+        aCoder.encodeObject(self.trackedItemIdentifier, forKey: "trackedItemIdentifier")
+    }
+    
+    // MARK: NSCopying
+    
+    override public func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = super.copyWithZone(zone) as! SBATrackedFormStep
+        copy._shouldSkipStep = self._shouldSkipStep
+        copy.trackingType = self.trackingType
+        copy.textFormat = self.textFormat
+        copy.frequencyAnswerFormat = self.frequencyAnswerFormat
+        copy.trackEach = self.trackEach
+        copy._trackedItemIdentifier = self.trackedItemIdentifier
+        return copy
+    }
+    
+    public func copy(trackedItem trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
+        let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
+        let copy = self.copyWithIdentifier(identifier)
+        copy._trackedItemIdentifier = trackedItem.identifier
+        copy.update(selectedItems:[trackedItem])
+        return copy
+    }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object as? SBATrackedFormStep else { return false }
+        return super.isEqual(object) &&
+            object.shouldSkipStep == self.shouldSkipStep &&
+            object.trackingType == self.trackingType &&
+            object.textFormat == self.textFormat &&
+            SBAObjectEquality(object.frequencyAnswerFormat, self.frequencyAnswerFormat) &&
+            object.trackEach == self.trackEach &&
+            object.trackedItemIdentifier == self.trackedItemIdentifier
+    }
+    
+    override public var hash: Int {
+        return super.hash ^
+            self.shouldSkipStep.hashValue ^
+            self.trackingType.hashValue ^
+            SBAObjectHash(self.textFormat) ^
+            SBAObjectHash(self.frequencyAnswerFormat) ^
+            self.trackEach.hashValue ^
+            SBAObjectHash(self.trackedItemIdentifier)
     }
 }
 

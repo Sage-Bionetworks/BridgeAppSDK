@@ -102,9 +102,22 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             return step;
             
         case .review:
-            let review = inputItem as! SBAFormStepSurveyItem
-            let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
-            return step;
+            if let consentReview = inputItem as? SBAConsentReviewOptions
+                where consentReview.usesDeprecatedOnboarding {
+                // If this uses the deprecated onboarding (consent review defined by ORKConsentReviewStep)
+                // then return that object type.
+                let signature = self.consentDocument.signatures?.first
+                signature?.requiresName = consentReview.requiresSignature
+                signature?.requiresSignatureImage = consentReview.requiresSignature
+                return ORKConsentReviewStep(identifier: inputItem.identifier,
+                                            signature: signature,
+                                            inDocument: self.consentDocument)
+            }
+            else {
+                let review = inputItem as! SBAFormStepSurveyItem
+                let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
+                return step;
+            }
         }
     }
     

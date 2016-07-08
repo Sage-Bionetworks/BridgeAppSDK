@@ -54,116 +54,130 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         
         XCTAssertEqual(sections.count, 6)
     }
-
-    // TODO: syoung 06/10/2016 enable the following tests. (commented out to allow pushing to master of the changes
-    // to the shared app protocols for inclusion in mPowerSDK and Lilly before leaving for WWDC)
     
-//    func testEligibilitySection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.Eligibility))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        
-//        let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
-//                                        ORKInstructionStep(identifier: "ineligibleInstruction"),
-//                                        SBADirectNavigationStep(identifier: "shareApp"),
-//                                        ORKInstructionStep(identifier: "eligibleInstruction")]
-//        XCTAssertEqual(steps.count, expectedSteps.count)
-//        for (idx, expectedStep) in expectedSteps.enumerate() {
-//            if idx < steps.count {
-//                XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
-//                let stepClass = NSStringFromClass(steps[idx].classForCoder)
-//                let expectedStepClass = NSStringFromClass(expectedStep.classForCoder)
-//                XCTAssertEqual(stepClass, expectedStepClass)
-//            }
-//        }
-//    }
-//    
-//    func testConsentSection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.Consent))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        XCTAssertEqual(steps.count, 9)
-//    }
-//    
-//    func testPasscodeSection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.Passcode))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        XCTAssertEqual(steps.count, 1)
-//        
-//        guard let step = steps.first as? ORKPasscodeStep else {
-//            XCTAssert(false, "\(steps.first) not of expected type")
-//            return
-//        }
-//        
-//        XCTAssertEqual(step.identifier, "passcode")
-//        XCTAssertEqual(step.passcodeType, ORKPasscodeType.Type6Digit)
-//        XCTAssertEqual(step.title, "Identification")
-//        XCTAssertEqual(step.text, "Select a 6-digit passcode. Setting up a passcode will help provide quick and secure access to this application.")
-//    }
-//    
-//    func testLoginSection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.Login))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        XCTAssertEqual(steps.count, 1)
-//    }
-//    
-//    func testEmailVerificationSection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.EmailVerification))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        XCTAssertEqual(steps.count, 1)
-//    }
-//    
-//    func testCompletionSection() {
-//        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
-//        let section = manager?.sectionForOnboardingSectionType(.Base(.Completion))
-//        XCTAssertNotNil(section)
-//        guard section != nil else { return }
-//        
-//        let factory = manager?.factoryForSection(section!)
-//        XCTAssertNotNil(factory?.steps)
-//        guard let steps = factory?.steps else { return }
-//        XCTAssertEqual(steps.count, 1)
-//        
-//        guard let step = steps.first as? ORKCompletionStep else {
-//            XCTAssert(false, "\(steps.first) not of expected type")
-//            return
-//        }
-//        
-//        XCTAssertEqual(step.identifier, "onboardingCompletion")
-//    }
-    
-    func testSortSections() {
+    func testShouldInclude() {
         
+        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")!
+        
+        let expectedNonNil: [SBAOnboardingSectionBaseType : [SBAOnboardingTaskType]] = [
+            .login: [.login],
+            .eligibility: [.registration],
+            .consent: [.login, .registration, .reconsent],
+            .registration: [.registration],
+            .passcode: [.login, .registration, .reconsent],
+            .emailVerification: [.registration],
+            .permissions: [.login, .registration],
+            .profile: [.registration],
+            .completion: [.login, .registration]]
+
+        for sectionType in SBAOnboardingSectionBaseType.all {
+            let include = expectedNonNil[sectionType]
+            XCTAssertNotNil(include, "\(sectionType)")
+            if include != nil {
+                for taskType in SBAOnboardingTaskType.all {
+                    let expectedShouldInclude = include!.contains(taskType)
+                    let section: NSDictionary = ["onboardingType": sectionType.rawValue]
+                    let shouldInclude = manager.shouldInclude(section: section, onboardingTaskType: taskType)
+                    XCTAssertEqual(shouldInclude, expectedShouldInclude, "\(sectionType) \(taskType)")
+                }
+            }
+        }
+        
+    }
+    
+    func testSortOrder() {
+        
+        let inputSections = [
+            ["onboardingType" : "customWelcome"],
+            ["onboardingType" : "consent"],
+            ["onboardingType" : "passcode"],
+            ["onboardingType" : "emailVerification"],
+            ["onboardingType" : "registration"],
+            ["onboardingType" : "login"],
+            ["onboardingType" : "eligibility"],
+            ["onboardingType" : "completion"],
+            ["onboardingType" : "customEnd"],]
+        let input: NSDictionary = ["sections" : inputSections];
+        
+        guard let sections = SBAOnboardingManager(dictionary: input).sections else {
+            XCTAssert(false, "failed to create onboarding manager sections")
+            return
+        }
+        
+        let expectedOrder = ["customWelcome",
+                             "login",
+                             "eligibility",
+                             "consent",
+                             "registration",
+                             "passcode",
+                             "emailVerification",
+                             "completion",
+                             "customEnd",]
+        let actualOrder = sections.mapAndFilter({ $0.onboardingSectionType?.identifier })
+        
+        XCTAssertEqual(actualOrder, expectedOrder)
+        
+    }
+    
+    func testEligibilitySection() {
+
+        guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
+        
+        let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
+                                        ORKInstructionStep(identifier: "ineligibleInstruction"),
+                                        SBADirectNavigationStep(identifier: "shareApp"),
+                                        ORKInstructionStep(identifier: "eligibleInstruction")]
+        XCTAssertEqual(steps.count, expectedSteps.count)
+        for (idx, expectedStep) in expectedSteps.enumerate() {
+            if idx < steps.count {
+                XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
+                let stepClass = NSStringFromClass(steps[idx].classForCoder)
+                let expectedStepClass = NSStringFromClass(expectedStep.classForCoder)
+                XCTAssertEqual(stepClass, expectedStepClass)
+            }
+        }
+    }
+    
+    func testPasscodeSection() {
+
+        guard let steps = checkOnboardingSteps( .base(.passcode), .registration) else { return }
+        
+        XCTAssertEqual(steps.count, 1)
+        
+        guard let step = steps.first as? ORKPasscodeStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "passcode")
+        XCTAssertEqual(step.passcodeType, ORKPasscodeType.Type6Digit)
+        XCTAssertEqual(step.title, "Identification")
+        XCTAssertEqual(step.text, "Select a 6-digit passcode. Setting up a passcode will help provide quick and secure access to this application.")
+    }
+    
+    func testLoginSection() {
+        guard let steps = checkOnboardingSteps( .base(.login), .login) else { return }
+        XCTAssertEqual(steps.count, 1)
+        
+        guard let step = steps.first as? SBALoginStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "login")
+    }
+    
+    func checkOnboardingSteps(sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
+        
+        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
+        let section = manager?.section(onboardingSectionType: sectionType)
+        XCTAssertNotNil(section, "sectionType:\(sectionType) taskType:\(taskType)")
+        guard section != nil else { return  nil}
+        
+        let steps = manager?.steps(section: section!, onboardingTaskType: taskType)
+        XCTAssertNotNil(steps, "sectionType:\(sectionType) taskType:\(taskType)")
+        
+        return steps
     }
 
 }

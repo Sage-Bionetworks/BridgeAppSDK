@@ -35,6 +35,8 @@ import ResearchKit
 
 public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
     
+    public var formItems: [ORKFormItem]?
+    
     public var surveyItemType: SBASurveyItemType {
         return .consent(.review)
     }
@@ -55,18 +57,15 @@ public class SBAConsentReviewStep: ORKConsentReviewStep, SBAProfileInfoForm {
         // Initialize common
         commonInit(inputItem)
         
-        // Copy options from commonInit back into the signature for this document
-        let requiresNameAndSignature = (self.formItemForIdentifier(SBAProfileInfoOption.name.rawValue) != nil)
-        self.signature?.requiresName = requiresNameAndSignature
-        self.signature?.requiresSignatureImage = requiresNameAndSignature
+        // Update the signature to capture whether or not the name/image are required
+        let requiresSignature = self.formItemForIdentifier(SBAProfileInfoOption.name.rawValue) != nil
+        self.signature?.requiresName = requiresSignature
+        self.signature?.requiresSignatureImage = requiresSignature
     }
     
     public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
-        if let dictionary = inputItem as? NSDictionary,
-            let requiresSignature = dictionary["requiresSignature"] as? Bool
-            where !requiresSignature {
-            // special-case the json key for requiresSignature and return empty set if signature is not required
-            // (json is more human-readable)
+        if let reviewOptions = inputItem as? SBAConsentReviewOptions where !reviewOptions.requiresSignature {
+            // If the signature is not required then return empty set
             return []
         }
         return [.name]   // by default

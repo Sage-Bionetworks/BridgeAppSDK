@@ -269,6 +269,71 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         }
     }
     
+    func testConsentReview_RequiresSignature_YES() {
+        guard let consentFactory = createConsentFactory() else { return }
+        
+        let inputStep: NSDictionary = [
+            "identifier"                : "consentReview",
+            "type"                      : "consentReview",
+            "requiresSignature"         : true
+        ]
+        
+        let step = consentFactory.createSurveyStepWithDictionary(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let reviewStep = step as? SBAConsentReviewStep else {
+            XCTAssert(false, "\(step) not of expected type")
+            return
+        }
+        
+        XCTAssertNotNil(reviewStep.reasonForConsent)
+        XCTAssertNotNil(reviewStep.signature)
+        
+        if let signature = reviewStep.signature {
+            XCTAssertTrue(signature.requiresName)
+            XCTAssertTrue(signature.requiresSignatureImage)
+        }
+        
+        XCTAssertNotNil(reviewStep.formItems)
+        
+        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
+        for (identifier, expectedClassName) in expected {
+            let formItem = reviewStep.formItemForIdentifier(identifier)
+            XCTAssertNotNil(formItem)
+            if let classForCoder = formItem?.answerFormat?.classForCoder {
+                let className = NSStringFromClass(classForCoder)
+                XCTAssertEqual(className, expectedClassName)
+            }
+        }
+    }
+    
+    func testConsentReview_RequiresSignature_NO() {
+        guard let consentFactory = createConsentFactory() else { return }
+        
+        let inputStep: NSDictionary = [
+            "identifier"                : "consentReview",
+            "type"                      : "consentReview",
+            "requiresSignature"         : false
+        ]
+        
+        let step = consentFactory.createSurveyStepWithDictionary(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let reviewStep = step as? SBAConsentReviewStep else {
+            XCTAssert(false, "\(step) not of expected type")
+            return
+        }
+        
+        XCTAssertNotNil(reviewStep.reasonForConsent)
+        XCTAssertNotNil(reviewStep.signature)
+        XCTAssertTrue(reviewStep.formItems == nil || reviewStep.formItems!.count == 0, "There should be no formItems for this review step")
+        
+        if let signature = reviewStep.signature {
+            XCTAssertFalse(signature.requiresName)
+            XCTAssertFalse(signature.requiresSignatureImage)
+        }
+    }
+    
     func createConsentFactory() -> SBAConsentDocumentFactory? {
         guard let input = jsonForResource("Consent") else { return nil }
         return SBAConsentDocumentFactory(dictionary: input)

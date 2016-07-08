@@ -37,7 +37,6 @@ import ResearchKit
 public enum SBAOnboardingSectionBaseType: String {
     
     case login              = "login"
-    case introduction       = "introduction"
     case eligibility        = "eligibility"
     case consent            = "consent"
     case registration       = "registration"
@@ -48,21 +47,24 @@ public enum SBAOnboardingSectionBaseType: String {
     case completion         = "completion"
     
     func ordinal() -> Int {
-        let order:[SBAOnboardingSectionBaseType] = [.login,
-                                                   .introduction,
-                                                   .eligibility,
-                                                   .consent,
-                                                   .registration,
-                                                   .passcode,
-                                                   .emailVerification,
-                                                   .permissions,
-                                                   .profile,
-                                                   .completion]
+        let order:[SBAOnboardingSectionBaseType] = SBAOnboardingSectionBaseType.all
         guard let ret = order.indexOf(self) else {
             assertionFailure("\(self) ordinal value is unknown")
             return (order.indexOf(.completion)! - 1)
         }
         return ret
+    }
+    
+    public static var all: [SBAOnboardingSectionBaseType] {
+        return [.login,
+                .eligibility,
+                .consent,
+                .registration,
+                .passcode,
+                .emailVerification,
+                .permissions,
+                .profile,
+                .completion]
     }
 }
 
