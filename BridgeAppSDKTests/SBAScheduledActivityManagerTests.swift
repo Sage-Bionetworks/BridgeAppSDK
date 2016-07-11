@@ -164,6 +164,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
         
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_MedTrackingOnly_MedsSelected() {
@@ -205,6 +207,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
         
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithNoMedsSelected() {
@@ -236,6 +240,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelected() {
@@ -267,6 +274,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelectedPreviously() {
@@ -303,6 +313,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithNoMeds() {
@@ -330,6 +343,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsSelected() {
@@ -357,6 +373,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsPreviouslySelected() {
@@ -388,6 +407,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
         
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithNoMedsPreviouslySelected() {
@@ -419,6 +440,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
         
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTask() {
@@ -446,6 +469,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
         
+        // Check the dates
+        checkDates(taskVC.taskResult, splitResults)
     }
     
     func testComboTaskResult_SimRun() {
@@ -477,13 +502,13 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         unarchiver.finishDecoding()
         
         taskVC.taskResult = taskResult
-        print(taskResult)
-        
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
-        print(splitResults)
     
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
+        
+        // Check the dates
+        checkDates(taskResult, splitResults)
     }
     
     func checkSchema(splitResults: [SBAActivityResult], expectedSchema:[[NSObject]]) {
@@ -539,6 +564,21 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             }
         }
 
+    }
+    
+    func checkDates(taskResult: ORKTaskResult, _ splitResults: [SBAActivityResult]) {
+        
+        for result in splitResults {
+            
+            let resultStart = result.startDate.timeIntervalSinceReferenceDate.roundTo(1)
+            let taskStart = taskResult.startDate.timeIntervalSinceReferenceDate.roundTo(1)
+            XCTAssertGreaterThanOrEqual(resultStart, taskStart, "\(result.identifier)")
+            
+            let resultEnd = result.endDate.timeIntervalSinceReferenceDate.roundTo(1)
+            let taskEnd = taskResult.endDate.timeIntervalSinceReferenceDate.roundTo(1)
+            XCTAssertLessThanOrEqual(resultEnd, taskEnd, "\(result.identifier)")
+        }
+        
     }
     
     // MARK: schedule filtering
@@ -744,6 +784,17 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             previousStep = step
         }
         
+        // Update the start and end dates
+        let stepInterval = 5.0
+        var date: NSDate = taskResult.startDate.dateByAddingTimeInterval(Double(-1 * taskResult.results!.count) * stepInterval)
+        for result in taskResult.results! {
+            result.startDate = date
+            date = date.dateByAddingTimeInterval(stepInterval)
+            result.endDate = date
+        }
+        taskResult.startDate = taskResult.results!.first!.startDate
+        taskResult.endDate = taskResult.results!.last!.endDate
+        
         // Check assumptions
         XCTAssertGreaterThan(taskResult.results!.count, 0)
         taskResult.validateParameters()
@@ -827,4 +878,12 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
         return TestTaskViewController(task: task, taskRunUUID: nil)
     }
     
+}
+
+extension Double {
+    /// Rounds the double to decimal places value
+    func roundTo(places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return round(self * divisor) / divisor
+    }
 }
