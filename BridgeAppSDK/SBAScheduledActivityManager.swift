@@ -422,10 +422,21 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         guard taskViewController.result.results != nil else { return [] }
         
         let taskResult = taskViewController.result
+        
+        func outputDate(inputDate: NSDate?, comparison:NSComparisonResult) -> NSDate {
+            let compareDate = (comparison == .OrderedAscending) ? taskResult.startDate : taskResult.endDate
+            guard let date = inputDate where date.compare(compareDate) == comparison else {
+                return compareDate
+            }
+            return date
+        }
+        
         func createActivityResult(identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
             let result = SBAActivityResult(taskIdentifier: identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
             result.results = stepResults
             result.schedule = schedule
+            result.startDate = outputDate(stepResults.first?.startDate, comparison: .OrderedAscending)
+            result.endDate = outputDate(stepResults.last?.endDate, comparison: .OrderedDescending)
             result.schemaRevision = bridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision ?? 1
             return result
         }
@@ -462,7 +473,13 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                             var subsetResults = subResults
                             for dataStore in dataStores {
                                 if let momentInDayResult = dataStore.momentInDayResult {
-                                    subsetResults += momentInDayResult
+                                    // Mark the start/end date with the start timestamp of the first step
+                                    for stepResult in momentInDayResult {
+                                        stepResult.startDate = subsetResults.first!.startDate
+                                        stepResult.endDate = stepResult.startDate
+                                    }
+                                    // Add the results at the beginning
+                                    subsetResults = momentInDayResult + subsetResults
                                 }
                             }
                             
