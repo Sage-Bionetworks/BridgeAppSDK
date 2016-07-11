@@ -423,6 +423,10 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         let taskResult = taskViewController.result
         
+        // Look at the task result start/end date and assign the start/end date for the split result
+        // based on whether or not the inputDate is greater/less than the comparison date. This way,
+        // the split result will have a start date that is >= the overall task start date and an
+        // end date that is <= the task end date.
         func outputDate(inputDate: NSDate?, comparison:NSComparisonResult) -> NSDate {
             let compareDate = (comparison == .OrderedAscending) ? taskResult.startDate : taskResult.endDate
             guard let date = inputDate where date.compare(compareDate) == comparison else {
@@ -431,6 +435,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return date
         }
         
+        // Function for creating each split result
         func createActivityResult(identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
             let result = SBAActivityResult(taskIdentifier: identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
             result.results = stepResults
@@ -441,6 +446,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return result
         }
         
+        // mutable arrays for ensuring all results are collected
         var topLevelResults:[ORKStepResult] = taskViewController.result.results! as! [ORKStepResult]
         var allResults:[SBAActivityResult] = []
         var dataStores:[SBATrackedDataStore] = []
