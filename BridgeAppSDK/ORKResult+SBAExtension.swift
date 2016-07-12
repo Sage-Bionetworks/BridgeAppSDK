@@ -167,13 +167,12 @@ extension ORKTappingIntervalResult {
         let rightButtonRect = NSStringFromCGRect(self.buttonRect2)
         tappingResults[kButtonRectRightKey] = rightButtonRect
     
-        var sampleResults: [[String: AnyObject]] = []
-        for sample in self.samples! {
+        let sampleResults = self.samples?.map({ (sample) -> [String: AnyObject] in
             var aSampleDictionary = [String: AnyObject]();
             
-            aSampleDictionary[kTapTimeStampKey]     = sample.timestamp;
+            aSampleDictionary[kTapTimeStampKey]     = sample.timestamp
             
-            aSampleDictionary[kTapCoordinateKey]   = NSStringFromCGPoint(sample.location);
+            aSampleDictionary[kTapCoordinateKey]   = NSStringFromCGPoint(sample.location)
             
             if (sample.buttonIdentifier == ORKTappingButtonIdentifier.None) {
                 aSampleDictionary[kTappedButtonIdKey] = kTappedButtonNoneKey
@@ -182,8 +181,9 @@ extension ORKTappingIntervalResult {
             } else if (sample.buttonIdentifier == ORKTappingButtonIdentifier.Right) {
                 aSampleDictionary[kTappedButtonIdKey] = kTappedButtonRightKey
             }
-            sampleResults += [aSampleDictionary]
-        }
+            return aSampleDictionary
+        }) ?? []
+        
         tappingResults[kTappingSamplesKey] = sampleResults
         tappingResults[kItemKey] = self.filenameForArchive()
         
