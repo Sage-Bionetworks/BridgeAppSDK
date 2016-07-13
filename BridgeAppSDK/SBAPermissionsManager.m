@@ -490,7 +490,20 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 #if TARGET_IPHONE_SIMULATOR
     return YES;
 #else
-    return self.coreMotionPermissionStatus == SBAPermissionStatusAuthorized;
+    BOOL permission;
+    
+    // available iOS 9 and later: a way to check motion sensor recorder permissions without explicitly requesting them.
+    // TODO: emm 2016-07-12 redo the whole permissions thing so this situation doesn't even come up. We should
+    // be requesting permissions either ahead of time or as we first need them, but not asking the user for
+    // permission to even *ask* them for the permissions, which winds up with not being able to set them in Settings
+    // later if they don't allow us to ask the first time through.
+    if ([CMSensorRecorder class]) {
+        permission = [CMSensorRecorder isAuthorizedForRecording];
+    } else {
+        permission = (self.coreMotionPermissionStatus == SBAPermissionStatusAuthorized);
+    }
+    
+    return permission;
 #endif
 }
 
