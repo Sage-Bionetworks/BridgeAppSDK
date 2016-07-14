@@ -157,7 +157,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkStandAloneSurveySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
     
-        let expectedCount = 4
+        let expectedCount = 5
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
@@ -173,7 +173,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
         XCTAssertEqual(selectionStep.text, "Do you take any of these medications?\n(Please select all that apply)")
-        checkMedicationSelectionStep(selectionStep, optional: true)
+        checkMedicationSelectionStep(selectionStep, optional: false)
         
         guard let frequencyStep = steps[2] as? SBATrackedFormStep else {
             XCTAssert(false, "\(steps[2]) not of expected type")
@@ -185,6 +185,13 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkMedicationFrequencyStep(frequencyStep, idList: ["Levodopa", "Carbex", "Duopa"], expectedFrequencyIds: ["Levodopa", "Carbex"], items: dataCollection.items)
         checkMedicationFrequencyStep(frequencyStep, idList: ["Duopa"], expectedFrequencyIds: [], items: dataCollection.items)
         
+        guard let handStep = steps[3] as? ORKFormStep else {
+            XCTAssert(false, "\(steps[3]) not of expected type")
+            return
+        }
+        XCTAssertEqual(handStep.identifier, "dominantHand")
+        XCTAssertEqual(handStep.text, "Which hand would you normally use to write or throw a ball?")
+        
         guard let conclusionStep = steps.last as? ORKInstructionStep else {
             XCTAssert(false, "\(steps.last) not of expected type")
             return
@@ -194,7 +201,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(conclusionStep.text, "")
     }
     
-    func testMedicationSelectionStep_NotOptional() {
+    func testMedicationSelectionStep_Optional() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
         
@@ -202,10 +209,12 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             "identifier"   : "medicationSelection",
             "trackingType" : "selection",
             "type"         : "trackingSelection",
-            "text"         : "Do you take any of these medications?\n(Please select all that apply)",]
+            "text"         : "Do you take any of these medications?\n(Please select all that apply)",
+            "optional"     : true,
+            ]
         
         let step = SBATrackedFormStep(surveyItem: inputItem, items:dataCollection.items)
-        checkMedicationSelectionStep(step, optional: false)
+        checkMedicationSelectionStep(step, optional: true)
     }
     
     func checkMedicationSelectionStep(step: ORKStep, optional: Bool) {
@@ -395,7 +404,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkChangedAndActivitySteps(steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
         
-        let expectedCount = 6
+        let expectedCount = 7
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
@@ -406,7 +415,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                 return
         }
         XCTAssertEqual(changedStep.identifier, "medicationChanged")
-        XCTAssertEqual(changedStep.text, "Has your Parkinson diagnosis or medication changed?")
+        XCTAssertEqual(changedStep.text, "Has your medication changed?")
         XCTAssertTrue(changedStep.skipIfPassed)
         XCTAssertEqual(changedStep.skipToStepIdentifier, expectedSkipIdentifier)
         
@@ -427,13 +436,16 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let frequencyStep = steps[2]
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
         
-        let momentInDayStep = steps[3]
+        let handStep = steps[3]
+        XCTAssertEqual(handStep.identifier, "dominantHand")
+        
+        let momentInDayStep = steps[4]
         XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
         
-        let timingStep = steps[4]
+        let timingStep = steps[5]
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
         
-        let trackEachStep = steps[5]
+        let trackEachStep = steps[6]
         XCTAssertEqual(trackEachStep.identifier, "medicationTrackEach")
     }
     
@@ -459,32 +471,29 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkSurveyAndActivitySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
         
-        let expectedCount = 6
+        let expectedCount = 7
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
-        // Step 1
         let stepIntro = steps[0]
         XCTAssertEqual(stepIntro.identifier, "medicationIntroduction")
         
-        // Step 3
         let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
         
-        // Step 4
         let frequencyStep = steps[2]
         XCTAssertEqual(frequencyStep.identifier, "medicationFrequency")
         
-        // Step 5
-        let momentInDayStep = steps[3]
+        let handStep = steps[3]
+        XCTAssertEqual(handStep.identifier, "dominantHand")
+        
+        let momentInDayStep = steps[4]
         XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
         
-        // Step 6
-        let timingStep = steps[4]
+        let timingStep = steps[5]
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
         
-        // Step 7
-        let trackEachStep = steps[5]
+        let trackEachStep = steps[6]
         XCTAssertEqual(trackEachStep.identifier, "medicationTrackEach")
     }
     
@@ -632,11 +641,15 @@ class SBATrackedDataObjectTests: ResourceTestCase {
 
         // make selection
         let nextStep = task!.stepAfterStep(selectionStep, withResult: taskResult!)
-        XCTAssertNil(nextStep)
+        XCTAssertNotNil(nextStep)
         XCTAssertNotNil(dataStore!.selectedItems)
         
         guard let selectedItems = dataStore!.selectedItems else { return }
         XCTAssertEqual(selectedItems.count, 0)
+        
+        guard let nextStepIdentifier = nextStep?.identifier else { return }
+        XCTAssertEqual(nextStepIdentifier, "dominantHand")
+
     }
     
     
@@ -674,8 +687,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let frequencyStepResult = ORKStepResult(stepIdentifier: frequencyStep.identifier, results: frequencyResults)
         taskResult.results! += [frequencyStepResult]
         
-        // Get the moment in day step
-        let step2 = task.stepAfterStep(frequencyStep, withResult: taskResult)
+        // Get the hand domninance step
+        let handStep_r = task.stepAfterStep(frequencyStep, withResult: taskResult)
         for item in dataStore.selectedItems! {
             if (item.usesFrequencyRange) {
                 XCTAssertEqual(item.frequency, UInt(item.identifier.characters.count), "\(item.identifier)")
@@ -684,6 +697,19 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
         
+        guard let handStep = handStep_r as? ORKFormStep, let handFormItem = handStep.formItems?.first else {
+            XCTAssert(false, "\(handStep_r) not of expected type" )
+            return
+        }
+    
+        // Add the hand result
+        let handQuestionResult = ORKChoiceQuestionResult(identifier: handFormItem.identifier)
+        handQuestionResult.choiceAnswers = ["Right hand"]
+        let handResult = ORKStepResult(stepIdentifier: handStep.identifier, results: [handQuestionResult])
+        taskResult.results! += [handResult]
+        
+        // Get moment in day
+        let step2 = task.stepAfterStep(handStep, withResult: taskResult)
         guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .activity,
             let momentFormItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(step2) not of expected type")

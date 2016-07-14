@@ -87,7 +87,6 @@
     ],
     "steps":
     [
-
      {
         "identifier" : "medicationIntroduction",
         "trackingType"     : "introduction",
@@ -99,7 +98,7 @@
          "identifier"       : "medicationChanged",
          "trackingType"     : "changed",
          "type"             : "boolean",
-         "text"             : "Has your Parkinson diagnosis or medication changed?",
+         "text"             : "Has your medication changed?",
          "expectedAnswer"   : false,
          "skipIfPassed"     : true,
          "skipIdentifier"   : "nextSection",
@@ -109,15 +108,22 @@
          "trackingType" : "selection",
          "type"         : "trackingSelection",
          "text"         : "Do you take any of these medications?\n(Please select all that apply)",
-         "optional"     : true,
+         "optional"     : false,
      },
      {
-        "identifier"    : "medicationFrequency",
-        "trackingType"  : "frequency",
-        "type"          : "trackingFrequency",
-        "text"          : "How many times a day do you take each of the following medications?",
-        "min"           : 1,
-        "max"           : 12,
+         "identifier"    : "medicationFrequency",
+         "trackingType"  : "frequency",
+         "type"          : "trackingFrequency",
+         "text"          : "How many times a day do you take each of the following medications?",
+         "min"           : 1,
+         "max"           : 12,
+         "optional"      : false,
+     },
+     {
+         "identifier"   : "dominantHand",
+         "type"         : "singleChoiceText",
+         "prompt"       : "Which hand would you normally use to write or throw a ball?",
+         "items"        : ["Right hand","Left hand","Don't know / no preference"],
      },
      {
          "identifier"       : "momentInDay",

@@ -775,6 +775,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     break
                 }
             }
+            else if let formStep = step as? ORKFormStep {
+                let stepResult = formStep.instantiateStepResult(.defaultValue)
+                taskResult.results?.append(stepResult)
+            }
             else {
                 let stepResult = ORKStepResult(identifier: step.identifier)
                 taskResult.results?.append(stepResult)
