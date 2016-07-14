@@ -35,17 +35,8 @@ import UIKit
 
 public class Localization: NSObject {
     
-    /**
-     * Locale bundle is defined as a variable rather than a singleton so that it can be 
-     * changed to a different bundle from the default localized bundle.
-     */
-    static var localizationBundleForClass = {
-        return NSBundle.init(forClass: Localization.classForCoder())
-    }()
-    
-    public class var localeBundle: NSBundle {
-        return localizationBundleForClass
-    }
+    public static let localeBundle = NSBundle(forClass: Localization.classForCoder())
+    public static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
         
     public static func localizedString(key: String) -> String {
         var str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
@@ -54,20 +45,20 @@ public class Localization: NSObject {
                 str = defaultStr
             }
             else {
-                str = SBALocalizationMacroWrapper.localizedORKString(key)
+                // If the string is not found in the BridgeAppSDK bundle then look in the ResearchKit bundle
+                str = NSLocalizedString(key, tableName: "ResearchKit", bundle: localeORKBundle, value: key, comment: "")
             }
         }
         return str
     }
     
-    static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
+    public static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
         return withVaList(arguments) {
-            //NSString.localizedStringWithFormat(localizedString(key), $0)
             NSString(format: localizedString(key), locale: NSLocale.currentLocale(), arguments: $0)
         } as String
     }
     
-    static func localizedJoin(textList: [String]) -> String {
+    public static func localizedJoin(textList: [String]) -> String {
         switch (textList.count) {
         case 0:
             return ""
@@ -120,31 +111,31 @@ public class Localization: NSObject {
     // MARK: Common button titles that should keep consistent with ResearchKit
     
     public static func buttonYes() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BOOL_YES")
+        return localizedString("BOOL_YES")
     }
     
     public static func buttonNo() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BOOL_NO")
+        return localizedString("BOOL_NO")
     }
     
     public static func buttonOK() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BUTTON_OK")
+        return localizedString("BUTTON_OK")
     }
     
     public static func buttonCancel() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BUTTON_CANCEL")
+        return localizedString("BUTTON_CANCEL")
     }
     
     public static func buttonDone() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BUTTON_DONE")
+        return localizedString("BUTTON_DONE")
     }
     
     public static func buttonNext() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BUTTON_NEXT")
+        return localizedString("BUTTON_NEXT")
     }
     
     public static func buttonGetStarted() -> String {
-        return SBALocalizationMacroWrapper.localizedORKString("BUTTON_GET_STARTED")
+        return localizedString("BUTTON_GET_STARTED")
     }
     
     // MARK: List of the strings used in this module.
