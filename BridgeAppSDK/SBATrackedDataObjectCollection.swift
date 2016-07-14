@@ -118,10 +118,8 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             switch (previous.trackingType!) {
             case .selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
-                mutateSelectionStepResult(result)
             case .frequency:
                 self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
-                mutateSelectionStepResult(result)
             case .activity:
                 if !previous.trackEach, let stepResult = result.stepResultForStepIdentifier(previous.identifier) {
                     self.dataStore.updateMomentInDayForStepResult(stepResult)
