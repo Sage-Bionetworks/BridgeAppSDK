@@ -35,18 +35,29 @@ import UIKit
 
 public class Localization: NSObject {
     
-    public static let localeBundle = NSBundle(forClass: Localization.classForCoder())
-    public static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
+    static let localeBundle = NSBundle(forClass: Localization.classForCoder())
+    static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
+    
+    public class var additionalBundles: [NSBundle] {
+        return [localeORKBundle]
+    }
         
     public static func localizedString(key: String) -> String {
-        var str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
+        let str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
         if (str == key) {
             if let defaultStr = listOfAllLocalizedStrings[key] {
-                str = defaultStr
+                return defaultStr
             }
             else {
-                // If the string is not found in the BridgeAppSDK bundle then look in the ResearchKit bundle
-                str = NSLocalizedString(key, tableName: "ResearchKit", bundle: localeORKBundle, value: key, comment: "")
+                for bundle in additionalBundles {
+                    // If the string is not found in the BridgeAppSDK bundle then look in the other bundles that are
+                    // in the list of bundles to search.
+                    let bundleStr = NSLocalizedString(key, tableName: nil, bundle: bundle, value: key, comment: "")
+                    if bundleStr != key {
+                        // If something is found where the returned
+                        return bundleStr
+                    }
+                }
             }
         }
         return str
