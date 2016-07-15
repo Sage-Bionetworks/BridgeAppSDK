@@ -161,8 +161,8 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertEqual(activeStep.minimumSpan, 3)
         XCTAssertEqual(activeStep.maximumSpan, 10)
         XCTAssertEqual(activeStep.playSpeed, 1.5)
-        XCTAssertEqual(activeStep.maxTests, 6)
-        XCTAssertEqual(activeStep.maxConsecutiveFailures, 4)
+        XCTAssertEqual(activeStep.maximumTests, 6)
+        XCTAssertEqual(activeStep.maximumConsecutiveFailures, 4)
         
         // Last - Completion
         guard let completionStep = task.steps.last as? ORKCompletionStep else {

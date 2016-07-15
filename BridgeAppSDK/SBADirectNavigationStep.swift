@@ -135,9 +135,9 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     }
     
     override public var hash: Int {
-        return super.hash |
-            SBAObjectHash(self.nextStepIdentifier) |
-            SBAObjectHash(learnMoreAction) |
+        return super.hash ^
+            SBAObjectHash(self.nextStepIdentifier) ^
+            SBAObjectHash(learnMoreAction) ^
             SBAObjectHash(self.customTypeIdentifier)
     }
 }

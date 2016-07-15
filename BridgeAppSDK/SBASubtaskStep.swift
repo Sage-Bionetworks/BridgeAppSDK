@@ -189,9 +189,10 @@ public class SBASubtaskStep: ORKStep {
     }
     
     override public var hash: Int {
-        let hashTaskIdentifier = self.taskIdentifier?.hash ?? 0
-        let hashSchemaIdentifier = self.schemaIdentifier?.hash ?? 0
-        return super.hash | hashTaskIdentifier | hashSchemaIdentifier | _subtask.hash
+        return super.hash ^
+            SBAObjectHash(self.taskIdentifier) ^
+            SBAObjectHash(self.schemaIdentifier) ^
+            _subtask.hash
     }
     
 }

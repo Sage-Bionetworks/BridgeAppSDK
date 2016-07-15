@@ -57,6 +57,7 @@ public protocol SBAConsentSignatureWrapper : class {
     var signatureDate: NSDate? { get set }
 }
 
+@objc
 public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecureCoding, NSCopying {
     
     public let identifier: String
@@ -125,21 +126,21 @@ public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecure
     // MARK: Equality
     
     public override func isEqual(object: AnyObject?) -> Bool {
-        guard super.isEqual(object),
-            let obj = object as? SBAConsentSignature else {
+        guard let obj = object as? SBAConsentSignature else {
             return false
         }
-        return SBAObjectEquality(self.signatureBirthdate, obj.signatureBirthdate) &&
+        return  SBAObjectEquality(self.identifier, obj.identifier) &&
+                SBAObjectEquality(self.signatureBirthdate, obj.signatureBirthdate) &&
                 SBAObjectEquality(self.signatureName, obj.signatureName) &&
                 SBAObjectEquality(self.signatureImage, obj.signatureImage) &&
                 SBAObjectEquality(self.signatureDate, obj.signatureDate)
     }
     
     public override var hash: Int {
-        return self.identifier.hash |
-            SBAObjectHash(self.signatureBirthdate) |
-            SBAObjectHash(self.signatureName) |
-            SBAObjectHash(self.signatureImage) |
+        return self.identifier.hash ^
+            SBAObjectHash(self.signatureBirthdate) ^
+            SBAObjectHash(self.signatureName) ^
+            SBAObjectHash(self.signatureImage) ^
             SBAObjectHash(self.signatureDate)
     }
     

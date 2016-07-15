@@ -737,7 +737,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             }
             else if let formStep = step as? SBATrackedFormStep, let formItems = formStep.formItems {
                 
-                switch formStep.trackingType! {
+                switch formStep.trackingType {
                 case .selection:
                     // Add a question answer to the selection step
                     let questionResult = ORKChoiceQuestionResult(identifier: formItems[0].identifier)

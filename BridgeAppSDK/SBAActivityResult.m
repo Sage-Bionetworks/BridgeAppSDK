@@ -83,7 +83,9 @@
 #pragma mark - Equality
 
 - (BOOL)isEqual:(id)object {
-    return [super isEqual:object] && [self.schedule isEqual:[object schedule]];
+    typeof(self) castObject = object;
+    return [super isEqual:object] &&
+    [self.schedule isEqual:castObject.schedule];
 }
 
 - (NSUInteger)hash {

@@ -33,7 +33,6 @@
  
 #import "SBAPermissionsManager.h"
 #import "SBABridgeAppSDKDelegate.h"
-#import "SBALocalizationMacroWrapper.h"
 
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
@@ -42,6 +41,17 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManagerErrorDomain";
+
+NSBundle *SBABundle() {
+    static NSBundle *__bundle;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __bundle = [NSBundle bundleForClass:[SBAPermissionsManager class]];
+    });
+    
+    return __bundle;
+}
 
 typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
     SBAPermissionsErrorCodeAccessDenied = -100,

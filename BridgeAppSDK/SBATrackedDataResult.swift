@@ -46,6 +46,8 @@ public class SBATrackedDataSelectionResult: ORKQuestionResult {
         self.questionType = .MultipleChoice
     }
     
+    // MARK: NSCoding
+    
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.selectedItems = aDecoder.decodeObjectForKey("selectedItems") as? [SBATrackedDataObject]
@@ -56,14 +58,24 @@ public class SBATrackedDataSelectionResult: ORKQuestionResult {
         aCoder.encodeObject(self.selectedItems, forKey: "selectedItems")
     }
     
+    // MARK: NSCopying
+    
+    public override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = super.copyWithZone(zone)
+        guard let result = copy as? SBATrackedDataSelectionResult else { return copy }
+        result.selectedItems = self.selectedItems
+        return result
+    }
+    
+    // MARK: Equality
+    
     public override func isEqual(object: AnyObject?) -> Bool {
         guard super.isEqual(object), let obj = object as? SBATrackedDataSelectionResult else { return false }
-        if let itemsA = self.selectedItems, let itemsB = obj.selectedItems {
-            return itemsA == itemsB
-        }
-        else {
-            return (self.selectedItems == nil) && (obj.selectedItems == nil)
-        }
+        return SBAObjectEquality(self.selectedItems, obj.selectedItems)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^ SBAObjectHash(self.selectedItems)
     }
 
 }

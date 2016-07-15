@@ -34,6 +34,8 @@
 #import <ResearchKit/ResearchKit.h>
 #import <BridgeSDK/BridgeSDK.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SBAActivityResult : ORKTaskResult
 
 @property (nonatomic, readwrite) SBBScheduledActivity *schedule;
@@ -41,3 +43,5 @@
 @property (nonatomic, readwrite, copy) NSString *schemaIdentifier;
 
 @end
+
+NS_ASSUME_NONNULL_END
