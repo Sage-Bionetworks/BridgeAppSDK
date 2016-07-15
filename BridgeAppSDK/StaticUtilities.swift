@@ -43,6 +43,6 @@ func SBAObjectEquality(objA: NSObject?, _ objB: NSObject?) -> Bool {
     return objA == objB
 }
 
-func SBAObjectHash(obj: NSObject?) -> Int {
+func SBAObjectHash(obj: AnyObject?) -> Int {
     return obj?.hash ?? 0
 }

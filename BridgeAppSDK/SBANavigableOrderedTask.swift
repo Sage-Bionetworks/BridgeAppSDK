@@ -248,12 +248,25 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
-        if let additionalTaskResults = self.additionalTaskResults {
-            aCoder.encodeObject(additionalTaskResults, forKey: "additionalTaskResults")
-        }
-        if let conditionalRule = self.conditionalRule {
-            aCoder.encodeObject(conditionalRule, forKey: "conditionalRule")
-        }
+        aCoder.encodeObject(self.additionalTaskResults, forKey: "additionalTaskResults")
+        aCoder.encodeObject(self.conditionalRule, forKey: "conditionalRule")
         aCoder.encodeObject(self.orderedStepIdentifiers, forKey: "orderedStepIdentifiers")
+    }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object as? SBANavigableOrderedTask else { return false }
+        return super.isEqual(object) &&
+            SBAObjectEquality(self.additionalTaskResults, object.additionalTaskResults) &&
+            SBAObjectEquality(self.orderedStepIdentifiers, object.orderedStepIdentifiers) &&
+            SBAObjectEquality(self.conditionalRule as? NSObject, object.conditionalRule as? NSObject)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^
+            SBAObjectHash(self.additionalTaskResults) ^
+            SBAObjectHash(self.orderedStepIdentifiers) ^
+            SBAObjectHash(self.conditionalRule)
     }
 }

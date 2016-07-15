@@ -93,6 +93,7 @@
 		FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */; };
 		FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */; };
 		FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF6484161CB617790055B9E7 /* MedicationTracking.json */; };
+		FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */; };
 		FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CEF81D00B5C4002C456D /* consent_1welcome.html */; };
 		FF78CF101D00B617002C456D /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */; };
 		FF78CF131D00B620002C456D /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF151D00B620002C456D /* consent_3activities.html */; };
@@ -449,6 +450,7 @@
 		FF64114C1CB4651F007FB9E1 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
 		FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
 		FF6484161CB617790055B9E7 /* MedicationTracking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MedicationTracking.json; sourceTree = "<group>"; };
+		FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEqualityTests.m; sourceTree = "<group>"; };
 		FF78CEF71D00B5C4002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_1welcome.html; sourceTree = "<group>"; };
 		FF78CF111D00B617002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_2quiz_headsup.html; sourceTree = "<group>"; };
 		FF78CF141D00B620002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_3activities.html; sourceTree = "<group>"; };
@@ -687,20 +689,21 @@
 				FBE5515A1C6D265000C9E1AA /* MockObjects */,
 				801040C41C5A843D00D26E19 /* Info.plist */,
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
-				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
-				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
-				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
-				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
-				FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */,
-				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
-				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
 				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
-				FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */,
-				FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */,
-				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
+				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */,
+				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
+				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
+				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
+				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
+				FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */,
+				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
+				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
+				FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */,
+				FF8DDFE21CB63E92006D1AFA /* SBATrackedDataStoreTests.m */,
+				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -1719,6 +1722,7 @@
 				FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */,
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */,
+				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
 				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,

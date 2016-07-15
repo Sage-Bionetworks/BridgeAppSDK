@@ -139,6 +139,16 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
         super.encodeWithCoder(aCoder)
         self.sharedEncoding(aCoder)
     }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        return super.isEqual(object) && sharedEquality(object)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^ sharedHash()
+    }
 }
 
 public final class SBASurveyFormItem : ORKFormItem {
@@ -165,15 +175,26 @@ public final class SBASurveyFormItem : ORKFormItem {
     // MARK: NSSecureCoding
     
     required public init?(coder aDecoder: NSCoder) {
-        rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
+        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
         super.init(coder: aDecoder);
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
-        if let rulePredicate = self.rulePredicate {
-            aCoder.encodeObject(rulePredicate, forKey: "rulePredicate")
-        }
+        aCoder.encodeObject(self.rulePredicate, forKey: "rulePredicate")
+    }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object as? SBASurveyFormItem else { return false }
+        return super.isEqual(object) &&
+            SBAObjectEquality(self.rulePredicate, object.rulePredicate)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^
+            SBAObjectHash(self.rulePredicate)
     }
 }
 
@@ -220,6 +241,7 @@ public extension SBASurveyNavigationStep {
     func sharedCopying(copy: AnyObject) -> AnyObject {
         guard let step = copy as? SBASurveyNavigationStep else { return copy }
         step.skipToStepIdentifier = self.skipToStepIdentifier
+        step.skipIfPassed = self.skipIfPassed
         return step
     }
     
@@ -239,5 +261,15 @@ public extension SBASurveyNavigationStep {
             self.skipToStepIdentifier = skipIdentifier
         }
         self.skipIfPassed = surveyItem.skipIfPassed
+    }
+    
+    func sharedHash() -> Int {
+        return SBAObjectHash(self.skipToStepIdentifier)
+    }
+    
+    func sharedEquality(object: AnyObject?) -> Bool {
+        guard let object = object as? SBASurveyNavigationStep else { return false }
+        return SBAObjectEquality(self.skipToStepIdentifier, object.skipToStepIdentifier) &&
+            self.skipIfPassed == object.skipIfPassed
     }
 }

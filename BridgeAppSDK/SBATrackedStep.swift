@@ -124,7 +124,7 @@ extension SBATrackedDataObject: SBATextChoice {
 
 public class SBATrackedFormStep: ORKFormStep {
     
-    public var trackingType: SBATrackingStepType!
+    public var trackingType: SBATrackingStepType = .introduction
     public var trackEach: Bool = false
     
     public var trackedItemIdentifier: String? {
@@ -151,7 +151,7 @@ public class SBATrackedFormStep: ORKFormStep {
     
     public init(surveyItem: SBATrackedStepSurveyItem, items:[SBATrackedDataObject]) {
         super.init(identifier: surveyItem.identifier)
-        self.trackingType = surveyItem.trackingType
+        self.trackingType = surveyItem.trackingType!
         self.textFormat = surveyItem.textFormat
         self.trackEach = surveyItem.trackEach
         if let formSurvey = surveyItem as? SBAFormStepSurveyItem {
@@ -172,7 +172,7 @@ public class SBATrackedFormStep: ORKFormStep {
     private var _shouldSkipStep = false
     
     public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
-        switch self.trackingType! {
+        switch self.trackingType {
 
         // For selection type, only care about building the form items for the first round
         case .selection where (self.formItems == nil):

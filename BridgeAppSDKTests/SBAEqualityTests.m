@@ -41,6 +41,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import <HealthKit/HealthKit.h>
 #import <MapKit/MapKit.h>
+@import BridgeAppSDK;
 
 @interface ClassProperty : NSObject
 
@@ -87,7 +88,6 @@
 
 @end
 
-// Classes that do not have an
 #define MAKE_TEST_INIT(class, block) \
 @interface class (SBAEqualityTests) \
 - (instancetype)test_init; \
@@ -100,30 +100,12 @@ return block(); \
 @end \
 
 // List of all classes with known special-case initializers b/c the [self init] is marked as unavailable
-MAKE_TEST_INIT(ORKStepNavigationRule, ^{return [super init];});
-MAKE_TEST_INIT(ORKSkipStepNavigationRule, ^{return [super init];});
-MAKE_TEST_INIT(ORKAnswerFormat, ^{return [super init];});
-MAKE_TEST_INIT(ORKLoginStep, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString title:@"title" text:@"text" loginViewControllerClass:NSClassFromString(@"ORKLoginStepViewController") ];});
-MAKE_TEST_INIT(ORKVerificationStep, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString text:@"text" verificationViewControllerClass:NSClassFromString(@"ORKVerificationStepViewController") ];});
 MAKE_TEST_INIT(ORKStep, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString];});
-MAKE_TEST_INIT(ORKReviewStep, ^{return [[self class] standaloneReviewStepWithIdentifier:[NSUUID UUID].UUIDString steps:@[] resultSource:[ORKTaskResult new]];});
+MAKE_TEST_INIT(SBADataObject, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString];});
 MAKE_TEST_INIT(ORKOrderedTask, ^{return [self initWithIdentifier:@"test1" steps:nil];});
-MAKE_TEST_INIT(ORKImageChoice, ^{return [super init];});
-MAKE_TEST_INIT(ORKTextChoice, ^{return [super init];});
-MAKE_TEST_INIT(ORKPredicateStepNavigationRule, ^{return [self initWithResultPredicates:@[[ORKResultPredicate predicateForBooleanQuestionResultWithResultSelector:[ORKResultSelector selectorWithResultIdentifier:@"test"] expectedAnswer:YES]] destinationStepIdentifiers:@[@"test2"]];});
-MAKE_TEST_INIT(ORKResultSelector, ^{return [self initWithResultIdentifier:@"resultIdentifier"];});
-MAKE_TEST_INIT(ORKRecorderConfiguration, ^{return [self initWithIdentifier:@"testRecorder"];});
-MAKE_TEST_INIT(ORKAccelerometerRecorderConfiguration, ^{return [super initWithIdentifier:@"testRecorder"];});
-MAKE_TEST_INIT(ORKHealthQuantityTypeRecorderConfiguration, ^{ return [super initWithIdentifier:@"testRecorder"];});
-MAKE_TEST_INIT(ORKAudioRecorderConfiguration, ^{ return [super initWithIdentifier:@"testRecorder"];});
-MAKE_TEST_INIT(ORKDeviceMotionRecorderConfiguration, ^{ return [super initWithIdentifier:@"testRecorder"];});
-MAKE_TEST_INIT(ORKLocation, (^{
-    ORKLocation *location = [self initWithCoordinate:CLLocationCoordinate2DMake(2.0, 3.0) region:[[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(2.0, 3.0) radius:100.0 identifier:@"identifier"] userInput:@"addressString" addressDictionary:@{@"city":@"city", @"street":@"street"}];
-    return location;
-}));
-
-
-
+MAKE_TEST_INIT(SBAConsentSignature, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString];});
+MAKE_TEST_INIT(ORKFormItem, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString text:[NSUUID UUID].UUIDString answerFormat:nil];});
+MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID].UUIDString];});
 
 @interface SBAEqualityTests : XCTestCase <NSKeyedUnarchiverDelegate>
 
@@ -131,7 +113,24 @@ MAKE_TEST_INIT(ORKLocation, (^{
 
 @implementation SBAEqualityTests
 
-
+- (NSArray <Class> *)classesWithCopyingAndCoding {
+    // Swift classes are not registered with obj-c runtime so instead just use a list
+    return @[[SBATrackedDataObjectCollection class],
+             [SBAMedication class],
+             [SBATrackedDataObject class],
+             [SBADataObject class],
+             //[SBAActivityResult class], TODO: FIXME!! syoung 07/15/2016 BridgeSDK objects do not implement Equality or Encoding
+             [SBAConsentSignature class],
+             [SBANavigableOrderedTask class],
+             [SBADirectNavigationStep class],
+             [SBASubtaskStep class],
+             [SBASurveyFormStep class],
+             [SBASurveySubtaskStep class],
+             [SBASurveyFormItem class],
+             [SBATrackedFormStep class],
+             [SBATrackedDataSelectionResult class]
+             ];
+}
 
 - (void)setUp {
     [super setUp];
@@ -143,166 +142,79 @@ MAKE_TEST_INIT(ORKLocation, (^{
     [super tearDown];
 }
 
-- (void)todo_testORKSecureCoding {
+- (void)testCoding {
     
-    NSArray<Class> *classesWithSecureCoding = [self classesWithSecureCoding];
-    
-    // Predefined exception
-    NSArray *knownNotSerializedProperties = @[];
-    NSArray *propertyExclusionList = [self propertyExclusionList];
+    NSArray<Class> *classesWithSecureCoding = [self classesWithCopyingAndCoding];
     
     // Test Each class
     for (Class aClass in classesWithSecureCoding) {
-        id instance = [self instanceForClass:aClass];
         
-        // Find all properties of this class
-        NSMutableArray *propertyNames = [NSMutableArray array];
-        unsigned int count;
-        objc_property_t *props = class_copyPropertyList(aClass, &count);
-        for (int i = 0; i < count; i++) {
-            objc_property_t property = props[i];
-            ClassProperty *p = [[ClassProperty alloc] initWithObjcProperty:property];
-            
-            if ([propertyExclusionList containsObject: p.propertyName] == NO) {
-                if (p.isPrimitiveType == NO) {
-                    [self applySomeValueToClassProperty:p forObject:instance index:0 forEqualityCheck:YES];
-                }
-                [propertyNames addObject:p.propertyName];
-            }
-        }
+        NSLog(@"ENCODE: %@", NSStringFromClass(aClass));
+        id instance = [self instanceWithPropertiesSetForClass:aClass];
         
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:instance];
         XCTAssertNotNil(data);
         
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-        unarchiver.requiresSecureCoding = YES;
+        //unarchiver.requiresSecureCoding = YES;
         unarchiver.delegate = self;
-        id newInstance = [unarchiver decodeObjectOfClasses:[NSSet setWithArray:classesWithSecureCoding] forKey:NSKeyedArchiveRootObjectKey];
         
-        // Set of classes we can check for equality. Would like to get rid of this once we implement
-        NSSet *checkableClasses = [NSSet setWithObjects:[NSNumber class], [NSString class], [NSDictionary class], [NSURL class], nil];
-        // All properties should have matching fields in dictionary (allow predefined exceptions)
-        for (NSString *pName in propertyNames) {
-            id newValue = [newInstance valueForKey:pName];
-            id oldValue = [instance valueForKey:pName];
-            
-            if (newValue == nil) {
-                NSString *notSerializedProperty = [NSString stringWithFormat:@"%@.%@", NSStringFromClass(aClass), pName];
-                BOOL success = [knownNotSerializedProperties containsObject:notSerializedProperty];
-                if (!success) {
-                    XCTAssertTrue(success, "Unexpected notSerializedProperty = %@", notSerializedProperty);
-                }
-            }
-            for (Class c in checkableClasses) {
-                if ([oldValue isKindOfClass:c]) {
-                    if ([newValue isKindOfClass:[NSURL class]] || [oldValue isKindOfClass:[NSURL class]]) {
-                        if (![[newValue absoluteString] isEqualToString:[oldValue absoluteString]]) {
-                            XCTAssertTrue([[newValue absoluteString] isEqualToString:[oldValue absoluteString]]);
-                        }
-                    } else {
-                        XCTAssertEqualObjects(newValue, oldValue);
-                    }
-                    break;
-                }
-            }
-        }
+        // TODO: syoung 07/15/2016 Research how to use decoding with secure coding in swift
+        id unarchivedInstance = [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
+        //[unarchiver decodeObjectOfClasses:[NSSet setWithArray:classesWithSecureCoding] forKey:NSKeyedArchiveRootObjectKey];
         
-        // NSData and NSDateComponents in your properties mess up the following test.
-        // NSDateComponents - seems to be due to serializing and then deserializing introducing a leap month:no flag.
-        if (aClass == [NSDateComponents class] || aClass == [ORKDateQuestionResult class] || aClass == [ORKDateAnswerFormat class] || aClass == [ORKDataResult class]) {
-            continue;
-        }
+        XCTAssertEqual([instance hash], [unarchivedInstance hash]);
+        XCTAssertEqualObjects(unarchivedInstance, instance);
         
-        NSData *data2 = [NSKeyedArchiver archivedDataWithRootObject:newInstance];
-        
-        NSKeyedUnarchiver *unarchiver2 = [[NSKeyedUnarchiver alloc] initForReadingWithData:data2];
-        unarchiver2.requiresSecureCoding = YES;
-        unarchiver2.delegate = self;
-        id newInstance2 = [unarchiver2 decodeObjectOfClasses:[NSSet setWithArray:classesWithSecureCoding] forKey:NSKeyedArchiveRootObjectKey];
-        NSData *data3 = [NSKeyedArchiver archivedDataWithRootObject:newInstance2];
-        
-        if (![data isEqualToData:data2]) { // allow breakpointing
-            if (![aClass isSubclassOfClass:[ORKConsentSection class]]) {
-                // ORKConsentSection mis-matches, but it is still "equal" because
-                // the net custom animation URL is a match.
-                XCTAssertEqualObjects(data, data2, @"data mismatch for %@", NSStringFromClass(aClass));
-            }
-        }
-        if (![data2 isEqualToData:data3]) { // allow breakpointing
-            XCTAssertEqualObjects(data2, data3, @"data mismatch for %@", NSStringFromClass(aClass));
-        }
-        
-        if (![newInstance isEqual:instance]) {
-            XCTAssertEqualObjects(newInstance, instance, @"equality mismatch for %@", NSStringFromClass(aClass));
-        }
-        if (![newInstance2 isEqual:instance]) {
-            XCTAssertEqualObjects(newInstance2, instance, @"equality mismatch for %@", NSStringFromClass(aClass));
+        if (![instance isEqual:unarchivedInstance]) {
+            [self checkPropertiesForClass:aClass instance:instance copiedInstance:unarchivedInstance];
         }
     }
 }
 
-- (void)todo_testCopying {
+- (void)testCopying {
     
-    NSArray<Class> *classesWithCopying = [self classesWithCopying];
-    
-    // Predefined exception
-    NSArray *propertyExclusionList = [self propertyExclusionList];
+    NSArray<Class> *classesWithCopying = [self classesWithCopyingAndCoding];
     
     // Test Each class
     for (Class aClass in classesWithCopying) {
-        id instance = [self instanceForClass:aClass];
-        
-        // Find all properties of this class
-        NSMutableArray *propertyNames = [NSMutableArray array];
-        unsigned int count;
-        objc_property_t *props = class_copyPropertyList(aClass, &count);
-        for (int i = 0; i < count; i++) {
-            objc_property_t property = props[i];
-            ClassProperty *p = [[ClassProperty alloc] initWithObjcProperty:property];
-            
-            if ([propertyExclusionList containsObject: p.propertyName] == NO) {
-                if (p.isPrimitiveType == NO) {
-                    if ([instance valueForKey:p.propertyName] == nil) {
-                        [self applySomeValueToClassProperty:p forObject:instance index:0 forEqualityCheck:YES];
-                    }
-                }
-                [propertyNames addObject:p.propertyName];
-            }
-        }
-        
+        NSLog(@"COPY: %@", NSStringFromClass(aClass));
+        id instance = [self instanceWithPropertiesSetForClass:aClass];
         id copiedInstance = [instance copy];
-        if (![copiedInstance isEqual:instance]) {
-            XCTAssertEqualObjects(copiedInstance, instance);
-        }
+        XCTAssertEqual([instance hash], [copiedInstance hash]);
+        XCTAssertEqualObjects(copiedInstance, instance);
         
-        for (int i = 0; i < count; i++) {
-            objc_property_t property = props[i];
-            ClassProperty *p = [[ClassProperty alloc] initWithObjcProperty:property];
-            
-            if ([propertyExclusionList containsObject: p.propertyName] == NO) {
-                if (p.isPrimitiveType == NO) {
-                    copiedInstance = [instance copy];
-                    if (instance == copiedInstance) {
-                        // Totally immutable object.
-                        continue;
-                    }
-                    if ([self applySomeValueToClassProperty:p forObject:copiedInstance index:1 forEqualityCheck:YES])
-                    {
-                        if ([copiedInstance isEqual:instance]) {
-                            XCTAssertNotEqualObjects(copiedInstance, instance);
-                        }
-                        [self applySomeValueToClassProperty:p forObject:copiedInstance index:0 forEqualityCheck:YES];
-                        XCTAssertEqualObjects(copiedInstance, instance);
-                        
-                        [copiedInstance setValue:nil forKey:p.propertyName];
-                        XCTAssertNotEqualObjects(copiedInstance, instance);
-                    }
+        if (![instance isEqual:copiedInstance]) {
+            [self checkPropertiesForClass:aClass instance:instance copiedInstance:copiedInstance];
+        }
+    }
+}
+
+- (void)checkPropertiesForClass:(Class)aClass instance:(id)instance copiedInstance:(id)copiedInstance {
+    // Predefined exception
+    NSArray *propertyExclusionList = [self propertyExclusionList];
+    
+    // Find all properties of this class
+    unsigned int count;
+    objc_property_t *props = class_copyPropertyList(aClass, &count);
+    for (int i = 0; i < count; i++) {
+        objc_property_t property = props[i];
+        ClassProperty *p = [[ClassProperty alloc] initWithObjcProperty:property];
+        
+        if ([propertyExclusionList containsObject: p.propertyName] == NO) {
+            if (p.isPrimitiveType == NO) {
+                id instanceProp = [instance valueForKey:p.propertyName];
+                id copyProp = [copiedInstance valueForKey:p.propertyName];
+                if (instanceProp == nil) {
+                    XCTAssertNil(copyProp, @"%@", p.propertyName);
+                }
+                else {
+                    XCTAssertEqualObjects(instanceProp, copyProp, @"%@", p.propertyName);
                 }
             }
         }
     }
 }
-
 
 
 #pragma mark - NSKeyedUnarchiverDelegate
@@ -314,73 +226,18 @@ MAKE_TEST_INIT(ORKLocation, (^{
 
 #pragma mark - helper methods
 
+static NSString *classPrefix = @"SBA";
+
 - (NSArray <NSString *> *)propertyExclusionList {
     return @[@"superclass",
-            @"description",
-            @"descriptionSuffix",
-            @"debugDescription",
-            @"hash",
-            @"requestedHealthKitTypesForReading",
-            @"requestedHealthKitTypesForWriting",
-            @"healthKitUnit",
-            @"firstResult",
-            ];
-}
-
-- (NSArray<Class> *)classesWithSecureCoding {
-    
-    NSArray *classesExcluded = @[]; // classes not intended to be serialized standalone
-    NSMutableArray *stringsForClassesExcluded = [NSMutableArray array];
-    for (Class c in classesExcluded) {
-        [stringsForClassesExcluded addObject:NSStringFromClass(c)];
-    }
-    
-    // Find all classes that conform to NSSecureCoding
-    NSMutableArray<Class> *classesWithSecureCoding = [NSMutableArray new];
-    int numClasses = objc_getClassList(NULL, 0);
-    Class classes[numClasses];
-    numClasses = objc_getClassList(classes, numClasses);
-    for (int index = 0; index < numClasses; index++) {
-        Class aClass = classes[index];
-        if ([stringsForClassesExcluded containsObject:NSStringFromClass(aClass)]) {
-            continue;
-        }
-        
-        if ([NSStringFromClass(aClass) hasPrefix:@"SBA"] &&
-            [aClass conformsToProtocol:@protocol(NSSecureCoding)]) {
-            [classesWithSecureCoding addObject:aClass];
-        }
-    }
-    
-    return [classesWithSecureCoding copy];
-}
-
-- (NSArray <Class> *)classesWithCopying {
-    
-    NSArray *classesExcluded = @[]; // classes not intended to be serialized standalone
-    NSMutableArray *stringsForClassesExcluded = [NSMutableArray new];
-    for (Class c in classesExcluded) {
-        [stringsForClassesExcluded addObject:NSStringFromClass(c)];
-    }
-    
-    // Find all classes that conform to NSSecureCoding
-    NSMutableArray *classesWithCopying = [NSMutableArray new];
-    int numClasses = objc_getClassList(NULL, 0);
-    Class classes[numClasses];
-    numClasses = objc_getClassList(classes, numClasses);
-    for (int index = 0; index < numClasses; index++) {
-        Class aClass = classes[index];
-        if ([stringsForClassesExcluded containsObject:NSStringFromClass(aClass)]) {
-            continue;
-        }
-        
-        if ([NSStringFromClass(aClass) hasPrefix:@"ORK"] &&
-            [aClass conformsToProtocol:@protocol(NSCopying)]) {
-            
-            [classesWithCopying addObject:aClass];
-        }
-    }
-    return classesWithCopying;
+             @"description",
+             @"debugDescription",
+             @"hash",
+             @"choiceDetail",
+             @"requestedHealthKitTypesForReading",
+             @"learnMoreHTMLContent",
+             @"trackedItemIdentifier",
+             ];
 }
 
 - (id)instanceForClass:(Class)c {
@@ -391,7 +248,32 @@ MAKE_TEST_INIT(ORKLocation, (^{
     }
 }
 
-- (BOOL)applySomeValueToClassProperty:(ClassProperty *)p forObject:(id)instance index:(NSInteger)index forEqualityCheck:(BOOL)equality {
+- (id)instanceWithPropertiesSetForClass:(Class)aClass {
+    
+    id instance = [self instanceForClass:aClass];
+    
+    // Predefined exception
+    NSArray *propertyExclusionList = [self propertyExclusionList];
+
+    // Find all properties of this class
+    unsigned int count;
+    objc_property_t *props = class_copyPropertyList(aClass, &count);
+    for (int i = 0; i < count; i++) {
+        objc_property_t property = props[i];
+        ClassProperty *p = [[ClassProperty alloc] initWithObjcProperty:property];
+        
+        // Set the value for properties that are simple to something non-nil
+        if (([propertyExclusionList containsObject: p.propertyName] == NO) &&
+            (p.isPrimitiveType == NO) &&
+            ([instance valueForKey:p.propertyName] == nil)) {
+            [self applySomeValueToClassProperty:p forObject:instance index:0];
+        }
+    }
+    
+    return instance;
+}
+
+- (BOOL)applySomeValueToClassProperty:(ClassProperty *)p forObject:(id)instance index:(NSInteger)index {
     // return YES if the index makes it distinct
     
     Class aClass = [instance class];
@@ -399,34 +281,24 @@ MAKE_TEST_INIT(ORKLocation, (^{
     if (p.propertyClass == [NSObject class] && (aClass == [ORKTextChoice class]|| aClass == [ORKImageChoice class] || (aClass == [ORKQuestionResult class])))
     {
         // Map NSObject to string, since it's used where either a string or a number is acceptable
-        [instance setValue:index?@"blah":@"test" forKey:p.propertyName];
-    } else if (p.propertyClass == [NSNumber class]) {
-        [instance setValue:index?@(12):@(123) forKey:p.propertyName];
-    } else if (p.propertyClass == [NSURL class]) {
-        NSURL *url = [NSURL fileURLWithFileSystemRepresentation:[index?@"xxx":@"blah" UTF8String]  isDirectory:NO relativeToURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
+        [instance setValue:(index ? @"test1" : @"test2") forKey:p.propertyName];
+    }
+    else if (p.propertyClass == [NSString class]) {
+        [instance setValue:(index ? @"test1" : @"test2") forKey:p.propertyName];
+    }
+    else if (p.propertyClass == [NSNumber class]) {
+        [instance setValue:(index ? @123 : @12) forKey:p.propertyName];
+    }
+    else if (p.propertyClass == [NSURL class]) {
+        NSURL *url = [NSURL fileURLWithFileSystemRepresentation:[(index ? @"test1" : @"test2") UTF8String] isDirectory:NO relativeToURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
         [instance setValue:url forKey:p.propertyName];
         [[NSFileManager defaultManager] createFileAtPath:[url path] contents:nil attributes:nil];
-    } else if (p.propertyClass == [HKUnit class]) {
-        [instance setValue:[HKUnit unitFromString:index?@"g":@"kg"] forKey:p.propertyName];
-    } else if (p.propertyClass == [HKQuantityType class]) {
-        [instance setValue:[HKQuantityType quantityTypeForIdentifier:index?HKQuantityTypeIdentifierActiveEnergyBurned : HKQuantityTypeIdentifierBodyMass] forKey:p.propertyName];
-    } else if (p.propertyClass == [HKCharacteristicType class]) {
-        [instance setValue:[HKCharacteristicType characteristicTypeForIdentifier:index?HKCharacteristicTypeIdentifierBiologicalSex: HKCharacteristicTypeIdentifierBloodType] forKey:p.propertyName];
-    } else if (p.propertyClass == [NSCalendar class]) {
-        [instance setValue:index?[NSCalendar calendarWithIdentifier:NSCalendarIdentifierChinese]:[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] forKey:p.propertyName];
-    } else if (p.propertyClass == [NSTimeZone class]) {
-        [instance setValue:index?[NSTimeZone timeZoneWithName:[NSTimeZone knownTimeZoneNames][0]]:[NSTimeZone timeZoneForSecondsFromGMT:1000] forKey:p.propertyName];
-    } else if (p.propertyClass == [ORKLocation class]) {
-        [instance setValue:[[ORKLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(index? 2.0 : 3.0, 3.0) region:[[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(2.0, 3.0) radius:100.0 identifier:@"identifier"] userInput:@"addressString" addressDictionary:@{@"city":@"city", @"street":@"street"}] forKey:p.propertyName];
-    } else if (p.propertyClass == [CLCircularRegion class]) {
-        [instance setValue:[[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(index? 2.0 : 3.0, 3.0) radius:100.0 identifier:@"identifier"] forKey:p.propertyName];
-    } else if (p.propertyClass == [NSPredicate class]) {
-        [instance setValue:[NSPredicate predicateWithFormat:index?@"1 == 1":@"1 == 2"] forKey:p.propertyName];
-    } else if (equality && (p.propertyClass == [UIImage class])) {
-        // do nothing - meaningless for the equality check
-        return NO;
-    } else if (aClass == [ORKReviewStep class] && [p.propertyName isEqualToString:@"resultSource"]) {
-        [instance setValue:[[ORKTaskResult alloc] initWithIdentifier:@"blah"] forKey:p.propertyName];
+    }
+    else if (p.propertyClass == [NSPredicate class]) {
+        [instance setValue:[NSPredicate predicateWithFormat:index ? @"1 == 2" : @"1 == 1"] forKey:p.propertyName];
+    }
+    else if (p.propertyClass == [UIImage class]) {
+        // do nothing - meaningless for the equaliy check
         return NO;
     } else {
         id instanceForChild = [self instanceForClass:p.propertyClass];
