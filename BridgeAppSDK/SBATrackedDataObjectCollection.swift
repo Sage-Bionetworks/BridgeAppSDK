@@ -115,7 +115,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         if let previous = previousStep as? SBATrackedFormStep {
             
             // update the previous step with the result
-            switch (previous.trackingType!) {
+            switch (previous.trackingType) {
             case .selection:
                 self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
             case .frequency:
