@@ -38,29 +38,26 @@ public class Localization: NSObject {
     static let localeBundle = NSBundle(forClass: Localization.classForCoder())
     static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
     
-    public class var additionalBundles: [NSBundle] {
-        return [localeORKBundle]
+    public class var allBundles: [NSBundle] {
+        return [localeBundle, localeORKBundle]
     }
         
     public static func localizedString(key: String) -> String {
-        let str = NSLocalizedString(key, tableName: nil, bundle: localeBundle, value: key, comment: "")
-        if (str == key) {
-            if let defaultStr = listOfAllLocalizedStrings[key] {
-                return defaultStr
-            }
-            else {
-                for bundle in additionalBundles {
-                    // If the string is not found in the BridgeAppSDK bundle then look in the other bundles that are
-                    // in the list of bundles to search.
-                    let bundleStr = NSLocalizedString(key, tableName: nil, bundle: bundle, value: key, comment: "")
-                    if bundleStr != key {
-                        // If something is found where the returned
-                        return bundleStr
-                    }
-                }
+        // Look in these bundles for a localization for the given key
+        for bundle in allBundles {
+            let bundleStr = NSLocalizedString(key, tableName: nil, bundle: bundle, value: key, comment: "")
+            if bundleStr != key {
+                // If something is found where the returned
+                return bundleStr
             }
         }
-        return str
+        // If the localized string isn't found in the localization bundles then 
+        // fall back to the list of strings included here.
+        if let defaultStr = listOfAllLocalizedStrings[key] {
+            return defaultStr
+        }
+        // Fallback to the key
+        return key
     }
     
     public static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
