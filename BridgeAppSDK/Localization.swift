@@ -35,11 +35,12 @@ import UIKit
 
 public class Localization: NSObject {
     
+    static let localeMainBundle = NSBundle.mainBundle()
     static let localeBundle = NSBundle(forClass: Localization.classForCoder())
     static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
     
     public class var allBundles: [NSBundle] {
-        return [localeBundle, localeORKBundle]
+        return [localeMainBundle, localeBundle, localeORKBundle]
     }
         
     public static func localizedString(key: String) -> String {
