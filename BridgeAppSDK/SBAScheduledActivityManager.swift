@@ -405,13 +405,18 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     // Expose method for building archive to allow for testing and subclass override
     public func archiveForActivityResult(activityResult: SBAActivityResult) -> SBAActivityArchive? {
-        if let archive = SBAActivityArchive(result: activityResult) {
+        if let archive = SBAActivityArchive(result: activityResult,
+                                            jsonValidationMapping: jsonValidationMapping(activityResult: activityResult)) {
             do {
                 try archive.completeArchive()
                 return archive
             }
             catch {}
         }
+        return nil
+    }
+    
+    public func jsonValidationMapping(activityResult activityResult: SBAActivityResult) -> [String: NSPredicate]?{
         return nil
     }
     
