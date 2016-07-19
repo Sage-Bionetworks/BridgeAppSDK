@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSURL *unencryptedURL;
 
+@property (nonatomic, readonly, nullable) NSDictionary <NSString *, NSPredicate *> *jsonValidationMapping;
+
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
@@ -52,7 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return    APCDataArchive      An instance of APCDataArchive
  */
-- (id)initWithReference:(NSString *)reference NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithReference:(NSString *)reference
+  jsonValidationMapping:(nullable NSDictionary <NSString *, NSPredicate *> *)jsonValidationMapping NS_DESIGNATED_INITIALIZER;
 
 
 /**

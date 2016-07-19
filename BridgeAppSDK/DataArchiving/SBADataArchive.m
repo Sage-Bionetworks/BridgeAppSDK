@@ -59,6 +59,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 @property (nonatomic, strong) NSMutableArray *zipEntries;
 @property (nonatomic, strong) NSMutableArray *filesList;
 @property (nonatomic, strong) NSMutableDictionary *infoDict;
+@property (nonatomic, strong) NSMutableArray *expectedJsonFilenames;
 
 @end
 
@@ -72,11 +73,13 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 }
 
 //designated initializer
-- (id)initWithReference: (NSString *)reference
-{
+- (instancetype)initWithReference:(NSString *)reference
+            jsonValidationMapping:(nullable NSDictionary <NSString *, NSPredicate *> *)jsonValidationMapping {
     self = [super init];
     if (self) {
-        _reference = reference;
+        _reference = [reference copy];
+        _jsonValidationMapping = [jsonValidationMapping copy];
+        _expectedJsonFilenames = [[jsonValidationMapping allKeys] mutableCopy];
         [self commonInit];
     }
     
@@ -133,6 +136,19 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 - (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename
 {
+    SBALogDebug(@"Archiving %@: %@", filename, dictionary);
+    
+    NSPredicate *validationPredicate = self.jsonValidationMapping[filename];
+    if (validationPredicate && ![validationPredicate evaluateWithObject:dictionary]) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:1
+                                         userInfo:@{ @"filename": filename,
+                                                     @"json": dictionary,
+                                                     @"validationPredicate": validationPredicate}];
+        SBALogError2(error);
+        NSAssert1(false, @"%@", error);
+    }
+    [self.expectedJsonFilenames removeObject:filename];
+    
     NSError * serializationError;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&serializationError];
         
@@ -189,6 +205,20 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     BOOL success = YES;
     NSError *internalError = nil;
     if (!self.isEmpty) {
+        
+        if (self.expectedJsonFilenames.count > 0) {
+            NSString *filenames = [self.expectedJsonFilenames componentsJoinedByString:@","];
+            NSError *validationError = [NSError errorWithDomain:NSStringFromClass([self class]) code:1
+                                             userInfo:@{ @"message": [NSString stringWithFormat:@"Missing expected json files: %@", filenames]
+                                                         }];
+            SBALogError2(validationError);
+            NSAssert1(false, @"%@", validationError);
+            if (error) {
+                *error = validationError;
+                return NO;
+            }
+        }
+        
         [self.infoDict setObject:self.filesList forKey:kFilesKey];
         
         [self.infoDict setObject:self.reference forKey:kItemKey];
