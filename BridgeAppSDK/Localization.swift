@@ -221,6 +221,9 @@ public class Localization: NSObject {
             "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter full name", comment:"Placeholder for the full name during registration."),
             "SBA_CONFIRM_EXTERNALID_TITLE" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Confirm", comment:"Title for the confirmation for registering via external ID"),
             "SBA_CONFIRM_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID again", comment:"Placeholder for the confirmation for registering via external ID"),
+            
+            // State
+            "SBA_COMPLETED" : NSLocalizedString("SBA_COMPLETED", tableName: nil, bundle: localeBundle, value:"Completed", comment:"Short phrase to use to indicate that an activity is completed."),
         ]
     }()
     

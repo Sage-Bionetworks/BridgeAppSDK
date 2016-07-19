@@ -293,7 +293,7 @@ public extension SBAUserWrapper {
         self.subpopulationGuid = response.subpopulationGuid
     }
     
-    private func emailAndPasswordForExternalId(externalId: String) -> (String?, String?) {
+    public func emailAndPasswordForExternalId(externalId: String) -> (String?, String?) {
         
         guard let emailFormat = self.bridgeInfo?.emailFormatForLoginViaExternalId else {
             assertionFailure("'emailFormatForRegistrationViaExternalId' key missing from BridgeInfo")
