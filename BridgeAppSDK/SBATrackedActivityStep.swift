@@ -65,8 +65,7 @@ extension SBATrackedActivitySurveyItem {
                 guard item.tracking else { return nil }
                 return baseStep.copyWithIdentifier(item.identifier)
             })
-            let task = ORKOrderedTask(identifier: self.identifier, steps: steps)
-            return SBATrackedActivityPageStep(identifier: self.identifier, pageTask: task)
+            return SBATrackedActivityPageStep(identifier: self.identifier, steps: steps)
             
         }
         else {
@@ -144,8 +143,8 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
     private var selectedItemIdentifiers: [String] = []
     
-    override public init(identifier: String, pageTask task: ORKOrderedTask) {
-        super.init(identifier: identifier, pageTask: task)
+    override init(identifier: String, steps: [ORKStep]?) {
+        super.init(identifier: identifier, steps: steps)
     }
     
     override public func stepViewControllerClass() -> AnyClass {
@@ -214,7 +213,7 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
     public init(identifier: String) {
         // Copying requires defining the base class ORKStep init
-        super.init(identifier: identifier, pageTask: ORKOrderedTask(identifier: identifier, steps: nil))
+        super.init(identifier: identifier, steps: nil)
     }
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
