@@ -161,13 +161,6 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         return createSurveyStepWithCustomType(inputItem)
     }
     
-    final func createSurveyStep(inputItem: SBATrackedStepSurveyItem, trackedItems: [SBATrackedDataObject]) -> ORKStep? {
-        guard let trackingType = inputItem.trackingType where trackingType.isTrackedFormStepType() else {
-            return self.createSurveyStep(inputItem)
-        }
-        return SBATrackedFormStep(surveyItem: inputItem, items: trackedItems)
-    }
-    
 }
 
 extension SBASurveyItem {

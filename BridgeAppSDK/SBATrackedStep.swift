@@ -33,10 +33,16 @@
 
 import ResearchKit
 
-public protocol SBATrackedStepSurveyItem: SBASurveyItem {
+public protocol SBATrackedStep {
     var trackingType: SBATrackingStepType? { get }
-    var trackEach: Bool { get }
-    var textFormat: String? { get }
+}
+
+public protocol SBATrackedStepSurveyItem: SBASurveyItem, SBATrackedStep {
+}
+
+public protocol SBATrackedNavigationStep: SBATrackedStep {
+    var shouldSkipStep: Bool { get }
+    func update(selectedItems selectedItems:[SBATrackedDataObject])
 }
 
 public enum SBATrackingStepType: String {
@@ -96,15 +102,6 @@ extension NSDictionary : SBATrackedStepSurveyItem {
         guard let trackingType = self["trackingType"] as? String else { return nil }
         return SBATrackingStepType(rawValue: trackingType)
     }
-    
-    public var textFormat: String? {
-        return self["textFormat"] as? String
-    }
-    
-    public var trackEach: Bool {
-        return self["trackEach"] as? Bool ?? false
-    }
-    
 }
 
 extension SBATrackedDataObject: SBATextChoice {
@@ -122,27 +119,10 @@ extension SBATrackedDataObject: SBATextChoice {
     }
 }
 
-public class SBATrackedFormStep: ORKFormStep {
+public class SBATrackedFormStep: ORKFormStep, SBATrackedNavigationStep {
     
-    public var trackingType: SBATrackingStepType = .introduction
-    public var trackEach: Bool = false
-    
-    public var trackedItemIdentifier: String? {
-        return _trackedItemIdentifier
-    }
-    private var _trackedItemIdentifier: String?
-    
-    public var baseIdentifier: String {
-        // If this *only* has the base then return that
-        guard let suffix = identifierSuffix() where self.identifier.hasSuffix(suffix),
-            let range = self.identifier.rangeOfString(suffix, options: .BackwardsSearch, range: nil, locale: nil)
-            else {
-                return self.identifier
-        }
-        return self.identifier.substringToIndex(range.startIndex)
-    }
-    
-    private var textFormat: String?
+    public var trackingType: SBATrackingStepType?
+
     private var frequencyAnswerFormat: ORKAnswerFormat?
     
     public override init(identifier: String) {
@@ -152,13 +132,8 @@ public class SBATrackedFormStep: ORKFormStep {
     public init(surveyItem: SBATrackedStepSurveyItem, items:[SBATrackedDataObject]) {
         super.init(identifier: surveyItem.identifier)
         self.trackingType = surveyItem.trackingType!
-        self.textFormat = surveyItem.textFormat
-        self.trackEach = surveyItem.trackEach
         if let formSurvey = surveyItem as? SBAFormStepSurveyItem {
             formSurvey.mapStepValues(self)
-            if (self.trackingType == .activity) {
-                formSurvey.buildFormItems(self, isSubtaskStep: false)
-            }
         }
         if let range = surveyItem as? SBANumberRange where (self.trackingType == .frequency) {
             self.frequencyAnswerFormat = range.createAnswerFormat(.scale)
@@ -172,7 +147,8 @@ public class SBATrackedFormStep: ORKFormStep {
     private var _shouldSkipStep = false
     
     public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
-        switch self.trackingType {
+        guard let trackingType = self.trackingType else { return }
+        switch trackingType {
 
         // For selection type, only care about building the form items for the first round
         case .selection where (self.formItems == nil):
@@ -181,71 +157,9 @@ public class SBATrackedFormStep: ORKFormStep {
         case .frequency:
             updateFrequencyFormItems(selectedItems)
             
-        case .activity:
-            updateActivityFormStep(selectedItems)
-            
         default:
             break
         }
-    }
-    
-    public func consolidatedResult(items:[SBATrackedDataObject], taskResult: ORKTaskResult) -> ORKStepResult? {
-        if self.trackingType == .activity && self.trackEach {
-            return consolidatedResultIfTrackEach(taskResult)
-        }
-        return taskResult.stepResultForStepIdentifier(self.baseIdentifier)
-    }
-    
-    private func consolidatedResultIfTrackEach(taskResult: ORKTaskResult) -> ORKStepResult? {
-    
-        var startDate: NSDate!
-        var endDate: NSDate!
-        let resultIdentifier = self.baseIdentifier
-        let prefix = "\(resultIdentifier)."
-        
-        let choiceAnswers = taskResult.results?.mapAndFilter({ (sResult) -> AnyObject? in
-            
-            // Filter out results that are not part of this step grouping
-            guard let stepResult = sResult as? ORKStepResult where stepResult.identifier.hasPrefix(prefix),
-                let formResults = stepResult.results where formResults.count == 1,
-                let formResult = formResults.first as? ORKQuestionResultAnswerJSON,
-                let answer = formResult.jsonSerializedAnswer()
-            else {
-                return nil
-            }
-            
-            // get timestamps
-            if (startDate == nil) {
-                startDate = stepResult.startDate
-            }
-            endDate = stepResult.endDate
-            
-            // create and return a mapping of identifier to value
-            let identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
-            var value = answer.value
-            if let array = value as? NSArray where array.count == 1 {
-                value = array.firstObject!
-            }
-            return ["identifier" : identifier, "answer" : value] as NSDictionary
-        })
-        
-        // If nothing was found and mapped then return nil
-        guard choiceAnswers != nil && choiceAnswers!.count > 0 else {
-            return nil
-        }
-        
-        // Create and return a step result for the consolidated steps
-        let questionResult = ORKChoiceQuestionResult(identifier: resultIdentifier)
-        questionResult.startDate = startDate
-        questionResult.endDate = endDate
-        questionResult.questionType = ORKQuestionType.MultipleChoice
-        questionResult.choiceAnswers = choiceAnswers
-        
-        let stepResult = ORKStepResult(stepIdentifier: resultIdentifier, results: [questionResult])
-        stepResult.startDate = startDate
-        stepResult.endDate = endDate
-        
-        return stepResult
     }
     
     // MARK: private consolidation
@@ -286,51 +200,22 @@ public class SBATrackedFormStep: ORKFormStep {
         _shouldSkipStep = (self.formItems == nil) || (self.formItems!.count == 0)
     }
     
-    private func updateActivityFormStep(selectedItems:[SBATrackedDataObject]) {
-        let trackedItems = selectedItems.filter({ $0.tracking && matchesTrackedItem($0)}).map({ $0.shortText })
-        _shouldSkipStep = (trackedItems.count == 0)
-        if let textFormat = self.textFormat where (trackedItems.count > 0) {
-            self.text = String.localizedStringWithFormat(textFormat, Localization.localizedJoin(trackedItems))
-        }
-    }
-    
-    private func matchesTrackedItem(item: SBATrackedDataObject) -> Bool {
-        if let trackedId = self.trackedItemIdentifier {
-            return (trackedId == item.identifier)
-        }
-        else {
-            return true
-        }
-    }
-    
-    private func identifierSuffix() -> String? {
-        guard let trackedId = self.trackedItemIdentifier else {
-            return nil
-        }
-        return ".\(trackedId)"
-    }
     
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.textFormat = aDecoder.decodeObjectForKey("textFormat") as? String
         if let trackingTypeValue = aDecoder.decodeObjectForKey("trackingType") as? String,
             let trackingType = SBATrackingStepType(rawValue: trackingTypeValue) {
             self.trackingType = trackingType
         }
         self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
-        self.trackEach = aDecoder.decodeBoolForKey("trackEach")
-        self._trackedItemIdentifier = aDecoder.decodeObjectForKey("trackedItemIdentifier") as? String
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
-        aCoder.encodeObject(self.trackingType.rawValue, forKey: "trackingType")
+        aCoder.encodeObject(self.trackingType?.rawValue, forKey: "trackingType")
         aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
-        aCoder.encodeBool(self.trackEach, forKey: "trackEach")
-        aCoder.encodeObject(self.trackedItemIdentifier, forKey: "trackedItemIdentifier")
     }
     
     // MARK: NSCopying
@@ -339,18 +224,7 @@ public class SBATrackedFormStep: ORKFormStep {
         let copy = super.copyWithZone(zone) as! SBATrackedFormStep
         copy._shouldSkipStep = self._shouldSkipStep
         copy.trackingType = self.trackingType
-        copy.textFormat = self.textFormat
         copy.frequencyAnswerFormat = self.frequencyAnswerFormat
-        copy.trackEach = self.trackEach
-        copy._trackedItemIdentifier = self.trackedItemIdentifier
-        return copy
-    }
-    
-    public func copy(trackedItem trackedItem: SBATrackedDataObject) -> SBATrackedFormStep {
-        let identifier = "\(baseIdentifier).\(trackedItem.identifier)"
-        let copy = self.copyWithIdentifier(identifier)
-        copy._trackedItemIdentifier = trackedItem.identifier
-        copy.update(selectedItems:[trackedItem])
         return copy
     }
     
@@ -361,20 +235,14 @@ public class SBATrackedFormStep: ORKFormStep {
         return super.isEqual(object) &&
             object.shouldSkipStep == self.shouldSkipStep &&
             object.trackingType == self.trackingType &&
-            object.textFormat == self.textFormat &&
-            SBAObjectEquality(object.frequencyAnswerFormat, self.frequencyAnswerFormat) &&
-            object.trackEach == self.trackEach &&
-            object.trackedItemIdentifier == self.trackedItemIdentifier
+            SBAObjectEquality(object.frequencyAnswerFormat, self.frequencyAnswerFormat)
     }
     
     override public var hash: Int {
         return super.hash ^
             self.shouldSkipStep.hashValue ^
-            self.trackingType.hashValue ^
-            SBAObjectHash(self.textFormat) ^
-            SBAObjectHash(self.frequencyAnswerFormat) ^
-            self.trackEach.hashValue ^
-            SBAObjectHash(self.trackedItemIdentifier)
+            (self.trackingType?.hashValue ?? 0) ^
+            SBAObjectHash(self.frequencyAnswerFormat)
     }
 }
 

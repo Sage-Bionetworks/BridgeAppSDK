@@ -283,13 +283,17 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 - (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps {
     NSMutableArray *idMap = [NSMutableArray new];
     NSMutableDictionary *trackEachMap = [NSMutableDictionary new];
-    for (ORKFormStep *step in activitySteps) {
-        if ([step isKindOfClass:[ORKFormStep class]]) {
-            ORKFormItem *formItem = [step.formItems firstObject];
+    for (ORKStep *step in activitySteps) {
+        ORKStep *formStep = step;
+        // If this is a page step then set the formStep to the first step and map this as a trackEach
+        if ([step isKindOfClass:[SBATrackedActivityPageStep class]]) {
+            trackEachMap[step.identifier] = @YES;
+            formStep = [((SBATrackedActivityPageStep*)step).pageTask.steps firstObject];
+        }
+        // Look for a formItem identifier to map
+        if ([formStep isKindOfClass:[ORKFormStep class]]) {
+            ORKFormItem *formItem = [((ORKFormStep*)formStep).formItems firstObject];
             if (formItem != nil) {
-                if ([step isKindOfClass:[SBATrackedFormStep class]]) {
-                    trackEachMap[step.identifier] = @(((SBATrackedFormStep*)step).trackEach);
-                }
                 [idMap addObject:@[step.identifier, formItem.identifier]];
             }
         }

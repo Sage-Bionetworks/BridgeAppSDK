@@ -726,18 +726,18 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let taskResult = ORKTaskResult(taskIdentifier: task.identifier, taskRunUUID: NSUUID(), outputDirectory: outputDirectory)
         taskResult.results = []
         
+        var copyTaskResult: ORKTaskResult = taskResult.copy() as! ORKTaskResult
         var previousStep: ORKStep? = nil
         while let step = task.stepAfterStep(previousStep, withResult: taskResult) {
             
-            if let _ = step as? ORKActiveStep {
-                // add a result to the step (there should be *something* to show)
-                let activeResult = ORKFileResult(identifier: "file")
-                let stepResult = ORKStepResult(stepIdentifier: step.identifier, results: [activeResult])
-                taskResult.results?.append(stepResult)
-            }
-            else if let formStep = step as? SBATrackedFormStep, let formItems = formStep.formItems {
+            // Building the task result should not modify the result set
+            XCTAssertEqual(taskResult, copyTaskResult)
+            
+            if let formStep = step as? SBATrackedFormStep,
+                let formItems = formStep.formItems,
+                let trackingType = formStep.trackingType  {
                 
-                switch formStep.trackingType {
+                switch trackingType {
                 case .selection:
                     // Add a question answer to the selection step
                     let questionResult = ORKChoiceQuestionResult(identifier: formItems[0].identifier)
@@ -759,33 +759,18 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                     let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
                     taskResult.results?.append(stepResult)
                     
-                case .activity:
-                    let formItemResults = formItems.map({ (formItem) -> ORKResult in
-                        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
-                        if let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat,
-                            let answer = answerFormat.textChoices.first?.value {
-                            questionResult.choiceAnswers = [answer]
-                        }
-                        return questionResult
-                    })
-                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
-                    taskResult.results?.append(stepResult)
-                    
                 default:
                     break
                 }
             }
-            else if let formStep = step as? ORKFormStep {
-                let stepResult = formStep.instantiateStepResult(.defaultValue)
-                taskResult.results?.append(stepResult)
-            }
             else {
-                let stepResult = ORKStepResult(identifier: step.identifier)
+                let stepResult = step.instantiateDefaultStepResult()
                 taskResult.results?.append(stepResult)
             }
             
             // set the previous step to this step
             previousStep = step
+            copyTaskResult = taskResult.copy() as! ORKTaskResult
         }
         
         // Update the start and end dates
