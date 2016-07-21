@@ -318,7 +318,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
-        guard let momentInDayStep = steps.first as? SBATrackedFormStep,
+        guard let momentInDayStep = steps.first as? SBATrackedActivityFormStep,
             let formItem = momentInDayStep.formItems?.first,
             let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat
             else {
@@ -337,7 +337,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkMedicationActivityStep(momentInDayStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.items)
         checkMedicationActivityStep(momentInDayStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.items)
         
-        guard let timingStep = steps[1] as? SBATrackedFormStep,
+        guard let timingStep = steps[1] as? SBATrackedActivityFormStep,
             let timingFormItem = timingStep.formItems?.first,
             let timingAnswerFormat = timingFormItem.answerFormat as? ORKTextChoiceAnswerFormat
             else {
@@ -385,7 +385,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
 
     }
     
-    func checkMedicationActivityStep(step: SBATrackedFormStep, idList:[String], expectedSkipped: Bool, items:[SBATrackedDataObject]) {
+    func checkMedicationActivityStep(step: SBATrackedNavigationStep, idList:[String], expectedSkipped: Bool, items:[SBATrackedDataObject]) {
         
         let selectedItems = items.filter({ idList.contains($0.identifier) })
         step.update(selectedItems: selectedItems)
@@ -710,7 +710,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // Get moment in day
         let step2 = task.stepAfterStep(handStep, withResult: taskResult)
-        guard let momentStep = step2 as? SBATrackedFormStep where momentStep.trackingType == .activity,
+        guard let momentStep = step2 as? SBATrackedActivityFormStep where momentStep.trackingType == .activity,
             let momentFormItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(step2) not of expected type")
                 return
@@ -726,7 +726,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertNotNil(dataStore.momentInDayResult)
         XCTAssertEqual(dataStore.momentInDayResult!.count, 1)
         
-        guard let timingStep = step3 as? SBATrackedFormStep where timingStep.trackingType == .activity else {
+        guard let timingStep = step3 as? SBATrackedActivityFormStep where timingStep.trackingType == .activity else {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
@@ -736,20 +736,16 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertNotNil(dataStore.momentInDayResult)
         XCTAssertEqual(dataStore.momentInDayResult!.count, 2)
         
-        guard let levodopaStep = step4 as? SBATrackedFormStep where levodopaStep.trackingType == .activity else {
+        guard let timingEachStep = step4 as? SBATrackedActivityPageStep else {
             XCTAssert(false, "\(step4) not of expected type")
             return
         }
         
-        XCTAssertEqual(levodopaStep.identifier, "medicationTrackEach.Levodopa")
-        taskResult.results! += [createTimingStepResult(levodopaStep, answer: "0-30 minutes")]
-        
-        let rytaryStep = task.stepAfterStep(levodopaStep, withResult: taskResult) as! SBATrackedFormStep
-        XCTAssertEqual(rytaryStep.identifier, "medicationTrackEach.Rytary")
-        taskResult.results! += [createTimingStepResult(rytaryStep, answer: "30-60 minutes")]
+        XCTAssertEqual(timingEachStep.identifier, "medicationTrackEach")
+        taskResult.addResult(timingEachStep.instantiateDefaultStepResult())
         
         // progress to next step to set results
-        task.stepAfterStep(rytaryStep, withResult: taskResult)
+        task.stepAfterStep(timingEachStep, withResult: taskResult)
         
         let momentInDayResults = dataStore.momentInDayResult
         XCTAssertNotNil(momentInDayResults)
@@ -763,9 +759,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         guard let timingResults = timingResult?.results else { return }
     
         XCTAssertEqual(timingResult!.identifier, "medicationTrackEach")
-        XCTAssertEqual(timingResults.count, 1)
         
-        guard let trackQuestionResult = timingResults.first as? ORKChoiceQuestionResult,
+        guard let trackQuestionResult = timingResults.last as? ORKChoiceQuestionResult,
         let choiceAnswers = trackQuestionResult.choiceAnswers as? [[String: String]]
         else {
             XCTAssert(false, "\(timingResults) not of expected type")
@@ -776,12 +771,12 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         guard choiceAnswers.count == 2 else { return }
         
         XCTAssertEqual(choiceAnswers.first!["identifier"], "Levodopa")
-        XCTAssertEqual(choiceAnswers.first!["answer"], "0-30 minutes")
+        XCTAssertEqual(choiceAnswers.first!["answer"], "0-30 minutes ago")
         XCTAssertEqual(choiceAnswers.last!["identifier"], "Rytary")
-        XCTAssertEqual(choiceAnswers.last!["answer"], "30-60 minutes")
+        XCTAssertEqual(choiceAnswers.last!["answer"], "0-30 minutes ago")
     }
     
-    func createTimingStepResult(timingStep:SBATrackedFormStep, answer: String) -> ORKStepResult {
+    func createTimingStepResult(timingStep:SBATrackedActivityFormStep, answer: String) -> ORKStepResult {
         let formItem = timingStep.formItems!.first!
         let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
         questionResult.choiceAnswers = [answer]

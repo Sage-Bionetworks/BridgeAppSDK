@@ -103,7 +103,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     public func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool {
 
         // Check if this step is a tracked step. If the tracked step is nil then should *not* skip the step
-        guard let trackedStep = step as? SBATrackedFormStep else { return false }
+        guard let trackedStep = step as? SBATrackedNavigationStep else { return false }
         
         // Otherwise, update the step with the selected items and then determine if it should be skipped
         trackedStep.update(selectedItems: self.dataStore.selectedItems ?? [])
@@ -112,47 +112,21 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
         
-        if let previous = previousStep as? SBATrackedFormStep {
+        if let previous = previousStep as? SBATrackedNavigationStep, let trackingType = previous.trackingType {
             
             // update the previous step with the result
-            switch (previous.trackingType) {
+            switch (trackingType) {
             case .selection:
-                self.dataStore.updateSelectedItems(self.items, stepIdentifier: previous.identifier, result: result)
+                self.dataStore.updateSelectedItems(self.items, stepIdentifier: previousStep!.identifier, result: result)
             case .frequency:
-                self.dataStore.updateFrequencyForStepIdentifier(previous.identifier, result: result)
+                self.dataStore.updateFrequencyForStepIdentifier(previousStep!.identifier, result: result)
             case .activity:
-                if !previous.trackEach, let stepResult = result.stepResultForStepIdentifier(previous.identifier) {
+                if let stepResult = result.stepResultForStepIdentifier(previousStep!.identifier) {
                     self.dataStore.updateMomentInDayForStepResult(stepResult)
                 }
             default:
                 break
             }
-            
-            // If this step is a trackEach, then split into multiple steps
-            if previous.trackEach,
-                let previousTrackedId = previous.trackedItemIdentifier,
-                let selectedItems = self.dataStore.selectedItems?.filter({ $0.tracking })
-            {
-                guard let nextItem = selectedItems.nextObject({ $0.identifier == previousTrackedId })
-                else {
-                    
-                    // consolidate the results and add to data store
-                    let momentResult = previous.consolidatedResult(self.items, taskResult: result)
-                    self.dataStore.updateMomentInDayForStepResult(momentResult)
-                    
-                    // the previous item was the last tracked item so return nil
-                    return nil
-                }
-                // create a copy of the step with the next item to be tracked
-                return previous.copy(trackedItem: nextItem)
-            }
-        }
-        else if let next = nextStep as? SBATrackedFormStep
-                where next.trackEach && next.trackedItemIdentifier == nil,
-                let firstItem = self.dataStore.selectedItems?.filter({ $0.tracking }).first {
-            // If this is the first step in a step where each item is tracked separately, then 
-            // replace the next step with a copy that includes the first selected item
-            return next.copy(trackedItem: firstItem)
         }
         
         return nextStep
@@ -179,19 +153,24 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 let trackingType = trackingItem.trackingType {
                 
                 // If should not include the tracking item then just return nil
-                // and let the factory create the step
-                guard include.shouldInclude(trackingType),
-                    let step = factory.createSurveyStep(trackingItem, trackedItems: self.items)
-                else {
-                    return nil
-                }
-
-                // Keep a pointer to the first activity step
-                if (trackingType == .activity) && (firstActivityStepIdentifier == nil) {
-                    firstActivityStepIdentifier = step.identifier
-                }
+                guard include.shouldInclude(trackingType) else { return nil }
                 
-                return step
+                if trackingType == .activity, let activityItem = trackingItem as? SBATrackedActivitySurveyItem {
+                    // keep a pointer to the first activity step identifier
+                    if firstActivityStepIdentifier == nil {
+                        firstActivityStepIdentifier = activityItem.identifier
+                    }
+                    // Let the activity item return the appropriate instance of the step
+                    return activityItem.createTrackedActivityStep(self.items)
+                }
+                else if trackingType.isTrackedFormStepType() {
+                    // If this is a selection/frequency step then return a tracked form step
+                    return SBATrackedFormStep(surveyItem: trackingItem, items: self.items)
+                }
+                else {
+                    // Otherwise, return the step from the factory
+                    return factory.createSurveyStep(trackingItem)
+                }
             }
             else if (include.includeSurvey()) {
                 // If this is the survey then all non-tracking type items are included

@@ -33,27 +33,65 @@
 
 import ResearchKit
 
-public enum SBADefaultFormItemAnswer {
+enum SBADefaultFormItemAnswer {
     case first, last, defaultValue, skip
 }
 
-public extension ORKFormStep {
-    
-    // Convenience method for adding a default answer or mapped answer for a given step
-    public func instantiateStepResult(defaultAnswer: SBADefaultFormItemAnswer, answerMap: [String : AnyObject] = [:], startDate: NSDate = NSDate(), endDate: NSDate = NSDate()) -> ORKStepResult {
-        
-        let results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
-            let answer = answerMap[formItem.identifier]
-            return formItem.instantiateQuestionResult(defaultAnswer, answer: answer, startDate: startDate, endDate: endDate)
-        })
-        
-        let stepResult = ORKStepResult(stepIdentifier: self.identifier, results: results)
-        stepResult.startDate = startDate
-        stepResult.endDate = endDate
-        
-        return stepResult
+extension ORKStep {
+    func instantiateDefaultStepResult() -> ORKStepResult {
+        return ORKStepResult(stepIdentifier: self.identifier, results: nil)
     }
+}
 
+extension ORKFormStep {
+    override func instantiateDefaultStepResult() -> ORKStepResult {
+        let results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
+            return formItem.instantiateQuestionResult(.defaultValue, answer: nil)
+        })
+        return ORKStepResult(stepIdentifier: self.identifier, results: results)
+    }
+}
+
+extension ORKActiveStep {
+    override func instantiateDefaultStepResult() -> ORKStepResult {
+        // add a result to the step (there should be *something* to show)
+        let activeResult = ORKFileResult(identifier: "file")
+        return ORKStepResult(stepIdentifier: self.identifier, results: [activeResult])
+    }
+}
+
+extension ORKPageStep {
+    override func instantiateDefaultStepResult() -> ORKStepResult {
+        
+        var results: [ORKResult] = []
+        
+        let taskResult = ORKTaskResult(taskIdentifier: self.identifier, taskRunUUID: NSUUID(), outputDirectory: nil)
+        taskResult.results = []
+        
+        var previousStepIdentifier: String? = nil
+        while let step = self.stepAfterStepWithIdentifier(previousStepIdentifier, withResult: taskResult) {
+            previousStepIdentifier = step.identifier
+            let stepResult = step.instantiateDefaultStepResult()
+            taskResult.addResult(stepResult)
+            if let stepResults = stepResult.results {
+                results += stepResults.map({ (result) -> ORKResult in
+                    let copy = result.copy() as! ORKResult
+                    copy.identifier = "\(step.identifier).\(result.identifier)"
+                    return copy
+                })
+            }
+        }
+        return ORKStepResult(stepIdentifier: self.identifier, results: results)
+    }
+}
+
+extension SBATrackedActivityPageStep {
+    override func instantiateDefaultStepResult() -> ORKStepResult {
+        let stepResult = super.instantiateDefaultStepResult()
+        let pageVC = self.instantiateStepViewControllerWithResult(stepResult)
+        let mutatedResult = pageVC.result
+        return mutatedResult ?? stepResult
+    }
 }
 
 protocol SBAQuestionResultMapping {
@@ -65,7 +103,7 @@ protocol SBAQuestionResultMapping {
 extension ORKFormItem {
     
     // Convenience method for adding a default answer or mapped answer for a given form item
-    func instantiateQuestionResult(defaultAnswer: SBADefaultFormItemAnswer, answer: AnyObject?, startDate: NSDate = NSDate(), endDate: NSDate = NSDate()) -> ORKQuestionResult? {
+    func instantiateQuestionResult(defaultAnswer: SBADefaultFormItemAnswer, answer: AnyObject?) -> ORKQuestionResult? {
         guard let answerFormat = self.answerFormat as? SBAQuestionResultMapping,
               let questionResult = answerFormat.instantiateQuestionResult(self.identifier, defaultAnswer, answer)
         else {
@@ -101,11 +139,11 @@ extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
         }
         else {
             switch defaultAnswer {
-            case .first:
+            case .first, .defaultValue:
                 result.choiceAnswers = [self.textChoices.first!.value]
             case .last:
                 result.choiceAnswers = [self.textChoices.last!.value]
-            default:
+            case .skip:
                 result.choiceAnswers = nil
             }
         }
@@ -147,7 +185,7 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
                 result.scaleAnswer = self.minimum
             case .last:
                 result.scaleAnswer = self.maximum
-            default:
+            case .skip:
                 result.scaleAnswer = nil
             }
         }

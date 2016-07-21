@@ -102,7 +102,7 @@ class SBASubtaskStepTests: XCTestCase {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
-        taskResult.results! += [formStep3.instantiateStepResult(.first)]
+        taskResult.results! += [formStep3.instantiateDefaultStepResult()]
         
         let step4 = navTask.stepAfterStep(step3, withResult: taskResult)
         XCTAssertNotNil(step4)
