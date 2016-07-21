@@ -127,7 +127,7 @@ MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID
              [SBASurveyFormStep class],
              [SBASurveySubtaskStep class],
              [SBASurveyFormItem class],
-             [SBATrackedFormStep class],
+             [SBATrackedSelectionStep class],
              [SBATrackedDataSelectionResult class],
              [SBATrackedActivityFormStep class]
              ];
@@ -238,6 +238,7 @@ static NSString *classPrefix = @"SBA";
              @"requestedHealthKitTypesForReading",
              @"learnMoreHTMLContent",
              @"trackedItemIdentifier",
+             @"trackedResultIdentifier",
              ];
 }
 

@@ -109,16 +109,17 @@
      "type"         : "trackingSelection",
      "text"         : "Do you take any of these medications?\n(Please select all that apply)\n\nScroll down for the complete list.",
      "optional"     : false,
+     "items"        : [{
+                       "identifier"    : "medication.frequency",
+                       "trackingType"  : "frequency",
+                       "type"          : "trackingFrequency",
+                       "text"          : "How many times a day do you take each of the following medications?",
+                       "min"           : 1,
+                       "max"           : 12,
+                       "optional"      : false,
+                       }],
      },
-     {
-    "identifier"    : "medication.frequency",
-    "trackingType"  : "frequency",
-    "type"          : "trackingFrequency",
-    "text"          : "How many times a day do you take each of the following medications?",
-    "min"           : 1,
-    "max"           : 12,
-    "optional"      : false,
-     },
+
      {
      "identifier"   : "hand.dominant",
      "type"         : "singleChoiceText",

@@ -38,22 +38,23 @@ enum SBADefaultFormItemAnswer {
 }
 
 extension ORKStep {
-    func instantiateDefaultStepResult() -> ORKStepResult {
+    
+    func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
         return ORKStepResult(stepIdentifier: self.identifier, results: nil)
     }
 }
 
 extension ORKFormStep {
-    override func instantiateDefaultStepResult() -> ORKStepResult {
+    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
         let results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
-            return formItem.instantiateQuestionResult(.defaultValue, answer: nil)
+            return formItem.instantiateQuestionResult(.defaultValue, answer: answerMap?[formItem.identifier])
         })
         return ORKStepResult(stepIdentifier: self.identifier, results: results)
     }
 }
 
 extension ORKActiveStep {
-    override func instantiateDefaultStepResult() -> ORKStepResult {
+    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
         // add a result to the step (there should be *something* to show)
         let activeResult = ORKFileResult(identifier: "file")
         return ORKStepResult(stepIdentifier: self.identifier, results: [activeResult])
@@ -61,7 +62,7 @@ extension ORKActiveStep {
 }
 
 extension ORKPageStep {
-    override func instantiateDefaultStepResult() -> ORKStepResult {
+    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
         
         var results: [ORKResult] = []
         
@@ -71,7 +72,7 @@ extension ORKPageStep {
         var previousStepIdentifier: String? = nil
         while let step = self.stepAfterStepWithIdentifier(previousStepIdentifier, withResult: taskResult) {
             previousStepIdentifier = step.identifier
-            let stepResult = step.instantiateDefaultStepResult()
+            let stepResult = step.instantiateDefaultStepResult(answerMap)
             taskResult.addResult(stepResult)
             if let stepResults = stepResult.results {
                 results += stepResults.map({ (result) -> ORKResult in
@@ -81,15 +82,11 @@ extension ORKPageStep {
                 })
             }
         }
-        return ORKStepResult(stepIdentifier: self.identifier, results: results)
-    }
-}
-
-extension SBATrackedActivityPageStep {
-    override func instantiateDefaultStepResult() -> ORKStepResult {
-        let stepResult = super.instantiateDefaultStepResult()
+        
+        let stepResult = ORKStepResult(stepIdentifier: self.identifier, results: results)
         let pageVC = self.instantiateStepViewControllerWithResult(stepResult)
         let mutatedResult = pageVC.result
+        
         return mutatedResult ?? stepResult
     }
 }
@@ -97,7 +94,6 @@ extension SBATrackedActivityPageStep {
 protocol SBAQuestionResultMapping {
     var questionType: ORKQuestionType { get }
     func instantiateQuestionResult(identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult?
-    func isValidAnswer(answer: AnyObject) -> Bool
 }
 
 extension ORKFormItem {
@@ -167,12 +163,6 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
     
     func instantiateQuestionResult(identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
         
-        // Check that the choice answers are nil or valid
-        guard (answer == nil) || isValidAnswer(answer!) else {
-            assertionFailure("\(answer) is invalid")
-            return nil
-        }
-        
         let result = ORKScaleQuestionResult(identifier: identifier)
         if let num = answer as? NSNumber {
             result.scaleAnswer = num
@@ -191,10 +181,6 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
         }
         
         return result
-    }
-    
-    func isValidAnswer(answer: AnyObject) -> Bool {
-        return NSJSONSerialization.isValidJSONObject(answer) && (answer is NSNumber)
     }
     
 }

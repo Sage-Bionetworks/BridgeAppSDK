@@ -726,6 +726,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let taskResult = ORKTaskResult(taskIdentifier: task.identifier, taskRunUUID: NSUUID(), outputDirectory: outputDirectory)
         taskResult.results = []
         
+        
         var copyTaskResult: ORKTaskResult = taskResult.copy() as! ORKTaskResult
         var previousStep: ORKStep? = nil
         while let step = task.stepAfterStep(previousStep, withResult: taskResult) {
@@ -733,38 +734,24 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             // Building the task result should not modify the result set
             XCTAssertEqual(taskResult, copyTaskResult)
             
-            if let formStep = step as? SBATrackedFormStep,
-                let formItems = formStep.formItems,
-                let trackingType = formStep.trackingType  {
-                
-                switch trackingType {
-                case .selection:
-                    // Add a question answer to the selection step
-                    let questionResult = ORKChoiceQuestionResult(identifier: formItems[0].identifier)
-                    if let meds = selectedMeds {
-                        questionResult.choiceAnswers = Array(meds.keys)
+            if let _ = step as? SBATrackedSelectionStep {
+                // modify the result to include the selected items if this is the selection step
+                let answerMap = NSMutableDictionary()
+                if let meds = selectedMeds, let choices = meds.allKeys {
+                    answerMap.setValue(choices, forKey: "choices")
+                    for (key, value) in meds {
+                        answerMap.setValue(value, forKey: key)
                     }
-                    else {
-                        questionResult.choiceAnswers = ["None"]
-                    }
-                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: [questionResult])
-                    taskResult.results?.append(stepResult)
-                    
-                case .frequency:
-                    let formItemResults = formItems.map({ (formItem) -> ORKResult in
-                        let questionResult = ORKScaleQuestionResult(identifier: formItem.identifier)
-                        questionResult.scaleAnswer = selectedMeds?[formItem.identifier]
-                        return questionResult
-                    })
-                    let stepResult = ORKStepResult(stepIdentifier: formStep.identifier, results: formItemResults)
-                    taskResult.results?.append(stepResult)
-                    
-                default:
-                    break
                 }
+                else {
+                    answerMap.setValue("None", forKey: "choices")
+                }
+                let stepResult = step.instantiateDefaultStepResult(answerMap)
+                taskResult.results?.append(stepResult)
             }
             else {
-                let stepResult = step.instantiateDefaultStepResult()
+                // Add the result to the task
+                let stepResult = step.instantiateDefaultStepResult(nil)
                 taskResult.results?.append(stepResult)
             }
             
