@@ -129,7 +129,7 @@ public class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
     override public func isEqual(object: AnyObject?) -> Bool {
         guard let object = object as? SBATrackedActivityFormStep else { return false }
         return super.isEqual(object) &&
-            object.textFormat == self.textFormat
+            SBAObjectEquality(object.textFormat, self.textFormat)
     }
     
     override public var hash: Int {

@@ -112,21 +112,15 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
         
-        if let previous = previousStep as? SBATrackedNavigationStep, let trackingType = previous.trackingType {
-            
-            // update the previous step with the result
-            switch (trackingType) {
-            case .selection:
-                self.dataStore.updateSelectedItems(self.items, stepIdentifier: previousStep!.identifier, result: result)
-            case .frequency:
-                self.dataStore.updateFrequencyForStepIdentifier(previousStep!.identifier, result: result)
-            case .activity:
-                if let stepResult = result.stepResultForStepIdentifier(previousStep!.identifier) {
-                    self.dataStore.updateMomentInDayForStepResult(stepResult)
-                }
-            default:
-                break
-            }
+        if let selectionStep = previousStep as? SBATrackedSelectionStep,
+            let stepResult = result.stepResultForStepIdentifier(selectionStep.identifier),
+            let trackedResultIdentifier = selectionStep.trackedResultIdentifier,
+            let trackedResult = stepResult.resultForIdentifier(trackedResultIdentifier) as? SBATrackedDataSelectionResult {
+            self.dataStore.selectedItems = trackedResult.selectedItems
+        }
+        else if let previous = previousStep as? SBATrackedStep where previous.trackingType == .activity,
+            let stepResult = result.stepResultForStepIdentifier(previousStep!.identifier) {
+            self.dataStore.updateMomentInDayForStepResult(stepResult)
         }
         
         return nextStep
@@ -152,25 +146,19 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             if let trackingItem = item as? SBATrackedStepSurveyItem,
                 let trackingType = trackingItem.trackingType {
                 
-                // If should not include the tracking item then just return nil
-                guard include.shouldInclude(trackingType) else { return nil }
+                // If should not include the tracking item or the factory returns nil
+                // then just return nil
+                guard include.shouldInclude(trackingType),
+                    let step = factory.createSurveyStep(item, trackingType: trackingType, trackedItems: self.items)
+                else { return nil }
                 
-                if trackingType == .activity, let activityItem = trackingItem as? SBATrackedActivitySurveyItem {
-                    // keep a pointer to the first activity step identifier
-                    if firstActivityStepIdentifier == nil {
-                        firstActivityStepIdentifier = activityItem.identifier
-                    }
-                    // Let the activity item return the appropriate instance of the step
-                    return activityItem.createTrackedActivityStep(self.items)
+                // keep a pointer to the first activity step identifier
+                if trackingType == .activity && firstActivityStepIdentifier == nil {
+                    firstActivityStepIdentifier = step.identifier
                 }
-                else if trackingType.isTrackedFormStepType() {
-                    // If this is a selection/frequency step then return a tracked form step
-                    return SBATrackedFormStep(surveyItem: trackingItem, items: self.items)
-                }
-                else {
-                    // Otherwise, return the step from the factory
-                    return factory.createSurveyStep(trackingItem)
-                }
+                
+                // return the step created by the factory
+                return step
             }
             else if (include.includeSurvey()) {
                 // If this is the survey then all non-tracking type items are included
@@ -207,23 +195,5 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             return false
         }
     }
-    
-    func mutateSelectionStepResult(taskResult: ORKTaskResult) {
-        guard let selectionItem = self.findStep(.selection),
-              let stepResult = taskResult.stepResultForStepIdentifier(selectionItem.identifier),
-              let firstResult = stepResult.results?.first
-        else {
-            // Only create the step for a task result that includes selection
-            return
-        }
-        
-        // Create and return a step result for the consolidated steps
-        let trackedResult = SBATrackedDataSelectionResult(identifier: selectionItem.identifier)
-        trackedResult.selectedItems = self.dataStore.selectedItems
-        trackedResult.startDate = stepResult.startDate
-        trackedResult.endDate = stepResult.endDate
-        
-        // Add the consolidated result to the step results
-        stepResult.results = [firstResult, trackedResult]
-    }
+
 }

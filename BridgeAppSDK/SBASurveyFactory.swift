@@ -117,6 +117,24 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         }
     }
     
+    /**
+     * Factory method for creating a step where the step uses tracked items to build the step.
+     * Note: only swift can subclass this method directly.
+     */
+    public func createSurveyStep(inputItem: SBASurveyItem, trackingType:SBATrackingStepType, trackedItems:[SBATrackedDataObject]) -> ORKStep? {
+        if trackingType == .activity, let activityItem = inputItem as? SBATrackedActivitySurveyItem {
+            // Let the activity item return the appropriate instance of the step
+            return activityItem.createTrackedActivityStep(trackedItems)
+        }
+        else if trackingType == .selection, let selectionItem = inputItem as? SBAFormStepSurveyItem {
+            return SBATrackedSelectionStep(inputItem: selectionItem, trackedItems: trackedItems, factory: self)
+        }
+        else {
+            // Otherwise, return the step from the factory
+            return self.createSurveyStep(inputItem)
+        }
+    }
+    
     final func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep? {
         return self.createSurveyStep(inputItem, isSubtaskStep: nil, isLastStep: nil)
     }

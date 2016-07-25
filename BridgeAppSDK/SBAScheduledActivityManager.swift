@@ -451,23 +451,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return result
         }
         
-        // TODO: syoung 07/14/2016 Replace this temp fix with custom SBATrackedDataStep: ORKPageStep
-        func mutateCollectionResult(inTask:AnyObject?, taskResult: ORKTaskResult) {
-            if let subtask = inTask as? SBANavigableOrderedTask,
-                let dataCollection = subtask.conditionalRule as? SBATrackedDataObjectCollection {
-                dataCollection.mutateSelectionStepResult(taskResult)
-            }
-        }
-        mutateCollectionResult(taskViewController.task, taskResult: taskResult)
-        
         // mutable arrays for ensuring all results are collected
         var topLevelResults:[ORKStepResult] = taskViewController.result.results! as! [ORKStepResult]
         var allResults:[SBAActivityResult] = []
         var dataStores:[SBATrackedDataStore] = []
         
         if let task = taskViewController.task as? SBANavigableOrderedTask {
-
-            
             for step in task.steps {
                 if let subtaskStep = step as? SBASubtaskStep {
                     
@@ -507,7 +496,6 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                             
                             // create the subresult and add to list
                             let substepResult: SBAActivityResult = createActivityResult(schemaId, schedule: subschedule, stepResults: subsetResults)
-                            mutateCollectionResult(subtaskStep.subtask, taskResult: substepResult)
                             allResults += [substepResult]
                         }
                     }
