@@ -185,7 +185,7 @@
 		FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */; };
 		FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDF71D0758C700434001 /* SBAOnboardingSection.swift */; };
 		FFDECDFB1D0774EE00434001 /* Onboarding.json in Resources */ = {isa = PBXBuildFile; fileRef = FFDECDF91D0774EE00434001 /* Onboarding.json */; };
-		FFDECDFD1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */; };
+		FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */; };
 		FFDECDFF1D0796D200434001 /* SBAOnboardingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */; };
 		FFDECE011D07DDED00434001 /* Dictionary+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE001D07DDED00434001 /* Dictionary+Utilities.swift */; };
 		FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE031D088FA600434001 /* SBALoginStep.swift */; };
@@ -546,7 +546,7 @@
 		FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewController.swift; sourceTree = "<group>"; };
 		FFDECDF71D0758C700434001 /* SBAOnboardingSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingSection.swift; sourceTree = "<group>"; };
 		FFDECDFA1D0774EE00434001 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Onboarding.json; sourceTree = "<group>"; };
-		FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentDocumentFactoryTests.swift; sourceTree = "<group>"; };
+		FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentTests.swift; sourceTree = "<group>"; };
 		FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingManagerTests.swift; sourceTree = "<group>"; };
 		FFDECE001D07DDED00434001 /* Dictionary+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Utilities.swift"; sourceTree = "<group>"; };
 		FFDECE031D088FA600434001 /* SBALoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoginStep.swift; sourceTree = "<group>"; };
@@ -699,7 +699,7 @@
 				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
 				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
-				FFDECDFC1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift */,
+				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
 				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
 				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
@@ -1746,7 +1746,7 @@
 				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FF8DDFE31CB63E92006D1AFA /* SBATrackedDataStoreTests.m in Sources */,
-				FFDECDFD1D077C2000434001 /* SBAConsentDocumentFactoryTests.swift in Sources */,
+				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,
 				FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */,
 				FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */,
 				FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */,

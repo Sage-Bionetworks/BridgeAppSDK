@@ -49,6 +49,7 @@ enum SBAProfileInfoOptionsError: ErrorType {
     case MissingRequiredOptions
     case MissingEmailOrExternalID
     case MissingNameOrExternalID
+    case MissingName
     case UnrecognizedSurveyItemType
 }
 
@@ -113,6 +114,9 @@ extension SBAFormProtocol {
     public func formItemForIdentifier(identifier: String) -> ORKFormItem? {
         return self.formItems?.findObject({ $0.identifier == identifier })
     }
+}
+
+extension ORKFormStep: SBAFormProtocol {
 }
 
 public protocol SBAProfileInfoForm : SBAFormProtocol {
