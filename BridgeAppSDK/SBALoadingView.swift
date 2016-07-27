@@ -1,5 +1,5 @@
 //
-//  SBALoadingViewPresenter.swift
+//  SBALoadingView.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,46 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
-public protocol SBALoadingViewPresenter {
-    var view: UIView! { get }
-}
-
-public extension SBALoadingViewPresenter {
+public class SBALoadingView: UIView {
     
-    public var loadingView: SBALoadingView? {
-        return self.view.subviews.findObject({ $0 is SBALoadingView }) as? SBALoadingView
+    public var isAnimating: Bool {
+        return loadingIndicator.isAnimating()
     }
     
-    public func showLoadingView() {
-        var loadingView: SBALoadingView! = self.loadingView
-        if (loadingView == nil) {
-            loadingView = SBALoadingView(frame: self.view.bounds)
-            loadingView.hidden = true
-            self.view.addSubview(loadingView)
-            loadingView.constrainToFillSuperview()
+    var loadingIndicator: UIActivityIndicatorView!
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if (loadingIndicator == nil) {
+            self.backgroundColor = UIColor(white: 0, alpha: 0.5)
+            loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            loadingIndicator.hidesWhenStopped = false
+            self.addSubview(loadingIndicator)
         }
-        if (loadingView!.isAnimating) {
-            loadingView!.startAnimating()
-        }
+        loadingIndicator.center = CGPoint(x: self.bounds.size.width / 2.0, y: self.bounds.size.height / 2.0)
     }
     
-    public func hideLoadingView(completion: (() -> Void)?) {
-        guard let view = loadingView where view.isAnimating else {
-            completion?()
-            return
-        }
-        view.stopAnimating({
-            view.removeFromSuperview()
-            completion?()
+    public func startAnimating() {
+        self.alpha = 0.0
+        self.superview?.addSubview(self)
+        self.hidden = false
+        self.loadingIndicator.startAnimating()
+        UIView.animateWithDuration(0.2, animations: {
+            self.alpha = 1.0
         })
     }
+    
+    public func stopAnimating(completion: (() -> Void)?) {
+        UIView.animateWithDuration(0.2, animations: {
+            self.alpha = 0.0
+            }, completion: {_ in
+                self.hidden = true
+                self.loadingIndicator.stopAnimating()
+                completion?()
+        })
+    }
+
 }

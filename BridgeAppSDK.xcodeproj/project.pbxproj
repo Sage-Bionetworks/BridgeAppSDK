@@ -144,7 +144,6 @@
 		FF9F4B581CEA735F00B5343B /* TaskResult_Combo.archive in Resources */ = {isa = PBXBuildFile; fileRef = FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */; };
 		FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */; };
 		FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */; };
-		FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */; };
 		FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */; };
 		FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4B41CBD903000ED5399 /* SBAKeyboardAnimator.swift */; };
 		FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */; };
@@ -156,6 +155,8 @@
 		FFB30D2E1D4008DE00D175D2 /* Array+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D2D1D4008DE00D175D2 /* Array+Utilities.swift */; };
 		FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */; };
 		FFB30D691D4139B400D175D2 /* SBATrackedSelectionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D681D4139B400D175D2 /* SBATrackedSelectionStep.swift */; };
+		FFB30E3A1D488F4800D175D2 /* SBALoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30E391D488F4800D175D2 /* SBALoadingView.swift */; };
+		FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */; };
 		FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */; };
 		FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */; };
 		FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD31CFE439500C29AF7 /* Main.storyboard */; };
@@ -508,7 +509,6 @@
 		FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TaskResult_Combo.archive; sourceTree = "<group>"; };
 		FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserTests.swift; sourceTree = "<group>"; };
 		FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+SBBTranslation.swift"; sourceTree = "<group>"; };
-		FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDOnboardingController.swift; sourceTree = "<group>"; };
 		FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoadingViewPresenter.swift; sourceTree = "<group>"; };
 		FFA8E4B41CBD903000ED5399 /* SBAKeyboardAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAKeyboardAnimator.swift; sourceTree = "<group>"; };
 		FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewController.swift; sourceTree = "<group>"; };
@@ -520,6 +520,8 @@
 		FFB30D2D1D4008DE00D175D2 /* Array+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Utilities.swift"; sourceTree = "<group>"; };
 		FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKFormStep+Result.swift"; sourceTree = "<group>"; };
 		FFB30D681D4139B400D175D2 /* SBATrackedSelectionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedSelectionStep.swift; sourceTree = "<group>"; };
+		FFB30E391D488F4800D175D2 /* SBALoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoadingView.swift; sourceTree = "<group>"; };
+		FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAccountTests.swift; sourceTree = "<group>"; };
 		FFBB57251CACEAA00041F120 /* SBAActiveTask+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+Dictionary.swift"; sourceTree = "<group>"; };
 		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
 		FFC15FD21CFE439500C29AF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -698,6 +700,7 @@
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
 				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
+				FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */,
 				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
@@ -955,7 +958,6 @@
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
 				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
 				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
-				FFA8E4AB1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift */,
 			);
 			name = Account;
 			sourceTree = "<group>";
@@ -1136,6 +1138,7 @@
 			children = (
 				FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */,
 				FFCF37DF1CDA99120090452F /* UIView+LayoutExtensions.swift */,
+				FFB30E391D488F4800D175D2 /* SBALoadingView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1658,7 +1661,6 @@
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
 				805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */,
-				FFA8E4AC1CBD756B00ED5399 /* SBAExternalIDOnboardingController.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
@@ -1698,6 +1700,7 @@
 				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
 				FBE1A9651CAB322700F1F584 /* SBAActiveTask.swift in Sources */,
 				FBAD116E1CADE55C005611D0 /* SBABridgeTask.swift in Sources */,
+				FFB30E3A1D488F4800D175D2 /* SBALoadingView.swift in Sources */,
 				FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */,
 				FF2379AC1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m in Sources */,
 				FFCF37B31CD94EC80090452F /* ORKOrderedTask+SBAExtension.m in Sources */,
@@ -1741,6 +1744,7 @@
 				FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */,
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */,
+				FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */,
 				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
 				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
