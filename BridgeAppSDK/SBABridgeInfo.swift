@@ -98,14 +98,18 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     var plist: NSDictionary!
 
     public convenience override init() {
-        self.init(name: "BridgeInfo")!
+        let additionalInfo = SBAResourceFinder().plistNamed("BridgeInfo-private") as? [NSObject : AnyObject]
+        self.init(name: "BridgeInfo", additionalInfo: additionalInfo)!
     }
     
-    public init?(name: String) {
+    public init?(name: String, additionalInfo: [NSObject : AnyObject]? = nil) {
         super.init()
-        guard let plist = SBAResourceFinder().plistNamed(name) else {
+        guard let plist = SBAResourceFinder().plistNamed(name)?.mutableCopy() as? NSMutableDictionary else {
             assertionFailure("\(name) plist file not found in the resource bundle")
             return nil
+        }
+        if let additionalInfo = additionalInfo {
+            plist.addEntriesFromDictionary(additionalInfo)
         }
         guard let studyIdentifier = plist["studyIdentifier"] as? String else {
             assertionFailure("\(name) plist file does not define the 'studyIdentifier'")
