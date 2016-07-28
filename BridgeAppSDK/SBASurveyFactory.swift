@@ -242,6 +242,8 @@ extension SBAFormStepSurveyItem {
             return SBALoginStep(inputItem: self)
         case .emailVerification:
             return SBAEmailVerificationStep(inputItem: self)
+        case .externalID:
+            return SBAExternalIDStep(inputItem: self)
         }
     }
     

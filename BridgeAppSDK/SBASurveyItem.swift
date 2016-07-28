@@ -126,6 +126,7 @@ public enum SBASurveyItemType {
         case registration       = "registration"            // SBARegistrationStep
         case login              = "login"                   // SBALoginStep
         case emailVerification  = "emailVerification"       // SBAEmailVerificationStep
+        case externalID         = "externalID"              // SBAExternalIDStep
         //TODO: Implement syoung 06/08/2016
         //case DataGroups         = "dataGroups"              // data groups step
     }

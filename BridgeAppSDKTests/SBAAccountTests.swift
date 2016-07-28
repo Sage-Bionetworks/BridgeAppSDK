@@ -32,7 +32,7 @@
 //
 
 import XCTest
-import BridgeAppSDK
+@testable import BridgeAppSDK
 
 class SBAAccountTests: XCTestCase {
 
@@ -46,24 +46,8 @@ class SBAAccountTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExternalIdRegistrationStep_NavigationWithoutConfirmation() {
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = false
-        
-        let taskResult = ORKTaskResult(identifier: "registration")
-        
-        let firstStep = registrationStep.stepAfterStepWithIdentifier(nil, withResult: taskResult)
-        XCTAssertNotNil(firstStep)
-        
-        guard let firstStepIdentifier = firstStep?.identifier else { return }
-        
-        let secondStep = registrationStep.stepAfterStepWithIdentifier(firstStepIdentifier, withResult: taskResult)
-        XCTAssertNil(secondStep)
-    }
-    
-    func testExternalIdRegistrationStep_NavigationWithConfirmation() {
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = true
+    func testExternalIdRegistrationStep_Navigation() {
+        let registrationStep = SBAExternalIDStep(identifier: "registration")
         
         let taskResult = ORKTaskResult(identifier: "registration")
         
@@ -87,8 +71,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Valid() {
         
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = true
+        let registrationStep = SBAExternalIDStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123"
@@ -105,8 +88,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Invalid() {
         
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = true
+        let registrationStep = SBAExternalIDStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123*"
@@ -117,7 +99,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDRegistrationError.Invalid(let reason) {
+        catch SBAExternalIDError.Invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -127,8 +109,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Empty() {
         
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = true
+        let registrationStep = SBAExternalIDStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = ""
@@ -139,7 +120,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDRegistrationError.Invalid(let reason) {
+        catch SBAExternalIDError.Invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -149,8 +130,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Mismatch() {
         
-        let registrationStep = SBAExternalIDRegistrationStep(identifier: "registration")
-        registrationStep.shouldConfirm = true
+        let registrationStep = SBAExternalIDStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123"
@@ -161,7 +141,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDRegistrationError.NotMatching {
+        catch SBAExternalIDError.NotMatching {
             // Expected error
         }
         catch let error as NSError {
@@ -171,7 +151,7 @@ class SBAAccountTests: XCTestCase {
 
 }
 
-class MockExternalIDRegistrationStepViewController : SBAExternalIDRegistrationStepViewController {
+class MockExternalIDRegistrationStepViewController : SBAExternalIDStepViewController {
     
     var firstAnswer: String?
     var secondAnswer: String?

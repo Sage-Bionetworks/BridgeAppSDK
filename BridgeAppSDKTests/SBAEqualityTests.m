@@ -130,7 +130,7 @@ MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID
              [SBATrackedSelectionStep class],
              [SBATrackedDataSelectionResult class],
              [SBATrackedActivityFormStep class],
-             [SBAExternalIDRegistrationStep class],
+             [SBAExternalIDStep class],
              ];
 }
 

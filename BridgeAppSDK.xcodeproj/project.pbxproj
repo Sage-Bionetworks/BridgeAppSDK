@@ -63,7 +63,7 @@
 		FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */; };
 		FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */; };
 		FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */; };
-		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */; };
+		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3A429C1CC0B7E400B8623A /* SBATaskViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -422,7 +422,7 @@
 		FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedStep.swift; sourceTree = "<group>"; };
 		FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Utilities.swift"; sourceTree = "<group>"; };
 		FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataObjectTests.swift; sourceTree = "<group>"; };
-		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDRegistrationStep.swift; sourceTree = "<group>"; };
+		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATaskViewController.h; sourceTree = "<group>"; };
@@ -954,7 +954,7 @@
 			children = (
 				FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */,
 				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
-				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift */,
+				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */,
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
 				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
 				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
@@ -1726,7 +1726,7 @@
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
-				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDRegistrationStep.swift in Sources */,
+				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
 				FF3A429D1CC0B7E400B8623A /* SBATaskViewController.m in Sources */,
 				FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  SBAExternalIDRegistrationStep.swift
+//  SBAExternalIDStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -39,102 +39,76 @@ extension ORKPageStep {
     }
 }
 
-public enum SBAExternalIDRegistrationError: ErrorType {
+public enum SBAExternalIDError: ErrorType {
     case Invalid(reason: String?)
     case NotMatching
 }
 
-public class SBAExternalIDRegistrationStep: ORKPageStep {
+public class SBAExternalIDStep: ORKPageStep {
     
-    public var shouldConfirm: Bool = true
+    static let initialStepIdentifier = SBAProfileInfoOption.externalID.rawValue
+    static let confirmStepIdentifier = "confirm"
+    
+    override public var title: String? {
+        didSet {
+            self.pageTask.steps.first?.title = title
+            self.pageTask.steps.last?.title = title
+        }
+    }
+    
+    override public var text: String? {
+        didSet {
+            self.pageTask.steps.first?.text = text
+        }
+    }
+    
+    // Step is never optional
+    override public var optional: Bool {
+        get { return false }
+        set {}
+    }
+    
+    public convenience init(inputItem: SBASurveyItem) {
+        self.init(identifier: inputItem.identifier)
+        if let title = inputItem.stepTitle {
+            self.title = title
+        }
+        if let text = inputItem.stepText {
+            self.text = text
+        }
+    }
 
     public init(identifier: String) {
-        super.init(identifier: identifier, steps: nil)
+        
+        // Create the steps that are used by this method
+        let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
+        let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
+            let options = SBAProfileInfoOptions(includes: [.externalID])
+            let formItems = options.makeFormItems(surveyItemType: .account(.registration))
+            let answerFormat = formItems.first?.answerFormat
+            let step = ORKQuestionStep(identifier: stepIdentifier, title: nil, answer: answerFormat)
+            step.optional = false
+            return step
+        }
+        
+        // Set the default text for the confirmation step
+        steps.last?.text = Localization.localizedString("SBA_CONFIRM_EXTERNALID_TEXT")
+
+        super.init(identifier: identifier, steps: steps)
     }
     
     override public func stepViewControllerClass() -> AnyClass {
-        return SBAExternalIDRegistrationStepViewController.classForCoder()
-    }
-    
-    // MARK: Navigiation
-    
-    let initialStepIdentifier = SBAProfileInfoOption.externalID.rawValue
-    let confirmStepIdentifier = "confirm"
-    
-    override public func stepAfterStepWithIdentifier(identifier: String?, withResult result: ORKTaskResult) -> ORKStep? {
-        if identifier == nil {
-            return self.stepWithIdentifier(initialStepIdentifier)
-        }
-        else if shouldConfirm && (identifier == initialStepIdentifier) {
-            return self.stepWithIdentifier(confirmStepIdentifier)
-        }
-        return nil
-    }
-    
-    override public func stepBeforeStepWithIdentifier(identifier: String, withResult result: ORKTaskResult) -> ORKStep? {
-        if identifier == confirmStepIdentifier {
-            return self.stepWithIdentifier(initialStepIdentifier)
-        }
-        return nil
-    }
-    
-    override public func stepWithIdentifier(identifier: String) -> ORKStep? {
-        
-        guard identifier == initialStepIdentifier || identifier == confirmStepIdentifier else { return nil }
-        
-        // Create a step for the substep
-        let options = SBAProfileInfoOptions(includes: [.externalID])
-        let formItems = options.makeFormItems(surveyItemType: .account(.registration))
-        let answerFormat = formItems.first?.answerFormat
-        
-        let step = ORKQuestionStep(identifier: identifier, title: self.title, answer: answerFormat)
-        step.optional = false
-        if identifier == initialStepIdentifier {
-            step.text = self.text
-        }
-        else {
-            step.text = Localization.localizedString("SBA_CONFIRM_EXTERNALID_TEXT")
-        }
-
-        return step
-    }
-    
-    
-    // MARK: NSCopying
-    
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let step = copy as? SBAExternalIDRegistrationStep else { return copy }
-        step.shouldConfirm = self.shouldConfirm
-        return step
+        return SBAExternalIDStepViewController.classForCoder()
     }
     
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.shouldConfirm = aDecoder.decodeBoolForKey("shouldConfirm")
-    }
-    
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeBool(self.shouldConfirm, forKey: "shouldConfirm")
-    }
-    
-    // MARK: Equality
-    
-    override public var hash: Int {
-        return super.hash ^ self.shouldConfirm.hashValue
-    }
-    
-    override public func isEqual(object: AnyObject?) -> Bool {
-        guard let castObject = object as? SBAExternalIDRegistrationStep else { return false }
-        return super.isEqual(object) &&
-            (castObject.shouldConfirm == self.shouldConfirm)
     }
 }
 
-public class SBAExternalIDRegistrationStepViewController: ORKPageStepViewController, SBASharedInfoController, SBALoadingViewPresenter {
+public class SBAExternalIDStepViewController: ORKPageStepViewController, SBASharedInfoController, SBALoadingViewPresenter {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
@@ -144,9 +118,10 @@ public class SBAExternalIDRegistrationStepViewController: ORKPageStepViewControl
         return self.sharedUser
     }()
     
-    
     // MARK: Navigation
     
+    // This step is publicly available so that overriding subclasses can access it, but it is marked final
+    // because it should not be overridden by subclasses.
     final public func goInitialStep() {
         guard let step = pageStep?.firstStep()
             else {
@@ -156,8 +131,9 @@ public class SBAExternalIDRegistrationStepViewController: ORKPageStepViewControl
         self.goToStep(step, direction: .Reverse, animated: true)
     }
     
-    // Override the default method for goForward and attempt user registration
-    public override func goForward() {
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final public override func goForward() {
         do {
             let externalId = try self.externalId()
             if self.isTestUser(externalId: externalId) {
@@ -170,10 +146,10 @@ public class SBAExternalIDRegistrationStepViewController: ORKPageStepViewControl
                 self.loginUser(externalId: externalId, isTestUser: false)
             }
         }
-        catch SBAExternalIDRegistrationError.NotMatching {
+        catch SBAExternalIDError.NotMatching {
             self.handleFailedConfirmation()
         }
-        catch SBAExternalIDRegistrationError.Invalid(let reason) {
+        catch SBAExternalIDError.Invalid(let reason) {
             self.handleFailedValidation(reason)
         }
         catch let error as NSError {
@@ -209,35 +185,38 @@ public class SBAExternalIDRegistrationStepViewController: ORKPageStepViewControl
     
     public func validateParameter(externalId externalId: String) throws {
         guard NSPredicate(format: "SELF MATCHES %@", self.validationRegEx).evaluateWithObject(externalId) else {
-            throw SBAExternalIDRegistrationError.Invalid(reason: nil)
+            throw SBAExternalIDError.Invalid(reason: nil)
         }
     }
     
-    public func externalId() throws -> String {
+    func externalId() throws -> String {
         
-        guard let externalIdStep = self.step as? SBAExternalIDRegistrationStep else {
-            throw SBAExternalIDRegistrationError.Invalid(reason: nil)
-        }
-        
-        let externalIds = self.result?.results?.mapAndFilter { (result) -> String? in
-            guard let textResult = result as? ORKTextQuestionResult,
-                let answer = textResult.textAnswer?.trim()
-                else { return nil }
-            return answer
+        guard let externalIds = externalIdAnswers(),
+              let externalId = externalIds.first
+        else {
+            throw SBAExternalIDError.Invalid(reason: nil)
         }
         
         // Check that the external ID is valid
-        guard let externalId = externalIds?.first else {
-            throw SBAExternalIDRegistrationError.Invalid(reason: nil)
-        }
         try validateParameter(externalId: externalId)
         
         // Check that the external ID matches
-        guard !externalIdStep.shouldConfirm || (externalIds!.count == 2 && externalId == externalIds?.last) else {
-            throw SBAExternalIDRegistrationError.NotMatching
+        guard (externalIds.count == 2 && externalId == externalIds.last) else {
+            throw SBAExternalIDError.NotMatching
         }
         
         return externalId
+    }
+    
+    func externalIdAnswers() -> [String]? {
+        return self.result?.results?.mapAndFilter { (result) -> String? in
+            guard let textResult = result as? ORKTextQuestionResult,
+                  let answer = textResult.textAnswer?.trim()
+            else {
+                return nil
+            }
+            return answer
+        }
     }
     
     
