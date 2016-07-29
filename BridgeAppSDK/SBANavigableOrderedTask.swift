@@ -34,13 +34,24 @@
 import ResearchKit
 
 /**
- * Define the navigation rule as a protocol to allow for protocol-oriented extention (multiple inheritance).
- * Currently defined usage is to allow the SBANavigableOrderedTask to check if a step has a navigation rule.
+ Define the navigation rule as a protocol to allow for protocol-oriented extention (multiple inheritance).
+ Currently defined usage is to allow the SBANavigableOrderedTask to check if a step has a navigation rule.
  */
 public protocol SBANavigationRule: class, NSSecureCoding {
     func nextStepIdentifier(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String?
 }
 
+/**
+ A naviation skip rule applies to this step to allow that step to be skipped.
+ */
+public protocol SBANavigationSkipRule: class, NSSecureCoding {
+    func shouldSkip(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> Bool
+}
+
+/**
+ A conditional rule is appended to the navigable task to check a secondary source for whether or not the
+ step should be displayed.
+ */
 public protocol SBAConditionalRule: class, NSSecureCoding {
     func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool
     func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep?
@@ -117,6 +128,9 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             
             // Check to see if this is a conditional step that *should* be skipped
             shouldSkip = conditionalRule?.shouldSkipStep(returnStep, result: result) ?? false
+            if !shouldSkip, let navigationSkipStep = returnStep as? SBANavigationSkipRule {
+                shouldSkip = navigationSkipStep.shouldSkip(result, additionalTaskResults:self.additionalTaskResults)
+            }
             if (shouldSkip) {
                 previousStep = returnStep
             }

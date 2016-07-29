@@ -244,10 +244,12 @@ extension SBAFormStepSurveyItem {
             return SBAEmailVerificationStep(inputItem: self)
         case .externalID:
             return SBAExternalIDStep(inputItem: self)
+        case .permissions:
+            return SBAPermissionsStep(inputItem: self)
         }
     }
     
-    func mapStepValues(step:ORKFormStep) {
+    func mapStepValues(step:ORKStep) {
         step.title = self.stepTitle
         step.text = self.stepText
         step.optional = self.optional

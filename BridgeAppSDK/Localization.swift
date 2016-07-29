@@ -224,6 +224,12 @@ public class Localization: NSObject {
             
             // State
             "SBA_COMPLETED" : NSLocalizedString("SBA_COMPLETED", tableName: nil, bundle: localeBundle, value:"Completed", comment:"Short phrase to use to indicate that an activity is completed."),
+            
+            // Permissions
+            "SBA_PERMISSIONS_TITLE" : NSLocalizedString("SBA_PERMISSIONS_TITLE", tableName: nil, bundle: localeBundle, value:"Permissions", comment:"Title for the screen showing the required permissions"),
+            "SBA_PERMISSIONS_FAILED_TITLE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Not Authorized", comment:"Title for a popup explaining that not all required permissions have been authorized."),
+            "SBA_PERMISSIONS_FAILED_MESSAGE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_MESSAGE", tableName: nil, bundle: localeBundle, value:"Go to Settings to change your permissions.", comment:"General purpose message for a popup explaining that not all required permissions have been authorized."),
+            
         ]
     }()
     
