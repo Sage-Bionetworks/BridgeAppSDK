@@ -35,13 +35,13 @@ import Foundation
 
 extension String {
     
-    func trim() -> String? {
+    public func trim() -> String? {
         let result = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         guard result != "" else { return nil }
         return result
     }
     
-    func parseSuffix(prefix: String, separator: String = "") -> String? {
+    public func parseSuffix(prefix: String, separator: String = "") -> String? {
         guard self.hasPrefix(prefix) else { return nil }
         let prefixWithSeparator = prefix + separator
         guard let range = self.rangeOfString(prefixWithSeparator) else { return "" }
