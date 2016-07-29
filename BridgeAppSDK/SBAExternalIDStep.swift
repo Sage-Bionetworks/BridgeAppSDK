@@ -50,16 +50,18 @@ public class SBAExternalIDStep: ORKPageStep {
     static let confirmStepIdentifier = "confirm"
     
     override public var title: String? {
-        didSet {
-            self.pageTask.steps.first?.title = title
-            self.pageTask.steps.last?.title = title
-        }
+        didSet { didSetTitle() }
+    }
+    private func didSetTitle() {
+        self.pageTask.steps.first?.title = title
+        self.pageTask.steps.last?.title = title
     }
     
     override public var text: String? {
-        didSet {
-            self.pageTask.steps.first?.text = text
-        }
+        didSet { didSetText() }
+    }
+    private func didSetText() {
+        self.pageTask.steps.first?.text = text
     }
     
     // Step is never optional
@@ -72,9 +74,11 @@ public class SBAExternalIDStep: ORKPageStep {
         self.init(identifier: inputItem.identifier)
         if let title = inputItem.stepTitle {
             self.title = title
+            didSetTitle()
         }
         if let text = inputItem.stepText {
             self.text = text
+            didSetText()
         }
     }
 
@@ -84,9 +88,8 @@ public class SBAExternalIDStep: ORKPageStep {
         let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
             let options = SBAProfileInfoOptions(includes: [.externalID])
-            let formItems = options.makeFormItems(surveyItemType: .account(.registration))
-            let answerFormat = formItems.first?.answerFormat
-            let step = ORKQuestionStep(identifier: stepIdentifier, title: nil, answer: answerFormat)
+            let step = ORKFormStep(identifier: stepIdentifier)
+            step.formItems = options.makeFormItems(surveyItemType: .account(.registration))
             step.optional = false
             return step
         }

@@ -66,7 +66,7 @@ public struct SBAProfileInfoOptions {
     
     public init(includes: [SBAProfileInfoOption]) {
         self.includes = includes
-        self.externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .None, keyboardType: .Default)
+        self.externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .AllCharacters, keyboardType: .ASCIICapable)
         self.customOptions = []
     }
     
@@ -145,7 +145,6 @@ public struct SBAProfileInfoOptions {
             case .externalID:
                 let answerFormat = ORKAnswerFormat.textAnswerFormat()
                 answerFormat.multipleLines = false
-                answerFormat.secureTextEntry = true
                 answerFormat.autocapitalizationType = self.externalIDOptions.autocapitalizationType
                 answerFormat.autocorrectionType = .No
                 answerFormat.spellCheckingType = .No
