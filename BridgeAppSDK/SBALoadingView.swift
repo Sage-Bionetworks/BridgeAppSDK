@@ -39,17 +39,16 @@ public class SBALoadingView: UIView {
         return loadingIndicator.isAnimating()
     }
     
-    var loadingIndicator: UIActivityIndicatorView!
+    lazy var loadingIndicator: UIActivityIndicatorView = {
+        self.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        loadingIndicator.hidesWhenStopped = false
+        self.addSubview(loadingIndicator)
+        return loadingIndicator
+    }()
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        
-        if (loadingIndicator == nil) {
-            self.backgroundColor = UIColor(white: 0, alpha: 0.5)
-            loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-            loadingIndicator.hidesWhenStopped = false
-            self.addSubview(loadingIndicator)
-        }
         loadingIndicator.center = CGPoint(x: self.bounds.size.width / 2.0, y: self.bounds.size.height / 2.0)
     }
     
