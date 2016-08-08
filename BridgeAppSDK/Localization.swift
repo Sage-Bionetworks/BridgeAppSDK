@@ -46,9 +46,10 @@ public class Localization: NSObject {
     public static func localizedString(key: String) -> String {
         // Look in these bundles for a localization for the given key
         for bundle in allBundles {
-            let bundleStr = NSLocalizedString(key, tableName: nil, bundle: bundle, value: key, comment: "")
+            let tableName = defaultTableNameForBundle(bundle)
+            let bundleStr = NSLocalizedString(key, tableName: tableName, bundle: bundle, value: key, comment: "")
             if bundleStr != key {
-                // If something is found where the returned
+                // If something is found here then return
                 return bundleStr
             }
         }
@@ -59,6 +60,10 @@ public class Localization: NSObject {
         }
         // Fallback to the key
         return key
+    }
+    
+    public static func defaultTableNameForBundle(bundle: NSBundle) -> String? {
+        return (bundle == localeORKBundle) ? "ResearchKit" : nil
     }
     
     public static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
@@ -81,7 +86,7 @@ public class Localization: NSObject {
                                  textList[textList.count - 2],
                                  textList[textList.count - 1])
             let delimiter = localizedString("SBA_LIST_FORMAT_DELIMITER")
-            let list = textList[0..<(textList.count - 3)] + [endText]
+            let list = Array([textList[0..<(textList.count - 3)], [endText]].flatten())
             return list.joinWithSeparator(delimiter)
         }
     }
@@ -152,8 +157,7 @@ public class Localization: NSObject {
         return listOfMyLocalizedStrings
     }
     
-    private static var listOfMyLocalizedStrings: [String : String] = {
-        return [
+    private static let listOfMyLocalizedStrings: [String : String] = [
             
             // Consent
             "SBA_CONSENT_TITLE" : NSLocalizedString("SBA_CONSENT_TITLE", tableName: nil, bundle: localeBundle, value: "Consent", comment: "Consent title"),
@@ -220,11 +224,15 @@ public class Localization: NSObject {
             "SBA_REGISTRATION_FULLNAME_TITLE" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_TITLE", tableName: nil, bundle: localeBundle, value:"Name", comment:"Title for the full name field during registration."),
             "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" : NSLocalizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter full name", comment:"Placeholder for the full name during registration."),
             "SBA_CONFIRM_EXTERNALID_TITLE" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_TITLE", tableName: nil, bundle: localeBundle, value:"Confirm", comment:"Title for the confirmation for registering via external ID"),
-            "SBA_CONFIRM_EXTERNALID_PLACEHOLDER" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_PLACEHOLDER", tableName: nil, bundle: localeBundle, value:"Enter Participant ID again", comment:"Placeholder for the confirmation for registering via external ID"),
+            "SBA_CONFIRM_EXTERNALID_TEXT" : NSLocalizedString("SBA_CONFIRM_EXTERNALID_TEXT", tableName: nil, bundle: localeBundle, value:"Confirm Participant Study ID", comment:"Placeholder for the confirmation for registering via external ID"),
             
             // State
             "SBA_COMPLETED" : NSLocalizedString("SBA_COMPLETED", tableName: nil, bundle: localeBundle, value:"Completed", comment:"Short phrase to use to indicate that an activity is completed."),
-        ]
-    }()
-    
+            
+            // Permissions
+            "SBA_PERMISSIONS_TITLE" : NSLocalizedString("SBA_PERMISSIONS_TITLE", tableName: nil, bundle: localeBundle, value:"Permissions", comment:"Title for the screen showing the required permissions"),
+            "SBA_PERMISSIONS_FAILED_TITLE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Not Authorized", comment:"Title for a popup explaining that not all required permissions have been authorized."),
+            "SBA_PERMISSIONS_FAILED_MESSAGE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_MESSAGE", tableName: nil, bundle: localeBundle, value:"Go to Settings to change your permissions.", comment:"General purpose message for a popup explaining that not all required permissions have been authorized."),
+            
+        ]    
 }

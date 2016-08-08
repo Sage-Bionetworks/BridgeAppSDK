@@ -1,5 +1,5 @@
 //
-//  SBALoadingViewPresenter.swift
+//  SBAMultilineTableViewCell.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,39 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import Foundation
+import UIKit
 
-public protocol SBALoadingViewPresenter {
-    var view: UIView! { get }
-}
+public class SBAMultipleLineTableViewCell: UITableViewCell {
+    
+    override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
-public extension SBALoadingViewPresenter {
-    
-    public var loadingView: SBALoadingView? {
-        return self.view.subviews.findObject({ $0 is SBALoadingView }) as? SBALoadingView
-    }
-    
-    public func showLoadingView() {
-        var loadingView: SBALoadingView! = self.loadingView
-        if (loadingView == nil) {
-            loadingView = SBALoadingView(frame: self.view.bounds)
-            loadingView.hidden = true
-            self.view.addSubview(loadingView)
-            loadingView.constrainToFillSuperview()
+    override public func systemLayoutSizeFittingSize(targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        
+        // Get the size calculated by super
+        var size = super.systemLayoutSizeFittingSize(targetSize, withHorizontalFittingPriority: horizontalFittingPriority, verticalFittingPriority: verticalFittingPriority)
+        
+        // If there is no detail label or the label height == 0 then exit early
+        guard let detailFrame = self.detailTextLabel?.frame where CGRectGetHeight(detailFrame) > 0,
+            let textFrame = self.textLabel?.frame
+            else {
+                return size
         }
-        if (loadingView!.isAnimating) {
-            loadingView!.startAnimating()
+        
+        // Otherwise, adjust the overall height
+        if CGRectGetMinY(detailFrame) == CGRectGetMinY(textFrame) {
+            size.height += CGRectGetHeight(detailFrame) - CGRectGetHeight(textFrame)
         }
-    }
-    
-    public func hideLoadingView(completion: (() -> Void)?) {
-        guard let view = loadingView where view.isAnimating else {
-            completion?()
-            return
+        else {
+            size.height += CGRectGetHeight(detailFrame);
         }
-        view.stopAnimating({
-            view.removeFromSuperview()
-            completion?()
-        })
+        
+        return size
     }
+
 }

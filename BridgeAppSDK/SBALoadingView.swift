@@ -1,5 +1,5 @@
 //
-//  SBAExternalIDRegistrationStep.swift
+//  SBALoadingView.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,39 +31,45 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import UIKit
 
-public class SBAExternalIDRegistrationStep: ORKStep {
+public class SBALoadingView: UIView {
     
-    public var shouldConfirmExternalID: Bool = false
-    public var externalID: String?
-    
-    override public init(identifier: String) {
-        super.init(identifier: identifier)
+    public var isAnimating: Bool {
+        return loadingIndicator.isAnimating()
     }
     
-    // MARK: NSCopying
+    lazy var loadingIndicator: UIActivityIndicatorView = {
+        self.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        loadingIndicator.hidesWhenStopped = false
+        self.addSubview(loadingIndicator)
+        return loadingIndicator
+    }()
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
-        guard let step = copy as? SBAExternalIDRegistrationStep else { return copy }
-        step.shouldConfirmExternalID = self.shouldConfirmExternalID
-        step.externalID = self.externalID
-        return step
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        loadingIndicator.center = CGPoint(x: self.bounds.size.width / 2.0, y: self.bounds.size.height / 2.0)
     }
     
-    // MARK: NSCoding
-    
-    required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder);
-        self.shouldConfirmExternalID = aDecoder.decodeBoolForKey("shouldConfirmExternalID")
-        self.externalID = aDecoder.decodeObjectForKey("externalID") as? String
+    public func startAnimating() {
+        self.alpha = 0.0
+        self.superview?.addSubview(self)
+        self.hidden = false
+        self.loadingIndicator.startAnimating()
+        UIView.animateWithDuration(0.2, animations: {
+            self.alpha = 1.0
+        })
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeBool(self.shouldConfirmExternalID, forKey: "shouldConfirmExternalID")
-        aCoder.encodeObject(self.externalID, forKey: "externalID")
+    public func stopAnimating(completion: (() -> Void)?) {
+        UIView.animateWithDuration(0.2, animations: {
+            self.alpha = 0.0
+            }, completion: {_ in
+                self.hidden = true
+                self.loadingIndicator.stopAnimating()
+                completion?()
+        })
     }
 
 }
