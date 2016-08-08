@@ -1,5 +1,5 @@
 //
-//  SBAPermissionsTask.swift
+//  SBAPermissionsStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.

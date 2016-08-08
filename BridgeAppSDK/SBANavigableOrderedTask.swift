@@ -42,7 +42,7 @@ public protocol SBANavigationRule: class, NSSecureCoding {
 }
 
 /**
- A naviation skip rule applies to this step to allow that step to be skipped.
+ A navigation skip rule applies to this step to allow that step to be skipped.
  */
 public protocol SBANavigationSkipRule: class, NSSecureCoding {
     func shouldSkip(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> Bool
