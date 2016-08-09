@@ -34,13 +34,40 @@
 import UIKit
 import BridgeAppSDK
 
-class StudyOverviewViewController: UIViewController {
+class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate {
 
     @IBAction func signUpTapped(sender: AnyObject) {
         // TODO: syoung 06/09/2016 implement
+        self.showAlertWithOk(nil, message: "TODO: syoung 06/09/2016 implement", actionHandler: nil)
     }
     
     @IBAction func loginTapped(sender: AnyObject) {
         // TODO: syoung 06/09/2016 implement
+        self.showAlertWithOk(nil, message: "TODO: syoung 06/09/2016 implement", actionHandler: nil)
+    }
+    
+    @IBAction func externalIDTapped(sender: AnyObject) {
+        
+        // TODO: syoung 06/09/2016 Implement consent and use onboarding manager for external ID
+        // Add consent signature.
+        let appDelegate = UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        appDelegate.currentUser.consentSignature = SBAConsentSignature(identifier: "signature")
+        
+        // Create a task with an external ID and permissions steps and display the view controller
+        let externalIDStep = SBAExternalIDStep(identifier: "externalID")
+        let permissonsStep = SBAPermissionsStep(identifier: "permissions")
+        permissonsStep.permissions = [.Coremotion, .LocalNotifications, .Microphone]
+        let task = ORKOrderedTask(identifier: "registration", steps: [externalIDStep, permissonsStep])
+        let vc = SBATaskViewController(task: task, taskRunUUID: nil)
+        vc.delegate = self
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    
+    func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+        taskViewController.dismissViewControllerAnimated(true) { 
+            if (reason == .Completed), let appDelegate = UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate {
+                appDelegate.showAppropriateViewController(false)
+            }
+        }
     }
 }
