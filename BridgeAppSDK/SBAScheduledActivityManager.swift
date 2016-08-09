@@ -78,7 +78,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         if (reloading) { return }
         reloading = true
         
-        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
+        SBABridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
             [weak self] (obj, error) in
             // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
             // if not, obj will be nil if error is not nil, so we don't need to check error
@@ -398,7 +398,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
-        SBAUserBridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
+        SBABridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
             self?.reloadData()
         }
     }

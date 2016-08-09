@@ -96,7 +96,7 @@ public extension SBAUserWrapper {
      * Update the user's data groups
      */
     public func updateDataGroups(dataGroups: [String], completion: ((NSError?) -> Void)?) {
-        SBAUserBridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
+        SBABridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
             guard (self != nil) else { return }
 
             self!.dataGroups = dataGroups
@@ -134,7 +134,7 @@ public extension SBAUserWrapper {
             self.externalId = externalId
             self.dataGroups = dataGroups
             
-            SBAUserBridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
+            SBABridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
                 self?.hasRegistered = (error == nil)
                 self?.callCompletionOnMain(error, completion: completion)
             })
@@ -207,7 +207,7 @@ public extension SBAUserWrapper {
         let consentImage = consentSignature.signatureImage
         let subpopGuid = self.subpopulationGuid ?? self.bridgeInfo?.studyIdentifier ?? "unknown"
         
-        SBAUserBridgeManager.sendUserConsented(name, birthDate: birthdate, consentImage: consentImage, sharingScope: self.dataSharingScope, subpopulationGuid: subpopGuid) { [weak self] (_, error) in
+        SBABridgeManager.sendUserConsented(name, birthDate: birthdate, consentImage: consentImage, sharingScope: self.dataSharingScope, subpopulationGuid: subpopGuid) { [weak self] (_, error) in
             guard (self != nil) else { return }
             
             self!.consentVerified = (error == nil)
@@ -230,7 +230,7 @@ public extension SBAUserWrapper {
         }
         
         // Make sure that 
-        SBAUserBridgeManager.ensureSignedInWithCompletion { [weak self] (_, error) in
+        SBABridgeManager.ensureSignedInWithCompletion { [weak self] (_, error) in
             guard (self != nil) else { return }
             
             if (error != nil) && error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue {
@@ -245,7 +245,7 @@ public extension SBAUserWrapper {
     
     private func signInUser(username: String, password: String, completion: ((NSError?) -> Void)?) {
         
-        SBAUserBridgeManager.signIn(username, password: password) { [weak self] (responseObject, error) in
+        SBABridgeManager.signIn(username, password: password) { [weak self] (responseObject, error) in
             guard (self != nil) else { return }
             
             // If there was an error and it is *not* the consent error then call completion and exit

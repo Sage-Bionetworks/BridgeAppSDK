@@ -47,7 +47,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     }
 
     func testCreateManager() {
-        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
+        let manager = MockOnboardingManager(jsonNamed: "Onboarding")
         XCTAssertNotNil(manager)
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
@@ -57,7 +57,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     
     func testShouldInclude() {
         
-        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")!
+        let manager = MockOnboardingManager(jsonNamed: "Onboarding")!
         
         let expectedNonNil: [SBAOnboardingSectionBaseType : [SBAOnboardingTaskType]] = [
             .login: [.login],
@@ -169,7 +169,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     
     func checkOnboardingSteps(sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
-        let manager = SBAOnboardingManager(jsonNamed: "Onboarding")
+        let manager = MockOnboardingManager(jsonNamed: "Onboarding")
         let section = manager?.section(onboardingSectionType: sectionType)
         XCTAssertNotNil(section, "sectionType:\(sectionType) taskType:\(taskType)")
         guard section != nil else { return  nil}
@@ -180,4 +180,15 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         return steps
     }
 
+}
+
+class MockOnboardingManager: SBAOnboardingManager {
+    
+    var mockAppDelegate:MockAppInfoDelegate = MockAppInfoDelegate()
+    
+    override var sharedAppDelegate: SBAAppInfoDelegate {
+        get { return mockAppDelegate }
+        set {}
+    }
+    
 }

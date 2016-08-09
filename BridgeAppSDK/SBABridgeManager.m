@@ -1,5 +1,5 @@
 //
-//  SBAUserBridgeManager.m
+//  SBABridgeManager.m
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,9 +31,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBAUserBridgeManager.h"
+#import "SBABridgeManager.h"
 
-@implementation SBAUserBridgeManager
+@implementation SBABridgeManager
 
 + (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
@@ -48,7 +48,7 @@
       password:(NSString *)password
     externalId:(NSString *)externalId
     dataGroups:(NSArray<NSString *> *)dataGroups
-    completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
+    completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     
     NSParameterAssert(email);
     NSParameterAssert(password);
@@ -74,7 +74,7 @@
      }];
 }
 
-+ (void)signIn:(NSString *)email password:(NSString *)password completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)signIn:(NSString *)email password:(NSString *)password completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     
     NSParameterAssert(email);
     NSParameterAssert(password);
@@ -99,7 +99,7 @@
              consentImage:(UIImage * _Nullable)consentImage
              sharingScope:(SBBUserDataSharingScope)sharingScope
         subpopulationGuid:(NSString *)subpopGuid
-               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock
+               completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock
 {
     NSParameterAssert(name);
     NSParameterAssert(birthDate);
@@ -122,7 +122,7 @@
 }
 
 
-+ (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)ensureSignedInWithCompletion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     
     [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionTask * __unused task,
                                                                  id responseObject,
@@ -138,7 +138,7 @@
     }];
 }
 
-+ (void) updateDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock
++ (void) updateDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock
 {
     SBBDataGroups *groups = [SBBDataGroups new];
     groups.dataGroups = [NSSet setWithArray:dataGroups];
@@ -160,7 +160,7 @@
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
                                 daysAhead:(NSInteger)daysAhead
                                daysBehind:(NSInteger)daysBehind
-                               completion:(SBAUserBridgeManagerCompletionBlock)completionBlock
+                               completion:(SBABridgeManagerCompletionBlock)completionBlock
 {
     // Intended design is to allow for the server to win in getting updates to the current list of scheduled
     // activities, but this will also *send* what is already known and may include a finishedOn date that is
@@ -170,7 +170,7 @@
     }];
 }
 
-+ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:^(id responseObject, NSError *error) {
         if (completionBlock) {
             completionBlock(responseObject, error);
@@ -178,7 +178,7 @@
     }];
 }
 
-+ (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBAuthManager) requestPasswordResetForEmail: emailAddress
                                                     completion: ^(NSURLSessionTask * __unused task,
                                                               id responseObject,
