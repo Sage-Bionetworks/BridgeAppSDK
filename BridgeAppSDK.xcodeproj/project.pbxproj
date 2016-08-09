@@ -195,6 +195,7 @@
 		FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */; };
 		FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */; };
 		FFDECE0A1D08D0F600434001 /* SBAProfileInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */; };
+		FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -559,6 +560,7 @@
 		FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEmailVerificationStep.swift; sourceTree = "<group>"; };
 		FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAConsentReviewStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAProfileInfoForm.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAPermissionsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1123,6 +1125,7 @@
 			children = (
 				FFAAF61C1CC0267E00500929 /* SBAPermissionsManager.h */,
 				FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */,
+				FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */,
 				FFB30EB01D4A8AB000D175D2 /* SBAPermissionsStep.swift */,
 			);
 			name = Permissions;
@@ -1695,6 +1698,7 @@
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
 				80D5F1D31CE557BA002A39DF /* ORKResult+SBAExtension.swift in Sources */,
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
+				FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */,
 				FFCF37DE1CDA91520090452F /* SBALearnMoreAction.swift in Sources */,
 				FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBAUserBridgeManager.m in Sources */,
