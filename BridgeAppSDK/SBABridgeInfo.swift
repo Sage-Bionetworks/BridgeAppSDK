@@ -175,8 +175,12 @@ extension SBABridgeInfo {
     }
     
     public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
-        guard let taskId = schedule.taskIdentifier else { return nil }
-        return taskReferenceWithIdentifier(taskId)
+        if let taskId = schedule.taskIdentifier {
+            return taskReferenceWithIdentifier(taskId)
+        }
+        else {
+            return schedule.activity.survey
+        }
     }
     
 }

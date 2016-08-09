@@ -84,6 +84,8 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 + (void)requestPasswordResetForEmail:(NSString*)emailAddress
                           completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
++ (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

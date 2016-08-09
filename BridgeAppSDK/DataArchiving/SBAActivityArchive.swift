@@ -71,7 +71,8 @@ public class SBAActivityArchive: SBADataArchive {
         if let surveyReference = result.schedule.activity.survey {
             // Survey schema is better matched by created date and survey guid
             self.setArchiveInfoObject(surveyReference.guid, forKey: kSurveyGuidKey)
-            self.setArchiveInfoObject(surveyReference.createdOn.ISO8601String(), forKey: kSurveyCreatedOnKey)
+            let createdOn = surveyReference.createdOn ?? NSDate()
+            self.setArchiveInfoObject(createdOn.ISO8601String(), forKey: kSurveyCreatedOnKey)
         }
         
         if !self.buildArchiveForResult(result) {
