@@ -193,10 +193,12 @@ public class SBAPermissionStepViewController: ORKTableStepViewController, SBALoa
                 dispatch_group_enter(dispatchGroup)
                 permissionsManager.requestPermissionForType(permission, withCompletion: { [weak self] (success, error) in
                     if (!success) {
-                        let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
-                        let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
-                        self?.showAlertWithOk(title, message: message, actionHandler: { (_) in
-                            dispatch_group_leave(dispatchGroup)
+                        dispatch_async(dispatch_get_main_queue(), { 
+                            let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
+                            let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
+                            self?.showAlertWithOk(title, message: message, actionHandler: { (_) in
+                                dispatch_group_leave(dispatchGroup)
+                            })
                         })
                     }
                     else {

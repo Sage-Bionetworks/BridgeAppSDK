@@ -56,7 +56,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         // Create a task with an external ID and permissions steps and display the view controller
         let externalIDStep = SBAExternalIDStep(identifier: "externalID")
         let permissonsStep = SBAPermissionsStep(identifier: "permissions")
-        permissonsStep.permissions = [.Coremotion, .LocalNotifications, .Microphone]
+        permissonsStep.permissions = appDelegate.requiredPermissions
         let task = ORKOrderedTask(identifier: "registration", steps: [externalIDStep, permissonsStep])
         let vc = SBATaskViewController(task: task, taskRunUUID: nil)
         vc.delegate = self
