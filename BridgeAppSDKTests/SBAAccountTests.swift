@@ -46,6 +46,8 @@ class SBAAccountTests: XCTestCase {
         super.tearDown()
     }
     
+    // MARK: External ID
+    
     func testExternalIdRegistrationStep_Navigation() {
         let registrationStep = SBAExternalIDStep(identifier: "registration")
         
@@ -147,6 +149,32 @@ class SBAAccountTests: XCTestCase {
         catch let error as NSError {
             XCTAssert(false, "Should throw invalid error: \(error)" )
         }
+    }
+    
+    // MARK: Permissions
+    
+    func testPermssionsType_Some() {
+        let permissonsStep = SBAPermissionsStep(identifier: "permissions")
+        permissonsStep.permissions = [.Coremotion, .LocalNotifications, .Microphone]
+        
+        let expectedItems = [SBAPermissionsType.Coremotion.rawValue, SBAPermissionsType.LocalNotifications.rawValue, SBAPermissionsType.Microphone.rawValue].sort()
+        let actualItems = permissonsStep.items as? [UInt]
+        
+        XCTAssertNotNil(actualItems)
+        guard actualItems != nil else { return }
+        XCTAssertEqual(actualItems!, expectedItems)
+    }
+    
+    func testPermssionsType_PhotoLibrary() {
+        let permissonsStep = SBAPermissionsStep(identifier: "permissions")
+        permissonsStep.permissions = [.PhotoLibrary]
+        
+        let expectedItems = [SBAPermissionsType.PhotoLibrary.rawValue].sort()
+        let actualItems = permissonsStep.items as? [UInt]
+        
+        XCTAssertNotNil(actualItems)
+        guard actualItems != nil else { return }
+        XCTAssertEqual(actualItems!, expectedItems)
     }
 
 }

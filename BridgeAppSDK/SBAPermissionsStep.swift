@@ -109,10 +109,14 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     override public func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, tableView: UITableView) {
-        guard let item = self.objectForRowAtIndexPath(indexPath) as? UInt else { return }
+        guard let item = self.objectForRowAtIndexPath(indexPath) as? UInt,
+            let multipleLineCell = cell as? SBAMultipleLineTableViewCell
+        else {
+            return
+        }
         let permission = SBAPermissionsType(rawValue: item)
-        cell.textLabel?.text = permissionsManager.permissionTitleForType(permission)
-        cell.detailTextLabel?.text = permissionsManager.permissionDescriptionForType(permission)
+        multipleLineCell.titleLabel?.text = permissionsManager.permissionTitleForType(permission)
+        multipleLineCell.subtitleLabel?.text = permissionsManager.permissionDescriptionForType(permission)
     }
 }
 
@@ -151,10 +155,11 @@ extension SBAPermissionsType {
     
     var items: [UInt] {
         var items: [UInt] = []
-        for ii in UInt(1)...UInt(16) {
-            let member = SBAPermissionsType(rawValue: ii)
+        for ii in UInt(0)...UInt(16) {
+            let rawValue = 1 << ii
+            let member = SBAPermissionsType(rawValue: rawValue)
             if self.contains(member) {
-                items.append(ii)
+                items.append(rawValue)
             }
         }
         return items
