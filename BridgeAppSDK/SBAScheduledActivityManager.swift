@@ -141,7 +141,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func sectionTitle(section: Int) -> String? {
         
         // Always return nil for the first section and if there are no rows in the section
-        guard section > 0 && scheduledActivitiesForSection(section).count > 0
+        guard scheduledActivitiesForSection(section).count > 0
         else {
             return nil
         }
