@@ -45,7 +45,88 @@ public protocol SBASurveyNavigationStep: SBANavigationRule {
     var surveyStepResultFilterPredicate: NSPredicate { get }
     
     // Form step that matches with the given result
-    func matchingSurveyStep(stepResult: ORKStepResult) -> ORKFormStep?
+    func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol?
+}
+
+public final class SBASurveyQuestionStep: ORKQuestionStep, SBASurveyNavigationStep, SBAFormProtocol {
+    
+    public var surveyStepResultFilterPredicate: NSPredicate {
+        return NSPredicate(format: "identifier = %@", self.identifier)
+    }
+    
+    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
+        guard (stepResult.identifier == self.identifier) else { return nil }
+        return self
+    }
+    
+    // MARK: SBAFormProtocol
+    
+    public var formItems: [ORKFormItem]? {
+        get {
+            guard let answerFormat = self.answerFormat else { return nil }
+            let formItem = SBASurveyFormItem(identifier: self.identifier, text: nil, answerFormat: answerFormat)
+            formItem.rulePredicate = rulePredicate
+            return [formItem]
+        }
+        set (newValue) {
+            guard let formItem = newValue?.first else { return }
+            self.answerFormat = formItem.answerFormat
+            if let item = formItem as? SBASurveyFormItem {
+                self.rulePredicate = item.rulePredicate
+            }
+        }
+    }
+    
+    // MARK: Stuff you can't extend on a protocol
+    
+    public var rulePredicate: NSPredicate?
+    
+    public var skipToStepIdentifier: String = ORKNullStepIdentifier
+    public var skipIfPassed: Bool = false
+    
+    override public init(identifier: String) {
+        super.init(identifier: identifier)
+    }
+    
+    init(surveyItem: SBASurveyItem) {
+        super.init(identifier: surveyItem.identifier)
+        self.sharedCopyFromSurveyItem(surveyItem)
+    }
+    
+    // MARK: NSCopying
+    
+    override public func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = super.copyWithZone(zone) as! SBASurveyQuestionStep
+        copy.rulePredicate = self.rulePredicate
+        return self.sharedCopying(copy)
+    }
+    
+    // MARK: NSSecureCoding
+    
+    required public init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder);
+        self.sharedDecoding(coder: aDecoder)
+        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
+    }
+    
+    override public func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        self.sharedEncoding(aCoder)
+        aCoder.encodeObject(self.rulePredicate, forKey: "rulePredicate")
+    }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let castObject = object as? SBASurveyQuestionStep else { return false }
+        return super.isEqual(object) &&
+            sharedEquality(object) &&
+            SBAObjectEquality(castObject.rulePredicate, self.rulePredicate)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^ sharedHash() ^ SBAObjectHash(self.rulePredicate)
+    }
 }
 
 public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
@@ -54,7 +135,7 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
         return NSPredicate(format: "identifier = %@", self.identifier)
     }
     
-    public func matchingSurveyStep(stepResult: ORKStepResult) -> ORKFormStep? {
+    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
         guard (stepResult.identifier == self.identifier) else { return nil }
         return self
     }
@@ -91,6 +172,16 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
         super.encodeWithCoder(aCoder)
         self.sharedEncoding(aCoder)
     }
+    
+    // MARK: Equality
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        return super.isEqual(object) && sharedEquality(object)
+    }
+    
+    override public var hash: Int {
+        return super.hash ^ sharedHash()
+    }
 }
 
 public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep {
@@ -99,8 +190,8 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
         return NSPredicate(format: "identifier BEGINSWITH %@", "\(self.identifier).")
     }
     
-    public func matchingSurveyStep(stepResult: ORKStepResult) -> ORKFormStep? {
-        return self.stepWithIdentifier(stepResult.identifier) as? ORKFormStep
+    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
+        return self.stepWithIdentifier(stepResult.identifier) as? SBAFormProtocol
     }
     
     // MARK: Stuff you can't extend on a protocol

@@ -73,6 +73,10 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
 
 extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
+    public var questionStyle: Bool {
+        return true
+    }
+    
     public var surveyItemType: SBASurveyItemType {
         if let _ = self.constraints as? SBBBooleanConstraints {
             return .form(.boolean)
@@ -162,7 +166,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     }
     
     public var skipIfPassed: Bool {
-        return true
+        return (self.skipIdentifier != nil)
     }
     
     public var rulePredicate: NSPredicate? {
