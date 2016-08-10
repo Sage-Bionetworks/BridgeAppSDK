@@ -312,15 +312,67 @@ extension ORKChoiceQuestionResult {
         guard let choiceAnswers = self.choiceAnswers else { return nil }
         return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject())
     }
-    
 }
 
 extension ORKScaleQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: (answer as NSNumber).jsonObject())
+        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject())
     }
+}
+
+extension ORKBooleanQuestionResult {
     
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.booleanAnswer else { return nil }
+        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject())
+    }
+}
+
+extension ORKTextQuestionResult {
+    
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.textAnswer else { return nil }
+        return AnswerKeyAndValue(key: "textAnswer", value: answer)
+    }
+}
+
+extension ORKNumericQuestionResult {
+    
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.numericAnswer else { return nil }
+        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject())
+    }
+}
+
+extension ORKTimeOfDayQuestionResult {
+    
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.dateComponentsAnswer else { return nil }
+        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: answer.jsonObject())
+    }
+}
+
+extension ORKTimeIntervalQuestionResult {
+    
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.intervalAnswer else { return nil }
+        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject())
+    }
+}
+
+extension ORKDateQuestionResult {
+    
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.dateAnswer else { return nil }
+        let key = "dateAnswer"
+        if self.questionType == ORKQuestionType.Date {
+            return AnswerKeyAndValue(key: key, value: answer.ISO8601DateOnlyString())
+        }
+        else {
+            return AnswerKeyAndValue(key: key, value: answer.jsonObject())
+        }
+    }
 }
 
