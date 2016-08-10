@@ -101,8 +101,13 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         else if let _ = self.constraints as? SBBTimeConstraints {
             return .form(.time)
         }
-        else if let _ = self.constraints as? SBBDurationConstraints {
-            return .form(.duration)
+        else if let durationConstraints = self.constraints as? SBBDurationConstraints {
+            if durationConstraints.unit == nil {
+                return .form(.duration)
+            }
+            else {
+                return .form(.integer)
+            }
         }
         else if let _ = self.constraints as? SBBIntegerConstraints {
             if (self.uiHint == "slider") {
@@ -119,14 +124,10 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     }
     
     public var stepTitle: String? {
-        return nil
-    }
-    
-    public var stepText: String? {
         return self.prompt
     }
     
-    public var stepDetail: String? {
+    public var stepText: String? {
         return self.promptDetail
     }
 
@@ -314,6 +315,23 @@ extension SBBIntegerConstraints: sbb_NumberRange {
 }
 
 extension SBBDecimalConstraints: sbb_NumberRange {
+}
+
+// Note: syoung 08/10/2016 On the server you are required to define a min/max and step
+// but the `SBBDurationConstraints` model object does not include these values. 
+extension SBBDurationConstraints: sbb_NumberRange {
+    
+    public var minValue: NSNumber! {
+        return NSNumber(integer: 0)
+    }
+    
+    public var maxValue: NSNumber!  {
+        return NSNumber(integer: NSIntegerMax)
+    }
+    
+    public var step: NSNumber! {
+        return nil
+    }
 }
 
 extension sbb_NumberRange {

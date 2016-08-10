@@ -43,7 +43,6 @@ public protocol SBASurveyItem: SBAStepTransformer {
     var surveyItemType: SBASurveyItemType { get }
     var stepTitle: String? { get }
     var stepText: String? { get }
-    var stepDetail: String? { get }
 }
 
 public protocol SBAActiveStepSurveyItem: SBASurveyItem {
@@ -62,6 +61,7 @@ public protocol SBAFormStepSurveyItem: SBASurveyItem {
 }
 
 public protocol SBAInstructionStepSurveyItem: SBASurveyItem {
+    var stepDetail: String? { get }
     var stepImage: UIImage? { get }
     func learnMoreAction() -> SBALearnMoreAction?
 }

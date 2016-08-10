@@ -476,6 +476,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
         inputStep.uiHint = "checkbox"
         inputStep.prompt = "Do you live alone?"
+        inputStep.promptDetail = "Prompt Detail"
         inputStep.constraints = SBBBooleanConstraints();
     
         let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
@@ -503,7 +504,8 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
-        XCTAssertEqual(surveyStep.text, "Do you live alone?")
+        XCTAssertEqual(surveyStep.title, "Do you live alone?")
+        XCTAssertEqual(surveyStep.text, "Prompt Detail")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -596,7 +598,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "medical-usage")
-        XCTAssertEqual(surveyStep.text, "Do you ever use your smartphone to look for health or medical information online?")
+        XCTAssertEqual(surveyStep.title, "Do you ever use your smartphone to look for health or medical information online?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -796,7 +798,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "feelings")
-        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        XCTAssertEqual(surveyStep.title, "How do you feel?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -835,7 +837,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -884,7 +886,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -929,7 +931,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
     
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -963,7 +965,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -977,6 +979,37 @@ class SBASurveyFactoryTests: XCTestCase {
             XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
             return
         }
+    }
+    
+    func testFactory_DurationConstraints_Weeks() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        
+        let constraints = SBBDurationConstraints()
+        inputStep.constraints = constraints
+        constraints.unit = "weeks"
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
+            XCTAssert(false, "\(step) or answer format is not of expected class type")
+            return
+        }
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.answerFormat) not of expected class type")
+                return
+        }
+        
+        XCTAssertEqual(answerFormat.minimum, 0)
+        XCTAssertEqual(answerFormat.maximum, NSIntegerMax)
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Integer)
+        XCTAssertEqual(answerFormat.unit, "weeks")
     }
     
     // MARK: IntegerConstraints
@@ -1008,7 +1041,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.text, "How old are you?")
+        XCTAssertEqual(surveyStep.title, "How old are you?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -1277,7 +1310,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.text, "How old are you?")
+        XCTAssertEqual(surveyStep.title, "How old are you?")
         XCTAssertEqual(formItems.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
