@@ -396,6 +396,9 @@ extension ORKTimeOfDayQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.dateComponentsAnswer else { return nil }
+        answer.year = 0
+        answer.month = 0
+        answer.day = 0
         return AnswerKeyAndValue(key: "dateComponentsAnswer", value: answer.jsonObject())
     }
 }
