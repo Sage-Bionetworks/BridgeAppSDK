@@ -72,3 +72,42 @@
 }
 
 @end
+
+@implementation ORKTaskResult (SBAExtensions)
+
+- (NSArray <ORKStepResult *> *)consolidatedResults {
+    
+    // Exit early if all are unique
+    NSArray *uniqueIdentifiers = [self.results valueForKeyPath:@"@distinctUnionOfObjects.identifier"];
+    if (self.results.count == uniqueIdentifiers.count) {
+        return self.results ?: @[];
+    }
+    
+    NSMutableArray <ORKStepResult *> *results = [NSMutableArray new];
+    for (NSString *identifer in uniqueIdentifiers) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", NSStringFromSelector(@selector(identifier)), identifer];
+        NSArray <ORKStepResult *> *filteredResults = (NSArray <ORKStepResult *> *)[self.results filteredArrayUsingPredicate:predicate];
+        ORKStepResult *stepResult = [filteredResults lastObject];
+        if (stepResult) {
+            if (filteredResults.count > 1) {
+                NSMutableArray *stepResults = [stepResult.results mutableCopy] ?: [NSMutableArray new];
+                // If there are more than one result, then add the duplicates to the consolidated step
+                for (NSInteger ii=0; ii < (filteredResults.count - 1); ii++) {
+                    NSArray *dupResults = [filteredResults[ii] results];
+                    if (dupResults) {
+                        for (ORKResult *result in dupResults) {
+                            result.identifier = [NSString stringWithFormat:@"%@_dup%@", result.identifier, @(ii)];
+                        }
+                        [stepResults addObjectsFromArray:dupResults];
+                    }
+                }
+                stepResult.results = stepResults;
+            }
+            [results addObject:stepResult];
+        }
+    }
+    
+    return [results copy];
+}
+
+@end

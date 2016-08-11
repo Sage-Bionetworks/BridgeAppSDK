@@ -45,4 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface ORKTaskResult (SBAExtensions)
+
+- (NSArray <ORKStepResult *> *)consolidatedResults;
+
+@end
+
 NS_ASSUME_NONNULL_END
