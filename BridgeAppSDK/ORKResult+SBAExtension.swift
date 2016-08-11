@@ -33,51 +33,54 @@
 
 import ResearchKit
 
-private var kStartDateKey = "startDate"
-private var kEndDateKey = "endDate"
-private var kIdentifierKey = "identifier"
+private let kStartDateKey = "startDate"
+private let kEndDateKey = "endDate"
+private let kIdentifierKey = "identifier"
 
-private var kItemKey = "item"
+private let kItemKey = "item"
 
-private var kTappingViewSizeKey = "TappingViewSize"
-private var kButtonRectLeftKey = "ButtonRectLeft"
-private var kButtonRectRightKey = "ButtonRectRight"
-private var kTapTimeStampKey = "TapTimeStamp"
-private var kTapCoordinateKey = "TapCoordinate"
-private var kTappedButtonIdKey = "TappedButtonId"
-private var kTappedButtonNoneKey = "TappedButtonNone"
-private var kTappedButtonLeftKey = "TappedButtonLeft"
-private var kTappedButtonRightKey = "TappedButtonRight"
-private var kTappingSamplesKey = "TappingSamples"
+private let kTappingViewSizeKey = "TappingViewSize"
+private let kButtonRectLeftKey = "ButtonRectLeft"
+private let kButtonRectRightKey = "ButtonRectRight"
+private let kTapTimeStampKey = "TapTimeStamp"
+private let kTapCoordinateKey = "TapCoordinate"
+private let kTappedButtonIdKey = "TappedButtonId"
+private let kTappedButtonNoneKey = "TappedButtonNone"
+private let kTappedButtonLeftKey = "TappedButtonLeft"
+private let kTappedButtonRightKey = "TappedButtonRight"
+private let kTappingSamplesKey = "TappingSamples"
 
-private var kSpatialSpanMemoryGameStatusKey = "MemoryGameStatus"
-private var kSpatialSpanMemoryGameStatusUnknownKey = "MemoryGameStatusUnknown"
-private var kSpatialSpanMemoryGameStatusSuccessKey = "MemoryGameStatusSuccess"
-private var kSpatialSpanMemoryGameStatusFailureKey = "MemoryGameStatusFailure"
-private var kSpatialSpanMemoryGameStatusTimeoutKey = "MemoryGameStatusTimeout"
+private let kSpatialSpanMemoryGameStatusKey = "MemoryGameStatus"
+private let kSpatialSpanMemoryGameStatusUnknownKey = "MemoryGameStatusUnknown"
+private let kSpatialSpanMemoryGameStatusSuccessKey = "MemoryGameStatusSuccess"
+private let kSpatialSpanMemoryGameStatusFailureKey = "MemoryGameStatusFailure"
+private let kSpatialSpanMemoryGameStatusTimeoutKey = "MemoryGameStatusTimeout"
 
-private var kSpatialSpanMemorySummaryNumberOfGamesKey = "MemoryGameNumberOfGames"
-private var kSpatialSpanMemorySummaryNumberOfFailuresKey = "MemoryGameNumberOfFailures"
-private var kSpatialSpanMemorySummaryOverallScoreKey = "MemoryGameOverallScore"
-private var kSpatialSpanMemorySummaryGameRecordsKey = "MemoryGameGameRecords"
+private let kSpatialSpanMemorySummaryNumberOfGamesKey = "MemoryGameNumberOfGames"
+private let kSpatialSpanMemorySummaryNumberOfFailuresKey = "MemoryGameNumberOfFailures"
+private let kSpatialSpanMemorySummaryOverallScoreKey = "MemoryGameOverallScore"
+private let kSpatialSpanMemorySummaryGameRecordsKey = "MemoryGameGameRecords"
 
-private var kSpatialSpanMemoryGameRecordSeedKey = "MemoryGameRecordSeed"
-private var kSpatialSpanMemoryGameRecordGameSizeKey = "MemoryGameRecordGameSize"
-private var kSpatialSpanMemoryGameRecordGameScoreKey = "MemoryGameRecordGameScore"
-private var kSpatialSpanMemoryGameRecordSequenceKey = "MemoryGameRecordSequence"
-private var kSpatialSpanMemoryGameRecordTouchSamplesKey = "MemoryGameRecordTouchSamples"
-private var kSpatialSpanMemoryGameRecordTargetRectsKey = "MemoryGameRecordTargetRects"
+private let kSpatialSpanMemoryGameRecordSeedKey = "MemoryGameRecordSeed"
+private let kSpatialSpanMemoryGameRecordGameSizeKey = "MemoryGameRecordGameSize"
+private let kSpatialSpanMemoryGameRecordGameScoreKey = "MemoryGameRecordGameScore"
+private let kSpatialSpanMemoryGameRecordSequenceKey = "MemoryGameRecordSequence"
+private let kSpatialSpanMemoryGameRecordTouchSamplesKey = "MemoryGameRecordTouchSamples"
+private let kSpatialSpanMemoryGameRecordTargetRectsKey = "MemoryGameRecordTargetRects"
 
-private var kSpatialSpanMemoryTouchSampleTimeStampKey = "MemoryGameTouchSampleTimestamp"
-private var kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSampleTargetIndex"
-private var kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
-private var kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
+private let kSpatialSpanMemoryTouchSampleTimeStampKey = "MemoryGameTouchSampleTimestamp"
+private let kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSampleTargetIndex"
+private let kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
+private let kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
 
-private var QuestionResultQuestionTextKey = "questionText"
-private var QuestionResultQuestionTypeKey = "questionType"
-private var QuestionResultUserInfoKey = "userInfo"
+private let QuestionResultQuestionTextKey = "questionText"
+private let QuestionResultQuestionTypeKey = "questionType"
+private let QuestionResultQuestionTypeNameKey = "questionTypeName"
+private let QuestionResultUserInfoKey = "userInfo"
+private let QuestionResultSurveyAnswerKey = "answer"
 
-private var SurveyAnswerKey = "answer"
+private let NumericResultUnitKey = "unit"
+private let DateAndTimeResultTimeZoneKey = "timeZone"
 
 public class ArchiveableResult : NSObject {
     public let result: AnyObject
@@ -284,17 +287,52 @@ public protocol ORKQuestionResultAnswerJSON {
     func jsonSerializedAnswer() -> AnswerKeyAndValue?
 }
 
+extension ORKQuestionType {
+    public var nameValue: String {
+        switch self {
+        case .None:
+            return "None"
+        case .Scale:
+            return "Scale"
+        case .SingleChoice:
+            return "SingleChoice"
+        case .MultipleChoice:
+            return "MultipleChoice"
+        case .Decimal:
+            return "Decimal"
+        case .Integer:
+            return "Integer"
+        case .Boolean:
+            return "Boolean"
+        case .Text:
+            return "Text"
+        case .TimeOfDay:
+            return "TimeOfDay"
+        case .DateAndTime:
+            return "DateAndTime"
+        case .Date:
+            return "Date"
+        case .TimeInterval:
+            return "TimeInterval"
+        case .Location:
+            return "Location"
+        case .Height:
+            return "Height"
+        }
+    }
+}
+
 extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
     
     override func resultAsDictionary() -> NSMutableDictionary {
         let choiceQuestionResult = super.resultAsDictionary()
+        choiceQuestionResult[kItemKey] = self.identifier
         choiceQuestionResult[QuestionResultQuestionTypeKey] = self.questionType.rawValue
+        choiceQuestionResult[QuestionResultQuestionTypeNameKey] = self.questionType.nameValue
         choiceQuestionResult[QuestionResultUserInfoKey] = self.userInfo
         if let answer = self.jsonSerializedAnswer() {
             choiceQuestionResult[answer.key] = answer.value
-            
-            // suspenders AND a belt: surveys apparently always expect the key "answer" regardless of question result subtype
-            choiceQuestionResult[SurveyAnswerKey] = answer.value
+            choiceQuestionResult[QuestionResultSurveyAnswerKey] = answer.value
         }
         return choiceQuestionResult
     }
@@ -343,6 +381,14 @@ extension ORKNumericQuestionResult {
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.numericAnswer else { return nil }
         return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject())
+    }
+    
+    override func resultAsDictionary() -> NSMutableDictionary {
+        let choiceQuestionResult = super.resultAsDictionary()
+        if let unit = self.unit {
+            choiceQuestionResult[NumericResultUnitKey] = unit
+        }
+        return choiceQuestionResult
     }
 }
 
