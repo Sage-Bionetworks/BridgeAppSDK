@@ -74,7 +74,7 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     override public func stepViewControllerClass() -> AnyClass {
-        return SBAPermissionStepViewController.classForCoder()
+        return SBAPermissionsStepViewController.classForCoder()
     }
     
     public func allPermissionsAuthorized() -> Bool {
@@ -109,99 +109,31 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     override public func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, tableView: UITableView) {
-        guard let item = self.objectForRowAtIndexPath(indexPath) as? UInt else { return }
-        let permission = SBAPermissionsType(rawValue: item)
-        cell.textLabel?.text = permissionsManager.permissionTitleForType(permission)
-        cell.detailTextLabel?.text = permissionsManager.permissionDescriptionForType(permission)
-    }
-}
-
-extension SBAPermissionsType {
-    
-    init(items: [UInt]?) {
-        let rawValue = items?.reduce(0, combine: |) ?? 0
-        self.init(rawValue: rawValue)
-    }
-    
-    init(key: String?) {
-        guard let key = key else {
-            self.init(rawValue: 0)
+        guard let item = self.objectForRowAtIndexPath(indexPath) as? UInt,
+            let multipleLineCell = cell as? SBAMultipleLineTableViewCell
+        else {
             return
         }
-        switch key {
-        case "camera":
-            self.init(rawValue:SBAPermissionsType.Camera.rawValue)
-        case "coremotion":
-            self.init(rawValue:SBAPermissionsType.Coremotion.rawValue)
-        case "healthKit":
-            self.init(rawValue:SBAPermissionsType.HealthKit.rawValue)
-        case "location":
-            self.init(rawValue:SBAPermissionsType.Location.rawValue)
-        case "localNotifications":
-            self.init(rawValue:SBAPermissionsType.LocalNotifications.rawValue)
-        case "microphone":
-            self.init(rawValue:SBAPermissionsType.Microphone.rawValue)
-        case "photoLibrary":
-            self.init(rawValue:SBAPermissionsType.PhotoLibrary.rawValue)
-        default:
-            let intValue = UInt(key) ?? 0
-            self.init(rawValue: intValue)
-        }
-    }
-    
-    var items: [UInt] {
-        var items: [UInt] = []
-        for ii in UInt(1)...UInt(16) {
-            let member = SBAPermissionsType(rawValue: ii)
-            if self.contains(member) {
-                items.append(ii)
-            }
-        }
-        return items
+        let permission = SBAPermissionsType(rawValue: item)
+        multipleLineCell.titleLabel?.text = permissionsManager.permissionTitleForType(permission)
+        multipleLineCell.subtitleLabel?.text = permissionsManager.permissionDescriptionForType(permission)
     }
 }
 
-public class SBAPermissionStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
-    
-    public var permissionsStep: SBAPermissionsStep? {
-        return self.step as? SBAPermissionsStep
-    }
+public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
     
     override public func goForward() {
-        guard let items = self.permissionsStep?.items as? [UInt] else {
-            assert(false, "Could not convert permission step items to permissions")
+        guard let permissionsStep = self.step as? SBAPermissionsStep else {
+            assertionFailure("Step is not of expected type")
             super.goForward()
             return
         }
         
         // Show a loading view to indicate that something is happening
         self.showLoadingView()
-        
-        // Use a dispatch group to iterate through all the permissions and accept them as
-        // a batch, showing an alert for each if not authorized.
-        let dispatchGroup = dispatch_group_create()
-        let permissionsManager = self.permissionsStep!.permissionsManager
-        
-        for item in items {
-            let permission = SBAPermissionsType(rawValue: item)
-            if !permissionsManager.isPermissionsGrantedForType(permission) {
-                dispatch_group_enter(dispatchGroup)
-                permissionsManager.requestPermissionForType(permission, withCompletion: { [weak self] (success, error) in
-                    if (!success) {
-                        let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
-                        let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
-                        self?.showAlertWithOk(title, message: message, actionHandler: { (_) in
-                            dispatch_group_leave(dispatchGroup)
-                        })
-                    }
-                    else {
-                        dispatch_group_leave(dispatchGroup)
-                    }
-                })
-            }
-        }
-        
-        dispatch_group_notify(dispatchGroup, dispatch_get_main_queue()) { [weak self] in
+        let permissionsManager = permissionsStep.permissionsManager
+        let permissions = permissionsStep.permissions
+        permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (_) in
             self?.goNext()
         }
     }
@@ -209,6 +141,10 @@ public class SBAPermissionStepViewController: ORKTableStepViewController, SBALoa
     private func goNext() {
         super.goForward()
     }
+    
+    public override var cancelButtonItem: UIBarButtonItem? {
+        // Overrride the cancel button to *not* display. User must tap the "Done" button.
+        get { return nil }
+        set {}
+    }
 }
-
-

@@ -35,35 +35,44 @@ import UIKit
 
 public class SBAMultipleLineTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var titleLabel: UILabel?
+    @IBOutlet weak var subtitleLabel: UILabel?
+    
     override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+        
+        // Add title
+        let titleLabel = UILabel(frame: CGRectZero)
+        titleLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+        titleLabel.textAlignment = .Center
+        self.titleLabel = titleLabel
+        self.contentView.addSubview(titleLabel)
+        
+        // Add subtitle
+        let subtitleLabel = UILabel(frame: CGRectZero)
+        subtitleLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        subtitleLabel.numberOfLines = 0
+        self.subtitleLabel = subtitleLabel
+        self.contentView.addSubview(subtitleLabel)
+
+        // Setup constraints
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleTop = NSLayoutConstraint(item: titleLabel, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .TopMargin, multiplier: 1.0, constant: 0)
+        let titleLeft = NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: .Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1.0, constant: 0)
+        let titleRight = NSLayoutConstraint(item: titleLabel, attribute: .Trailing, relatedBy: .Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1.0, constant: 0)
+
+        let subtitleTop = NSLayoutConstraint(item: subtitleLabel, attribute: .Top, relatedBy: .Equal, toItem: titleLabel, attribute: .Bottom, multiplier: 1.0, constant: 8)
+        let subtitleLeft = NSLayoutConstraint(item: subtitleLabel, attribute: .Leading, relatedBy: .Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1.0, constant: 0)
+        let subtitleRight = NSLayoutConstraint(item: subtitleLabel, attribute: .Trailing, relatedBy: .Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1.0, constant: 0)
+        let subtitleBottom = NSLayoutConstraint(item: subtitleLabel, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .BottomMargin, multiplier: 1.0, constant: 0)
+        
+        self.contentView.addConstraints([titleTop, titleLeft, titleRight, subtitleTop, subtitleLeft, subtitleRight, subtitleBottom])
     }
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    override public func systemLayoutSizeFittingSize(targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        
-        // Get the size calculated by super
-        var size = super.systemLayoutSizeFittingSize(targetSize, withHorizontalFittingPriority: horizontalFittingPriority, verticalFittingPriority: verticalFittingPriority)
-        
-        // If there is no detail label or the label height == 0 then exit early
-        guard let detailFrame = self.detailTextLabel?.frame where CGRectGetHeight(detailFrame) > 0,
-            let textFrame = self.textLabel?.frame
-            else {
-                return size
-        }
-        
-        // Otherwise, adjust the overall height
-        if CGRectGetMinY(detailFrame) == CGRectGetMinY(textFrame) {
-            size.height += CGRectGetHeight(detailFrame) - CGRectGetHeight(textFrame)
-        }
-        else {
-            size.height += CGRectGetHeight(detailFrame);
-        }
-        
-        return size
     }
 
 }

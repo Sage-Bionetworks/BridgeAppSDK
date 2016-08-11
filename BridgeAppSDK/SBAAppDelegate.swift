@@ -110,7 +110,7 @@ public protocol SBAAppInfoDelegate: class {
     
     public func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
         if identifier == kBackgroundSessionIdentifier {
-            SBAUserBridgeManager.restoreBackgroundSession(identifier, completionHandler: completionHandler)
+            SBABridgeManager.restoreBackgroundSession(identifier, completionHandler: completionHandler)
         }
     }
     
@@ -158,7 +158,7 @@ public protocol SBAAppInfoDelegate: class {
     
     func initializeBridgeServerConnection() {
         BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, useCache:bridgeInfo.useCache, environment: bridgeInfo.environment)
-        SBAUserBridgeManager.setAuthDelegate(self.currentUser)
+        SBABridgeManager.setAuthDelegate(self.currentUser)
     }
     
     

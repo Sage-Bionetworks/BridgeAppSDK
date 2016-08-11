@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBABridgeTask+SBBSurveyReference.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+import BridgeSDK
+import ResearchKit
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATaskViewController.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/ResearchKitExtensions.h>
+extension SBBSurveyReference : SBATaskReference {
+    
+    public func transformToTask(factory factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+        return SBASurveyTask(surveyReference: self, factory: factory)
+    }
+    
+    public var cancelDisabled: Bool {
+        return false
+    }
+    
+    public var allowMultipleRun: Bool {
+        return true
+    }
+    
+    public var scheduleNotification: Bool {
+        return false
+    }
+}

@@ -234,5 +234,12 @@ public class Localization: NSObject {
             "SBA_PERMISSIONS_FAILED_TITLE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_TITLE", tableName: nil, bundle: localeBundle, value:"Not Authorized", comment:"Title for a popup explaining that not all required permissions have been authorized."),
             "SBA_PERMISSIONS_FAILED_MESSAGE" : NSLocalizedString("SBA_PERMISSIONS_FAILED_MESSAGE", tableName: nil, bundle: localeBundle, value:"Go to Settings to change your permissions.", comment:"General purpose message for a popup explaining that not all required permissions have been authorized."),
             
-        ]    
+            // Network failure messages
+            "SBA_NETWORK_FAILURE_TITLE" : NSLocalizedString("SBA_NETWORK_FAILURE_TITLE", tableName: nil, bundle: localeBundle, value:"Could Not Complete", comment:"Title for a step or alert indicating a network failure"),
+            "SBA_NETWORK_FAILURE_MESSAGE" : NSLocalizedString("SBA_NETWORK_FAILURE_MESSAGE", tableName: nil, bundle: localeBundle, value:"Please try again later.", comment:"Message for a step or alert indicating a network failure"),
+            
+            // Survey loading message
+            "SBA_SURVEY_LOADING_TEXT" : NSLocalizedString("SBA_SURVEY_LOADING_TEXT", tableName: nil, bundle: localeBundle, value:"Please wait while the survey is downloaded.", comment:"Message for a loading a survey."),
+    
+        ]
 }

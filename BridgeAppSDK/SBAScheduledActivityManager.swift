@@ -78,7 +78,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         if (reloading) { return }
         reloading = true
         
-        SBAUserBridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
+        SBABridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
             [weak self] (obj, error) in
             // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
             // if not, obj will be nil if error is not nil, so we don't need to check error
@@ -141,7 +141,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func sectionTitle(section: Int) -> String? {
         
         // Always return nil for the first section and if there are no rows in the section
-        guard section > 0 && scheduledActivitiesForSection(section).count > 0
+        guard scheduledActivitiesForSection(section).count > 0
         else {
             return nil
         }
@@ -286,9 +286,6 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             let schedule = scheduledActivityForTaskViewController(taskViewController)
             where shouldRecordResult(schedule, taskViewController: taskViewController) {
             
-            // Update the schedule on the server
-            updateScheduledActivity(schedule, taskViewController: taskViewController)
-            
             // Update any data stores associated with this task
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
             
@@ -296,7 +293,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
             let archives = results.mapAndFilter({ archiveForActivityResult($0) })
             SBADataArchive.encryptAndUploadArchives(archives)
-
+            
+            // Update the schedule on the server
+            updateScheduledActivity(schedule, taskViewController: taskViewController)
         }
         else {
             taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
@@ -349,6 +348,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
         let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
+        if let surveyTask = task as? SBASurveyTask {
+            surveyTask.title = schedule.activity.label
+        }
         return (task, taskRef)
     }
     
@@ -398,7 +400,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     }
     
     public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
-        SBAUserBridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
+        SBABridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
             self?.reloadData()
         }
     }
@@ -427,6 +429,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         guard taskViewController.result.results != nil else { return [] }
         
         let taskResult = taskViewController.result
+        let surveyTask = taskViewController.task as? SBASurveyTask
         
         // Look at the task result start/end date and assign the start/end date for the split result
         // based on whether or not the inputDate is greater/less than the comparison date. This way,
@@ -439,7 +442,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             }
             return date
         }
-        
+
         // Function for creating each split result
         func createActivityResult(identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
             let result = SBAActivityResult(taskIdentifier: identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
@@ -447,7 +450,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             result.schedule = schedule
             result.startDate = outputDate(stepResults.first?.startDate, comparison: .OrderedAscending)
             result.endDate = outputDate(stepResults.last?.endDate, comparison: .OrderedDescending)
-            result.schemaRevision = bridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision ?? 1
+            result.schemaRevision = surveyTask?.schemaRevision ?? bridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision ?? 1
             return result
         }
         
@@ -464,7 +467,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                     if let subtask = subtaskStep.subtask as? SBANavigableOrderedTask,
                         let dataCollection = subtask.conditionalRule as? SBATrackedDataObjectCollection {
                         // But keep a pointer to the dataStore
-                        dataStores += [dataCollection.dataStore]
+                        dataStores.append(dataCollection.dataStore)
                         isDataCollection = true
                     }
                     
@@ -496,7 +499,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                             
                             // create the subresult and add to list
                             let substepResult: SBAActivityResult = createActivityResult(schemaId, schedule: subschedule, stepResults: subsetResults)
-                            allResults += [substepResult]
+                            allResults.append(substepResult)
                         }
                     }
                     else if isDataCollection {
@@ -513,7 +516,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // If there are any results that were not filtered into a subgroup then include them at the top level
         if topLevelResults.filter({ $0.hasResults }).count > 0 {
             let topResult = createActivityResult(taskResult.identifier, schedule: schedule, stepResults: topLevelResults)
-            allResults =  [topResult] + allResults
+            allResults.insert(topResult, atIndex: 0)
         }
         
         return allResults

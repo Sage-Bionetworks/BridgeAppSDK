@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>emailForLoginViaExternalId</key>
-	<string>not_supported</string>
+	<string>bridge-testing@sagebase.org</string>
 	<key>studyIdentifier</key>
 	<string>sample-study-ios</string>
 	<key>useCache</key>

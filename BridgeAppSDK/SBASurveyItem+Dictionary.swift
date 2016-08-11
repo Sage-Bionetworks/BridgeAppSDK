@@ -155,6 +155,10 @@ extension NSDictionary: SBAFormStepSurveyItem {
     public var expectedAnswer: AnyObject? {
         return self["expectedAnswer"]
     }
+    
+    public var questionStyle: Bool {
+        return self["questionStyle"] as? Bool ?? false
+    }
 }
 
 extension NSDictionary: SBANumberRange {

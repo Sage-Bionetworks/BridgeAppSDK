@@ -33,7 +33,14 @@
 
 import UIKit
 
+enum SBAScheduledNotificationType: String {
+    case scheduledActivity
+}
+
 public class SBANotificationsManager: NSObject, SBASharedInfoController {
+    
+    static let notificationType = "notificationType"
+    static let identifier = "identifier"
     
     public static let sharedManager = SBANotificationsManager()
     
@@ -41,29 +48,52 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
     }()
     
+    lazy public var sharedApplication: UIApplication = {
+        return UIApplication.sharedApplication()
+    }()
+    
+    lazy public var permissionsManager: SBAPermissionsManager = {
+        return SBAPermissionsManager.sharedManager()
+    }()
+    
     public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        // TODO: emm 2016-04-29 handle mPower-style notification scheduling, etc.
-        if !SBAPermissionsManager.sharedManager().isPermissionsGrantedForType(.LocalNotifications) {
-            return
+        permissionsManager.requestPermissions(.LocalNotifications, alertPresenter: nil) { [weak self] (granted) in
+            if granted {
+                self?.scheduleNotifications(scheduledActivities: activities)
+            }
         }
+    }
+    
+    private func scheduleNotifications(scheduledActivities activities: [SBBScheduledActivity]) {
         
-        let app = UIApplication.sharedApplication()
-        
-        // TODO: syoung 06/10/2016 Only cancel the notifications that are scheduled using this manager
-        app.cancelAllLocalNotifications()
+        // Cancel previous notifications
+        cancelNotifications(notificationType: .scheduledActivity)
         
         // Add a notification for the scheduled activities that should include one
+        let app = sharedApplication
         for sa in activities {
             if let taskRef = self.sharedBridgeInfo.taskReferenceForSchedule(sa)
                 where taskRef.scheduleNotification  {
-                let notif = UILocalNotification.init()
+                let notif = UILocalNotification()
                 notif.fireDate = sa.scheduledOn
                 notif.soundName = UILocalNotificationDefaultSoundName
                 notif.alertBody = Localization.localizedStringWithFormatKey("SBA_TIME_FOR_%@", sa.activity.label)
+                notif.userInfo = [ SBANotificationsManager.notificationType: SBAScheduledNotificationType.scheduledActivity.rawValue,
+                                   SBANotificationsManager.identifier: sa.guid ]
                 app.scheduleLocalNotification(notif)
             }
         }
-        
     }
     
+    private func cancelNotifications(notificationType notificationType: SBAScheduledNotificationType) {
+        let app = sharedApplication
+        if let scheduledNotifications = app.scheduledLocalNotifications {
+            for notif in scheduledNotifications {
+                if let type = notif.userInfo?[SBANotificationsManager.notificationType] as? String,
+                    let notifType = SBAScheduledNotificationType(rawValue: type) where notifType == notificationType {
+                    app.cancelLocalNotification(notif)
+                }
+            }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 //
-//  SBAUserBridgeManager.h
+//  SBABridgeManager.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -43,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param responseObject The JSON object from the response, if any.
  *  @param error          Any error that occurred.
  */
-typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject, NSError * _Nullable error);
+typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSError * _Nullable error);
 
-@interface SBAUserBridgeManager : NSObject
+@interface SBABridgeManager : NSObject
 
-+ (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
++ (void)setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
 
 + (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
 
@@ -55,32 +55,36 @@ typedef void (^SBAUserBridgeManagerCompletionBlock)(id _Nullable responseObject,
       password:(NSString *)password
     externalId:(NSString * _Nullable)externalId
     dataGroups:(NSArray<NSString *> * _Nullable)dataGroups
-    completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+    completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)signIn:(NSString *)username
       password:(NSString *)password
-    completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+    completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)sendUserConsented:(NSString *)name
                 birthDate:(NSDate *)birthDate
              consentImage:(UIImage * _Nullable)consentImage
              sharingScope:(SBBUserDataSharingScope)sharingScope
         subpopulationGuid:(NSString *)subpopGuid
-               completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+               completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
-+ (void)ensureSignedInWithCompletion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
++ (void)ensureSignedInWithCompletion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)updateDataGroups:(NSArray<NSString *> *)dataGroups
-              completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
+              completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
                                 daysAhead:(NSInteger)daysAhead
                                daysBehind:(NSInteger)daysBehind
-                               completion:(SBAUserBridgeManagerCompletionBlock)completionBlock;
+                               completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
-+ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
++ (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
+                       completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
-+ (void)requestPasswordResetForEmail:(NSString*)emailAddress completion:(SBAUserBridgeManagerCompletionBlock _Nullable)completionBlock;
++ (void)requestPasswordResetForEmail:(NSString*)emailAddress
+                          completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
+
++ (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
 @end
 

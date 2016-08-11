@@ -180,7 +180,9 @@ extension SBAActiveTask {
                 if let step = task.steps.filter({ return $0.identifier == item.identifier }).first {
                     step.title = item.stepTitle ?? step.title
                     step.text = item.stepText ?? step.text
-                    if let detail = item.stepDetail, let instructionStep = step as? ORKInstructionStep {
+                    if let instructionItem = item as? SBAInstructionStepSurveyItem,
+                        let detail = instructionItem.stepDetail,
+                        let instructionStep = step as? ORKInstructionStep {
                         instructionStep.detailText = detail
                     }
                     if let activeStep = step as? ORKActiveStep,

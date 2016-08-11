@@ -476,6 +476,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
         inputStep.uiHint = "checkbox"
         inputStep.prompt = "Do you live alone?"
+        inputStep.promptDetail = "Prompt Detail"
         inputStep.constraints = SBBBooleanConstraints();
     
         let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
@@ -497,13 +498,14 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBASurveyFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
-        XCTAssertEqual(surveyStep.text, "Do you live alone?")
+        XCTAssertEqual(surveyStep.title, "Do you live alone?")
+        XCTAssertEqual(surveyStep.text, "Prompt Detail")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -531,6 +533,41 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
     }
     
+    func testFactory_BooleanConstraints_NoRules() {
+        
+        let inputStep = SBBSurveyQuestion()
+        inputStep.identifier = "living-alone-status"
+        inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep.uiHint = "checkbox"
+        inputStep.prompt = "Do you live alone?"
+        inputStep.constraints = SBBBooleanConstraints();
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "living-alone-status")
+        
+        // In every case, the next step identifier should be nil
+        
+        let questionResult = ORKBooleanQuestionResult(identifier:surveyStep.identifier)
+        let stepResult = ORKStepResult(stepIdentifier: surveyStep.identifier, results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [stepResult]
+        
+        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+        
+        questionResult.booleanAnswer = false
+        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+        
+        questionResult.booleanAnswer = true
+        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+    }
+    
     // MARK: MultiValueConstraints
 
     func testFactory_MultiValueConstraints() {
@@ -555,13 +592,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBASurveyFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "medical-usage")
-        XCTAssertEqual(surveyStep.text, "Do you ever use your smartphone to look for health or medical information online?")
+        XCTAssertEqual(surveyStep.title, "Do you ever use your smartphone to look for health or medical information online?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -617,7 +654,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not meet expected format")
@@ -651,7 +688,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not meet expected format")
@@ -677,7 +714,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -697,7 +734,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -726,7 +763,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -755,13 +792,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "feelings")
-        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        XCTAssertEqual(surveyStep.title, "How do you feel?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -794,13 +831,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -843,13 +880,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -888,13 +925,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
     
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -922,13 +959,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -942,6 +979,37 @@ class SBASurveyFactoryTests: XCTestCase {
             XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
             return
         }
+    }
+    
+    func testFactory_DurationConstraints_Weeks() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.identifier = "last-smoked"
+        inputStep.guid = "2d4b697c-368e-4cda-a30d-0c7dfc38342e"
+        inputStep.prompt = "When is the last time you smoked (put todays date if you are still smoking)?"
+        inputStep.uiHint = "datetimepicker"
+        
+        let constraints = SBBDurationConstraints()
+        inputStep.constraints = constraints
+        constraints.unit = "weeks"
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
+            XCTAssert(false, "\(step) or answer format is not of expected class type")
+            return
+        }
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.answerFormat) not of expected class type")
+                return
+        }
+        
+        XCTAssertEqual(answerFormat.minimum, 0)
+        XCTAssertEqual(answerFormat.maximum, NSIntegerMax)
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Integer)
+        XCTAssertEqual(answerFormat.unit, "weeks")
     }
     
     // MARK: IntegerConstraints
@@ -967,13 +1035,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
     
-        guard let surveyStep = step as? SBASurveyFormStep else {
+        guard let surveyStep = step as? SBASurveyQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.text, "How old are you?")
+        XCTAssertEqual(surveyStep.title, "How old are you?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -1023,7 +1091,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
             XCTAssert(false, "\(step) does not match expected")
@@ -1055,7 +1123,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not match expected")
@@ -1087,7 +1155,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not match expected")
@@ -1119,7 +1187,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not match expected")
@@ -1151,7 +1219,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not match expected")
@@ -1183,7 +1251,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first as? SBASurveyFormItem,
             let navigationRule = formItem.rulePredicate else {
                 XCTAssert(false, "\(step) does not match expected")
@@ -1234,7 +1302,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBASurveyFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
               let formItems = surveyStep.formItems
         else {
             XCTAssert(false, "\(step) is not of expected class type")
@@ -1242,7 +1310,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.text, "How old are you?")
+        XCTAssertEqual(surveyStep.title, "How old are you?")
         XCTAssertEqual(formItems.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -1288,7 +1356,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
                 XCTAssert(false, "\(step) Not of expected class")
@@ -1307,7 +1375,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         // ResearchKit requires that number of steps between min and max value are >= 1 and <= 13
         // so if there would be more than 13 steps (100/5 == 20) then use continuous scale
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -1326,7 +1394,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -1348,7 +1416,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // If the step size is not defined, but the slider uiHint is set,
         // then should be step size == 1. This will result in more than 13 step intervals
         // so the returned class should be continuous scale
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
@@ -1368,7 +1436,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         // a step size of 37 is not divisible by 100 so is invalid
-        guard let surveyStep = step as? ORKFormStep,
+        guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let _ = formItem.answerFormat as? ORKNumericAnswerFormat else {
             XCTAssert(false, "\(step) Not of expected class")

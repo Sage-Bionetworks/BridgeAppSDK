@@ -225,11 +225,19 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-    func createFormStep(isSubtaskStep: Bool) -> ORKFormStep {
-        let step = (!isSubtaskStep && self.usesNavigation()) ?
-            SBASurveyFormStep(surveyItem: self) :
+    func createFormStep(isSubtaskStep: Bool) -> ORKStep {
+        
+        // Factory method for determining the proper type of form-style step to return
+        // the ORKQuestionStep and ORKFormStep have a different UI presentation
+        let step: ORKStep =
+            // If this is a question style then use the SBA subclass
+            self.questionStyle ? SBASurveyQuestionStep(surveyItem: self) :
+            // If this is *not* a subtask step and it uses navigation then return a survey form step
+            (!isSubtaskStep && self.usesNavigation()) ? SBASurveyFormStep(surveyItem: self) :
+            // Otherwise, use a form step
             ORKFormStep(identifier: self.identifier)
-        buildFormItems(step, isSubtaskStep: isSubtaskStep)
+        
+        buildFormItems(step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep)
         mapStepValues(step)
         return step
     }
@@ -249,13 +257,13 @@ extension SBAFormStepSurveyItem {
         }
     }
     
-    func mapStepValues(step:ORKStep) {
+    func mapStepValues(step: ORKStep) {
         step.title = self.stepTitle
         step.text = self.stepText
         step.optional = self.optional
     }
     
-    func buildFormItems(step:ORKFormStep, isSubtaskStep: Bool) {
+    func buildFormItems(step: SBAFormProtocol, isSubtaskStep: Bool) {
         if case SBASurveyItemType.form(.compound) = self.surveyItemType {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
