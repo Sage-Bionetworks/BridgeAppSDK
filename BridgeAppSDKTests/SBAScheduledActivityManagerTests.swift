@@ -40,6 +40,7 @@ let medicationTrackingTaskId = "Medication Task"
 let comboTaskId = "Combo Task"
 let tappingTaskId = "Tapping Task"
 let memoryTaskId = "Memory Task"
+let voiceTaskId = "Voice Task"
 
 class SBAScheduledActivityManagerTests: XCTestCase {
 
@@ -473,6 +474,40 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         checkDates(taskVC.taskResult, splitResults)
     }
     
+    func testActivityResultsForSchedule_VoiceTask() {
+        
+        let manager = TestScheduledActivityManager()
+        manager.activities = createScheduledActivities([voiceTaskId])
+        
+        let schedule = manager.activities[0]
+        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+            let task = taskVC.task
+            else {
+                XCTAssert(false, "Failed to create a task view controller of expected type")
+                return
+        }
+        taskVC.taskResult = buildTaskResult(task, selectedMeds: nil, outputDirectory: nil, tooLoudCount: 2)
+        
+        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        XCTAssertEqual(splitResults.count, 1)
+        
+        guard let result = splitResults.first else { return }
+        
+        // Check that the results are singular
+        result.validateParameters()
+        
+        let countdownResult = result.stepResultForStepIdentifier("countdown")
+        XCTAssertNotNil(countdownResult)
+        XCTAssertNotNil(countdownResult?.results)
+        guard let countdownResults = countdownResult?.results else { return }
+        XCTAssertEqual(countdownResults.count, 3)
+        
+        // Additional results should be kept. Only the most recent should *not* have _dup# appended to the identifier
+        let resultIdentifiers = countdownResults.map({ $0.identifier })
+        let expectedResultIdentifiers = [ "file", "file_dup0", "file_dup1"]
+        XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
+    }
+    
     func testComboTaskResult_SimRun() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(comboTaskId)
@@ -721,11 +756,16 @@ class SBAScheduledActivityManagerTests: XCTestCase {
 
     func buildTaskResult(task: ORKTask,
                          selectedMeds: [String : NSNumber]? = nil,
-                         outputDirectory: NSURL? = nil) -> ORKTaskResult {
+                         outputDirectory: NSURL? = nil,
+                         tooLoudCount: Int = 0) -> ORKTaskResult {
         
         let taskResult = ORKTaskResult(taskIdentifier: task.identifier, taskRunUUID: NSUUID(), outputDirectory: outputDirectory)
         taskResult.results = []
         
+        // setup voice step search
+        let voicePrefix = tooLoudCount > 0 && task.identifier != "Voice Activity" ? "Voice Activity." : ""
+        let voiceCountdownStepIdentifier = voicePrefix + "countdown"
+        let voiceTooLoudStepIdentifier = voicePrefix + "audio.tooloud"
         
         var copyTaskResult: ORKTaskResult = taskResult.copy() as! ORKTaskResult
         var previousStep: ORKStep? = nil
@@ -748,6 +788,14 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                 }
                 let stepResult = step.instantiateDefaultStepResult(answerMap)
                 taskResult.results?.append(stepResult)
+            }
+            else if tooLoudCount > 0 && step.identifier == voiceCountdownStepIdentifier {
+                for ii in 0...tooLoudCount {
+                    taskResult.results?.append(step.instantiateDefaultStepResult(nil))
+                    if ii < tooLoudCount {
+                        taskResult.results?.append(ORKStepResult(identifier: voiceTooLoudStepIdentifier))
+                    }
+                }
             }
             else {
                 // Add the result to the task
@@ -773,7 +821,11 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check assumptions
         XCTAssertGreaterThan(taskResult.results!.count, 0)
-        taskResult.validateParameters()
+        if (tooLoudCount == 0) {
+            // Only validate the paramenters if the tooLoudCount is zero
+            // because RK Navigiation will add multiple steps with the same result identifier
+            taskResult.validateParameters()
+        }
         
         return taskResult
     }
@@ -804,43 +856,51 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var passwordFormatForLoginViaExternalId: String?
     var testUserDataGroup: String?
     var schemaMap: [NSDictionary]? {
-        return [memorySchemaRef, walkingSchemaRef, tappingSchemaRef]
+        return [memorySchemaRef, walkingSchemaRef, tappingSchemaRef, voiceSchemaRef]
     }
     var taskMap: [NSDictionary]? {
-        return [medTaskRef, comboTaskRef, tappingTaskRef, memoryTaskRef]
+        return [medTaskRef, comboTaskRef, tappingTaskRef, memoryTaskRef, voiceTaskRef]
     }
     var filenameMap: NSDictionary?
     var certificateName: String?
     
-    var medTaskRef = [
+    let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,
         "resourceName"      : "MedicationTracking",
         "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? "",
         "classType"         : "TrackedDataObjectCollection"]
-    var comboTaskRef = [
+    let comboTaskRef = [
         "taskIdentifier"    : comboTaskId,
         "resourceName"      : "CombinedTask",
         "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? ""]
-    var tappingTaskRef = [
+    let tappingTaskRef = [
         "taskIdentifier"    : tappingTaskId,
         "resourceName"      : "TappingTask",
         "resourceBundle"    : NSBundle(forClass: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? ""]
-    var memoryTaskRef = [
+    let memoryTaskRef = [
         "taskIdentifier"    : memoryTaskId,
         "schemaIdentifier"  : "Memory Activity",
         "taskType"          : "memory"]
+    let voiceTaskRef = [
+        "taskIdentifier"    : voiceTaskId,
+        "schemaIdentifier"  : "Voice Activity",
+        "taskType"          : "voice"]
     
-    var walkingSchemaRef = [
+    let walkingSchemaRef = [
         "schemaIdentifier"  : "Walking Activity",
         "schemaRevision"    : 7,
     ]
-    var memorySchemaRef = [
+    let memorySchemaRef = [
         "schemaIdentifier"  : "Memory Activity",
         "schemaRevision"    : 3,
         ]
-    var tappingSchemaRef = [
+    let tappingSchemaRef = [
         "schemaIdentifier"  : "Tapping Activity",
         "schemaRevision"    : 5,
+        ]
+    let voiceSchemaRef = [
+        "schemaIdentifier"  : "Voice Activity",
+        "schemaRevision"    : 1,
         ]
     
     // MARK: test function overrrides

@@ -455,7 +455,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
         
         // mutable arrays for ensuring all results are collected
-        var topLevelResults:[ORKStepResult] = taskViewController.result.results! as! [ORKStepResult]
+        var topLevelResults:[ORKStepResult] = taskViewController.result.consolidatedResults()
         var allResults:[SBAActivityResult] = []
         var dataStores:[SBATrackedDataStore] = []
         
