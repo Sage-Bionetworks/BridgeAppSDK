@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		601F7CB31D6236F500C5FE09 /* SBAEncryption+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F7C9B1D62361400C5FE09 /* SBAEncryption+Internal.h */; };
 		801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 801040B41C5A843D00D26E19 /* BridgeAppSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		801040BC1C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
@@ -356,6 +357,7 @@
 		16BF5B681BE2974A007C79C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProfileViewController.swift; path = ../BridgeAppSDKSample/ProfileViewController.swift; sourceTree = "<group>"; };
 		16BF5B6E1BE2BE77007C79C6 /* HealthClientType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthClientType.swift; sourceTree = "<group>"; };
 		16BF5B701BE2C989007C79C6 /* ProfileStaticTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStaticTableViewCell.swift; sourceTree = "<group>"; };
+		601F7C9B1D62361400C5FE09 /* SBAEncryption+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SBAEncryption+Internal.h"; sourceTree = "<group>"; };
 		801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		801040B41C5A843D00D26E19 /* BridgeAppSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeAppSDK.h; sourceTree = "<group>"; };
 		801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -996,6 +998,7 @@
 				FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */,
 				805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */,
 				80D5F1911CE51C40002A39DF /* SBAEncryption.h */,
+				601F7C9B1D62361400C5FE09 /* SBAEncryption+Internal.h */,
 				80D5F1921CE51C40002A39DF /* SBAEncryption.m */,
 				80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */,
 			);
@@ -1326,6 +1329,7 @@
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
 				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
 				80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */,
+				601F7CB31D6236F500C5FE09 /* SBAEncryption+Internal.h in Headers */,
 				80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */,
 				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,

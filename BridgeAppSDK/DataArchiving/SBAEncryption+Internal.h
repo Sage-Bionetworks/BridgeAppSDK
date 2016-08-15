@@ -1,5 +1,5 @@
 //
-//  SBAEncryptionHelper.swift
+//  SBAEncryption+Internal.h
 //  BridgeAppSDK
 //
 // Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,45 +31,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+#import "SBAEncryption.h"
 
-@objc public class SBAEncryptionHelper: NSObject {
-    
-    public class func pemPath() -> String? {
-        guard let sharedAppDelegate = UIApplication.sharedApplication().delegate as? SBAAppInfoDelegate else { return nil }
-        let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
-        return certificatePath
-    }
-    
-    class func encryptedDataFilename() -> String {
-        return "encrypted.zip"
-    }
-    
-    class func encryptedDataPathRoot() -> String {
-        return NSTemporaryDirectory()
-    }
-    
-    public class func encryptedFilesAwaitingUploadResponse() -> [String] {
-        let tmpDir = encryptedDataPathRoot()
-        let fileMan = NSFileManager.defaultManager()
-        
-        let tmpContents = fileMan.subpathsAtPath(tmpDir)
-        let filesOfInterest = tmpContents?.mapAndFilter({ (file) -> String? in
-            if (file as NSString).lastPathComponent != encryptedDataFilename() { return nil }
-            return (tmpDir as NSString).stringByAppendingPathComponent(file)
-        })
-        return filesOfInterest ?? []
-    }
+@interface SBAEncryption(Internal)
 
-    public class func cleanUpEncryptedFile(file: NSURL) {
-        var dirUrl = file;
-        if file.lastPathComponent == encryptedDataFilename() {
-            dirUrl = file.URLByDeletingLastPathComponent!
-        }
-        if (try? NSFileManager.defaultManager().removeItemAtURL(dirUrl)) == nil {
-            #if DEBUG
-            NSLog("Error thrown attempting to remove %@", dirUrl)
-            #endif
-        }
-    }
-}
++ (NSArray<NSString *> *)encryptedFilesAwaitingUploadResponse;
+
+@end

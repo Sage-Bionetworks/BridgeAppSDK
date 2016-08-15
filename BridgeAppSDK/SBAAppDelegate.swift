@@ -60,6 +60,22 @@ public protocol SBAAppInfoDelegate: class {
         
         self.initializeBridgeServerConnection()
         
+        // Kickstart any potentially "orphaned" file uploads
+        let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
+        let uploadManager = SBBComponentManager.component(SBBUploadManager)
+        for file in uploads {
+            let fileUrl = NSURL.fileURLWithPath(file)
+            
+            // (if the upload manager already knows about this file, it won't try to upload again)
+            // (also, use the method that lets BridgeSDK figure out the contentType since we don't have any better info about that)
+            uploadManager.uploadFileToBridge(fileUrl, completion: { (error) in
+                if error == nil {
+                    // clean up the file now that it's been successfully uploaded so we don't keep trying
+                    SBAEncryptionHelper.cleanUpEncryptedFile(fileUrl);
+                }
+            })
+        }
+        
         // Set the window tint color if applicable
         if let tintColor = UIColor.primaryTintColor() {
             self.window?.tintColor = tintColor
