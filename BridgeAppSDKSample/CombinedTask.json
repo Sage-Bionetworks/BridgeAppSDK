@@ -1,0 +1,88 @@
+{
+    "taskIdentifier"    : "Combined Task",
+    "identifier"        : "Combined Task",
+    "steps"         :
+    [
+     {
+     "identifier"   : "introduction",
+     "type"         : "instruction",
+     "title"        : "Activity Session",
+     "text"         : "A session includes four activities. It may take 5 minutes to complete.",
+     },
+     {
+     "identifier"   : "permissions",
+     "type"         : "permissions",
+     "title"        : "Permissions",
+     "text"         : "The following permissions are required for this session.",
+     "items"        : ["coremotion", "microphone"],
+     "optional"     : false
+     },
+     {
+     "resourceName"            : "MedicationTracking",
+     "classType"               : "TrackedDataObjectCollection",
+     },
+     {
+     "taskIdentifier"            : "Tapping",
+     "schemaIdentifier"          : "Tapping Activity",
+     "taskType"                  : "tapping",
+     "intendedUseDescription"    : "In this activity we ask you to tap your fingers. It is an activity that tells us about your fine motor coordination.",
+     "localizedSteps"            : [{
+                                    "identifier" : "instruction1.right",
+                                    "detailText" : "Tap Next to begin."
+                                    },
+                                    {
+                                    "identifier" : "instruction1.left",
+                                    "detailText" : "Tap Next to begin."
+                                    }]
+     },
+     {
+     "taskIdentifier"            : "Voice",
+     "schemaIdentifier"          : "Voice Activity",
+     "taskType"                  : "voice",
+     "intendedUseDescription"    : "In this activity we ask you to say, “Aaaah.”",
+     "localizedSteps"            : [{
+                                     "identifier" : "instruction1",
+                                     "text"       : "This activity uses your phone’s microphone. Hold your phone so you can easily see the screen. Take a deep breath and say, “Aaaah,” for as long as you can. Try to keep the volume of your voice steady so the audio bars remain blue.",
+                                     "detailText" : "Tap Next to begin."
+                                    }]
+     },
+     {
+     "taskIdentifier"            : "Memory",
+     "schemaIdentifier"          : "Memory Activity",
+     "taskType"                  : "memory",
+     "intendedUseDescription"    : "In this activity we ask you to remember a pattern. It is an activity that tells us about your short-term memory.",
+     "localizedSteps"            : [{
+                                     "identifier" : "instruction1",
+                                     "text"       : "The flowers will light up one at a time. Watch carefully. Then tap the flowers in the same order they lit up.",
+                                     "detailText" : "Tap Next to begin."
+                                    }]
+     },
+     {
+     "taskIdentifier"            : "Walking",
+     "schemaIdentifier"          : "Walking Activity",
+     "taskType"                  : "walking",
+     "intendedUseDescription"    : "In this activity we ask you to walk back and forth. Then we ask you to turn in a full circle and stand still.",
+     "optional"                  : true,
+     "localizedSteps"            : [{
+                                    "identifier" : "instruction",
+                                    "detailText" : "This activity measures your gait and balance as you walk and stand still.\nIf you cannot safely walk unassisted, then tap the “Skip this activity” link in red below.  Otherwise, tap Next to begin."
+                                    },
+                                    {
+                                     "identifier" : "instruction1",
+                                     "text"       : "Find a place where you can walk safely back and forth in a straight line. Turn the volume on your phone all the way up.",
+                                     "detailText" : "Tap Next to begin.\nThen put the phone upside down in the front pocket of your pants and follow the audio instructions."
+                                    },
+                                    {
+                                     "identifier" : "walking.rest",
+                                     "finishedSpokenInstruction" : "You've completed the activity session.",
+                                    },
+                                    {
+                                     "identifier" : "conclusion",
+                                     "title"      : "Thank You!",
+                                     "text"       : "You’ve completed the activity session. Select done in top right hand corner.",
+                                     "detailText" : "",
+                                    },
+                                    ]
+     }
+     ]
+}

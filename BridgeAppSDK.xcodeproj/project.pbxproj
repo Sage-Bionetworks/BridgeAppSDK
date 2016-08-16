@@ -71,6 +71,7 @@
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
 		FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30541D5A806C00347165 /* SBASurveyTask.swift */; };
 		FF3E30831D5CE85D00347165 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30821D5CE85D00347165 /* SBAActivityArchive.swift */; };
+		FF3E30C41D62CF7100347165 /* CombinedTask.json in Resources */ = {isa = PBXBuildFile; fileRef = FF3E30C31D62CF7100347165 /* CombinedTask.json */; };
 		FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */; };
@@ -436,6 +437,7 @@
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
 		FF3E30541D5A806C00347165 /* SBASurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyTask.swift; sourceTree = "<group>"; };
 		FF3E30821D5CE85D00347165 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
+		FF3E30C31D62CF7100347165 /* CombinedTask.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CombinedTask.json; sourceTree = "<group>"; };
 		FF45F8121CA5B57200EE0562 /* SBARootViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBARootViewControllerProtocol.h; sourceTree = "<group>"; };
 		FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBABridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBABridgeManager.m; sourceTree = "<group>"; };
@@ -1211,6 +1213,7 @@
 			children = (
 				FFDECDF91D0774EE00434001 /* Onboarding.json */,
 				FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */,
+				FF3E30C31D62CF7100347165 /* CombinedTask.json */,
 				FF78CF4E1D00B6C9002C456D /* Consent.json */,
 				FF78CF601D00C125002C456D /* Memory.json */,
 				FF78CF631D00C12A002C456D /* Tapping.json */,
@@ -1599,6 +1602,7 @@
 				FF78CF1C1D00B636002C456D /* consent_6protectingdata.html in Resources */,
 				FF78CF461D00B691002C456D /* consent_contact.html in Resources */,
 				FFDECDFB1D0774EE00434001 /* Onboarding.json in Resources */,
+				FF3E30C41D62CF7100347165 /* CombinedTask.json in Resources */,
 				FF78CF2B1D00B65C002C456D /* consent_11potential_risk.html in Resources */,
 				FF78CF511D00BDAE002C456D /* MedicalSurvey.json in Resources */,
 				FFC15FD61CFE452C00C29AF7 /* Onboarding.storyboard in Resources */,
