@@ -133,8 +133,14 @@ public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALo
         self.showLoadingView()
         let permissionsManager = permissionsStep.permissionsManager
         let permissions = permissionsStep.permissions
-        permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (_) in
-            self?.goNext()
+        permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (granted) in
+            if granted || permissionsStep.optional {
+                self?.goNext()
+            }
+            else if let strongSelf = self, let strongDelegate = strongSelf.delegate {
+                let error = NSError(domain: "SBAPermissionsStepDomain", code: 1, userInfo: nil)
+                strongDelegate.stepViewControllerDidFail(strongSelf, withError: error)
+            }
         }
     }
     
