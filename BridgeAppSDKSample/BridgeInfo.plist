@@ -14,6 +14,12 @@
 	<array>
 		<dict>
 			<key>schemaIdentifier</key>
+			<string>Mood Survey</string>
+			<key>schemaRevision</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
 			<string>Tapping Activity</string>
 			<key>schemaRevision</key>
 			<integer>1</integer>
@@ -55,7 +61,37 @@
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-StudyTracker-408C5ED4-AB61-41d3-AF37-7f44C6A16BBF</string>
+			<string>Mood Survey</string>
+			<key>taskType</key>
+			<string>moodSurvey</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>Memory Activity</string>
+			<key>taskType</key>
+			<string>memory</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>Tapping Activity</string>
+			<key>taskType</key>
+			<string>tapping</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>Walking Activity</string>
+			<key>taskType</key>
+			<string>walking</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>Voice Activity</string>
+			<key>taskType</key>
+			<string>voice</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>1-StudyTracker</string>
 			<key>resourceName</key>
 			<string>StudyTracker</string>
 			<key>cancelDisabled</key>
@@ -65,13 +101,13 @@
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-Training-295f81EF-13CB-4DB4-8223-10A173AA0780</string>
+			<string>1-Training</string>
 			<key>resourceName</key>
 			<string>CombinedTask</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-Combo-295f81EF-13CB-4DB4-8223-10A173AA0780</string>
+			<string>1-Combo</string>
 			<key>resourceName</key>
 			<string>CombinedTask</string>
 			<key>cancelDisabled</key>
