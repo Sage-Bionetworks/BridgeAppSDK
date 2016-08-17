@@ -275,10 +275,12 @@ extension ORKSpatialSpanMemoryResult {
 public class AnswerKeyAndValue: NSObject {
     let key: String
     let value: AnyObject
+    let questionType: ORKQuestionType
     
-    init(key: String, value: AnyObject) {
+    init(key: String, value: AnyObject, questionType: ORKQuestionType) {
         self.key = key
         self.value = value
+        self.questionType = questionType
         super.init()
     }
 }
@@ -327,12 +329,12 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
     override func resultAsDictionary() -> NSMutableDictionary {
         let choiceQuestionResult = super.resultAsDictionary()
         choiceQuestionResult[kItemKey] = self.identifier
-        choiceQuestionResult[QuestionResultQuestionTypeKey] = self.questionType.rawValue
-        choiceQuestionResult[QuestionResultQuestionTypeNameKey] = self.questionType.nameValue
         choiceQuestionResult[QuestionResultUserInfoKey] = self.userInfo
         if let answer = self.jsonSerializedAnswer() {
             choiceQuestionResult[answer.key] = answer.value
             choiceQuestionResult[QuestionResultSurveyAnswerKey] = answer.value
+            choiceQuestionResult[QuestionResultQuestionTypeKey] = answer.questionType.rawValue
+            choiceQuestionResult[QuestionResultQuestionTypeNameKey] = answer.questionType.nameValue
         }
         return choiceQuestionResult
     }
@@ -348,15 +350,23 @@ extension ORKChoiceQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let choiceAnswers = self.choiceAnswers else { return nil }
-        return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject())
+        return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject(), questionType: self.questionType)
     }
 }
 
 extension ORKScaleQuestionResult {
+
+    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+        guard let answer = self.scaleAnswer else { return nil }
+        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .Scale)
+    }
+}
+
+extension ORKMoodScaleQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject())
+        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .Scale)
     }
 }
 
@@ -364,7 +374,7 @@ extension ORKBooleanQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.booleanAnswer else { return nil }
-        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject())
+        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject(), questionType: .Boolean)
     }
 }
 
@@ -372,7 +382,7 @@ extension ORKTextQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.textAnswer else { return nil }
-        return AnswerKeyAndValue(key: "textAnswer", value: answer)
+        return AnswerKeyAndValue(key: "textAnswer", value: answer, questionType: .Text)
     }
 }
 
@@ -380,7 +390,7 @@ extension ORKNumericQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.numericAnswer else { return nil }
-        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject())
+        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject(), questionType: self.questionType)
     }
     
     override func resultAsDictionary() -> NSMutableDictionary {
@@ -399,7 +409,7 @@ extension ORKTimeOfDayQuestionResult {
         answer.year = 0
         answer.month = 0
         answer.day = 0
-        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: answer.jsonObject())
+        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: answer.jsonObject(), questionType: .TimeOfDay)
     }
 }
 
@@ -407,7 +417,7 @@ extension ORKTimeIntervalQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.intervalAnswer else { return nil }
-        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject())
+        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject(), questionType: .TimeInterval)
     }
 }
 
@@ -417,10 +427,10 @@ extension ORKDateQuestionResult {
         guard let answer = self.dateAnswer else { return nil }
         let key = "dateAnswer"
         if self.questionType == ORKQuestionType.Date {
-            return AnswerKeyAndValue(key: key, value: answer.ISO8601DateOnlyString())
+            return AnswerKeyAndValue(key: key, value: answer.ISO8601DateOnlyString(), questionType: self.questionType)
         }
         else {
-            return AnswerKeyAndValue(key: key, value: answer.jsonObject())
+            return AnswerKeyAndValue(key: key, value: answer.jsonObject(), questionType: self.questionType)
         }
     }
 }

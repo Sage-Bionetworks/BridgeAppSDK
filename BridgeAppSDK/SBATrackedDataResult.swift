@@ -86,7 +86,7 @@ extension SBATrackedDataSelectionResult {
         // Always return a non-nil result for items
         let selectedItems: NSArray? = self.selectedItems
         let value = selectedItems?.jsonObject() ?? []
-        return AnswerKeyAndValue(key: "items", value: value)
+        return AnswerKeyAndValue(key: "items", value: value, questionType: .MultipleChoice)
     }
     
 }

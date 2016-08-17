@@ -81,6 +81,23 @@ class SBAActivityArchive: XCTestCase {
         XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(integer: 5))
     }
     
+    func testMoodScaleQuestionResult() {
+        
+        let result = ORKMoodScaleQuestionResult(identifier: "test")
+        result.questionType = .SingleChoice
+        result.scaleAnswer = NSNumber(integer: 5)
+        
+        guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
+            XCTAssert(false)
+            return
+        }
+        
+        // Check the values specific to this result type
+        XCTAssertEqual(json["item"] as? String, "test")
+        XCTAssertEqual(json["questionTypeName"] as? String, "Scale")
+        XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(integer: 5))
+    }
+    
     func testBooleanQuestionResult() {
         
         let result = ORKBooleanQuestionResult(identifier: "test")
