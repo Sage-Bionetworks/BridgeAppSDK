@@ -157,8 +157,28 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     func initializeBridgeServerConnection() {
+        // These two lines actually, you know, set up BridgeSDK
         BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, useCache:bridgeInfo.useCache, environment: bridgeInfo.environment)
         SBABridgeManager.setAuthDelegate(self.currentUser)
+        
+        // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
+        // manager instance so its notification handlers get set up in time)
+        let uploadManager = SBBComponentManager.component(SBBUploadManager)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
+            for file in uploads {
+                let fileUrl = NSURL.fileURLWithPath(file)
+                
+                // (if the upload manager already knows about this file, it won't try to upload again)
+                // (also, use the method that lets BridgeSDK figure out the contentType since we don't have any better info about that)
+                uploadManager.uploadFileToBridge(fileUrl, completion: { (error) in
+                    if error == nil {
+                        // clean up the file now that it's been successfully uploaded so we don't keep trying
+                        SBAEncryptionHelper.cleanUpEncryptedFile(fileUrl);
+                    }
+                })
+            }
+        }
     }
     
     

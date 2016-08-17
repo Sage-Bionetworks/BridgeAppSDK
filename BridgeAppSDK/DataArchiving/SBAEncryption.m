@@ -37,8 +37,6 @@
 @import openssl;
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
-static NSString * kEncryptedDataFilename            = @"encrypted.zip";
-
 @interface SBAEncryption ()
 
 @property (nonatomic, strong) NSString * workingDirectoryName;
@@ -66,7 +64,7 @@ static NSString * kEncryptedDataFilename            = @"encrypted.zip";
         NSData * encryptedZipData = [self.class cmsEncrypt:unencryptedZipData identityPath:pemPath error:&encryptionError];
         
         if (encryptedZipData) {
-            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:kEncryptedDataFilename];
+            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:[SBAEncryptionHelper kEncryptedDataFilename]];
             
             if ([encryptedZipData writeToFile:encryptedPath options:NSDataWritingAtomic error:&encryptionError]) {
                 encryptedUrl = [[NSURL alloc] initFileURLWithPath:encryptedPath];
@@ -189,7 +187,7 @@ err:
 - (NSString *)workingDirectoryPath
 {
     
-    NSString *workingDirectoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:self.workingDirectoryName];
+    NSString *workingDirectoryPath = [[SBAEncryptionHelper encryptedDataPathRoot] stringByAppendingPathComponent:self.workingDirectoryName];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:workingDirectoryPath]) {
         NSError * fileError;
@@ -209,6 +207,5 @@ err:
         NSAssert(false, @"failed to remove encryptor working directory at %@",[self workingDirectoryPath] );
     }
 }
-
 
 @end

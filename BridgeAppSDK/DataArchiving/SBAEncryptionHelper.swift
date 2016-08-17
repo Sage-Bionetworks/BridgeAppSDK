@@ -40,5 +40,40 @@ import UIKit
         let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
         return certificatePath
     }
+    
+    static let kEncryptedDataFilename = "encrypted.zip"
+    
+    class func isEncryptedURL(file: NSURL) -> Bool {
+        return file.lastPathComponent == kEncryptedDataFilename
+    }
+    
+    class func isEncryptedString(file: NSString) -> Bool {
+        return file.lastPathComponent == kEncryptedDataFilename
+    }
+    
+    class func encryptedDataPathRoot() -> String {
+        return NSTemporaryDirectory()
+    }
+    
+    public class func encryptedFilesAwaitingUploadResponse() -> [String] {
+        let tmpDir = encryptedDataPathRoot()
+        let fileMan = NSFileManager.defaultManager()
+        
+        let tmpContents = fileMan.subpathsAtPath(tmpDir)
+        let filesOfInterest = tmpContents?.mapAndFilter({ (file) -> String? in
+            guard isEncryptedString(file) else { return nil }
+            return (tmpDir as NSString).stringByAppendingPathComponent(file)
+        })
+        return filesOfInterest ?? []
+    }
 
+    public class func cleanUpEncryptedFile(file: NSURL) {
+        let dirUrl = isEncryptedURL(file) ? file.URLByDeletingLastPathComponent! : file
+        
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(dirUrl)
+        } catch let error as NSError {
+            print("Error thrown attempting to remove %@:\n%@", dirUrl, error)
+        }
+    }
 }
