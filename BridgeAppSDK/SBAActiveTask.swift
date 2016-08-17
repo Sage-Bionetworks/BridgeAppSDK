@@ -43,16 +43,18 @@ public enum SBAActiveTaskType {
     case voice
     case walking
     case tremor
+    case moodSurvey
     
     init(name: String?) {
         guard let type = name else { self = .custom(nil); return }
         switch(type) {
-        case "tapping"  : self = .tapping
-        case "memory"   : self = .memory
-        case "voice"    : self = .voice
-        case "walking"  : self = .walking
-        case "tremor"   : self = .tremor
-        default         : self = .custom(name)
+        case "tapping"      : self = .tapping
+        case "memory"       : self = .memory
+        case "voice"        : self = .voice
+        case "walking"      : self = .walking
+        case "tremor"       : self = .tremor
+        case "moodSurvey"   : self = .moodSurvey
+        default             : self = .custom(name)
         }
     }
     
@@ -97,6 +99,16 @@ extension ORKTremorActiveTaskOption {
     }
 }
 
+extension ORKMoodSurveyFrequency {
+    init(name: String?) {
+        let name = name ?? "daily"
+        switch name {
+        case "weekly"   : self = .Weekly
+        default         : self = .Daily
+        }
+    }
+}
+
 public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskType: SBAActiveTaskType { get }
     var intendedUseDescription: String? { get }
@@ -125,6 +137,8 @@ extension SBAActiveTask {
             task = walkingTask(predefinedExclusions)
         case .tremor:
             task = tremorTask(predefinedExclusions)
+        case .moodSurvey:
+            task = moodSurvey(predefinedExclusions)
         default:
             // exit early if not supported by base implementation
             return nil
@@ -281,6 +295,18 @@ extension SBAActiveTask {
                                                            activeTaskOptions: excludeOptions,
                                                            handOptions: handOptions,
                                                            options: options)
+    }
+    
+    func moodSurvey(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+        
+        let frequency = ORKMoodSurveyFrequency(name: taskOptions?["frequency"] as? String)
+        let customQuestionText = taskOptions?["customQuestionText"] as? String
+        
+        return ORKOrderedTask.moodSurveyWithIdentifier(self.schemaIdentifier,
+                                                       intendedUseDescription: self.intendedUseDescription,
+                                                       frequency: frequency,
+                                                       customQuestionText: customQuestionText,
+                                                       options: options)
     }
 }
 
