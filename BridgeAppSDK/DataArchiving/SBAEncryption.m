@@ -33,7 +33,6 @@
 //
 
 #import "SBAEncryption.h"
-#import "SBAEncryption+Internal.h"
 @import UIKit;
 @import openssl;
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
