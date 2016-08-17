@@ -64,7 +64,7 @@
         NSData * encryptedZipData = [self.class cmsEncrypt:unencryptedZipData identityPath:pemPath error:&encryptionError];
         
         if (encryptedZipData) {
-            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:[SBAEncryptionHelper encryptedDataFilename]];
+            NSString *encryptedPath = [[self workingDirectoryPath] stringByAppendingPathComponent:[SBAEncryptionHelper kEncryptedDataFilename]];
             
             if ([encryptedZipData writeToFile:encryptedPath options:NSDataWritingAtomic error:&encryptionError]) {
                 encryptedUrl = [[NSURL alloc] initFileURLWithPath:encryptedPath];

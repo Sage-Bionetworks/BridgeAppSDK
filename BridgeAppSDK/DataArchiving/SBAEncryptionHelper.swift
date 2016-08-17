@@ -41,8 +41,14 @@ import UIKit
         return certificatePath
     }
     
-    class func encryptedDataFilename() -> String {
-        return "encrypted.zip"
+    static let kEncryptedDataFilename = "encrypted.zip"
+    
+    class func isEncryptedURL(file: NSURL) -> Bool {
+        return file.lastPathComponent == kEncryptedDataFilename
+    }
+    
+    class func isEncryptedString(file: NSString) -> Bool {
+        return file.lastPathComponent == kEncryptedDataFilename
     }
     
     class func encryptedDataPathRoot() -> String {
@@ -55,21 +61,19 @@ import UIKit
         
         let tmpContents = fileMan.subpathsAtPath(tmpDir)
         let filesOfInterest = tmpContents?.mapAndFilter({ (file) -> String? in
-            if (file as NSString).lastPathComponent != encryptedDataFilename() { return nil }
+            guard isEncryptedString(file) else { return nil }
             return (tmpDir as NSString).stringByAppendingPathComponent(file)
         })
         return filesOfInterest ?? []
     }
 
     public class func cleanUpEncryptedFile(file: NSURL) {
-        var dirUrl = file;
-        if file.lastPathComponent == encryptedDataFilename() {
-            dirUrl = file.URLByDeletingLastPathComponent!
-        }
-        if (try? NSFileManager.defaultManager().removeItemAtURL(dirUrl)) == nil {
-            #if DEBUG
-            NSLog("Error thrown attempting to remove %@", dirUrl)
-            #endif
+        let dirUrl = isEncryptedURL(file) ? file.URLByDeletingLastPathComponent! : file
+        
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(dirUrl)
+        } catch let error as NSError {
+            print("Error thrown attempting to remove %@:\n%@", dirUrl, error)
         }
     }
 }
