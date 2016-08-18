@@ -122,6 +122,19 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
 
 public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
     
+    var permissionsGranted: Bool = false
+    
+    override public var result: ORKStepResult? {
+        guard let result = super.result else { return nil }
+        
+        // Add a result for whether or not the permissions were granted
+        let grantedResult = ORKBooleanQuestionResult(identifier: result.identifier)
+        grantedResult.booleanAnswer = NSNumber(bool: permissionsGranted)
+        result.results = [grantedResult]
+        
+        return result
+    }
+    
     override public func goForward() {
         guard let permissionsStep = self.step as? SBAPermissionsStep else {
             assertionFailure("Step is not of expected type")
@@ -135,6 +148,7 @@ public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALo
         let permissions = permissionsStep.permissions
         permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (granted) in
             if granted || permissionsStep.optional {
+                self?.permissionsGranted = granted
                 self?.goNext()
             }
             else if let strongSelf = self, let strongDelegate = strongSelf.delegate {
