@@ -39,6 +39,11 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         return SBAPermissionsManager.sharedManager()
     }()
     
+    public class func defaultPermissions() -> SBAPermissionsType {
+        guard let appDelegate = UIApplication.sharedApplication().delegate as? SBAAppInfoDelegate else { return .None }
+        return appDelegate.requiredPermissions
+    }
+    
     public var permissions: SBAPermissionsType {
         get {
             return SBAPermissionsType(items: self.items as? [UInt])
@@ -53,14 +58,15 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         commonInit()
     }
     
-    convenience init(inputItem: SBAFormStepSurveyItem) {
+    convenience init?(inputItem: SBASurveyItem) {
+        guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
         self.init(identifier: inputItem.identifier)
-        inputItem.mapStepValues(self)
+        survey.mapStepValues(self)
         commonInit()
         // Set the permissions if they can be mapped
-        self.permissions = inputItem.items?.reduce(SBAPermissionsType.None, combine: { (input, item) -> SBAPermissionsType in
+        self.permissions = survey.items?.reduce(SBAPermissionsType.None, combine: { (input, item) -> SBAPermissionsType in
             return input.union(SBAPermissionsType(key: item as? String))
-        }) ?? .None
+        }) ?? SBAPermissionsStep.defaultPermissions()
     }
     
     private func commonInit() {

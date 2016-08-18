@@ -43,6 +43,7 @@ public protocol SBASurveyItem: SBAStepTransformer {
     var surveyItemType: SBASurveyItemType { get }
     var stepTitle: String? { get }
     var stepText: String? { get }
+    var options: [String : AnyObject]? { get }
 }
 
 public protocol SBAActiveStepSurveyItem: SBASurveyItem {
@@ -129,6 +130,7 @@ public enum SBASurveyItemType {
         case emailVerification  = "emailVerification"       // SBAEmailVerificationStep
         case externalID         = "externalID"              // SBAExternalIDStep
         case permissions        = "permissions"             // SBAPermissionsStep
+        case completion         = "onboardingCompletion"
         //TODO: Implement syoung 06/08/2016
         //case DataGroups         = "dataGroups"              // data groups step
     }

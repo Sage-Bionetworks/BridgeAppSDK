@@ -1,5 +1,5 @@
 //
-//  SBALoginStep.swift
+//  SBAOnboardingCompleteStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,26 +33,43 @@
 
 import ResearchKit
 
-public class SBALoginStep: ORKLoginStep {
-    // TODO: syoung 06/08/2016 Implement
+public class SBAOnboardingCompleteStep: ORKTableStep {
     
-    public override init(identifier: String, title: String?, text: String?, loginViewControllerClass: AnyClass) {
-        super.init(identifier: identifier, title: title, text: text, loginViewControllerClass: loginViewControllerClass)
+    override public init(identifier: String) {
+        super.init(identifier: identifier)
     }
     
-    public required init(coder aDecoder: NSCoder) {
+    required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    public convenience init(inputItem: SBASurveyItem) {
-        self.init(identifier: inputItem.identifier,
-                  title: inputItem.stepTitle,
-                  text: inputItem.stepText,
-                  loginViewControllerClass: SBALoginStepViewController.classForCoder())
+    convenience init(inputItem: SBASurveyItem) {
+        self.init(identifier: inputItem.identifier)
+        self.title = inputItem.stepTitle
+        self.detailText = inputItem.stepText
+        self.optional = false
+    }
+    
+    let reuseIdentifier = "OnboardingComplete"
+    
+    public var detailText: String? {
+        get { return self.items?.first as? String }
+        set(newValue) { self.items = (newValue == nil) ? nil : [newValue!] }
+    }
+    
+    override public func reuseIdentifierForRowAtIndexPath(indexPath: NSIndexPath) -> String {
+        return reuseIdentifier
     }
 
-}
-
-public class SBALoginStepViewController: ORKLoginStepViewController {
+    override public func registerCellsForTableView(tableView: UITableView) {
+        let bundle = NSBundle(forClass: SBAOnboardingCompleteTableViewCell.classForCoder())
+        let nib = UINib(nibName: "SBAOnboardingCompleteTableViewCell", bundle: bundle)
+        tableView.registerNib(nib, forCellReuseIdentifier: reuseIdentifier)
+    }
     
+    override public func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, tableView: UITableView) {
+        guard let onboardingCell = cell as? SBAOnboardingCompleteTableViewCell else { return }
+        onboardingCell.appNameLabel.text = Localization.localizedAppName
+        onboardingCell.descriptionLabel.text = self.detailText
+    }
 }

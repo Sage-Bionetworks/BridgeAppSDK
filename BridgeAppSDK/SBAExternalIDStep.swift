@@ -70,8 +70,9 @@ public class SBAExternalIDStep: ORKPageStep {
         set {}
     }
     
-    public convenience init(inputItem: SBASurveyItem) {
-        self.init(identifier: inputItem.identifier)
+    public init(inputItem: SBASurveyItem) {
+        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options))
+        super.init(identifier: inputItem.identifier, steps: steps)
         if let title = inputItem.stepTitle {
             self.title = title
             didSetTitle()
@@ -83,11 +84,15 @@ public class SBAExternalIDStep: ORKPageStep {
     }
 
     public init(identifier: String) {
-        
+        let steps = SBAExternalIDStep.steps()
+        super.init(identifier: identifier, steps: steps)
+    }
+    
+    private class func steps(options: SBAExternalIDOptions = SBAExternalIDOptions()) -> [ORKStep] {
         // Create the steps that are used by this method
         let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
-            let options = SBAProfileInfoOptions(includes: [.externalID])
+            let options = SBAProfileInfoOptions(externalIDOptions: options)
             let step = ORKFormStep(identifier: stepIdentifier)
             step.formItems = options.makeFormItems(surveyItemType: .account(.registration))
             step.optional = false
@@ -96,8 +101,8 @@ public class SBAExternalIDStep: ORKPageStep {
         
         // Set the default text for the confirmation step
         steps.last?.text = Localization.localizedString("SBA_CONFIRM_EXTERNALID_TEXT")
-
-        super.init(identifier: identifier, steps: steps)
+        
+        return steps
     }
     
     override public func stepViewControllerClass() -> AnyClass {
