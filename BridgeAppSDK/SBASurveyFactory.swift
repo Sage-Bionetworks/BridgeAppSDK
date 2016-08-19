@@ -68,6 +68,13 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     /**
+     * Factory method for creating an SBANavigableOrderedTask from the current steps
+     */
+    public func createTaskWithIdentifier(identifier: String) -> SBANavigableOrderedTask {
+        return SBANavigableOrderedTask(identifier: identifier, steps: steps)
+    }
+    
+    /**
      * Factory method for creating an ORKTask from an SBBSurvey
      */
     public func createTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
@@ -162,9 +169,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
             } else { break }
             
         case .account(let subtype):
-            if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createAccountStep(subtype)
-            } else { break }
+            return createAccountStep(inputItem: inputItem, subtype: subtype)
             
         case .passcode(let passcodeType):
             let step = ORKPasscodeStep(identifier: inputItem.identifier)
@@ -179,10 +184,26 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         return createSurveyStepWithCustomType(inputItem)
     }
     
+    func createAccountStep(inputItem inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
+        switch (subtype) {
+        case .registration:
+            return SBARegistrationStep(inputItem: inputItem)
+        case .login:
+            return SBALoginStep(inputItem: inputItem)
+        case .emailVerification:
+            return SBAEmailVerificationStep(inputItem: inputItem)
+        case .externalID:
+            return SBAExternalIDStep(inputItem: inputItem)
+        case .permissions:
+            return SBAPermissionsStep(inputItem: inputItem)
+        case .completion:
+            return SBAOnboardingCompleteStep(inputItem: inputItem)
+        }
+    }
+    
 }
 
 extension SBASurveyItem {
-    
 }
 
 extension SBAInstructionStepSurveyItem {
@@ -242,20 +263,7 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-    func createAccountStep(subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
-        switch (subtype) {
-        case .registration:
-            return SBARegistrationStep(inputItem: self)
-        case .login:
-            return SBALoginStep(inputItem: self)
-        case .emailVerification:
-            return SBAEmailVerificationStep(inputItem: self)
-        case .externalID:
-            return SBAExternalIDStep(inputItem: self)
-        case .permissions:
-            return SBAPermissionsStep(inputItem: self)
-        }
-    }
+
     
     func mapStepValues(step: ORKStep) {
         step.title = self.stepTitle

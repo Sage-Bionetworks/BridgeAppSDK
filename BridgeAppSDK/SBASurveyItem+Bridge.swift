@@ -62,6 +62,10 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
+    public var options: [String : AnyObject]? {
+        return nil
+    }
+    
     public func learnMoreAction() -> SBALearnMoreAction? {
         return nil
     }
@@ -155,6 +159,10 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         }
         
         return items
+    }
+    
+    public var options: [String : AnyObject]? {
+        return nil
     }
     
     public var range: AnyObject? {

@@ -39,6 +39,11 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         return SBAPermissionsManager.sharedManager()
     }()
     
+    public class func defaultPermissions() -> SBAPermissionsType {
+        guard let appDelegate = UIApplication.sharedApplication().delegate as? SBAAppInfoDelegate else { return .None }
+        return appDelegate.requiredPermissions
+    }
+    
     public var permissions: SBAPermissionsType {
         get {
             return SBAPermissionsType(items: self.items as? [UInt])
@@ -53,14 +58,15 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         commonInit()
     }
     
-    convenience init(inputItem: SBAFormStepSurveyItem) {
+    convenience init?(inputItem: SBASurveyItem) {
+        guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
         self.init(identifier: inputItem.identifier)
-        inputItem.mapStepValues(self)
+        survey.mapStepValues(self)
         commonInit()
         // Set the permissions if they can be mapped
-        self.permissions = inputItem.items?.reduce(SBAPermissionsType.None, combine: { (input, item) -> SBAPermissionsType in
+        self.permissions = survey.items?.reduce(SBAPermissionsType.None, combine: { (input, item) -> SBAPermissionsType in
             return input.union(SBAPermissionsType(key: item as? String))
-        }) ?? .None
+        }) ?? SBAPermissionsStep.defaultPermissions()
     }
     
     private func commonInit() {
@@ -122,6 +128,19 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
 
 public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
     
+    var permissionsGranted: Bool = false
+    
+    override public var result: ORKStepResult? {
+        guard let result = super.result else { return nil }
+        
+        // Add a result for whether or not the permissions were granted
+        let grantedResult = ORKBooleanQuestionResult(identifier: result.identifier)
+        grantedResult.booleanAnswer = NSNumber(bool: permissionsGranted)
+        result.results = [grantedResult]
+        
+        return result
+    }
+    
     override public func goForward() {
         guard let permissionsStep = self.step as? SBAPermissionsStep else {
             assertionFailure("Step is not of expected type")
@@ -135,6 +154,7 @@ public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALo
         let permissions = permissionsStep.permissions
         permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (granted) in
             if granted || permissionsStep.optional {
+                self?.permissionsGranted = granted
                 self?.goNext()
             }
             else if let strongSelf = self, let strongDelegate = strongSelf.delegate {

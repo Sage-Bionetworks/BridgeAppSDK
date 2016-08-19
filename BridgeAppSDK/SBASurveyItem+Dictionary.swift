@@ -78,6 +78,10 @@ extension NSDictionary: SBASurveyItem {
     public var stepDetail: String? {
         return self["detailText"] as? String
     }
+    
+    public var options: [String : AnyObject]? {
+        return self["options"] as? [String : AnyObject]
+    }
 }
 
 extension NSDictionary: SBAActiveStepSurveyItem {

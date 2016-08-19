@@ -217,7 +217,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             XCTAssert(false, "\(step) not of expected type")
             return (nil, nil)
         }
-        return (selectionStep.pageTask.steps.first, selectionStep.pageTask.steps.last)
+        return (selectionStep.steps.first, selectionStep.steps.last)
     }
     
     func checkMedicationSelectionStep(step: ORKStep?, optional: Bool) {

@@ -44,7 +44,7 @@ public class SBAEmailVerificationStep: ORKVerificationStep {
         super.init(coder: aDecoder)
     }
     
-    public convenience init(inputItem: SBAFormStepSurveyItem) {
+    public convenience init(inputItem: SBASurveyItem) {
         self.init(identifier: inputItem.identifier,
                   text: inputItem.stepText,
                   verificationViewControllerClass: SBAEmailVerificationStepViewController.classForCoder())

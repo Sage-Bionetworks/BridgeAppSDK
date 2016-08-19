@@ -54,8 +54,41 @@ enum SBAProfileInfoOptionsError: ErrorType {
 }
 
 struct SBAExternalIDOptions {
+    
+    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .AllCharacters
+    static let defaultKeyboardType: UIKeyboardType = .ASCIICapable
+    
     let autocapitalizationType: UITextAutocapitalizationType
-    let keyboardType:           UIKeyboardType
+    let keyboardType: UIKeyboardType
+    
+    init() {
+        self.autocapitalizationType = SBAExternalIDOptions.defaultAutocapitalizationType
+        self.keyboardType = SBAExternalIDOptions.defaultKeyboardType
+    }
+    
+    init(autocapitalizationType: UITextAutocapitalizationType, keyboardType: UIKeyboardType) {
+        self.autocapitalizationType = autocapitalizationType
+        self.keyboardType = keyboardType
+    }
+    
+    init(options: [NSObject : AnyObject]?) {
+        self.autocapitalizationType = {
+            if let autocap = options?["autocapitalizationType"] as? String {
+                 return UITextAutocapitalizationType(key: autocap)
+            }
+            else {
+                return SBAExternalIDOptions.defaultAutocapitalizationType
+            }
+        }()
+        self.keyboardType = {
+            if let keyboard = options?["keyboardType"] as? String {
+                return UIKeyboardType(key: keyboard)
+            }
+            else {
+                return SBAExternalIDOptions.defaultKeyboardType
+            }
+        }()
+    }
 }
 
 public struct SBAProfileInfoOptions {
@@ -66,7 +99,13 @@ public struct SBAProfileInfoOptions {
     
     public init(includes: [SBAProfileInfoOption]) {
         self.includes = includes
-        self.externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .AllCharacters, keyboardType: .ASCIICapable)
+        self.externalIDOptions = SBAExternalIDOptions()
+        self.customOptions = []
+    }
+    
+    init(externalIDOptions: SBAExternalIDOptions) {
+        self.includes = [.externalID]
+        self.externalIDOptions = externalIDOptions
         self.customOptions = []
     }
     
@@ -86,9 +125,7 @@ public struct SBAProfileInfoOptions {
                 let identifier = dictionary["identifier"] as? String,
                 let option = SBAProfileInfoOption(rawValue: identifier) {
                 if option == .externalID {
-                    let autocapitalizationType = UITextAutocapitalizationType(key: dictionary["autocapitalizationType"] as? String)
-                    let keyboardType = UIKeyboardType(key: dictionary["keyboardType"] as? String)
-                    externalIDOptions = SBAExternalIDOptions(autocapitalizationType: autocapitalizationType, keyboardType: keyboardType)
+                    externalIDOptions = SBAExternalIDOptions(options: dictionary)
                 }
                 return option
             }

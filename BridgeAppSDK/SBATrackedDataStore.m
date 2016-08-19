@@ -288,7 +288,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
         // If this is a page step then set the formStep to the first step and map this as a trackEach
         if ([step isKindOfClass:[SBATrackedActivityPageStep class]]) {
             trackEachMap[step.identifier] = @YES;
-            formStep = [((SBATrackedActivityPageStep*)step).pageTask.steps firstObject];
+            formStep = [((SBATrackedActivityPageStep*)step).steps firstObject];
         }
         // Look for a formItem identifier to map
         if ([formStep isKindOfClass:[ORKFormStep class]]) {

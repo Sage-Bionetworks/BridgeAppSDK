@@ -45,9 +45,10 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
         super.init(identifier: identifier)
     }
     
-    public init(inputItem: SBAFormStepSurveyItem) {
+    public init?(inputItem: SBASurveyItem) {
+        guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
         super.init(identifier: inputItem.identifier)
-        commonInit(inputItem)
+        commonInit(survey)
     }
     
     public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {

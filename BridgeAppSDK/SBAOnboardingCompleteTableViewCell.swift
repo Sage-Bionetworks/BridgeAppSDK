@@ -1,5 +1,5 @@
 //
-//  SBALoginStep.swift
+//  SBAOnboardingCompleteTableViewCell.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,28 +31,21 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import UIKit
 
-public class SBALoginStep: ORKLoginStep {
-    // TODO: syoung 06/08/2016 Implement
+class SBAOnboardingCompleteTableViewCell: UITableViewCell {
+
+    @IBOutlet weak var appNameLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     
-    public override init(identifier: String, title: String?, text: String?, loginViewControllerClass: AnyClass) {
-        super.init(identifier: identifier, title: title, text: text, loginViewControllerClass: loginViewControllerClass)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        appNameLabel.textColor = self.tintColor
     }
     
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+        appNameLabel.textColor = self.tintColor
     }
-    
-    public convenience init(inputItem: SBASurveyItem) {
-        self.init(identifier: inputItem.identifier,
-                  title: inputItem.stepTitle,
-                  text: inputItem.stepText,
-                  loginViewControllerClass: SBALoginStepViewController.classForCoder())
-    }
-
-}
-
-public class SBALoginStepViewController: ORKLoginStepViewController {
     
 }
