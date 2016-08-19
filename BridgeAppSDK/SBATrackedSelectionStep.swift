@@ -92,7 +92,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     // MARK: Selection filtering
     
     var trackedResultIdentifier: String? {
-        return self.pageTask.steps.findObject({ (step) -> Bool in
+        return self.steps.findObject({ (step) -> Bool in
             if let trackedStep = step as? SBATrackedStep where trackedStep.trackingType == .selection {
                 return true
             }
@@ -102,7 +102,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     
     func filterItems(resultSource resultSource:ORKTaskResultSource) -> [SBATrackedDataObject]? {
         var items: [SBATrackedDataObject]? = trackedItems
-        for step in self.pageTask.steps {
+        for step in self.steps {
             if let filterItems = items,
                 let filterStep = step as? SBATrackedSelectionFilter,
                 let stepResult = resultSource.stepResultForStepIdentifier(step.identifier) {
@@ -147,7 +147,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         // Check if the current state means that nothing was selected. In this case
         // return to the first step
         guard let _ = filterItems(resultSource: result) else {
-            return self.pageTask.steps.first
+            return self.steps.first
         }
         
         // Loop backward through the steps until one is found that is the first

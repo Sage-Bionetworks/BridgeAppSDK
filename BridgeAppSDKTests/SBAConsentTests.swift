@@ -398,7 +398,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         }
 
         guard let reviewStep = pageStep.stepWithIdentifier("review") as? ORKConsentReviewStep else {
-            XCTAssert(false, "\(pageStep.pageTask.steps) does not include a review step (required)")
+            XCTAssert(false, "\(pageStep.steps) does not include a review step (required)")
             return (nil, nil, nil, nil)
         }
         

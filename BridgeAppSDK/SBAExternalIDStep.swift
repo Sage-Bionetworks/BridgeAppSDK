@@ -53,15 +53,15 @@ public class SBAExternalIDStep: ORKPageStep {
         didSet { didSetTitle() }
     }
     private func didSetTitle() {
-        self.pageTask.steps.first?.title = title
-        self.pageTask.steps.last?.title = title
+        self.steps.first?.title = title
+        self.steps.last?.title = title
     }
     
     override public var text: String? {
         didSet { didSetText() }
     }
     private func didSetText() {
-        self.pageTask.steps.first?.text = text
+        self.steps.first?.text = text
     }
     
     // Step is never optional

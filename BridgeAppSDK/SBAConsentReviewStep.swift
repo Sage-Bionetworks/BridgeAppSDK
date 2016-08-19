@@ -62,19 +62,19 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     }
     
     var nameStep: ORKFormStep? {
-        guard let step = self.pageTask.stepWithIdentifier(SBAConsentReviewStep.nameStepIdentifier) as? ORKFormStep
+        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.nameStepIdentifier) as? ORKFormStep
             else { return nil }
         return step
     }
     
     var reviewStep: ORKConsentReviewStep? {
-        guard let step = self.pageTask.stepWithIdentifier(SBAConsentReviewStep.reviewStepIdentifier) as? ORKConsentReviewStep
+        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.reviewStepIdentifier) as? ORKConsentReviewStep
             else { return nil }
         return step
     }
     
     var signatureStep: ORKSignatureStep? {
-        guard let step = self.pageTask.stepWithIdentifier(SBAConsentReviewStep.signatureStepIdentifier) as? ORKSignatureStep
+        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.signatureStepIdentifier) as? ORKSignatureStep
             else { return nil }
         return step
     }

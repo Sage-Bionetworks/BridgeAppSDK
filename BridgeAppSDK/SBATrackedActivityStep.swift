@@ -159,7 +159,7 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
         
         // Look for the next match
         guard let nextIdentifier = selectedItemIdentifiers.nextMatch(identifier) else { return nil }
-        return pageTask.stepWithIdentifier(nextIdentifier)
+        return stepWithIdentifier(nextIdentifier)
     }
     
     override public func stepBeforeStepWithIdentifier(identifier: String, withResult result: ORKTaskResult) -> ORKStep? {
@@ -168,7 +168,7 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
         
         // Look in reverse order through the selected identifiers
         guard let nextIdentifier = selectedItemIdentifiers.reverse().nextMatch(identifier) else { return nil }
-        return pageTask.stepWithIdentifier(nextIdentifier)
+        return stepWithIdentifier(nextIdentifier)
     }
     
     // MARK: SBATrackedNavigationStep
@@ -237,7 +237,7 @@ public class SBATrackedActivityPageStepViewController: ORKPageStepViewController
         
         // Get the choice answers
         var formIdentifier = self.step!.identifier
-        let choiceAnswers = self.pageStep?.pageTask.steps.mapAndFilter({ (step) -> AnyObject? in
+        let choiceAnswers = self.pageStep?.steps.mapAndFilter({ (step) -> AnyObject? in
             
             guard let formStep = step as? ORKFormStep,
                 let formItem = formStep.formItems?.first,
