@@ -70,6 +70,10 @@
     return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn))];
 }
 
++ (NSPredicate *) scheduledComingWeekPredicate {
+    return [[NSPredicate alloc] initWithWeek:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn))];
+}
+
 + (NSPredicate *) expiredYesterdayPredicate {
     return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:-24*60*60] dateKey:NSStringFromSelector(@selector(expiresOn))];
 }

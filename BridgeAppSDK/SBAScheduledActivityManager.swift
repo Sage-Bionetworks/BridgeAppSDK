@@ -46,6 +46,7 @@ public enum SBAScheduledActivitySection {
     case today
     case keepGoing
     case tomorrow
+    case comingWeek
 }
 
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
@@ -156,7 +157,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
         case .tomorrow:
             return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
-        default:
+        case .comingWeek:
+            return Localization.localizedString("SBA_ACTIVITY_COMING_WEEK")
+        case .none:
             return nil
         }
     }
@@ -164,7 +167,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func filterPredicateForScheduledActivitySection(section: SBAScheduledActivitySection) -> NSPredicate? {
 
         switch section {
-            
+
         case .expiredYesterday:
             // expired yesterday section only showns those expired tasks that are also unfinished
             return SBBScheduledActivity.expiredYesterdayPredicate()
@@ -184,8 +187,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         case .tomorrow:
             // scheduled for tomorrow only
             return SBBScheduledActivity.scheduledTomorrowPredicate()
+        
+        case .comingWeek:
+            return SBBScheduledActivity.scheduledComingWeekPredicate()
             
-        default:
+        case .none:
             return nil
         }
     }

@@ -311,7 +311,7 @@ extension ORKQuestionType {
         case .TimeOfDay:
             return "TimeOfDay"
         case .DateAndTime:
-            return "DateAndTime"
+            return "Date"
         case .Date:
             return "Date"
         case .TimeInterval:
@@ -417,6 +417,7 @@ extension ORKTimeIntervalQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.intervalAnswer else { return nil }
+        
         return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject(), questionType: .TimeInterval)
     }
 }
