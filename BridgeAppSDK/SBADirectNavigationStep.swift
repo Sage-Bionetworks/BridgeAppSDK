@@ -79,6 +79,11 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     }
     
     /**
+    * Indicates whether or not this step should use the completion step animation.
+    */
+    public var isCompletionStep: Bool = false
+    
+    /**
      * The learn more action for this step
      */
     public var learnMoreAction: SBALearnMoreAction?
@@ -97,6 +102,15 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         self.customTypeIdentifier = customTypeIdentifier
     }
     
+    public override func stepViewControllerClass() -> AnyClass {
+        if self.isCompletionStep && self.image == nil {
+            return ORKCompletionStepViewController.classForCoder()
+        }
+        else {
+            return super.stepViewControllerClass()
+        }
+    }
+    
     // MARK: NSCopy
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
@@ -105,6 +119,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         step.nextStepIdentifier = self.nextStepIdentifier
         step.learnMoreAction = self.learnMoreAction
         step.customTypeIdentifier = self.customTypeIdentifier
+        step.isCompletionStep = self.isCompletionStep
         return step
     }
     
@@ -115,6 +130,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as? String
         self.learnMoreAction = aDecoder.decodeObjectForKey("learnMoreAction") as? SBALearnMoreAction
         self.customTypeIdentifier = aDecoder.decodeObjectForKey("customTypeIdentifier") as? String
+        self.isCompletionStep = aDecoder.decodeBoolForKey("isCompletionStep")
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
@@ -122,6 +138,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
         aCoder.encodeObject(self.learnMoreAction, forKey: "learnMoreAction")
         aCoder.encodeObject(self.customTypeIdentifier, forKey: "customTypeIdentifier")
+        aCoder.encodeBool(self.isCompletionStep, forKey: "isCompletionStep")
     }
     
     // MARK: Equality
@@ -131,13 +148,15 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         return super.isEqual(object) &&
             SBAObjectEquality(self.nextStepIdentifier, object.nextStepIdentifier) &&
             SBAObjectEquality(self.learnMoreAction, object.learnMoreAction) &&
-            SBAObjectEquality(self.customTypeIdentifier, object.customTypeIdentifier)
+            SBAObjectEquality(self.customTypeIdentifier, object.customTypeIdentifier) &&
+            (self.isCompletionStep == object.isCompletionStep)
     }
     
     override public var hash: Int {
         return super.hash ^
             SBAObjectHash(self.nextStepIdentifier) ^
             SBAObjectHash(learnMoreAction) ^
-            SBAObjectHash(self.customTypeIdentifier)
+            SBAObjectHash(self.customTypeIdentifier) ^
+            self.isCompletionStep.hashValue
     }
 }

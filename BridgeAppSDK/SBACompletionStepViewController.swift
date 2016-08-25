@@ -1,5 +1,5 @@
 //
-//  SBATaskViewController.h
+//  SBACompletionStepViewController.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,13 +31,19 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
-#import <ResearchKit/ResearchKit.h>
+import UIKit
 
-@interface SBATaskViewController : ORKTaskViewController
-
-@property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
-
-@property (nonatomic, readonly) NSDate * _Nullable finishedOn;
-
-@end
+public class SBACompletionStepViewController: ORKInstructionStepViewController {
+    
+    private var _checkmarkView: SBACheckmarkView!
+    
+    public override func buildCustomView() -> UIView? {
+        _checkmarkView = SBACheckmarkView()
+        return _checkmarkView
+    }
+    
+    public override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        _checkmarkView.drawCheckmarkAnimated(animated)
+    }
+}

@@ -205,31 +205,21 @@ extension SBASurveyItem {
 extension SBAInstructionStepSurveyItem {
     
     func createInstructionStep(customType customType: String? = nil, isLastStep: Bool = false) -> ORKInstructionStep {
-        var instructionStep: ORKInstructionStep!
-        let learnMore = self.learnMoreAction()
-        var nextIdentifier: String? = nil
-        if let directStep = self as? SBADirectNavigationRule {
-            nextIdentifier = directStep.nextStepIdentifier
-        }
-        if self.surveyItemType == .instruction(.completion) {
-            instructionStep = ORKCompletionStep(identifier: self.identifier)
-        }
-        else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
-            let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
-            step.learnMoreAction = learnMore
-            step.customTypeIdentifier = customType
-            instructionStep = step
-        }
-        else if isLastStep {
-            instructionStep = ORKCompletionStep(identifier: self.identifier)
-        }
-        else {
-            instructionStep = ORKInstructionStep(identifier: self.identifier)
-        }
+        
+        let nextIdentifier: String? = {
+            guard let directStep = self as? SBADirectNavigationRule else { return nil }
+            return directStep.nextStepIdentifier
+        }()
+
+        let instructionStep = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
+        instructionStep.isCompletionStep = isLastStep || (self.surveyItemType == .instruction(.completion))
+        instructionStep.learnMoreAction = self.learnMoreAction()
+        instructionStep.customTypeIdentifier = customType
         instructionStep.title = self.stepTitle?.trim()
         instructionStep.text = self.stepText?.trim()
         instructionStep.detailText = self.stepDetail?.trim()
-        instructionStep.image = self.stepImage;
+        instructionStep.image = self.stepImage
+        
         return instructionStep
     }
 }

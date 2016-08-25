@@ -66,8 +66,6 @@
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
-		FF3A429C1CC0B7E400B8623A /* SBATaskViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FF3A429D1CC0B7E400B8623A /* SBATaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
 		FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30541D5A806C00347165 /* SBASurveyTask.swift */; };
 		FF3E30831D5CE85D00347165 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30821D5CE85D00347165 /* SBAActivityArchive.swift */; };
@@ -81,6 +79,9 @@
 		FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */; };
 		FF5051D31D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */; };
 		FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */; };
+		FF5E56CD1D6F8415008BA2A8 /* SBACompletionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56CC1D6F8415008BA2A8 /* SBACompletionStepViewController.swift */; };
+		FF5E56E61D6F8469008BA2A8 /* SBACheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */; };
+		FF5E56E81D6F8941008BA2A8 /* SBATaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */; };
 		FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */; };
 		FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */ = {isa = PBXBuildFile; fileRef = FF63D0F61CD032B4007ADEE5 /* SBALog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0F71CD032B4007ADEE5 /* SBALog.m */; };
@@ -435,8 +436,6 @@
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
-		FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATaskViewController.h; sourceTree = "<group>"; };
-		FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATaskViewController.m; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
 		FF3E30541D5A806C00347165 /* SBASurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyTask.swift; sourceTree = "<group>"; };
 		FF3E30821D5CE85D00347165 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
@@ -450,6 +449,9 @@
 		FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAOnboardingCompleteTableViewCell.xib; sourceTree = "<group>"; };
 		FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteTableViewCell.swift; sourceTree = "<group>"; };
 		FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteStep.swift; sourceTree = "<group>"; };
+		FF5E56CC1D6F8415008BA2A8 /* SBACompletionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACompletionStepViewController.swift; sourceTree = "<group>"; };
+		FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACheckmarkView.swift; sourceTree = "<group>"; };
+		FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATaskViewController.swift; sourceTree = "<group>"; };
 		FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAWebViewController.swift; sourceTree = "<group>"; };
 		FF63D0F61CD032B4007ADEE5 /* SBALog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBALog.h; sourceTree = "<group>"; };
 		FF63D0F71CD032B4007ADEE5 /* SBALog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBALog.m; sourceTree = "<group>"; };
@@ -922,8 +924,7 @@
 				FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */,
 				FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */,
 				FF3E30541D5A806C00347165 /* SBASurveyTask.swift */,
-				FF3A429A1CC0B7E400B8623A /* SBATaskViewController.h */,
-				FF3A429B1CC0B7E400B8623A /* SBATaskViewController.m */,
+				FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */,
 			);
 			name = Task;
 			sourceTree = "<group>";
@@ -943,6 +944,7 @@
 				FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */,
 				FFDA29EE1D3FF216005CD0D0 /* SBATrackedActivityStep.swift */,
 				FFB30D681D4139B400D175D2 /* SBATrackedSelectionStep.swift */,
+				FF5E56CC1D6F8415008BA2A8 /* SBACompletionStepViewController.swift */,
 			);
 			name = Step;
 			sourceTree = "<group>";
@@ -1165,6 +1167,7 @@
 			isa = PBXGroup;
 			children = (
 				FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */,
+				FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */,
 				FFCF37DF1CDA99120090452F /* UIView+LayoutExtensions.swift */,
 				FFB30E391D488F4800D175D2 /* SBALoadingView.swift */,
 				FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */,
@@ -1337,7 +1340,6 @@
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */,
 				FFCF384F1CE113FC0090452F /* SBBScheduledActivity+Filters.h in Headers */,
-				FF3A429C1CC0B7E400B8623A /* SBATaskViewController.h in Headers */,
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
 				FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
@@ -1716,6 +1718,7 @@
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBADirectNavigationStep.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
+				FF5E56CD1D6F8415008BA2A8 /* SBACompletionStepViewController.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
 				FF10F4E01D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.m in Sources */,
 				FFB30D2E1D4008DE00D175D2 /* Array+Utilities.swift in Sources */,
@@ -1736,6 +1739,7 @@
 				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
 				FBE1A9651CAB322700F1F584 /* SBAActiveTask.swift in Sources */,
 				FBAD116E1CADE55C005611D0 /* SBABridgeTask.swift in Sources */,
+				FF5E56E81D6F8941008BA2A8 /* SBATaskViewController.swift in Sources */,
 				FFB30E3A1D488F4800D175D2 /* SBALoadingView.swift in Sources */,
 				FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */,
 				FF2379AC1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m in Sources */,
@@ -1757,6 +1761,7 @@
 				FF9055EC1CE527890049D12A /* SBAProgressStep.swift in Sources */,
 				FF6411161CB341D0007FB9E1 /* SBATrackedDataObject.m in Sources */,
 				FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */,
+				FF5E56E61D6F8469008BA2A8 /* SBACheckmarkView.swift in Sources */,
 				80D5F1941CE51C40002A39DF /* SBAEncryption.m in Sources */,
 				FFA8E4B51CBD903000ED5399 /* SBAKeyboardAnimator.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
@@ -1766,7 +1771,6 @@
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
-				FF3A429D1CC0B7E400B8623A /* SBATaskViewController.m in Sources */,
 				FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
