@@ -53,9 +53,18 @@ public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
     func reloadTable(scheduledActivityManager: SBAScheduledActivityManager)
 }
 
-public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
+public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
     
     public weak var delegate: SBAScheduledActivityManagerDelegate?
+    
+    public override init() {
+        super.init()
+    }
+    
+    public init(delegate: SBAScheduledActivityManagerDelegate?) {
+        super.init()
+        self.delegate = delegate
+    }
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate

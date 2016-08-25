@@ -35,23 +35,37 @@ import UIKit
 import ResearchKit
 import BridgeSDK
 
+@objc
+public protocol SBAScheduledActivityDataSource: class {
+    
+    func reloadData()
+    func numberOfSections() -> Int
+    func numberOfRowsInSection(section: Int) -> Int
+    func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity?
+    func shouldShowTaskForIndexPath(indexPath: NSIndexPath) -> Bool
+    
+    optional func didSelectRowAtIndexPath(indexPath: NSIndexPath)
+    optional func sectionTitle(section: Int) -> String?
+}
+
 public class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
     
-    public var scheduledActivityManager : SBAScheduledActivityManager  {
+    public var scheduledActivityDataSource: SBAScheduledActivityDataSource {
         return _scheduledActivityManager
     }
-    private let _scheduledActivityManager : SBAScheduledActivityManager = SBAScheduledActivityManager()
+    lazy private var _scheduledActivityManager : SBAScheduledActivityManager = {
+        return SBAScheduledActivityManager(delegate: self)
+    }()
     
     private var foregroundNotification: NSObjectProtocol?
     
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scheduledActivityManager.delegate = self
-        self.scheduledActivityManager.reloadData()
+        self.scheduledActivityDataSource.reloadData()
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self.scheduledActivityManager, action: #selector(self.scheduledActivityManager.reloadData), forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self.scheduledActivityDataSource, action: #selector(self.scheduledActivityDataSource.reloadData), forControlEvents: .ValueChanged)
         self.refreshControl = refreshControl
     }
     
@@ -62,7 +76,7 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
 
         foregroundNotification = NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
             [weak self] _ in
-            self?.scheduledActivityManager.reloadData()
+            self?.scheduledActivityDataSource.reloadData()
         }
     }
     
@@ -90,7 +104,7 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     
     public func configureCell(cell: UITableViewCell, tableView: UITableView, indexPath: NSIndexPath) {
         guard let activityCell = cell as? SBAActivityTableViewCell,
-            let schedule = scheduledActivityManager.scheduledActivityAtIndexPath(indexPath) else {
+            let schedule = scheduledActivityDataSource.scheduledActivityAtIndexPath(indexPath) else {
                 return
         }
         
@@ -102,7 +116,7 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
         activityCell.timeLabel?.text = schedule.scheduledTime
         
         // Modify the label colors if disabled
-        if (scheduledActivityManager.shouldShowTaskForSchedule(schedule)) {
+        if (scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath)) {
             activityCell.titleLabel.textColor = UIColor.blackColor()
         }
         else {
@@ -114,11 +128,11 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     // Mark: UITableViewController overrides
     
     override public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return scheduledActivityManager.numberOfSections()
+        return scheduledActivityDataSource.numberOfSections()
     }
     
     override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scheduledActivityManager.numberOfRowsInSection(section)
+        return scheduledActivityDataSource.numberOfRowsInSection(section)
     }
     
     override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -128,16 +142,16 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
     }
     
     override public func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        return scheduledActivityManager.shouldShowTaskForIndexPath(indexPath) ? indexPath : nil
+        return scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath) ? indexPath : nil
     }
     
     override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        scheduledActivityManager.didSelectRowAtIndexPath(indexPath)
+        scheduledActivityDataSource.didSelectRowAtIndexPath?(indexPath)
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     override public func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return scheduledActivityManager.sectionTitle(section)
+        return scheduledActivityDataSource.sectionTitle?(section)
     }
 }
 
