@@ -52,15 +52,15 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(consentFactory.steps)
         guard let steps = consentFactory.steps else { return }
         
-        let expectedSteps: [ORKStep] = [SBADirectNavigationStep(identifier: "reconsentIntroduction"),
+        let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
                                    ORKVisualConsentStep(identifier: "consentVisual"),
                                    SBASurveySubtaskStep(identifier: "consentQuiz"),
-                                   SBADirectNavigationStep(identifier: "consentFailedQuiz"),
-                                   ORKInstructionStep(identifier: "consentPassedQuiz"),
+                                   SBAInstructionStep(identifier: "consentFailedQuiz"),
+                                   SBAInstructionStep(identifier: "consentPassedQuiz"),
                                    ORKConsentSharingStep(identifier: "consentSharingOptions"),
                                    SBAConsentReviewStep(identifier: "consentReview"),
                                    SBARegistrationStep(identifier: "registration"),
-                                   ORKInstructionStep(identifier: "consentCompletion")]
+                                   SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
             if idx < steps.count {
@@ -79,14 +79,14 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let steps = (consentFactory.reconsentStep().subtask as! SBANavigableOrderedTask).steps
         
-        let expectedSteps: [ORKStep] = [SBADirectNavigationStep(identifier: "reconsentIntroduction"),
+        let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
                                         ORKVisualConsentStep(identifier: "consentVisual"),
                                         SBASurveySubtaskStep(identifier: "consentQuiz"),
-                                        SBADirectNavigationStep(identifier: "consentFailedQuiz"),
-                                        ORKInstructionStep(identifier: "consentPassedQuiz"),
+                                        SBAInstructionStep(identifier: "consentFailedQuiz"),
+                                        SBAInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
                                         SBAConsentReviewStep(identifier: "consentReview"),
-                                        ORKInstructionStep(identifier: "consentCompletion")]
+                                        SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
             if idx < steps.count {
@@ -107,12 +107,12 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let expectedSteps: [ORKStep] = [ORKVisualConsentStep(identifier: "consentVisual"),
                                         SBASurveySubtaskStep(identifier: "consentQuiz"),
-                                        SBADirectNavigationStep(identifier: "consentFailedQuiz"),
-                                        ORKInstructionStep(identifier: "consentPassedQuiz"),
+                                        SBAInstructionStep(identifier: "consentFailedQuiz"),
+                                        SBAInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
                                         SBAConsentReviewStep(identifier: "consentReview"),
                                         SBARegistrationStep(identifier: "registration"),
-                                        ORKInstructionStep(identifier: "consentCompletion")]
+                                        SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
             if idx < steps.count {

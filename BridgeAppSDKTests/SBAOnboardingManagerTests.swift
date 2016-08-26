@@ -124,9 +124,9 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
         
         let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
-                                        ORKInstructionStep(identifier: "ineligibleInstruction"),
-                                        SBADirectNavigationStep(identifier: "shareApp"),
-                                        ORKInstructionStep(identifier: "eligibleInstruction")]
+                                        SBAInstructionStep(identifier: "ineligibleInstruction"),
+                                        SBAInstructionStep(identifier: "shareApp"),
+                                        SBAInstructionStep(identifier: "eligibleInstruction")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
             if idx < steps.count {

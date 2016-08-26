@@ -54,7 +54,7 @@ public class SBATaskViewController: ORKTaskViewController {
         guard let step = stepViewController.step else { return }
         
         let isCompletionStep: Bool = {
-            if let directStep = step as? SBADirectNavigationStep {
+            if let directStep = step as? SBAInstructionStep {
                 return directStep.isCompletionStep
             }
             return step is ORKCompletionStep

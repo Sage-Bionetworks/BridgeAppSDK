@@ -1,5 +1,5 @@
 //
-//  SBACompletionStepViewController.swift
+//  SBADirectNavigationRule.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,19 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import Foundation
 
-public class SBACompletionStepViewController: ORKInstructionStepViewController {
-    
-    private var _checkmarkView: SBACheckmarkView!
-    
-    public override func buildCustomView() -> UIView? {
-        _checkmarkView = SBACheckmarkView()
-        return _checkmarkView
+/**
+ * The direct navigation rule allows for a step to be displayed with a direct
+ * pointer to something other than the next step in the sequencial order defined by
+ * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
+ */
+public protocol SBADirectNavigationRule: SBANavigationRule {
+    var nextStepIdentifier: String? { get }
+}
+
+extension SBADirectNavigationRule {
+    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+        return self.nextStepIdentifier;
     }
-    
-    public override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        _checkmarkView.drawCheckmarkAnimated(animated)
+}
+
+extension NSDictionary: SBADirectNavigationRule {
+    public var nextStepIdentifier: String? {
+        return self["nextIdentifier"] as? String
     }
 }

@@ -240,8 +240,10 @@ public class Localization: NSObject {
             "SBA_NETWORK_FAILURE_TITLE" : NSLocalizedString("SBA_NETWORK_FAILURE_TITLE", tableName: nil, bundle: localeBundle, value:"Could Not Complete", comment:"Title for a step or alert indicating a network failure"),
             "SBA_NETWORK_FAILURE_MESSAGE" : NSLocalizedString("SBA_NETWORK_FAILURE_MESSAGE", tableName: nil, bundle: localeBundle, value:"Please try again later.", comment:"Message for a step or alert indicating a network failure"),
             
-            // Survey loading message
+            // Survey
             "SBA_SURVEY_LOADING_TEXT" : NSLocalizedString("SBA_SURVEY_LOADING_TEXT", tableName: nil, bundle: localeBundle, value:"Please wait while the survey is downloaded.", comment:"Message for a loading a survey."),
+            "SBA_COPYRIGHT" : NSLocalizedString("SBA_COPYRIGHT", tableName: nil, bundle: localeBundle, value:"Copyright", comment:"Text on the copyright button."),
+            
     
         ]
 }

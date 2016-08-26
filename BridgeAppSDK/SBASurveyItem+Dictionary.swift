@@ -49,7 +49,7 @@ extension NSDictionary: SBAStepTransformer {
             return step
         }
         else {
-            return factory.createSurveyStep(self, isSubtaskStep: false, isLastStep: isLastStep)
+            return factory.createSurveyStep(self)
         }
     }
 }

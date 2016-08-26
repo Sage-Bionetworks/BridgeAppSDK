@@ -266,14 +266,14 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     // MARK: ORKTaskViewControllerDelegate
     
     public func taskViewController(taskViewController: ORKTaskViewController, hasLearnMoreForStep step: ORKStep) -> Bool {
-        if let learnMoreStep = step as? SBADirectNavigationStep where learnMoreStep.learnMoreAction != nil {
+        if let learnMoreStep = step as? SBAInstructionStep where learnMoreStep.learnMoreAction != nil {
             return true
         }
         return false
     }
     
     public func taskViewController(taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
-        guard let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
             let learnMore = learnMoreStep.learnMoreAction else {
                 return
         }
@@ -283,7 +283,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
         // If this is a learn more step then set the button title
-        if let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+        if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
             let learnMore = learnMoreStep.learnMoreAction {
             stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
         }

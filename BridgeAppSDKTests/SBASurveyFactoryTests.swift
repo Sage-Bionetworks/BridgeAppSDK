@@ -63,7 +63,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBADirectNavigationStep else {
+        guard let surveyStep = step as? SBAInstructionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
@@ -206,7 +206,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBADirectNavigationStep else {
+        guard let surveyStep = step as? SBAInstructionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }

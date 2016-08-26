@@ -620,6 +620,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
     func testAllDefaultSectionFilters() {
         let manager = TestScheduledActivityManager()
+        manager.daysAhead = 7
         let (schedules, sections, expectedTaskIdPerSection) = createFullSchedule()
         manager.sections = sections
         manager.activities = schedules
@@ -746,7 +747,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         schedules.append(createScheduledActivity("8 Days From Now",
             scheduledOn: eightDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
 
-        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing, .comingWeek], sections)
+        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing, .comingUp], sections)
     }
     
     func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {

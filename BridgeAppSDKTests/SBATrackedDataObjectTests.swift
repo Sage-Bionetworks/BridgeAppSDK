@@ -191,7 +191,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         XCTAssertEqual(conclusionStep.identifier, "medicationConclusion")
         XCTAssertEqual(conclusionStep.title, "Thank You!")
-        XCTAssertEqual(conclusionStep.text, "")
+        XCTAssertNil(conclusionStep.text)
     }
     
     func testMedicationSelectionStep_Optional() {

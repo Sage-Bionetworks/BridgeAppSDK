@@ -81,7 +81,20 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         let lastStepIndex = survey.elements.count - 1
         let steps: [ORKStep] = survey.elements.enumerate().mapAndFilter({ (index: Int, element: AnyObject) -> ORKStep? in
             guard let surveyItem = element as? SBASurveyItem else { return nil }
-            return createSurveyStep(surveyItem, isSubtaskStep: false, isLastStep: (index == lastStepIndex))
+            let step = createSurveyStep(surveyItem)
+            if (index == lastStepIndex), let instructionStep = step as? SBAInstructionStep {
+                instructionStep.isCompletionStep = true
+                // For the last step of a survey, put the detail text in a popup and assume that it 
+                // is copyright information
+                if let detailText = instructionStep.detailText {
+                    let popAction = SBAPopUpLearnMoreAction(identifier: "learnMore")
+                    popAction.learnMoreText = detailText
+                    popAction.learnMoreButtonText = Localization.localizedString("SBA_COPYRIGHT")
+                    instructionStep.detailText = nil
+                    instructionStep.learnMoreAction = popAction
+                }
+            }
+            return step
         })
         return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
     }
@@ -120,7 +133,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
                 return instruction.createInstructionStep(customType: customType)
             }
             else {
-                return SBADirectNavigationStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
+                return SBAInstructionStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
             }
             
         default:
@@ -146,12 +159,12 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         }
     }
     
-    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool = false, isLastStep: Bool = false) -> ORKStep? {
+    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
         case .instruction(_):
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
-                return instruction.createInstructionStep(customType: nil, isLastStep: isLastStep)
+                return instruction.createInstructionStep()
             }
             
         case .subtask:
@@ -204,15 +217,15 @@ extension SBASurveyItem {
 
 extension SBAInstructionStepSurveyItem {
     
-    func createInstructionStep(customType customType: String? = nil, isLastStep: Bool = false) -> ORKInstructionStep {
+    func createInstructionStep(customType customType: String? = nil) -> ORKInstructionStep {
         
         let nextIdentifier: String? = {
             guard let directStep = self as? SBADirectNavigationRule else { return nil }
             return directStep.nextStepIdentifier
         }()
 
-        let instructionStep = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
-        instructionStep.isCompletionStep = isLastStep || (self.surveyItemType == .instruction(.completion))
+        let instructionStep = SBAInstructionStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
+        instructionStep.isCompletionStep = (self.surveyItemType == .instruction(.completion))
         instructionStep.learnMoreAction = self.learnMoreAction()
         instructionStep.customTypeIdentifier = customType
         instructionStep.title = self.stepTitle?.trim()
