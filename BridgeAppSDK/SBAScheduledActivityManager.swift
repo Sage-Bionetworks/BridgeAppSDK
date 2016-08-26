@@ -46,7 +46,7 @@ public enum SBAScheduledActivitySection {
     case today
     case keepGoing
     case tomorrow
-    case comingWeek
+    case comingUp
 }
 
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
@@ -166,8 +166,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
         case .tomorrow:
             return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
-        case .comingWeek:
-            return Localization.localizedString("SBA_ACTIVITY_COMING_WEEK")
+        case .comingUp:
+            return Localization.localizedString("SBA_ACTIVITY_COMING_UP")
         case .none:
             return nil
         }
@@ -197,8 +197,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             // scheduled for tomorrow only
             return SBBScheduledActivity.scheduledTomorrowPredicate()
         
-        case .comingWeek:
-            return SBBScheduledActivity.scheduledComingWeekPredicate()
+        case .comingUp:
+            return SBBScheduledActivity.scheduledComingUpPredicate(self.daysAhead)
             
         case .none:
             return nil

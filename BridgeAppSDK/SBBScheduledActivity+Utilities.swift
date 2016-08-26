@@ -55,9 +55,8 @@ public extension SBBScheduledActivity {
             return Localization.localizedString("SBA_NOW")
         }
         else {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "h:mm a"
-            return dateFormatter.stringFromDate(self.scheduledOn).lowercaseString
+            let timeString = NSDateFormatter.localizedStringFromDate(scheduledOn, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+            return timeString.lowercaseString
         }
     }
     

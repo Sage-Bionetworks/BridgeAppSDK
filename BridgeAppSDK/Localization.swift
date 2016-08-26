@@ -208,7 +208,7 @@ public class Localization: NSObject {
             "SBA_ACTIVITY_TODAY" : NSLocalizedString("SBA_ACTIVITY_TODAY", tableName: nil, bundle: localeBundle, value:"Today", comment:"Title of activity section for today's tasks"),
             "SBA_ACTIVITY_KEEP_GOING" : NSLocalizedString("SBA_ACTIVITY_KEEP_GOING", tableName: nil, bundle: localeBundle, value:"Keep Going", comment:"Title of activity section for unscheduled tasks"),
             "SBA_ACTIVITY_TOMORROW" : NSLocalizedString("SBA_ACTIVITY_TOMORROW", tableName: nil, bundle: localeBundle, value:"Tomorrow", comment:"Title of activity section for tomorrow's tasks"),
-            "SBA_ACTIVITY_COMING_WEEK" : NSLocalizedString("SBA_ACTIVITY_COMING_WEEK", tableName: nil, bundle: localeBundle, value:"Coming Week", comment:"Title of activity section for coming week's tasks (tomorrow thru 7 days)"),
+            "SBA_ACTIVITY_COMING_UP" : NSLocalizedString("SBA_ACTIVITY_COMING_UP", tableName: nil, bundle: localeBundle, value:"Coming Up", comment:"Title of activity section for tasks that are coming up"),
             
             "SBA_ACTIVITY_SCHEDULE_MESSAGE" : NSLocalizedString("SBA_ACTIVITY_SCHEDULE_MESSAGE", tableName: nil, bundle: localeBundle, value:"This activity is not available until %@", comment:"Message for when a participant tries to do an activity ahead of schedule"),
             
