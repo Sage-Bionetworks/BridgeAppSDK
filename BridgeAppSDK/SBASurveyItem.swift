@@ -53,6 +53,7 @@ public protocol SBAActiveStepSurveyItem: SBASurveyItem {
 
 public protocol SBAFormStepSurveyItem: SBASurveyItem {
     var questionStyle: Bool { get }
+    var placeholderText: String? { get }
     var optional: Bool { get }
     var items: [AnyObject]? { get }
     var range: AnyObject? { get }

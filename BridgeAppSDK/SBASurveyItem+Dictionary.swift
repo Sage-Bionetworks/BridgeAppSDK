@@ -117,6 +117,10 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
 
 extension NSDictionary: SBAFormStepSurveyItem {
     
+    public var placeholderText: String? {
+        return self["placeholder"] as? String
+    }
+    
     public var optional: Bool {
         let optional = self["optional"] as? Bool
         return optional ?? false
