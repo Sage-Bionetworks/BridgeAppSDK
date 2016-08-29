@@ -1,0 +1,122 @@
+/* 
+  BridgeAppSDK.strings
+  BridgeAppSDK
+
+  Copyright © 2016 Sage Bionetworks. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+
+ 1.  Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+
+ 2.  Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation and/or
+ other materials provided with the distribution.
+
+ 3.  Neither the name of the copyright holder(s) nor the names of any contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission. No license is granted to the trademarks of
+ the copyright holders even if such marks are included in this software.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+
+/* Consent */
+"SBA_CONSENT_TITLE" = "Consent"; // Consent title
+"SBA_CONSENT_SIGNATURE_CONTENT" = "By agreeing you confirm that you read the consent and that you wish to take part in this research study."; // Consent signature page content
+"SBA_CONSENT_PERSON_TITLE" = "Participant"; // Title for the person participating in the study
+
+/* Text choice questions */
+"SBA_OTHER" = "Other"; // Word to use in a muliple choice list that allows 'other' as a choice
+"SBA_NONE_OF_THE_ABOVE" = "None of the above"; // Selection choice for none of the above
+"SBA_SKIP_CHOICE" = "Prefer not to answer"; // Text for selection when prefer not to answer (skip)
+"SBA_NOT_SURE_CHOICE" = "Not sure"; // Text for selection when not sure of the answer
+
+/* Passcode Reset */
+"SBA_RESET_PASSCODE_TITLE" = "Reset Passcode"; // Prompt to change passcode
+"SBA_RESET_PASSCODE_MESSAGE" = "In order to reset your passcode, you'll need to log out of the app completely and log back in using your email and password."; // Description of what happens when passcode is reset
+
+/* Logout */
+"SBA_LOGOUT" = "Log out"; // Log out button text
+
+/* Tester */
+"SBA_TESTER_ALERT_TITLE" = "Are you a tester?"; // Question if the user is a quality assurance tester
+"SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@" = "Based on your email address, we have detected you are a tester for %1$@.  If this is correct, select %2$@ so we can store your data separately."; // Message informing user if and what happens if they are a tester
+
+/* Joining items */
+"SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@" = "%1$@ or %2$@"; // Format of a list with two items (For example, 'Levodopa or Rytary')
+"SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@" = "%1$@, %2$@, or %3$@"; // Format of a list with three items (For example, 'Levodopa, Simet, or Rytary')
+"SBA_LIST_FORMAT_DELIMITER"  = ", "; // Delimiter for a list of more than 3 items. Include whitespace as appropriate. (For example, 'Foo, Levodopa, Simet, or Rytary')
+
+/* Time interval */
+"SBA_LESS_THAN_%@_AGO" = "Less than %@ ago"; // Less than %@ time interval in the past
+"SBA_MORE_THAN_%@_AGO" = "More than %@ ago"; // More than %@ time interval in the past
+"SBA_RANGE_%@_AGO" = "%@ ago"; // Range time interval in the past (Ex. '0-30 minutes ago')
+
+/* Local notifications */
+"SBA_TIME_FOR_%@" = "Time for %@"; // Alert body for local notification that it's time to perform a scheduled activity
+
+/* Scheduling */
+"SBA_NOW" = "Now"; // Time if now
+"SBA_EXPIRED" = "Expired"; // Time if expired
+
+/* Skip step or activity */
+"SBA_SKIP_STEP" = "Skip"; // Skip button text
+"SBA_SKIP_ACTIVITY" = "Skip this activity"; // Skip button text for skipping an activity
+"SBA_SKIP_ACTIVITY_INSTRUCTION" = "If you need to skip this activity, then tap the \"Skip this activity\" link below. Otherwise, tap Next to begin."; // Skip activity explanation text for skipping an activity.
+
+/* Activity section titles */
+"SBA_ACTIVITY_YESTERDAY" = "Yesterday"; // Title of activity section for expired tasks from the previous day
+"SBA_ACTIVITY_TODAY" = "Today"; // Title of activity section for today's tasks
+"SBA_ACTIVITY_KEEP_GOING" = "Keep Going"; // Title of activity section for unscheduled tasks
+"SBA_ACTIVITY_TOMORROW" = "Tomorrow"; // Title of activity section for tomorrow's tasks
+"SBA_ACTIVITY_COMING_UP" = "Coming Up"; // Title of activity section for tasks that are coming up
+
+"SBA_ACTIVITY_SCHEDULE_MESSAGE" = "This activity is not available until %@"; // Message for when a participant tries to do an activity ahead of schedule
+
+/* Progress step */
+"SBA_PROGRESS_STEP_TITLE" = "Progress so far:"; // Title of a progress step
+"SBA_PROGRESS_CHECKMARK" = "\u{2705}"; // Character to use for a step progress check mark
+"SBA_PROGRESS_UNCHECKED" = "\u{2003}\u{2002}"; // Character to use for a step progress for unchecked
+
+/* Registration */
+"SBA_REGISTRATION_INVALID_CODE" = "Please enter a valid Participant ID."; // Message for invalid registration code
+"SBA_REGISTRATION_MATCH_FAILED" = "The Participant ID you entered does not match."; // Message for registration codes that do not match
+"SBA_REGISTRATION_FAILED_TITLE" = "Registration Failed"; // Title for error when registration fails
+"SBA_REGISTRATION_EXTERNALID_TITLE" = "Participant ID"; // Title for the external ID during registration.
+"SBA_REGISTRATION_EXTERNALID_PLACEHOLDER" = "Enter Participant ID"; // Placeholder for the external ID during registration.
+"SBA_REGISTRATION_FULLNAME_TITLE" = "Name"; // Title for the full name field during registration.
+"SBA_REGISTRATION_FULLNAME_PLACEHOLDER" = "Enter full name"; // Placeholder for the full name during registration.
+"SBA_CONFIRM_EXTERNALID_TITLE" = "Confirm"; // Title for the confirmation for registering via external ID
+"SBA_CONFIRM_EXTERNALID_TEXT" = "Confirm Participant Study ID"; // Placeholder for the confirmation for registering via external ID
+
+/* State */
+"SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.
+
+/* Permissions */
+"SBA_PERMISSIONS_TITLE" = "Permissions"; // Title for the screen showing the required permissions
+"SBA_PERMISSIONS_FAILED_TITLE" = "Not Authorized"; // Title for a popup explaining that not all required permissions have been authorized.
+"SBA_PERMISSIONS_FAILED_MESSAGE" = "Go to Settings to change your permissions."; // General purpose message for a popup explaining that not all required permissions have been authorized.
+
+/* Network failure messages */
+"SBA_NETWORK_FAILURE_TITLE" = "Could Not Complete"; // Title for a step or alert indicating a network failure
+"SBA_NETWORK_FAILURE_MESSAGE" = "Please try again later."; // Message for a step or alert indicating a network failure
+
+/* Survey */
+"SBA_SURVEY_LOADING_TEXT" = "Please wait while the survey is downloaded."; // Message for a loading a survey.
+"SBA_COPYRIGHT" = "Copyright"; // Text on the copyright button.
+
+
+
+
