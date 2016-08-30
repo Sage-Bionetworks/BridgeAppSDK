@@ -82,8 +82,10 @@
 "SBA_ACTIVITY_KEEP_GOING" = "Keep Going"; // Title of activity section for unscheduled tasks
 "SBA_ACTIVITY_TOMORROW" = "Tomorrow"; // Title of activity section for tomorrow's tasks
 "SBA_ACTIVITY_COMING_UP" = "Coming Up"; // Title of activity section for tasks that are coming up
-
 "SBA_ACTIVITY_SCHEDULE_MESSAGE" = "This activity is not available until %@"; // Message for when a participant tries to do an activity ahead of schedule
+"SBA_ACTIVITY_SCHEDULE_DETAIL_%@_UNTIL_%@" = "%1$@ until %2$@"; // Detail for a scheduled activity where %1$@ is the date and %2$@ is the expires time
+"SBA_ACTIVITY_SCHEDULE_COMPLETE_%@" = "Completed: %@"; // Detail for a scheduled activity where %@ is the timestamp when completed
+"SBA_ACTIVITY_SCHEDULE_EXPIRED_%@" = "Expired: %@"; // Detail for a scheduled activity where %@ is the timestamp when expired
 
 /* Progress step */
 "SBA_PROGRESS_STEP_TITLE" = "Progress so far:"; // Title of a progress step

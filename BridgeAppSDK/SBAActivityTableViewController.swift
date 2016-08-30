@@ -112,8 +112,28 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
         let activity = schedule.activity
         activityCell.complete = schedule.isCompleted
         activityCell.titleLabel.text = activity.label
-        activityCell.subtitleLabel.text = activity.labelDetail
+        
         activityCell.timeLabel?.text = schedule.scheduledTime
+        
+        // Show a detail that is most appropriate to the schedule status
+        if schedule.isCompleted {
+            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_COMPLETE_%@")
+            let dateString = NSDateFormatter.localizedStringFromDate(schedule.finishedOn, dateStyle: .LongStyle, timeStyle: .ShortStyle)
+            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
+        }
+        else if schedule.isExpired {
+            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_EXPIRED_%@")
+            let dateString = schedule.isToday ? schedule.expiresTime! : NSDateFormatter.localizedStringFromDate(schedule.expiresOn, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
+            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
+        }
+        else if schedule.isToday || schedule.isTomorrow {
+            activityCell.subtitleLabel.text = activity.labelDetail
+        }
+        else {
+            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_DETAIL_%@_UNTIL_%@")
+            let dateString = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .LongStyle, timeStyle: .NoStyle)
+            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString, schedule.expiresTime!)
+        }
         
         // Modify the label colors if disabled
         if (scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath)) {
