@@ -87,8 +87,8 @@
 
 /* Progress step */
 "SBA_PROGRESS_STEP_TITLE" = "Progress so far:"; // Title of a progress step
-"SBA_PROGRESS_CHECKMARK" = "\u{2705}"; // Character to use for a step progress check mark
-"SBA_PROGRESS_UNCHECKED" = "\u{2003}\u{2002}"; // Character to use for a step progress for unchecked
+"SBA_PROGRESS_CHECKMARK" = "\U2705"; // Character to use for a step progress check mark
+"SBA_PROGRESS_UNCHECKED" = "\U2003\U2002"; // Character to use for a step progress for unchecked
 
 /* Registration */
 "SBA_REGISTRATION_INVALID_CODE" = "Please enter a valid Participant ID."; // Message for invalid registration code
