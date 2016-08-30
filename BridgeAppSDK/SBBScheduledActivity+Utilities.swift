@@ -47,6 +47,14 @@ public extension SBBScheduledActivity {
         return !isCompleted && ((self.scheduledOn == nil) || ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired))
     }
     
+    var isToday: Bool {
+        return !isCompleted && ((self.scheduledOn == nil) || self.scheduledOn.isToday)
+    }
+    
+    var isTomorrow: Bool {
+        return (self.scheduledOn != nil) && self.scheduledOn.isTomorrow
+    }
+    
     var scheduledTime: String {
         if isCompleted {
             return ""
@@ -58,6 +66,12 @@ public extension SBBScheduledActivity {
             let timeString = NSDateFormatter.localizedStringFromDate(scheduledOn, dateStyle: .NoStyle, timeStyle: .ShortStyle)
             return timeString.lowercaseString
         }
+    }
+    
+    var expiresTime: String? {
+        if expiresOn == nil { return nil }
+        let timeString = NSDateFormatter.localizedStringFromDate(expiresOn, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        return timeString.lowercaseString
     }
     
     public dynamic var taskIdentifier: String? {

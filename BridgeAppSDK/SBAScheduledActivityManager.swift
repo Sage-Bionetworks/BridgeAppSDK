@@ -226,13 +226,27 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return schedule.isNow || schedule.isCompleted
     }
     
+    public func messageForUnavailableSchedule(schedule: SBBScheduledActivity) -> String {
+        var scheduledTime: String!
+        if schedule.isToday {
+            scheduledTime = schedule.scheduledTime
+        }
+        else if schedule.isTomorrow {
+            scheduledTime = Localization.localizedString("SBA_ACTIVITY_TOMORROW")
+        }
+        else {
+            scheduledTime = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .MediumStyle, timeStyle: .NoStyle)
+        }
+        return Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", scheduledTime)
+    }
+    
     public func didSelectRowAtIndexPath(indexPath: NSIndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
         guard isScheduleAvailable(schedule) else {
             // Block performing a task that is scheduled for the future
-            let message = Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", schedule.scheduledTime)
+            let message = messageForUnavailableSchedule(schedule)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
             return
         }
@@ -247,7 +261,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
     }
     
-    
+
     // MARK: Task management
     
     public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
