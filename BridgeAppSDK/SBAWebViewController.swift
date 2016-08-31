@@ -37,6 +37,8 @@ public class SBAWebViewController: UIViewController, UIWebViewDelegate {
     
     @IBOutlet weak var webView: UIWebView!
     public var url : NSURL!
+    
+    private var _webviewLoaded = false
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +52,17 @@ public class SBAWebViewController: UIViewController, UIWebViewDelegate {
             self.webView = subview
         }
     
-        let request = NSURLRequest(URL: url)
-        webView.loadRequest(request)
+
+    }
+    
+    public override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (!_webviewLoaded) {
+            _webviewLoaded = true
+            let request = NSURLRequest(URL: url)
+            webView.loadRequest(request)
+        }
     }
     
     public func dismissViewController() {
