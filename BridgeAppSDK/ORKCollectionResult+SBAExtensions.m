@@ -78,32 +78,26 @@
 - (NSArray <ORKStepResult *> *)consolidatedResults {
     
     // Exit early if all are unique
+    
     NSArray *uniqueIdentifiers = [self.results valueForKeyPath:@"@distinctUnionOfObjects.identifier"];
     if (self.results.count == uniqueIdentifiers.count) {
         return self.results ?: @[];
     }
     
+    // syoung 08/29/2016 For some reason, ResearchKit is including the same step result
+    // object in the results array multiple times, looping through to include the object
+    // without using a copy of the original. The result is that for the case where the
+    // navigation loops (for example, audio voice countdown) the previous countdowns that
+    // were too loud are lost, and are replaced by the same identical object.
+    // For now, just strip out the duplicate steps and only keep one.
     NSMutableArray <ORKStepResult *> *results = [NSMutableArray new];
-    for (NSString *identifer in uniqueIdentifiers) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", NSStringFromSelector(@selector(identifier)), identifer];
-        NSArray <ORKStepResult *> *filteredResults = (NSArray <ORKStepResult *> *)[self.results filteredArrayUsingPredicate:predicate];
-        ORKStepResult *stepResult = [filteredResults lastObject];
-        if (stepResult) {
-            if (filteredResults.count > 1) {
-                NSMutableArray *stepResults = [stepResult.results mutableCopy] ?: [NSMutableArray new];
-                // If there are more than one result, then add the duplicates to the consolidated step
-                for (NSInteger ii=0; ii < (filteredResults.count - 1); ii++) {
-                    NSArray *dupResults = [filteredResults[ii] results];
-                    if (dupResults) {
-                        for (ORKResult *result in dupResults) {
-                            result.identifier = [NSString stringWithFormat:@"%@_dup%@", result.identifier, @(ii)];
-                        }
-                        [stepResults addObjectsFromArray:dupResults];
-                    }
-                }
-                stepResult.results = stepResults;
-            }
-            [results addObject:stepResult];
+    NSMutableArray *identifiers = [NSMutableArray new];
+    NSEnumerator *enumerator = [self.results reverseObjectEnumerator];
+    for (ORKStepResult *stepResult in enumerator) {
+        if (![identifiers containsObject:stepResult.identifier]) {
+            // Add to list of identifiers and add to results
+            [identifiers addObject:stepResult.identifier];
+            [results insertObject:stepResult atIndex:0];
         }
     }
     
