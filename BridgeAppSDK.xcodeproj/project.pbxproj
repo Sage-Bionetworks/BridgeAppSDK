@@ -100,6 +100,13 @@
 		FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */; };
 		FF6484171CB617790055B9E7 /* MedicationTracking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF6484161CB617790055B9E7 /* MedicationTracking.json */; };
 		FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF71A6341D71023D00A4EE8A /* BridgeAppSDK.strings */; };
+		FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF722C0D1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift */; };
+		FF722C131D775BB8004B2F8B /* SBANewsFeedParser.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C0F1D775BB8004B2F8B /* SBANewsFeedParser.h */; };
+		FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C101D775BB8004B2F8B /* SBANewsFeedParser.m */; };
+		FF722C151D775BB8004B2F8B /* SBANewsFeedManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C111D775BB8004B2F8B /* SBANewsFeedManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */; };
+		FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */; };
 		FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */; };
 		FF77F4721D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */; };
 		FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CEF81D00B5C4002C456D /* consent_1welcome.html */; };
@@ -473,6 +480,13 @@
 		FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTestCase.swift; sourceTree = "<group>"; };
 		FF6484161CB617790055B9E7 /* MedicationTracking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MedicationTracking.json; sourceTree = "<group>"; };
 		FF71A6331D71023D00A4EE8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/BridgeAppSDK.strings; sourceTree = "<group>"; };
+		FF722C0D1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANewsfeedTableViewCell.swift; sourceTree = "<group>"; };
+		FF722C0F1D775BB8004B2F8B /* SBANewsFeedParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedParser.h; sourceTree = "<group>"; };
+		FF722C101D775BB8004B2F8B /* SBANewsFeedParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedParser.m; sourceTree = "<group>"; };
+		FF722C111D775BB8004B2F8B /* SBANewsFeedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedManager.h; sourceTree = "<group>"; };
+		FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedManager.m; sourceTree = "<group>"; };
+		FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedItem.h; sourceTree = "<group>"; };
+		FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedItem.m; sourceTree = "<group>"; };
 		FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEqualityTests.m; sourceTree = "<group>"; };
 		FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBSBAMultipleLineTableViewCell.swift; sourceTree = "<group>"; };
 		FF78CEF71D00B5C4002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_1welcome.html; sourceTree = "<group>"; };
@@ -643,6 +657,7 @@
 				16BF5B611BE29643007C79C6 /* Onboarding */,
 				16BF5B671BE29676007C79C6 /* Activities */,
 				FF6410ED1CAF3795007FB9E1 /* MedicationTracking */,
+				FF722BF51D7759EB004B2F8B /* Newsfeed */,
 				80F554CB1CD3F21D00C38053 /* Notifications */,
 				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
@@ -1090,6 +1105,20 @@
 			name = Library;
 			sourceTree = "<group>";
 		};
+		FF722BF51D7759EB004B2F8B /* Newsfeed */ = {
+			isa = PBXGroup;
+			children = (
+				FF722C0D1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift */,
+				FF722C0F1D775BB8004B2F8B /* SBANewsFeedParser.h */,
+				FF722C101D775BB8004B2F8B /* SBANewsFeedParser.m */,
+				FF722C111D775BB8004B2F8B /* SBANewsFeedManager.h */,
+				FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */,
+				FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */,
+				FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */,
+			);
+			name = Newsfeed;
+			sourceTree = "<group>";
+		};
 		FF90559E1CE286EA0049D12A /* BridgeExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1339,7 +1368,9 @@
 			files = (
 				FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */,
 				FF45F8131CA5B57200EE0562 /* SBARootViewControllerProtocol.h in Headers */,
+				FF722C151D775BB8004B2F8B /* SBANewsFeedManager.h in Headers */,
 				FFAAF61E1CC0267E00500929 /* SBAPermissionsManager.h in Headers */,
+				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */,
 				FFCF384F1CE113FC0090452F /* SBBScheduledActivity+Filters.h in Headers */,
@@ -1350,6 +1381,7 @@
 				80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */,
 				80A27B011CE6E32000E3419B /* SBAJSONObject.h in Headers */,
 				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
+				FF722C131D775BB8004B2F8B /* SBANewsFeedParser.h in Headers */,
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
 				FF10F4DF1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.h in Headers */,
@@ -1684,6 +1716,7 @@
 				FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */,
 				FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */,
 				FFDECE011D07DDED00434001 /* Dictionary+Utilities.swift in Sources */,
+				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF4F06D21CEED20D007BD273 /* SBATrackedDataResult.swift in Sources */,
 				FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
@@ -1716,6 +1749,7 @@
 				FF08E0C01C9A6A120082D530 /* SBASurveyItem+Dictionary.swift in Sources */,
 				FFCF37E01CDA99120090452F /* UIView+LayoutExtensions.swift in Sources */,
 				FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */,
+				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
@@ -1731,6 +1765,7 @@
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
 				FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */,
 				FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */,
+				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,
 				FFCF37DE1CDA91520090452F /* SBALearnMoreAction.swift in Sources */,
 				FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
@@ -1776,6 +1811,7 @@
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
 				FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */,
+				FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

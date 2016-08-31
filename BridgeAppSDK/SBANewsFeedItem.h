@@ -1,8 +1,4 @@
-//
-//  BridgeAppSDK.h
-//  BridgeAppSDK
-//
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,29 +27,26 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+@interface SBANewsFeedItem : NSObject
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@property (nonatomic, copy) NSString *title;
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/ResearchKitExtensions.h>
+@property (nonatomic, copy) NSString *link;
 
-//AppCore
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
+@property (nonatomic, copy) NSString *itemDescription;
+
+@property (nonatomic, copy) NSString *content;
+
+@property (nonatomic, strong) NSDate *pubDate;
+
+@property (nonatomic, copy) NSString *author;
+
+@property (nonatomic, copy) NSString *guid;
+
+- (NSArray *)imageURLsFromContent;
+
+- (NSArray *)imageURLsFromItemDescription;
+
+@end

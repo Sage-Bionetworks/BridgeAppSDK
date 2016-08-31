@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
-//  BridgeAppSDK
+//  SBANewsFeedManager.h
+//  APCAppCore
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,29 +31,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+NS_ASSUME_NONNULL_BEGIN
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+FOUNDATION_EXPORT NSString * const SBANewsFeedUpdateNotificationKey;
 
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/ResearchKitExtensions.h>
+typedef void (^SBANewsFeedManagerCompletionBlock)(NSArray * _Nullable  posts, NSError * _Nullable error);
 
-//AppCore
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
+@class SBANewsFeedItem;
+
+@interface SBANewsFeedManager : NSObject
+
+@property (nonatomic, strong, nullable) NSArray<SBANewsFeedItem *> *feedPosts;
+
+- (NSUInteger)unreadPostsCount;
+
+- (void)fetchFeedWithCompletion:(SBANewsFeedManagerCompletionBlock _Nullable)completion;
+
+- (BOOL)hasUserReadPostWithURL:(NSString *)postURL;
+
+- (void)userDidReadPostWithURL:(NSString *)postURL;
+
+@end
+
+NS_ASSUME_NONNULL_END
