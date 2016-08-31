@@ -620,6 +620,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
     func testAllDefaultSectionFilters() {
         let manager = TestScheduledActivityManager()
+        manager.daysAhead = 7
         let (schedules, sections, expectedTaskIdPerSection) = createFullSchedule()
         manager.sections = sections
         manager.activities = schedules
@@ -691,6 +692,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let tenPM = midnightToday.dateByAddingTimeInterval(22 * hour)
         let tomorrow = NSDate(timeIntervalSinceNow: day)
         let twoDaysFromNow = NSDate(timeIntervalSinceNow: 2 * day)
+        let sevenDaysFromNow = NSDate(timeIntervalSinceNow: 7 * day)
+        let eightDaysFromNow = NSDate(timeIntervalSinceNow: 8 * day)
         
         var schedules: [SBBScheduledActivity] = []
         var sections: [[String]] = []
@@ -728,15 +731,23 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: nil, optional: true))
         sections.append(["2 Days Ago - Incomplete - Optional"])
         
+        // Section - Coming Week
+        schedules.append(createScheduledActivity("Two Days From Now",
+            scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+        // Section - Coming Week
+        schedules.append(createScheduledActivity("Seven Days From Now",
+            scheduledOn: sevenDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+        sections.append(["Tomorrow", "Two Days From Now", "Seven Days From Now"])
+        
         // Section - None
         schedules.append(createScheduledActivity("2 Days Ago - Completed Yesterday",
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: yesterday, optional: false))
         schedules.append(createScheduledActivity("2 Days Ago - Completed Today - Optional",
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: now, optional: true))
-        schedules.append(createScheduledActivity("Two Days From Now",
-            scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
-        
-        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing], sections)
+        schedules.append(createScheduledActivity("8 Days From Now",
+            scheduledOn: eightDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+
+        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing, .comingUp], sections)
     }
     
     func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {

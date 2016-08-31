@@ -78,7 +78,24 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      * Factory method for creating an ORKTask from an SBBSurvey
      */
     public func createTaskWithSurvey(survey: SBBSurvey) -> SBANavigableOrderedTask {
-        let steps: [ORKStep] = survey.elements.mapAndFilter({ self.createSurveyStepWithSurveyElement($0 as! SBBSurveyElement) });
+        let lastStepIndex = survey.elements.count - 1
+        let steps: [ORKStep] = survey.elements.enumerate().mapAndFilter({ (index: Int, element: AnyObject) -> ORKStep? in
+            guard let surveyItem = element as? SBASurveyItem else { return nil }
+            let step = createSurveyStep(surveyItem)
+            if (index == lastStepIndex), let instructionStep = step as? SBAInstructionStep {
+                instructionStep.isCompletionStep = true
+                // For the last step of a survey, put the detail text in a popup and assume that it 
+                // is copyright information
+                if let detailText = instructionStep.detailText {
+                    let popAction = SBAPopUpLearnMoreAction(identifier: "learnMore")
+                    popAction.learnMoreText = detailText
+                    popAction.learnMoreButtonText = Localization.localizedString("SBA_COPYRIGHT")
+                    instructionStep.detailText = nil
+                    instructionStep.learnMoreAction = popAction
+                }
+            }
+            return step
+        })
         return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
     }
     
@@ -94,7 +111,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      * Factory method for creating a survey step with a dictionary
      */
     public func createSurveyStepWithDictionary(dictionary: NSDictionary) -> ORKStep? {
-        return self.createSurveyStep(dictionary, isSubtaskStep: false)
+        return self.createSurveyStep(dictionary)
     }
     
     /**
@@ -102,7 +119,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      */
     public func createSurveyStepWithSurveyElement(inputItem: SBBSurveyElement) -> ORKStep? {
         guard let surveyItem = inputItem as? SBASurveyItem else { return nil }
-        return self.createSurveyStep(surveyItem, isSubtaskStep: false)
+        return self.createSurveyStep(surveyItem)
     }
     
     /**
@@ -113,10 +130,10 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         switch (inputItem.surveyItemType) {
         case .custom(let customType):
             if let instruction = inputItem as? SBAInstructionStepSurveyItem {
-                return instruction.createInstructionStep(customType)
+                return instruction.createInstructionStep(customType: customType)
             }
             else {
-                return SBADirectNavigationStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
+                return SBAInstructionStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
             }
             
         default:
@@ -142,15 +159,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         }
     }
     
-    final func createSurveyStep(inputItem: SBASurveyItem) -> ORKStep? {
-        return self.createSurveyStep(inputItem, isSubtaskStep: nil, isLastStep: nil)
-    }
-
-    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?) -> ORKStep? {
-        return self.createSurveyStep(inputItem, isSubtaskStep: isSubtaskStep, isLastStep: nil)
-    }
-    
-    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool?, isLastStep: Bool?) -> ORKStep? {
+    final func createSurveyStep(inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
         case .instruction(_):
@@ -208,29 +217,22 @@ extension SBASurveyItem {
 
 extension SBAInstructionStepSurveyItem {
     
-    func createInstructionStep(customType: String? = nil) -> ORKInstructionStep {
-        var instructionStep: ORKInstructionStep!
-        let learnMore = self.learnMoreAction()
-        var nextIdentifier: String? = nil
-        if let directStep = self as? SBADirectNavigationRule {
-            nextIdentifier = directStep.nextStepIdentifier
-        }
-        if self.surveyItemType == .instruction(.completion) {
-            instructionStep = ORKCompletionStep(identifier: self.identifier)
-        }
-        else if (nextIdentifier != nil) || (learnMore != nil) || (customType != nil) {
-            let step = SBADirectNavigationStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
-            step.learnMoreAction = learnMore
-            step.customTypeIdentifier = customType
-            instructionStep = step
-        }
-        else {
-            instructionStep = ORKInstructionStep(identifier: self.identifier)
-        }
-        instructionStep.title = self.stepTitle
-        instructionStep.text = self.stepText
-        instructionStep.detailText = self.stepDetail
-        instructionStep.image = self.stepImage;
+    func createInstructionStep(customType customType: String? = nil) -> ORKInstructionStep {
+        
+        let nextIdentifier: String? = {
+            guard let directStep = self as? SBADirectNavigationRule else { return nil }
+            return directStep.nextStepIdentifier
+        }()
+
+        let instructionStep = SBAInstructionStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
+        instructionStep.isCompletionStep = (self.surveyItemType == .instruction(.completion))
+        instructionStep.learnMoreAction = self.learnMoreAction()
+        instructionStep.customTypeIdentifier = customType
+        instructionStep.title = self.stepTitle?.trim()
+        instructionStep.text = self.stepText?.trim()
+        instructionStep.detailText = self.stepDetail?.trim()
+        instructionStep.image = self.stepImage
+        
         return instructionStep
     }
 }
@@ -263,11 +265,9 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-
-    
     func mapStepValues(step: ORKStep) {
-        step.title = self.stepTitle
-        step.text = self.stepText
+        step.title = self.stepTitle?.trim()
+        step.text = self.stepText?.trim()
         step.optional = self.optional
     }
     

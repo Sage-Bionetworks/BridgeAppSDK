@@ -42,7 +42,7 @@ public protocol SBATextChoice  {
 
 extension SBATextChoice {
     func createORKTextChoice() -> ORKTextChoice {
-        return ORKTextChoice(text: self.choiceText, detailText: self.choiceDetail, value: self.choiceValue, exclusive: self.exclusive)
+        return ORKTextChoice(text: self.choiceText.trim() ?? "", detailText: self.choiceDetail?.trim(), value: self.choiceValue, exclusive: self.exclusive)
     }
 }
 

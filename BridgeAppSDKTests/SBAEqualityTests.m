@@ -122,7 +122,7 @@ MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID
              //[SBAActivityResult class], TODO: FIXME!! syoung 07/15/2016 BridgeSDK objects do not implement Equality or Encoding
              [SBAConsentSignature class],
              [SBANavigableOrderedTask class],
-             [SBADirectNavigationStep class],
+             [SBAInstructionStep class],
              [SBASubtaskStep class],
              [SBASurveyFormStep class],
              [SBASurveySubtaskStep class],

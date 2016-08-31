@@ -48,4 +48,20 @@ extension String {
         return self.substringFromIndex(range.endIndex)
     }
     
+    public func stringByRemovingNewlineCharacters() -> String {
+        guard let result = (self as NSString).mutableCopy() as? NSMutableString else { return self }
+        let set = NSCharacterSet.newlineCharacterSet()
+        var range = result.rangeOfCharacterFromSet(set)
+        while (range.location != NSNotFound) {
+            result.replaceCharactersInRange(range, withString: " ")
+            range = result.rangeOfCharacterFromSet(set)
+        }
+        range = result.rangeOfString("  ")
+        while (range.location != NSNotFound) {
+            result.replaceCharactersInRange(range, withString: " ")
+            range = result.rangeOfString("  ")
+        }
+        return result.copy() as! String
+    }
+
 }

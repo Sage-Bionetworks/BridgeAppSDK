@@ -40,6 +40,7 @@
 + (NSPredicate *) availableTodayPredicate;
 + (NSPredicate *) scheduledTodayPredicate;
 + (NSPredicate *) scheduledTomorrowPredicate;
++ (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays;
 + (NSPredicate *) expiredYesterdayPredicate;
 + (NSPredicate *) optionalPredicate;
 

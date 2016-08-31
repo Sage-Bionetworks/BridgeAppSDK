@@ -55,6 +55,10 @@ public class SBAColorInfo : NSObject {
 
 extension UIColor {
     
+    static public func colorForKey(key: String) -> UIColor? {
+        return SBAColorInfo.defaultColorInfo.colorForKey(key)
+    }
+    
     static public func primaryTintColor() -> UIColor? {
         return SBAColorInfo.defaultColorInfo.colorForKey("primaryTintColor")
     }
@@ -67,10 +71,6 @@ extension UIColor {
     static public func blueTintColor() -> UIColor? {
         // For certain cases, we want to use a blue tint and will override the default color
         return SBAColorInfo.defaultColorInfo.colorForKey("blueTintColor") ?? UIColor(red:0.132, green:0.684, blue:0.959, alpha:1.000)
-    }
-    
-    static public func disabledPrimaryTintColor() -> UIColor? {
-        return SBAColorInfo.defaultColorInfo.colorForKey("disabledPrimaryTintColor")
     }
     
     public convenience init?(hexString: String) {

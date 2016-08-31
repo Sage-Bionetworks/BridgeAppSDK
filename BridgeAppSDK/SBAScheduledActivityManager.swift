@@ -46,15 +46,25 @@ public enum SBAScheduledActivitySection {
     case today
     case keepGoing
     case tomorrow
+    case comingUp
 }
 
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
     func reloadTable(scheduledActivityManager: SBAScheduledActivityManager)
 }
 
-public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
+public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
     
     public weak var delegate: SBAScheduledActivityManagerDelegate?
+    
+    public override init() {
+        super.init()
+    }
+    
+    public init(delegate: SBAScheduledActivityManagerDelegate?) {
+        super.init()
+        self.delegate = delegate
+    }
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
@@ -156,7 +166,9 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
         case .tomorrow:
             return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
-        default:
+        case .comingUp:
+            return Localization.localizedString("SBA_ACTIVITY_COMING_UP")
+        case .none:
             return nil
         }
     }
@@ -164,7 +176,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func filterPredicateForScheduledActivitySection(section: SBAScheduledActivitySection) -> NSPredicate? {
 
         switch section {
-            
+
         case .expiredYesterday:
             // expired yesterday section only showns those expired tasks that are also unfinished
             return SBBScheduledActivity.expiredYesterdayPredicate()
@@ -184,8 +196,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         case .tomorrow:
             // scheduled for tomorrow only
             return SBBScheduledActivity.scheduledTomorrowPredicate()
+        
+        case .comingUp:
+            return SBBScheduledActivity.scheduledComingUpPredicate(self.daysAhead)
             
-        default:
+        case .none:
             return nil
         }
     }
@@ -211,13 +226,27 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return schedule.isNow || schedule.isCompleted
     }
     
+    public func messageForUnavailableSchedule(schedule: SBBScheduledActivity) -> String {
+        var scheduledTime: String!
+        if schedule.isToday {
+            scheduledTime = schedule.scheduledTime
+        }
+        else if schedule.isTomorrow {
+            scheduledTime = Localization.localizedString("SBA_ACTIVITY_TOMORROW")
+        }
+        else {
+            scheduledTime = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .MediumStyle, timeStyle: .NoStyle)
+        }
+        return Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", scheduledTime)
+    }
+    
     public func didSelectRowAtIndexPath(indexPath: NSIndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
         guard isScheduleAvailable(schedule) else {
             // Block performing a task that is scheduled for the future
-            let message = Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", schedule.scheduledTime)
+            let message = messageForUnavailableSchedule(schedule)
             self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
             return
         }
@@ -232,7 +261,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
     }
     
-    
+
     // MARK: Task management
     
     public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
@@ -251,14 +280,14 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     // MARK: ORKTaskViewControllerDelegate
     
     public func taskViewController(taskViewController: ORKTaskViewController, hasLearnMoreForStep step: ORKStep) -> Bool {
-        if let learnMoreStep = step as? SBADirectNavigationStep where learnMoreStep.learnMoreAction != nil {
+        if let learnMoreStep = step as? SBAInstructionStep where learnMoreStep.learnMoreAction != nil {
             return true
         }
         return false
     }
     
     public func taskViewController(taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
-        guard let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
             let learnMore = learnMoreStep.learnMoreAction else {
                 return
         }
@@ -268,7 +297,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
         // If this is a learn more step then set the button title
-        if let learnMoreStep = stepViewController.step as? SBADirectNavigationStep,
+        if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
             let learnMore = learnMoreStep.learnMoreAction {
             stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
         }

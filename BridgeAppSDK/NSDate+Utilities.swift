@@ -41,5 +41,13 @@ extension NSDate {
         let components = calendar.components(unitFlags, fromDate: self)
         return calendar.dateFromComponents(components) ?? self
     }
+    
+    var isToday: Bool {
+        return self.startOfDay() == NSDate().startOfDay()
+    }
+    
+    var isTomorrow: Bool {
+        return self.startOfDay() == NSDate(timeIntervalSinceNow: 24 * 60 * 60).startOfDay()
+    }
 
 }

@@ -49,7 +49,7 @@ extension NSDictionary: SBAStepTransformer {
             return step
         }
         else {
-            return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
+            return factory.createSurveyStep(self)
         }
     }
 }
@@ -116,6 +116,10 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
 }
 
 extension NSDictionary: SBAFormStepSurveyItem {
+    
+    public var placeholderText: String? {
+        return self["placeholder"] as? String
+    }
     
     public var optional: Bool {
         let optional = self["optional"] as? Bool

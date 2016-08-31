@@ -1,5 +1,5 @@
 //
-//  SBADirectNavigationStep.swift
+//  SBAInstructionStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,28 +33,7 @@
 
 import ResearchKit
 
-public protocol SBADirectNavigationRule: SBANavigationRule {
-    var nextStepIdentifier: String? { get }
-}
-
-extension SBADirectNavigationRule {
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
-        return self.nextStepIdentifier;
-    }
-}
-
-extension NSDictionary: SBADirectNavigationRule {
-    public var nextStepIdentifier: String? {
-        return self["nextIdentifier"] as? String
-    }
-}
-
-/**
- * The direct navigation step allows for a final step to be displayed with a direct
- * pointer to something other than the next step in the sequencial order defined by
- * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
- */
-public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
+public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
     
     /**
     * For cases where this type of step is created as a placeholder for a custom step.
@@ -79,6 +58,11 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
     }
     
     /**
+    * Indicates whether or not this step should use the completion step animation.
+    */
+    public var isCompletionStep: Bool = false
+    
+    /**
      * The learn more action for this step
      */
     public var learnMoreAction: SBALearnMoreAction?
@@ -97,14 +81,24 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         self.customTypeIdentifier = customTypeIdentifier
     }
     
+    public override func stepViewControllerClass() -> AnyClass {
+        if self.isCompletionStep && self.image == nil {
+            return ORKCompletionStepViewController.classForCoder()
+        }
+        else {
+            return super.stepViewControllerClass()
+        }
+    }
+    
     // MARK: NSCopy
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = super.copyWithZone(zone)
-        guard let step = copy as? SBADirectNavigationStep else { return copy }
+        guard let step = copy as? SBAInstructionStep else { return copy }
         step.nextStepIdentifier = self.nextStepIdentifier
         step.learnMoreAction = self.learnMoreAction
         step.customTypeIdentifier = self.customTypeIdentifier
+        step.isCompletionStep = self.isCompletionStep
         return step
     }
     
@@ -115,6 +109,7 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as? String
         self.learnMoreAction = aDecoder.decodeObjectForKey("learnMoreAction") as? SBALearnMoreAction
         self.customTypeIdentifier = aDecoder.decodeObjectForKey("customTypeIdentifier") as? String
+        self.isCompletionStep = aDecoder.decodeBoolForKey("isCompletionStep")
     }
     
     override public func encodeWithCoder(aCoder: NSCoder) {
@@ -122,22 +117,25 @@ public final class SBADirectNavigationStep: ORKInstructionStep, SBADirectNavigat
         aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
         aCoder.encodeObject(self.learnMoreAction, forKey: "learnMoreAction")
         aCoder.encodeObject(self.customTypeIdentifier, forKey: "customTypeIdentifier")
+        aCoder.encodeBool(self.isCompletionStep, forKey: "isCompletionStep")
     }
     
     // MARK: Equality
     
     override public func isEqual(object: AnyObject?) -> Bool {
-        guard let object = object as? SBADirectNavigationStep else { return false }
+        guard let object = object as? SBAInstructionStep else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(self.nextStepIdentifier, object.nextStepIdentifier) &&
             SBAObjectEquality(self.learnMoreAction, object.learnMoreAction) &&
-            SBAObjectEquality(self.customTypeIdentifier, object.customTypeIdentifier)
+            SBAObjectEquality(self.customTypeIdentifier, object.customTypeIdentifier) &&
+            (self.isCompletionStep == object.isCompletionStep)
     }
     
     override public var hash: Int {
         return super.hash ^
             SBAObjectHash(self.nextStepIdentifier) ^
             SBAObjectHash(learnMoreAction) ^
-            SBAObjectHash(self.customTypeIdentifier)
+            SBAObjectHash(self.customTypeIdentifier) ^
+            self.isCompletionStep.hashValue
     }
 }

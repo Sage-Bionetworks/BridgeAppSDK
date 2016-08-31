@@ -132,13 +132,13 @@
 - (void)testNavigationWithRules {
     
     NSMutableArray *steps = [self createStepsWithPrefix:@"step" numberOfSteps:2];
-    SBADirectNavigationStep *stepA1 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepA.1"];
+    SBAInstructionStep *stepA1 = [[SBAInstructionStep alloc] initWithIdentifier:@"stepA.1"];
     [steps addObject:stepA1];
-    SBADirectNavigationStep *stepA2 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepA.2"];
+    SBAInstructionStep *stepA2 = [[SBAInstructionStep alloc] initWithIdentifier:@"stepA.2"];
     [steps addObject:stepA2];
     ORKInstructionStep *stepB1 = [[ORKInstructionStep alloc] initWithIdentifier:@"stepB.1"];
     [steps addObject:stepB1];
-    SBADirectNavigationStep *stepB2 = [[SBADirectNavigationStep alloc] initWithIdentifier:@"stepB.2"];
+    SBAInstructionStep *stepB2 = [[SBAInstructionStep alloc] initWithIdentifier:@"stepB.2"];
     [steps addObject:stepB2];
     
     stepA1.nextStepIdentifier = @"stepB.1";

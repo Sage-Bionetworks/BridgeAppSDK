@@ -1,5 +1,5 @@
 //
-//  SBATaskViewController.h
+//  SBADirectNavigationRule.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,13 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
-#import <ResearchKit/ResearchKit.h>
+import Foundation
 
-@interface SBATaskViewController : ORKTaskViewController
+/**
+ * The direct navigation rule allows for a step to be displayed with a direct
+ * pointer to something other than the next step in the sequencial order defined by
+ * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
+ */
+public protocol SBADirectNavigationRule: SBANavigationRule {
+    var nextStepIdentifier: String? { get }
+}
 
-@property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
+extension SBADirectNavigationRule {
+    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+        return self.nextStepIdentifier;
+    }
+}
 
-@property (nonatomic, readonly) NSDate * _Nullable finishedOn;
-
-@end
+extension NSDictionary: SBADirectNavigationRule {
+    public var nextStepIdentifier: String? {
+        return self["nextIdentifier"] as? String
+    }
+}

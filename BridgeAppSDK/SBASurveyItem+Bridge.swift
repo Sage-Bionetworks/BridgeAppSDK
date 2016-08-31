@@ -38,6 +38,9 @@ import ResearchKit
 // forced unwrap whereas they should be defined as optionals. Therefore, I am wrapping the properties
 // in optionals and always check that the object is not nil before using it.
 
+// NOTE: syoung 08/26/2016 Newline characters are not displayed in the Bridge Web UI so the person 
+// copy/pasting the text into the question cannot proofread them. Strip any newlines out of the text.
+
 extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     
     public var surveyItemType: SBASurveyItemType {
@@ -45,15 +48,18 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     }
     
     public var stepTitle: String? {
-        return self.title
+        if (self.title == nil) { return nil }
+        return self.title.stringByRemovingNewlineCharacters()
     }
     
     public var stepText: String? {
-        return self.prompt
+        if (self.prompt == nil) { return nil }
+        return self.prompt.stringByRemovingNewlineCharacters()
     }
     
     public var stepDetail: String? {
-        return self.promptDetail
+        if (self.promptDetail == nil) { return nil }
+        return self.promptDetail.stringByRemovingNewlineCharacters()
     }
     
     public var stepImage: UIImage? {
@@ -71,7 +77,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     }
     
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
-        return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
+        return factory.createSurveyStep(self)
     }
 }
 
@@ -128,13 +134,19 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     }
     
     public var stepTitle: String? {
-        return self.prompt
+        return nil
     }
     
     public var stepText: String? {
-        return self.promptDetail
+        if (self.prompt == nil) { return nil }
+        return self.prompt.stringByRemovingNewlineCharacters()
     }
 
+    public var placeholderText: String? {
+        if (self.promptDetail == nil) { return nil }
+        return self.promptDetail.stringByRemovingNewlineCharacters()
+    }
+    
     public var optional: Bool {
         return true // default implementation.
     }
@@ -204,7 +216,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     }
     
     public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
-        return factory.createSurveyStep(self, isSubtaskStep: nil, isLastStep: isLastStep)
+        return factory.createSurveyStep(self)
     }
 }
 

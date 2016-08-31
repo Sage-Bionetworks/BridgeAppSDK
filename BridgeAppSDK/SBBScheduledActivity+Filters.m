@@ -70,6 +70,10 @@
     return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn))];
 }
 
++ (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays {
+    return [[NSPredicate alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn)) numberOfDays:numberOfDays];
+}
+
 + (NSPredicate *) expiredYesterdayPredicate {
     return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:-24*60*60] dateKey:NSStringFromSelector(@selector(expiresOn))];
 }
