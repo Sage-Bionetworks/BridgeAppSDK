@@ -512,17 +512,19 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
                         let subschedule = scheduledActivityForTaskIdentifier(taskId) ?? schedule
                         if subResults.count > 0 {
                             
-                            // add dataStore results
+                            // add dataStore results but only if this is not a data collection itself
                             var subsetResults = subResults
-                            for dataStore in dataStores {
-                                if let momentInDayResult = dataStore.momentInDayResult {
-                                    // Mark the start/end date with the start timestamp of the first step
-                                    for stepResult in momentInDayResult {
-                                        stepResult.startDate = subsetResults.first!.startDate
-                                        stepResult.endDate = stepResult.startDate
+                            if !isDataCollection {
+                                for dataStore in dataStores {
+                                    if let momentInDayResult = dataStore.momentInDayResult {
+                                        // Mark the start/end date with the start timestamp of the first step
+                                        for stepResult in momentInDayResult {
+                                            stepResult.startDate = subsetResults.first!.startDate
+                                            stepResult.endDate = stepResult.startDate
+                                        }
+                                        // Add the results at the beginning
+                                        subsetResults = momentInDayResult + subsetResults
                                     }
-                                    // Add the results at the beginning
-                                    subsetResults = momentInDayResult + subsetResults
                                 }
                             }
                             

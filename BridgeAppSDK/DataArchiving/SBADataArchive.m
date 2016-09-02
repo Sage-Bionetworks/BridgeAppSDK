@@ -163,6 +163,12 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 - (void)insertDataIntoArchive :(NSData *)data filename: (NSString *)filename
 {
+    // Check that the file has not already been added
+    if ([self.filesList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K = %@", kFileInfoNameKey, kFileInfoNameKey]].count != 0) {
+        NSAssert1(NO, @"File has already been added: %@", filename);
+        return;
+    }
+    
     [self.zipEntries addObject: [ZZArchiveEntry archiveEntryWithFileName: filename
                                                                 compress:YES
                                                                dataBlock:^(NSError** error)
@@ -173,7 +179,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     
     //add the fileInfoEntry
     NSString *extension = [filename pathExtension] ? : kJsonPathExtension;
-    NSDictionary *fileInfoEntry = @{ kFileInfoNameKey: filename,
+    NSDictionary *fileInfoEntry = @{ kFileInfoNameKey: kFileInfoNameKey,
                                      kFileInfoTimeStampKey: [[NSDate date] jsonObjectWithFormatter:nil],
                                      kFileInfoContentTypeKey: [self contentTypeForFileExtension:extension] };
     
