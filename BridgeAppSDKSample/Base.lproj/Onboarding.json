@@ -43,13 +43,22 @@
                              ]
                   },
                   
+                  {
+                  "onboardingType" : "permissions",
+                  "steps" : [
+                             {
+                             "identifier"   : "permissions",
+                             "type"         : "permissions"
+                             }
+                             ]
+                  },
                   
                   {
                   "onboardingType" : "completion",
                   "steps" : [
                              {
                              "identifier"   : "onboardingCompletion",
-                             "type"         : "completion",
+                             "type"         : "onboardingCompletion",
                              "title"        : "Thank You!",
                              "text"         : "You are all set."
                              }

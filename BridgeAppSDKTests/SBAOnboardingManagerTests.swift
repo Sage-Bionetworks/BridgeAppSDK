@@ -52,7 +52,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
         
-        XCTAssertEqual(sections.count, 6)
+        XCTAssertEqual(sections.count, 7)
     }
     
     func testShouldInclude() {
@@ -95,6 +95,8 @@ class SBAOnboardingManagerTests: ResourceTestCase {
             ["onboardingType" : "registration"],
             ["onboardingType" : "login"],
             ["onboardingType" : "eligibility"],
+            ["onboardingType" : "profile"],
+            ["onboardingType" : "permissions"],
             ["onboardingType" : "completion"],
             ["onboardingType" : "customEnd"],]
         let input: NSDictionary = ["sections" : inputSections];
@@ -111,6 +113,8 @@ class SBAOnboardingManagerTests: ResourceTestCase {
                              "registration",
                              "passcode",
                              "emailVerification",
+                             "permissions",
+                             "profile",
                              "completion",
                              "customEnd",]
         let actualOrder = sections.mapAndFilter({ $0.onboardingSectionType?.identifier })
