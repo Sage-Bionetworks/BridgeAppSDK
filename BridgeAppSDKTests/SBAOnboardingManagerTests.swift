@@ -52,7 +52,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
         
-        XCTAssertEqual(sections.count, 6)
+        XCTAssertEqual(sections.count, 7)
     }
     
     func testShouldInclude() {
@@ -95,6 +95,8 @@ class SBAOnboardingManagerTests: ResourceTestCase {
             ["onboardingType" : "registration"],
             ["onboardingType" : "login"],
             ["onboardingType" : "eligibility"],
+            ["onboardingType" : "profile"],
+            ["onboardingType" : "permissions"],
             ["onboardingType" : "completion"],
             ["onboardingType" : "customEnd"],]
         let input: NSDictionary = ["sections" : inputSections];
@@ -111,6 +113,8 @@ class SBAOnboardingManagerTests: ResourceTestCase {
                              "registration",
                              "passcode",
                              "emailVerification",
+                             "permissions",
+                             "profile",
                              "completion",
                              "customEnd",]
         let actualOrder = sections.mapAndFilter({ $0.onboardingSectionType?.identifier })
@@ -124,9 +128,9 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
         
         let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
-                                        ORKInstructionStep(identifier: "ineligibleInstruction"),
-                                        SBADirectNavigationStep(identifier: "shareApp"),
-                                        ORKInstructionStep(identifier: "eligibleInstruction")]
+                                        SBAInstructionStep(identifier: "ineligibleInstruction"),
+                                        SBAInstructionStep(identifier: "shareApp"),
+                                        SBAInstructionStep(identifier: "eligibleInstruction")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerate() {
             if idx < steps.count {

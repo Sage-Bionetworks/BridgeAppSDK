@@ -1,8 +1,9 @@
 //
-//  SBBScheduledActivity+Filters.h
+//  SBANewsFeedManager.h
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,17 +32,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import <Foundation/Foundation.h>
 
-@interface SBBScheduledActivity (SBAFilters)
+NS_ASSUME_NONNULL_BEGIN
 
-+ (NSPredicate *) unfinishedPredicate;
-+ (NSPredicate *) finishedTodayPredicate;
-+ (NSPredicate *) availableTodayPredicate;
-+ (NSPredicate *) scheduledTodayPredicate;
-+ (NSPredicate *) scheduledTomorrowPredicate;
-+ (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays;
-+ (NSPredicate *) expiredYesterdayPredicate;
-+ (NSPredicate *) optionalPredicate;
+FOUNDATION_EXPORT NSString * const SBANewsFeedUpdateNotificationKey;
+
+typedef void (^SBANewsFeedManagerCompletionBlock)(NSArray * _Nullable  posts, NSError * _Nullable error);
+
+@class SBANewsFeedItem;
+
+@interface SBANewsFeedManager : NSObject
+
+@property (nonatomic, strong, nullable) NSArray<SBANewsFeedItem *> *feedPosts;
+
+- (NSUInteger)unreadPostsCount;
+
+- (void)fetchFeedWithCompletion:(SBANewsFeedManagerCompletionBlock _Nullable)completion;
+
+- (BOOL)hasUserReadPostWithURL:(NSString *)postURL;
+
+- (void)userDidReadPostWithURL:(NSString *)postURL;
 
 @end
+
+NS_ASSUME_NONNULL_END

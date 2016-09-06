@@ -42,7 +42,7 @@ public class SBALearnMoreAction: SBADataObject {
         return super.dictionaryRepresentationKeys() + [learnMoreButtonTextKey]
     }
     
-    public func learnMoreAction(step: SBADirectNavigationStep, taskViewController: ORKTaskViewController) {
+    public func learnMoreAction(step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
         assertionFailure("Abstract method")
     }
     
@@ -68,13 +68,28 @@ public class SBAURLLearnMoreAction: SBALearnMoreAction {
     }
     private var _learnMoreURL: NSURL!
 
-    override public func learnMoreAction(step: SBADirectNavigationStep, taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
         let vc = SBAWebViewController(nibName: nil, bundle: nil)
         vc.url = learnMoreURL
         vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: vc, action: #selector(vc.dismissViewController))
         let navVC = UINavigationController(rootViewController: vc)
         taskViewController.presentViewController(navVC, animated: true, completion: nil)
     }
+}
+
+public class SBAPopUpLearnMoreAction: SBALearnMoreAction {
+    
+    let learnMoreTextKey = "learnMoreText"
+    public dynamic var learnMoreText: String!
+    
+    override public func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys() + [learnMoreTextKey]
+    }
+    
+    public override func learnMoreAction(step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+        taskViewController.showAlertWithOk(nil, message: learnMoreText, actionHandler: nil)
+    }
+    
 }
 
 public class SBASkipAction: SBALearnMoreAction {
@@ -88,7 +103,7 @@ public class SBASkipAction: SBALearnMoreAction {
         }
     }
     
-    override public func learnMoreAction(step: SBADirectNavigationStep, taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
         // Set the next step identifier
         step.nextStepIdentifier = self.identifier
         
@@ -100,6 +115,5 @@ public class SBASkipAction: SBALearnMoreAction {
         // go forward
         taskViewController.goForward()
     }
-    
 }
 

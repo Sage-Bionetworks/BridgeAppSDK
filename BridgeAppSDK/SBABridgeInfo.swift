@@ -86,6 +86,11 @@ public protocol SBABridgeInfo: class {
      * Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
      */
     var certificateName: String? { get }
+    
+    /**
+     * URL for the news feed for this app.
+     */
+    var newsfeedURLString: String? { get }
 
 }
 
@@ -146,6 +151,10 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var certificateName: String? {
         return self.plist["certificateName"] as? String
+    }
+    
+    public var newsfeedURLString: String? {
+        return self.plist["newsfeedURL"] as? String
     }
 }
 

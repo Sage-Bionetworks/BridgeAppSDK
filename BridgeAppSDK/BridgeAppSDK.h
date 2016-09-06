@@ -47,10 +47,13 @@ FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 #import <BridgeAppSDK/SBAMedication.h>
 #import <BridgeAppSDK/SBATrackedDataStore.h>
 #import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATaskViewController.h>
 #import <BridgeAppSDK/SBBScheduledActivity+Filters.h>
 #import <BridgeAppSDK/SBAActivityResult.h>
 #import <BridgeAppSDK/SBALog.h>
 #import <BridgeAppSDK/SBADataArchive.h>
 #import <BridgeAppSDK/SBAActivityResult.h>
 #import <BridgeAppSDK/ResearchKitExtensions.h>
+
+//AppCore
+#import <BridgeAppSDK/SBANewsFeedItem.h>
+#import <BridgeAppSDK/SBANewsFeedManager.h>

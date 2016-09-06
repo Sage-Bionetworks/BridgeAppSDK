@@ -48,4 +48,16 @@ extension String {
         return self.substringFromIndex(range.endIndex)
     }
     
+    public func stringByRemovingNewlineCharacters() -> String {
+        let set = NSCharacterSet.newlineCharacterSet()
+        // Since there can be two newline characters in a row, but we only want to replace that with a single 
+        // space, use the custom reduce to strip out the new line characters and replace with a single space.
+        let result = (self as NSString).componentsSeparatedByCharactersInSet(set).reduce("") { (input, next) -> String in
+            guard let nextTrimmed = next.trim() else { return input }
+            guard input != "" else { return nextTrimmed }
+            return input + " " + nextTrimmed
+        }
+        return result
+    }
+
 }

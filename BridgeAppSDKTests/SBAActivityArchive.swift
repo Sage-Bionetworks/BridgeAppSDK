@@ -215,7 +215,7 @@ class SBAActivityArchive: XCTestCase {
         
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
-        XCTAssertEqual(json["questionTypeName"] as? String, "DateAndTime")
+        XCTAssertEqual(json["questionTypeName"] as? String, "Date")
         let expectedAnswer = "1969-08-03T04:10:00.000" + timezoneString()
         XCTAssertEqual(json["dateAnswer"] as? String, expectedAnswer)
     }

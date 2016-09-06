@@ -1,8 +1,6 @@
 //
-//  SBBScheduledActivity+Filters.h
-//  BridgeAppSDK
-//
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,17 +29,26 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import <Foundation/Foundation.h>
 
-@interface SBBScheduledActivity (SBAFilters)
+@interface SBANewsFeedItem : NSObject
 
-+ (NSPredicate *) unfinishedPredicate;
-+ (NSPredicate *) finishedTodayPredicate;
-+ (NSPredicate *) availableTodayPredicate;
-+ (NSPredicate *) scheduledTodayPredicate;
-+ (NSPredicate *) scheduledTomorrowPredicate;
-+ (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays;
-+ (NSPredicate *) expiredYesterdayPredicate;
-+ (NSPredicate *) optionalPredicate;
+@property (nonatomic, copy) NSString *title;
+
+@property (nonatomic, copy) NSString *link;
+
+@property (nonatomic, copy) NSString *itemDescription;
+
+@property (nonatomic, copy) NSString *content;
+
+@property (nonatomic, strong) NSDate *pubDate;
+
+@property (nonatomic, copy) NSString *author;
+
+@property (nonatomic, copy) NSString *guid;
+
+- (NSArray *)imageURLsFromContent;
+
+- (NSArray *)imageURLsFromItemDescription;
 
 @end

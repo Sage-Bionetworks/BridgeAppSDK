@@ -5,7 +5,7 @@
 	<key>emailForLoginViaExternalId</key>
 	<string>bridge-testing@sagebase.org</string>
 	<key>studyIdentifier</key>
-	<string>sample-study-ios</string>
+	<string>sample-study</string>
 	<key>useCache</key>
 	<true/>
 	<key>certificateName</key>
@@ -16,7 +16,7 @@
 			<key>schemaIdentifier</key>
 			<string>Mood Survey</string>
 			<key>schemaRevision</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>

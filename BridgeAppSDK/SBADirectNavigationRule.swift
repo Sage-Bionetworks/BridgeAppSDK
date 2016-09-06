@@ -1,5 +1,5 @@
 //
-//  SBATextChoice.swift
+//  SBADirectNavigationRule.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,50 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
-public protocol SBATextChoice  {
-    var choiceText: String { get }
-    var choiceDetail: String? { get }
-    var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { get }
-    var exclusive: Bool { get }
+/**
+ * The direct navigation rule allows for a step to be displayed with a direct
+ * pointer to something other than the next step in the sequential order defined by
+ * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
+ */
+public protocol SBADirectNavigationRule: SBANavigationRule {
+    var nextStepIdentifier: String? { get }
 }
 
-extension SBATextChoice {
-    func createORKTextChoice() -> ORKTextChoice {
-        return ORKTextChoice(text: self.choiceText.trim() ?? "", detailText: self.choiceDetail?.trim(), value: self.choiceValue, exclusive: self.exclusive)
-    }
-}
-
-extension NSDictionary: SBATextChoice {
-    
-    public var choiceText: String {
-        return (self["text"] as? String) ?? (self["prompt"] as? String) ?? self.identifier
-    }
-    
-    public var choiceDetail: String? {
-        return self["detailText"] as? String
-    }
-    
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> {
-        return (self["value"] as? protocol<NSCoding, NSCopying, NSObjectProtocol>) ?? self.choiceText ?? self.identifier
-    }
-    
-    public var exclusive: Bool {
-        let exclusive = self["exclusive"] as? Bool
-        return exclusive ?? false
+extension SBADirectNavigationRule {
+    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+        return self.nextStepIdentifier;
     }
 }
 
-extension ORKTextChoice: SBATextChoice {
-    public var choiceText: String { return self.text }
-    public var choiceDetail: String? { return self.detailText }
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self.value }
-}
-
-extension NSString: SBATextChoice {
-    public var choiceText: String { return self as String }
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self }
-    public var choiceDetail: String? { return nil }
-    public var exclusive: Bool { return false }
+extension NSDictionary: SBADirectNavigationRule {
+    public var nextStepIdentifier: String? {
+        return self["nextIdentifier"] as? String
+    }
 }

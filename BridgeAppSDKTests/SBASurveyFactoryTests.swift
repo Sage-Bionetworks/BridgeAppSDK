@@ -63,7 +63,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBADirectNavigationStep else {
+        guard let surveyStep = step as? SBAInstructionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
@@ -206,7 +206,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBADirectNavigationStep else {
+        guard let surveyStep = step as? SBAInstructionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
@@ -476,7 +476,6 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
         inputStep.uiHint = "checkbox"
         inputStep.prompt = "Do you live alone?"
-        inputStep.promptDetail = "Prompt Detail"
         inputStep.constraints = SBBBooleanConstraints();
     
         let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
@@ -504,8 +503,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
-        XCTAssertEqual(surveyStep.title, "Do you live alone?")
-        XCTAssertEqual(surveyStep.text, "Prompt Detail")
+        XCTAssertEqual(surveyStep.text, "Do you live alone?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -598,7 +596,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "medical-usage")
-        XCTAssertEqual(surveyStep.title, "Do you ever use your smartphone to look for health or medical information online?")
+        XCTAssertEqual(surveyStep.text, "Do you ever use your smartphone to look for health or medical information online?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -798,7 +796,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "feelings")
-        XCTAssertEqual(surveyStep.title, "How do you feel?")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -837,7 +835,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -886,7 +884,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -931,7 +929,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
     
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -965,7 +963,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
-        XCTAssertEqual(surveyStep.title, "When is the last time you smoked (put todays date if you are still smoking)?")
+        XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         
         guard let formItem = surveyStep.formItems?.first else {
@@ -1041,7 +1039,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.title, "How old are you?")
+        XCTAssertEqual(surveyStep.text, "How old are you?")
         XCTAssertEqual(surveyStep.formItems?.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
@@ -1276,7 +1274,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "numberfield"
         inputStep.identifier = "age"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
-        inputStep.prompt = "How old are you?"
+        inputStep.prompt = "How old\n\nare you?"
         
         let constraints = SBBDecimalConstraints()
         inputStep.constraints = constraints
@@ -1310,7 +1308,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
-        XCTAssertEqual(surveyStep.title, "How old are you?")
+        XCTAssertEqual(surveyStep.text, "How old are you?")
         XCTAssertEqual(formItems.count, 1)
         XCTAssertTrue(surveyStep.skipIfPassed)
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")

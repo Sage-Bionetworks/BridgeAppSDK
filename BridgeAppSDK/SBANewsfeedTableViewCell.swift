@@ -1,5 +1,5 @@
 //
-//  SBATaskViewController.h
+//  SBANewsfeedTableViewCell.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,13 +31,20 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
-#import <ResearchKit/ResearchKit.h>
+import UIKit
 
-@interface SBATaskViewController : ORKTaskViewController
+public class SBANewsfeedTableViewCell: UITableViewCell {
 
-@property (nonatomic, readwrite, copy) NSString * _Nullable scheduledActivityGUID;
-
-@property (nonatomic, readonly) NSDate * _Nullable finishedOn;
-
-@end
+    @IBOutlet public weak var titleLabel: UILabel!
+    @IBOutlet public weak var subtitleLabel: UILabel!
+    @IBOutlet public weak var dateLabel: UILabel!
+    
+    public var readColor = UIColor.whiteColor()
+    public var unreadColor = UIColor.colorForKey("newsfeedHighlightColor") ?? UIColor.whiteColor()
+    
+    public var hasRead: Bool = false {
+        didSet {
+            self.backgroundColor = hasRead ? readColor : unreadColor
+        }
+    }
+}

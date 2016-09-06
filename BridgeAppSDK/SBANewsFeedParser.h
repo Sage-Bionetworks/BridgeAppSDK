@@ -1,8 +1,6 @@
 //
-//  SBBScheduledActivity+Filters.h
-//  BridgeAppSDK
-//
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2015, Apple Inc.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,17 +29,17 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import <Foundation/Foundation.h>
 
-@interface SBBScheduledActivity (SBAFilters)
+typedef void (^SBANewsFeedParserCompletionBlock)(NSArray* results, NSError *error);
 
-+ (NSPredicate *) unfinishedPredicate;
-+ (NSPredicate *) finishedTodayPredicate;
-+ (NSPredicate *) availableTodayPredicate;
-+ (NSPredicate *) scheduledTodayPredicate;
-+ (NSPredicate *) scheduledTomorrowPredicate;
-+ (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays;
-+ (NSPredicate *) expiredYesterdayPredicate;
-+ (NSPredicate *) optionalPredicate;
+@interface SBANewsFeedParser : NSObject
+
+@property (nonatomic, strong) NSURL *feedURL;
+
+- (instancetype)initWithFeedURL:(NSURL *)feedURL;
+
+- (void)fetchFeedWithCompletion:(SBANewsFeedParserCompletionBlock)completion;
 
 @end
+

@@ -172,7 +172,7 @@ extension SBAActiveTask {
         
         // Replace the intro step with a direct navigation step that has a skip button 
         // to skip to the conclusion
-        let replaceStep = SBADirectNavigationStep(identifier: introStep.identifier)
+        let replaceStep = SBAInstructionStep(identifier: introStep.identifier)
         replaceStep.title = introStep.title
         replaceStep.text = introStep.text
         let skipExplanation = Localization.localizedString("SBA_SKIP_ACTIVITY_INSTRUCTION")

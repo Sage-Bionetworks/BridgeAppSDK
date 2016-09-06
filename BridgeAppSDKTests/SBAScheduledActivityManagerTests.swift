@@ -167,6 +167,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_MedTrackingOnly_MedsSelected() {
@@ -210,6 +214,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithNoMedsSelected() {
@@ -244,6 +252,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelected() {
@@ -278,6 +290,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_ComboWithMedsSelectedPreviously() {
@@ -317,6 +333,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithNoMeds() {
@@ -347,6 +367,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsSelected() {
@@ -377,6 +401,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithMedsPreviouslySelected() {
@@ -410,6 +438,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTaskWithNoMedsPreviouslySelected() {
@@ -443,6 +475,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_SingleTask() {
@@ -472,6 +508,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Check the dates
         checkDates(taskVC.taskResult, splitResults)
+        
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
     }
     
     func testActivityResultsForSchedule_VoiceTask() {
@@ -496,54 +536,60 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         // Check that the results are singular
         result.validateParameters()
         
-        let countdownResult = result.stepResultForStepIdentifier("countdown")
-        XCTAssertNotNil(countdownResult)
-        XCTAssertNotNil(countdownResult?.results)
-        guard let countdownResults = countdownResult?.results else { return }
-        XCTAssertEqual(countdownResults.count, 3)
+        // Validate the archive
+        checkValidation(splitResults)
+        checkDuplicateFilenames(splitResults)
         
-        // Additional results should be kept. Only the most recent should *not* have _dup# appended to the identifier
-        let resultIdentifiers = countdownResults.map({ $0.identifier })
-        let expectedResultIdentifiers = [ "file", "file_dup0", "file_dup1"]
-        XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
+        // TODO: syoung 08/29/2016 See comment in the consolidatedResult code.
+        //        let countdownResult = result.stepResultForStepIdentifier("countdown")
+        //        XCTAssertNotNil(countdownResult)
+        //        XCTAssertNotNil(countdownResult?.results)
+        //        guard let countdownResults = countdownResult?.results else { return }
+        //        XCTAssertEqual(countdownResults.count, 3)
+        //        
+        //        // Additional results should be kept. Only the most recent should *not* have _dup# appended to the identifier
+        //        let resultIdentifiers = countdownResults.map({ $0.identifier })
+        //        let expectedResultIdentifiers = [ "file", "file_dup0", "file_dup1"]
+        //        XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
     }
     
-    func testComboTaskResult_SimRun() {
-        let manager = TestScheduledActivityManager()
-        let schedule = createScheduledActivity(comboTaskId)
-        manager.activities = [schedule]
-        
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController
-        else {
-            XCTAssert(false, "Failed to create a task view controller of expected type")
-            return
+    func checkValidation(splitResults: [SBAActivityResult]) {
+        for activityResult in splitResults {
+            
+            var stepIdentifiers: [String] = []
+            for stepResult in activityResult.results! {
+                
+                XCTAssertFalse(stepIdentifiers.contains(stepResult.identifier), "\(activityResult.identifier).\(stepResult.identifier)")
+                stepIdentifiers.append(stepResult.identifier)
+                
+                var resultIdentifiers: [String] = []
+                if let stepResults = (stepResult as! ORKStepResult).results {
+                    for result in stepResults {
+                        XCTAssertFalse(resultIdentifiers.contains(result.identifier), "\(activityResult.identifier).\(stepResult.identifier).\(result.identifier)")
+                        resultIdentifiers.append(result.identifier)
+                    }
+                }
+            }
+            
+            activityResult.validateParameters()
         }
-        
-        guard let url = NSBundle(forClass: self.classForCoder).URLForResource("TaskResult_Combo", withExtension: "archive"),
-            let data = NSData(contentsOfURL: url)
-        else {
-            XCTAssert(false, "Failed to get archive data")
-            return
-        }
-        
-        let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
-        guard let root = unarchiver.decodeObjectForKey("root") as? [ORKTaskResult],
-        let taskResult = root.first
-        else {
-            let rootObj = unarchiver.decodeObjectForKey("root")
-            XCTAssert(false, "Failed to unarchive task result. ROOT:\(rootObj)")
-            return
-        }
-        unarchiver.finishDecoding()
-        
-        taskVC.taskResult = taskResult
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+    }
     
-        // Check that the subtask step identifier is stripped
-        checkResultIdentifiers(splitResults)
-        
-        // Check the dates
-        checkDates(taskResult, splitResults)
+    func checkDuplicateFilenames(splitResults: [SBAActivityResult]) {
+        for activityResult in splitResults {
+            var filenames: [String] = []
+            for stepResult in activityResult.results! {
+                if let stepResults = (stepResult as! ORKStepResult).results {
+                    for result in stepResults {
+                        if let archiveableResult = result.bridgeData(stepResult.identifier) {
+                            let filename = archiveableResult.filename
+                            XCTAssertFalse(filenames.contains(filename), "\(activityResult.identifier).\(stepResult.identifier).\(result.identifier):\(filename)")
+                            filenames.append(filename)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func checkSchema(splitResults: [SBAActivityResult], expectedSchema:[[NSObject]]) {
@@ -582,6 +628,9 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         let expectedIdentifiers = ["momentInDay", "medicationActivityTiming", "medicationTrackEach"]
         for result in splitResults {
+            if result.identifier == "Medication Tracker" {
+                continue
+            }
             for stepIdentifier in expectedIdentifiers {
                 let stepResult = result.stepResultForStepIdentifier(stepIdentifier)
                 XCTAssertNotNil(stepResult, "\(stepIdentifier)")
@@ -620,6 +669,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
     func testAllDefaultSectionFilters() {
         let manager = TestScheduledActivityManager()
+        manager.daysAhead = 7
         let (schedules, sections, expectedTaskIdPerSection) = createFullSchedule()
         manager.sections = sections
         manager.activities = schedules
@@ -691,6 +741,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let tenPM = midnightToday.dateByAddingTimeInterval(22 * hour)
         let tomorrow = NSDate(timeIntervalSinceNow: day)
         let twoDaysFromNow = NSDate(timeIntervalSinceNow: 2 * day)
+        let sevenDaysFromNow = NSDate(timeIntervalSinceNow: 7 * day)
+        let eightDaysFromNow = NSDate(timeIntervalSinceNow: 8 * day)
         
         var schedules: [SBBScheduledActivity] = []
         var sections: [[String]] = []
@@ -728,15 +780,23 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: nil, optional: true))
         sections.append(["2 Days Ago - Incomplete - Optional"])
         
+        // Section - Coming Week
+        schedules.append(createScheduledActivity("Two Days From Now",
+            scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+        // Section - Coming Week
+        schedules.append(createScheduledActivity("Seven Days From Now",
+            scheduledOn: sevenDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+        sections.append(["Tomorrow", "Two Days From Now", "Seven Days From Now"])
+        
         // Section - None
         schedules.append(createScheduledActivity("2 Days Ago - Completed Yesterday",
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: yesterday, optional: false))
         schedules.append(createScheduledActivity("2 Days Ago - Completed Today - Optional",
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: now, optional: true))
-        schedules.append(createScheduledActivity("Two Days From Now",
-            scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
-        
-        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing], sections)
+        schedules.append(createScheduledActivity("8 Days From Now",
+            scheduledOn: eightDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
+
+        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing, .comingUp], sections)
     }
     
     func createScheduledActivity(taskId: String, scheduledOn:NSDate = NSDate(), expiresOn:NSDate? = nil, finishedOn:NSDate? = nil, optional:Bool = false) -> SBBScheduledActivity {
@@ -863,6 +923,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     }
     var filenameMap: NSDictionary?
     var certificateName: String?
+    var newsfeedURLString: String?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,
