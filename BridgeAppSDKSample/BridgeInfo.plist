@@ -10,6 +10,12 @@
 	<true/>
 	<key>certificateName</key>
 	<string>sample-study</string>
+	<key>newsfeedURL</key>
+	<string>https://notsupported.null</string>
+	<key>logoImageName</key>
+	<string>logo</string>
+	<key>appUpdateURL</key>
+	<string>https://notsupported.null</string>
 	<key>schemaMapping</key>
 	<array>
 		<dict>

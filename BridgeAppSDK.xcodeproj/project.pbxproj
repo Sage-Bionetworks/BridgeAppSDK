@@ -159,6 +159,8 @@
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
 		FF9E48961CF3A2F1005EE7E0 /* StaticUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E48951CF3A2F1005EE7E0 /* StaticUtilities.swift */; };
 		FF9F4B581CEA735F00B5343B /* TaskResult_Combo.archive in Resources */ = {isa = PBXBuildFile; fileRef = FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */; };
+		FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA391AA1D7F3C4E000957E1 /* CatastrophicError.storyboard */; };
+		FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA391B01D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift */; };
 		FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */; };
 		FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */; };
 		FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */; };
@@ -543,6 +545,8 @@
 		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
 		FF9E48951CF3A2F1005EE7E0 /* StaticUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticUtilities.swift; sourceTree = "<group>"; };
 		FF9F4B571CEA735F00B5343B /* TaskResult_Combo.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = TaskResult_Combo.archive; sourceTree = "<group>"; };
+		FFA391AA1D7F3C4E000957E1 /* CatastrophicError.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CatastrophicError.storyboard; sourceTree = "<group>"; };
+		FFA391B01D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACatastrophicErrorViewController.swift; sourceTree = "<group>"; };
 		FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserTests.swift; sourceTree = "<group>"; };
 		FFA8E4A91CBD6E0B00ED5399 /* NSError+SBBTranslation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+SBBTranslation.swift"; sourceTree = "<group>"; };
 		FFA8E4AE1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoadingViewPresenter.swift; sourceTree = "<group>"; };
@@ -1022,6 +1026,8 @@
 			isa = PBXGroup;
 			children = (
 				FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */,
+				FFA391AA1D7F3C4E000957E1 /* CatastrophicError.storyboard */,
+				FFA391B01D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1681,6 +1687,7 @@
 				FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */,
 				FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */,
 				FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */,
+				FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */,
 				FF64114D1CB4651F007FB9E1 /* ClassTypeMap.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1724,6 +1731,7 @@
 				FBAD11671CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
 				804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */,
+				FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */,
 				FF64113A1CB436B6007FB9E1 /* SBAClassTypeMap.m in Sources */,
 				FFB30D691D4139B400D175D2 /* SBATrackedSelectionStep.swift in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
@@ -2153,7 +2161,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -2193,7 +2201,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = iphoneos;
@@ -2212,7 +2220,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
 				PROVISIONING_PROFILE = "";
@@ -2231,7 +2239,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
 				PROVISIONING_PROFILE = "";

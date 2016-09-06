@@ -92,6 +92,15 @@ public protocol SBABridgeInfo: class {
      */
     var newsfeedURLString: String? { get }
 
+    /**
+     * The Logo image to use for this app.
+     */
+    var logoImageName: String? { get }
+    
+    /**
+     * A custom url for launching an app update.
+     */
+    var appUpdateURLString: String? { get }
 }
 
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
@@ -156,6 +165,14 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var newsfeedURLString: String? {
         return self.plist["newsfeedURL"] as? String
     }
+    
+    public var logoImageName: String? {
+        return self.plist["logoImageName"] as? String
+    }
+    
+    public var appUpdateURLString: String? {
+        return self.plist["appUpdateURLString"] as? String
+    }
 }
 
 extension SBABridgeInfo {
@@ -192,5 +209,21 @@ extension SBABridgeInfo {
         }
     }
     
+    public var newsfeedURL: NSURL? {
+        guard let urlString = newsfeedURLString else { return nil }
+        return NSURL(string: urlString)
+    }
+    
+    public var logoImage: UIImage? {
+        guard let imageName = logoImageName else { return nil }
+        return UIImage(named: imageName)
+    }
+    
+    public var appUpdateURL: NSURL {
+        guard let urlString = appUpdateURLString, let url =  NSURL(string: urlString) else {
+            return NSBundle.mainBundle().appStoreLinkURL()
+        }
+        return url
+    }
 }
 

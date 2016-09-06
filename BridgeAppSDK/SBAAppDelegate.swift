@@ -89,12 +89,17 @@ public protocol SBAAppInfoDelegate: class {
         
         self.currentUser.ensureSignedInWithCompletion() { (error) in
             // Check if there are any errors during sign in that we need to address
-            if let error = error {
-                if (error.code == SBBErrorCode.ServerPreconditionNotMet.rawValue) {
+            if let error = error, let errorCode = SBBErrorCode(rawValue: error.code) {
+                switch errorCode {
+                    
+                case SBBErrorCode.ServerPreconditionNotMet:
                     self.showReconsentIfNecessary()
-                }
-                else if (error.code == SBBErrorCode.UnsupportedAppVersion.rawValue) {
+                    
+                case SBBErrorCode.UnsupportedAppVersion:
                     self.handleUnsupportedAppVersionError(error, networkManager: nil)
+                    
+                default:
+                    break
                 }
             }
         }
@@ -205,14 +210,14 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     public func showReconsentIfNecessary() {
-        assertionFailure("Not implemented")
+        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
     * Abstract method for showing the study overview (onboarding) for a user who is not signed in
     */
     public func showOnboardingViewController(animated: Bool) {
-        assertionFailure("Not implemented")
+        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
@@ -220,14 +225,14 @@ public protocol SBAAppInfoDelegate: class {
      * but not signed in
      */
     public func showEmailVerificationViewController(animated: Bool) {
-        assertionFailure("Not implemented")
+        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
      * Abstract method for showing the main view controller for a user who signed in
      */
     public func showMainViewController(animated: Bool) {
-        assertionFailure("Not implemented")
+        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
@@ -278,10 +283,22 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     public func showCatastrophicStartupErrorViewController(animated: Bool) {
-        // TODO: syoung 03/24/2016 Implement default method
-        assertionFailure("Not implemented")
+        
+        // If we cannot open the catastrophic error view controller (for some reason)
+        // then this is a fatal error
+        guard let vc = SBACatastrophicErrorViewController.instantiateWithMessage(catastrophicErrorMessage) else {
+            fatalError(catastrophicErrorMessage)
+        }
+        
+        // Present the view controller
+        transitionToRootViewController(vc, animated: true)
     }
     
+    public var catastrophicErrorMessage: String {
+        return catastrophicStartupError?.localizedFailureReason ??
+            catastrophicStartupError?.localizedDescription ??
+            Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
+    }
     
     // ------------------------------------------------
     // MARK: Unsupported App Version
@@ -289,8 +306,10 @@ public protocol SBAAppInfoDelegate: class {
     
     public func handleUnsupportedAppVersionError(error: NSError, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
-        if let _ = self.window?.rootViewController {
-            showCatastrophicStartupErrorViewController(true)
+        dispatch_async(dispatch_get_main_queue()) {
+            if let _ = self.window?.rootViewController {
+                self.showCatastrophicStartupErrorViewController(true)
+            }
         }
         return true
     }
