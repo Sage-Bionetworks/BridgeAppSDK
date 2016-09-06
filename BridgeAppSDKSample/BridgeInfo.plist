@@ -5,7 +5,7 @@
 	<key>emailForLoginViaExternalId</key>
 	<string>bridge-testing@sagebase.org</string>
 	<key>studyIdentifier</key>
-	<string>sample-study-ios</string>
+	<string>sample-study</string>
 	<key>useCache</key>
 	<true/>
 	<key>certificateName</key>
