@@ -53,11 +53,6 @@ public class Localization: NSObject {
                 return bundleStr
             }
         }
-        // If the localized string isn't found in the localization bundles then 
-        // fall back to the list of strings included here.
-        if let defaultStr = listOfAllLocalizedStrings[key] {
-            return defaultStr
-        }
         // Fallback to the key
         return key
     }
@@ -152,10 +147,5 @@ public class Localization: NSObject {
     
     public static func buttonGetStarted() -> String {
         return localizedString("BUTTON_GET_STARTED")
-    }
-    
-    // MARK: List of the strings used in this module.
-    public class var listOfAllLocalizedStrings: [String : String] {
-        return [:]
     }
 }
