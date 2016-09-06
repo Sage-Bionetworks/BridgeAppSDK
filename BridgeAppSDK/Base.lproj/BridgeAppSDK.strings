@@ -111,9 +111,11 @@
 "SBA_PERMISSIONS_FAILED_TITLE" = "Not Authorized"; // Title for a popup explaining that not all required permissions have been authorized.
 "SBA_PERMISSIONS_FAILED_MESSAGE" = "Go to Settings to change your permissions."; // General purpose message for a popup explaining that not all required permissions have been authorized.
 
-/* Network failure messages */
+/* Failure messages */
 "SBA_NETWORK_FAILURE_TITLE" = "Could Not Complete"; // Title for a step or alert indicating a network failure
 "SBA_NETWORK_FAILURE_MESSAGE" = "Please try again later."; // Message for a step or alert indicating a network failure
+"SBA_CATASTROPHIC_FAILURE_MESSAGE" = "We're sorry. Something went wrong. Please check for an updated version of the app."; // Generic message for a catastrophic failure
+"SBA_UPDATE_APP_BUTTON" = "Update %@"; // Default text for action button to update the application where %@ is the app name
 
 /* Survey */
 "SBA_SURVEY_LOADING_TEXT" = "Please wait while the survey is downloaded."; // Message for a loading a survey.
