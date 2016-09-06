@@ -82,6 +82,9 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
     }
     
     public override func stepViewControllerClass() -> AnyClass {
+        // If this is a completion step, then use ORKCompletionStepViewController 
+        // unless this is class has an image, in which case ORKCompletionStepViewController
+        // will not display that image so use the super class implementation.
         if self.isCompletionStep && self.image == nil {
             return ORKCompletionStepViewController.classForCoder()
         }

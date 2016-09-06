@@ -35,7 +35,7 @@ import Foundation
 
 /**
  * The direct navigation rule allows for a step to be displayed with a direct
- * pointer to something other than the next step in the sequencial order defined by
+ * pointer to something other than the next step in the sequential order defined by
  * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
  */
 public protocol SBADirectNavigationRule: SBANavigationRule {
