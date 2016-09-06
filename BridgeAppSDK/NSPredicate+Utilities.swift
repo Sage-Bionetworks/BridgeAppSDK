@@ -39,14 +39,9 @@ public extension NSPredicate {
         self.init(date: day, dateKey: dateKey, numberOfDays: 1)
     }
     
-    public convenience init(week: NSDate, dateKey: String) {
-        self.init(date: week, dateKey: dateKey, numberOfDays: 7)
-    }
-    
-    public convenience init(date: NSDate, dateKey: String, numberOfDays: Double) {
-        let calendar = NSCalendar.currentCalendar()
-        let start = calendar.startOfDayForDate(date)
-        let end = start.dateByAddingTimeInterval(numberOfDays * 24 * 60 * 60)
+    public convenience init(date: NSDate, dateKey: String, numberOfDays: Int) {
+        let start = date.startOfDay()
+        let end = start.dateByAddingNumberOfDays(numberOfDays)
         self.init(format: "%K <> nil AND %K >= %@ AND %K < %@", dateKey, dateKey, start, dateKey, end)
     }
 }

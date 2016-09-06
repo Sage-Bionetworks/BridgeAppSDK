@@ -35,19 +35,26 @@ import UIKit
 
 extension NSDate {
     
-    func startOfDay() -> NSDate {
+    public func startOfDay() -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let unitFlags: NSCalendarUnit = [.Day, .Month, .Year]
         let components = calendar.components(unitFlags, fromDate: self)
         return calendar.dateFromComponents(components) ?? self
     }
     
-    var isToday: Bool {
+    public var isToday: Bool {
         return self.startOfDay() == NSDate().startOfDay()
     }
     
-    var isTomorrow: Bool {
-        return self.startOfDay() == NSDate(timeIntervalSinceNow: 24 * 60 * 60).startOfDay()
+    public var isTomorrow: Bool {
+        return self.startOfDay() == NSDate().startOfDay().dateByAddingNumberOfDays(1)
+    }
+    
+    public func dateByAddingNumberOfDays(days: Int) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.day = days
+        return calendar.dateByAddingComponents(components, toDate: self, options: .WrapComponents)!
     }
 
 }

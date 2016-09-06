@@ -50,32 +50,33 @@
 
 + (NSPredicate *) availableTodayPredicate {
     
+    NSDate *startOfToday = [[NSDate date] startOfDay];
+    NSDate *startOfTomorrow = [startOfToday dateByAddingNumberOfDays:1];
+    
     // Scheduled today or prior
     NSString *scheduledKey = NSStringFromSelector(@selector(scheduledOn));
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDate *tomorrowMidnight = [calendar startOfDayForDate:[NSDate dateWithTimeIntervalSinceNow:24*60*60]];
-    NSPredicate *todayOrBefore = [NSPredicate predicateWithFormat:@"%K == nil OR %K < %@", scheduledKey, scheduledKey, tomorrowMidnight];
+    NSPredicate *todayOrBefore = [NSPredicate predicateWithFormat:@"%K == nil OR %K < %@", scheduledKey, scheduledKey, startOfTomorrow];
     
     // Unfinished or done today
     NSPredicate *unfinishedOrFinishedToday = [NSCompoundPredicate orPredicateWithSubpredicates:@[[self unfinishedPredicate], [self finishedTodayPredicate]]];
     
     // Not expired
     NSString *expiredKey = NSStringFromSelector(@selector(expiresOn));
-    NSPredicate *notExpired = [NSPredicate predicateWithFormat:@"%K == nil OR %K > %@", expiredKey, expiredKey, [calendar startOfDayForDate:[NSDate date]]];
+    NSPredicate *notExpired = [NSPredicate predicateWithFormat:@"%K == nil OR %K > %@", expiredKey, expiredKey, startOfToday];
     
     return [NSCompoundPredicate andPredicateWithSubpredicates:@[todayOrBefore, unfinishedOrFinishedToday, notExpired]];
 }
 
 + (NSPredicate *) scheduledTomorrowPredicate {
-    return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn))];
+    return [[NSPredicate alloc] initWithDay:[[NSDate date] dateByAddingNumberOfDays:1] dateKey:NSStringFromSelector(@selector(scheduledOn))];
 }
 
 + (NSPredicate *) scheduledComingUpPredicate: (NSInteger)numberOfDays {
-    return [[NSPredicate alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:24*60*60] dateKey:NSStringFromSelector(@selector(scheduledOn)) numberOfDays:numberOfDays];
+    return [[NSPredicate alloc] initWithDate:[[NSDate date] dateByAddingNumberOfDays:1] dateKey:NSStringFromSelector(@selector(scheduledOn)) numberOfDays:numberOfDays];
 }
 
 + (NSPredicate *) expiredYesterdayPredicate {
-    return [[NSPredicate alloc] initWithDay:[NSDate dateWithTimeIntervalSinceNow:-24*60*60] dateKey:NSStringFromSelector(@selector(expiresOn))];
+    return [[NSPredicate alloc] initWithDay:[[NSDate date] dateByAddingNumberOfDays:-1] dateKey:NSStringFromSelector(@selector(expiresOn))];
 }
 
 + (NSPredicate *) optionalPredicate {
