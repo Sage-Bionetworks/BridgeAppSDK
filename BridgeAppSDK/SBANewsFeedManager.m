@@ -1,6 +1,6 @@
 //
 //  SBANewsFeedManager.m
-//  APCAppCore
+//  BridgeAppSDK
 //
 // Copyright © 2016 Sage Bionetworks. All rights reserved.
 // Copyright (c) 2015, Apple Inc.
