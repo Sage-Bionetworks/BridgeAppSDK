@@ -1274,7 +1274,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "numberfield"
         inputStep.identifier = "age"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
-        inputStep.prompt = "How old are you?"
+        inputStep.prompt = "How old\n\nare you?"
         
         let constraints = SBBDecimalConstraints()
         inputStep.constraints = constraints

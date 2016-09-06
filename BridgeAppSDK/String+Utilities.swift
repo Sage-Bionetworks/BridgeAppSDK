@@ -49,19 +49,15 @@ extension String {
     }
     
     public func stringByRemovingNewlineCharacters() -> String {
-        guard let result = (self as NSString).mutableCopy() as? NSMutableString else { return self }
         let set = NSCharacterSet.newlineCharacterSet()
-        var range = result.rangeOfCharacterFromSet(set)
-        while (range.location != NSNotFound) {
-            result.replaceCharactersInRange(range, withString: " ")
-            range = result.rangeOfCharacterFromSet(set)
+        // Since there can be two newline characters in a row, but we only want to replace that with a single 
+        // space, use the custom reduce to strip out the new line characters and replace with a single space.
+        let result = (self as NSString).componentsSeparatedByCharactersInSet(set).reduce("") { (input, next) -> String in
+            guard let nextTrimmed = next.trim() else { return input }
+            guard input != "" else { return nextTrimmed }
+            return input + " " + nextTrimmed
         }
-        range = result.rangeOfString("  ")
-        while (range.location != NSNotFound) {
-            result.replaceCharactersInRange(range, withString: " ")
-            range = result.rangeOfString("  ")
-        }
-        return result.copy() as! String
+        return result
     }
 
 }
