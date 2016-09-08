@@ -42,7 +42,7 @@ public enum SBAOnboardingTaskType: String {
     }
 }
 
-public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
+public class SBAOnboardingManager: NSObject, SBASharedInfoController {
     
     public var sections: [SBAOnboardingSection]?
 
@@ -76,7 +76,6 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // Create the task view controller
         let task = SBANavigableOrderedTask(identifier: onboardingTaskType.rawValue, steps: steps)
         let taskViewController = SBATaskViewController(task: task, taskRunUUID: nil)
-        taskViewController.delegate = self
         
         return taskViewController
     }
@@ -111,10 +110,10 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // are immutable but can be skipped using navigation rules.
         if let consentFactory = factory as? SBAConsentDocumentFactory {
             switch (onboardingTaskType) {
-            case .login, .reconsent:
-                return [consentFactory.reconsentStep()]
             case .registration:
                 return [consentFactory.registrationConsentStep()]
+            default:
+                return [consentFactory.reconsentStep()]
             }
         }
         
@@ -148,7 +147,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     public func shouldInclude(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
-            // By default, ONLY Registration should include any custom section
+            // By default, ONLY Registration and verification should include any custom section
             return onboardingTaskType == .registration
         }
         
@@ -191,20 +190,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
     }()
-    
-    
-    // MARK: ORKTaskViewControllerDelegate
-    
-    public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
-        
-        // Dismiss the view controller
-        taskViewController.dismissViewControllerAnimated(true) {}
-    }
 
-    public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerDidFinish stepViewController: ORKStepViewController) {
-        // TODO: syoung 06/10/2016 custom handling required during process
-    }
-    
     
     // MARK: Passcode handling
     

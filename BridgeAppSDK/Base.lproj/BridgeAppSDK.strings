@@ -93,6 +93,7 @@
 "SBA_PROGRESS_UNCHECKED" = "\U2003\U2002"; // Character to use for a step progress for unchecked
 
 /* Registration */
+"SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@" = "Passwords must be between %1$@ and %2$@ characters long."; // Default message for invalid password
 "SBA_REGISTRATION_INVALID_CODE" = "Please enter a valid Participant ID."; // Message for invalid registration code
 "SBA_REGISTRATION_MATCH_FAILED" = "The Participant ID you entered does not match."; // Message for registration codes that do not match
 "SBA_REGISTRATION_FAILED_TITLE" = "Registration Failed"; // Title for error when registration fails
@@ -102,6 +103,7 @@
 "SBA_REGISTRATION_FULLNAME_PLACEHOLDER" = "Enter full name"; // Placeholder for the full name during registration.
 "SBA_CONFIRM_EXTERNALID_TITLE" = "Confirm"; // Title for the confirmation for registering via external ID
 "SBA_CONFIRM_EXTERNALID_TEXT" = "Confirm Participant Study ID"; // Placeholder for the confirmation for registering via external ID
+"SBA_REGISTRATION_NOT_CONSENTED" = "The participant did not consent"; // Error message for unconsented user
 
 /* State */
 "SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.

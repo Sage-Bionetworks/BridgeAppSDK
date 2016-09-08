@@ -34,16 +34,29 @@
 import UIKit
 import BridgeAppSDK
 
-class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate {
+class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate, SBASharedInfoController {
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if (sharedUser.hasRegistered) {
+            presentOnboarding(.registration, animated: animated)
+        }
+    }
+    
+    // MARK: SBASharedInfoController
+    
+    lazy var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+    
+    // MARK: actions
 
     @IBAction func signUpTapped(sender: AnyObject) {
-        // TODO: syoung 06/09/2016 implement
-        self.showAlertWithOk(nil, message: "TODO: syoung 06/09/2016 implement", actionHandler: nil)
+        presentOnboarding(.registration, animated: true)
     }
     
     @IBAction func loginTapped(sender: AnyObject) {
-        // TODO: syoung 06/09/2016 implement
-        self.showAlertWithOk(nil, message: "TODO: syoung 06/09/2016 implement", actionHandler: nil)
+        presentOnboarding(.login, animated: true)
     }
     
     @IBAction func externalIDTapped(sender: AnyObject) {
@@ -62,6 +75,18 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         vc.delegate = self
         self.presentViewController(vc, animated: true, completion: nil)
     }
+    
+    // MARK: login and registration
+    
+    func presentOnboarding(taskType: SBAOnboardingTaskType, animated: Bool) {
+        let onboardingManager = SBAOnboardingManager(jsonNamed: "Onboarding")!
+        let vc = onboardingManager.initializeTaskViewController(onboardingTaskType: taskType)!
+        
+        vc.delegate = self
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    
+    // MARK: ORKTaskViewControllerDelegate
     
     func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         taskViewController.dismissViewControllerAnimated(true) { 
