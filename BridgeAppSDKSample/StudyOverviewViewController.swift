@@ -91,7 +91,12 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         taskViewController.dismissViewControllerAnimated(true) { 
             if (reason == .Completed), let appDelegate = UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate {
+                // If complete, then show the appropriate view controller
                 appDelegate.showAppropriateViewController(false)
+            }
+            else if (reason == .Discarded) {
+                // Discard the registration information that has been gathered so far
+                self.sharedUser.logout()
             }
         }
     }

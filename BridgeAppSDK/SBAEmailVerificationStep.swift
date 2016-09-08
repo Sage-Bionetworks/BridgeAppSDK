@@ -36,21 +36,59 @@ import ResearchKit
 public class SBAEmailVerificationStep: ORKVerificationStep {
     // TODO: syoung 06/08/2016 Implement
     
-    public override init(identifier: String, text: String?, verificationViewControllerClass: AnyClass) {
-        super.init(identifier: identifier, text: text, verificationViewControllerClass: verificationViewControllerClass)
-    }
-    
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    public convenience init(inputItem: SBASurveyItem) {
-        self.init(identifier: inputItem.identifier,
+//    public init(identifier: String) {
+//        super.init(identifier: identifier,
+//                   text: nil,
+//                   verificationViewControllerClass: SBAEmailVerificationStepViewController.classForCoder())
+//    }
+    
+    public init(inputItem: SBASurveyItem) {
+        super.init(identifier: inputItem.identifier,
                   text: inputItem.stepText,
                   verificationViewControllerClass: SBAEmailVerificationStepViewController.classForCoder())
     }
 }
 
-public class SBAEmailVerificationStepViewController: ORKVerificationStepViewController {
+public class SBAEmailVerificationStepViewController: ORKVerificationStepViewController, SBAUserRegistrationController {
+    
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+    
+    // Mark: Navigation overrides - cannot go back and override go forward to register
+    
+    public override func resendEmailButtonTapped() {
+        // TODO: syoung 09/08/2016 implement
+        assertionFailure("Not implemented")
+    }
+    
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final public override func goForward() {
+    
+        showLoadingView()
+        sharedUser.verifyRegistration { [weak self] error in
+
+            if let error = error {
+                self?.handleFailedRegistration(error)
+            }
+            else {
+                self?.goNext()
+            }
+        }
+    }
+    
+    func goNext() {
+        // Then call super to go forward
+        super.goForward()
+    }
+    
+    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+
     
 }

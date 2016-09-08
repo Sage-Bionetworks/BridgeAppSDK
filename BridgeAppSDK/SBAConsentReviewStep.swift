@@ -113,7 +113,7 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         }
     }
     
-    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
+    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.name]   // by default
     }
     

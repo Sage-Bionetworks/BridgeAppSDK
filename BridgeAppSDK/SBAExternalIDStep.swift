@@ -116,7 +116,7 @@ public class SBAExternalIDStep: ORKPageStep {
     }
 }
 
-public class SBAExternalIDStepViewController: ORKPageStepViewController, SBASharedInfoController, SBALoadingViewPresenter {
+public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
@@ -155,7 +155,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAShar
             }
         }
         catch SBAExternalIDError.NotMatching {
-            self.handleFailedConfirmation()
+            self.handleFailedValidation(failedConfirmationMessage)
         }
         catch SBAExternalIDError.Invalid(let reason) {
             self.handleFailedValidation(reason)
@@ -166,6 +166,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAShar
     }
     
     func loginUser(externalId externalId: String, isTestUser:Bool) {
+        showLoadingView()
         user.loginUser(externalId: externalId) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
@@ -227,7 +228,6 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAShar
         }
     }
     
-    
     // MARK: Test User
     
     // Default RegEx is nil for checking if this is a test user
@@ -247,31 +247,9 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAShar
         self.showAlertWithYesNo(title, message: message, actionHandler: loginHandler)
     }
     
-    
     // MARK: Error handling
     
     public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_INVALID_CODE")
     public var failedConfirmationMessage = Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED")
     public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
-    
-    func handleFailedValidation(reason: String? = nil) {
-        showAlertWithOk(nil, message: reason ?? failedValidationMessage, actionHandler: { (_) in
-            self.goInitialStep()
-        })
-    }
-    
-    func handleFailedConfirmation() {
-        showAlertWithOk(nil, message: failedConfirmationMessage, actionHandler: { (_) in
-            self.goInitialStep()
-        })
-    }
-    
-    func handleFailedRegistration(error: NSError) {
-        self.hideLoadingView({
-            let message = error.localizedBridgeErrorMessage
-            self.showAlertWithOk(self.failedRegistrationTitle, message: message, actionHandler: { (_) in
-                self.goInitialStep()
-            })
-        })
-    }
 }

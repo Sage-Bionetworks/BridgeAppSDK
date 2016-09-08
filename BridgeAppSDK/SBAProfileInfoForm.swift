@@ -111,8 +111,9 @@ public struct SBAProfileInfoOptions {
         self.customOptions = []
     }
     
-    public init?(inputItem: SBAFormStepSurveyItem) {
-        guard let items = inputItem.items else {
+    public init?(inputItem: SBASurveyItem?) {
+        guard let surveyForm = inputItem as? SBAFormStepSurveyItem,
+            let items = surveyForm.items else {
             return nil
         }
         
@@ -163,13 +164,7 @@ public struct SBAProfileInfoOptions {
                 answerFormat.autocapitalizationType = .None
                 answerFormat.autocorrectionType = .No
                 answerFormat.spellCheckingType = .No
-                
-                // Set default regex
-                let minLength = SBARegistrationStep.defaultPasswordMinLength
-                let maxLength = SBARegistrationStep.defaultPasswordMaxLength
-                answerFormat.validationRegex = "[[:ascii:]]{\(minLength),\(maxLength)}"
-                answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(integer: minLength), NSNumber(integer: maxLength))
-                
+
                 let formItem = ORKFormItem(identifier: option.rawValue,
                                                    text: Localization.localizedString("PASSWORD_FORM_ITEM_TITLE"),
                                                    answerFormat: answerFormat,
@@ -179,6 +174,14 @@ public struct SBAProfileInfoOptions {
                 
                 // confirmation
                 if (surveyItemType == .account(.registration)) {
+                    
+                    // If this is a registration, go ahead and set the default password verification
+                    let minLength = SBARegistrationStep.defaultPasswordMinLength
+                    let maxLength = SBARegistrationStep.defaultPasswordMaxLength
+                    answerFormat.validationRegex = "[[:ascii:]]{\(minLength),\(maxLength)}"
+                    answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(integer: minLength), NSNumber(integer: maxLength))
+                    
+                    // Add a confirmation field
                     let confirmIdentifier = SBARegistrationStep.confirmationIdentifier
                     let confirmText = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE")
                     let confirmError = Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE")
@@ -269,8 +272,7 @@ extension ORKFormStep: SBAFormProtocol {
 
 public protocol SBAProfileInfoForm : SBAFormProtocol {
     var surveyItemType: SBASurveyItemType { get }
-    func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption]
-    func validate(options options: [SBAProfileInfoOption]?) throws
+    func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption]
 }
 
 extension SBAProfileInfoForm {
@@ -279,9 +281,13 @@ extension SBAProfileInfoForm {
         return self.formItems?.mapAndFilter({ SBAProfileInfoOption(rawValue: $0.identifier) })
     }
     
-    func commonInit(inputItem: SBAFormStepSurveyItem) {
-        self.title = inputItem.stepTitle
-        self.text = inputItem.stepText
+    public func formItemForProfileInfoOption(profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
+        return self.formItems?.findObject({ $0.identifier == profileInfoOption.rawValue })
+    }
+    
+    func commonInit(inputItem: SBASurveyItem?) {
+        self.title = inputItem?.stepTitle
+        self.text = inputItem?.stepText
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
         self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
     }

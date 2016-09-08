@@ -104,6 +104,7 @@
 "SBA_CONFIRM_EXTERNALID_TITLE" = "Confirm"; // Title for the confirmation for registering via external ID
 "SBA_CONFIRM_EXTERNALID_TEXT" = "Confirm Participant Study ID"; // Placeholder for the confirmation for registering via external ID
 "SBA_REGISTRATION_NOT_CONSENTED" = "The participant did not consent"; // Error message for unconsented user
+"SBA_REGISTRATION_UNKNOWN_FAILED" = "We're sorry. Registration has failed. Please contact the study coordinator for support"; // Unhandled registration failure
 
 /* State */
 "SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.

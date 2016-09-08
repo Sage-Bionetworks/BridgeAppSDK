@@ -8,7 +8,19 @@
 
 import UIKit
 
+protocol SBATaskViewControllerStrongReference: class, NSSecureCoding {
+    func attachTaskViewController(taskViewController: SBATaskViewController)
+}
+
 public class SBATaskViewController: ORKTaskViewController {
+    
+    /**
+     * A strongly held reference to a delegate or result source that is used by the
+     * associated view controller. If used, the strongly held reference should ONLY
+     * hold a weak reference to this view controller or else this will result in a 
+     * retain loop. Please excercise caution when using this reference.
+     */
+    var strongReference: SBATaskViewControllerStrongReference?
 
     /**
      Pointer to the guid for tracking this task via `SBBScheduledActivity`
@@ -84,10 +96,13 @@ public class SBATaskViewController: ORKTaskViewController {
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.scheduledActivityGUID = aDecoder.decodeObjectForKey("scheduledActivityGUID") as? String
+        self.strongReference = aDecoder.decodeObjectForKey("strongReference") as? SBATaskViewControllerStrongReference
+        self.strongReference?.attachTaskViewController(self)
     }
     
     public override func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
         aCoder.encodeObject(self.scheduledActivityGUID, forKey: "scheduledActivityGUID")
+        aCoder.encodeObject(self.strongReference, forKey: "strongReference")
     }
 }

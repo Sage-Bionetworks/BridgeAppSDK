@@ -116,6 +116,7 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
 public protocol SBAOnboardingSection {
     var onboardingSectionType: SBAOnboardingSectionType? { get }
     func defaultOnboardingSurveyFactory() -> SBASurveyFactory
+    func dictionaryRepresentation() -> [NSObject : AnyObject]
 }
 
 extension NSDictionary: SBAOnboardingSection {
@@ -133,5 +134,9 @@ extension NSDictionary: SBAOnboardingSection {
         else {
             return SBASurveyFactory(dictionary: dictionary)
         }
+    }
+    
+    public func dictionaryRepresentation()  -> [NSObject : AnyObject] {
+        return self as [NSObject : AnyObject]
     }
 }

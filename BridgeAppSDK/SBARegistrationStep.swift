@@ -44,22 +44,20 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
         return .account(.registration)
     }
     
-    public override required init(identifier: String) {
-        super.init(identifier: identifier)
-        let options = SBAProfileInfoOptions(includes: defaultOptions(nil))
-        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
-    }
-    
-    public init?(inputItem: SBASurveyItem) {
-        guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
-        super.init(identifier: inputItem.identifier)
-        commonInit(survey)
-    }
-    
-    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
+    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.name, .email, .password]
     }
-
+    
+    public override required init(identifier: String) {
+        super.init(identifier: identifier)
+        commonInit(nil)
+    }
+    
+    public init(inputItem: SBASurveyItem) {
+        super.init(identifier: inputItem.identifier)
+        commonInit(inputItem)
+    }
+    
     public override func validateParameters() {
         super.validateParameters()
         try! validate(options: self.options)
@@ -96,7 +94,7 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
 }
 
 
-public class SBARegistrationStepViewController: ORKFormStepViewController, SBASharedInfoController, SBALoadingViewPresenter {
+public class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
@@ -142,53 +140,11 @@ public class SBARegistrationStepViewController: ORKFormStepViewController, SBASh
         // Do nothing
     }
     
-    // MARK: Results
-    
-    public var email: String? {
-        return textAnswer(.email)
-    }
-    
-    public var password: String? {
-        return textAnswer(.password)
-    }
-    
-    public var externalID: String? {
-        return textAnswer(.externalID)
-    }
-
     public var dataGroups: [String]? {
         return nil
     }
     
-    public var gender: String? {
-        guard let result = self.result?.resultForIdentifier(SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult else { return nil }
-        return result.choiceAnswers?.first as? String
-    }
-    
-    public var birthdate: NSDate? {
-        guard let result = self.result?.resultForIdentifier(SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
-        return result.dateAnswer
-    }
-    
-    func textAnswer(field: SBAProfileInfoOption) -> String? {
-        guard let result = self.result?.resultForIdentifier(field.rawValue) as? ORKTextQuestionResult else { return nil }
-        return result.textAnswer
-    }
-    
-    // MARK: Error handling
-    
-    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_INVALID_CODE")
+    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 
-    func handleFailedValidation(reason: String? = nil) {
-        let message = reason ?? failedValidationMessage
-        self.hideLoadingView({ [weak self] in
-            self?.showAlertWithOk(self?.failedRegistrationTitle, message: message, actionHandler: nil)
-        })
-    }
-
-    func handleFailedRegistration(error: NSError) {
-        let message = error.localizedBridgeErrorMessage
-        handleFailedValidation(message)
-    }
 }
