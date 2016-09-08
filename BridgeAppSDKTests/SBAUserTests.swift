@@ -75,6 +75,8 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var filenameMap: NSDictionary?
     var certificateName: String?
     var newsfeedURLString: String?
+    var logoImageName: String? 
+    var appUpdateURLString: String?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

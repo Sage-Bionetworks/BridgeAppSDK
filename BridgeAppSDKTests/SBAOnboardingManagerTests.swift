@@ -85,6 +85,61 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         
     }
     
+    func testShouldInclude_HasPasscode() {
+        
+        let manager = MockOnboardingManager(jsonNamed: "Onboarding")!
+        manager._hasPasscode = true
+        
+        // Check that if the passcode has been set that it is not included
+        for taskType in SBAOnboardingTaskType.all {
+            let section: NSDictionary = ["onboardingType": SBAOnboardingSectionBaseType.passcode.rawValue]
+            let shouldInclude = manager.shouldInclude(section: section, onboardingTaskType: taskType)
+            XCTAssertFalse(shouldInclude, "\(taskType)")
+        }
+    }
+    
+    func testShouldInclude_HasRegistered() {
+        
+        let manager = MockOnboardingManager(jsonNamed: "Onboarding")!
+        
+        // If the user has registered and this is a completion of the registration
+        // then only include email verification and those sections AFTER verification
+        // However, if the user is being reconsented then include the reconsent section
+        
+        manager.mockAppDelegate.mockCurrentUser.hasRegistered = true
+        manager._hasPasscode = true
+    
+        let taskTypes: [SBAOnboardingTaskType] = [.registration, .reconsent]
+        let expectedNonNil: [SBAOnboardingSectionBaseType : [SBAOnboardingTaskType]] = [
+            .login: [.login],
+            // eligibility should *not* be included in registration if the user is at the email verification step
+            .eligibility: [],
+            // consent should *not* be included in registration if the user is at the email verification step
+            .consent: [.login, .reconsent],
+            // registration should *not* be included in registration if the user is at the email verification step
+            .registration: [],
+            // passcode should *not* be included in registration if the user is at the email verification step
+            // and has already set the passcode
+            .passcode: [],
+            .emailVerification: [.registration],
+            .permissions: [.login, .registration],
+            .profile: [.registration],
+            .completion: [.login, .registration]]
+        
+        for sectionType in SBAOnboardingSectionBaseType.all {
+            let include = expectedNonNil[sectionType]
+            XCTAssertNotNil(include, "\(sectionType)")
+            if include != nil {
+                for taskType in taskTypes {
+                    let expectedShouldInclude = include!.contains(taskType)
+                    let section: NSDictionary = ["onboardingType": sectionType.rawValue]
+                    let shouldInclude = manager.shouldInclude(section: section, onboardingTaskType: taskType)
+                    XCTAssertEqual(shouldInclude, expectedShouldInclude, "\(sectionType) \(taskType)")
+                }
+            }
+        }
+    }
+    
     func testSortOrder() {
         
         let inputSections = [
@@ -193,6 +248,12 @@ class MockOnboardingManager: SBAOnboardingManager {
     override var sharedAppDelegate: SBAAppInfoDelegate {
         get { return mockAppDelegate }
         set {}
+    }
+    
+    var _hasPasscode = false
+    
+    override var hasPasscode: Bool {
+        return _hasPasscode
     }
     
 }

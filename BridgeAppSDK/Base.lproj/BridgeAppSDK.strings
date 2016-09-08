@@ -105,6 +105,8 @@
 "SBA_CONFIRM_EXTERNALID_TEXT" = "Confirm Participant Study ID"; // Placeholder for the confirmation for registering via external ID
 "SBA_REGISTRATION_NOT_CONSENTED" = "The participant did not consent"; // Error message for unconsented user
 "SBA_REGISTRATION_UNKNOWN_FAILED" = "We're sorry. Registration has failed. Please contact the study coordinator for support"; // Unhandled registration failure
+"REGISTRATION_VERIFICATION_TEXT_%@_%@" = "%1$@ has sent you a verification email at %2$@"; // Email verification instructions where %1$@ is the app name and %2$@ is the email.
+"REGISTRATION_VERIFICATION_DETAIL_%@" = "Once verified, tap %@"; // Email verification detail text where %@ is the title of the continue button
 
 /* State */
 "SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.

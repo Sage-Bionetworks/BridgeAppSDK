@@ -924,6 +924,8 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var filenameMap: NSDictionary?
     var certificateName: String?
     var newsfeedURLString: String?
+    var logoImageName: String?
+    var appUpdateURLString: String?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,

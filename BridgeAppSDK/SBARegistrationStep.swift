@@ -131,6 +131,11 @@ public class SBARegistrationStepViewController: ORKFormStepViewController, SBAUs
         super.goForward()
     }
     
+    public override var cancelButtonItem: UIBarButtonItem? {
+        get { return nil }
+        set {}
+    }
+    
     public override var backButtonItem: UIBarButtonItem? {
         get { return nil }
         set {}

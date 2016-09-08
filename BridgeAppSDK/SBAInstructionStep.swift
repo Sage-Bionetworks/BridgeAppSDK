@@ -67,18 +67,52 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
      */
     public var learnMoreAction: SBALearnMoreAction?
     
+    /**
+     * The text to display for the continue button
+     */
+    public var continueButtonText: String?
+    
+    // Allow the detail text include formatting for the text of the continue button.
+    override public var detailText: String? {
+        get {
+            let detail = super.detailText
+            guard let detailFormat = detail where detailFormat.containsString("%@"),
+                let continueText = continueButtonText
+            else {
+                return detail
+            }
+            return String.localizedStringWithFormat(detail!, continueText)
+        }
+        set {
+            super.detailText = newValue
+        }
+    }
+    
     override public init(identifier: String) {
         super.init(identifier: identifier)
     }
     
-    public init(identifier: String, nextStepIdentifier: String?) {
-        super.init(identifier: identifier)
-        self.nextStepIdentifier = nextStepIdentifier
-    }
-    
-    public init(identifier: String, customTypeIdentifier: String?) {
-        super.init(identifier: identifier)
-        self.customTypeIdentifier = customTypeIdentifier
+    public init(inputItem: SBASurveyItem) {
+        super.init(identifier: inputItem.identifier)
+        
+        self.title = inputItem.stepTitle?.trim()
+        self.text = inputItem.stepText?.trim()
+        
+        if let directStep = inputItem as? SBADirectNavigationRule {
+            self.nextStepIdentifier = directStep.nextStepIdentifier
+        }
+        
+        if case SBASurveyItemType.custom(let customType) = inputItem.surveyItemType {
+            self.customTypeIdentifier = customType
+        }
+        
+        self.isCompletionStep = (inputItem.surveyItemType == .instruction(.completion))
+        
+        if let surveyItem = inputItem as? SBAInstructionStepSurveyItem {
+            self.learnMoreAction = surveyItem.learnMoreAction()
+            self.detailText = surveyItem.stepDetail?.trim()
+            self.image = surveyItem.stepImage
+        }
     }
     
     public override func stepViewControllerClass() -> AnyClass {
@@ -89,7 +123,7 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
             return ORKCompletionStepViewController.classForCoder()
         }
         else {
-            return super.stepViewControllerClass()
+            return SBAInstructionStepViewController.classForCoder()
         }
     }
     
@@ -141,4 +175,31 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
             SBAObjectHash(self.customTypeIdentifier) ^
             self.isCompletionStep.hashValue
     }
+}
+
+public class SBAInstructionStepViewController: ORKInstructionStepViewController {
+    
+    internal var sbaIntructionStep: SBAInstructionStep? {
+        return self.step as? SBAInstructionStep
+    }
+    
+    override public var continueButtonTitle: String? {
+        get {
+            return sbaIntructionStep?.continueButtonText ?? super.continueButtonTitle
+        }
+        set {
+            sbaIntructionStep?.continueButtonText = newValue
+            super.continueButtonTitle = newValue
+        }
+    }
+    
+    override public var learnMoreButtonTitle: String? {
+        get {
+            return sbaIntructionStep?.learnMoreAction?.learnMoreButtonText ?? super.learnMoreButtonTitle
+        }
+        set {
+            super.learnMoreButtonTitle = newValue
+        }
+    }
+    
 }
