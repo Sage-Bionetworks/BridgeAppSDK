@@ -42,6 +42,8 @@
 
 static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManagerErrorDomain";
 
+static NSString * const SBARemindersOnKey = @"SBARemindersOnKey";
+
 NSBundle *SBABundle() {
     static NSBundle *__bundle;
     
@@ -453,12 +455,9 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
     if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) {
         self.notificationsCompletionBlock = completion;
 
-        UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
-        id <SBABridgeAppSDKDelegate> delegate = (id <SBABridgeAppSDKDelegate>)[UIApplication sharedApplication].delegate;
-        NSSet <UIUserNotificationCategory *> *categories = [[delegate taskReminderManager] categories];
-        
+        UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;        
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
-                                                                                 categories:categories];
+                                                                                 categories:nil];
 
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -476,14 +475,17 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 - (void)appDidRegisterForRemoteNotifications: (UIUserNotificationSettings *)settings
 {
     if (settings.types != 0) {
-        id <SBABridgeAppSDKDelegate> delegate = (id <SBABridgeAppSDKDelegate>)[UIApplication sharedApplication].delegate;
-        [[delegate taskReminderManager] setReminderOn:YES];
+        
+        // TODO: syoung 09/08/2016 Revisit permissions notification handling
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SBARemindersOnKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
         if (self.notificationsCompletionBlock) {
             self.notificationsCompletionBlock(YES, nil);
         }
     }
 	else {
+        
         if (self.notificationsCompletionBlock) {
             self.notificationsCompletionBlock(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeLocalNotifications]);
         }

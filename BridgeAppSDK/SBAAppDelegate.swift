@@ -327,11 +327,6 @@ public protocol SBAAppInfoDelegate: class {
         return self.resourceBundle().pathForResource(resourceName, ofType: resourceType)
     }
     
-    public func taskReminderManager() -> SBATaskReminderManagerProtocol? {
-        // TODO: syoung 04/14/2016 - Erin Mounts: please replace stubbed out implementation
-        return nil
-    }
-    
     // ------------------------------------------------
     // MARK: Passcode Display Handling
     // ------------------------------------------------

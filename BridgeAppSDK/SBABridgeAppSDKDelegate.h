@@ -35,7 +35,6 @@
 #define BridgeAppSDKDelegate_h
 
 #import <UIKit/UIKit.h>
-#import "SBATaskReminderManagerProtocol.h"
 
 @protocol SBABridgeAppSDKDelegate <NSObject, UIApplicationDelegate>
 
@@ -45,10 +44,6 @@
 
 //
 - (void)showAppropriateViewController:(BOOL)animated;
-
-// manager pointers
-@optional
-- (id <SBATaskReminderManagerProtocol> _Nullable)taskReminderManager;
 
 @end
 
