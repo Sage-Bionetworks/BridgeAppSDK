@@ -59,11 +59,18 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     public override init() {
         super.init()
+        commonInit()
     }
     
     public init(delegate: SBAScheduledActivityManagerDelegate?) {
         super.init()
         self.delegate = delegate
+        commonInit()
+    }
+    
+    func commonInit() {
+        self.daysAhead = self.bridgeInfo.cacheDaysAhead
+        self.daysBehind = self.bridgeInfo.cacheDaysBehind
     }
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -77,8 +84,8 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     public var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
     public var activities: [SBBScheduledActivity] = []
     
-    public var daysAhead = 4
-    public var daysBehind = 1
+    public var daysAhead: Int!
+    public var daysBehind: Int!
     
     private var reloading: Bool = false
     public func reloadData() {
