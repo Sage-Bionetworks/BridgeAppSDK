@@ -163,7 +163,10 @@ public protocol SBAAppInfoDelegate: class {
     
     func initializeBridgeServerConnection() {
         // These two lines actually, you know, set up BridgeSDK
-        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier, useCache:bridgeInfo.useCache, environment: bridgeInfo.environment)
+        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier,
+                                 cacheDaysAhead: bridgeInfo.cacheDaysAhead,
+                                 cacheDaysBehind: bridgeInfo.cacheDaysBehind,
+                                 environment: bridgeInfo.environment)
         SBABridgeManager.setAuthDelegate(self.currentUser)
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload

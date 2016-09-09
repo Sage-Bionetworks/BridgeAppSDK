@@ -43,9 +43,14 @@ public protocol SBABridgeInfo: class {
     var studyIdentifier: String! { get }
     
     /**
-     * Whether to use BridgeSDK's built-in caching
+     * If using BridgeSDK's built-in caching, number of days ahead to cache
      */
-    var useCache: Bool { get }
+    var cacheDaysAhead: Int { get }
+    
+    /**
+     * If using BridgeSDK's built-in caching, number of days behind to cache
+     */
+    var cacheDaysBehind: Int { get }
     
     /**
      * Environment to load
@@ -106,7 +111,8 @@ public protocol SBABridgeInfo: class {
 public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var studyIdentifier: String!
-    public var useCache: Bool = false
+    public var cacheDaysAhead: Int = 0
+    public var cacheDaysBehind: Int = 0
     public var environment: SBBEnvironment = .Prod
     
     var plist: NSDictionary!
@@ -130,7 +136,19 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
             return nil
         }
         self.studyIdentifier = studyIdentifier
-        self.useCache = plist["useCache"] as? Bool ?? false
+        
+        let cacheDaysAhead = plist["cacheDaysAhead"] as? Int
+        let cacheDaysBehind = plist["cacheDaysBehind"] as? Int
+        if (cacheDaysAhead != nil) || (cacheDaysBehind != nil) {
+            self.cacheDaysAhead = cacheDaysAhead ?? SBBDefaultCacheDaysAhead
+            self.cacheDaysBehind = cacheDaysBehind ?? SBBDefaultCacheDaysBehind
+        }
+        else if let useCache = plist["useCache"] as? Bool where useCache {
+            // If this plist has the useCache key then set the ahead and behind to default
+            self.cacheDaysAhead = SBBDefaultCacheDaysAhead
+            self.cacheDaysBehind = SBBDefaultCacheDaysBehind
+        }
+        
         self.plist = plist
     }
     
