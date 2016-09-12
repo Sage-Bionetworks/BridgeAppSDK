@@ -118,7 +118,7 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
         // Show a detail that is most appropriate to the schedule status
         if schedule.isCompleted {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_COMPLETE_%@")
-            let dateString = NSDateFormatter.localizedStringFromDate(schedule.finishedOn, dateStyle: .LongStyle, timeStyle: .ShortStyle)
+            let dateString = NSDateFormatter.localizedStringFromDate(schedule.finishedOn, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         else if schedule.isExpired {
@@ -126,12 +126,16 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
             let dateString = schedule.isToday ? schedule.expiresTime! : NSDateFormatter.localizedStringFromDate(schedule.expiresOn, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
-        else if schedule.isToday || schedule.isTomorrow {
+        else if schedule.isToday {
             activityCell.subtitleLabel.text = activity.labelDetail
+        }
+        else if schedule.isTomorrow {
+            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_TOMORROW_UNTIL_%@")
+            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, schedule.expiresTime!)
         }
         else {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_DETAIL_%@_UNTIL_%@")
-            let dateString = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .LongStyle, timeStyle: .NoStyle)
+            let dateString = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .MediumStyle, timeStyle: .NoStyle)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString, schedule.expiresTime!)
         }
         

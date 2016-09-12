@@ -64,7 +64,8 @@ class SBAUserTests: XCTestCase {
 
 class MockBridgeInfo : NSObject, SBABridgeInfo {
     var studyIdentifier: String! = "study"
-    var useCache: Bool = false
+    var cacheDaysAhead: Int = 0
+    var cacheDaysBehind: Int = 0
     var environment: SBBEnvironment = .Staging
     var appStoreLinkURLString: String?
     var emailForLoginViaExternalId: String? = "test@sagebase.org"
@@ -75,6 +76,8 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var filenameMap: NSDictionary?
     var certificateName: String?
     var newsfeedURLString: String?
+    var logoImageName: String?
+    var appUpdateURLString: String?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {
