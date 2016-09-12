@@ -909,7 +909,8 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     }
     
     var studyIdentifier: String!
-    var useCache: Bool = false
+    var cacheDaysAhead: Int = 0
+    var cacheDaysBehind: Int = 0
     var environment: SBBEnvironment = .Prod
     var appStoreLinkURLString: String?
     var emailForLoginViaExternalId: String?
@@ -924,6 +925,8 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var filenameMap: NSDictionary?
     var certificateName: String?
     var newsfeedURLString: String?
+    var logoImageName: String?
+    var appUpdateURLString: String?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,
