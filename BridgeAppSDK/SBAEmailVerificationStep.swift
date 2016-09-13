@@ -33,24 +33,97 @@
 
 import ResearchKit
 
-public class SBAEmailVerificationStep: ORKVerificationStep {
+public class SBAEmailVerificationStep: SBAInstructionStep {
     // TODO: syoung 06/08/2016 Implement
     
-    public override init(identifier: String, text: String?, verificationViewControllerClass: AnyClass) {
-        super.init(identifier: identifier, text: text, verificationViewControllerClass: verificationViewControllerClass)
+    public override init(identifier: String) {
+        super.init(identifier: identifier)
+        commonInit(nil)
     }
+    
+    public init(inputItem: SBASurveyItem, appInfo: SBAAppInfoDelegate?) {
+        super.init(identifier: inputItem.identifier)
+        commonInit(appInfo)
+    }
+    
+    func commonInit(appInfoDelegate: SBAAppInfoDelegate?) {
+        let appInfo = appInfoDelegate ?? UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        
+        if self.title == nil {
+            self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
+        }
+        if self.text == nil {
+            let appName = Localization.localizedAppName
+            let email = appInfo.currentUser.email!
+            self.text = Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_TEXT_%@_%@", appName, email)
+        }
+        if self.detailText == nil {
+            self.detailText = Localization.localizedString("REGISTRATION_VERIFICATION_DETAIL_%@")
+        }
+        if self.image == nil {
+            self.image = appInfo.bridgeInfo.logoImage
+        }
+        if self.learnMoreAction == nil {
+            // TODO: syoung 09/08/2016 Add learn more action for resending email or changing email
+        }
+    }
+    
+    public override func stepViewControllerClass() -> AnyClass {
+        return SBAEmailVerificationStepViewController.classForCoder()
+    }
+    
+    // Mark: NSCoding
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    public convenience init(inputItem: SBASurveyItem) {
-        self.init(identifier: inputItem.identifier,
-                  text: inputItem.stepText,
-                  verificationViewControllerClass: SBAEmailVerificationStepViewController.classForCoder())
-    }
 }
 
-public class SBAEmailVerificationStepViewController: ORKVerificationStepViewController {
+public class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserRegistrationController {
     
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+    
+    // Mark: Navigation overrides - cannot go back and override go forward to register
+    
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final public override func goForward() {
+    
+        showLoadingView()
+        sharedUser.verifyRegistration { [weak self] error in
+
+            if let error = error {
+                self?.handleFailedRegistration(error)
+            }
+            else {
+                self?.goNext()
+            }
+        }
+    }
+    
+    func goNext() {
+        // Then call super to go forward
+        super.goForward()
+    }
+    
+    public override var cancelButtonItem: UIBarButtonItem? {
+        get { return nil }
+        set {}
+    }
+    
+    public override var backButtonItem: UIBarButtonItem? {
+        get { return nil }
+        set {}
+    }
+    
+    override public func goBackward() {
+        // Do nothing
+    }
+    
+    // MARK: Failure handling
+    
+    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 }

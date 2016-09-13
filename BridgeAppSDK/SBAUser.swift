@@ -61,6 +61,8 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kSubpopulationGuidKey = "SavedSubpopulationGuid"
     let kConsentSignatureKey = "ConsentSignature"
     let kExternalIdKey = "externalId"
+    let kGenderKey = "gender"
+    let kBirthdateKey = "birthdate"
     
     public var sessionToken: String? {
         get {
@@ -104,6 +106,24 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
         set (newValue) {
             setKeychainObject(newValue, key: kPasswordPropertyKey)
+        }
+    }
+
+    public var gender: String? {
+        get {
+            return getKeychainObject(kGenderKey) as? String
+        }
+        set (newValue) {
+            setKeychainObject(newValue, key: kGenderKey)
+        }
+    }
+    
+    public var birthdate: NSDate?  {
+        get {
+            return getKeychainObject(kBirthdateKey) as? NSDate
+        }
+        set (newValue) {
+            setKeychainObject(newValue, key: kBirthdateKey)
         }
     }
     

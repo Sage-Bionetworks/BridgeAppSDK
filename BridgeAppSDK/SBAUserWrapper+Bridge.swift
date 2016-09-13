@@ -135,8 +135,9 @@ public extension SBAUserWrapper {
             self.dataGroups = dataGroups
             
             SBABridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
-                self?.hasRegistered = (error == nil)
-                self?.callCompletionOnMain(error, completion: completion)
+                let (unhandledError, _) = self!.checkForConsentError(error)
+                self?.hasRegistered = (unhandledError == nil)
+                self?.callCompletionOnMain(unhandledError, completion: completion)
             })
         }
         
@@ -249,9 +250,9 @@ public extension SBAUserWrapper {
             guard (self != nil) else { return }
             
             // If there was an error and it is *not* the consent error then call completion and exit
-            let requiresConsent = (error != nil) && error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue
-            guard ((error == nil) || requiresConsent) else {
-                self!.callCompletionOnMain(error, completion: completion)
+            let (unhandledError, requiresConsent) = self!.checkForConsentError(error)
+            guard unhandledError == nil else {
+                self!.callCompletionOnMain(unhandledError, completion: completion)
                 return
             }
             
@@ -311,6 +312,13 @@ public extension SBAUserWrapper {
         dispatch_async(dispatch_get_main_queue()) {
             completion?(error)
         }
+    }
+    
+    private func checkForConsentError(error: NSError?) -> (error: NSError?, requiresConsent: Bool) {
+        guard let error = error else { return (nil, false) }
+        let requiresConsent = error.code == SBBErrorCode.ServerPreconditionNotMet.rawValue
+        let unhandledError: NSError? = requiresConsent ? nil : error
+        return (unhandledError, requiresConsent)
     }
 
 }

@@ -51,6 +51,10 @@ class AppDelegate: SBAAppDelegate {
         self.transitionToRootViewController(vc, animated: animated)
     }
     
+    override func showEmailVerificationViewController(animated: Bool) {
+        showOnboardingViewController(animated)
+    }
+    
     override func showOnboardingViewController(animated: Bool) {
         guard let storyboard = openStoryboard("Onboarding"),
             let vc = storyboard.instantiateInitialViewController()

@@ -42,7 +42,7 @@ public enum SBAOnboardingTaskType: String {
     }
 }
 
-public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate {
+public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
     public var sections: [SBAOnboardingSection]?
 
@@ -76,7 +76,12 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // Create the task view controller
         let task = SBANavigableOrderedTask(identifier: onboardingTaskType.rawValue, steps: steps)
         let taskViewController = SBATaskViewController(task: task, taskRunUUID: nil)
-        taskViewController.delegate = self
+        
+        // by default, attach self to the task view controller as a strong reference
+        // This is to ensure that the onboarding manager, which is by default the result data source,
+        // is not released prematurely.
+        taskViewController.strongReference = self
+        attachTaskViewController(taskViewController)
         
         return taskViewController
     }
@@ -111,10 +116,10 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
         // are immutable but can be skipped using navigation rules.
         if let consentFactory = factory as? SBAConsentDocumentFactory {
             switch (onboardingTaskType) {
-            case .login, .reconsent:
-                return [consentFactory.reconsentStep()]
             case .registration:
                 return [consentFactory.registrationConsentStep()]
+            default:
+                return [consentFactory.reconsentStep()]
             }
         }
         
@@ -148,7 +153,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     public func shouldInclude(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
-            // By default, ONLY Registration should include any custom section
+            // By default, ONLY Registration and verification should include any custom section
             return onboardingTaskType == .registration
         }
         
@@ -191,25 +196,57 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskVie
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
     }()
-    
-    
-    // MARK: ORKTaskViewControllerDelegate
-    
-    public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
-        
-        // Dismiss the view controller
-        taskViewController.dismissViewControllerAnimated(true) {}
-    }
 
-    public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerDidFinish stepViewController: ORKStepViewController) {
-        // TODO: syoung 06/10/2016 custom handling required during process
-    }
-    
     
     // MARK: Passcode handling
     
     public var hasPasscode: Bool {
         return ORKPasscodeViewController.isPasscodeStoredInKeychain()
+    }
+    
+    // MARK: ORKTaskResultSource
+    
+    public func stepResultForStepIdentifier(stepIdentifier: String) -> ORKStepResult? {
+        
+        guard let step = _taskViewController?.task?.stepWithIdentifier?(stepIdentifier) else { return nil }
+        
+        // If this is a registration step with a name field and a currently available 
+        // name stored for that field then return that result as a default.
+        if let registrationStep = step as? SBARegistrationStep,
+            let name = sharedUser.name,
+            let formItem = registrationStep.formItemForProfileInfoOption(.name) {
+            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
+            nameResult.textAnswer = name
+            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
+        }
+        
+        return nil
+    }
+    
+    // MARK: SBATaskViewControllerStrongReference
+    
+    weak private var _taskViewController: SBATaskViewController?
+    
+    func attachTaskViewController(taskViewController: SBATaskViewController) {
+        _taskViewController = taskViewController
+        taskViewController.defaultResultSource = self
+    }
+    
+    // MARK: NSSecureCoding
+    
+    public static func supportsSecureCoding() -> Bool {
+        return true
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init()
+        guard let encodedSections = aDecoder.decodeObjectForKey("sections") as? [NSDictionary] else { return }
+        self.sections = encodedSections.map({ $0 as SBAOnboardingSection })
+    }
+    
+    public func encodeWithCoder(aCoder: NSCoder) {
+        guard let encodableSections = self.sections?.map({ $0.dictionaryRepresentation() as NSDictionary }) else { return }
+        aCoder.encodeObject(encodableSections, forKey: "sections")
     }
 
 }

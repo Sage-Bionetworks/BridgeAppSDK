@@ -63,6 +63,16 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
      * Password is stored in the keychain
      */
     var password: String? { get set }
+    
+    /**
+     * Gender is stored in the keychain
+     */
+    var gender: String? { get set }
+    
+    /**
+     * Birthdate is stored in the keychain
+     */
+    var birthdate: NSDate? { get set }
 
     /**
      * Subpopulation GUID is used for tracking by certain apps. Stored in the keychain.

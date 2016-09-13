@@ -79,6 +79,7 @@
 		FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */; };
 		FF5051D31D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */; };
 		FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */; };
+		FF5242B11D81E9D0009043B3 /* SBAUserRegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5242B01D81E9D0009043B3 /* SBAUserRegistrationController.swift */; };
 		FF5E56E61D6F8469008BA2A8 /* SBACheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */; };
 		FF5E56E81D6F8941008BA2A8 /* SBATaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */; };
 		FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */; };
@@ -169,7 +170,6 @@
 		FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */; };
 		FFAAF61E1CC0267E00500929 /* SBAPermissionsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAAF61C1CC0267E00500929 /* SBAPermissionsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFAAF61F1CC0267E00500929 /* SBAPermissionsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */; };
-		FFAAF6221CC03B2300500929 /* SBATaskReminderManagerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */; };
 		FFB30D2E1D4008DE00D175D2 /* Array+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D2D1D4008DE00D175D2 /* Array+Utilities.swift */; };
 		FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */; };
@@ -459,6 +459,7 @@
 		FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAOnboardingCompleteTableViewCell.xib; sourceTree = "<group>"; };
 		FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteTableViewCell.swift; sourceTree = "<group>"; };
 		FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteStep.swift; sourceTree = "<group>"; };
+		FF5242B01D81E9D0009043B3 /* SBAUserRegistrationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserRegistrationController.swift; sourceTree = "<group>"; };
 		FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACheckmarkView.swift; sourceTree = "<group>"; };
 		FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATaskViewController.swift; sourceTree = "<group>"; };
 		FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAWebViewController.swift; sourceTree = "<group>"; };
@@ -555,7 +556,6 @@
 		FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewCell.swift; sourceTree = "<group>"; };
 		FFAAF61C1CC0267E00500929 /* SBAPermissionsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAPermissionsManager.h; sourceTree = "<group>"; };
 		FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAPermissionsManager.m; sourceTree = "<group>"; };
-		FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATaskReminderManagerProtocol.h; sourceTree = "<group>"; };
 		FFAAF6381CC0A42A00500929 /* SBABorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABorderedButton.swift; sourceTree = "<group>"; };
 		FFB30D2D1D4008DE00D175D2 /* Array+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Utilities.swift"; sourceTree = "<group>"; };
 		FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKFormStep+Result.swift"; sourceTree = "<group>"; };
@@ -773,9 +773,8 @@
 				FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */,
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
-				FFC15FAF1CFE3DB300C29AF7 /* Apple Sample Code */,
-				801040F51C5AD57E00D26E19 /* Frameworks */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
+				FFC15FAF1CFE3DB300C29AF7 /* Apple Sample Code */,
 			);
 			path = BridgeAppSDKSample;
 			sourceTree = "<group>";
@@ -792,13 +791,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		801040F51C5AD57E00D26E19 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		803221DE1CE64207001D5281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -813,7 +805,6 @@
 		80F554CB1CD3F21D00C38053 /* Notifications */ = {
 			isa = PBXGroup;
 			children = (
-				FFAAF6211CC03B2300500929 /* SBATaskReminderManagerProtocol.h */,
 				80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */,
 			);
 			name = Notifications;
@@ -1008,6 +999,7 @@
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
 				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
 				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
+				FF5242B01D81E9D0009043B3 /* SBAUserRegistrationController.swift */,
 			);
 			name = Account;
 			sourceTree = "<group>";
@@ -1391,7 +1383,6 @@
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
 				FF10F4DF1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.h in Headers */,
-				FFAAF6221CC03B2300500929 /* SBATaskReminderManagerProtocol.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */,
 				FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */,
@@ -1778,6 +1769,7 @@
 				FF6410FA1CAF39B4007FB9E1 /* String+Utilities.swift in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
+				FF5242B11D81E9D0009043B3 /* SBAUserRegistrationController.swift in Sources */,
 				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
 				FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
@@ -2144,6 +2136,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2190,6 +2183,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

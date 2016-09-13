@@ -113,7 +113,7 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         }
     }
     
-    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
+    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.name]   // by default
     }
     
@@ -187,8 +187,12 @@ public class SBAConsentReviewResult: ORKResult {
     }
 }
 
-class SBAConsentReviewStepViewController: ORKPageStepViewController {
+class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController {
     
+    lazy var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+
     var consentStep: SBAConsentReviewStep? {
         return self.step as? SBAConsentReviewStep
     }
@@ -250,6 +254,30 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController {
         }
         
         return stepResult
+    }
+    
+    var consentReviewResult: SBAConsentReviewResult? {
+        return self.result?.results?.findObject({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
+    }
+    
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final override func goForward() {
+        
+        // Check that the user has consented or fail with an error
+        guard let consentResult = self.consentReviewResult where consentResult.isConsented else {
+            let error = NSError(domain: "SBAConsentReviewStepDomain",
+                                code: -1,
+                                userInfo: [NSLocalizedDescriptionKey : Localization.localizedString("SBA_REGISTRATION_NOT_CONSENTED")])
+            self.delegate?.stepViewControllerDidFail(self, withError: error)
+            return
+        }
+        
+        // set the consent to the shared user
+        sharedUser.consentSignature = consentResult.consentSignature
+        
+        // finally call through to super to continue once the consent signature has been stored
+        super.goForward()
     }
 }
 

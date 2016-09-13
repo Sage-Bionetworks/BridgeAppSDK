@@ -128,14 +128,8 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
      */
     public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
         switch (inputItem.surveyItemType) {
-        case .custom(let customType):
-            if let instruction = inputItem as? SBAInstructionStepSurveyItem {
-                return instruction.createInstructionStep(customType: customType)
-            }
-            else {
-                return SBAInstructionStep(identifier: inputItem.identifier, customTypeIdentifier: customType)
-            }
-            
+        case .custom(_):
+            return SBAInstructionStep(inputItem: inputItem)
         default:
             return nil
         }
@@ -163,9 +157,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         switch (inputItem.surveyItemType) {
             
         case .instruction(_):
-            if let instruction = inputItem as? SBAInstructionStepSurveyItem {
-                return instruction.createInstructionStep()
-            }
+            return SBAInstructionStep(inputItem: inputItem)
             
         case .subtask:
             if let form = inputItem as? SBAFormStepSurveyItem {
@@ -200,7 +192,7 @@ public class SBASurveyFactory : NSObject, SBASharedInfoController {
         case .login:
             return SBALoginStep(inputItem: inputItem)
         case .emailVerification:
-            return SBAEmailVerificationStep(inputItem: inputItem)
+            return SBAEmailVerificationStep(inputItem: inputItem, appInfo: self.sharedAppDelegate)
         case .externalID:
             return SBAExternalIDStep(inputItem: inputItem)
         case .permissions:
@@ -216,25 +208,6 @@ extension SBASurveyItem {
 }
 
 extension SBAInstructionStepSurveyItem {
-    
-    func createInstructionStep(customType customType: String? = nil) -> ORKInstructionStep {
-        
-        let nextIdentifier: String? = {
-            guard let directStep = self as? SBADirectNavigationRule else { return nil }
-            return directStep.nextStepIdentifier
-        }()
-
-        let instructionStep = SBAInstructionStep(identifier: self.identifier, nextStepIdentifier: nextIdentifier)
-        instructionStep.isCompletionStep = (self.surveyItemType == .instruction(.completion))
-        instructionStep.learnMoreAction = self.learnMoreAction()
-        instructionStep.customTypeIdentifier = customType
-        instructionStep.title = self.stepTitle?.trim()
-        instructionStep.text = self.stepText?.trim()
-        instructionStep.detailText = self.stepDetail?.trim()
-        instructionStep.image = self.stepImage
-        
-        return instructionStep
-    }
 }
 
 extension SBAFormStepSurveyItem {

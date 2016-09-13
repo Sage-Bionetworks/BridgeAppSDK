@@ -37,24 +37,27 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
     static let confirmationIdentifier = "confirmation"
     
+    static let defaultPasswordMinLength = 4
+    static let defaultPasswordMaxLength = 16
+    
     public var surveyItemType: SBASurveyItemType {
         return .account(.registration)
     }
     
+    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+        return [.name, .email, .password]
+    }
+    
     public override required init(identifier: String) {
         super.init(identifier: identifier)
+        commonInit(nil)
     }
     
-    public init?(inputItem: SBASurveyItem) {
-        guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
+    public init(inputItem: SBASurveyItem) {
         super.init(identifier: inputItem.identifier)
-        commonInit(survey)
+        commonInit(inputItem)
     }
     
-    public func defaultOptions(inputItem: SBAFormStepSurveyItem?) -> [SBAProfileInfoOption] {
-        return [.emailAndPassword]
-    }
-
     public override func validateParameters() {
         super.validateParameters()
         try! validate(options: self.options)
@@ -65,9 +68,22 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
             throw SBAProfileInfoOptionsError.MissingRequiredOptions
         }
         
-        guard options.contains(.emailAndPassword) || options.contains(.externalID) else {
-            throw SBAProfileInfoOptionsError.MissingEmailOrExternalID
+        guard options.contains(.email) && options.contains(.password) else {
+            throw SBAProfileInfoOptionsError.MissingEmail
         }
+    }
+    
+    public override var optional: Bool {
+        get { return false }
+        set {}
+    }
+    
+    public var passwordAnswerFormat: ORKTextAnswerFormat? {
+        return self.formItemForIdentifier(SBAProfileInfoOption.password.rawValue)?.answerFormat as? ORKTextAnswerFormat
+    }
+    
+    public override func stepViewControllerClass() -> AnyClass {
+        return SBARegistrationStepViewController.classForCoder()
     }
     
     // MARK: NSCoding
@@ -75,4 +91,65 @@ public class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+}
+
+
+public class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+    
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+    
+    // Mark: Navigation overrides - cannot go back and override go forward to register
+    
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final public override func goForward() {
+        
+        showLoadingView()
+        sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
+            if let error = error {
+                self?.handleFailedRegistration(error)
+            }
+            else {
+                self?.goNext()
+            }
+        }
+    }
+    
+    func goNext() {
+        
+        // successfully registered. Set the other values from this form.
+        if let gender = self.gender {
+            sharedUser.gender = gender
+        }
+        if let birthdate = self.birthdate {
+            sharedUser.birthdate = birthdate
+        }
+        
+        // Then call super to go forward
+        super.goForward()
+    }
+    
+    public override var cancelButtonItem: UIBarButtonItem? {
+        get { return nil }
+        set {}
+    }
+    
+    public override var backButtonItem: UIBarButtonItem? {
+        get { return nil }
+        set {}
+    }
+    
+    override public func goBackward() {
+        // Do nothing
+    }
+    
+    public var dataGroups: [String]? {
+        return nil
+    }
+    
+    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+
 }

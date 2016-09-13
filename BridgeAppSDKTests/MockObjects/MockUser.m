@@ -49,6 +49,8 @@
 @synthesize dataSharingEnabled;
 @synthesize dataSharingScope;
 @synthesize onboardingStepIdentifier;
+@synthesize gender;
+@synthesize birthdate;
 
 - (instancetype)init {
     if (self = [super init]) {
