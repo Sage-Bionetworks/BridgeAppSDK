@@ -37,7 +37,8 @@
 @interface MockBridgeInfo : NSObject <SBABridgeInfo>
 
 @property (nonatomic, readwrite, copy) NSString * _Null_unspecified studyIdentifier;
-@property (nonatomic, readwrite) BOOL useCache;
+@property (nonatomic, readwrite) NSInteger cacheDaysAhead;
+@property (nonatomic, readwrite) NSInteger cacheDaysBehind;
 @property (nonatomic, readwrite) SBBEnvironment environment;
 @property (nonatomic, readwrite, copy) NSString * _Nullable appStoreLinkURLString;
 @property (nonatomic, readwrite, copy) NSString * _Nullable emailForLoginViaExternalId;
@@ -46,5 +47,9 @@
 @property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable schemaMap;
 @property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable taskMap;
 @property (nonatomic, readwrite, copy) NSString * _Nullable certificateName;
+@property (nonatomic, readwrite, copy) NSString * _Nullable news;
+@property (nonatomic, readwrite, copy) NSString * _Nullable newsfeedURLString;
+@property (nonatomic, readwrite, copy) NSString * _Nullable logoImageName;
+@property (nonatomic, readwrite, copy) NSString * _Nullable appUpdateURLString;
 
 @end

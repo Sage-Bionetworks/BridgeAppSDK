@@ -41,9 +41,15 @@ private let kScheduledActivityGuidKey         = "scheduledActivityGuid"
 private let kTaskRunUUIDKey                   = "taskRunUUID"
 private let kStartDate                        = "startDate"
 private let kEndDate                          = "endDate"
+private let kDataGroups                       = "dataGroups"
 private let kMetadataFilename                 = "metadata.json"
 
-public class SBAActivityArchive: SBADataArchive {
+public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
+    
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    }()
+
     private var metadata = [String: AnyObject]()
     
     public init?(result: SBAActivityResult, jsonValidationMapping: [String: NSPredicate]? = nil) {
@@ -62,6 +68,11 @@ public class SBAActivityArchive: SBADataArchive {
         // -- add the start/end date
         self.metadata[kStartDate] = result.startDate.ISO8601String()
         self.metadata[kEndDate] = result.endDate.ISO8601String()
+        
+        // -- add data groups
+        if let dataGroups = sharedUser.dataGroups {
+            self.metadata[kDataGroups] = dataGroups.joinWithSeparator(",")
+        }
         
         // set up the info.json
         // -- always set the schemaRevision
