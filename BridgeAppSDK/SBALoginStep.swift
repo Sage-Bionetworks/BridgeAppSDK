@@ -33,13 +33,13 @@
 
 import ResearchKit
 
-public class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
+open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
 
-    public var surveyItemType: SBASurveyItemType {
+    open var surveyItemType: SBASurveyItemType {
         return .account(.login)
     }
     
-    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.email, .password]
     }
     
@@ -53,27 +53,27 @@ public class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
         commonInit(inputItem)
     }
     
-    public override func validateParameters() {
+    open override func validateParameters() {
         super.validateParameters()
         try! validate(options: self.options)
     }
     
-    public func validate(options options: [SBAProfileInfoOption]?) throws {
+    open func validate(options: [SBAProfileInfoOption]?) throws {
         guard let options = options else {
-            throw SBAProfileInfoOptionsError.MissingRequiredOptions
+            throw SBAProfileInfoOptionsError.missingRequiredOptions
         }
         
         guard options.contains(.email) && options.contains(.password) else {
-            throw SBAProfileInfoOptionsError.MissingEmail
+            throw SBAProfileInfoOptionsError.missingEmail
         }
     }
     
-    public override var optional: Bool {
+    open override var isOptional: Bool {
         get { return false }
         set {}
     }
 
-    public override func stepViewControllerClass() -> AnyClass {
+    open override func stepViewControllerClass() -> AnyClass {
         return SBALoginStepViewController.classForCoder()
     }
     
@@ -84,10 +84,10 @@ public class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
     }
 }
 
-public class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
     // Mark: Navigation overrides - cannot go back and override go forward to register
@@ -121,20 +121,20 @@ public class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegis
         super.goForward()
     }
     
-    public override var backButtonItem: UIBarButtonItem? {
+    open override var backButtonItem: UIBarButtonItem? {
         get { return nil }
         set {}
     }
     
-    override public func goBackward() {
+    override open func goBackward() {
         // Do nothing
     }
     
-    public var dataGroups: [String]? {
+    open var dataGroups: [String]? {
         return nil
     }
     
-    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
-    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
     
 }

@@ -35,7 +35,7 @@ import ResearchKit
 import BridgeSDK
 
 public protocol SBAStepTransformer: class {
-    func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep?
+    func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep?
 }
 
 public protocol SBASurveyItem: SBAStepTransformer {
@@ -69,8 +69,8 @@ public protocol SBAInstructionStepSurveyItem: SBASurveyItem {
 }
 
 public protocol SBADateRange: class {
-    var minDate: NSDate? { get }
-    var maxDate: NSDate? { get }
+    var minDate: Date? { get }
+    var maxDate: Date? { get }
 }
 
 public protocol SBANumberRange: class {
@@ -83,7 +83,7 @@ public protocol SBANumberRange: class {
 extension ORKPasscodeType {
     init?(key: String) {
         guard let passcodeSuffix = key.parseSuffix(SBASurveyItemType.passcodeKey) else { return nil }
-        self = (passcodeSuffix == SBASurveyItemType.passcodeType6Digit) ? .Type6Digit : .Type4Digit
+        self = (passcodeSuffix == SBASurveyItemType.passcodeType6Digit) ? .type6Digit : .type4Digit
     }
 }
 

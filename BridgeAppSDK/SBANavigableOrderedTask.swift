@@ -38,14 +38,14 @@ import ResearchKit
  Currently defined usage is to allow the SBANavigableOrderedTask to check if a step has a navigation rule.
  */
 public protocol SBANavigationRule: class, NSSecureCoding {
-    func nextStepIdentifier(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String?
+    func nextStepIdentifier(_ result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String?
 }
 
 /**
  A navigation skip rule applies to this step to allow that step to be skipped.
  */
 public protocol SBANavigationSkipRule: class, NSSecureCoding {
-    func shouldSkip(result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> Bool
+    func shouldSkip(_ result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> Bool
 }
 
 /**
@@ -53,20 +53,20 @@ public protocol SBANavigationSkipRule: class, NSSecureCoding {
  step should be displayed.
  */
 public protocol SBAConditionalRule: class, NSSecureCoding {
-    func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool
-    func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep?
+    func shouldSkipStep(_ step: ORKStep?, result: ORKTaskResult) -> Bool
+    func nextStep(_ previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep?
 }
 
 /**
  * SBANavigableOrderedTask can process both SBASubtaskStep steps and as well as any step that conforms
  * to the SBANavigationRule.
  */
-public class SBANavigableOrderedTask: ORKOrderedTask {
+open class SBANavigableOrderedTask: ORKOrderedTask {
     
-    public var additionalTaskResults: [ORKTaskResult]?
-    public var conditionalRule: SBAConditionalRule?
+    open var additionalTaskResults: [ORKTaskResult]?
+    open var conditionalRule: SBAConditionalRule?
     
-    private var orderedStepIdentifiers: [String] = []
+    fileprivate var orderedStepIdentifiers: [String] = []
     
     // Swift Fun Fact: In order to use a superclass initializer it must be overridden 
     // by the subclass. syoung 02/11/2016
@@ -74,20 +74,21 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         super.init(identifier: identifier, steps: steps)
     }
 
-    private func subtaskStep(identifier identifier: String?) -> SBASubtaskStep? {
+    fileprivate func subtaskStep(identifier: String?) -> SBASubtaskStep? {
         // Look for a period in the range of the string
-        guard let range = identifier?.rangeOfString(".") where range.endIndex > identifier!.startIndex else {
+        guard let identifier = identifier,
+            let range = identifier.range(of: "."), range.upperBound > identifier.startIndex else {
             return nil
         }
         // Parse out the subtask identifier and look in super for a step with that identifier
-        let subtaskStepIdentifier = identifier!.substringToIndex(range.endIndex.advancedBy(-1))
-        guard let subtaskStep = super.stepWithIdentifier(subtaskStepIdentifier) as? SBASubtaskStep else {
+        let subtaskStepIdentifier = identifier.substring(to: identifier.index(range.upperBound, offsetBy: -1))
+        guard let subtaskStep = super.step(withIdentifier: subtaskStepIdentifier) as? SBASubtaskStep else {
             return nil
         }
         return subtaskStep
     }
     
-    private func superStepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    fileprivate func superStepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         
         // Check the conditional rule to see if it returns a next step for the given previous
         // step and return that with an early exit if applicable.
@@ -106,12 +107,12 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
                     // If this is a step that conforms to the SBANavigableStep protocol and
                     // the next step identifier is non-nil then get the next step by looking within
                     // the steps associated with this task
-                    returnStep = super.stepWithIdentifier(nextStepIdentifier)
+                    returnStep = super.step(withIdentifier: nextStepIdentifier)
             }
             else {
                 // If we've dropped through without setting the return step to something non-nil
                 // then look to super for the next step
-                returnStep = super.stepAfterStep(previousStep, withResult: result)
+                returnStep = super.step(after: previousStep, with: result)
             }
             
             // If the superclass returns a step of type subtask step, then get the first step from the subtask
@@ -122,7 +123,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
                     returnStep = subtaskReturnStep
                 }
                 else {
-                    returnStep = super.stepAfterStep(subtaskStep, withResult: result)
+                    returnStep = super.step(after: subtaskStep, with: result)
                 }
             }
             
@@ -147,7 +148,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
 
     // MARK: ORKOrderedTask overrides
     
-    override public func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
         var returnStep: ORKStep?
 
@@ -167,12 +168,12 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         
         // Look for step in the ordered steps and lop off everything after this one
         if let previousIdentifier = step?.identifier,
-            let idx = self.orderedStepIdentifiers.indexOf(previousIdentifier) where idx < self.orderedStepIdentifiers.endIndex {
-                self.orderedStepIdentifiers.removeRange(idx.advancedBy(1) ..< self.orderedStepIdentifiers.endIndex)
+            let idx = self.orderedStepIdentifiers.index(of: previousIdentifier) , idx < self.orderedStepIdentifiers.endIndex {
+                self.orderedStepIdentifiers.removeSubrange(idx.advanced(by: 1) ..< self.orderedStepIdentifiers.endIndex)
         }
         if let identifier = returnStep?.identifier {
-            if let idx = self.orderedStepIdentifiers.indexOf(identifier) {
-                self.orderedStepIdentifiers.removeRange(idx ..< self.orderedStepIdentifiers.endIndex)
+            if let idx = self.orderedStepIdentifiers.index(of: identifier) {
+                self.orderedStepIdentifiers.removeSubrange(idx ..< self.orderedStepIdentifiers.endIndex)
             }
             self.orderedStepIdentifiers += [identifier]
         }
@@ -180,30 +181,30 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         return returnStep
     }
 
-    override public func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func step(before step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         guard let identifier = step?.identifier,
-            let idx = self.orderedStepIdentifiers.indexOf(identifier) where idx > 0 else {
+            let idx = self.orderedStepIdentifiers.index(of: identifier) , idx > 0 else {
             return nil
         }
-        let previousIdentifier = self.orderedStepIdentifiers[idx.advancedBy(-1)]
-        return self.stepWithIdentifier(previousIdentifier)
+        let previousIdentifier = self.orderedStepIdentifiers[idx.advanced(by: -1)]
+        return self.step(withIdentifier: previousIdentifier)
     }
     
-    override public func stepWithIdentifier(identifier: String) -> ORKStep? {
+    override open func step(withIdentifier identifier: String) -> ORKStep? {
         // Look for the step in the superclass
-        if let step = super.stepWithIdentifier(identifier) {
+        if let step = super.step(withIdentifier: identifier) {
             return step
         }
         // If not found check to see if it is a substep
-        return subtaskStep(identifier: identifier)?.stepWithIdentifier(identifier)
+        return subtaskStep(identifier: identifier)?.step(withIdentifier: identifier)
     }
     
-    override public func progressOfCurrentStep(step: ORKStep, withResult result: ORKTaskResult) -> ORKTaskProgress {
+    override open func progress(ofCurrentStep step: ORKStep, with result: ORKTaskResult) -> ORKTaskProgress {
         // Do not show progress for an ordered task with navigation rules
         return ORKTaskProgress(current: 0, total: 0)
     }
     
-    override public func validateParameters() {
+    override open func validateParameters() {
         super.validateParameters()
         for step in self.steps {
             // Check if the step is a subtask step and validate parameters
@@ -213,19 +214,19 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         }
     }
     
-    override public var requestedHealthKitTypesForReading: Set<HKObjectType>? {
+    override open var requestedHealthKitTypesForReading: Set<HKObjectType>? {
         var set = super.requestedHealthKitTypesForReading ?? Set()
         for step in self.steps {
             // Check if the step is a subtask step and validate parameters
             if let subtaskStep = step as? SBASubtaskStep,
-                let subset = subtaskStep.subtask.requestedHealthKitTypesForReading where subset != nil {
+                let subset = subtaskStep.subtask.requestedHealthKitTypesForReading , subset != nil {
                     set = set.union(subset!)
             }
         }
         return set.count > 0 ? set : nil
     }
 
-    override public var providesBackgroundAudioPrompts: Bool {
+    override open var providesBackgroundAudioPrompts: Bool {
         let superRet = super.providesBackgroundAudioPrompts
         if (superRet) {
             return true
@@ -233,7 +234,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
         for step in self.steps {
             // Check if the step is a subtask step and validate parameters
             if let subtaskStep = step as? SBASubtaskStep,
-                let subRet = subtaskStep.subtask.providesBackgroundAudioPrompts where subRet {
+                let subRet = subtaskStep.subtask.providesBackgroundAudioPrompts , subRet {
                     return true
             }
         }
@@ -242,8 +243,8 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     
     // MARK: NSCopy
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         guard let task = copy as? SBANavigableOrderedTask else { return copy }
         task.additionalTaskResults = self.additionalTaskResults
         task.orderedStepIdentifiers = self.orderedStepIdentifiers
@@ -254,22 +255,22 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        self.additionalTaskResults = aDecoder.decodeObjectForKey("additionalTaskResults") as? [ORKTaskResult]
-        self.orderedStepIdentifiers = aDecoder.decodeObjectForKey("orderedStepIdentifiers") as! [String]
-        self.conditionalRule = aDecoder.decodeObjectForKey("conditionalRule") as? SBAConditionalRule
+        self.additionalTaskResults = aDecoder.decodeObject(forKey: "additionalTaskResults") as? [ORKTaskResult]
+        self.orderedStepIdentifiers = aDecoder.decodeObject(forKey: "orderedStepIdentifiers") as! [String]
+        self.conditionalRule = aDecoder.decodeObject(forKey: "conditionalRule") as? SBAConditionalRule
         super.init(coder: aDecoder);
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.additionalTaskResults, forKey: "additionalTaskResults")
-        aCoder.encodeObject(self.conditionalRule, forKey: "conditionalRule")
-        aCoder.encodeObject(self.orderedStepIdentifiers, forKey: "orderedStepIdentifiers")
+    override open func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(self.additionalTaskResults, forKey: "additionalTaskResults")
+        aCoder.encode(self.conditionalRule, forKey: "conditionalRule")
+        aCoder.encode(self.orderedStepIdentifiers, forKey: "orderedStepIdentifiers")
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBANavigableOrderedTask else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(self.additionalTaskResults, object.additionalTaskResults) &&
@@ -277,7 +278,7 @@ public class SBANavigableOrderedTask: ORKOrderedTask {
             SBAObjectEquality(self.conditionalRule as? NSObject, object.conditionalRule as? NSObject)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.additionalTaskResults) ^
             SBAObjectHash(self.orderedStepIdentifiers) ^

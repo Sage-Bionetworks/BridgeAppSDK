@@ -33,17 +33,17 @@
 
 import UIKit
 
-public class Localization: NSObject {
+open class Localization: NSObject {
     
-    static let localeMainBundle = NSBundle.mainBundle()
-    static let localeBundle = NSBundle(forClass: Localization.classForCoder())
-    static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
+    static let localeMainBundle = Bundle.main
+    static let localeBundle = Bundle(for: Localization.classForCoder())
+    static let localeORKBundle = Bundle(for: ORKStep.classForCoder())
     
-    public class var allBundles: [NSBundle] {
+    open class var allBundles: [Bundle] {
         return [localeMainBundle, localeBundle, localeORKBundle]
     }
         
-    public static func localizedString(key: String) -> String {
+    open class func localizedString(_ key: String) -> String {
         // Look in these bundles for a localization for the given key
         for bundle in allBundles {
             let tableName = defaultTableNameForBundle(bundle)
@@ -57,15 +57,15 @@ public class Localization: NSObject {
         return key
     }
     
-    public static func defaultTableNameForBundle(bundle: NSBundle) -> String? {
+    open class func defaultTableNameForBundle(_ bundle: Bundle) -> String? {
         if (bundle == localeORKBundle) { return "ResearchKit" }
         if (bundle == localeBundle) { return "BridgeAppSDK" }
         return nil
     }
     
-    public static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
+    public static func localizedStringWithFormatKey(_ key: String, _ arguments: CVarArg...) -> String {
         return withVaList(arguments) {
-            NSString(format: localizedString(key), locale: NSLocale.currentLocale(), arguments: $0)
+            (NSString(format: localizedString(key), locale: Locale.current, arguments: $0) as String)
         } as String
     }
     
@@ -88,15 +88,15 @@ public class Localization: NSObject {
                                  text3)
             list.append(endText)
             let delimiter = localizedString("SBA_LIST_FORMAT_DELIMITER")
-            return list.joinWithSeparator(delimiter)
+            return list.joined(separator: delimiter)
         }
     }
     
     
     // MARK: Localized App Name
     
-    public static let localizedAppName : String = {
-        let mainBundle = NSBundle.mainBundle()
+    open static let localizedAppName : String = {
+        let mainBundle = Bundle.main
         if let bundleInfo = mainBundle.localizedInfoDictionary ?? mainBundle.infoDictionary {
             if let name = bundleInfo["CFBundleDisplayName"] as? String {
                 return name
@@ -114,31 +114,31 @@ public class Localization: NSObject {
     
     // MARK: Common button titles that should keep consistent with ResearchKit
     
-    public static func buttonYes() -> String {
+    open class func buttonYes() -> String {
         return localizedString("BOOL_YES")
     }
     
-    public static func buttonNo() -> String {
+    open class func buttonNo() -> String {
         return localizedString("BOOL_NO")
     }
     
-    public static func buttonOK() -> String {
+    open class func buttonOK() -> String {
         return localizedString("BUTTON_OK")
     }
     
-    public static func buttonCancel() -> String {
+    open class func buttonCancel() -> String {
         return localizedString("BUTTON_CANCEL")
     }
     
-    public static func buttonDone() -> String {
+    open class func buttonDone() -> String {
         return localizedString("BUTTON_DONE")
     }
     
-    public static func buttonNext() -> String {
+    open class func buttonNext() -> String {
         return localizedString("BUTTON_NEXT")
     }
     
-    public static func buttonGetStarted() -> String {
+    open class func buttonGetStarted() -> String {
         return localizedString("BUTTON_GET_STARTED")
     }
 }

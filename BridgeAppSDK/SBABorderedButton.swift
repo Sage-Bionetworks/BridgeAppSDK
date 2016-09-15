@@ -35,19 +35,19 @@
 import UIKit
 
 @IBDesignable
-public class SBABorderedButton: UIButton {
+open class SBABorderedButton: UIButton {
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
-        self.layer.borderColor = self.titleLabel?.textColor.CGColor
+        self.layer.borderColor = self.titleLabel?.textColor.cgColor
         self.layer.borderWidth = 1
         self.layer.cornerRadius = 4
     }
     
-    override public var enabled: Bool {
+    override open var isEnabled: Bool {
         didSet {
-            self.layer.borderColor = self.titleLabel?.textColor.CGColor
+            self.layer.borderColor = self.titleLabel?.textColor.cgColor
         }
     }
 }

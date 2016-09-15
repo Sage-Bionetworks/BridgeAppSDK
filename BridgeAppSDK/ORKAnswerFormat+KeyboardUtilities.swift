@@ -42,11 +42,11 @@ extension UITextAutocapitalizationType {
         }
         switch key {
         case "words":
-            self.init(rawValue:UITextAutocapitalizationType.Words.rawValue)!
+            self.init(rawValue:UITextAutocapitalizationType.words.rawValue)!
         case "sentences":
-            self.init(rawValue:UITextAutocapitalizationType.Sentences.rawValue)!
+            self.init(rawValue:UITextAutocapitalizationType.sentences.rawValue)!
         case "all":
-            self.init(rawValue:UITextAutocapitalizationType.AllCharacters.rawValue)!
+            self.init(rawValue:UITextAutocapitalizationType.allCharacters.rawValue)!
         default:
             let intValue = Int(key) ?? 0
             self.init(rawValue: intValue)!
@@ -63,21 +63,21 @@ extension UIKeyboardType {
         }
         switch key {
         case "ascii":
-            self.init(rawValue: UIKeyboardType.ASCIICapable.rawValue)!
+            self.init(rawValue: UIKeyboardType.asciiCapable.rawValue)!
         case "numbersAndPunctuation":
-            self.init(rawValue: UIKeyboardType.NumbersAndPunctuation.rawValue)!
+            self.init(rawValue: UIKeyboardType.numbersAndPunctuation.rawValue)!
         case "url":
             self.init(rawValue: UIKeyboardType.URL.rawValue)!
         case "numberPad":
-            self.init(rawValue: UIKeyboardType.NumberPad.rawValue)!
+            self.init(rawValue: UIKeyboardType.numberPad.rawValue)!
         case "phonePad":
-            self.init(rawValue: UIKeyboardType.PhonePad.rawValue)!
+            self.init(rawValue: UIKeyboardType.phonePad.rawValue)!
         case "namePhonePad":
-            self.init(rawValue: UIKeyboardType.NamePhonePad.rawValue)!
+            self.init(rawValue: UIKeyboardType.namePhonePad.rawValue)!
         case "emailAddress":
-            self.init(rawValue: UIKeyboardType.EmailAddress.rawValue)!
+            self.init(rawValue: UIKeyboardType.emailAddress.rawValue)!
         case "decimalPad":
-            self.init(rawValue: UIKeyboardType.DecimalPad.rawValue)!
+            self.init(rawValue: UIKeyboardType.decimalPad.rawValue)!
         default:
             let intValue = Int(key) ?? 0
             self.init(rawValue: intValue)!

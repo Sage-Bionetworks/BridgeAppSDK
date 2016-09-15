@@ -33,16 +33,16 @@
 
 import UIKit
 
-public class SBANewsfeedTableViewCell: UITableViewCell {
+open class SBANewsfeedTableViewCell: UITableViewCell {
 
-    @IBOutlet public weak var titleLabel: UILabel!
-    @IBOutlet public weak var subtitleLabel: UILabel!
-    @IBOutlet public weak var dateLabel: UILabel!
+    @IBOutlet open weak var titleLabel: UILabel!
+    @IBOutlet open weak var subtitleLabel: UILabel!
+    @IBOutlet open weak var dateLabel: UILabel!
     
-    public var readColor = UIColor.whiteColor()
-    public var unreadColor = UIColor.colorForKey("newsfeedHighlightColor") ?? UIColor.whiteColor()
+    open var readColor = UIColor.white
+    open var unreadColor = UIColor.colorForKey("newsfeedHighlightColor") ?? UIColor.white
     
-    public var hasRead: Bool = false {
+    open var hasRead: Bool = false {
         didSet {
             self.backgroundColor = hasRead ? readColor : unreadColor
         }

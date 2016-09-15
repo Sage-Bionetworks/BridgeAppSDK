@@ -82,9 +82,9 @@ private let QuestionResultSurveyAnswerKey = "answer"
 private let NumericResultUnitKey = "unit"
 private let DateAndTimeResultTimeZoneKey = "timeZone"
 
-public class ArchiveableResult : NSObject {
-    public let result: AnyObject
-    public let filename: String
+open class ArchiveableResult : NSObject {
+    open let result: AnyObject
+    open let filename: String
     
     init(result: AnyObject, filename: String) {
         self.result = result
@@ -95,19 +95,19 @@ public class ArchiveableResult : NSObject {
 
 public protocol BridgeUploadableData {
     // returns result object, result type, and filename
-    func bridgeData(stepIdentifier: String) -> ArchiveableResult?
+    func bridgeData(_ stepIdentifier: String) -> ArchiveableResult?
 }
 
 extension ORKResult: BridgeUploadableData {
     
-    func dataFromFile(fileURL: NSURL) -> NSData? {
-        return NSData.init(contentsOfURL: fileURL)
+    func dataFromFile(_ fileURL: NSURL) -> NSData? {
+        return NSData.init(contentsOf: fileURL as URL)
     }
     
-    func dataFromDictionary(dictionary: Dictionary<String, AnyObject>) -> NSData? {
+    func dataFromDictionary(_ dictionary: Dictionary<String, AnyObject>) -> NSData? {
         let jsonData: NSData
         do {
-            jsonData = try NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions.init(rawValue: 0))
+            jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: JSONSerialization.WritingOptions.init(rawValue: 0))
         } catch let error as NSError {
             fatalError("Failed to serialize JSON dictionary:\n\(error)")
         }
@@ -125,7 +125,7 @@ extension ORKResult: BridgeUploadableData {
         return asDict
     }
     
-    func bridgifyFilename(filename: String) -> String {
+    func bridgifyFilename(_ filename: String) -> String {
         return filename.stringByReplacingOccurrencesOfString(".", withString: "_")
     }
     
@@ -133,16 +133,16 @@ extension ORKResult: BridgeUploadableData {
         return bridgifyFilename(self.identifier) + ".json"
     }
     
-    public func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+    public func bridgeData(_ stepIdentifier: String) -> ArchiveableResult? {
         // extend subclasses individually to override this as needed
-        return ArchiveableResult(result: self.resultAsDictionary().jsonObject(), filename: self.filenameForArchive())
+        return ArchiveableResult(result: self.resultAsDictionary().jsonObject() as AnyObject, filename: self.filenameForArchive())
     }
     
 }
 
 extension ORKFileResult {
     
-    override public func bridgeData(stepIdentifier: String) -> ArchiveableResult? {
+    override public func bridgeData(_ stepIdentifier: String) -> ArchiveableResult? {
         guard let url = self.fileURL else {
             return nil
         }
@@ -150,8 +150,8 @@ extension ORKFileResult {
         if ext == nil || ext == "" {
             ext = "json"
         }
-        let filename = bridgifyFilename(self.identifier + "_" + stepIdentifier) + "." + ext!
-        return ArchiveableResult(result: url, filename: filename)
+        let filename = bridgifyFilename(self.identifier + "_" + stepIdentifier) + "." + ext
+        return ArchiveableResult(result: url as AnyObject, filename: filename)
     }
     
 }
@@ -173,16 +173,16 @@ extension ORKTappingIntervalResult {
         let sampleResults = self.samples?.map({ (sample) -> [String: AnyObject] in
             var aSampleDictionary = [String: AnyObject]();
             
-            aSampleDictionary[kTapTimeStampKey]     = sample.timestamp
+            aSampleDictionary[kTapTimeStampKey]     = sample.timestamp as AnyObject?
             
-            aSampleDictionary[kTapCoordinateKey]   = NSStringFromCGPoint(sample.location)
+            aSampleDictionary[kTapCoordinateKey]   = NSStringFromCGPoint(sample.location) as AnyObject?
             
-            if (sample.buttonIdentifier == ORKTappingButtonIdentifier.None) {
-                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonNoneKey
-            } else if (sample.buttonIdentifier == ORKTappingButtonIdentifier.Left) {
-                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonLeftKey
-            } else if (sample.buttonIdentifier == ORKTappingButtonIdentifier.Right) {
-                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonRightKey
+            if (sample.buttonIdentifier == ORKTappingButtonIdentifier.none) {
+                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonNoneKey as AnyObject?
+            } else if (sample.buttonIdentifier == ORKTappingButtonIdentifier.left) {
+                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonLeftKey as AnyObject?
+            } else if (sample.buttonIdentifier == ORKTappingButtonIdentifier.right) {
+                aSampleDictionary[kTappedButtonIdKey] = kTappedButtonRightKey as AnyObject?
             }
             return aSampleDictionary
         }) ?? []
@@ -218,11 +218,11 @@ extension ORKSpatialSpanMemoryResult {
             
             var aGameRecord = [String: AnyObject]()
             
-            aGameRecord[kSpatialSpanMemoryGameRecordSeedKey]      = NSNumber(unsignedInt: aRecord.seed)
-            aGameRecord[kSpatialSpanMemoryGameRecordGameSizeKey]  = aRecord.gameSize
-            aGameRecord[kSpatialSpanMemoryGameRecordGameScoreKey] = aRecord.score
-            aGameRecord[kSpatialSpanMemoryGameRecordSequenceKey]  = aRecord.sequence
-            aGameRecord[kSpatialSpanMemoryGameStatusKey]          = gameStatusKeys[aRecord.gameStatus.rawValue]
+            aGameRecord[kSpatialSpanMemoryGameRecordSeedKey]      = NSNumber(value: aRecord.seed)
+            aGameRecord[kSpatialSpanMemoryGameRecordGameSizeKey]  = aRecord.gameSize as AnyObject?
+            aGameRecord[kSpatialSpanMemoryGameRecordGameScoreKey] = aRecord.score as AnyObject?
+            aGameRecord[kSpatialSpanMemoryGameRecordSequenceKey]  = aRecord.sequence as AnyObject?
+            aGameRecord[kSpatialSpanMemoryGameStatusKey]          = gameStatusKeys[aRecord.gameStatus.rawValue] as AnyObject?
             
             let touchSamples = makeTouchSampleRecords(aRecord.touchSamples)
             aGameRecord[kSpatialSpanMemoryGameRecordTouchSamplesKey] = touchSamples
@@ -237,42 +237,42 @@ extension ORKSpatialSpanMemoryResult {
         return memoryGameResults
     }
     
-    func makeTouchSampleRecords(touchSamples: [ORKSpatialSpanMemoryGameTouchSample]?) -> NSArray
+    func makeTouchSampleRecords(_ touchSamples: [ORKSpatialSpanMemoryGameTouchSample]?) -> NSArray
     {
         var samples = [[String: AnyObject]]()
         
         guard touchSamples != nil else {
-            return samples
+            return samples as NSArray
         }
         for sample: ORKSpatialSpanMemoryGameTouchSample in touchSamples! {
             
             var aTouchSample = [String: AnyObject]()
             
-            aTouchSample[kSpatialSpanMemoryTouchSampleTimeStampKey]   = sample.timestamp
-            aTouchSample[kSpatialSpanMemoryTouchSampleTargetIndexKey] = sample.targetIndex
-            aTouchSample[kSpatialSpanMemoryTouchSampleLocationKey]    = NSStringFromCGPoint(sample.location)
-            aTouchSample[kSpatialSpanMemoryTouchSampleIsCorrectKey]   = sample.correct
+            aTouchSample[kSpatialSpanMemoryTouchSampleTimeStampKey]   = sample.timestamp as AnyObject?
+            aTouchSample[kSpatialSpanMemoryTouchSampleTargetIndexKey] = sample.targetIndex as AnyObject?
+            aTouchSample[kSpatialSpanMemoryTouchSampleLocationKey]    = NSStringFromCGPoint(sample.location) as AnyObject?
+            aTouchSample[kSpatialSpanMemoryTouchSampleIsCorrectKey]   = sample.isCorrect as AnyObject?
             
             samples += [aTouchSample]
         }
-        return  samples
+        return  samples as NSArray
     }
     
-    func makeTargetRectangleRecords(targetRectangles: [NSValue]) -> NSArray
+    func makeTargetRectangleRecords(_ targetRectangles: [NSValue]) -> NSArray
     {
         var rectangles = [String]()
         
         for value: NSValue in targetRectangles {
-            let rectangle = value.CGRectValue()
+            let rectangle = value.cgRectValue
             let stringified = NSStringFromCGRect(rectangle)
             rectangles += [stringified]
         }
-        return  rectangles
+        return  rectangles as NSArray
     }
     
 }
 
-public class AnswerKeyAndValue: NSObject {
+open class AnswerKeyAndValue: NSObject {
     let key: String
     let value: AnyObject
     let questionType: ORKQuestionType
@@ -292,33 +292,33 @@ public protocol ORKQuestionResultAnswerJSON {
 extension ORKQuestionType {
     public var nameValue: String {
         switch self {
-        case .None:
+        case .none:
             return "None"
-        case .Scale:
+        case .scale:
             return "Scale"
-        case .SingleChoice:
+        case .singleChoice:
             return "SingleChoice"
-        case .MultipleChoice:
+        case .multipleChoice:
             return "MultipleChoice"
-        case .Decimal:
+        case .decimal:
             return "Decimal"
-        case .Integer:
+        case .integer:
             return "Integer"
-        case .Boolean:
+        case .boolean:
             return "Boolean"
-        case .Text:
+        case .text:
             return "Text"
-        case .TimeOfDay:
+        case .timeOfDay:
             return "TimeOfDay"
-        case .DateAndTime:
+        case .dateAndTime:
             return "Date"
-        case .Date:
+        case .date:
             return "Date"
-        case .TimeInterval:
+        case .timeInterval:
             return "TimeInterval"
-        case .Location:
+        case .location:
             return "Location"
-        case .Height:
+        case .height:
             return "Height"
         }
     }
@@ -350,7 +350,7 @@ extension ORKChoiceQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let choiceAnswers = self.choiceAnswers else { return nil }
-        return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject(), questionType: self.questionType)
+        return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject() as AnyObject, questionType: self.questionType)
     }
 }
 
@@ -358,7 +358,7 @@ extension ORKScaleQuestionResult {
 
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .Scale)
+        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject() as AnyObject, questionType: .scale)
     }
 }
 
@@ -366,7 +366,7 @@ extension ORKMoodScaleQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .Scale)
+        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject() as AnyObject, questionType: .scale)
     }
 }
 
@@ -374,7 +374,7 @@ extension ORKBooleanQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.booleanAnswer else { return nil }
-        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject(), questionType: .Boolean)
+        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject() as AnyObject, questionType: .boolean)
     }
 }
 
@@ -382,7 +382,7 @@ extension ORKTextQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.textAnswer else { return nil }
-        return AnswerKeyAndValue(key: "textAnswer", value: answer, questionType: .Text)
+        return AnswerKeyAndValue(key: "textAnswer", value: answer as AnyObject, questionType: .text)
     }
 }
 
@@ -390,7 +390,7 @@ extension ORKNumericQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.numericAnswer else { return nil }
-        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject(), questionType: self.questionType)
+        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject() as AnyObject, questionType: self.questionType)
     }
     
     override func resultAsDictionary() -> NSMutableDictionary {
@@ -418,7 +418,7 @@ extension ORKTimeIntervalQuestionResult {
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.intervalAnswer else { return nil }
         
-        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject(), questionType: .TimeInterval)
+        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject() as AnyObject, questionType: .timeInterval)
     }
 }
 
@@ -427,7 +427,7 @@ extension ORKDateQuestionResult {
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.dateAnswer else { return nil }
         let key = "dateAnswer"
-        if self.questionType == ORKQuestionType.Date {
+        if self.questionType == ORKQuestionType.date {
             return AnswerKeyAndValue(key: key, value: answer.ISO8601DateOnlyString(), questionType: self.questionType)
         }
         else {

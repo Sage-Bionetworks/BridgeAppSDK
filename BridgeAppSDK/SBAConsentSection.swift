@@ -42,7 +42,7 @@ public protocol SBAConsentSection: class {
     var sectionHtmlContent: String? { get }
     var sectionLearnMoreButtonTitle: String? { get }
     var sectionCustomImage: UIImage? { get }
-    var sectionCustomAnimationURL: NSURL? { get }
+    var sectionCustomAnimationURL: URL? { get }
 }
 
 extension SBAConsentSection {
@@ -65,18 +65,18 @@ extension SBAConsentSection {
 extension NSDictionary: SBAConsentSection {
     
     public var consentSectionType: ORKConsentSectionType {
-        guard let sectionType = self["sectionType"] as? String else { return .Custom }
+        guard let sectionType = self["sectionType"] as? String else { return .custom }
         switch (sectionType) {
-        case "overview"          : return .Overview
-        case "privacy"           : return .Privacy
-        case "dataGathering"     : return .DataGathering
-        case "dataUse"           : return .DataUse
-        case "timeCommitment"    : return .TimeCommitment
-        case "studySurvey"       : return .StudySurvey
-        case "studyTasks"        : return .StudyTasks
-        case "withdrawing"       : return .Withdrawing
-        case "onlyInDocument"    : return .OnlyInDocument
-        default                  : return .Custom
+        case "overview"          : return .overview
+        case "privacy"           : return .privacy
+        case "dataGathering"     : return .dataGathering
+        case "dataUse"           : return .dataUse
+        case "timeCommitment"    : return .timeCommitment
+        case "studySurvey"       : return .studySurvey
+        case "studyTasks"        : return .studyTasks
+        case "withdrawing"       : return .withdrawing
+        case "onlyInDocument"    : return .onlyInDocument
+        default                  : return .custom
         }
     }
     
@@ -110,9 +110,9 @@ extension NSDictionary: SBAConsentSection {
         return SBAResourceFinder().imageNamed(imageNamed)
     }
     
-    public var sectionCustomAnimationURL: NSURL? {
+    public var sectionCustomAnimationURL: URL? {
         guard let resource = self["sectionAnimationUrl"] as? String else { return nil }
-        let scaleFactor = UIScreen.mainScreen().scale >= 3 ? "@3x" : "@2x"
+        let scaleFactor = UIScreen.main.scale >= 3 ? "@3x" : "@2x"
         return SBAResourceFinder().urlNamed("\(resource)\(scaleFactor)", withExtension: "m4v")
     }
 }

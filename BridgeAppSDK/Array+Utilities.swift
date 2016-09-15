@@ -35,8 +35,8 @@ import Foundation
 
 extension Array where Element: Equatable {
     
-    @warn_unused_result
-    public func nextMatch(object: Array.Generator.Element?) -> Array.Generator.Element? {
+    
+    public func nextMatch(_ object: Array.Iterator.Element?) -> Array.Iterator.Element? {
         guard let match = object else { return self.first }
         return self.nextObject({ (match == $0)
         })

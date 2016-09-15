@@ -33,40 +33,40 @@
 
 import UIKit
 
-public class SBALoadingView: UIView {
+open class SBALoadingView: UIView {
     
-    public var isAnimating: Bool {
-        return loadingIndicator.isAnimating()
+    open var isAnimating: Bool {
+        return loadingIndicator.isAnimating
     }
     
     lazy var loadingIndicator: UIActivityIndicatorView = {
         self.backgroundColor = UIColor(white: 0, alpha: 0.5)
-        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         loadingIndicator.hidesWhenStopped = false
         self.addSubview(loadingIndicator)
         return loadingIndicator
     }()
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         loadingIndicator.center = CGPoint(x: self.bounds.size.width / 2.0, y: self.bounds.size.height / 2.0)
     }
     
-    public func startAnimating() {
+    open func startAnimating() {
         self.alpha = 0.0
         self.superview?.addSubview(self)
-        self.hidden = false
+        self.isHidden = false
         self.loadingIndicator.startAnimating()
-        UIView.animateWithDuration(0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: {
             self.alpha = 1.0
         })
     }
     
-    public func stopAnimating(completion: (() -> Void)?) {
-        UIView.animateWithDuration(0.2, animations: {
+    open func stopAnimating(_ completion: (() -> Void)?) {
+        UIView.animate(withDuration: 0.2, animations: {
             self.alpha = 0.0
             }, completion: {_ in
-                self.hidden = true
+                self.isHidden = true
                 self.loadingIndicator.stopAnimating()
                 completion?()
         })

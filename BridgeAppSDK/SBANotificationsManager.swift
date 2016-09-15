@@ -37,34 +37,34 @@ enum SBAScheduledNotificationType: String {
     case scheduledActivity
 }
 
-public class SBANotificationsManager: NSObject, SBASharedInfoController {
+open class SBANotificationsManager: NSObject, SBASharedInfoController {
     
     static let notificationType = "notificationType"
     static let identifier = "identifier"
     
-    public static let sharedManager = SBANotificationsManager()
+    open static let sharedManager = SBANotificationsManager()
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    lazy public var sharedApplication: UIApplication = {
-        return UIApplication.sharedApplication()
+    lazy open var sharedApplication: UIApplication = {
+        return UIApplication.shared
     }()
     
-    lazy public var permissionsManager: SBAPermissionsManager = {
-        return SBAPermissionsManager.sharedManager()
+    lazy open var permissionsManager: SBAPermissionsManager = {
+        return SBAPermissionsManager.shared()
     }()
     
-    public func setupNotificationsForScheduledActivities(activities: [SBBScheduledActivity]) {
-        permissionsManager.requestPermissions(.LocalNotifications, alertPresenter: nil) { [weak self] (granted) in
+    open func setupNotificationsForScheduledActivities(_ activities: [SBBScheduledActivity]) {
+        permissionsManager.requestPermissions(.localNotifications, alertPresenter: nil) { [weak self] (granted) in
             if granted {
                 self?.scheduleNotifications(scheduledActivities: activities)
             }
         }
     }
     
-    private func scheduleNotifications(scheduledActivities activities: [SBBScheduledActivity]) {
+    fileprivate func scheduleNotifications(scheduledActivities activities: [SBBScheduledActivity]) {
         
         // Cancel previous notifications
         cancelNotifications(notificationType: .scheduledActivity)
@@ -73,7 +73,7 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
         let app = sharedApplication
         for sa in activities {
             if let taskRef = self.sharedBridgeInfo.taskReferenceForSchedule(sa)
-                where taskRef.scheduleNotification  {
+                , taskRef.scheduleNotification  {
                 let notif = UILocalNotification()
                 notif.fireDate = sa.scheduledOn
                 notif.soundName = UILocalNotificationDefaultSoundName
@@ -85,12 +85,12 @@ public class SBANotificationsManager: NSObject, SBASharedInfoController {
         }
     }
     
-    private func cancelNotifications(notificationType notificationType: SBAScheduledNotificationType) {
+    fileprivate func cancelNotifications(notificationType: SBAScheduledNotificationType) {
         let app = sharedApplication
         if let scheduledNotifications = app.scheduledLocalNotifications {
             for notif in scheduledNotifications {
                 if let type = notif.userInfo?[SBANotificationsManager.notificationType] as? String,
-                    let notifType = SBAScheduledNotificationType(rawValue: type) where notifType == notificationType {
+                    let notifType = SBAScheduledNotificationType(rawValue: type) , notifType == notificationType {
                     app.cancelLocalNotification(notif)
                 }
             }

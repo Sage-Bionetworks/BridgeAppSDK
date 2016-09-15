@@ -35,7 +35,7 @@ import UIKit
 
 class SBACheckmarkView: UIView {
     
-    func drawCheckmarkAnimated(animated:Bool) {
+    func drawCheckmarkAnimated(_ animated:Bool) {
         
         guard animated else {
             _shapeLayer.strokeEnd = 1
@@ -52,11 +52,11 @@ class SBACheckmarkView: UIView {
         animation.duration = 0.3
         
         _shapeLayer.strokeEnd = 0
-        _shapeLayer.addAnimation(animation, forKey: "strokeEnd")
+        _shapeLayer.add(animation, forKey: "strokeEnd")
     }
 
-    private var _shapeLayer: CAShapeLayer!
-    private var _tickViewSize: CGFloat!
+    fileprivate var _shapeLayer: CAShapeLayer!
+    fileprivate var _tickViewSize: CGFloat!
     
     static let defaultSize: CGFloat = 122
     
@@ -84,27 +84,27 @@ class SBACheckmarkView: UIView {
         commonInit()
     }
     
-    private func commonInit() {
+    fileprivate func commonInit() {
         
         self.layer.cornerRadius = _tickViewSize / 2;
         self.backgroundColor = UIColor.greenTintColor()
 
         let ratio = _tickViewSize / SBACheckmarkView.defaultSize
         let path = UIBezierPath()
-        path.moveToPoint(CGPoint(x: ratio * 37, y: ratio * 65))
-        path.addLineToPoint(CGPoint(x: ratio * 50, y: ratio * 78))
-        path.addLineToPoint(CGPoint(x: ratio * 87, y: ratio * 42))
-        path.lineCapStyle = CGLineCap.Round
+        path.move(to: CGPoint(x: ratio * 37, y: ratio * 65))
+        path.addLine(to: CGPoint(x: ratio * 50, y: ratio * 78))
+        path.addLine(to: CGPoint(x: ratio * 87, y: ratio * 42))
+        path.lineCapStyle = CGLineCap.round
         path.lineWidth = min(max(1, ratio * 5), 5)
 
         let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.CGPath
+        shapeLayer.path = path.cgPath
         shapeLayer.lineWidth = path.lineWidth
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
         shapeLayer.frame = self.layer.bounds
-        shapeLayer.strokeColor = UIColor.whiteColor().CGColor
-        shapeLayer.backgroundColor = UIColor.clearColor().CGColor
+        shapeLayer.strokeColor = UIColor.white.cgColor
+        shapeLayer.backgroundColor = UIColor.clear.cgColor
         shapeLayer.fillColor = nil
         shapeLayer.strokeEnd = 0
         self.layer.addSublayer(shapeLayer);
@@ -121,12 +121,12 @@ class SBACheckmarkView: UIView {
         _shapeLayer.frame = self.layer.bounds;
     }
 
-    override func intrinsicContentSize() -> CGSize {
+    override var intrinsicContentSize : CGSize {
         return CGSize(width: _tickViewSize, height: _tickViewSize)
     }
     
-    override func sizeThatFits(size: CGSize) -> CGSize {
-        return intrinsicContentSize()
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return intrinsicContentSize
     }
 
 }

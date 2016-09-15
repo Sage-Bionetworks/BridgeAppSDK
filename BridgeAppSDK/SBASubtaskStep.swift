@@ -36,15 +36,15 @@ import ResearchKit
 /**
  * The subtask step is a logical grouping of steps where the steps are defined by a subtask.
  */
-public class SBASubtaskStep: ORKStep {
+open class SBASubtaskStep: ORKStep {
     
-    public var taskIdentifier: String?
-    public var schemaIdentifier: String?
+    open var taskIdentifier: String?
+    open var schemaIdentifier: String?
     
-    public var subtask: protocol <ORKTask, NSCopying, NSSecureCoding> {
+    open var subtask: ORKTask & NSCopying & NSSecureCoding {
         return _subtask
     }
-    private var _subtask: protocol <ORKTask, NSCopying, NSSecureCoding>
+    fileprivate var _subtask: ORKTask & NSCopying & NSSecureCoding
     
     override public init(identifier: String) {
         _subtask = ORKOrderedTask(identifier: identifier, steps: nil)
@@ -56,25 +56,25 @@ public class SBASubtaskStep: ORKStep {
         super.init(identifier: identifier);
     }
     
-    public init(subtask: protocol <ORKTask, NSCopying, NSSecureCoding>) {
+    public init(subtask: ORKTask & NSCopying & NSSecureCoding) {
         _subtask = subtask;
         super.init(identifier: subtask.identifier);
     }
     
-    func substepIdentifier(identifier: String) -> String? {
+    func substepIdentifier(_ identifier: String) -> String? {
         guard let range = identifier.rangeOfString("\(self.subtask.identifier).") else { return nil }
         let stepRange = range.endIndex ..< identifier.endIndex
         let stepIdentifier = identifier.substringWithRange(stepRange)
         return stepIdentifier
     }
     
-    func replacementStep(step: ORKStep?) -> ORKStep? {
+    func replacementStep(_ step: ORKStep?) -> ORKStep? {
         guard let step = step else { return nil }
         let stepIdentifier = "\(self.subtask.identifier).\(step.identifier)"
-        return step.copyWithIdentifier(stepIdentifier)
+        return step.copy(withIdentifier: stepIdentifier)
     }
     
-    func filteredTaskResult(inputResult: ORKTaskResult) -> ORKTaskResult {
+    func filteredTaskResult(_ inputResult: ORKTaskResult) -> ORKTaskResult {
         // create a mutated copy of the results that includes only the subtask results
         let subtaskResult: ORKTaskResult = inputResult.copy() as! ORKTaskResult
         if let stepResults = subtaskResult.results as? [ORKStepResult] {
@@ -84,13 +84,13 @@ public class SBASubtaskStep: ORKStep {
         return subtaskResult;
     }
     
-    func filteredStepResults(inputResults: [ORKStepResult]) -> (subtaskResults:[ORKStepResult], remainingResults:[ORKStepResult]) {
+    func filteredStepResults(_ inputResults: [ORKStepResult]) -> (subtaskResults:[ORKStepResult], remainingResults:[ORKStepResult]) {
         let prefix = "\(self.subtask.identifier)."
         let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
         var subtaskResults:[ORKStepResult] = []
         var remainingResults:[ORKStepResult] = []
         for stepResult in inputResults {
-            if (predicate.evaluateWithObject(stepResult)) {
+            if (predicate.evaluate(with: stepResult)) {
                 stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
                 if let stepResults = stepResult.results {
                     for result in stepResults {
@@ -108,26 +108,26 @@ public class SBASubtaskStep: ORKStep {
         return (subtaskResults, remainingResults)
     }
     
-    func stepWithIdentifier(identifier: String) -> ORKStep? {
+    func step(withIdentifier identifier: String) -> ORKStep? {
         guard let stepIdentifier = substepIdentifier(identifier),
-            let step = self.subtask.stepWithIdentifier?(stepIdentifier) else {
+            let step = self.subtask.step?(stepIdentifier) else {
                 return nil
         }
         return replacementStep(step)
     }
     
-    func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    func stepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         guard let step = step else {
-            return replacementStep(self.subtask.stepAfterStep(nil, withResult: result))
+            return replacementStep(self.subtask.step(after: nil, with: result))
         }
         guard let substepIdentifier = substepIdentifier(step.identifier) else {
             return nil
         }
         
         // get the next step
-        let substep = step.copyWithIdentifier(substepIdentifier)
+        let substep = step.copy(withIdentifier: substepIdentifier)
         let replacementTaskResult = filteredTaskResult(result)
-        let nextStep = self.subtask.stepAfterStep(substep, withResult: replacementTaskResult)
+        let nextStep = self.subtask.step(after: substep, with: replacementTaskResult)
         
         // If the task result was mutated, need to add any changes back into the result set
         if let thisStepResult = replacementTaskResult.stepResultForStepIdentifier(substepIdentifier),
@@ -139,24 +139,24 @@ public class SBASubtaskStep: ORKStep {
         return replacementStep(nextStep)
     }
     
-    override public var requestedPermissions: ORKPermissionMask {
+    override open var requestedPermissions: ORKPermissionMask {
         if let permissions = self.subtask.requestedPermissions {
             return permissions
         }
-        return .None
+        return .none
     }
     
     // MARK: NSCopy
     
-    public func copyWithTask(subtask: protocol <ORKTask, NSCopying, NSSecureCoding>) -> SBASubtaskStep {
+    open func copyWithTask(_ subtask: ORKTask & NSCopying & NSSecureCoding) -> SBASubtaskStep {
         let copy = self.copyWithZone(nil) as! SBASubtaskStep
         copy._subtask = subtask
         return copy
     }
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBASubtaskStep
-        copy._subtask = _subtask.copyWithZone(zone) as! protocol <ORKTask, NSCopying, NSSecureCoding>
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBASubtaskStep
+        copy._subtask = _subtask.copyWithZone(zone) as! ORKTask & NSCopying & NSSecureCoding
         copy.taskIdentifier = taskIdentifier
         copy.schemaIdentifier = schemaIdentifier
         return copy
@@ -165,22 +165,22 @@ public class SBASubtaskStep: ORKStep {
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        _subtask = aDecoder.decodeObjectForKey("subtask") as! protocol <ORKTask, NSCopying, NSSecureCoding>
-        taskIdentifier = aDecoder.decodeObjectForKey("taskIdentifier") as? String
-        schemaIdentifier = aDecoder.decodeObjectForKey("schemaIdentifier") as? String
+        _subtask = aDecoder.decodeObject(forKey: "subtask") as! ORKTask & NSCopying & NSSecureCoding
+        taskIdentifier = aDecoder.decodeObject(forKey: "taskIdentifier") as? String
+        schemaIdentifier = aDecoder.decodeObject(forKey: "schemaIdentifier") as? String
         super.init(coder: aDecoder);
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(_subtask, forKey: "subtask")
-        aCoder.encodeObject(taskIdentifier, forKey: "taskIdentifier")
-        aCoder.encodeObject(schemaIdentifier, forKey: "schemaIdentifier")
+    override open func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(_subtask, forKey: "subtask")
+        aCoder.encode(taskIdentifier, forKey: "taskIdentifier")
+        aCoder.encode(schemaIdentifier, forKey: "schemaIdentifier")
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBASubtaskStep else { return false }
         return super.isEqual(object) &&
             _subtask.isEqual(object._subtask) &&
@@ -188,7 +188,7 @@ public class SBASubtaskStep: ORKStep {
             (self.schemaIdentifier == object.schemaIdentifier)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.taskIdentifier) ^
             SBAObjectHash(self.schemaIdentifier) ^

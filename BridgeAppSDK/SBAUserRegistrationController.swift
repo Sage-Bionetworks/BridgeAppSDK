@@ -58,30 +58,30 @@ extension SBAUserRegistrationController {
     }
     
     public var gender: String? {
-        guard let result = self.result?.resultForIdentifier(SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult else { return nil }
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult else { return nil }
         return result.choiceAnswers?.first as? String
     }
     
-    public var birthdate: NSDate? {
-        guard let result = self.result?.resultForIdentifier(SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
+    public var birthdate: Date? {
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer
     }
     
-    func textAnswer(field: SBAProfileInfoOption) -> String? {
-        guard let result = self.result?.resultForIdentifier(field.rawValue) as? ORKTextQuestionResult else { return nil }
+    func textAnswer(_ field: SBAProfileInfoOption) -> String? {
+        guard let result = self.result?.result(forIdentifier: field.rawValue) as? ORKTextQuestionResult else { return nil }
         return result.textAnswer
     }
     
     // MARK: Error handling
 
-    func handleFailedValidation(reason: String? = nil) {
+    func handleFailedValidation(_ reason: String? = nil) {
         let message = reason ?? failedValidationMessage
         self.hideLoadingView({ [weak self] in
             self?.showAlertWithOk(self?.failedRegistrationTitle, message: message, actionHandler: nil)
             })
     }
     
-    func handleFailedRegistration(error: NSError) {
+    func handleFailedRegistration(_ error: NSError) {
         let message = error.localizedBridgeErrorMessage
         handleFailedValidation(message)
     }

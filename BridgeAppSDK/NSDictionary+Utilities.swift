@@ -40,14 +40,14 @@ extension NSDictionary {
                 return nil
         }
         let bundleName = self["resourceBundle"] as? String
-        let bundle = (bundleName != nil) ? NSBundle(identifier: bundleName!) : nil
+        let bundle = (bundleName != nil) ? Bundle(identifier: bundleName!) : nil
         guard let json = SBAResourceFinder.sharedResourceFinder.jsonNamed(resourceName, bundle: bundle) else {
             return nil
         }
         guard let classType = self["classType"] as? String else {
             return json
         }
-        return SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(json as [NSObject : AnyObject], classType: classType)
+        return SBAClassTypeMap.shared().object(withDictionaryRepresentation: json as [AnyHashable: Any], classType: classType)
     }
     
 }

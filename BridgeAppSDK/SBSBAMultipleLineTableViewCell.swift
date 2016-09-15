@@ -33,24 +33,24 @@
 
 import UIKit
 
-public class SBAMultipleLineTableViewCell: UITableViewCell {
+open class SBAMultipleLineTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var subtitleLabel: UILabel?
     
     override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         // Add title
-        let titleLabel = UILabel(frame: CGRectZero)
-        titleLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        titleLabel.textAlignment = .Center
+        let titleLabel = UILabel(frame: CGRect.zero)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
+        titleLabel.textAlignment = .center
         self.titleLabel = titleLabel
         self.contentView.addSubview(titleLabel)
         
         // Add subtitle
-        let subtitleLabel = UILabel(frame: CGRectZero)
-        subtitleLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        let subtitleLabel = UILabel(frame: CGRect.zero)
+        subtitleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
         subtitleLabel.numberOfLines = 0
         self.subtitleLabel = subtitleLabel
         self.contentView.addSubview(subtitleLabel)
@@ -59,14 +59,14 @@ public class SBAMultipleLineTableViewCell: UITableViewCell {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let titleTop = NSLayoutConstraint(item: titleLabel, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .TopMargin, multiplier: 1.0, constant: 0)
-        let titleLeft = NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: .Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1.0, constant: 0)
-        let titleRight = NSLayoutConstraint(item: titleLabel, attribute: .Trailing, relatedBy: .Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1.0, constant: 0)
+        let titleTop = NSLayoutConstraint(item: titleLabel, attribute: .top, relatedBy: .equal, toItem: self.contentView, attribute: .topMargin, multiplier: 1.0, constant: 0)
+        let titleLeft = NSLayoutConstraint(item: titleLabel, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let titleRight = NSLayoutConstraint(item: titleLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
 
-        let subtitleTop = NSLayoutConstraint(item: subtitleLabel, attribute: .Top, relatedBy: .Equal, toItem: titleLabel, attribute: .Bottom, multiplier: 1.0, constant: 8)
-        let subtitleLeft = NSLayoutConstraint(item: subtitleLabel, attribute: .Leading, relatedBy: .Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1.0, constant: 0)
-        let subtitleRight = NSLayoutConstraint(item: subtitleLabel, attribute: .Trailing, relatedBy: .Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1.0, constant: 0)
-        let subtitleBottom = NSLayoutConstraint(item: subtitleLabel, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .BottomMargin, multiplier: 1.0, constant: 0)
+        let subtitleTop = NSLayoutConstraint(item: subtitleLabel, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 8)
+        let subtitleLeft = NSLayoutConstraint(item: subtitleLabel, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let subtitleRight = NSLayoutConstraint(item: subtitleLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
+        let subtitleBottom = NSLayoutConstraint(item: subtitleLabel, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottomMargin, multiplier: 1.0, constant: 0)
         
         self.contentView.addConstraints([titleTop, titleLeft, titleRight, subtitleTop, subtitleLeft, subtitleRight, subtitleBottom])
     }

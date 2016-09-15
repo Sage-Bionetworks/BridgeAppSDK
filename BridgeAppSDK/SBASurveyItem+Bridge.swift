@@ -76,7 +76,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }
@@ -165,12 +165,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         if (multiConstraints.allowOtherValue) {
             var other = Localization.localizedString("SBA_OTHER")
             if (multiConstraints.enumeration.filter({ ($0 as! SBBSurveyQuestionOption).hasUppercaseLetters }).count == 0) {
-                other = other.lowercaseString
+                other = other.lowercased()
             }
             return items + [NSString(string: other)]
         }
         
-        return items
+        return items as [AnyObject]?
     }
     
     public var options: [String : AnyObject]? {
@@ -215,7 +215,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }
@@ -237,7 +237,7 @@ extension SBBSurveyRule {
         return SBBSurveyRuleOperator(rawValue: self.`operator`)
     }
     
-    func rulePredicate(subtype: SBASurveyItemType.FormSubtype) -> NSPredicate? {
+    func rulePredicate(_ subtype: SBASurveyItemType.FormSubtype) -> NSPredicate? {
         // Exit early if operator or value are unsupported
         guard let op = self.ruleOperator, let value = self.value as? NSObject
         else { return nil }
@@ -285,7 +285,7 @@ extension SBBSurveyQuestionOption: SBATextChoice {
         return self.detail;
     }
     
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> {
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
         return self.value
     }
     
@@ -294,14 +294,14 @@ extension SBBSurveyQuestionOption: SBATextChoice {
     }
     
     public var hasUppercaseLetters: Bool {
-        return self.label.lowercaseString != self.label
+        return self.label.lowercased() != self.label
     }
 }
 
 public protocol sbb_DateRange : SBADateRange {
     var allowFutureValue: Bool { get }
-    var earliestValue: NSDate! { get }
-    var latestValue: NSDate! { get }
+    var earliestValue: Date! { get }
+    var latestValue: Date! { get }
 }
 
 extension SBBDateConstraints : sbb_DateRange {
@@ -311,12 +311,12 @@ extension SBBDateTimeConstraints : sbb_DateRange {
 }
 
 extension sbb_DateRange  {
-    public var minDate: NSDate? {
+    public var minDate: Date? {
         return self.earliestValue
     }
-    public var maxDate: NSDate? {
+    public var maxDate: Date? {
         if ((!self.allowFutureValue) && (self.latestValue == nil)) {
-            return NSDate() // Return NOW if future dates are not allowed
+            return Date() // Return NOW if future dates are not allowed
         }
         else {
             return self.latestValue
@@ -342,11 +342,11 @@ extension SBBDecimalConstraints: sbb_NumberRange {
 extension SBBDurationConstraints: sbb_NumberRange {
     
     public var minValue: NSNumber! {
-        return NSNumber(integer: 0)
+        return NSNumber(value: 0 as Int)
     }
     
     public var maxValue: NSNumber!  {
-        return NSNumber(integer: NSIntegerMax)
+        return NSNumber(value: NSIntegerMax as Int)
     }
     
     public var step: NSNumber! {
@@ -368,7 +368,7 @@ extension sbb_NumberRange {
     
     public var stepInterval: Int {
         guard (self.step != nil) else { return 1 }
-        return self.step.integerValue
+        return self.step.intValue
     }
     
     public var unitLabel: String? {

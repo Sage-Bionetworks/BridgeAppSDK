@@ -35,18 +35,18 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
-public class SBAUser: NSObject, SBAUserWrapper {
+open class SBAUser: NSObject, SBAUserWrapper {
     
-    let lockQueue = dispatch_queue_create("org.sagebase.UserLockQueue", nil)
+    let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue", attributes: [])
 
-    public func logout() {
-        dispatch_async(lockQueue) {
+    open func logout() {
+        lockQueue.async {
             self.resetUserDefaults()
             self.resetKeychain()
         }
     }
     
-    lazy public var bridgeInfo: SBABridgeInfo? = {
+    lazy open var bridgeInfo: SBABridgeInfo? = {
        return SBAAppDelegate.sharedDelegate?.bridgeInfo
     }()
     
@@ -64,80 +64,80 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kGenderKey = "gender"
     let kBirthdateKey = "birthdate"
     
-    public var sessionToken: String? {
+    open var sessionToken: String? {
         get {
             return getKeychainObject(kSessionTokenKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kSessionTokenKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kSessionTokenKey)
         }
     }
     
-    public var name: String? {
+    open var name: String? {
         get {
             return getKeychainObject(kNamePropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kNamePropertyKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kNamePropertyKey)
         }
     }
     
-    public var email: String? {
+    open var email: String? {
         get {
             return getKeychainObject(kEmailPropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kEmailPropertyKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kEmailPropertyKey)
         }
     }
     
-    public var externalId: String? {
+    open var externalId: String? {
         get {
             return getKeychainObject(kExternalIdKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kExternalIdKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kExternalIdKey)
         }
     }
     
-    public var password: String? {
+    open var password: String? {
         get {
             return getKeychainObject(kPasswordPropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kPasswordPropertyKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kPasswordPropertyKey)
         }
     }
 
-    public var gender: String? {
+    open var gender: String? {
         get {
             return getKeychainObject(kGenderKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kGenderKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kGenderKey)
         }
     }
     
-    public var birthdate: NSDate?  {
+    open var birthdate: Date?  {
         get {
-            return getKeychainObject(kBirthdateKey) as? NSDate
+            return getKeychainObject(kBirthdateKey) as? Date
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kBirthdateKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kBirthdateKey)
         }
     }
     
-    public var subpopulationGuid: String? {
+    open var subpopulationGuid: String? {
         get {
             // if no subpopulationGuid found for user, return study identifier instead
             return getKeychainObject(kSubpopulationGuidKey) as? String ?? gSBBAppStudy
         }
         set (newValue) {
-            setKeychainObject(newValue, key: kSubpopulationGuidKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kSubpopulationGuidKey)
         }
     }
 
-    public var consentSignature: SBAConsentSignatureWrapper? {
+    open var consentSignature: SBAConsentSignatureWrapper? {
         get {
             return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignature
         }
@@ -153,11 +153,11 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    private func getKeychainObject(key: String) -> NSSecureCoding? {
+    fileprivate func getKeychainObject(_ key: String) -> NSSecureCoding? {
         var obj: NSSecureCoding?
-        dispatch_sync(lockQueue) {
+        lockQueue.sync {
             var err: NSError?
-            obj = ORKKeychainWrapper.objectForKey(key, error: &err)
+            obj = ORKKeychainWrapper.object(forKey: key, error: &err)
             if let error = err {
                 print("Error accessing keychain: \(error)")
             }
@@ -165,14 +165,14 @@ public class SBAUser: NSObject, SBAUserWrapper {
         return obj
     }
     
-    private func setKeychainObject(object: NSSecureCoding?, key: String) {
-        dispatch_async(lockQueue) {
+    fileprivate func setKeychainObject(_ object: NSSecureCoding?, key: String) {
+        lockQueue.async {
             do {
                 if let obj = object {
                     try ORKKeychainWrapper.setObject(obj, forKey: key)
                 }
                 else {
-                    try ORKKeychainWrapper.removeObjectForKey(key)
+                    try ORKKeychainWrapper.removeObject(forKey: key)
                 }
             }
             catch let error as NSError {
@@ -181,7 +181,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    private func resetKeychain() {
+    fileprivate func resetKeychain() {
         do {
             try ORKKeychainWrapper.resetKeychain()
         }
@@ -203,7 +203,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
     
-    public var hasRegistered: Bool {
+    open var hasRegistered: Bool {
         get {
             return syncBoolForKey(kRegisteredKey)
         }
@@ -212,7 +212,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var loginVerified: Bool {
+    open var loginVerified: Bool {
         get {
             return syncBoolForKey(kLoginVerifiedKey)
         }
@@ -221,7 +221,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var consentVerified: Bool {
+    open var consentVerified: Bool {
         get {
             return syncBoolForKey(kConsentVerifiedKey)
         }
@@ -230,7 +230,7 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var dataSharingEnabled: Bool {
+    open var dataSharingEnabled: Bool {
         get {
             return syncBoolForKey(kDataSharingEnabledKey)
         }
@@ -239,88 +239,88 @@ public class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var dataSharingScope: SBBUserDataSharingScope {
+    open var dataSharingScope: SBBUserDataSharingScope {
         get {
-            return SBBUserDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .None
+            return SBBUserDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .none
         }
         set (newValue) {
             syncSetInteger(newValue.rawValue, forKey: kDataSharingScopeKey)
         }
     }
 
-    public var dataGroups: [String]? {
+    open var dataGroups: [String]? {
         get {
             return syncObjectForKey(kSavedDataGroupsKey) as? [String]
         }
         set (newValue) {
-            syncSetObject(newValue, forKey: kSavedDataGroupsKey)
+            syncSetObject(newValue as AnyObject?, forKey: kSavedDataGroupsKey)
         }
     }
     
-    public var onboardingStepIdentifier: String? {
+    open var onboardingStepIdentifier: String? {
         get {
             return syncObjectForKey(kOnboardingStepIdentifier) as? String
         }
         set (newValue) {
-            syncSetObject(newValue, forKey: kOnboardingStepIdentifier)
+            syncSetObject(newValue as AnyObject?, forKey: kOnboardingStepIdentifier)
         }
     }
     
-    func userDefaults() -> NSUserDefaults {
-        return NSUserDefaults.standardUserDefaults()
+    func userDefaults() -> UserDefaults {
+        return UserDefaults.standard
     }
     
-    private func syncBoolForKey(key: String) -> Bool {
+    fileprivate func syncBoolForKey(_ key: String) -> Bool {
         var ret: Bool = false
-        dispatch_sync(lockQueue) {
-            ret = self.userDefaults().boolForKey(key)
+        lockQueue.sync {
+            ret = self.userDefaults().bool(forKey: key)
         }
         return ret
     }
     
-    private func syncSetBool(value:Bool, forKey key: String) {
-        dispatch_async(lockQueue) {
-            self.userDefaults().setBool(value, forKey: key)
+    fileprivate func syncSetBool(_ value:Bool, forKey key: String) {
+        lockQueue.async {
+            self.userDefaults().set(value, forKey: key)
         }
     }
     
-    private func syncIntForKey(key: String) -> Int {
+    fileprivate func syncIntForKey(_ key: String) -> Int {
         var ret: Int = 0
-        dispatch_sync(lockQueue) {
-            ret = self.userDefaults().integerForKey(key)
+        lockQueue.sync {
+            ret = self.userDefaults().integer(forKey: key)
         }
         return ret
     }
     
-    private func syncSetInteger(value:Int, forKey key: String) {
-        dispatch_async(lockQueue) {
-            self.userDefaults().setInteger(value, forKey: key)
+    fileprivate func syncSetInteger(_ value:Int, forKey key: String) {
+        lockQueue.async {
+            self.userDefaults().set(value, forKey: key)
         }
     }
     
-    private func syncObjectForKey(key: String) -> AnyObject? {
+    fileprivate func syncObjectForKey(_ key: String) -> AnyObject? {
         var ret: AnyObject?
-        dispatch_sync(lockQueue) {
-            ret = self.userDefaults().objectForKey(key)
+        lockQueue.sync {
+            ret = self.userDefaults().object(forKey: key) as AnyObject?
         }
         return ret
     }
     
-    private func syncSetObject(value:AnyObject?, forKey key: String) {
-        dispatch_async(lockQueue) {
+    fileprivate func syncSetObject(_ value:AnyObject?, forKey key: String) {
+        lockQueue.async {
             if let obj = value {
-                self.userDefaults().setObject(obj, forKey: key)
+                self.userDefaults().set(obj, forKey: key)
             }
             else {
-                self.userDefaults().removeObjectForKey(key)
+                self.userDefaults().removeObject(forKey: key)
             }
         }
     }
     
-    private func resetUserDefaults() {
+    fileprivate func resetUserDefaults() {
         let store = userDefaults()
         for (key, _) in store.dictionaryRepresentation() {
-            store.removeObjectForKey(key)
+            store.removeObject(forKey: key)
         }
         store.synchronize()
     }
@@ -329,19 +329,19 @@ public class SBAUser: NSObject, SBAUserWrapper {
 
 extension SBAUser : SBBAuthManagerDelegateProtocol {
     
-    public func sessionTokenForAuthManager(authManager: SBBAuthManagerProtocol) -> String? {
+    public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
         return self.sessionToken
     }
     
-    public func authManager(authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
+    public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
         self.sessionToken = sessionToken
     }
     
-    public func emailForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
+    public func email(forAuthManager authManager: SBBAuthManagerProtocol?) -> String? {
         return self.email
     }
     
-    public func passwordForAuthManager(authManager: SBBAuthManagerProtocol?) -> String? {
+    public func password(forAuthManager authManager: SBBAuthManagerProtocol?) -> String? {
         return self.password
     }
     

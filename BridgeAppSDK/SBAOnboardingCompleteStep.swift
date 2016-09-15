@@ -33,7 +33,7 @@
 
 import ResearchKit
 
-public class SBAOnboardingCompleteStep: ORKTableStep {
+open class SBAOnboardingCompleteStep: ORKTableStep {
     
     override public init(identifier: String) {
         super.init(identifier: identifier)
@@ -47,27 +47,27 @@ public class SBAOnboardingCompleteStep: ORKTableStep {
         self.init(identifier: inputItem.identifier)
         self.title = inputItem.stepTitle
         self.detailText = inputItem.stepText
-        self.optional = false
+        self.isOptional = false
     }
     
-    let reuseIdentifier = "OnboardingComplete"
+    public let reuseIdentifier = "OnboardingComplete"
     
-    public var detailText: String? {
+    open var detailText: String? {
         get { return self.items?.first as? String }
-        set(newValue) { self.items = (newValue == nil) ? nil : [newValue!] }
+        set(newValue) { self.items = (newValue == nil) ? nil : [newValue as! NSCopying & NSSecureCoding & NSObjectProtocol] }
     }
     
-    override public func reuseIdentifierForRowAtIndexPath(indexPath: NSIndexPath) -> String {
+    override open func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
         return reuseIdentifier
     }
 
-    override public func registerCellsForTableView(tableView: UITableView) {
-        let bundle = NSBundle(forClass: SBAOnboardingCompleteTableViewCell.classForCoder())
+    override open func registerCells(for tableView: UITableView) {
+        let bundle = Bundle(for: SBAOnboardingCompleteTableViewCell.classForCoder())
         let nib = UINib(nibName: "SBAOnboardingCompleteTableViewCell", bundle: bundle)
-        tableView.registerNib(nib, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(nib, forCellReuseIdentifier: reuseIdentifier)
     }
     
-    override public func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, tableView: UITableView) {
+    override open func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
         guard let onboardingCell = cell as? SBAOnboardingCompleteTableViewCell else { return }
         onboardingCell.appNameLabel.text = Localization.localizedAppName
         onboardingCell.descriptionLabel.text = self.detailText

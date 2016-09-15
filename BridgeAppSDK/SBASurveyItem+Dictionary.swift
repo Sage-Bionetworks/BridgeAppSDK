@@ -38,7 +38,7 @@ extension NSDictionary: SBAStepTransformer {
     
     // Because an NSDictionary could be used to create both an SBASurveyItem *and* an SBAActiveTask
     // need to look to see which is the more likely form to result in a valid result.
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         if (self.surveyItemType.isNilType()) {
             guard let subtask = self.transformToTask(factory: factory, isLastStep: isLastStep) else {
                 return nil
@@ -108,8 +108,8 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
             return SBAURLLearnMoreAction(identifier: html)
         }
         // Look for a dictionary that matches the learnMoreActionKey
-        if let learnMoreAction = self["learnMoreAction"] as? [NSObject : AnyObject] {
-            return SBAClassTypeMap.sharedMap().objectWithDictionaryRepresentation(learnMoreAction) as? SBALearnMoreAction
+        if let learnMoreAction = self["learnMoreAction"] as? [AnyHashable: Any] {
+            return SBAClassTypeMap.shared().object(withDictionaryRepresentation: learnMoreAction) as? SBALearnMoreAction
         }
         return nil
     }
@@ -148,7 +148,7 @@ extension NSDictionary: SBAFormStepSurveyItem {
             if case .boolean = subtype,
                 let expectedAnswer = self.expectedAnswer as? Bool
             {
-                return NSPredicate(format: "answer = %@", expectedAnswer)
+                return NSPredicate(format: "answer = %@", expectedAnswer as CVarArg)
             }
             else if case .singleChoice = subtype,
                 let expectedAnswer = self.expectedAnswer

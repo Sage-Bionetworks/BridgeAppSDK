@@ -72,7 +72,7 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     /**
      * Birthdate is stored in the keychain
      */
-    var birthdate: NSDate? { get set }
+    var birthdate: Date? { get set }
 
     /**
      * Subpopulation GUID is used for tracking by certain apps. Stored in the keychain.

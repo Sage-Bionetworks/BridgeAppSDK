@@ -39,7 +39,7 @@ public protocol SBAConsentSignatureWrapper : class {
     /**
      * Age verification stored with consent
      */
-    var signatureBirthdate: NSDate? { get set }
+    var signatureBirthdate: Date? { get set }
     
     /**
      * Name used to sign consent
@@ -54,17 +54,17 @@ public protocol SBAConsentSignatureWrapper : class {
     /**
      * Date of consent
      */
-    var signatureDate: NSDate? { get set }
+    var signatureDate: Date? { get set }
 }
 
 @objc
-public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecureCoding, NSCopying {
+open class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecureCoding, NSCopying {
     
-    public let identifier: String
-    public var signatureBirthdate: NSDate?
-    public var signatureName: String?
-    public var signatureImage: UIImage?
-    public var signatureDate: NSDate?
+    open let identifier: String
+    open var signatureBirthdate: Date?
+    open var signatureName: String?
+    open var signatureImage: UIImage?
+    open var signatureDate: Date?
     
     public required init(identifier: String) {
         self.identifier = identifier
@@ -81,41 +81,41 @@ public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecure
         }
         self.signatureImage = signature.signatureImage
         if let dateString = signature.signatureDate, let dateFormat = signature.signatureDateFormatString {
-            let formatter = NSDateFormatter()
+            let formatter = DateFormatter()
             formatter.dateFormat = dateFormat
-            self.signatureDate = formatter.dateFromString(dateString)
+            self.signatureDate = formatter.date(from: dateString)
         }
     }
     
     // MARK: NSSecureCoding
     
-    public static func supportsSecureCoding() -> Bool {
+    public static var supportsSecureCoding : Bool {
         return true
     }
     
     public required convenience init?(coder aDecoder: NSCoder) {
-        guard let identifier = aDecoder.decodeObjectForKey("identifier") as? String else {
+        guard let identifier = aDecoder.decodeObject(forKey: "identifier") as? String else {
             return nil
         }
         self.init(identifier: identifier)
-        self.signatureBirthdate = aDecoder.decodeObjectForKey("signatureBirthdate") as? NSDate
-        self.signatureName = aDecoder.decodeObjectForKey("signatureName") as? String
-        self.signatureImage = aDecoder.decodeObjectForKey("signatureImage") as? UIImage
-        self.signatureDate = aDecoder.decodeObjectForKey("signatureDate") as? NSDate
+        self.signatureBirthdate = aDecoder.decodeObject(forKey: "signatureBirthdate") as? Date
+        self.signatureName = aDecoder.decodeObject(forKey: "signatureName") as? String
+        self.signatureImage = aDecoder.decodeObject(forKey: "signatureImage") as? UIImage
+        self.signatureDate = aDecoder.decodeObject(forKey: "signatureDate") as? Date
     }
     
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(self.identifier, forKey: "identifier")
-        aCoder.encodeObject(self.signatureBirthdate, forKey: "signatureBirthdate")
-        aCoder.encodeObject(self.signatureName, forKey: "signatureName")
-        aCoder.encodeObject(self.signatureImage, forKey: "signatureImage")
-        aCoder.encodeObject(self.signatureDate, forKey: "signatureDate")
+    open func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.identifier, forKey: "identifier")
+        aCoder.encode(self.signatureBirthdate, forKey: "signatureBirthdate")
+        aCoder.encode(self.signatureName, forKey: "signatureName")
+        aCoder.encode(self.signatureImage, forKey: "signatureImage")
+        aCoder.encode(self.signatureDate, forKey: "signatureDate")
     }
     
     // MARK: Copying
     
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(identifier: self.identifier)
+    open func copy(with zone: NSZone?) -> Any {
+        let copy = type(of: self).init(identifier: self.identifier)
         copy.signatureBirthdate = self.signatureBirthdate
         copy.signatureName = self.signatureName
         copy.signatureImage = self.signatureImage
@@ -125,7 +125,7 @@ public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecure
     
     // MARK: Equality
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    open override func isEqual(_ object: Any?) -> Bool {
         guard let obj = object as? SBAConsentSignature else {
             return false
         }
@@ -136,7 +136,7 @@ public class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecure
                 SBAObjectEquality(self.signatureDate, obj.signatureDate)
     }
     
-    public override var hash: Int {
+    open override var hash: Int {
         return self.identifier.hash ^
             SBAObjectHash(self.signatureBirthdate) ^
             SBAObjectHash(self.signatureName) ^

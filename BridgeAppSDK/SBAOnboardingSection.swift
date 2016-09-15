@@ -48,9 +48,9 @@ public enum SBAOnboardingSectionBaseType: String {
     
     func ordinal() -> Int {
         let order:[SBAOnboardingSectionBaseType] = SBAOnboardingSectionBaseType.all
-        guard let ret = order.indexOf(self) else {
+        guard let ret = order.index(of: self) else {
             assertionFailure("\(self) ordinal value is unknown")
-            return (order.indexOf(.completion)! - 1)
+            return (order.index(of: .completion)! - 1)
         }
         return ret
     }
@@ -116,7 +116,7 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
 public protocol SBAOnboardingSection {
     var onboardingSectionType: SBAOnboardingSectionType? { get }
     func defaultOnboardingSurveyFactory() -> SBASurveyFactory
-    func dictionaryRepresentation() -> [NSObject : AnyObject]
+    func dictionaryRepresentation() -> [AnyHashable: Any]
 }
 
 extension NSDictionary: SBAOnboardingSection {
@@ -136,7 +136,7 @@ extension NSDictionary: SBAOnboardingSection {
         }
     }
     
-    public func dictionaryRepresentation()  -> [NSObject : AnyObject] {
-        return self as [NSObject : AnyObject]
+    public func dictionaryRepresentation()  -> [AnyHashable: Any] {
+        return self as! [AnyHashable: Any]
     }
 }

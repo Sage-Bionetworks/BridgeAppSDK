@@ -33,7 +33,7 @@
 
 import ResearchKit
 
-public class SBAEmailVerificationStep: SBAInstructionStep {
+open class SBAEmailVerificationStep: SBAInstructionStep {
     // TODO: syoung 06/08/2016 Implement
     
     public override init(identifier: String) {
@@ -46,8 +46,8 @@ public class SBAEmailVerificationStep: SBAInstructionStep {
         commonInit(appInfo)
     }
     
-    func commonInit(appInfoDelegate: SBAAppInfoDelegate?) {
-        let appInfo = appInfoDelegate ?? UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    func commonInit(_ appInfoDelegate: SBAAppInfoDelegate?) {
+        let appInfo = appInfoDelegate ?? UIApplication.shared.delegate as! SBAAppInfoDelegate
         
         if self.title == nil {
             self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
@@ -68,7 +68,7 @@ public class SBAEmailVerificationStep: SBAInstructionStep {
         }
     }
     
-    public override func stepViewControllerClass() -> AnyClass {
+    open override func stepViewControllerClass() -> AnyClass {
         return SBAEmailVerificationStepViewController.classForCoder()
     }
     
@@ -79,10 +79,10 @@ public class SBAEmailVerificationStep: SBAInstructionStep {
     }
 }
 
-public class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserRegistrationController {
+open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserRegistrationController {
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
     // Mark: Navigation overrides - cannot go back and override go forward to register
@@ -108,22 +108,22 @@ public class SBAEmailVerificationStepViewController: SBAInstructionStepViewContr
         super.goForward()
     }
     
-    public override var cancelButtonItem: UIBarButtonItem? {
+    open override var cancelButtonItem: UIBarButtonItem? {
         get { return nil }
         set {}
     }
     
-    public override var backButtonItem: UIBarButtonItem? {
+    open override var backButtonItem: UIBarButtonItem? {
         get { return nil }
         set {}
     }
     
-    override public func goBackward() {
+    override open func goBackward() {
         // Do nothing
     }
     
     // MARK: Failure handling
     
-    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
-    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 }

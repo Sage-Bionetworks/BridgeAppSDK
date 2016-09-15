@@ -34,7 +34,7 @@
 import ResearchKit
 
 public protocol SBATaskTransformable: class {
-    func transformToTask(factory factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>?
+    func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> ORKTask & NSCopying & NSSecureCoding
 }
 
 public protocol SBATaskReference: SBATaskTransformable {
@@ -57,13 +57,13 @@ public protocol SBABridgeTask: class {
 
 public extension SBABridgeTask {
     
-    public func createORKTask(factory: SBASurveyFactory = SBASurveyFactory()) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+    public func createORKTask(_ factory: SBASurveyFactory = SBASurveyFactory()) -> ORKTask & NSCopying & NSSecureCoding {
 
         guard let steps = transformTaskSteps(factory) else { return nil }
         
         let allSteps = addInsertSteps(steps, factory: factory)
 
-        if let subtaskStep = allSteps.first as? SBASubtaskStep where allSteps.count == 1 {
+        if let subtaskStep = allSteps.first as? SBASubtaskStep , allSteps.count == 1 {
             // If there is only 1 step then do not need to wrap subtasks in a subtask step
             return subtaskStep.subtask
         }
@@ -73,7 +73,7 @@ public extension SBABridgeTask {
         }
     }
     
-    func transformTaskSteps(factory: SBASurveyFactory) -> [ORKStep]? {
+    func transformTaskSteps(_ factory: SBASurveyFactory) -> [ORKStep]? {
         let transformableSteps = self.taskSteps
         guard transformableSteps.count > 0 else { return nil }
         
@@ -87,7 +87,7 @@ public extension SBABridgeTask {
                 let task = activeStep.subtask as? SBATaskExtension,
                 let firstStep = task.stepAtIndex(0),
                 let taskTitle = firstStep.title
-                where task.isActiveTask() {
+                , task.isActiveTask() {
                 // If this is an active task AND the title is available, then track it
                 activeStep.title = taskTitle
                 activeSteps.append(activeStep)
@@ -98,10 +98,10 @@ public extension SBABridgeTask {
         // If there should be a progress step added between active tasks, then insert those steps
         if activeSteps.count > 1 {
             let stepTitles = activeSteps.map({ $0.title! })
-            for (idx, activeStep) in activeSteps.enumerate() {
-                if idx + 1 < activeSteps.count, let insertAfter = subtaskSteps.indexOf(activeStep) {
+            for (idx, activeStep) in activeSteps.enumerated() {
+                if idx + 1 < activeSteps.count, let insertAfter = subtaskSteps.index(of: activeStep) {
                     let progressStep = SBAProgressStep(identifier: "progress", stepTitles: stepTitles, index: idx)
-                    subtaskSteps.insert(progressStep, atIndex: insertAfter.advancedBy(1))
+                    subtaskSteps.insert(progressStep, at: insertAfter.advancedBy(1))
                 }
             }
         }
@@ -109,11 +109,11 @@ public extension SBABridgeTask {
         return subtaskSteps
     }
     
-    func addInsertSteps(subtaskSteps: [ORKStep], factory: SBASurveyFactory) -> [ORKStep] {
+    func addInsertSteps(_ subtaskSteps: [ORKStep], factory: SBASurveyFactory) -> [ORKStep] {
         
         // Map the insert steps
         guard let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
-            where insertSteps.count > 0 else {
+            , insertSteps.count > 0 else {
                 return subtaskSteps
         }
         
@@ -128,7 +128,7 @@ public extension SBABridgeTask {
             // Pull out the first step from the ordered task and use that as the intro step
             var mutatableSteps = orderedTask.steps
             introStep = mutatableSteps.removeFirst()
-            let mutatedTask = orderedTask.copyWithSteps(mutatableSteps)
+            let mutatedTask = orderedTask.copy(with: mutatableSteps)
             let mutatedSubtaskStep = subtaskStep.copyWithTask(mutatedTask)
             steps.insert(mutatedSubtaskStep, atIndex: 0)
         }
@@ -139,7 +139,7 @@ public extension SBABridgeTask {
         }
         
         // Insert the steps inside
-        steps.insert(introStep, atIndex: 0)
+        steps.insert(introStep, at: 0)
         steps.insertContentsOf(insertSteps, at: 1)
         
         return steps

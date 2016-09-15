@@ -33,24 +33,24 @@
 
 import ResearchKit
 
-public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
+open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
     
     /**
     * For cases where this type of step is created as a placeholder for a custom step.
     */
-    public var customTypeIdentifier: String?
+    open var customTypeIdentifier: String?
     
     /**
      * Pointer to the next step to show after this one. If nil, then the next step
      * is determined by the navigation rules setup by SBANavigableOrderedTask.
      */
-    public var nextStepIdentifier: String?
+    open var nextStepIdentifier: String?
     
     /**
      * HTML Content for the "learn more" for this step
      */
-    @available(*, deprecated, message="use learnMoreAction: instead")
-    public var learnMoreHTMLContent: String? {
+    @available(*, deprecated, message: "use learnMoreAction: instead")
+    open var learnMoreHTMLContent: String? {
         guard let learnMore = self.learnMoreAction?.identifier else {
             return nil
         }
@@ -60,23 +60,23 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
     /**
     * Indicates whether or not this step should use the completion step animation.
     */
-    public var isCompletionStep: Bool = false
+    open var isCompletionStep: Bool = false
     
     /**
      * The learn more action for this step
      */
-    public var learnMoreAction: SBALearnMoreAction?
+    open var learnMoreAction: SBALearnMoreAction?
     
     /**
      * The text to display for the continue button
      */
-    public var continueButtonText: String?
+    open var continueButtonText: String?
     
     // Allow the detail text include formatting for the text of the continue button.
-    override public var detailText: String? {
+    override open var detailText: String? {
         get {
             let detail = super.detailText
-            guard let detailFormat = detail where detailFormat.containsString("%@"),
+            guard let detailFormat = detail , detailFormat.containsString("%@"),
                 let continueText = continueButtonText
             else {
                 return detail
@@ -115,7 +115,7 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
         }
     }
     
-    public override func stepViewControllerClass() -> AnyClass {
+    open override func stepViewControllerClass() -> AnyClass {
         // If this is a completion step, then use ORKCompletionStepViewController 
         // unless this is class has an image, in which case ORKCompletionStepViewController
         // will not display that image so use the super class implementation.
@@ -129,8 +129,8 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
     
     // MARK: NSCopy
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         guard let step = copy as? SBAInstructionStep else { return copy }
         step.nextStepIdentifier = self.nextStepIdentifier
         step.learnMoreAction = self.learnMoreAction
@@ -143,23 +143,23 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.nextStepIdentifier = aDecoder.decodeObjectForKey("nextStepIdentifier") as? String
-        self.learnMoreAction = aDecoder.decodeObjectForKey("learnMoreAction") as? SBALearnMoreAction
-        self.customTypeIdentifier = aDecoder.decodeObjectForKey("customTypeIdentifier") as? String
-        self.isCompletionStep = aDecoder.decodeBoolForKey("isCompletionStep")
+        self.nextStepIdentifier = aDecoder.decodeObject(forKey: "nextStepIdentifier") as? String
+        self.learnMoreAction = aDecoder.decodeObject(forKey: "learnMoreAction") as? SBALearnMoreAction
+        self.customTypeIdentifier = aDecoder.decodeObject(forKey: "customTypeIdentifier") as? String
+        self.isCompletionStep = aDecoder.decodeBool(forKey: "isCompletionStep")
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.nextStepIdentifier, forKey: "nextStepIdentifier")
-        aCoder.encodeObject(self.learnMoreAction, forKey: "learnMoreAction")
-        aCoder.encodeObject(self.customTypeIdentifier, forKey: "customTypeIdentifier")
-        aCoder.encodeBool(self.isCompletionStep, forKey: "isCompletionStep")
+    override open func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.nextStepIdentifier, forKey: "nextStepIdentifier")
+        aCoder.encode(self.learnMoreAction, forKey: "learnMoreAction")
+        aCoder.encode(self.customTypeIdentifier, forKey: "customTypeIdentifier")
+        aCoder.encode(self.isCompletionStep, forKey: "isCompletionStep")
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBAInstructionStep else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(self.nextStepIdentifier, object.nextStepIdentifier) &&
@@ -168,7 +168,7 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
             (self.isCompletionStep == object.isCompletionStep)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.nextStepIdentifier) ^
             SBAObjectHash(learnMoreAction) ^
@@ -177,13 +177,13 @@ public class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SB
     }
 }
 
-public class SBAInstructionStepViewController: ORKInstructionStepViewController {
+open class SBAInstructionStepViewController: ORKInstructionStepViewController {
     
     internal var sbaIntructionStep: SBAInstructionStep? {
         return self.step as? SBAInstructionStep
     }
     
-    override public var continueButtonTitle: String? {
+    override open var continueButtonTitle: String? {
         get {
             return sbaIntructionStep?.continueButtonText ?? super.continueButtonTitle
         }
@@ -193,7 +193,7 @@ public class SBAInstructionStepViewController: ORKInstructionStepViewController 
         }
     }
     
-    override public var learnMoreButtonTitle: String? {
+    override open var learnMoreButtonTitle: String? {
         get {
             return sbaIntructionStep?.learnMoreAction?.learnMoreButtonText ?? super.learnMoreButtonTitle
         }

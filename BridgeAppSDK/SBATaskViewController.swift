@@ -34,10 +34,10 @@
 import UIKit
 
 protocol SBATaskViewControllerStrongReference: class, NSSecureCoding {
-    func attachTaskViewController(taskViewController: SBATaskViewController)
+    func attachTaskViewController(_ taskViewController: SBATaskViewController)
 }
 
-public class SBATaskViewController: ORKTaskViewController {
+open class SBATaskViewController: ORKTaskViewController {
     
     /**
      * A strongly held reference to a delegate or result source that is used by the
@@ -50,33 +50,33 @@ public class SBATaskViewController: ORKTaskViewController {
     /**
      Pointer to the guid for tracking this task via `SBBScheduledActivity`
      */
-    public var scheduledActivityGUID: String?
+    open var scheduledActivityGUID: String?
     
     /**
      Date indicating when the task was finished (verse when the completion handler will fire)
      */
-    public var finishedOn: NSDate? {
+    open var finishedOn: Date? {
         return _finishedOn
     }
-    private var _finishedOn: NSDate?
+    fileprivate var _finishedOn: Date?
     
-    public override var outputDirectory: NSURL? {
+    open override var outputDirectory: URL? {
         get {
             if let superDirectory = super.outputDirectory {
                 return superDirectory
             }
             
-            let paths = NSSearchPathForDirectoriesInDomains(.ApplicationSupportDirectory, .UserDomainMask, true)
+            let paths = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)
             let path = (paths.last! as NSString).stringByAppendingPathComponent(self.taskRunUUID.UUIDString)
-            if !NSFileManager.defaultManager().fileExistsAtPath(path) {
+            if !FileManager.defaultManager().fileExistsAtPath(path) {
                 do {
-                    try NSFileManager.defaultManager().createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: [ NSFileProtectionKey : NSFileProtectionCompleteUntilFirstUserAuthentication ])
+                    try FileManager.defaultManager().createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: [ FileAttributeKey.protectionKey : FileProtectionType.completeUntilFirstUserAuthentication ])
                 } catch let error as NSError {
                     print ("Error creating file: \(error)")
                 }
             }
             
-            let outputDirectory = NSURL(fileURLWithPath: path, isDirectory: true)
+            let outputDirectory = URL(fileURLWithPath: path, isDirectory: true)
             super.outputDirectory = outputDirectory
             
             return outputDirectory
@@ -86,7 +86,7 @@ public class SBATaskViewController: ORKTaskViewController {
         }
     }
     
-    public override func stepViewControllerWillAppear(stepViewController: ORKStepViewController) {
+    open override func stepViewControllerWillAppear(_ stepViewController: ORKStepViewController) {
         super.stepViewControllerWillAppear(stepViewController)
         guard let step = stepViewController.step else { return }
         
@@ -98,7 +98,7 @@ public class SBATaskViewController: ORKTaskViewController {
         }()
 
         if isCompletionStep {
-            _finishedOn = NSDate()
+            _finishedOn = Date()
             stepViewController.view.tintColor = UIColor.greenTintColor()
         }
         else if step is ORKAudioStep {
@@ -108,11 +108,11 @@ public class SBATaskViewController: ORKTaskViewController {
 
     // MARK: Initializers
     
-    public override init(task: ORKTask?, taskRunUUID: NSUUID?) {
-        super.init(task: task, taskRunUUID: taskRunUUID)
+    public override init(task: ORKTask?, taskRun taskRunUUID: UUID?) {
+        super.init(task: task, taskRun: taskRunUUID)
     }
     
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -120,14 +120,14 @@ public class SBATaskViewController: ORKTaskViewController {
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.scheduledActivityGUID = aDecoder.decodeObjectForKey("scheduledActivityGUID") as? String
-        self.strongReference = aDecoder.decodeObjectForKey("strongReference") as? SBATaskViewControllerStrongReference
+        self.scheduledActivityGUID = aDecoder.decodeObject(forKey: "scheduledActivityGUID") as? String
+        self.strongReference = aDecoder.decodeObject(forKey: "strongReference") as? SBATaskViewControllerStrongReference
         self.strongReference?.attachTaskViewController(self)
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.scheduledActivityGUID, forKey: "scheduledActivityGUID")
-        aCoder.encodeObject(self.strongReference, forKey: "strongReference")
+    open override func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.scheduledActivityGUID, forKey: "scheduledActivityGUID")
+        aCoder.encode(self.strongReference, forKey: "strongReference")
     }
 }

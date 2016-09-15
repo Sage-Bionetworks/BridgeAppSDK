@@ -33,83 +33,83 @@
 
 import UIKit
 
-public class SBAResourceFinder: NSObject {
+open class SBAResourceFinder: NSObject {
     
     static let sharedResourceFinder = SBAResourceFinder()
     
     func sharedResourceDelegate() -> SBABridgeAppSDKDelegate? {
-        return UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate
+        return UIApplication.shared.delegate as? SBABridgeAppSDKDelegate
     }
     
-    func pathForResource(resourceNamed: String, ofType: String) -> String? {
+    func pathForResource(_ resourceNamed: String, ofType: String) -> String? {
         if let resourceDelegate = self.sharedResourceDelegate(),
-            let path = resourceDelegate.pathForResource(resourceNamed, ofType: ofType) {
+            let path = resourceDelegate.path(forResource: resourceNamed, ofType: ofType) {
                 return path
         }
-        else if let path = NSBundle.mainBundle().pathForResource(resourceNamed, ofType: ofType) {
+        else if let path = Bundle.main.path(forResource: resourceNamed, ofType: ofType) {
             return path
         }
-        else if let path = NSBundle(forClass: self.classForCoder).pathForResource(resourceNamed, ofType: ofType) {
+        else if let path = Bundle(for: self.classForCoder).path(forResource: resourceNamed, ofType: ofType) {
             return path
         }
         return nil
     }
     
-    public func imageNamed(named: String) -> UIImage? {
+    open func imageNamed(_ named: String) -> UIImage? {
         if let resourceDelegate = self.sharedResourceDelegate(),
-            let image = UIImage(named: named, inBundle: resourceDelegate.resourceBundle(), compatibleWithTraitCollection: nil) {
+            let image = UIImage(named: named, in: resourceDelegate.resourceBundle(), compatibleWith: nil) {
             return image
         }
         else if let image = UIImage(named: named) {
             return image
         }
-        else if let image = UIImage(named: named, inBundle: NSBundle(forClass: self.classForCoder), compatibleWithTraitCollection: nil) {
+        else if let image = UIImage(named: named, in: Bundle(for: self.classForCoder), compatibleWith: nil) {
             return image
         }
         return nil;
     }
     
-    func dataNamed(resourceNamed: String, ofType: String) -> NSData? {
+    func dataNamed(_ resourceNamed: String, ofType: String) -> Data? {
         return dataNamed(resourceNamed, ofType: ofType, bundle: nil)
     }
     
-    func dataNamed(resourceNamed: String, ofType: String, bundle: NSBundle?) -> NSData? {
-        if let path = bundle?.pathForResource(resourceNamed, ofType: ofType) ??
+    func dataNamed(_ resourceNamed: String, ofType: String, bundle: Bundle?) -> Data? {
+        if let path = bundle?.path(forResource: resourceNamed, ofType: ofType) ??
             self.pathForResource(resourceNamed, ofType: ofType) {
-            return NSData(contentsOfFile: path)
+            return (try? Data(contentsOf: URL(fileURLWithPath: path)))
         }
         return nil
     }
     
-    public func htmlNamed(resourceNamed: String) -> String? {
+    open func htmlNamed(_ resourceNamed: String) -> String? {
         if let data = self.dataNamed(resourceNamed, ofType: "html"),
-            let html = String(data: data, encoding: NSUTF8StringEncoding) {
+            let html = String(data: data, encoding: String.Encoding.utf8) {
             return importHTML(html)
         }
         return nil
     }
     
-    func importHTML(input: String) -> String {
+    func importHTML(_ input: String) -> String {
         
         // setup string
         var html = input
-        func search(str: String, _ range: Range<String.Index>?) -> Range<String.Index>? {
-            return html.rangeOfString(str, options: .CaseInsensitiveSearch, range: range, locale: nil)
+        func search(_ str: String, _ range: Range<String.Index>?) -> Range<String.Index>? {
+            return html.range(of: str, options: .caseInsensitive, range: range, locale: nil)
         }
         
         // search for <import href="resourceName.html" /> and replace with contents of resource file
         var keepGoing = true
         while keepGoing {
             keepGoing = false
-            if let startRange = search("<import", html.startIndex..<html.endIndex),
-                let endRange = search("/>", startRange.endIndex..<html.endIndex),
-                let hrefRange = search("href", startRange.endIndex..<endRange.endIndex),
-                let fileStartRange = search("\"", hrefRange.endIndex..<endRange.endIndex),
-                let fileEndRange = search(".html\"", fileStartRange.endIndex..<endRange.endIndex) {
-                let resourceName = html.substringWithRange(fileStartRange.endIndex..<fileEndRange.startIndex)
+            if let startRange = search("<import", nil),
+                let endRange = search("/>", startRange.upperBound..<html.endIndex),
+                let hrefRange = search("href", startRange.upperBound..<endRange.upperBound),
+                let fileStartRange = search("\"", hrefRange.upperBound..<endRange.upperBound),
+                let fileEndRange = search(".html\"", fileStartRange.upperBound..<endRange.upperBound) {
+                let resourceName = html.substring(with: fileStartRange.upperBound..<fileEndRange.lowerBound)
                 if let importText = htmlNamed(resourceName) {
                     keepGoing = true
-                    html.replaceRange(startRange.startIndex..<endRange.endIndex, with: importText)
+                    html.replaceSubrange(startRange.lowerBound..<endRange.upperBound, with: importText)
                 }
             }
         }
@@ -117,14 +117,14 @@ public class SBAResourceFinder: NSObject {
         return html
     }
     
-    func jsonNamed(resourceNamed: String) -> NSDictionary? {
+    func jsonNamed(_ resourceNamed: String) -> NSDictionary? {
         return jsonNamed(resourceNamed, bundle: nil)
     }
     
-    func jsonNamed(resourceNamed: String, bundle: NSBundle?) -> NSDictionary? {
+    func jsonNamed(_ resourceNamed: String, bundle: Bundle?) -> NSDictionary? {
         do {
             if let data = self.dataNamed(resourceNamed, ofType: "json", bundle: bundle) {
-                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
                 return json as? NSDictionary
             }
         }
@@ -136,7 +136,7 @@ public class SBAResourceFinder: NSObject {
         return nil
     }
     
-    public func plistNamed(resourceNamed: String) -> NSDictionary? {
+    open func plistNamed(_ resourceNamed: String) -> NSDictionary? {
         if let path = self.pathForResource(resourceNamed, ofType: "plist"),
             let dictionary = NSDictionary(contentsOfFile: path) {
                 return dictionary
@@ -144,18 +144,18 @@ public class SBAResourceFinder: NSObject {
         return nil
     }
     
-    public func urlNamed(resourceNamed: String, withExtension: String) -> NSURL? {
+    open func urlNamed(_ resourceNamed: String, withExtension: String) -> URL? {
         if let resourceDelegate = self.sharedResourceDelegate(),
-            let url = resourceDelegate.resourceBundle().URLForResource(resourceNamed, withExtension: withExtension)
-            where url.checkResourceIsReachableAndReturnError(nil) {
+            let url = resourceDelegate.resourceBundle().url(forResource: resourceNamed, withExtension: withExtension)
+            , (url as NSURL).checkResourceIsReachableAndReturnError(nil) {
                 return url
         }
-        else if let url = NSBundle.mainBundle().URLForResource(resourceNamed, withExtension: withExtension)
-            where url.checkResourceIsReachableAndReturnError(nil) {
+        else if let url = Bundle.main.url(forResource: resourceNamed, withExtension: withExtension)
+            , (url as NSURL).checkResourceIsReachableAndReturnError(nil) {
             return url
         }
-        else if let url = NSBundle(forClass: self.classForCoder).URLForResource(resourceNamed, withExtension: withExtension)
-            where url.checkResourceIsReachableAndReturnError(nil) {
+        else if let url = Bundle(for: self.classForCoder).url(forResource: resourceNamed, withExtension: withExtension)
+            , (url as NSURL).checkResourceIsReachableAndReturnError(nil) {
                 return url
         }
         return nil;

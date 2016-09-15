@@ -33,9 +33,9 @@
 
 import ResearchKit
 
-public class SBAConsentDocumentFactory: SBASurveyFactory {
+open class SBAConsentDocumentFactory: SBASurveyFactory {
     
-    lazy public var consentDocument: ORKConsentDocument = {
+    lazy open var consentDocument: ORKConsentDocument = {
         
         // Setup the consent document
         let consentDocument = ORKConsentDocument()
@@ -73,7 +73,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
         self.mapSteps(dictionary)
     }
     
-    override public func createSurveyStepWithCustomType(inputItem: SBASurveyItem) -> ORKStep? {
+    override open func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
         guard let subtype = inputItem.surveyItemType.consentSubtype() else {
             return super.createSurveyStepWithCustomType(inputItem)
         }
@@ -103,7 +103,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
             
         case .review:
             if let consentReview = inputItem as? SBAConsentReviewOptions
-                where consentReview.usesDeprecatedOnboarding {
+                , consentReview.usesDeprecatedOnboarding {
                 // If this uses the deprecated onboarding (consent review defined by ORKConsentReviewStep)
                 // then return that object type.
                 let signature = self.consentDocument.signatures?.first
@@ -111,7 +111,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
                 signature?.requiresSignatureImage = consentReview.requiresSignature
                 return ORKConsentReviewStep(identifier: inputItem.identifier,
                                             signature: signature,
-                                            inDocument: self.consentDocument)
+                                            in: self.consentDocument)
             }
             else {
                 let review = inputItem as! SBAFormStepSurveyItem
@@ -124,7 +124,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
     /**
      * Return visual consent step
      */
-    public func visualConsentStep() -> ORKVisualConsentStep {
+    open func visualConsentStep() -> ORKVisualConsentStep {
         return self.steps?.findObject({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
             ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, document: self.consentDocument)
     }
@@ -132,7 +132,7 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
     /**
     * Return subtask step with only the steps required for reconsent
     */
-    public func reconsentStep() -> SBASubtaskStep {
+    open func reconsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
         let steps = self.steps?.filter({ !($0 is SBARegistrationStep) && !($0 is ORKRegistrationStep) })
         let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
@@ -142,13 +142,13 @@ public class SBAConsentDocumentFactory: SBASurveyFactory {
     /**
     * Return subtask step with only the steps required for initial registration
     */
-    public func registrationConsentStep() -> SBASubtaskStep {
+    open func registrationConsentStep() -> SBASubtaskStep {
         // Strip out the reconsent steps
         let steps = self.steps?.filter({ (step) -> Bool in
             // If this is a step that conforms to the custom step protocol and the custom step type is 
             // a reconsent subtype, then this is not to be included in the registration steps
             if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier
-                where customType.hasPrefix("reconsent") {
+                , customType.hasPrefix("reconsent") {
                 return false
             }
             return true

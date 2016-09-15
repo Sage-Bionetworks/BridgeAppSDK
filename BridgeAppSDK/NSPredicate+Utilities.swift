@@ -35,11 +35,11 @@ import Foundation
 
 public extension NSPredicate {
     
-    public convenience init(day: NSDate, dateKey: String) {
+    public convenience init(day: Date, dateKey: String) {
         self.init(date: day, dateKey: dateKey, numberOfDays: 1)
     }
     
-    public convenience init(date: NSDate, dateKey: String, numberOfDays: Int) {
+    public convenience init(date: Date, dateKey: String, numberOfDays: Int) {
         let start = date.startOfDay()
         let end = start.dateByAddingNumberOfDays(numberOfDays)
         self.init(format: "%K <> nil AND %K >= %@ AND %K < %@", dateKey, dateKey, start, dateKey, end)

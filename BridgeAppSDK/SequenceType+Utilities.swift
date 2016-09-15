@@ -33,14 +33,14 @@
 
 import Foundation
 
-extension SequenceType {
+extension Sequence {
     
     /**
     Returns an `Array` containing the results of mapping and filtered `transform`
     over `self`.
     */
-    @warn_unused_result
-    public func mapAndFilter<T>(@noescape transform: (Self.Generator.Element) throws -> T?) rethrows -> [T] {
+    
+    public func mapAndFilter<T>(_ transform: (Self.Iterator.Element) throws -> T?) rethrows -> [T] {
         var result = [T]()
         for element in self {
             if let t = try transform(element) {
@@ -50,8 +50,8 @@ extension SequenceType {
         return result
     }
     
-    @warn_unused_result
-    public func findObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+    
+    public func findObject(_ transform: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         for element in self {
             if try transform(element) {
                 return element
@@ -60,8 +60,8 @@ extension SequenceType {
         return nil
     }
     
-    @warn_unused_result
-    public func nextObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+    
+    public func nextObject(_ transform: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         var found = false
         for element in self {
             if found {
@@ -72,12 +72,12 @@ extension SequenceType {
         return nil
     }
     
-    @warn_unused_result
-    public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
+    
+    public func object(withIdentifier identifier: String) -> Self.Iterator.Element? {
         for element in self {
             if let obj = element as? NSObject,
-                let id = obj.valueForKey("identifier") as? String
-                where (id == identifier) {
+                let id = obj.value(forKey: "identifier") as? String
+                , (id == identifier) {
                 return element
             }
         }

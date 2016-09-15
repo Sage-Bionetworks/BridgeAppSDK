@@ -70,9 +70,9 @@ extension ORKPredefinedTaskHandOption {
     init(name: String?) {
         let name = name ?? "both"
         switch name {
-        case "right"    : self = .Right
-        case "left"     : self = .Left
-        default         : self = .Both
+        case "right"    : self = .right
+        case "left"     : self = .left
+        default         : self = .both
         }
     }
 }
@@ -85,12 +85,12 @@ extension ORKTremorActiveTaskOption {
         }
         let rawValue: UInt = excludes.map({ (exclude) -> ORKTremorActiveTaskOption in
             switch exclude {
-            case "inLap"            : return .ExcludeHandInLap
-            case "shoulderHeight"   : return .ExcludeHandAtShoulderHeight
-            case "elbowBent"        : return .ExcludeHandAtShoulderHeightElbowBent
-            case "touchNose"        : return .ExcludeHandToNose
-            case "queenWave"        : return .ExcludeQueenWave
-            default                 : return .None
+            case "inLap"            : return .excludeHandInLap
+            case "shoulderHeight"   : return .excludeHandAtShoulderHeight
+            case "elbowBent"        : return .excludeHandAtShoulderHeightElbowBent
+            case "touchNose"        : return .excludeHandToNose
+            case "queenWave"        : return .excludeQueenWave
+            default                 : return .none
             }
         }).reduce(0) { (raw, option) -> UInt in
             return option.rawValue | raw
@@ -103,8 +103,8 @@ extension ORKMoodSurveyFrequency {
     init(name: String?) {
         let name = name ?? "daily"
         switch name {
-        case "weekly"   : self = .Weekly
-        default         : self = .Daily
+        case "weekly"   : self = .weekly
+        default         : self = .daily
         }
     }
 }
@@ -120,7 +120,7 @@ public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
 
 extension SBAActiveTask {
     
-    func createDefaultORKActiveTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask? {
+    func createDefaultORKActiveTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask? {
         
         let predefinedExclusions = self.predefinedExclusions ?? options
         
@@ -155,9 +155,9 @@ extension SBAActiveTask {
         return task
     }
     
-    func taskWithSkipAction(task: ORKOrderedTask) -> ORKOrderedTask {
+    func taskWithSkipAction(_ task: ORKOrderedTask) -> ORKOrderedTask {
         
-        guard task.dynamicType === ORKOrderedTask.self else {
+        guard type(of: task) === ORKOrderedTask.self else {
             assertionFailure("Handling of an optional task is not implemented for any class other than ORKOrderedTask")
             return task
         }
@@ -182,13 +182,13 @@ extension SBAActiveTask {
         replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
         var steps: [ORKStep] = task.steps
         steps.removeFirst()
-        steps.insert(replaceStep, atIndex: 0)
+        steps.insert(replaceStep, at: 0)
         
         // Return a navigable ordered task
         return SBANavigableOrderedTask(identifier: task.identifier, steps: steps)
     }
     
-    func mapLocalizedSteps(task: ORKOrderedTask) {
+    func mapLocalizedSteps(_ task: ORKOrderedTask) {
         // Map the title, text and detail from the localizedSteps to their matching step from the
         // base factory method defined
         if let items = self.localizedSteps {
@@ -215,23 +215,23 @@ extension SBAActiveTask {
         }
     }
     
-    func tappingTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
-        let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
+    func tappingTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+        let duration: TimeInterval = taskOptions?["duration"] as? TimeInterval ?? 10.0
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
-        return ORKOrderedTask.twoFingerTappingIntervalTaskWithIdentifier(
-            self.schemaIdentifier,
+        return ORKOrderedTask.twoFingerTappingIntervalTask(
+            withIdentifier: self.schemaIdentifier,
             intendedUseDescription: self.intendedUseDescription,
             duration: duration,
             handOptions: handOptions,
             options: options)
     }
     
-    func memoryTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+    func memoryTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
         let initialSpan: Int = taskOptions?["initialSpan"] as? Int ?? 3
         let minimumSpan: Int = taskOptions?["minimumSpan"] as? Int ?? 2
         let maximumSpan: Int = taskOptions?["maximumSpan"] as? Int ?? 15
-        let playSpeed: NSTimeInterval = taskOptions?["playSpeed"] as? NSTimeInterval ?? 1.0
+        let playSpeed: TimeInterval = taskOptions?["playSpeed"] as? TimeInterval ?? 1.0
         let maxTests: Int = taskOptions?["maxTests"] as? Int ?? 5
         let maxConsecutiveFailures: Int = taskOptions?["maxConsecutiveFailures"] as? Int ?? 3
         var customTargetImage: UIImage? = nil
@@ -241,7 +241,7 @@ extension SBAActiveTask {
         let customTargetPluralName: String? = taskOptions?["customTargetPluralName"] as? String
         let requireReversal: Bool = taskOptions?["requireReversal"] as? Bool ?? false
         
-        return ORKOrderedTask.spatialSpanMemoryTaskWithIdentifier(self.schemaIdentifier,
+        return ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: self.schemaIdentifier,
                                                                   intendedUseDescription: self.intendedUseDescription,
                                                                   initialSpan: initialSpan,
                                                                   minimumSpan: minimumSpan,
@@ -255,14 +255,14 @@ extension SBAActiveTask {
                                                                   options: options)
     }
     
-    func voiceTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+    func voiceTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
         let speechInstruction: String? = taskOptions?["speechInstruction"] as? String
         let shortSpeechInstruction: String? = taskOptions?["shortSpeechInstruction"] as? String
-        let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
+        let duration: TimeInterval = taskOptions?["duration"] as? TimeInterval ?? 10.0
         let recordingSettings: [String: AnyObject]? = taskOptions?["recordingSettings"] as? [String: AnyObject]
         
-        return ORKOrderedTask.audioTaskWithIdentifier(self.schemaIdentifier,
+        return ORKOrderedTask.audioTask(withIdentifier: self.schemaIdentifier,
             intendedUseDescription: self.intendedUseDescription,
             speechInstruction: speechInstruction,
             shortSpeechInstruction: shortSpeechInstruction,
@@ -272,26 +272,26 @@ extension SBAActiveTask {
             options: options)
     }
     
-    func walkingTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+    func walkingTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
         // The walking activity is assumed to be walking back and forth rather than trying to walk down a long hallway.
-        let walkDuration: NSTimeInterval = taskOptions?["walkDuration"] as? NSTimeInterval ?? 30.0
-        let restDuration: NSTimeInterval = taskOptions?["restDuration"] as? NSTimeInterval ?? 30.0
+        let walkDuration: TimeInterval = taskOptions?["walkDuration"] as? TimeInterval ?? 30.0
+        let restDuration: TimeInterval = taskOptions?["restDuration"] as? TimeInterval ?? 30.0
         
-        return ORKOrderedTask.walkBackAndForthTaskWithIdentifier(self.schemaIdentifier,
+        return ORKOrderedTask.walkBackAndForthTask(withIdentifier: self.schemaIdentifier,
                                                                  intendedUseDescription: self.intendedUseDescription,
                                                                  walkDuration: walkDuration,
                                                                  restDuration: restDuration,
                                                                  options: options)
     }
     
-    func tremorTask(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+    func tremorTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
-        let duration: NSTimeInterval = taskOptions?["duration"] as? NSTimeInterval ?? 10.0
+        let duration: TimeInterval = taskOptions?["duration"] as? TimeInterval ?? 10.0
         let handOptions = ORKPredefinedTaskHandOption(name: taskOptions?["handOptions"] as? String)
         let excludeOptions = ORKTremorActiveTaskOption(excludes: taskOptions?["excludePostions"] as? [String])
         
-        return ORKOrderedTask.tremorTestTaskWithIdentifier(self.schemaIdentifier,
+        return ORKOrderedTask.tremorTest(withIdentifier: self.schemaIdentifier,
                                                            intendedUseDescription: self.intendedUseDescription,
                                                            activeStepDuration: duration,
                                                            activeTaskOptions: excludeOptions,
@@ -299,12 +299,12 @@ extension SBAActiveTask {
                                                            options: options)
     }
     
-    func moodSurvey(options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+    func moodSurvey(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
         let frequency = ORKMoodSurveyFrequency(name: taskOptions?["frequency"] as? String)
         let customQuestionText = taskOptions?["customQuestionText"] as? String
         
-        return ORKOrderedTask.moodSurveyWithIdentifier(self.schemaIdentifier,
+        return ORKOrderedTask.moodSurvey(withIdentifier: self.schemaIdentifier,
                                                        intendedUseDescription: self.intendedUseDescription,
                                                        frequency: frequency,
                                                        customQuestionText: customQuestionText,

@@ -50,12 +50,12 @@ public enum SBAScheduledActivitySection {
 }
 
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
-    func reloadTable(scheduledActivityManager: SBAScheduledActivityManager)
+    func reloadTable(_ scheduledActivityManager: SBAScheduledActivityManager)
 }
 
-public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
+open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
     
-    public weak var delegate: SBAScheduledActivityManagerDelegate?
+    open weak var delegate: SBAScheduledActivityManagerDelegate?
     
     public override init() {
         super.init()
@@ -73,42 +73,42 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         self.daysBehind = self.bridgeInfo.cacheDaysBehind
     }
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    public var bridgeInfo: SBABridgeInfo {
+    open var bridgeInfo: SBABridgeInfo {
         return self.sharedBridgeInfo
     }
     
-    public var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
-    public var activities: [SBBScheduledActivity] = []
+    open var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
+    open var activities: [SBBScheduledActivity] = []
     
-    public var daysAhead: Int!
-    public var daysBehind: Int!
+    open var daysAhead: Int!
+    open var daysBehind: Int!
     
-    private var reloading: Bool = false
-    public func reloadData() {
+    fileprivate var reloading: Bool = false
+    open func reloadData() {
         
         // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from
         // this tab to another tab.
         if (reloading) { return }
         reloading = true
         
-        SBABridgeManager.fetchChangesToScheduledActivities(activities, daysAhead: daysAhead, daysBehind: daysBehind) {
+        SBABridgeManager.fetchChanges(toScheduledActivities: activities, daysAhead: daysAhead, daysBehind: daysBehind) {
             [weak self] (obj, error) in
             // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
             // if not, obj will be nil if error is not nil, so we don't need to check error
             guard let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self?.loadActivities(scheduledActivities)
                 self?.reloading = false
             })
         }
     }
     
-    public func loadActivities(scheduledActivities: [SBBScheduledActivity]) {
+    open func loadActivities(_ scheduledActivities: [SBBScheduledActivity]) {
         
         // schedule notifications
         setupNotificationsForScheduledActivities(scheduledActivities)
@@ -121,14 +121,14 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
         self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluateWithObject(schedule)
+            return bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluate(with: schedule)
         })
         
         // reload table
         self.delegate?.reloadTable(self)
     }
     
-    public func setupNotificationsForScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
+    open func setupNotificationsForScheduledActivities(_ scheduledActivities: [SBBScheduledActivity]) {
         // schedule notifications
         SBANotificationsManager.sharedManager.setupNotificationsForScheduledActivities(scheduledActivities)
     }
@@ -136,26 +136,26 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     // MARK: Data Source Management
     
-    public func numberOfSections() -> Int {
+    open func numberOfSections() -> Int {
         return sections.count
     }
     
-    public func numberOfRowsInSection(section: Int) -> Int {
+    open func numberOfRowsInSection(_ section: Int) -> Int {
         return scheduledActivitiesForSection(section).count
     }
     
-    private func scheduledActivitySectionForTableSection(section: Int) -> SBAScheduledActivitySection {
+    fileprivate func scheduledActivitySectionForTableSection(_ section: Int) -> SBAScheduledActivitySection {
         guard section < sections.count else { return .none }
         return sections[section]
     }
     
-    public func scheduledActivitiesForSection(section: Int) ->[SBBScheduledActivity] {
+    open func scheduledActivitiesForSection(_ section: Int) ->[SBBScheduledActivity] {
         let scheduledActivitySection = scheduledActivitySectionForTableSection(section)
         guard let predicate = filterPredicateForScheduledActivitySection(scheduledActivitySection) else { return [] }
-        return activities.filter({ predicate.evaluateWithObject($0) })
+        return activities.filter({ predicate.evaluate(with: $0) })
     }
     
-    public func sectionTitle(section: Int) -> String? {
+    open func sectionTitle(_ section: Int) -> String? {
         
         // Always return nil for the first section and if there are no rows in the section
         guard scheduledActivitiesForSection(section).count > 0
@@ -180,7 +180,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
     }
     
-    public func filterPredicateForScheduledActivitySection(section: SBAScheduledActivitySection) -> NSPredicate? {
+    open func filterPredicateForScheduledActivitySection(_ section: SBAScheduledActivitySection) -> NSPredicate? {
 
         switch section {
 
@@ -212,28 +212,28 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
     }
     
-    public func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity? {
-        let schedules = scheduledActivitiesForSection(indexPath.section)
-        guard indexPath.row < schedules.count else {
+    open func scheduledActivityAtIndexPath(_ indexPath: IndexPath) -> SBBScheduledActivity? {
+        let schedules = scheduledActivitiesForSection((indexPath as NSIndexPath).section)
+        guard (indexPath as NSIndexPath).row < schedules.count else {
             assertionFailure("Requested row greater than number of rows in section")
             return nil
         }
-        return schedules[indexPath.row]
+        return schedules[(indexPath as NSIndexPath).row]
     }
     
-    public func shouldShowTaskForIndexPath(indexPath: NSIndexPath) -> Bool {
-        guard let schedule = scheduledActivityAtIndexPath(indexPath) where shouldShowTaskForSchedule(schedule)
+    open func shouldShowTaskForIndexPath(_ indexPath: IndexPath) -> Bool {
+        guard let schedule = scheduledActivityAtIndexPath(indexPath) , shouldShowTaskForSchedule(schedule)
         else {
             return false
         }
         return true
     }
     
-    public func isScheduleAvailable(schedule: SBBScheduledActivity) -> Bool {
+    open func isScheduleAvailable(_ schedule: SBBScheduledActivity) -> Bool {
         return schedule.isNow || schedule.isCompleted
     }
     
-    public func messageForUnavailableSchedule(schedule: SBBScheduledActivity) -> String {
+    open func messageForUnavailableSchedule(_ schedule: SBBScheduledActivity) -> String {
         var scheduledTime: String!
         if schedule.isToday {
             scheduledTime = schedule.scheduledTime
@@ -242,12 +242,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             scheduledTime = Localization.localizedString("SBA_ACTIVITY_TOMORROW")
         }
         else {
-            scheduledTime = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .MediumStyle, timeStyle: .NoStyle)
+            scheduledTime = DateFormatter.localizedString(from: schedule.scheduledOn, dateStyle: .medium, timeStyle: .none)
         }
         return Localization.localizedStringWithFormatKey("SBA_ACTIVITY_SCHEDULE_MESSAGE", scheduledTime)
     }
     
-    public func didSelectRowAtIndexPath(indexPath: NSIndexPath) {
+    open func didSelectRowAtIndexPath(_ indexPath: IndexPath) {
         
         // Only if the task was created should something be done.
         guard let schedule = scheduledActivityAtIndexPath(indexPath) else { return }
@@ -271,7 +271,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
 
     // MARK: Task management
     
-    public func scheduledActivityForTaskViewController(taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
+    open func scheduledActivityForTaskViewController(_ taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
         guard let vc = taskViewController as? SBATaskViewController,
             let guid = vc.scheduledActivityGUID
             else {
@@ -280,20 +280,20 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return activities.findObject({ $0.guid == guid })
     }
     
-    public func scheduledActivityForTaskIdentifier(taskIdentifier: String) -> SBBScheduledActivity? {
+    open func scheduledActivityForTaskIdentifier(_ taskIdentifier: String) -> SBBScheduledActivity? {
         return activities.findObject({ $0.taskIdentifier == taskIdentifier })
     }
     
     // MARK: ORKTaskViewControllerDelegate
     
-    public func taskViewController(taskViewController: ORKTaskViewController, hasLearnMoreForStep step: ORKStep) -> Bool {
-        if let learnMoreStep = step as? SBAInstructionStep where learnMoreStep.learnMoreAction != nil {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
+        if let learnMoreStep = step as? SBAInstructionStep , learnMoreStep.learnMoreAction != nil {
             return true
         }
         return false
     }
     
-    public func taskViewController(taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
         guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
             let learnMore = learnMoreStep.learnMoreAction else {
                 return
@@ -301,7 +301,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         learnMore.learnMoreAction(learnMoreStep, taskViewController: taskViewController)
     }
     
-    public func taskViewController(taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
         // If this is a learn more step then set the button title
         if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
@@ -311,16 +311,16 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         
         // If cancel is disabled then hide on all but the first step
         if let step = stepViewController.step
-            where shouldHideCancelForStep(step, taskViewController: taskViewController) {
-            stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .Plain, target: nil, action: nil)
+            , shouldHideCancelForStep(step, taskViewController: taskViewController) {
+            stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         }
     }
     
-    public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
         
-        if reason == ORKTaskViewControllerFinishReason.Completed,
+        if reason == ORKTaskViewControllerFinishReason.completed,
             let schedule = scheduledActivityForTaskViewController(taskViewController)
-            where shouldRecordResult(schedule, taskViewController: taskViewController) {
+            , shouldRecordResult(schedule, taskViewController: taskViewController) {
             
             // Update any data stores associated with this task
             taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
@@ -337,12 +337,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
             taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
         }
         
-        taskViewController.dismissViewControllerAnimated(true) {}
+        taskViewController.dismiss(animated: true) {}
     }
     
     // MARK: Convenience methods
     
-    public final func createTaskViewControllerForSchedule(schedule: SBBScheduledActivity) -> SBATaskViewController? {
+    public final func createTaskViewControllerForSchedule(_ schedule: SBBScheduledActivity) -> SBATaskViewController? {
         let (inTask, inTaskRef) = createTask(schedule)
         guard let task = inTask, let taskRef = inTaskRef else { return nil }
         let taskViewController = instantiateTaskViewController(schedule, task: task, taskRef: taskRef)
@@ -352,11 +352,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
     
     // MARK: Protected subclass methods
 
-    public func shouldHideCancelForStep(step: ORKStep, taskViewController: ORKTaskViewController) -> Bool {
+    open func shouldHideCancelForStep(_ step: ORKStep, taskViewController: ORKTaskViewController) -> Bool {
         
         // Return false if cancel is *not* disabled
         guard let schedule = scheduledActivityForTaskViewController(taskViewController),
-            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) where taskRef.cancelDisabled
+            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) , taskRef.cancelDisabled
         else {
             return false
         }
@@ -368,20 +368,20 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         }
 
         // Otherwise, do not disable the first step IF and ONLY IF there are more than 1 steps.
-        return task.stepCount() == 1 || task.indexOfStep(step) > 0;
+        return task.stepCount() == 1 || task.index(of: step) > 0;
     }
 
-    public func shouldShowTaskForSchedule(schedule: SBBScheduledActivity) -> Bool {
+    open func shouldShowTaskForSchedule(_ schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
         guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) else { return false }
         return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
     }
     
-    public func instantiateTaskViewController(schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
+    open func instantiateTaskViewController(_ schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
         return SBATaskViewController(task: task, taskRunUUID: nil)
     }
     
-    public func createTask(schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
+    open func createTask(_ schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
         let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
         if let surveyTask = task as? SBASurveyTask {
@@ -390,26 +390,26 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return (task, taskRef)
     }
     
-    public func setupTaskViewController(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
+    open func setupTaskViewController(_ taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
         taskViewController.scheduledActivityGUID = schedule.guid
         taskViewController.delegate = self
     }
     
-    public func shouldRecordResult(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+    open func shouldRecordResult(_ schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
         // Subclass can override to provide custom implementation. By default, will return true.
         return true
     }
     
-    public func updateScheduledActivity(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
+    open func updateScheduledActivity(_ schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         
         // Set finish and start timestamps
         schedule.finishedOn = {
             if let sbaTaskViewController = taskViewController as? SBATaskViewController,
                 let finishedOn = sbaTaskViewController.finishedOn {
-                return finishedOn
+                return finishedOn as Date!
             }
             else {
-                return taskViewController.result.endDate ?? NSDate()
+                return taskViewController.result.endDate ?? Date()
             }
             }()
         
@@ -422,7 +422,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         if let navTask = taskViewController.task as? SBANavigableOrderedTask {
             for step in navTask.steps {
                 if let subtaskStep = step as? SBASubtaskStep, let taskId = subtaskStep.taskIdentifier,
-                    let subschedule = scheduledActivityForTaskIdentifier(taskId) where !subschedule.isCompleted {
+                    let subschedule = scheduledActivityForTaskIdentifier(taskId) , !subschedule.isCompleted {
                     // If schedule is found then set its start/stop time and add to list to update
                     subschedule.startedOn = schedule.startedOn
                     subschedule.finishedOn = schedule.finishedOn
@@ -435,18 +435,18 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         sendUpdatedScheduledActivities(scheduledActivities)
     }
     
-    public func sendUpdatedScheduledActivities(scheduledActivities: [SBBScheduledActivity]) {
+    open func sendUpdatedScheduledActivities(_ scheduledActivities: [SBBScheduledActivity]) {
         SBABridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
             self?.reloadData()
         }
     }
     
     // Expose method for building archive to allow for testing and subclass override
-    public func archiveForActivityResult(activityResult: SBAActivityResult) -> SBAActivityArchive? {
+    open func archiveForActivityResult(_ activityResult: SBAActivityResult) -> SBAActivityArchive? {
         if let archive = SBAActivityArchive(result: activityResult,
                                             jsonValidationMapping: jsonValidationMapping(activityResult: activityResult)) {
             do {
-                try archive.completeArchive()
+                try archive.complete()
                 return archive
             }
             catch {}
@@ -454,12 +454,12 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         return nil
     }
     
-    public func jsonValidationMapping(activityResult activityResult: SBAActivityResult) -> [String: NSPredicate]?{
+    open func jsonValidationMapping(activityResult: SBAActivityResult) -> [String: NSPredicate]?{
         return nil
     }
     
     // Expose method for building results to allow for testing and subclass override
-    public func activityResultsForSchedule(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
+    open func activityResultsForSchedule(_ schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
         
         // If no results, return empty array
         guard taskViewController.result.results != nil else { return [] }
@@ -471,21 +471,21 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // based on whether or not the inputDate is greater/less than the comparison date. This way,
         // the split result will have a start date that is >= the overall task start date and an
         // end date that is <= the task end date.
-        func outputDate(inputDate: NSDate?, comparison:NSComparisonResult) -> NSDate {
-            let compareDate = (comparison == .OrderedAscending) ? taskResult.startDate : taskResult.endDate
-            guard let date = inputDate where date.compare(compareDate) == comparison else {
+        func outputDate(_ inputDate: Date?, comparison:ComparisonResult) -> Date {
+            let compareDate = (comparison == .orderedAscending) ? taskResult.startDate : taskResult.endDate
+            guard let date = inputDate , date.compare(compareDate) == comparison else {
                 return compareDate
             }
             return date
         }
 
         // Function for creating each split result
-        func createActivityResult(identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
-            let result = SBAActivityResult(taskIdentifier: identifier, taskRunUUID: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
+        func createActivityResult(_ identifier: String, schedule: SBBScheduledActivity, stepResults: [ORKStepResult]) -> SBAActivityResult {
+            let result = SBAActivityResult(taskIdentifier: identifier, taskRun: taskResult.taskRunUUID, outputDirectory: taskResult.outputDirectory)
             result.results = stepResults
             result.schedule = schedule
-            result.startDate = outputDate(stepResults.first?.startDate, comparison: .OrderedAscending)
-            result.endDate = outputDate(stepResults.last?.endDate, comparison: .OrderedDescending)
+            result.startDate = outputDate(stepResults.first?.startDate, comparison: .orderedAscending)
+            result.endDate = outputDate(stepResults.last?.endDate, comparison: .orderedDescending)
             result.schemaRevision = surveyTask?.schemaRevision ?? bridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision ?? 1
             return result
         }
@@ -554,7 +554,7 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
         // If there are any results that were not filtered into a subgroup then include them at the top level
         if topLevelResults.filter({ $0.hasResults }).count > 0 {
             let topResult = createActivityResult(taskResult.identifier, schedule: schedule, stepResults: topLevelResults)
-            allResults.insert(topResult, atIndex: 0)
+            allResults.insert(topResult, at: 0)
         }
         
         return allResults
@@ -563,11 +563,11 @@ public class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORK
 
 extension ORKTask {
     
-    func updateTrackedDataStores(shouldCommit shouldCommit: Bool) {
+    func updateTrackedDataStores(shouldCommit: Bool) {
         guard let navTask = self as? SBANavigableOrderedTask else { return }
         
         // If this task has a conditional rule then update it
-        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection where collection.dataStore.hasChanges {
+        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection , collection.dataStore.hasChanges {
             if (shouldCommit) {
                 collection.dataStore.commitChanges()
             }

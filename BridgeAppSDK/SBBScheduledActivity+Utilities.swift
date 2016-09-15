@@ -40,7 +40,7 @@ public extension SBBScheduledActivity {
     }
     
     public var isExpired: Bool {
-        return (self.expiresOn != nil) && (NSDate().earlierDate(self.expiresOn) == self.expiresOn)
+        return (self.expiresOn != nil) && ((Date() as NSDate).earlierDate(self.expiresOn) == self.expiresOn)
     }
     
     public var isNow: Bool {
@@ -48,11 +48,11 @@ public extension SBBScheduledActivity {
     }
     
     var isToday: Bool {
-        return SBBScheduledActivity.availableTodayPredicate().evaluateWithObject(self)
+        return SBBScheduledActivity.availableTodayPredicate().evaluate(with: self)
     }
     
     var isTomorrow: Bool {
-        return SBBScheduledActivity.scheduledTomorrowPredicate().evaluateWithObject(self)
+        return SBBScheduledActivity.scheduledTomorrowPredicate().evaluate(with: self)
     }
     
     var scheduledTime: String {
@@ -63,13 +63,13 @@ public extension SBBScheduledActivity {
             return Localization.localizedString("SBA_NOW")
         }
         else {
-            return NSDateFormatter.localizedStringFromDate(scheduledOn, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+            return DateFormatter.localizedString(from: scheduledOn, dateStyle: .none, timeStyle: .short)
         }
     }
     
     var expiresTime: String? {
         if expiresOn == nil { return nil }
-        return NSDateFormatter.localizedStringFromDate(expiresOn, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        return DateFormatter.localizedString(from: expiresOn, dateStyle: .none, timeStyle: .short)
     }
     
     public dynamic var taskIdentifier: String? {

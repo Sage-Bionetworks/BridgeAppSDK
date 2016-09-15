@@ -42,9 +42,9 @@ public enum SBAOnboardingTaskType: String {
     }
 }
 
-public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
+open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
-    public var sections: [SBAOnboardingSection]?
+    open var sections: [SBAOnboardingSection]?
 
     public override init() {
         super.init()
@@ -59,13 +59,13 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
         self.init()
         self.sections = (dictionary["sections"] as? [AnyObject])?.map({ (obj) -> SBAOnboardingSection in
             return obj as! SBAOnboardingSection
-        }).sort({ sortOrder($0, $1) })
+        }).sorted(by: { sortOrder($0, $1) })
     }
     
     /**
      Returns an initialized task view controller for the given task type with this manager as its delegate.
     */
-    public func initializeTaskViewController(onboardingTaskType onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
+    open func initializeTaskViewController(onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
         guard let sections = self.sections else { return nil }
         
         // Get the steps from the sections
@@ -92,7 +92,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
     /**
      Convenience method for getting the section for a given section type.
     */
-    public func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
+    open func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
         return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
     }
     
@@ -102,7 +102,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
      or nil if the steps for that section should not be included for the given task.
      @return    Optional array of `ORKStep`
     */
-    public func steps(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
+    open func steps(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         // Check to see that the steps for this section should be included
         guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
@@ -136,7 +136,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
      original dictionary.
      @return    `true` if left precedes right in order, `false` if same or right precedes left
     */
-    public func sortOrder(lhs: SBAOnboardingSection, _ rhs: SBAOnboardingSection) -> Bool {
+    open func sortOrder(_ lhs: SBAOnboardingSection, _ rhs: SBAOnboardingSection) -> Bool {
         guard let lhsType = lhs.onboardingSectionType, let rhsType = rhs.onboardingSectionType else { return false }
         switch (lhsType, rhsType) {
         case (.base(let lhsValue), .base(let rhsValue)):
@@ -150,7 +150,7 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
      Define the rules for including a given section in a given task type.
      @return    `true` if the `SBAOnboardingSection` should be included for this `SBAOnboardingTaskType`
     */
-    public func shouldInclude(section section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
+    open func shouldInclude(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
             // By default, ONLY Registration and verification should include any custom section
@@ -193,22 +193,22 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
     
     // MARK: SBASharedInfoController
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
 
     
     // MARK: Passcode handling
     
-    public var hasPasscode: Bool {
+    open var hasPasscode: Bool {
         return ORKPasscodeViewController.isPasscodeStoredInKeychain()
     }
     
     // MARK: ORKTaskResultSource
     
-    public func stepResultForStepIdentifier(stepIdentifier: String) -> ORKStepResult? {
+    open func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
         
-        guard let step = _taskViewController?.task?.stepWithIdentifier?(stepIdentifier) else { return nil }
+        guard let step = _taskViewController?.task?.step?(stepIdentifier) else { return nil }
         
         // If this is a registration step with a name field and a currently available 
         // name stored for that field then return that result as a default.
@@ -225,28 +225,28 @@ public class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskRes
     
     // MARK: SBATaskViewControllerStrongReference
     
-    weak private var _taskViewController: SBATaskViewController?
+    weak fileprivate var _taskViewController: SBATaskViewController?
     
-    func attachTaskViewController(taskViewController: SBATaskViewController) {
+    func attachTaskViewController(_ taskViewController: SBATaskViewController) {
         _taskViewController = taskViewController
         taskViewController.defaultResultSource = self
     }
     
     // MARK: NSSecureCoding
     
-    public static func supportsSecureCoding() -> Bool {
+    public static var supportsSecureCoding : Bool {
         return true
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init()
-        guard let encodedSections = aDecoder.decodeObjectForKey("sections") as? [NSDictionary] else { return }
+        guard let encodedSections = aDecoder.decodeObject(forKey: "sections") as? [NSDictionary] else { return }
         self.sections = encodedSections.map({ $0 as SBAOnboardingSection })
     }
     
-    public func encodeWithCoder(aCoder: NSCoder) {
+    open func encode(with aCoder: NSCoder) {
         guard let encodableSections = self.sections?.map({ $0.dictionaryRepresentation() as NSDictionary }) else { return }
-        aCoder.encodeObject(encodableSections, forKey: "sections")
+        aCoder.encode(encodableSections, forKey: "sections")
     }
 
 }

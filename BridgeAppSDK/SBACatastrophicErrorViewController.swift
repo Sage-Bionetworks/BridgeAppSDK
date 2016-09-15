@@ -36,7 +36,7 @@ import UIKit
 class SBACatastrophicErrorViewController: UIViewController, SBASharedInfoController {
 
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
     @IBOutlet weak var logoImageView: UIImageView!
@@ -44,8 +44,8 @@ class SBACatastrophicErrorViewController: UIViewController, SBASharedInfoControl
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var actionButton: UIButton!
     
-    class func instantiateWithMessage(message: String) -> SBACatastrophicErrorViewController? {
-        let storyboard = UIStoryboard(name: "CatastrophicError", bundle: NSBundle(forClass: self.classForCoder()))
+    class func instantiateWithMessage(_ message: String) -> SBACatastrophicErrorViewController? {
+        let storyboard = UIStoryboard(name: "CatastrophicError", bundle: Bundle(for: self.classForCoder()))
         let vc = storyboard.instantiateInitialViewController() as? SBACatastrophicErrorViewController
         vc?.initialMessage = message
         return vc
@@ -62,18 +62,18 @@ class SBACatastrophicErrorViewController: UIViewController, SBASharedInfoControl
         }
     }
     
-    func setupError(message message: String, buttonText: String? = nil, action: ((UIViewController) -> Void)? = nil) {
+    func setupError(message: String, buttonText: String? = nil, action: ((UIViewController) -> Void)? = nil) {
         
         // Update the state of the message label and action button to visible
-        messageLabel.hidden = false
-        actionButton.hidden = false
+        messageLabel.isHidden = false
+        actionButton.isHidden = false
         
         // Set the message
         messageLabel.text = message
         
         // If the button title is nil set to default title
         let buttonTitle = buttonText ?? String.localizedStringWithFormat(Localization.localizedString("SBA_UPDATE_APP_BUTTON"), Localization.localizedAppName)
-        actionButton.setTitle(buttonTitle, forState: .Normal)
+        actionButton.setTitle(buttonTitle, for: UIControlState())
         
         // If the action handler is nil then set to default of opening the app for update
         if action != nil {
@@ -82,15 +82,15 @@ class SBACatastrophicErrorViewController: UIViewController, SBASharedInfoControl
         else {
             actionHandler = {[weak self] _ in
                 guard let url = self?.sharedBridgeInfo.appUpdateURL else { return }
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url as URL)
             }
         }
     }
     
-    private var initialMessage: String?
-    private var actionHandler : ((UIViewController) -> Void)?
+    fileprivate var initialMessage: String?
+    fileprivate var actionHandler : ((UIViewController) -> Void)?
     
-    @IBAction func actionButtonTapped(sender: AnyObject) {
+    @IBAction func actionButtonTapped(_ sender: AnyObject) {
         actionHandler?(self)
     }
 }

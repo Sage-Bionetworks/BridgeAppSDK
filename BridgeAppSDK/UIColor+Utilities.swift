@@ -33,18 +33,18 @@
 
 import UIKit
 
-public class SBAColorInfo : NSObject {
+open class SBAColorInfo : NSObject {
     
     static let defaultColorInfo = SBAColorInfo(name: "ColorInfo")
     
-    private var plist: NSDictionary?
+    fileprivate var plist: NSDictionary?
     
     init(name: String) {
         super.init()
         self.plist = SBAResourceFinder().plistNamed(name)
     }
     
-    func colorForKey(colorKey: String) -> UIColor? {
+    func colorForKey(_ colorKey: String) -> UIColor? {
         guard let colorHex = plist?[colorKey] as? String else {
             return nil
         }
@@ -55,7 +55,7 @@ public class SBAColorInfo : NSObject {
 
 extension UIColor {
     
-    static public func colorForKey(key: String) -> UIColor? {
+    static public func colorForKey(_ key: String) -> UIColor? {
         return SBAColorInfo.defaultColorInfo.colorForKey(key)
     }
     
@@ -80,9 +80,9 @@ extension UIColor {
         var start = hexString.startIndex
         let prefixes = ["#", "0x"]
         for prefix in prefixes {
-            if let range = hexString.rangeOfString(prefix) {
-                if range.startIndex == start {
-                    start = range.endIndex
+            if let range = hexString.range(of: prefix) {
+                if range.lowerBound == start {
+                    start = range.upperBound
                     break
                 }
                 else {
@@ -90,15 +90,15 @@ extension UIColor {
                 }
             }
         }
-        let hexColor = hexString.substringFromIndex(start)
+        let hexColor = hexString.substring(from: start)
         
         // If there aren't 6 characters in the hex color then drop through to return nil
         if hexColor.characters.count == 6 {
-            let scanner = NSScanner(string: hexColor)
+            let scanner = Scanner(string: hexColor)
             var hexNumber: UInt64 = 0
             
             // scan the string into a hex and drop through to nil if unsuccessful
-            if scanner.scanHexLongLong(&hexNumber) {
+            if scanner.scanHexInt64(&hexNumber) {
                 r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
                 g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
                 b = CGFloat((hexNumber & 0x0000ff) >> 0) / 255

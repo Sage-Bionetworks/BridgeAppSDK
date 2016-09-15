@@ -397,7 +397,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
             return (nil, nil, nil, nil)
         }
 
-        guard let reviewStep = pageStep.stepWithIdentifier("review") as? ORKConsentReviewStep else {
+        guard let reviewStep = pageStep.step(withIdentifier: "review") as? ORKConsentReviewStep else {
             XCTAssert(false, "\(pageStep.steps) does not include a review step (required)")
             return (nil, nil, nil, nil)
         }
@@ -408,8 +408,8 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
             XCTAssertFalse(signature.requiresSignatureImage)
         }
         
-        let formStep = pageStep.stepWithIdentifier("name") as? ORKFormStep
-        let signatureStep = pageStep.stepWithIdentifier("signature") as? ORKSignatureStep
+        let formStep = pageStep.step(withIdentifier: "name") as? ORKFormStep
+        let signatureStep = pageStep.step(withIdentifier: "signature") as? ORKSignatureStep
         
         return (pageStep, reviewStep, formStep, signatureStep)
     }

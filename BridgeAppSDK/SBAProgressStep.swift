@@ -33,7 +33,7 @@
 
 import ResearchKit
 
-public class SBAProgressStep: ORKTableStep {
+open class SBAProgressStep: ORKTableStep {
     
     // MARK: Default initializer
     
@@ -41,7 +41,7 @@ public class SBAProgressStep: ORKTableStep {
         let progessIdentifier = "\(identifier).\(stepTitles[index])"
         super.init(identifier: progessIdentifier)
         
-        self.items = stepTitles.enumerate().map({ (idx: Int, title: String) -> SBACheckmarkItem in
+        self.items = stepTitles.enumerated().map({ (idx: Int, title: String) -> SBACheckmarkItem in
             return SBACheckmarkItem(title: title, checked: (idx <= index))
         })
         self.title = Localization.localizedString("SBA_PROGRESS_STEP_TITLE")
@@ -80,29 +80,29 @@ class SBACheckmarkItem: NSObject, NSSecureCoding, NSCopying {
     
     // MARK: NSSecureCoding
     
-    static func supportsSecureCoding() -> Bool {
+    static var supportsSecureCoding : Bool {
         return true
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(self.title, forKey: "title")
-        aCoder.encodeBool(self.checked, forKey: "checked")
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.title, forKey: "title")
+        aCoder.encode(self.checked, forKey: "checked")
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
-        guard let title = aDecoder.decodeObjectForKey("title") as? String else { return nil }
-        self.init(title: title, checked: aDecoder.decodeBoolForKey("checked"))
+        guard let title = aDecoder.decodeObject(forKey: "title") as? String else { return nil }
+        self.init(title: title, checked: aDecoder.decodeBool(forKey: "checked"))
     }
     
     // MARK: NSCopying
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
+    func copy(with zone: NSZone?) -> Any {
         return SBACheckmarkItem(title: self.title, checked: self.checked)
     }
     
     // MARK: Equality
     
-    override func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         guard let cast = object as? SBACheckmarkItem else { return false }
         return (self.title == cast.title) && (self.checked == cast.checked)
     }
