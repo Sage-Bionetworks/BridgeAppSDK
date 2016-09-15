@@ -1436,7 +1436,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // a step size of 37 is not divisible by 100 so is invalid
         guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
-            let _ = formItem.answerFormat as? ORKNumericAnswerFormat else {
+            let _ = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
             XCTAssert(false, "\(step) Not of expected class")
             return
         }

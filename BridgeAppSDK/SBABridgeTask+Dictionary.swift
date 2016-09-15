@@ -51,7 +51,7 @@ extension NSDictionary: SBATaskReference {
             // If the object returned is a dictionary, check validity and return nil if failed
             return nil
         }
-        return bridgeTask.createORKTask(factory: factory)
+        return bridgeTask.createORKTask(factory)
     }
     
     public var cancelDisabled: Bool {

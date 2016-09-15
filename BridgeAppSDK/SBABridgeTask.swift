@@ -57,18 +57,31 @@ public protocol SBABridgeTask: class {
 
 public extension SBABridgeTask {
     
-    public func createORKTask() -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
-        return createORKTask(factory: SBASurveyFactory())
+    public func createORKTask(factory: SBASurveyFactory = SBASurveyFactory()) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+
+        guard let steps = transformTaskSteps(factory) else { return nil }
+        
+        let allSteps = addInsertSteps(steps, factory: factory)
+
+        if let subtaskStep = allSteps.first as? SBASubtaskStep where allSteps.count == 1 {
+            // If there is only 1 step then do not need to wrap subtasks in a subtask step
+            return subtaskStep.subtask
+        }
+        else {
+            // Create a navigable ordered task for the steps
+            return SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: allSteps)
+        }
     }
     
-    public func createORKTask(factory factory: SBASurveyFactory) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
-        let steps = self.taskSteps
-        guard steps.count > 0 else { return nil }
-
-        // Map to ORKSteps
-        var activeSteps:[ORKStep] = []
-        let lastIndex = steps.count - 1
-        var subtaskSteps: [ORKStep] = steps.enumerate().mapAndFilter({ (index, item) in
+    func transformTaskSteps(factory: SBASurveyFactory) -> [ORKStep]? {
+        let transformableSteps = self.taskSteps
+        guard transformableSteps.count > 0 else { return nil }
+        
+        var activeSteps: [ORKStep] = []
+        let lastIndex = transformableSteps.count - 1
+        
+        // Map the step transformers to ORKSteps
+        var subtaskSteps: [ORKStep] = transformableSteps.enumerate().mapAndFilter({ (index, item) in
             let step = item.transformToStep(factory, isLastStep:(lastIndex == index))
             if let activeStep = step as? SBASubtaskStep,
                 let task = activeStep.subtask as? SBATaskExtension,
@@ -77,59 +90,60 @@ public extension SBABridgeTask {
                 where task.isActiveTask() {
                 // If this is an active task AND the title is available, then track it
                 activeStep.title = taskTitle
-                activeSteps += [activeStep]
+                activeSteps.append(activeStep)
             }
             return step
         })
-        guard subtaskSteps.count > 0 else { return nil }
         
-        // Check for progress steps
+        // If there should be a progress step added between active tasks, then insert those steps
         if activeSteps.count > 1 {
             let stepTitles = activeSteps.map({ $0.title! })
-            subtaskSteps = subtaskSteps.map({ (step) -> [ORKStep] in
-                if let idx = activeSteps.indexOf(step) where idx != activeSteps.count - 1 {
+            for (idx, activeStep) in activeSteps.enumerate() {
+                if idx + 1 < activeSteps.count, let insertAfter = subtaskSteps.indexOf(activeStep) {
                     let progressStep = SBAProgressStep(identifier: "progress", stepTitles: stepTitles, index: idx)
-                    return [step, progressStep]
+                    subtaskSteps.insert(progressStep, atIndex: insertAfter.advancedBy(1))
                 }
-                else {
-                    return [step]
-                }
-            }).flatMap({$0})
+            }
         }
         
+        return subtaskSteps
+    }
+    
+    func addInsertSteps(subtaskSteps: [ORKStep], factory: SBASurveyFactory) -> [ORKStep] {
+        
         // Map the insert steps
-        if let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
-            where insertSteps.count > 0 {
-            
-            var introStep: ORKStep!
-            let firstStep = subtaskSteps.removeFirst()
-            if let subtaskStep = firstStep as? SBASubtaskStep,
-                let orderedTask = subtaskStep.subtask as? ORKOrderedTask {
-                // Pull out the first step from the ordered task and use that as the intro step
-                var mutatableSteps = orderedTask.steps
-                introStep = mutatableSteps.removeFirst()
-                let mutatedTask = orderedTask.copyWithSteps(mutatableSteps)
-                let mutatedSubtaskStep = subtaskStep.copyWithTask(mutatedTask)
-                subtaskSteps.insert(mutatedSubtaskStep, atIndex: 0)
-            }
-            else {
-                // If the first step isn't of the subtask step type with an ordered task
-                // then use the first step as the intro step
-                introStep = firstStep
-            }
-            
-            // Insert the steps inside
-            subtaskSteps = [introStep] + insertSteps + subtaskSteps
+        guard let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
+            where insertSteps.count > 0 else {
+                return subtaskSteps
         }
-
-        if let subtaskStep = subtaskSteps.first as? SBASubtaskStep where subtaskSteps.count == 1 {
-            // If there is only 1 step then do not need to wrap subtasks in a subtask step
-            return subtaskStep.subtask
+        
+        var steps = subtaskSteps
+        var introStep: ORKStep!
+        let firstStep = steps.removeFirst()
+        
+        // Look at what kind of step the first step is. If this is a subtask step then 
+        // pull out the first step of the subtask and use that as the intro step
+        if let subtaskStep = firstStep as? SBASubtaskStep,
+            let orderedTask = subtaskStep.subtask as? ORKOrderedTask {
+            // Pull out the first step from the ordered task and use that as the intro step
+            var mutatableSteps = orderedTask.steps
+            introStep = mutatableSteps.removeFirst()
+            let mutatedTask = orderedTask.copyWithSteps(mutatableSteps)
+            let mutatedSubtaskStep = subtaskStep.copyWithTask(mutatedTask)
+            steps.insert(mutatedSubtaskStep, atIndex: 0)
         }
         else {
-            // Create a navigable ordered task for the steps
-            return SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: subtaskSteps)
+            // If the first step isn't of the subtask step type with an ordered task
+            // then use the first step as the intro step
+            introStep = firstStep
         }
+        
+        // Insert the steps inside
+        steps.insert(introStep, atIndex: 0)
+        steps.insertContentsOf(insertSteps, at: 1)
+        
+        return steps
+
     }
     
 }

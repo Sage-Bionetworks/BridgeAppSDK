@@ -336,18 +336,19 @@ extension SBANumberRange {
     
     func createAnswerFormat(subtype: SBASurveyItemType.FormSubtype) -> ORKAnswerFormat {
         
-        if (subtype == .scale),
+        if (subtype == .scale) && self.stepInterval >= 1,
             // If this is a scale subtype then check that the max, min and step interval are valid
-            let min = self.minNumber?.integerValue, let max = self.maxNumber?.integerValue where
-            (max > min) && ((max - min) % self.stepInterval) == 0
+            let min = self.minNumber?.doubleValue, let max = self.maxNumber?.doubleValue where (max > min)
         {
             // ResearchKit will throw an assertion if the number of steps is greater than 13 so 
             // hardcode a check for whether or not to use a continuous scale based on that number
-            if ((max - min) / self.stepInterval) > 13 {
-                return ORKContinuousScaleAnswerFormat(maximumValue: Double(max), minimumValue: Double(min), defaultValue: 0.0, maximumFractionDigits: 0)
+            let interval = Double(self.stepInterval)
+            let numberOfSteps = floor((max - min) / interval)
+            if (numberOfSteps > 13) || (numberOfSteps * interval != (max - min)) {
+                return ORKContinuousScaleAnswerFormat(maximumValue: max, minimumValue: min, defaultValue: 0.0, maximumFractionDigits: 0)
             }
             else {
-                return ORKScaleAnswerFormat(maximumValue: max, minimumValue: min, defaultValue: 0, step: self.stepInterval)
+                return ORKScaleAnswerFormat(maximumValue: self.maxNumber!.integerValue, minimumValue: self.minNumber!.integerValue, defaultValue: 0, step: self.stepInterval)
             }
         }
         
@@ -362,26 +363,31 @@ extension SBANumberRange {
         let formatter = NSDateComponentsFormatter()
         formatter.allowedUnits = timeIntervalUnit
         formatter.unitsStyle = .Full
-        let unit = self.unitLabel ?? "seconds"
+        let unitText = self.unitLabel ?? "seconds"
+        let calendarUnit = self.timeIntervalUnit
         
         // Note: in all cases, the value is returned in English so that the localized 
         // values will result in the same answer in any table. It is up to the researcher to translate.
-        if let max = dateComponents(self.maxNumber), let maxString = formatter.stringFromDateComponents(max) {
-            let maxNum = self.maxNumber!.integerValue
+        if let maxNum = self.maxNumber?.integerValue,
+            let max = dateComponents(maxNum, calendarUnit: calendarUnit),
+            let maxString = formatter.stringFromDateComponents(max) {
+            
             if let minNum = self.minNumber?.integerValue {
                 let maxText = Localization.localizedStringWithFormatKey("SBA_RANGE_%@_AGO", maxString)
                 return ORKTextChoice(text: "\(minNum)-\(maxText)",
-                                     value: "\(minNum)-\(maxNum) \(unit) ago")
+                                     value: "\(minNum)-\(maxNum) \(unitText) ago")
             }
             else {
                 let text = Localization.localizedStringWithFormatKey("SBA_LESS_THAN_%@_AGO", maxString)
-                return ORKTextChoice(text: text, value: "Less than \(maxNum) \(unit) ago")
+                return ORKTextChoice(text: text, value: "Less than \(maxNum) \(unitText) ago")
             }
         }
-        else if let min = dateComponents(self.minNumber), let minString = formatter.stringFromDateComponents(min) {
-            let minNum = self.minNumber!.integerValue
+        else if let minNum = self.minNumber?.integerValue,
+            let min = dateComponents(minNum, calendarUnit: calendarUnit),
+            let minString = formatter.stringFromDateComponents(min) {
+            
             let text = Localization.localizedStringWithFormatKey("SBA_MORE_THAN_%@_AGO", minString)
-            return ORKTextChoice(text: text, value: "More than \(minNum) \(unit) ago")
+            return ORKTextChoice(text: text, value: "More than \(minNum) \(unitText) ago")
         }
         
         assertionFailure("Not a valid range with neither a min or max value defined")
@@ -408,10 +414,9 @@ extension SBANumberRange {
         }
     }
     
-    func dateComponents(num: NSNumber?) -> NSDateComponents? {
-        guard let value = num?.integerValue else { return nil }
+    func dateComponents(value: Int, calendarUnit: NSCalendarUnit) -> NSDateComponents? {
         let components = NSDateComponents()
-        switch(timeIntervalUnit) {
+        switch(calendarUnit) {
         case NSCalendarUnit.Year:
             components.year = value
         case NSCalendarUnit.Month:

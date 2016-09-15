@@ -180,7 +180,9 @@ extension SBAActiveTask {
         replaceStep.detailText = "\(detail)\n\(skipExplanation)\n"
         replaceStep.learnMoreAction = SBASkipAction(identifier: conclusionStep.identifier)
         replaceStep.learnMoreAction!.learnMoreButtonText = Localization.localizedString("SBA_SKIP_ACTIVITY")
-        let steps: [ORKStep] = [replaceStep] + task.steps.dropFirst()
+        var steps: [ORKStep] = task.steps
+        steps.removeFirst()
+        steps.insert(replaceStep, atIndex: 0)
         
         // Return a navigable ordered task
         return SBANavigableOrderedTask(identifier: task.identifier, steps: steps)
@@ -191,7 +193,7 @@ extension SBAActiveTask {
         // base factory method defined
         if let items = self.localizedSteps {
             for item in items {
-                if let step = task.steps.filter({ return $0.identifier == item.identifier }).first {
+                if let step = task.steps.findObject({ return $0.identifier == item.identifier }) {
                     step.title = item.stepTitle ?? step.title
                     step.text = item.stepText ?? step.text
                     if let instructionItem = item as? SBAInstructionStepSurveyItem,

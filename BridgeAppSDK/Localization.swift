@@ -78,12 +78,16 @@ public class Localization: NSObject {
         case 2:
             return String.localizedStringWithFormat(localizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@"), textList[0], textList[1])
         default:
+            var list: [String] = textList
+            let text3 = list.removeLast()
+            let text2 = list.removeLast()
+            let text1 = list.removeLast()
             let endText = String.localizedStringWithFormat(localizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@"),
-                                 textList[textList.count - 3],
-                                 textList[textList.count - 2],
-                                 textList[textList.count - 1])
+                                 text1,
+                                 text2,
+                                 text3)
+            list.append(endText)
             let delimiter = localizedString("SBA_LIST_FORMAT_DELIMITER")
-            let list = Array([textList[0..<(textList.count - 3)], [endText]].flatten())
             return list.joinWithSeparator(delimiter)
         }
     }
@@ -91,31 +95,20 @@ public class Localization: NSObject {
     
     // MARK: Localized App Name
     
-    public static var localizedAppName : String = {
+    public static let localizedAppName : String = {
         let mainBundle = NSBundle.mainBundle()
-        let bundleInfo = mainBundle.infoDictionary
-        let localizedBundleInfo = mainBundle.localizedInfoDictionary
-        
-        func trim(obj: AnyObject?) -> String? {
-            guard let str = obj as? String else { return nil }
-            let result = str.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-            guard result != "" else { return nil }
-            return result
+        if let bundleInfo = mainBundle.localizedInfoDictionary ?? mainBundle.infoDictionary {
+            if let name = bundleInfo["CFBundleDisplayName"] as? String {
+                return name
+            }
+            else if let name = bundleInfo["CFBundleName"] as? String {
+                return name
+            }
+            else if let name = bundleInfo["CFBundleExecutable"] as? String {
+                return name
+            }
         }
-        
-        let result =
-                trim(localizedBundleInfo? ["CFBundleDisplayName"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")) ??
-                trim(bundleInfo? ["CFBundleDisplayName"]) ??
-                trim(localizedBundleInfo? ["CFBundleName"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleName")) ??
-                trim(bundleInfo? ["CFBundleName"]) ??
-                trim(localizedBundleInfo? ["CFBundleExecutable"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleExecutable")) ??
-                trim(bundleInfo? ["CFBundleExecutable"]) ??
-                "???"
-        
-        return result
+        return "???"
     }()
     
     
