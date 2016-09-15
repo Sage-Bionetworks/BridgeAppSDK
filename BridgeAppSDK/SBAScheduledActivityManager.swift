@@ -205,7 +205,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
             return SBBScheduledActivity.scheduledTomorrowPredicate()
         
         case .comingUp:
-            return SBBScheduledActivity.scheduledComingUpPredicate(self.daysAhead)
+            return SBBScheduledActivity.scheduledComingUpPredicate(numberOfDays: self.daysAhead)
             
         case .none:
             return nil

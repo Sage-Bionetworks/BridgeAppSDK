@@ -29,6 +29,7 @@
 		FB14FFE41C76852500E0D5AF /* SBABridgeAppSDKDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FB14FFE71C7686EB00E0D5AF /* SBAResourceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */; };
 		FB14FFE91C769F9E00E0D5AF /* SBAConsentSharingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */; };
+		FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */; };
 		FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */; };
 		FB6BA0951C7CDA6000C9903F /* SBAInstructionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6BA0941C7CDA6000C9903F /* SBAInstructionStep.swift */; };
 		FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */; };
@@ -195,8 +196,6 @@
 		FFCF37DE1CDA91520090452F /* SBALearnMoreAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37DD1CDA91520090452F /* SBALearnMoreAction.swift */; };
 		FFCF37E01CDA99120090452F /* UIView+LayoutExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37DF1CDA99120090452F /* UIView+LayoutExtensions.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
-		FFCF384F1CE113FC0090452F /* SBBScheduledActivity+Filters.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FFCF38501CE113FC0090452F /* SBBScheduledActivity+Filters.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */; };
 		FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
 		FFDA29EF1D3FF216005CD0D0 /* SBATrackedActivityStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDA29EE1D3FF216005CD0D0 /* SBATrackedActivityStep.swift */; };
@@ -382,6 +381,7 @@
 		FB14FFE31C76852500E0D5AF /* SBABridgeAppSDKDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBABridgeAppSDKDelegate.h; sourceTree = "<group>"; };
 		FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAResourceFinder.swift; sourceTree = "<group>"; };
 		FB14FFE81C769F9E00E0D5AF /* SBAConsentSharingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingOptions.swift; sourceTree = "<group>"; };
+		FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBBScheduledActivity+Filters.swift"; sourceTree = "<group>"; };
 		FB6817391C6B0307006C8FC9 /* SBANavigableOrderedTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANavigableOrderedTask.swift; sourceTree = "<group>"; };
 		FB6BA0941C7CDA6000C9903F /* SBAInstructionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAInstructionStep.swift; sourceTree = "<group>"; };
 		FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASubtaskStep.swift; sourceTree = "<group>"; };
@@ -556,8 +556,6 @@
 		FFCF37DD1CDA91520090452F /* SBALearnMoreAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALearnMoreAction.swift; sourceTree = "<group>"; };
 		FFCF37DF1CDA99120090452F /* UIView+LayoutExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+LayoutExtensions.swift"; sourceTree = "<group>"; };
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
-		FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBBScheduledActivity+Filters.h"; sourceTree = "<group>"; };
-		FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBBScheduledActivity+Filters.m"; sourceTree = "<group>"; };
 		FFCF385C1CE1172A0090452F /* NSPredicate+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Utilities.swift"; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
 		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
@@ -1017,8 +1015,7 @@
 		FF90559E1CE286EA0049D12A /* BridgeExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF384D1CE113FC0090452F /* SBBScheduledActivity+Filters.h */,
-				FFCF384E1CE113FC0090452F /* SBBScheduledActivity+Filters.m */,
+				FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */,
 				FF9055A01CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift */,
 			);
 			name = BridgeExtensions;
@@ -1240,7 +1237,6 @@
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */,
-				FFCF384F1CE113FC0090452F /* SBBScheduledActivity+Filters.h in Headers */,
 				FBAE3CF31C8615DF003CEC4A /* SBAPDFPrintPageRenderer.h in Headers */,
 				FF6411181CB341EC007FB9E1 /* SBATrackedDataObject.h in Headers */,
 				FF6411391CB436B6007FB9E1 /* SBAClassTypeMap.h in Headers */,
@@ -1598,6 +1594,7 @@
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
 				FBC45E7A1C759040007AA424 /* Localization.swift in Sources */,
 				FBAE3CF41C8615DF003CEC4A /* SBAPDFPrintPageRenderer.m in Sources */,
+				FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */,
 				FB84392D1C7518FE0086E961 /* SBATextChoice.swift in Sources */,
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
@@ -1610,7 +1607,6 @@
 				FFDDD7F01D2DA02B00446806 /* SBAConsentReviewOptions.swift in Sources */,
 				FFDA29EF1D3FF216005CD0D0 /* SBATrackedActivityStep.swift in Sources */,
 				FB84392F1C7519340086E961 /* SBASurveyItem.swift in Sources */,
-				FFCF38501CE113FC0090452F /* SBBScheduledActivity+Filters.m in Sources */,
 				FFB30EB11D4A8AB000D175D2 /* SBAPermissionsStep.swift in Sources */,
 				FB14FFE91C769F9E00E0D5AF /* SBAConsentSharingOptions.swift in Sources */,
 				80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */,
