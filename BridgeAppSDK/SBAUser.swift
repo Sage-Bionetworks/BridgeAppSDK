@@ -35,20 +35,24 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
-open class SBAUser: NSObject, SBAUserWrapper {
+/**
+ The `SBAUser` model object is intended as a singleton object for storing information about
+ the currently logged in user in the user defaults and keychain.
+ */
+public final class SBAUser: NSObject, SBAUserWrapper {
     
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue", attributes: [])
 
-    open func logout() {
+    public func logout() {
         lockQueue.async {
             self.resetUserDefaults()
             self.resetKeychain()
         }
     }
     
-    lazy open var bridgeInfo: SBABridgeInfo? = {
+    public var bridgeInfo: SBABridgeInfo? {
        return SBAAppDelegate.sharedDelegate?.bridgeInfo
-    }()
+    }
     
     // --------------------------------------------------
     // MARK: Keychain storage
@@ -64,7 +68,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
     let kGenderKey = "gender"
     let kBirthdateKey = "birthdate"
     
-    open var sessionToken: String? {
+    public var sessionToken: String? {
         get {
             return getKeychainObject(kSessionTokenKey) as? String
         }
@@ -73,7 +77,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var name: String? {
+    public var name: String? {
         get {
             return getKeychainObject(kNamePropertyKey) as? String
         }
@@ -82,7 +86,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var email: String? {
+    public var email: String? {
         get {
             return getKeychainObject(kEmailPropertyKey) as? String
         }
@@ -91,7 +95,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var externalId: String? {
+    public var externalId: String? {
         get {
             return getKeychainObject(kExternalIdKey) as? String
         }
@@ -100,7 +104,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var password: String? {
+    public var password: String? {
         get {
             return getKeychainObject(kPasswordPropertyKey) as? String
         }
@@ -109,7 +113,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    open var gender: String? {
+    public var gender: String? {
         get {
             return getKeychainObject(kGenderKey) as? String
         }
@@ -118,7 +122,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var birthdate: Date?  {
+    public var birthdate: Date?  {
         get {
             return getKeychainObject(kBirthdateKey) as? Date
         }
@@ -127,7 +131,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var subpopulationGuid: String? {
+    public var subpopulationGuid: String? {
         get {
             // if no subpopulationGuid found for user, return study identifier instead
             return getKeychainObject(kSubpopulationGuidKey) as? String ?? gSBBAppStudy
@@ -137,7 +141,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    open var consentSignature: SBAConsentSignatureWrapper? {
+    public var consentSignature: SBAConsentSignatureWrapper? {
         get {
             return getKeychainObject(kConsentSignatureKey) as? SBAConsentSignature
         }
@@ -203,7 +207,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
     
-    open var hasRegistered: Bool {
+    public var hasRegistered: Bool {
         get {
             return syncBoolForKey(kRegisteredKey)
         }
@@ -212,7 +216,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    open var loginVerified: Bool {
+    public var loginVerified: Bool {
         get {
             return syncBoolForKey(kLoginVerifiedKey)
         }
@@ -221,7 +225,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    open var consentVerified: Bool {
+    public var consentVerified: Bool {
         get {
             return syncBoolForKey(kConsentVerifiedKey)
         }
@@ -230,7 +234,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var dataSharingEnabled: Bool {
+    public var dataSharingEnabled: Bool {
         get {
             return syncBoolForKey(kDataSharingEnabledKey)
         }
@@ -239,7 +243,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var dataSharingScope: SBBUserDataSharingScope {
+    public var dataSharingScope: SBBUserDataSharingScope {
         get {
             return SBBUserDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .none
         }
@@ -248,7 +252,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    open var dataGroups: [String]? {
+    public var dataGroups: [String]? {
         get {
             return syncObjectForKey(kSavedDataGroupsKey) as? [String]
         }
@@ -257,7 +261,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    open var onboardingStepIdentifier: String? {
+    public var onboardingStepIdentifier: String? {
         get {
             return syncObjectForKey(kOnboardingStepIdentifier) as? String
         }
@@ -266,7 +270,7 @@ open class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    func userDefaults() -> UserDefaults {
+    fileprivate func userDefaults() -> UserDefaults {
         return UserDefaults.standard
     }
     
