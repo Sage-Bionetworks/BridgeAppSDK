@@ -119,7 +119,7 @@ class SBASubtaskStepTests: XCTestCase {
 
 class MutatedResultTask: ORKOrderedTask {
     
-    override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    override func stepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         
         if let previousStep = step as? ORKFormStep,
             let stepResult = result.stepResultForStepIdentifier(previousStep.identifier),

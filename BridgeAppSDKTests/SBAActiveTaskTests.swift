@@ -221,7 +221,7 @@ class SBAActiveTaskTests: XCTestCase {
             return
         }
         XCTAssertEqual(countStep.identifier, "countdown")
-        let audioRule = task.navigationRuleForTriggerStepIdentifier(countStep.identifier)
+        let audioRule = task.navigationRule(forTriggerStepIdentifier: countStep.identifier)
         XCTAssertNotNil(audioRule)
         
         // Step 4 - audio too loud
@@ -230,7 +230,7 @@ class SBAActiveTaskTests: XCTestCase {
             return
         }
         XCTAssertEqual(tooLoudStep.identifier, "audio.tooloud")
-        if let navTooLoudRule = task.navigationRuleForTriggerStepIdentifier(tooLoudStep.identifier) as? ORKDirectStepNavigationRule {
+        if let navTooLoudRule = task.navigationRule(forTriggerStepIdentifier: tooLoudStep.identifier) as? ORKDirectStepNavigationRule {
             XCTAssertEqual(navTooLoudRule.destinationStepIdentifier, countStep.identifier)
         }
         else {
@@ -456,7 +456,7 @@ class SBAActiveTaskTests: XCTestCase {
             let start = introSteps.count + (hand - 1) * bothHandSteps.count
             let end = start + bothHandSteps.count
             let handSteps = Array(task.steps[start..<end])
-            for (idx, step) in handSteps.enumerate() {
+            for (idx, step) in handSteps.enumerated() {
                 XCTAssertTrue(step.identifier.hasPrefix(bothHandSteps[idx]), "expected=\(bothHandSteps[idx]) actual=\(step.identifier)")
             }
         }
@@ -509,7 +509,7 @@ class SBAActiveTaskTests: XCTestCase {
             "insertSteps"               :[
                 [
                     "resourceName"      : "MedicationTracking",
-                    "resourceBundle"    : NSBundle(forClass: self.classForCoder).bundleIdentifier ?? "",
+                    "resourceBundle"    : Bundle(for: self.classForCoder).bundleIdentifier ?? "",
                     "classType"         : "TrackedDataObjectCollection"
                     ]
                 ]
@@ -652,7 +652,7 @@ class SBAActiveTaskTests: XCTestCase {
             "insertSteps"               :[
                 [
                     "resourceName"      : "MedicationTracking",
-                    "resourceBundle"    : NSBundle(forClass: self.classForCoder).bundleIdentifier ?? "",
+                    "resourceBundle"    : Bundle(for: self.classForCoder).bundleIdentifier ?? "",
                     "classType"         : "TrackedDataObjectCollection"
                 ]
             ]

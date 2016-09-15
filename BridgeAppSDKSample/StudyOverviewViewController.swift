@@ -36,7 +36,7 @@ import BridgeAppSDK
 
 class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate, SBASharedInfoController {
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if (sharedUser.hasRegistered) {
             presentOnboarding(.registration, animated: animated)
@@ -46,24 +46,24 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     // MARK: SBASharedInfoController
     
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
     // MARK: actions
 
-    @IBAction func signUpTapped(sender: AnyObject) {
+    @IBAction func signUpTapped(_ sender: AnyObject) {
         presentOnboarding(.registration, animated: true)
     }
     
-    @IBAction func loginTapped(sender: AnyObject) {
+    @IBAction func loginTapped(_ sender: AnyObject) {
         presentOnboarding(.login, animated: true)
     }
     
-    @IBAction func externalIDTapped(sender: AnyObject) {
+    @IBAction func externalIDTapped(_ sender: AnyObject) {
         
         // TODO: syoung 06/09/2016 Implement consent and use onboarding manager for external ID
         // Add consent signature.
-        let appDelegate = UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        let appDelegate = UIApplication.shared.delegate as! SBAAppInfoDelegate
         appDelegate.currentUser.consentSignature = SBAConsentSignature(identifier: "signature")
         
         // Create a task with an external ID and permissions steps and display the view controller
@@ -78,23 +78,23 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     
     // MARK: login and registration
     
-    func presentOnboarding(taskType: SBAOnboardingTaskType, animated: Bool) {
+    func presentOnboarding(_ taskType: SBAOnboardingTaskType, animated: Bool) {
         let onboardingManager = SBAOnboardingManager(jsonNamed: "Onboarding")!
         let vc = onboardingManager.initializeTaskViewController(onboardingTaskType: taskType)!
         
         vc.delegate = self
-        self.presentViewController(vc, animated: true, completion: nil)
+        self.present(vc, animated: true, completion: nil)
     }
     
     // MARK: ORKTaskViewControllerDelegate
     
-    func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
-        taskViewController.dismissViewControllerAnimated(true) { 
-            if (reason == .Completed), let appDelegate = UIApplication.sharedApplication().delegate as? SBABridgeAppSDKDelegate {
+    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+        taskViewController.dismiss(animated: true) { 
+            if (reason == .completed), let appDelegate = UIApplication.shared.delegate as? SBABridgeAppSDKDelegate {
                 // If complete, then show the appropriate view controller
                 appDelegate.showAppropriateViewController(false)
             }
-            else if (reason == .Discarded) {
+            else if (reason == .discarded) {
                 // Discard the registration information that has been gathered so far
                 self.sharedUser.logout()
             }

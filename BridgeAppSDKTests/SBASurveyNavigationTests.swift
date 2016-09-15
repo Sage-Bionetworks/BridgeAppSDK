@@ -220,8 +220,8 @@ class SBASurveyNavigationTests: XCTestCase {
     }
 
     func testSubtaskQuizStep_Passed() {
-        let subtaskStep = self.createSubtaskQuizStep([true, false, "b"])
-        let result = self.createSubtaskTaskResult([true, false, "b"])
+        let subtaskStep = self.createSubtaskQuizStep([true as AnyObject, false as AnyObject, "b" as AnyObject])
+        let result = self.createSubtaskTaskResult([true as AnyObject, false as AnyObject, "b" as AnyObject])
         
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
@@ -238,8 +238,8 @@ class SBASurveyNavigationTests: XCTestCase {
     }
     
     func testSubtaskQuizStep_Failed() {
-        let subtaskStep = self.createSubtaskQuizStep([true, false, "b"])
-        let result = self.createSubtaskTaskResult([true, true, "b"])
+        let subtaskStep = self.createSubtaskQuizStep([true as AnyObject, false as AnyObject, "b" as AnyObject])
+        let result = self.createSubtaskTaskResult([true as AnyObject, true as AnyObject, "b" as AnyObject])
         
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
@@ -256,8 +256,8 @@ class SBASurveyNavigationTests: XCTestCase {
     }
     
     func testSubtaskQuizStep_Skipped() {
-        let subtaskStep = self.createSubtaskQuizStep([true, false, "b"])
-        let result = self.createSubtaskTaskResult([true, false, NSNull()])
+        let subtaskStep = self.createSubtaskQuizStep([true as AnyObject, false as AnyObject, "b" as AnyObject])
+        let result = self.createSubtaskTaskResult([true as AnyObject, false as AnyObject, NSNull()])
         
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
@@ -275,9 +275,9 @@ class SBASurveyNavigationTests: XCTestCase {
     
     // MARK: helper methods
     
-    func createSubtaskQuizStep(expectedAnswers: [AnyObject]) -> SBASurveySubtaskStep {
+    func createSubtaskQuizStep(_ expectedAnswers: [AnyObject]) -> SBASurveySubtaskStep {
         var steps: [ORKStep] = [ORKInstructionStep(identifier: "introduction")]
-        for (index, expectedAnswer) in expectedAnswers.enumerate() {
+        for (index, expectedAnswer) in expectedAnswers.enumerated() {
             let identifier = "question\(index+1)"
             let formStep = ORKFormStep(identifier: identifier, title: "Question \(index+1)", text: nil)
             if let expectedAnswer = expectedAnswer as? Bool {
@@ -285,7 +285,7 @@ class SBASurveyNavigationTests: XCTestCase {
                 formStep.formItems = [formItem]
             }
             else if let expectedAnswer = expectedAnswer as? String {
-                let formItem = self.createSingleTextChoiceSurveyFormItem(identifier, text: nil, choices: ["a","b","c"], values: nil, expectedAnswer: expectedAnswer, optional: true)
+                let formItem = self.createSingleTextChoiceSurveyFormItem(identifier, text: nil, choices: ["a","b","c"], values: nil, expectedAnswer: expectedAnswer as NSCoding & NSCopying & NSObjectProtocol, optional: true)
                 formStep.formItems = [formItem]
             }
             steps += [formStep]
@@ -295,11 +295,11 @@ class SBASurveyNavigationTests: XCTestCase {
         return subtaskStep
     }
     
-    func createBooleanQuizStep(expectedAnswers: [Bool]) -> SBASurveyFormStep {
+    func createBooleanQuizStep(_ expectedAnswers: [Bool]) -> SBASurveyFormStep {
         // Create the form step question
         let formStep = self.createQuizStep()
         var formItems: [ORKFormItem] = []
-        for (index, expectedAnswer) in expectedAnswers.enumerate() {
+        for (index, expectedAnswer) in expectedAnswers.enumerated() {
             let identifier = "question\(index+1)"
             let formItem = self.createBooleanSurveyFormItem(identifier, text: nil, expectedAnswer: expectedAnswer, optional: true)
             formItems += [formItem]
@@ -308,37 +308,37 @@ class SBASurveyNavigationTests: XCTestCase {
         return formStep;
     }
     
-    func createBooleanSurveyFormItem(identifier:String, text:String?, expectedAnswer: Bool, optional:Bool) -> SBASurveyFormItem {
+    func createBooleanSurveyFormItem(_ identifier:String, text:String?, expectedAnswer: Bool, optional:Bool) -> SBASurveyFormItem {
         let answerFormat = ORKBooleanAnswerFormat()
         let formItem = SBASurveyFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
-        formItem.rulePredicate = NSPredicate(format: "answer = %@", expectedAnswer)
+        formItem.rulePredicate = NSPredicate(format: "answer = %@", expectedAnswer as CVarArg)
         return formItem
     }
     
-    func createSingleTextChoiceSurveyFormItem(identifier:String, text:String?, choices:[String], values:[protocol<NSCoding, NSCopying, NSObjectProtocol>]?, expectedAnswer: protocol<NSCoding, NSCopying, NSObjectProtocol>, optional:Bool) -> SBASurveyFormItem {
+    func createSingleTextChoiceSurveyFormItem(_ identifier:String, text:String?, choices:[String], values:[NSCoding & NSCopying & NSObjectProtocol]?, expectedAnswer: NSCoding & NSCopying & NSObjectProtocol, optional:Bool) -> SBASurveyFormItem {
         let answerFormat = self.createSingleTextChoiceAnswerFormat(choices, values: values)
         let formItem = SBASurveyFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
         formItem.rulePredicate = NSPredicate(format: "answer = %@", [expectedAnswer])
         return formItem
     }
     
-    func createSingleTextChoiceAnswerFormat(choices:[String], values:[protocol<NSCoding, NSCopying, NSObjectProtocol>]?) -> ORKTextChoiceAnswerFormat {
+    func createSingleTextChoiceAnswerFormat(_ choices:[String], values:[NSCoding & NSCopying & NSObjectProtocol]?) -> ORKTextChoiceAnswerFormat {
         // Create the text choices object from the choices and associated values
         var textChoices: [ORKTextChoice] = []
-        for (index, choice) in choices.enumerate() {
+        for (index, choice) in choices.enumerated() {
             let value = values?[index] ?? choice
             textChoices += [ORKTextChoice(text: choice, value: value)]
         }
         // Return a survey item of the appropriate type
-        return ORKTextChoiceAnswerFormat(style: .SingleChoice, textChoices: textChoices)
+        return ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices)
     }
     
-    func createBooleanTaskResult(answers: [Bool]) -> ORKTaskResult {
+    func createBooleanTaskResult(_ answers: [Bool]) -> ORKTaskResult {
         var questionResults: [ORKQuestionResult] = []
-        for (index, answer) in answers.enumerate() {
+        for (index, answer) in answers.enumerated() {
             let identifier = "question\(index+1)"
             let questionResult = ORKBooleanQuestionResult(identifier:identifier)
-            questionResult.booleanAnswer = answer
+            questionResult.booleanAnswer = answer as NSNumber?
             questionResults += [questionResult]
         }
         return self.createTaskResult("quiz", questionResults: questionResults)
@@ -347,12 +347,12 @@ class SBASurveyNavigationTests: XCTestCase {
     func createTextChoiceQuizStep() -> SBASurveyFormStep {
         // Create the form step question
         let formStep = self.createQuizStep()
-        let formItem = self.createSingleTextChoiceSurveyFormItem("question1", text: nil, choices: ["a","b","c"], values: nil, expectedAnswer: "b", optional: true)
+        let formItem = self.createSingleTextChoiceSurveyFormItem("question1", text: nil, choices: ["a","b","c"], values: nil, expectedAnswer: "b" as NSCoding & NSCopying & NSObjectProtocol, optional: true)
         formStep.formItems = [formItem]
         return formStep;
     }
     
-    func createTextChoiceTaskResult(passed: Bool) -> ORKTaskResult {
+    func createTextChoiceTaskResult(_ passed: Bool) -> ORKTaskResult {
         let questionResult = ORKChoiceQuestionResult(identifier: "question1")
         questionResult.choiceAnswers = passed ? ["b"] : ["a"]
         return self.createTaskResult("quiz", questionResults: [questionResult])
@@ -364,7 +364,7 @@ class SBASurveyNavigationTests: XCTestCase {
         return step
     }
     
-    func createTaskResult(quizIdentifier: String, questionResults: [ORKQuestionResult]?) -> ORKTaskResult {
+    func createTaskResult(_ quizIdentifier: String, questionResults: [ORKQuestionResult]?) -> ORKTaskResult {
         let introStepResult = ORKStepResult(identifier: "introduction")
         let quizStepResult = ORKStepResult(stepIdentifier: quizIdentifier, results:questionResults)
         let taskResult = ORKTaskResult(identifier: "test");
@@ -372,16 +372,16 @@ class SBASurveyNavigationTests: XCTestCase {
         return taskResult
     }
     
-    func createSubtaskTaskResult(questionResults: [AnyObject]) -> ORKTaskResult {
+    func createSubtaskTaskResult(_ questionResults: [AnyObject]) -> ORKTaskResult {
         var results: [ORKStepResult] = [ORKStepResult(identifier: "introduction"),
             ORKStepResult(identifier: "quiz.introduction")]
         
-        for (index, answer) in questionResults.enumerate() {
+        for (index, answer) in questionResults.enumerated() {
             let identifier = "question\(index+1)"
             var itemResults: [ORKResult]?
             if let answer = answer as? Bool {
                 let questionResult = ORKBooleanQuestionResult(identifier: identifier)
-                questionResult.booleanAnswer = answer
+                questionResult.booleanAnswer = answer as NSNumber?
                 itemResults = [questionResult]
             }
             else if let answer = answer as? String {

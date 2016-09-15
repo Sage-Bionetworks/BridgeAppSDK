@@ -50,7 +50,7 @@ class SBAActivityArchive: XCTestCase {
     func testSingleChoiceQuestionResult() {
         
         let result = ORKChoiceQuestionResult(identifier: "test")
-        result.questionType = .SingleChoice
+        result.questionType = .singleChoice
         result.choiceAnswers = ["answer"]
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
@@ -71,7 +71,7 @@ class SBAActivityArchive: XCTestCase {
     func testMultipleChoiceQuestionResult() {
         
         let result = ORKChoiceQuestionResult(identifier: "test")
-        result.questionType = .MultipleChoice
+        result.questionType = .multipleChoice
         result.choiceAnswers = ["A", "B"]
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
@@ -92,8 +92,8 @@ class SBAActivityArchive: XCTestCase {
     func testScaleQuestionResult() {
         
         let result = ORKScaleQuestionResult(identifier: "test")
-        result.questionType = .Scale
-        result.scaleAnswer = NSNumber(integer: 5)
+        result.questionType = .scale
+        result.scaleAnswer = NSNumber(value: 5)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
             XCTAssert(false)
@@ -103,14 +103,14 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Scale")
-        XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(integer: 5))
+        XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(value: 5))
     }
     
     func testMoodScaleQuestionResult() {
         
         let result = ORKMoodScaleQuestionResult(identifier: "test")
-        result.questionType = .SingleChoice
-        result.scaleAnswer = NSNumber(integer: 5)
+        result.questionType = .singleChoice
+        result.scaleAnswer = NSNumber(value: 5)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
             XCTAssert(false)
@@ -120,14 +120,14 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Scale")
-        XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(integer: 5))
+        XCTAssertEqual(json["scaleAnswer"] as? NSNumber, NSNumber(value: 5))
     }
     
     func testBooleanQuestionResult() {
         
         let result = ORKBooleanQuestionResult(identifier: "test")
-        result.questionType = .Boolean
-        result.booleanAnswer = NSNumber(bool: true)
+        result.questionType = .boolean
+        result.booleanAnswer = NSNumber(value: true)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
             XCTAssert(false)
@@ -137,13 +137,13 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Boolean")
-        XCTAssertEqual(json["booleanAnswer"] as? NSNumber, NSNumber(bool: true))
+        XCTAssertEqual(json["booleanAnswer"] as? NSNumber, NSNumber(value: true))
     }
     
     func testTextQuestionResult() {
         
         let result = ORKTextQuestionResult(identifier: "test")
-        result.questionType = .Text
+        result.questionType = .text
         result.textAnswer = "foo bar"
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
@@ -160,8 +160,8 @@ class SBAActivityArchive: XCTestCase {
     func testNumericQuestionResult_Integer() {
         
         let result = ORKNumericQuestionResult(identifier: "test")
-        result.questionType = .Integer
-        result.numericAnswer = NSNumber(integer: 5)
+        result.questionType = .integer
+        result.numericAnswer = NSNumber(value: 5)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
             XCTAssert(false)
@@ -171,14 +171,14 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Integer")
-        XCTAssertEqual(json["numericAnswer"] as? NSNumber, NSNumber(integer: 5))
+        XCTAssertEqual(json["numericAnswer"] as? NSNumber, NSNumber(value: 5))
     }
     
     func testNumericQuestionResult_Decimal() {
         
         let result = ORKNumericQuestionResult(identifier: "test")
-        result.questionType = .Decimal
-        result.numericAnswer = NSNumber(float: 1.2)
+        result.questionType = .decimal
+        result.numericAnswer = NSNumber(value: 1.2)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
             XCTAssert(false)
@@ -188,14 +188,14 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Decimal")
-        XCTAssertEqual(json["numericAnswer"] as? NSNumber, NSNumber(float: 1.2))
+        XCTAssertEqual(json["numericAnswer"] as? NSNumber, NSNumber(value: 1.2))
     }
     
     func testTimeOfDayQuestionResult() {
         
         let result = ORKTimeOfDayQuestionResult(identifier: "test")
-        result.questionType = .TimeOfDay
-        result.dateComponentsAnswer = NSDateComponents()
+        result.questionType = .timeOfDay
+        result.dateComponentsAnswer = DateComponents()
         result.dateComponentsAnswer?.hour = 5
         result.dateComponentsAnswer?.minute = 32
         
@@ -213,7 +213,7 @@ class SBAActivityArchive: XCTestCase {
     func testDateQuestionResult_Date() {
         
         let result = ORKDateQuestionResult(identifier: "test")
-        result.questionType = .Date
+        result.questionType = .date
         result.dateAnswer = date(year: 1969, month: 8, day: 3)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
@@ -230,7 +230,7 @@ class SBAActivityArchive: XCTestCase {
     func testDateQuestionResult_DateAndTime() {
         
         let result = ORKDateQuestionResult(identifier: "test")
-        result.questionType = .DateAndTime
+        result.questionType = .dateAndTime
         result.dateAnswer = date(year: 1969, month: 8, day: 3, hour: 4, minute: 10, second: 00)
         
         guard let json = checkSharedArchiveKeys(result, stepIdentifier: "test", expectedFilename: "test.json") else {
@@ -253,7 +253,7 @@ class SBAActivityArchive: XCTestCase {
     
     // MARK: Helper methods
     
-    func checkSharedArchiveKeys(result: ORKResult, stepIdentifier: String, expectedFilename: String) -> [NSObject : AnyObject]? {
+    func checkSharedArchiveKeys(_ result: ORKResult, stepIdentifier: String, expectedFilename: String) -> [AnyHashable: Any]? {
         
         result.startDate = date(year: 2016, month: 7, day: 4, hour: 8, minute: 29, second: 54)
         result.endDate = date(year: 2016, month: 7, day: 4, hour: 8, minute: 30, second: 23)
@@ -266,7 +266,7 @@ class SBAActivityArchive: XCTestCase {
         
         XCTAssertEqual(archiveResult.filename, expectedFilename)
         
-        guard let json = archiveResult.result as? [NSObject: AnyObject] else {
+        guard let json = archiveResult.result as? [AnyHashable: Any] else {
             XCTAssert(false, "\(archiveResult.result) not of expected type")
             return nil
         }
@@ -281,24 +281,24 @@ class SBAActivityArchive: XCTestCase {
         return json
     }
     
-    func date(year year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0) -> NSDate {
+    func date(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0) -> Date {
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        let components = NSDateComponents()
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        var components = DateComponents()
         components.day = day
         components.month = month
         components.year = year
         components.hour = hour
         components.minute = minute
         components.second = second
-        return calendar.dateFromComponents(components)!
+        return calendar.date(from: components)!
     }
     
     func timezoneString() -> String {
         let hoursUnit = 60 * 60
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        let timezoneHours: Int = calendar.timeZone.secondsFromGMT / hoursUnit
-        let timezoneSeconds = abs(calendar.timeZone.secondsFromGMT - (timezoneHours * hoursUnit))
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        let timezoneHours: Int = calendar.timeZone.secondsFromGMT() / hoursUnit
+        let timezoneSeconds = abs(calendar.timeZone.secondsFromGMT() - (timezoneHours * hoursUnit))
         let timezone = String(format: "%+.2d:%02d", timezoneHours, timezoneSeconds)
         return timezone
     }

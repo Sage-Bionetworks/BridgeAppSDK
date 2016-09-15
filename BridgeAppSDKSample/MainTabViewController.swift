@@ -38,8 +38,8 @@ class MainTabViewController: UITabBarController, SBARootViewControllerProtocol {
     
     var contentHidden = false {
         didSet {
-            guard contentHidden != oldValue && isViewLoaded() else { return }
-            self.childViewControllers.first?.view.hidden = contentHidden
+            guard contentHidden != oldValue && isViewLoaded else { return }
+            self.childViewControllers.first?.view.isHidden = contentHidden
         }
     }
 

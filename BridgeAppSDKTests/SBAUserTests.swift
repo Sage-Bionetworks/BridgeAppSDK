@@ -46,8 +46,8 @@ class SBAUserTests: XCTestCase {
         // register mocks for components
         authMock = MockAuthManager()
         consentMock = MockConsentManager()
-        SBBComponentManager.registerComponent(authMock, forClass: SBBAuthManager().classForCoder)
-        SBBComponentManager.registerComponent(consentMock, forClass: SBBConsentManager().classForCoder)
+        SBBComponentManager.registerComponent(authMock, for: SBBAuthManager().classForCoder)
+        SBBComponentManager.registerComponent(consentMock, for: SBBConsentManager().classForCoder)
     }
     
     override func tearDown() {
@@ -66,7 +66,7 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var studyIdentifier: String! = "study"
     var cacheDaysAhead: Int = 0
     var cacheDaysBehind: Int = 0
-    var environment: SBBEnvironment = .Staging
+    var environment: SBBEnvironment = .staging
     var appStoreLinkURLString: String?
     var emailForLoginViaExternalId: String? = "test@sagebase.org"
     var passwordFormatForLoginViaExternalId: String?
@@ -83,71 +83,71 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {
     weak var authDelegate: SBBAuthManagerDelegateProtocol?
     
-    func signUpWithEmail(email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func signUp(withEmail email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
     
-    func signUpWithEmail(email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func signUp(withEmail email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
     
-    func resendEmailVerification(email: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func resendEmailVerification(_ email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
     
-    func signInWithEmail(email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
     
-    func signOutWithCompletion(completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func signOut(completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func ensureSignedInWithCompletion(completion: SBBNetworkManagerCompletionBlock?) {
+    func ensureSignedIn(completion: SBBNetworkManagerCompletionBlock?) {
         
     }
     
-    func requestPasswordResetForEmail(email: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func requestPasswordReset(forEmail email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func resetPasswordToNewPassword(password: String, resetToken token: String, completion: SBBNetworkManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func resetPassword(toNewPassword password: String, resetToken token: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func addAuthHeaderToHeaders(headers: NSMutableDictionary) {
+    func addAuthHeader(toHeaders headers: NSMutableDictionary) {
         
     }
 }
 
 class MockConsentManager: NSObject, SBBConsentManagerProtocol {
     
-    func consentSignature(name: String, birthdate date: NSDate, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func consentSignature(_ name: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func consentSignature(name: String, forSubpopulationGuid subpopGuid: String, birthdate date: NSDate, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func consentSignature(_ name: String, forSubpopulationGuid subpopGuid: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func retrieveConsentSignatureWithCompletion(completion: SBBConsentManagerRetrieveCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func retrieveConsentSignature(completion: SBBConsentManagerRetrieveCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func getConsentSignatureForSubpopulation(subpopGuid: String, completion: SBBConsentManagerGetCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func getConsentSignature(forSubpopulation subpopGuid: String, completion: SBBConsentManagerGetCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func withdrawConsentWithReason(reason: String?, completion: SBBConsentManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func withdrawConsent(withReason reason: String?, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func withdrawConsentForSubpopulation(subpopGuid: String, withReason reason: String?, completion: SBBConsentManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func withdrawConsent(forSubpopulation subpopGuid: String, withReason reason: String?, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
 
-    func emailConsentForSubpopulation(subpopGuid: String, completion: SBBConsentManagerCompletionBlock?) -> NSURLSessionTask {
-        return NSURLSessionDataTask()
+    func emailConsent(forSubpopulation subpopGuid: String, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+        return URLSessionDataTask()
     }
     
 }

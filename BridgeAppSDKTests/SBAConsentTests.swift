@@ -62,7 +62,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                    SBARegistrationStep(identifier: "registration"),
                                    SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
-        for (idx, expectedStep) in expectedSteps.enumerate() {
+        for (idx, expectedStep) in expectedSteps.enumerated() {
             if idx < steps.count {
                 XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
                 let stepClass = NSStringFromClass(steps[idx].classForCoder)
@@ -88,7 +88,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBAConsentReviewStep(identifier: "consentReview"),
                                         SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
-        for (idx, expectedStep) in expectedSteps.enumerate() {
+        for (idx, expectedStep) in expectedSteps.enumerated() {
             if idx < steps.count {
                 XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
                 let stepClass = NSStringFromClass(steps[idx].classForCoder)
@@ -114,7 +114,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBARegistrationStep(identifier: "registration"),
                                         SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
-        for (idx, expectedStep) in expectedSteps.enumerate() {
+        for (idx, expectedStep) in expectedSteps.enumerated() {
             if idx < steps.count {
                 XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
                 let stepClass = NSStringFromClass(steps[idx].classForCoder)
@@ -259,17 +259,17 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         nameResult.textAnswer = "John Jones"
         
         let birthResult = ORKDateQuestionResult(identifier: "name.birthdate")
-        birthResult.dateAnswer = NSDate(timeIntervalSince1970: 0)
+        birthResult.dateAnswer = Date(timeIntervalSince1970: 0)
         
         let signatureResult = ORKSignatureResult(identifier: "signature.signature")
         signatureResult.signatureImage = UIImage()
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult, nameResult, birthResult, signatureResult])
-        let viewController = step?.instantiateStepViewControllerWithResult(inputResult)
+        let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         
         XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.resultForIdentifier(step!.identifier) as? SBAConsentReviewResult else {
+        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
             XCTAssert(false, "\(outputResult) missing consent review result")
             return
         }
@@ -300,11 +300,11 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.signature = reviewStep!.signature
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult])
-        let viewController = step?.instantiateStepViewControllerWithResult(inputResult)
+        let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         
         XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.resultForIdentifier(step!.identifier) as? SBAConsentReviewResult else {
+        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
             XCTAssert(false, "\(outputResult) missing consent review result")
             return
         }
@@ -330,11 +330,11 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.signature = reviewStep!.signature
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult])
-        let viewController = step?.instantiateStepViewControllerWithResult(inputResult)
+        let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         
         XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.resultForIdentifier(step!.identifier) as? SBAConsentReviewResult else {
+        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
             XCTAssert(false, "\(outputResult) missing consent review result")
             return
         }
@@ -356,7 +356,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         guard reviewStep != nil else { return }
         let taskResult = consentReviewTaskResult(step!.identifier, consented: false)
         
-        let nextStep = pageStep?.stepAfterStepWithIdentifier(reviewStep?.identifier, withResult: taskResult)
+        let nextStep = pageStep?.stepAfterStep(withIdentifier: reviewStep?.identifier, with: taskResult)
         XCTAssertNil(nextStep)
     }
     
@@ -374,14 +374,14 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         guard reviewStep != nil else { return }
         let taskResult = consentReviewTaskResult(step!.identifier, consented: true)
         
-        let nextStep = pageStep?.stepAfterStepWithIdentifier(reviewStep?.identifier, withResult: taskResult)
+        let nextStep = pageStep?.stepAfterStep(withIdentifier: reviewStep?.identifier, with: taskResult)
         XCTAssertNotNil(nextStep)
     }
     
     
     // MARK: helper methods
     
-    func consentReviewTaskResult(identifier: String, consented: Bool) -> ORKTaskResult {
+    func consentReviewTaskResult(_ identifier: String, consented: Bool) -> ORKTaskResult {
         let reviewResult = ORKConsentSignatureResult(identifier: "consent")
         reviewResult.consented = consented
         let stepResult = ORKStepResult(stepIdentifier: "review", results: [reviewResult])
@@ -390,7 +390,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         return taskResult
     }
     
-    func consentReviewSteps(step: ORKStep?) -> (pageStep:SBAConsentReviewStep?, reviewStep: ORKConsentReviewStep?, nameStep: ORKFormStep?, signatureStep: ORKSignatureStep?) {
+    func consentReviewSteps(_ step: ORKStep?) -> (pageStep:SBAConsentReviewStep?, reviewStep: ORKConsentReviewStep?, nameStep: ORKFormStep?, signatureStep: ORKSignatureStep?) {
         
         guard let pageStep = step as? SBAConsentReviewStep else {
             XCTAssert(false, "\(step) not of expected type")

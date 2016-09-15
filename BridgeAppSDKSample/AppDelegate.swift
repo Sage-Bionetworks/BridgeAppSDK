@@ -38,10 +38,10 @@ import BridgeAppSDK
 class AppDelegate: SBAAppDelegate {
     
     override var requiredPermissions: SBAPermissionsType {
-        return [.Coremotion, .LocalNotifications, .Microphone]
+        return [.coremotion, .localNotifications, .microphone]
     }
     
-    override func showMainViewController(animated: Bool) {
+    override func showMainViewController(_ animated: Bool) {
         guard let storyboard = openStoryboard("Main"),
             let vc = storyboard.instantiateInitialViewController()
             else {
@@ -51,11 +51,11 @@ class AppDelegate: SBAAppDelegate {
         self.transitionToRootViewController(vc, animated: animated)
     }
     
-    override func showEmailVerificationViewController(animated: Bool) {
+    override func showEmailVerificationViewController(_ animated: Bool) {
         showOnboardingViewController(animated)
     }
     
-    override func showOnboardingViewController(animated: Bool) {
+    override func showOnboardingViewController(_ animated: Bool) {
         guard let storyboard = openStoryboard("Onboarding"),
             let vc = storyboard.instantiateInitialViewController()
             else {
@@ -65,7 +65,7 @@ class AppDelegate: SBAAppDelegate {
         self.transitionToRootViewController(vc, animated: animated)
     }
     
-    func openStoryboard(name: String) -> UIStoryboard? {
+    func openStoryboard(_ name: String) -> UIStoryboard? {
         return UIStoryboard(name: name, bundle: nil)
     }
     

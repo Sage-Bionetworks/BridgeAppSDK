@@ -65,10 +65,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         duopa.frequency = 4;
         
         // Archive
-        let data = NSKeyedArchiver.archivedDataWithRootObject([duopa]);
+        let data = NSKeyedArchiver.archivedData(withRootObject: [duopa]);
         
         // Unarchive it and check the result
-        guard let arr = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [SBAMedication],
+        guard let arr = NSKeyedUnarchiver.unarchiveObject(with: data) as? [SBAMedication],
             let med = arr.first else {
                 XCTAssert(false, "Value did not unarchive as array")
                 return
@@ -103,10 +103,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         
         let meds = dataCollection.items;
-        guard let levodopa = meds[0] as? SBAMedication,
-            let carbidopa = meds[1] as? SBAMedication,
-            let rytary = meds[2] as? SBAMedication,
-            let duopa = meds.last as? SBAMedication
+        guard let levodopa = meds?[0] as? SBAMedication,
+            let carbidopa = meds?[1] as? SBAMedication,
+            let rytary = meds?[2] as? SBAMedication,
+            let duopa = meds?.last as? SBAMedication
             else {
                 XCTAssert(false, "items not of expected type \(meds)")
                 return
@@ -155,7 +155,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkStandAloneSurveySteps(steps, dataCollection: dataCollection)
     }
     
-    func checkStandAloneSurveySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
+    func checkStandAloneSurveySteps(_ steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
     
         let expectedCount = 4
         XCTAssertEqual(steps.count, expectedCount)
@@ -212,7 +212,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkMedicationSelectionStep(selectionStep, optional: true)
     }
     
-    func splitMedicationSelectionStep(step: ORKStep?) -> (selection:ORKStep?, frequency:ORKStep?) {
+    func splitMedicationSelectionStep(_ step: ORKStep?) -> (selection:ORKStep?, frequency:ORKStep?) {
         guard let selectionStep = step as? SBATrackedSelectionStep else {
             XCTAssert(false, "\(step) not of expected type")
             return (nil, nil)
@@ -220,7 +220,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         return (selectionStep.steps.first, selectionStep.steps.last)
     }
     
-    func checkMedicationSelectionStep(step: ORKStep?, optional: Bool) {
+    func checkMedicationSelectionStep(_ step: ORKStep?, optional: Bool) {
         
         guard let selectionStep = step as? ORKFormStep else {
             XCTAssert(false, "\(step) not of expected type")
@@ -237,10 +237,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             return
         }
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
-        XCTAssertFalse(selectionStep.optional)
+        XCTAssertFalse(selectionStep.isOptional)
         XCTAssertEqual(selectionStep.formItems?.count, 1)
         
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.MultipleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.multipleChoice)
         
         var expectedChoices = [ ["Levodopa", "Levodopa"],
                                 ["Carbidopa", "Carbidopa"],
@@ -263,7 +263,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         XCTAssertEqual(answerFormat.textChoices.count, expectedChoices.count)
         if answerFormat.textChoices.count <= expectedChoices.count {
-            for (idx, textChoice) in answerFormat.textChoices.enumerate() {
+            for (idx, textChoice) in answerFormat.textChoices.enumerated() {
                 XCTAssertEqual(textChoice.text, expectedChoices[idx].first!)
                 if let value = textChoice.value as? String {
                     XCTAssertEqual(value, expectedChoices[idx].last!)
@@ -277,9 +277,9 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
     }
     
-    func checkMedicationFrequencyStep(step: ORKStep?, idList:[String], expectedFrequencyIds: [String], items:[SBATrackedDataObject]) {
+    func checkMedicationFrequencyStep(_ step: ORKStep?, idList:[String], expectedFrequencyIds: [String], items:[SBATrackedDataObject]) {
         
-        guard let trackNav = step as? SBATrackedNavigationStep, formStep = step as? ORKFormStep else {
+        guard let trackNav = step as? SBATrackedNavigationStep, let formStep = step as? ORKFormStep else {
             XCTAssert(false, "\(step) not of expected type")
             return
         }
@@ -326,7 +326,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkActivityOnlySteps(steps, dataCollection: dataCollection)
     }
     
-    func checkActivityOnlySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
+    func checkActivityOnlySteps(_ steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
         
         let expectedCount = 3
         XCTAssertEqual(steps.count, expectedCount)
@@ -340,13 +340,13 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                 return
         }
         XCTAssertEqual(momentInDayStep.identifier, "momentInDay")
-        XCTAssertFalse(momentInDayStep.optional)
+        XCTAssertFalse(momentInDayStep.isOptional)
         XCTAssertEqual(momentInDayStep.formItems?.count, 1)
         XCTAssertEqual(momentInDayStep.text, "We would like to understand how your performance on this activity could be affected by the timing of your medication.")
         XCTAssertEqual(formItem.identifier, "momentInDayFormat")
         XCTAssertEqual(formItem.text, "When are you performing this activity?")
         XCTAssertEqual(answerFormat.textChoices.count, 3)
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         
         checkMedicationActivityStep(momentInDayStep, idList: ["Levodopa", "Carbidopa", "Rytary"], expectedSkipped: false, items: dataCollection.items)
         checkMedicationActivityStep(momentInDayStep, idList: ["Carbidopa"], expectedSkipped: true, items: dataCollection.items)
@@ -359,12 +359,12 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                 return
         }
         XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
-        XCTAssertFalse(timingStep.optional)
+        XCTAssertFalse(timingStep.isOptional)
         XCTAssertEqual(timingStep.formItems?.count, 1)
         XCTAssertEqual(timingFormItem.identifier, "medicationActivityTiming")
         
         // Look at the answer format
-        XCTAssertEqual(timingAnswerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(timingAnswerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         let expectedTimeChoices = [ "0-30 minutes ago",
                                     "30-60 minutes ago",
                                     "1-2 hours ago",
@@ -373,7 +373,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                                     "More than 8 hours ago",
                                     "Not sure"]
         XCTAssertEqual(timingAnswerFormat.textChoices.count, expectedTimeChoices.count)
-        for (idx, textChoice) in timingAnswerFormat.textChoices.enumerate() {
+        for (idx, textChoice) in timingAnswerFormat.textChoices.enumerated() {
             if (idx < expectedTimeChoices.count) {
                 XCTAssertEqual(textChoice.text, expectedTimeChoices[idx])
                 if let value = textChoice.value as? String {
@@ -399,7 +399,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
 
     }
     
-    func checkMedicationActivityStep(step: SBATrackedNavigationStep, idList:[String], expectedSkipped: Bool, items:[SBATrackedDataObject]) {
+    func checkMedicationActivityStep(_ step: SBATrackedNavigationStep, idList:[String], expectedSkipped: Bool, items:[SBATrackedDataObject]) {
         
         let selectedItems = items.filter({ idList.contains($0.identifier) })
         step.update(selectedItems: selectedItems)
@@ -416,7 +416,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkChangedAndActivitySteps(steps, expectedSkipIdentifier: "momentInDay", dataCollection: dataCollection)
     }
     
-    func checkChangedAndActivitySteps(steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
+    func checkChangedAndActivitySteps(_ steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
         
         let expectedCount = 6
         XCTAssertEqual(steps.count, expectedCount)
@@ -439,10 +439,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
         questionResult.booleanAnswer = false
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.booleanAnswer = true
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
         let selectionStep = steps[1]
         XCTAssertEqual(selectionStep.identifier, "medicationSelection")
@@ -480,7 +480,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkSurveyAndActivitySteps(steps, dataCollection: dataCollection)
     }
     
-    func checkSurveyAndActivitySteps(steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
+    func checkSurveyAndActivitySteps(_ steps: [ORKStep], dataCollection: SBATrackedDataObjectCollection) {
         
         let expectedCount = 6
         XCTAssertEqual(steps.count, expectedCount)
@@ -529,7 +529,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataCollection.dataStore = dataStore
         
         // If the selected items set is empty (but there is one) then do not show the activity steps
-        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = []
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
@@ -551,7 +551,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the selected items set does not include any that are tracked then should
         // return the empty set (for a date in the near past)
-        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
         
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
@@ -573,7 +573,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item, then should include the activty 
         // steps, but do not need to include any of the others
-        dataStore.lastTrackingSurveyDate = NSDate()
+        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
@@ -593,7 +593,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
@@ -613,7 +613,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = NSDate(timeIntervalSinceNow: -40*24*60*60)
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = []
         let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
@@ -626,7 +626,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkChangedAndActivitySteps(task.steps, expectedSkipIdentifier: "nextSection", dataCollection: dataCollection)
     }
     
-    func checkDataStoreDefaultIDMap(dataStore: SBATrackedDataStore) {
+    func checkDataStoreDefaultIDMap(_ dataStore: SBATrackedDataStore) {
 
         guard let defaultMap = dataStore.momentInDayResultDefaultIdMap as? [[String]] else {
             XCTAssert(false, "\(dataStore.momentInDayResultDefaultIdMap) not of expected type")
@@ -648,7 +648,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         guard task != nil else { return }
 
         // make selection
-        let nextStep = task!.stepAfterStep(selectionStep, withResult: taskResult!)
+        let nextStep = task!.step(after: selectionStep, with: taskResult!)
         XCTAssertNotNil(nextStep)
         XCTAssertNotNil(dataStore!.selectedItems)
         
@@ -668,7 +668,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         guard let task = retTask, let dataStore = retDataStore, let taskResult = retTaskResult else { return }
         
         // get the next step
-        let nextStep = task.stepAfterStep(selectionStep, withResult: taskResult)
+        let nextStep = task.step(after: selectionStep, with: taskResult)
         XCTAssertNotNil(nextStep)
         XCTAssertNotNil(dataStore.selectedItems)
         
@@ -697,8 +697,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         taskResult.results! += [handResult]
         
         // Get moment in day
-        let step2 = task.stepAfterStep(handStep, withResult: taskResult)
-        guard let momentStep = step2 as? SBATrackedActivityFormStep where momentStep.trackingType == .activity,
+        let step2 = task.step(after: handStep, with: taskResult)
+        guard let momentStep = step2 as? SBATrackedActivityFormStep , momentStep.trackingType == .activity,
             let momentFormItem = momentStep.formItems?.first  else {
                 XCTAssert(false, "\(step2) not of expected type")
                 return
@@ -710,17 +710,17 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         let momentResult = ORKStepResult(stepIdentifier: momentStep.identifier, results: [questionResult])
         taskResult.results! += [momentResult]
         
-        let step3 = task.stepAfterStep(momentStep, withResult: taskResult)
+        let step3 = task.step(after: momentStep, with: taskResult)
         XCTAssertNotNil(dataStore.momentInDayResult)
         XCTAssertEqual(dataStore.momentInDayResult!.count, 1)
         
-        guard let timingStep = step3 as? SBATrackedActivityFormStep where timingStep.trackingType == .activity else {
+        guard let timingStep = step3 as? SBATrackedActivityFormStep , timingStep.trackingType == .activity else {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
         taskResult.results! += [createTimingStepResult(timingStep, answer: "0-30 minutes")]
         
-        let step4 = task.stepAfterStep(timingStep, withResult: taskResult)
+        let step4 = task.step(after: timingStep, with: taskResult)
         XCTAssertNotNil(dataStore.momentInDayResult)
         XCTAssertEqual(dataStore.momentInDayResult!.count, 2)
         
@@ -733,7 +733,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         taskResult.addResult(timingEachStep.instantiateDefaultStepResult(nil))
         
         // progress to next step to set results
-        task.stepAfterStep(timingEachStep, withResult: taskResult)
+        task.step(after: timingEachStep, with: taskResult)
         
         let momentInDayResults = dataStore.momentInDayResult
         XCTAssertNotNil(momentInDayResults)
@@ -764,7 +764,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(choiceAnswers.last!["answer"], "0-30 minutes ago")
     }
     
-    func createTimingStepResult(timingStep:SBATrackedActivityFormStep, answer: String) -> ORKStepResult {
+    func createTimingStepResult(_ timingStep:SBATrackedActivityFormStep, answer: String) -> ORKStepResult {
         let formItem = timingStep.formItems!.first!
         let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
         questionResult.choiceAnswers = [answer]
@@ -772,7 +772,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         return momentResult
     }
     
-    func checkSelectionItemsInserted(selectedItems: [SBATrackedDataObject], taskResult: ORKTaskResult) {
+    func checkSelectionItemsInserted(_ selectedItems: [SBATrackedDataObject], taskResult: ORKTaskResult) {
         
 // TODO: FIXME!!! syoung 07/14/2016 In response to changes in RK/master, inserting a result in an
 // ORKStepResult now fails. Code has been changed to mutate the taskResult in the archiving stage.
@@ -799,7 +799,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     // Mark: convenience methods
     
     func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
-        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("MockTrackedDataStore")
+        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "MockTrackedDataStore")
         XCTAssertNotNil(result)
         guard let classType = result as? SBATrackedDataStore.Type else {
             XCTAssert(false, "\(result) not of expected class type")
@@ -809,13 +809,13 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func dataCollectionForMedicationTracking() -> SBATrackedDataObjectCollection? {
-        guard let json = self.jsonForResource("MedicationTracking") as? [NSObject: AnyObject] else {
+        guard let json = self.jsonForResource("MedicationTracking") as? [AnyHashable: Any] else {
             return nil
         }
         return SBATrackedDataObjectCollection(dictionaryRepresentation: json)
     }
 
-    func stepToSelection(choiceAnswers: [String]) -> (task: ORKTask?, dataStore: SBATrackedDataStore?, selectionStep: ORKStep?, taskResult: ORKTaskResult?) {
+    func stepToSelection(_ choiceAnswers: [String]) -> (task: ORKTask?, dataStore: SBATrackedDataStore?, selectionStep: ORKStep?, taskResult: ORKTaskResult?) {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking(),
             let dataStore = self.dataStoreForMedicationTracking() else { return (nil,nil,nil, nil) }
@@ -838,7 +838,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
                 let stepResult = ORKStepResult(stepIdentifier: previousStep.identifier, results: nil)
                 taskResult.results! += [stepResult]
             }
-            guard let nextStep = task.stepAfterStep(step, withResult: taskResult) else {
+            guard let nextStep = task.step(after: step, with: taskResult) else {
                 XCTAssert(false, "\(step) after not expected to be nil")
                 return (nil,nil,nil, nil)
             }
