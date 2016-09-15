@@ -71,9 +71,9 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         let permissonsStep = SBAPermissionsStep(identifier: "permissions")
         permissonsStep.permissions = appDelegate.requiredPermissions
         let task = ORKOrderedTask(identifier: "registration", steps: [externalIDStep, permissonsStep])
-        let vc = SBATaskViewController(task: task, taskRunUUID: nil)
+        let vc = SBATaskViewController(task: task, taskRun: nil)
         vc.delegate = self
-        self.presentViewController(vc, animated: true, completion: nil)
+        self.present(vc, animated: true, completion: nil)
     }
     
     // MARK: login and registration
@@ -88,7 +88,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     
     // MARK: ORKTaskViewControllerDelegate
     
-    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         taskViewController.dismiss(animated: true) { 
             if (reason == .completed), let appDelegate = UIApplication.shared.delegate as? SBABridgeAppSDKDelegate {
                 // If complete, then show the appropriate view controller
