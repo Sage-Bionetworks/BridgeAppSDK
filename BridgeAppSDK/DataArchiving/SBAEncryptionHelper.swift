@@ -61,7 +61,7 @@ import UIKit
         
         let tmpContents = fileMan.subpaths(atPath: tmpDir)
         let filesOfInterest = tmpContents?.mapAndFilter({ (file) -> String? in
-            guard isEncryptedString(file) else { return nil }
+            guard isEncryptedString(file as NSString) else { return nil }
             return (tmpDir as NSString).appendingPathComponent(file)
         })
         return filesOfInterest ?? []

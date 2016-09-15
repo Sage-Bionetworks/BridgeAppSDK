@@ -62,9 +62,9 @@ open class SBASubtaskStep: ORKStep {
     }
     
     func substepIdentifier(_ identifier: String) -> String? {
-        guard let range = identifier.rangeOfString("\(self.subtask.identifier).") else { return nil }
-        let stepRange = range.endIndex ..< identifier.endIndex
-        let stepIdentifier = identifier.substringWithRange(stepRange)
+        guard let range = identifier.range(of: "\(self.subtask.identifier).") else { return nil }
+        let stepRange = range.upperBound ..< identifier.endIndex
+        let stepIdentifier = identifier.substring(with: stepRange)
         return stepIdentifier
     }
     
@@ -91,11 +91,11 @@ open class SBASubtaskStep: ORKStep {
         var remainingResults:[ORKStepResult] = []
         for stepResult in inputResults {
             if (predicate.evaluate(with: stepResult)) {
-                stepResult.identifier = stepResult.identifier.substringFromIndex(prefix.endIndex)
+                stepResult.identifier = stepResult.identifier.substring(from: prefix.endIndex)
                 if let stepResults = stepResult.results {
                     for result in stepResults {
                         if result.identifier.hasPrefix(prefix) {
-                            result.identifier = result.identifier.substringFromIndex(prefix.endIndex)
+                            result.identifier = result.identifier.substring(from: prefix.endIndex)
                         }
                     }
                 }
@@ -110,7 +110,7 @@ open class SBASubtaskStep: ORKStep {
     
     func step(withIdentifier identifier: String) -> ORKStep? {
         guard let stepIdentifier = substepIdentifier(identifier),
-            let step = self.subtask.step?(stepIdentifier) else {
+            let step = self.subtask.step?(withIdentifier: stepIdentifier) else {
                 return nil
         }
         return replacementStep(step)
@@ -130,8 +130,8 @@ open class SBASubtaskStep: ORKStep {
         let nextStep = self.subtask.step(after: substep, with: replacementTaskResult)
         
         // If the task result was mutated, need to add any changes back into the result set
-        if let thisStepResult = replacementTaskResult.stepResultForStepIdentifier(substepIdentifier),
-            let parentStepResult = result.stepResultForStepIdentifier(step.identifier) {
+        if let thisStepResult = replacementTaskResult.stepResult(forStepIdentifier: substepIdentifier),
+            let parentStepResult = result.stepResult(forStepIdentifier: step.identifier) {
             parentStepResult.results = thisStepResult.results
         }
         
@@ -143,20 +143,20 @@ open class SBASubtaskStep: ORKStep {
         if let permissions = self.subtask.requestedPermissions {
             return permissions
         }
-        return .none
+        return []
     }
     
     // MARK: NSCopy
     
     open func copyWithTask(_ subtask: ORKTask & NSCopying & NSSecureCoding) -> SBASubtaskStep {
-        let copy = self.copyWithZone(nil) as! SBASubtaskStep
+        let copy = self.copy() as! SBASubtaskStep
         copy._subtask = subtask
         return copy
     }
     
     override open func copy(with zone: NSZone? = nil) -> Any {
         let copy = super.copy(with: zone) as! SBASubtaskStep
-        copy._subtask = _subtask.copyWithZone(zone) as! ORKTask & NSCopying & NSSecureCoding
+        copy._subtask = _subtask.copy(with: zone) as! ORKTask & NSCopying & NSSecureCoding
         copy.taskIdentifier = taskIdentifier
         copy.schemaIdentifier = schemaIdentifier
         return copy

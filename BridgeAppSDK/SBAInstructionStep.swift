@@ -76,7 +76,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
     override open var detailText: String? {
         get {
             let detail = super.detailText
-            guard let detailFormat = detail , detailFormat.containsString("%@"),
+            guard let detailFormat = detail , detailFormat.contains("%@"),
                 let continueText = continueButtonText
             else {
                 return detail

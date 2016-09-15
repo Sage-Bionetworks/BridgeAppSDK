@@ -35,7 +35,7 @@ import Foundation
 
 extension NSDictionary {
     
-    func objectWithResourceDictionary() -> AnyObject? {
+    func objectWithResourceDictionary() -> Any? {
         guard let resourceName = self["resourceName"] as? String else {
                 return nil
         }

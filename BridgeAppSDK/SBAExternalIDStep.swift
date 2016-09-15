@@ -238,7 +238,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         return NSPredicate(format: "SELF MATCHES %@", testUserRegEx).evaluate(with: externalId)
     }
     
-    open func promptUserForTestDataGroup(externalId: String, loginHandler: ((_ isTestUser: Bool) -> Void)) {
+    open func promptUserForTestDataGroup(externalId: String, loginHandler: @escaping ((_ isTestUser: Bool) -> Void)) {
         // If this may be a test user, need to first display a prompt to confirm that the user is really QA
         // and then on answering the question, complete the registration
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")

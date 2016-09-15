@@ -67,10 +67,10 @@ open class SBATaskViewController: ORKTaskViewController {
             }
             
             let paths = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)
-            let path = (paths.last! as NSString).stringByAppendingPathComponent(self.taskRunUUID.UUIDString)
-            if !FileManager.defaultManager().fileExistsAtPath(path) {
+            let path = (paths.last! as NSString).appendingPathComponent(self.taskRunUUID.uuidString)
+            if !FileManager.default.fileExists(atPath: path) {
                 do {
-                    try FileManager.defaultManager().createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: [ FileAttributeKey.protectionKey : FileProtectionType.completeUntilFirstUserAuthentication ])
+                    try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: [ FileAttributeKey.protectionKey.rawValue : FileProtectionType.completeUntilFirstUserAuthentication ])
                 } catch let error as NSError {
                     print ("Error creating file: \(error)")
                 }

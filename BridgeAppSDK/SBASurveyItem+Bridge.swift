@@ -151,7 +151,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return true // default implementation.
     }
     
-    public var items: [AnyObject]? {
+    public var items: [Any]? {
         
         // NOTE: Only supported use of items is for a multiple choice constraint. SBBBridgeObjects
         // do not (currently) have a constraint type that allows for compound steps (although the
@@ -164,13 +164,13 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         // If this multiple choice should have an "other" option then include the string as a choice
         if (multiConstraints.allowOtherValue) {
             var other = Localization.localizedString("SBA_OTHER")
-            if (multiConstraints.enumeration.filter({ ($0 as! SBBSurveyQuestionOption).hasUppercaseLetters }).count == 0) {
+            if (items.filter({ ($0 as! SBBSurveyQuestionOption).hasUppercaseLetters }).count == 0) {
                 other = other.lowercased()
             }
-            return items + [NSString(string: other)]
+            return (items as NSArray).adding(NSString(string: other)) as [Any]
         }
         
-        return items as [AnyObject]?
+        return items
     }
     
     public var options: [String : AnyObject]? {
@@ -250,10 +250,10 @@ extension SBBSurveyRule {
         case .skip:
             return NSPredicate(format: "answer = NULL")
         case .equal:
-            let answer = isArray ? [value] : value
+            let answer: CVarArg = isArray ? [value] : value
             return NSPredicate(format: "answer = %@", answer)
         case .notEqual:
-            let answer = isArray ? [value] : value
+            let answer: CVarArg = isArray ? [value] : value
             return NSPredicate(format: "answer <> %@", answer)
         case .otherThan:
             if (isArray) {

@@ -90,7 +90,7 @@ extension ORKTremorActiveTaskOption {
             case "elbowBent"        : return .excludeHandAtShoulderHeightElbowBent
             case "touchNose"        : return .excludeHandToNose
             case "queenWave"        : return .excludeQueenWave
-            default                 : return .none
+            default                 : return []
             }
         }).reduce(0) { (raw, option) -> UInt in
             return option.rawValue | raw

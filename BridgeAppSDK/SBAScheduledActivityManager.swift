@@ -286,6 +286,30 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     // MARK: ORKTaskViewControllerDelegate
     
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        if reason == ORKTaskViewControllerFinishReason.completed,
+            let schedule = scheduledActivityForTaskViewController(taskViewController)
+            , shouldRecordResult(schedule, taskViewController: taskViewController) {
+            
+            // Update any data stores associated with this task
+            taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
+            
+            // Archive the results
+            let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
+            let archives = results.mapAndFilter({ archiveForActivityResult($0) })
+            SBADataArchive.encryptAndUploadArchives(archives)
+            
+            // Update the schedule on the server
+            updateScheduledActivity(schedule, taskViewController: taskViewController)
+        }
+        else {
+            taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
+        }
+        
+        taskViewController.dismiss(animated: true) {}
+    }
+
     open func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
         if let learnMoreStep = step as? SBAInstructionStep , learnMoreStep.learnMoreAction != nil {
             return true
@@ -316,29 +340,6 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         }
     }
     
-    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
-        
-        if reason == ORKTaskViewControllerFinishReason.completed,
-            let schedule = scheduledActivityForTaskViewController(taskViewController)
-            , shouldRecordResult(schedule, taskViewController: taskViewController) {
-            
-            // Update any data stores associated with this task
-            taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
-            
-            // Archive the results
-            let results = activityResultsForSchedule(schedule, taskViewController: taskViewController)
-            let archives = results.mapAndFilter({ archiveForActivityResult($0) })
-            SBADataArchive.encryptAndUploadArchives(archives)
-            
-            // Update the schedule on the server
-            updateScheduledActivity(schedule, taskViewController: taskViewController)
-        }
-        else {
-            taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
-        }
-        
-        taskViewController.dismiss(animated: true) {}
-    }
     
     // MARK: Convenience methods
     
@@ -378,7 +379,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     }
     
     open func instantiateTaskViewController(_ schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
-        return SBATaskViewController(task: task, taskRunUUID: nil)
+        return SBATaskViewController(task: task, taskRun: nil)
     }
     
     open func createTask(_ schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
@@ -409,11 +410,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
                 return finishedOn as Date!
             }
             else {
-                return taskViewController.result.endDate ?? Date()
+                return taskViewController.result.endDate
             }
-            }()
+        }()
         
-        schedule.startedOn = taskViewController.result.startDate ?? schedule.finishedOn
+        schedule.startedOn = taskViewController.result.startDate
         
         // Add any additional schedules
         var scheduledActivities = [schedule]

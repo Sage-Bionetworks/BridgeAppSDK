@@ -107,7 +107,7 @@ extension ORKResult: BridgeUploadableData {
     func dataFromDictionary(_ dictionary: Dictionary<String, AnyObject>) -> NSData? {
         let jsonData: NSData
         do {
-            jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: JSONSerialization.WritingOptions.init(rawValue: 0))
+            jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: JSONSerialization.WritingOptions.init(rawValue: 0)) as NSData
         } catch let error as NSError {
             fatalError("Failed to serialize JSON dictionary:\n\(error)")
         }
@@ -126,7 +126,7 @@ extension ORKResult: BridgeUploadableData {
     }
     
     func bridgifyFilename(_ filename: String) -> String {
-        return filename.stringByReplacingOccurrencesOfString(".", withString: "_")
+        return filename.replacingOccurrences(of: ".", with: "_")
     }
     
     func filenameForArchive() -> String {
@@ -147,7 +147,7 @@ extension ORKFileResult {
             return nil
         }
         var ext = url.pathExtension
-        if ext == nil || ext == "" {
+        if ext == "" {
             ext = "json"
         }
         let filename = bridgifyFilename(self.identifier + "_" + stepIdentifier) + "." + ext
@@ -405,11 +405,12 @@ extension ORKNumericQuestionResult {
 extension ORKTimeOfDayQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
-        guard let answer = self.dateComponentsAnswer else { return nil }
+        guard let dateAnswer = self.dateComponentsAnswer else { return nil }
+        var answer = dateAnswer
         answer.year = 0
         answer.month = 0
         answer.day = 0
-        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: answer.jsonObject(), questionType: .TimeOfDay)
+        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: (answer as NSDateComponents).jsonObject() as AnyObject, questionType: .timeOfDay)
     }
 }
 
@@ -428,10 +429,10 @@ extension ORKDateQuestionResult {
         guard let answer = self.dateAnswer else { return nil }
         let key = "dateAnswer"
         if self.questionType == ORKQuestionType.date {
-            return AnswerKeyAndValue(key: key, value: answer.ISO8601DateOnlyString(), questionType: self.questionType)
+            return AnswerKeyAndValue(key: key, value: (answer as NSDate).iso8601DateOnlyString() as AnyObject, questionType: self.questionType)
         }
         else {
-            return AnswerKeyAndValue(key: key, value: answer.jsonObject(), questionType: self.questionType)
+            return AnswerKeyAndValue(key: key, value: (answer as NSDate).jsonObject() as AnyObject, questionType: self.questionType)
         }
     }
 }

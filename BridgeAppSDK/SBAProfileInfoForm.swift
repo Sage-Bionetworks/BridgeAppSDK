@@ -96,7 +96,7 @@ struct SBAExternalIDOptions {
 public struct SBAProfileInfoOptions {
     
     public let includes: [SBAProfileInfoOption]
-    public let customOptions: [AnyObject]
+    public let customOptions: [Any]
     let externalIDOptions: SBAExternalIDOptions
     
     public init(includes: [SBAProfileInfoOption]) {
@@ -119,7 +119,7 @@ public struct SBAProfileInfoOptions {
         
         // Map the includes, and if it is an external ID then also map the keyboard options
         var externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .none, keyboardType: .default)
-        var customOptions: [AnyObject] = []
+        var customOptions: [Any] = []
         self.includes = items.mapAndFilter({ (obj) -> SBAProfileInfoOption? in
             if let str = obj as? String {
                 return SBAProfileInfoOption(rawValue: str)
@@ -215,13 +215,13 @@ public struct SBAProfileInfoOptions {
         let minLength = SBARegistrationStep.defaultPasswordMinLength
         let maxLength = SBARegistrationStep.defaultPasswordMaxLength
         answerFormat.validationRegex = "[[:ascii:]]{\(minLength),\(maxLength)}"
-        answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(integer: minLength), NSNumber(integer: maxLength))
+        answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(value: minLength), NSNumber(value: maxLength))
         
         // Add a confirmation field
         let confirmIdentifier = SBARegistrationStep.confirmationIdentifier
         let confirmText = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE")
         let confirmError = Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE")
-        let confirmFormItem = formItem.confirmationAnswerFormItemWithIdentifier(confirmIdentifier, text: confirmText,
+        let confirmFormItem = formItem.confirmationAnswer(withIdentifier: confirmIdentifier, text: confirmText,
                                                                                 errorMessage: confirmError)
         
         confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
@@ -266,7 +266,7 @@ public struct SBAProfileInfoOptions {
     func makeBirthdateFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
         // Calculate default date (20 years old).
         let defaultDate = (Calendar.current as NSCalendar).date(byAdding: .year, value: -20, to: Date(), options: NSCalendar.Options(rawValue: 0))
-        let answerFormat = ORKAnswerFormat.dateAnswerFormatWithDefaultDate(defaultDate, minimumDate: nil, maximumDate: Date(), calendar: Calendar.current)
+        let answerFormat = ORKAnswerFormat.dateAnswerFormat(withDefaultDate: defaultDate, minimumDate: nil, maximumDate: Date(), calendar: Calendar.current)
         let formItem = ORKFormItem(identifier: option.rawValue,
                                    text: Localization.localizedString("DOB_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,

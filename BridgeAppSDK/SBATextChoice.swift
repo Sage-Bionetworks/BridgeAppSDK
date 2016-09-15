@@ -57,7 +57,7 @@ extension NSDictionary: SBATextChoice {
     }
     
     public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
-        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString ?? self.identifier as NSString
+        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString
     }
     
     public var exclusive: Bool {

@@ -329,7 +329,7 @@ public extension SBASurveyNavigationStep {
         return true;
     }
     
-    func sharedCopying(_ copy: AnyObject) -> AnyObject {
+    func sharedCopying(_ copy: Any) -> Any {
         guard let step = copy as? SBASurveyNavigationStep else { return copy }
         step.skipToStepIdentifier = self.skipToStepIdentifier
         step.skipIfPassed = self.skipIfPassed
@@ -346,7 +346,7 @@ public extension SBASurveyNavigationStep {
         aCoder.encode(self.skipIfPassed, forKey: "skipIfPassed")
     }
     
-    func sharedCopyFromSurveyItem(_ surveyItem: AnyObject) {
+    func sharedCopyFromSurveyItem(_ surveyItem: Any) {
         guard let surveyItem = surveyItem as? SBAFormStepSurveyItem else { return }
         if let skipIdentifier = surveyItem.skipIdentifier {
             self.skipToStepIdentifier = skipIdentifier
@@ -358,7 +358,7 @@ public extension SBASurveyNavigationStep {
         return SBAObjectHash(self.skipToStepIdentifier)
     }
     
-    func sharedEquality(_ object: AnyObject?) -> Bool {
+    func sharedEquality(_ object: Any?) -> Bool {
         guard let object = object as? SBASurveyNavigationStep else { return false }
         return SBAObjectEquality(self.skipToStepIdentifier, object.skipToStepIdentifier) &&
             self.skipIfPassed == object.skipIfPassed

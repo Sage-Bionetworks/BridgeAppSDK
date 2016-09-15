@@ -126,8 +126,8 @@ extension NSDictionary: SBAFormStepSurveyItem {
         return optional ?? false
     }
     
-    public var items: [AnyObject]? {
-        return self["items"] as? [AnyObject]
+    public var items: [Any]? {
+        return self["items"] as? [Any]
     }
     
     public var range: AnyObject? {
@@ -160,7 +160,7 @@ extension NSDictionary: SBAFormStepSurveyItem {
         return nil;
     }
     
-    public var expectedAnswer: AnyObject? {
+    public var expectedAnswer: Any? {
         return self["expectedAnswer"]
     }
     

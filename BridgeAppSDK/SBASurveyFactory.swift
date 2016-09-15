@@ -329,7 +329,7 @@ extension SBAFormStepSurveyItem {
         }
     }
     
-    func createTextChoice(_ obj: AnyObject) -> ORKTextChoice {
+    func createTextChoice(_ obj: Any) -> ORKTextChoice {
         guard let textChoice = obj as? SBATextChoice else {
             assertionFailure("Passing object \(obj) does not match expected protocol SBATextChoice")
             return ORKTextChoice(text: "", detailText: nil, value: NSNull(), exclusive: false)

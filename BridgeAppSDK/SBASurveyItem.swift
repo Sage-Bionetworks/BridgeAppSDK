@@ -55,7 +55,7 @@ public protocol SBAFormStepSurveyItem: SBASurveyItem {
     var questionStyle: Bool { get }
     var placeholderText: String? { get }
     var optional: Bool { get }
-    var items: [AnyObject]? { get }
+    var items: [Any]? { get }
     var range: AnyObject? { get }
     var skipIdentifier: String? { get }
     var skipIfPassed: Bool { get }

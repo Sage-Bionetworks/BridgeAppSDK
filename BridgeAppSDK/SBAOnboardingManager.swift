@@ -75,7 +75,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         // Create the task view controller
         let task = SBANavigableOrderedTask(identifier: onboardingTaskType.rawValue, steps: steps)
-        let taskViewController = SBATaskViewController(task: task, taskRunUUID: nil)
+        let taskViewController = SBATaskViewController(task: task, taskRun: nil)
         
         // by default, attach self to the task view controller as a strong reference
         // This is to ensure that the onboarding manager, which is by default the result data source,
@@ -208,7 +208,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     open func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
         
-        guard let step = _taskViewController?.task?.step?(stepIdentifier) else { return nil }
+        guard let step = _taskViewController?.task?.step?(withIdentifier: stepIdentifier) else { return nil }
         
         // If this is a registration step with a name field and a currently available 
         // name stored for that field then return that result as a default.

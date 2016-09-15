@@ -138,7 +138,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     override open func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         // If this is a non-consented review step then do not continue to name/signature
         if identifier == SBAConsentReviewStep.reviewStepIdentifier,
-            let stepResult = result.stepResultForStepIdentifier(identifier!),
+            let stepResult = result.stepResult(forStepIdentifier: identifier!),
             let reviewResult = stepResult.results?.first as? ORKConsentSignatureResult , !reviewResult.consented {
             return nil
         }

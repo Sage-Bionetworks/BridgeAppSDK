@@ -98,7 +98,9 @@ public protocol SBAAppInfoDelegate: class {
                     self.showReconsentIfNecessary()
                     
                 case SBBErrorCode.unsupportedAppVersion:
-                    self.handleUnsupportedAppVersionError(error, networkManager: nil)
+                    if !self.handleUnsupportedAppVersionError(error, networkManager: nil) {
+                        self.registerCatastrophicStartupError(error)
+                    }
                     
                 default:
                     break
@@ -174,8 +176,8 @@ public protocol SBAAppInfoDelegate: class {
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
         // manager instance so its notification handlers get set up in time)
-        let uploadManager = SBBComponentManager.component(SBBUploadManager)
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+        let uploadManager = SBBComponentManager.component(SBBUploadManager.self) as! SBBUploadManagerProtocol
+        DispatchQueue.global(qos: .background).async {
             let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
             for file in uploads {
                 let fileUrl = URL(fileURLWithPath: file)
@@ -285,7 +287,7 @@ public protocol SBAAppInfoDelegate: class {
     // MARK: Catastrophic startup errors
     // ------------------------------------------------
     
-    private var catastrophicStartupError: NSError?
+    private var catastrophicStartupError: Error?
     
     /**
      Catastrophic Errors are errors from which the system cannot recover. By default, 
@@ -315,7 +317,7 @@ public protocol SBAAppInfoDelegate: class {
      Register a catastrophic error. Once launch is complete, this will trigger showing 
      the error.
      */
-    public final func registerCatastrophicStartupError(_ error: NSError) {
+    public final func registerCatastrophicStartupError(_ error: Error) {
         self.catastrophicStartupError = error
     }
     
@@ -323,7 +325,7 @@ public protocol SBAAppInfoDelegate: class {
      The error message to display for a catastrophic error.
     */
     open var catastrophicErrorMessage: String {
-        return catastrophicStartupError?.localizedFailureReason ??
+        return (catastrophicStartupError as? NSError)?.localizedFailureReason ??
             catastrophicStartupError?.localizedDescription ??
             Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
     }
@@ -337,7 +339,7 @@ public protocol SBAAppInfoDelegate: class {
      Default implementation for handling an unsupported app version is to display a
      catastrophic error.
     */
-    open func handleUnsupportedAppVersionError(_ error: NSError, networkManager: SBBNetworkManagerProtocol?) -> Bool {
+    open func handleUnsupportedAppVersionError(_ error: Error, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
         DispatchQueue.main.async {
             if let _ = self.window?.rootViewController {
