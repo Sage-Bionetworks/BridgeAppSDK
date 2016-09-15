@@ -51,8 +51,8 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     }()
     
     public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
-        self.init(dictionary: json)
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonNamed) else { return nil }
+        self.init(dictionary: json as NSDictionary)
     }
     
     public convenience init(dictionary: NSDictionary) {
@@ -66,7 +66,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         // Load the document for the HTML content
         if let properties = dictionary["documentProperties"] as? NSDictionary,
             let documentHtmlContent = properties["htmlDocument"] as? String {
-            self.consentDocument.htmlReviewContent = SBAResourceFinder().htmlNamed(documentHtmlContent)
+            self.consentDocument.htmlReviewContent = SBAResourceFinder.shared.html(forResource: documentHtmlContent)
         }
         
         // After loading the consentDocument, map the steps
@@ -85,7 +85,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
             
         case .sharingOptions:
             let share = inputItem as! SBAConsentSharingOptions
-            let learnMore = SBAResourceFinder.sharedResourceFinder.htmlNamed(share.localizedLearnMoreHTMLContent) ?? "PLACEHOLDER"
+            let learnMore = SBAResourceFinder.shared.html(forResource: share.localizedLearnMoreHTMLContent) ?? "PLACEHOLDER"
             let step = ORKConsentSharingStep(identifier: inputItem.identifier,
                 investigatorShortDescription: share.investigatorShortDescription,
                 investigatorLongDescription: share.investigatorLongDescription,
@@ -125,7 +125,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
      * Return visual consent step
      */
     open func visualConsentStep() -> ORKVisualConsentStep {
-        return self.steps?.findObject({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
+        return self.steps?.find({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
             ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, document: self.consentDocument)
     }
     

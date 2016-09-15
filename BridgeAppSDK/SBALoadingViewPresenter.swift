@@ -40,7 +40,7 @@ public protocol SBALoadingViewPresenter {
 public extension SBALoadingViewPresenter {
     
     public var loadingView: SBALoadingView? {
-        return self.view.subviews.findObject({ $0 is SBALoadingView }) as? SBALoadingView
+        return self.view.subviews.find({ $0 is SBALoadingView }) as? SBALoadingView
     }
     
     public func showLoadingView() {

@@ -179,7 +179,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     }
     
     public func findStep(_ trackingType: SBATrackingStepType) -> SBATrackedStepSurveyItem? {
-        return self.steps.findObject({ (obj) -> Bool in
+        return self.steps.find({ (obj) -> Bool in
             guard let trackingItem = obj as? SBATrackedStepSurveyItem,
                 let type = trackingItem.trackingType else { return false }
             return type == trackingType

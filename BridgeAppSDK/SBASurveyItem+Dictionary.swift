@@ -99,7 +99,7 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
     
     public var stepImage: UIImage? {
         guard let imageNamed = self["image"] as? String else { return nil }
-        return SBAResourceFinder().imageNamed(imageNamed)
+        return SBAResourceFinder.shared.image(forResource: imageNamed)
     }
     
     public func learnMoreAction() -> SBALearnMoreAction? {

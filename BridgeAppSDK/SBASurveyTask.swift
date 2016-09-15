@@ -180,20 +180,9 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
         super.viewWillAppear(animated)
         
         if let surveyTask = self.step?.task as? SBASurveyTask {
-            
-            assertionFailure("TODO: FIXME!! syoung 09/15/2016 implement. Not sure what the migration issue it.")
-            
-            /*
-            self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask.surveyReference, completion: { [weak self] (object, error) in
-                self?.handleSurveyLoaded(survey: object as? SBBSurvey, error: error)
-            })
- */
-            
-            /*
             self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask.surveyReference, completion: { [weak self] (object, error) in
                 self?.handleSurveyLoaded(survey: object, error: error)
-            }) as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock as! SBABridgeManagerCompletionBlock
- */
+            } as! SBABridgeManagerCompletionBlock)
         }
     }
     

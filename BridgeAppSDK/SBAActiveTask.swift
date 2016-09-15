@@ -193,7 +193,7 @@ extension SBAActiveTask {
         // base factory method defined
         if let items = self.localizedSteps {
             for item in items {
-                if let step = task.steps.findObject({ return $0.identifier == item.identifier }) {
+                if let step = task.steps.find({ return $0.identifier == item.identifier }) {
                     step.title = item.stepTitle ?? step.title
                     step.text = item.stepText ?? step.text
                     if let instructionItem = item as? SBAInstructionStepSurveyItem,
@@ -236,7 +236,7 @@ extension SBAActiveTask {
         let maxConsecutiveFailures: Int = taskOptions?["maxConsecutiveFailures"] as? Int ?? 3
         var customTargetImage: UIImage? = nil
         if let imageName = taskOptions?["customTargetImageName"] as? String {
-            customTargetImage = SBAResourceFinder.sharedResourceFinder.imageNamed(imageName)
+            customTargetImage = SBAResourceFinder.shared.image(forResource: imageName)
         }
         let customTargetPluralName: String? = taskOptions?["customTargetPluralName"] as? String
         let requireReversal: Bool = taskOptions?["requireReversal"] as? Bool ?? false

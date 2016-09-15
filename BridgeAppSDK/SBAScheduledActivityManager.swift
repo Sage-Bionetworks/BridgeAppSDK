@@ -277,11 +277,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
             else {
                 return nil
         }
-        return activities.findObject({ $0.guid == guid })
+        return activities.find({ $0.guid == guid })
     }
     
     open func scheduledActivityForTaskIdentifier(_ taskIdentifier: String) -> SBBScheduledActivity? {
-        return activities.findObject({ $0.taskIdentifier == taskIdentifier })
+        return activities.find({ $0.taskIdentifier == taskIdentifier })
     }
     
     // MARK: ORKTaskViewControllerDelegate

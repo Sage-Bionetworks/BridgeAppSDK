@@ -303,7 +303,7 @@ public protocol SBAFormProtocol : class {
 
 extension SBAFormProtocol {
     public func formItemForIdentifier(_ identifier: String) -> ORKFormItem? {
-        return self.formItems?.findObject({ $0.identifier == identifier })
+        return self.formItems?.find({ $0.identifier == identifier })
     }
 }
 
@@ -322,7 +322,7 @@ extension SBAProfileInfoForm {
     }
     
     public func formItemForProfileInfoOption(_ profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
-        return self.formItems?.findObject({ $0.identifier == profileInfoOption.rawValue })
+        return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
     func commonInit(_ inputItem: SBASurveyItem?) {

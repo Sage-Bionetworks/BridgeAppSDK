@@ -92,7 +92,7 @@ open class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     // MARK: Selection filtering
     
     var trackedResultIdentifier: String? {
-        return self.steps.findObject({ (step) -> Bool in
+        return self.steps.find({ (step) -> Bool in
             if let trackedStep = step as? SBATrackedStep , trackedStep.trackingType == .selection {
                 return true
             }

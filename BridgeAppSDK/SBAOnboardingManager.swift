@@ -51,8 +51,8 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     }
     
     public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
-        self.init(dictionary: json)
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonNamed) else { return nil }
+        self.init(dictionary: json as NSDictionary)
     }
     
     public convenience init(dictionary: NSDictionary) {
@@ -93,7 +93,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
      Convenience method for getting the section for a given section type.
     */
     open func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
-        return self.sections?.findObject({ $0.onboardingSectionType == sectionType })
+        return self.sections?.find({ $0.onboardingSectionType == sectionType })
     }
     
     /**

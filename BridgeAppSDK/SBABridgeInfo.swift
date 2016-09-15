@@ -126,18 +126,18 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var cacheDaysBehind: Int = 0
     public var environment: SBBEnvironment = .prod
     
-    private let plist: [String: AnyHashable]
+    private let plist: [String: Any]
 
     public convenience override init() {
-        let plist = SBAResourceFinder().plistNamed("BridgeInfo")!.mutableCopy() as! NSMutableDictionary
-        if let additionalInfo = SBAResourceFinder().plistNamed("BridgeInfo-private") as? [String: AnyHashable] {
-            plist.addEntries(from: additionalInfo)
+        var plist = SBAResourceFinder.shared.plist(forResource: "BridgeInfo")!
+        if let additionalInfo = SBAResourceFinder.shared.plist(forResource: "BridgeInfo-private") {
+            plist = plist.merge(from: additionalInfo)
         }
         let studyIdentifier = plist["studyIdentifier"] as! String
-        self.init(studyIdentifier: studyIdentifier, plist: plist as! [String: AnyHashable])
+        self.init(studyIdentifier: studyIdentifier, plist: plist)
     }
     
-    public init(studyIdentifier:String, plist: [String: AnyHashable]) {
+    public init(studyIdentifier:String, plist: [String: Any]) {
         
         // Set study identifier and plist pointers
         self._studyIdentifier = studyIdentifier
@@ -218,11 +218,11 @@ extension SBABridgeInfo {
     }
         
     public func schemaReferenceWithIdentifier(_ schemaIdentifier: String) -> SBASchemaReference? {
-        return self.schemaMap?.findObject({ $0.schemaIdentifier == schemaIdentifier})
+        return self.schemaMap?.find({ $0.schemaIdentifier == schemaIdentifier})
     }
     
     public func taskReferenceWithIdentifier(_ taskIdentifier: String) -> SBATaskReference? {
-        return self.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier})
+        return self.taskMap?.find({ $0.taskIdentifier == taskIdentifier})
     }
     
     public func taskReferenceForSchedule(_ schedule: SBBScheduledActivity) -> SBATaskReference? {

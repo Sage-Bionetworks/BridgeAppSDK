@@ -54,7 +54,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         guard let learnMore = self.learnMoreAction?.identifier else {
             return nil
         }
-        return SBAResourceFinder.sharedResourceFinder.htmlNamed(learnMore)
+        return SBAResourceFinder.shared.html(forResource: learnMore)
     }
     
     /**

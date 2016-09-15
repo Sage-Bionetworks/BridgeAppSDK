@@ -37,11 +37,11 @@ open class SBAColorInfo : NSObject {
     
     static let defaultColorInfo = SBAColorInfo(name: "ColorInfo")
     
-    fileprivate var plist: NSDictionary?
+    fileprivate var plist: [String : Any]?
     
     init(name: String) {
         super.init()
-        self.plist = SBAResourceFinder().plistNamed(name)
+        self.plist = SBAResourceFinder.shared.plist(forResource: name)
     }
     
     func colorForKey(_ colorKey: String) -> UIColor? {

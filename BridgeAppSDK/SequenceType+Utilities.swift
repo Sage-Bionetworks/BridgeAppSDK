@@ -39,7 +39,6 @@ extension Sequence {
     Returns an `Array` containing the results of mapping and filtered `transform`
     over `self`.
     */
-    
     public func mapAndFilter<T>(_ transform: (Self.Iterator.Element) throws -> T?) rethrows -> [T] {
         var result = [T]()
         for element in self {
@@ -50,34 +49,39 @@ extension Sequence {
         return result
     }
     
-    
-    public func findObject(_ transform: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
+    /**
+     Find the first element in the `Sequence` that matches the given criterion.
+    */
+    public func find(_ evaluate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         for element in self {
-            if try transform(element) {
+            if try evaluate(element) {
                 return element
             }
         }
         return nil
     }
     
-    
-    public func nextObject(_ transform: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
+    /**
+     Find the next element in the `Sequence` after the element that matches the given criterion.
+     */
+    public func next(_ evaluate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         var found = false
         for element in self {
             if found {
                 return element
             }
-            found = try transform(element)
+            found = try evaluate(element)
         }
         return nil
     }
     
-    
-    public func object(withIdentifier identifier: String) -> Self.Iterator.Element? {
+    /**
+     Find the first element with the given `identifier`
+    */
+    public func find(withIdentifier identifier: String) -> Self.Iterator.Element? {
         for element in self {
             if let obj = element as? NSObject,
-                let id = obj.value(forKey: "identifier") as? String
-                , (id == identifier) {
+                let id = obj.value(forKey: "identifier") as? String, (id == identifier) {
                 return element
             }
         }

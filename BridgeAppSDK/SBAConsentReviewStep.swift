@@ -257,7 +257,7 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
     }
     
     var consentReviewResult: SBAConsentReviewResult? {
-        return self.result?.results?.findObject({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
+        return self.result?.results?.find({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
     }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses

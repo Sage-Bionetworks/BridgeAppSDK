@@ -33,15 +33,15 @@
 
 import UIKit
 
-open class SBAResourceFinder: NSObject {
+public final class SBAResourceFinder: NSObject {
     
-    static let sharedResourceFinder = SBAResourceFinder()
+    public static let shared = SBAResourceFinder()
     
-    func sharedResourceDelegate() -> SBABridgeAppSDKDelegate? {
+    private func sharedResourceDelegate() -> SBABridgeAppSDKDelegate? {
         return UIApplication.shared.delegate as? SBABridgeAppSDKDelegate
     }
     
-    func pathForResource(_ resourceNamed: String, ofType: String) -> String? {
+    public func path(forResource resourceNamed: String, ofType: String) -> String? {
         if let resourceDelegate = self.sharedResourceDelegate(),
             let path = resourceDelegate.path(forResource: resourceNamed, ofType: ofType) {
                 return path
@@ -55,46 +55,42 @@ open class SBAResourceFinder: NSObject {
         return nil
     }
     
-    open func imageNamed(_ named: String) -> UIImage? {
+    public func image(forResource resourceNamed: String) -> UIImage? {
         if let resourceDelegate = self.sharedResourceDelegate(),
-            let image = UIImage(named: named, in: resourceDelegate.resourceBundle(), compatibleWith: nil) {
+            let image = UIImage(named: resourceNamed, in: resourceDelegate.resourceBundle(), compatibleWith: nil) {
             return image
         }
-        else if let image = UIImage(named: named) {
+        else if let image = UIImage(named: resourceNamed) {
             return image
         }
-        else if let image = UIImage(named: named, in: Bundle(for: self.classForCoder), compatibleWith: nil) {
+        else if let image = UIImage(named: resourceNamed, in: Bundle(for: self.classForCoder), compatibleWith: nil) {
             return image
         }
         return nil;
     }
     
-    func dataNamed(_ resourceNamed: String, ofType: String) -> Data? {
-        return dataNamed(resourceNamed, ofType: ofType, bundle: nil)
-    }
-    
-    func dataNamed(_ resourceNamed: String, ofType: String, bundle: Bundle?) -> Data? {
+    public func data(forResource resourceNamed: String, ofType: String, bundle: Bundle? = nil) -> Data? {
         if let path = bundle?.path(forResource: resourceNamed, ofType: ofType) ??
-            self.pathForResource(resourceNamed, ofType: ofType) {
+            self.path(forResource: resourceNamed, ofType: ofType) {
             return (try? Data(contentsOf: URL(fileURLWithPath: path)))
         }
         return nil
     }
     
-    open func htmlNamed(_ resourceNamed: String) -> String? {
-        if let data = self.dataNamed(resourceNamed, ofType: "html"),
+    public func html(forResource resourceNamed: String) -> String? {
+        if let data = self.data(forResource: resourceNamed, ofType: "html"),
             let html = String(data: data, encoding: String.Encoding.utf8) {
             return importHTML(html)
         }
         return nil
     }
     
-    func importHTML(_ input: String) -> String {
+    private func importHTML(_ input: String) -> String {
         
         // setup string
-        var html = input
+        var htmlString = input
         func search(_ str: String, _ range: Range<String.Index>?) -> Range<String.Index>? {
-            return html.range(of: str, options: .caseInsensitive, range: range, locale: nil)
+            return htmlString.range(of: str, options: .caseInsensitive, range: range, locale: nil)
         }
         
         // search for <import href="resourceName.html" /> and replace with contents of resource file
@@ -102,30 +98,26 @@ open class SBAResourceFinder: NSObject {
         while keepGoing {
             keepGoing = false
             if let startRange = search("<import", nil),
-                let endRange = search("/>", startRange.upperBound..<html.endIndex),
+                let endRange = search("/>", startRange.upperBound..<htmlString.endIndex),
                 let hrefRange = search("href", startRange.upperBound..<endRange.upperBound),
                 let fileStartRange = search("\"", hrefRange.upperBound..<endRange.upperBound),
                 let fileEndRange = search(".html\"", fileStartRange.upperBound..<endRange.upperBound) {
-                let resourceName = html.substring(with: fileStartRange.upperBound..<fileEndRange.lowerBound)
-                if let importText = htmlNamed(resourceName) {
+                let resourceName = htmlString.substring(with: fileStartRange.upperBound..<fileEndRange.lowerBound)
+                if let importText = html(forResource: resourceName) {
                     keepGoing = true
-                    html.replaceSubrange(startRange.lowerBound..<endRange.upperBound, with: importText)
+                    htmlString.replaceSubrange(startRange.lowerBound..<endRange.upperBound, with: importText)
                 }
             }
         }
         
-        return html
+        return htmlString
     }
     
-    func jsonNamed(_ resourceNamed: String) -> NSDictionary? {
-        return jsonNamed(resourceNamed, bundle: nil)
-    }
-    
-    func jsonNamed(_ resourceNamed: String, bundle: Bundle?) -> NSDictionary? {
+    public func json(forResource resourceNamed: String, bundle: Bundle? = nil) -> [String : Any]? {
         do {
-            if let data = self.dataNamed(resourceNamed, ofType: "json", bundle: bundle) {
+            if let data = self.data(forResource: resourceNamed, ofType: "json", bundle: bundle) {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
-                return json as? NSDictionary
+                return json as? [String : Any]
             }
         }
         catch let error as NSError {
@@ -136,15 +128,15 @@ open class SBAResourceFinder: NSObject {
         return nil
     }
     
-    open func plistNamed(_ resourceNamed: String) -> NSDictionary? {
-        if let path = self.pathForResource(resourceNamed, ofType: "plist"),
+    public func plist(forResource resourceNamed: String) -> [String : Any]? {
+        if let path = self.path(forResource: resourceNamed, ofType: "plist"),
             let dictionary = NSDictionary(contentsOfFile: path) {
-                return dictionary
+                return dictionary as? [String : Any]
         }
         return nil
     }
     
-    open func urlNamed(_ resourceNamed: String, withExtension: String) -> URL? {
+    public func url(forResource resourceNamed: String, withExtension: String) -> URL? {
         if let resourceDelegate = self.sharedResourceDelegate(),
             let url = resourceDelegate.resourceBundle().url(forResource: resourceNamed, withExtension: withExtension)
             , (url as NSURL).checkResourceIsReachableAndReturnError(nil) {

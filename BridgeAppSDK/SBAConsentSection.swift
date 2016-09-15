@@ -102,17 +102,17 @@ extension NSDictionary: SBAConsentSection {
     
     public var sectionHtmlContent: String? {
         guard let htmlContent = self["sectionHtmlContent"] as? String else { return nil }
-        return SBAResourceFinder().htmlNamed(htmlContent)
+        return SBAResourceFinder.shared.html(forResource: htmlContent)
     }
 
     public var sectionCustomImage: UIImage? {
         guard let imageNamed = self["sectionImage"] as? String else { return nil }
-        return SBAResourceFinder().imageNamed(imageNamed)
+        return SBAResourceFinder.shared.image(forResource: imageNamed)
     }
     
     public var sectionCustomAnimationURL: URL? {
         guard let resource = self["sectionAnimationUrl"] as? String else { return nil }
         let scaleFactor = UIScreen.main.scale >= 3 ? "@3x" : "@2x"
-        return SBAResourceFinder().urlNamed("\(resource)\(scaleFactor)", withExtension: "m4v")
+        return SBAResourceFinder.shared.url(forResource: "\(resource)\(scaleFactor)", withExtension: "m4v")
     }
 }

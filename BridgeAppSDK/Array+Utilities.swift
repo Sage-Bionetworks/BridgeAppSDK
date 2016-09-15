@@ -35,10 +35,9 @@ import Foundation
 
 extension Array where Element: Equatable {
     
-    
     public func nextMatch(_ object: Array.Iterator.Element?) -> Array.Iterator.Element? {
         guard let match = object else { return self.first }
-        return self.nextObject({ (match == $0)
+        return self.next({ (match == $0)
         })
     }
 

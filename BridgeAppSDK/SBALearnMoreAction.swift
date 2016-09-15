@@ -56,7 +56,7 @@ open class SBAURLLearnMoreAction: SBALearnMoreAction {
                 if let url = URL(string: identifier) {
                     _learnMoreURL = url
                 }
-                else if let url = SBAResourceFinder.sharedResourceFinder.urlNamed(identifier, withExtension: "html") {
+                else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
                     _learnMoreURL = url
                 }
             }

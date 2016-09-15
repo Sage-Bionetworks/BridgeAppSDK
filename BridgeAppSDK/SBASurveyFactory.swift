@@ -72,8 +72,8 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder().jsonNamed(jsonNamed) else { return nil }
-        self.init(dictionary: json)
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonNamed) else { return nil }
+        self.init(dictionary: json as NSDictionary)
     }
     
     public convenience init(dictionary: NSDictionary) {
