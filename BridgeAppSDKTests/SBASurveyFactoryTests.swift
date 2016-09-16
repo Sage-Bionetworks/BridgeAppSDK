@@ -1004,8 +1004,8 @@ class SBASurveyFactoryTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual(answerFormat.minimum, 0)
-        XCTAssertEqual(answerFormat.maximum, NSIntegerMax)
+        XCTAssertEqual(answerFormat.minimum?.intValue, 0)
+        XCTAssertEqual(answerFormat.maximum?.intValue, NSIntegerMax)
         XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.integer)
         XCTAssertEqual(answerFormat.unit, "weeks")
     }

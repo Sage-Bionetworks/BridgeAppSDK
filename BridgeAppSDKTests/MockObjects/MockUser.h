@@ -48,7 +48,7 @@
 @property (nonatomic, copy) NSString * _Nullable password;
 @property (nonatomic, copy) NSString * _Nullable subpopulationGuid;
 @property (nonatomic, copy) NSString * _Nullable gender;
-@property (nonatomic, strong) NSDate * _Nullable birthdate;
+@property (nonatomic, copy) NSDate * _Nullable birthdate;
 @property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
 @property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
 @property (nonatomic) BOOL hasRegistered;

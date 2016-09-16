@@ -509,7 +509,7 @@ class SBAActiveTaskTests: XCTestCase {
             "insertSteps"               :[
                 [
                     "resourceName"      : "MedicationTracking",
-                    "resourceBundle"    : Bundle(for: self.classForCoder).bundleIdentifier ?? "",
+                    "resourceBundle"    : Bundle(for: self.classForCoder).bundleIdentifier,
                     "classType"         : "TrackedDataObjectCollection"
                     ]
                 ]

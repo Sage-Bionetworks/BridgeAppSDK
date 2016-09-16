@@ -142,7 +142,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
-        checkSchema(splitResults, expectedSchema:[["Medication Tracker" as NSObject, 1 as NSObject]])
+        checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1)])
         
         XCTAssertEqual(splitResults.count, 1)
         guard let medResult = splitResults.first else { return }
@@ -190,7 +190,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
-        checkSchema(splitResults, expectedSchema:[["Medication Tracker" as NSObject, 1 as NSObject]])
+        checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1 )])
 
         guard let medResult = splitResults.first else { return }
         
@@ -238,11 +238,11 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
-            ["Medication Tracker" as NSObject, 1 as NSObject],
-            ["Tapping Activity" as NSObject, 5 as NSObject],
-            ["Voice Activity" as NSObject, 1 as NSObject],
-            ["Memory Activity" as NSObject, 3],
-            ["Walking Activity", 7]])
+            ("Medication Tracker", 1),
+            ("Tapping Activity", 5),
+            ("Voice Activity", 1),
+            ("Memory Activity", 3),
+            ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -276,11 +276,11 @@ class SBAScheduledActivityManagerTests: XCTestCase {
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
-            ["Medication Tracker" as NSObject, 1 as NSObject],
-            ["Tapping Activity" as NSObject, 5 as NSObject],
-            ["Voice Activity" as NSObject, 1 as NSObject],
-            ["Memory Activity" as NSObject, 3],
-            ["Walking Activity", 7]])
+            ("Medication Tracker", 1),
+            ("Tapping Activity", 5),
+            ("Voice Activity", 1),
+            ("Memory Activity", 3),
+            ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -305,7 +305,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // run through the task steps to setup the data store with previous values
         let (previousTask, _) = manager.createTask(schedule)
-        buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
+        let _ = buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
         
         // run again with updated steps
         guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
@@ -320,10 +320,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
-            ["Tapping Activity" as NSObject, 5 as NSObject],
-            ["Voice Activity" as NSObject, 1 as NSObject],
-            ["Memory Activity" as NSObject, 3 as NSObject],
-            ["Walking Activity" as NSObject, 7]])
+            ("Tapping Activity", 5),
+            ("Voice Activity", 1),
+            ("Memory Activity", 3),
+            ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -356,8 +356,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
-            ["Medication Tracker" as NSObject, 1 as NSObject],
-            ["Tapping Activity" as NSObject, 5 as NSObject]])
+            ("Medication Tracker", 1),
+            ("Tapping Activity", 5)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -390,8 +390,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
-            ["Medication Tracker" as NSObject, 1 as NSObject],
-            ["Tapping Activity" as NSObject, 5 as NSObject]])
+            ("Medication Tracker", 1),
+            ("Tapping Activity", 5)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -415,7 +415,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // run through the task steps to setup the data store with previous values
         let (previousTask, _) = manager.createTask(schedule)
-        buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
+        let _ = buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
         
         guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
             let task = taskVC.task
@@ -428,7 +428,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
         
         // check the schema
-        checkSchema(splitResults, expectedSchema:[["Tapping Activity" as NSObject, 5 as NSObject]])
+        checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -452,7 +452,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // run through the task steps to setup the data store with previous values
         let (previousTask, _) = manager.createTask(schedule)
-        buildTaskResult(previousTask!)
+        let _ = buildTaskResult(previousTask!)
         
         guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
             let task = taskVC.task
@@ -465,7 +465,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
 
         // check the schema
-        checkSchema(splitResults, expectedSchema:[["Tapping Activity" as NSObject, 5 as NSObject]])
+        checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
         
         // check that the data store results were added to the other tasks
         checkDataStoreResults(splitResults)
@@ -592,16 +592,16 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
     }
     
-    func checkSchema(_ splitResults: [SBAActivityResult], expectedSchema:[[NSObject]]) {
+    func checkSchema(_ splitResults: [SBAActivityResult], expectedSchema:[(schemaId: String, schemaRevision: Int)]) {
         
         XCTAssertEqual(splitResults.count, expectedSchema.count)
         guard splitResults.count <= expectedSchema.count else { return }
         
-        for (idx,result) in splitResults.enumerated() {
-            let expectedSchemaId = expectedSchema[idx].first
+        for (idx, result) in splitResults.enumerated() {
+            let expectedSchemaId = expectedSchema[idx].schemaId
             XCTAssertEqual(result.schemaIdentifier, expectedSchemaId)
-            let expectedSchemaRev = expectedSchema[idx].last
-            XCTAssertEqual(result.schemaRevision, expectedSchemaRev)
+            let expectedSchemaRev = expectedSchema[idx].schemaRevision
+            XCTAssertEqual(result.schemaRevision.intValue, expectedSchemaRev)
         }
     }
     
@@ -632,7 +632,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                 continue
             }
             for stepIdentifier in expectedIdentifiers {
-                let stepResult = result.stepResultForStepIdentifier(stepIdentifier)
+                let stepResult = result.stepResult(forStepIdentifier: stepIdentifier)
                 XCTAssertNotNil(stepResult, "\(stepIdentifier)")
                 XCTAssertTrue(stepResult?.hasResults ?? false, "\(stepIdentifier)")
                 if let results = stepResult?.results {
@@ -654,12 +654,18 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         for result in splitResults {
             
-            let resultStart = result.startDate.timeIntervalSinceReferenceDate.roundTo(1)
-            let taskStart = taskResult.startDate.timeIntervalSinceReferenceDate.roundTo(1)
+            func roundDate(_ date: Date) -> Double {
+                let ret = date.timeIntervalSinceReferenceDate
+                let divisor = pow(10.0, Double(1))
+                return round(ret * divisor) / divisor
+            }
+            
+            let resultStart = roundDate(result.startDate)
+            let taskStart = roundDate(taskResult.startDate)
             XCTAssertGreaterThanOrEqual(resultStart, taskStart, "\(result.identifier)")
             
-            let resultEnd = result.endDate.timeIntervalSinceReferenceDate.roundTo(1)
-            let taskEnd = taskResult.endDate.timeIntervalSinceReferenceDate.roundTo(1)
+            let resultEnd = roundDate(result.endDate)
+            let taskEnd = roundDate(taskResult.endDate)
             XCTAssertLessThanOrEqual(resultEnd, taskEnd, "\(result.identifier)")
         }
         
@@ -870,10 +876,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         // Update the start and end dates
         let stepInterval = 5.0
-        var date: Date = taskResult.startDate.dateByAddingTimeInterval(Double(-1 * taskResult.results!.count) * stepInterval)
+        var date: Date = taskResult.startDate.addingTimeInterval(Double(-1 * taskResult.results!.count) * stepInterval)
         for result in taskResult.results! {
             result.startDate = date
-            date = date.dateByAddingTimeInterval(stepInterval)
+            date = date.addingTimeInterval(stepInterval)
             result.endDate = date
         }
         taskResult.startDate = taskResult.results!.first!.startDate
@@ -975,15 +981,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     }
     
     override func instantiateTaskViewController(_ schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
-        return TestTaskViewController(task: task, taskRunUUID: nil)
+        return TestTaskViewController(task: task, taskRun: nil)
     }
     
-}
-
-extension Double {
-    /// Rounds the double to decimal places value
-    func roundTo(_ places:Int) -> Double {
-        let divisor = pow(10.0, Double(places))
-        return round(self * divisor) / divisor
-    }
 }

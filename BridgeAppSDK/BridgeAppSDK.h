@@ -51,8 +51,9 @@ FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 #import <BridgeAppSDK/SBALog.h>
 #import <BridgeAppSDK/SBADataArchive.h>
 #import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/ResearchKitExtensions.h>
-
-//AppCore
 #import <BridgeAppSDK/SBANewsFeedItem.h>
 #import <BridgeAppSDK/SBANewsFeedManager.h>
+#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
+#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+#import <BridgeAppSDK/SBAJSONObject.h>
+#import <BridgeAppSDK/SBALog.h>

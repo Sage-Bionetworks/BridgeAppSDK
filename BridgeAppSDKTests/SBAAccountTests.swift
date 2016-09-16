@@ -101,7 +101,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.Invalid(let reason) {
+        catch SBAExternalIDError.invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -122,7 +122,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.Invalid(let reason) {
+        catch SBAExternalIDError.invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -143,7 +143,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.NotMatching {
+        catch SBAExternalIDError.notMatching {
             // Expected error
         }
         catch let error as NSError {

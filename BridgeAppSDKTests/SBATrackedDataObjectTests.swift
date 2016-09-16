@@ -293,11 +293,11 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(trackNav.shouldSkipStep, expectedFrequencyIds.count == 0)
         
         for identifier in idList {
-            guard let item = items.objectWithIdentifier(identifier) else {
+            guard let item = items.find(withIdentifier: identifier) else {
                 XCTAssert(false, "Couldn't find item \(identifier)")
                 return
             }
-            let formItem = formStep.formItems?.objectWithIdentifier(identifier)
+            let formItem = formStep.formItems?.find(withIdentifier: identifier)
             if (expectedFrequencyIds.contains(item.identifier)) {
                 XCTAssertNotNil(formItem, "\(identifier)")
                 XCTAssertEqual(formItem?.text, item.text)
@@ -628,7 +628,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     
     func checkDataStoreDefaultIDMap(_ dataStore: SBATrackedDataStore) {
 
-        guard let defaultMap = dataStore.momentInDayResultDefaultIdMap as? [[String]] else {
+        guard let defaultMap = dataStore.momentInDayResultDefaultIdMap as? [Array <String>] else {
             XCTAssert(false, "\(dataStore.momentInDayResultDefaultIdMap) not of expected type")
             return
         }
@@ -638,7 +638,12 @@ class SBATrackedDataObjectTests: ResourceTestCase {
              ["medicationActivityTiming", "medicationActivityTiming"],
              ["medicationTrackEach", "medicationTrackEach"]];
         
-        XCTAssertEqual(defaultMap, expectedMap);
+        XCTAssertEqual(defaultMap.count, expectedMap.count)
+        
+        for (index, pair) in defaultMap.enumerated() {
+            let expected = expectedMap[index]
+            XCTAssertEqual(expected, pair)
+        }
     }
     
     // Mark: Navigation tests

@@ -326,7 +326,7 @@ class SBASurveyNavigationTests: XCTestCase {
         // Create the text choices object from the choices and associated values
         var textChoices: [ORKTextChoice] = []
         for (index, choice) in choices.enumerated() {
-            let value = values?[index] ?? choice
+            let value = values?[index] ?? choice as NSCoding & NSCopying & NSObjectProtocol
             textChoices += [ORKTextChoice(text: choice, value: value)]
         }
         // Return a survey item of the appropriate type
