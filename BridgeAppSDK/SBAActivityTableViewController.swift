@@ -38,14 +38,46 @@ import BridgeSDK
 @objc
 public protocol SBAScheduledActivityDataSource: class {
     
+    /**
+     Reload the data source.
+     */
     func reloadData()
-    func numberOfSections() -> Int
-    func numberOfRowsInSection(_ section: Int) -> Int
-    func scheduledActivityAtIndexPath(_ indexPath: IndexPath) -> SBBScheduledActivity?
-    func shouldShowTaskForIndexPath(_ indexPath: IndexPath) -> Bool
     
-    @objc optional func didSelectRowAtIndexPath(_ indexPath: IndexPath)
-    @objc optional func sectionTitle(_ section: Int) -> String?
+    /**
+     Number of sections in the data source.
+     */
+    func numberOfSections() -> Int
+    
+    /**
+     Number of rows in the data source.
+     */
+    @objc(numberOfRowsInSection:)
+    func numberOfRows(for section: Int) -> Int
+    
+    /**
+     The scheduled activity at the given index.
+     @param indexPath   The index path for the schedule
+     */
+    @objc(scheduledActivityAtIndexPath:)
+    func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity?
+    
+    /**
+     Should the task associated with the given index path be disabled.
+     */
+    @objc(shouldShowTaskForIndexPath:)
+    func shouldShowTask(for indexPath: IndexPath) -> Bool
+    
+    /**
+     Called when a row is selected.
+     */
+    @objc(didSelectRowAtIndexPath:)
+    optional func didSelectRow(at indexPath: IndexPath)
+    
+    /**
+     Title for the given section (if applicable)
+     */
+    @objc(titleForSection:)
+    optional func title(for section: Int) -> String?
 }
 
 open class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
@@ -90,21 +122,32 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     
     // MARK: data refresh
     
-    open func reloadTable(_ scheduledActivityManager: SBAScheduledActivityManager) {
+    open func reloadFinished(_ sender: Any?) {
         // reload table
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
     }
     
     // MARK: table cell customization
+    
+    static let defaultReuseIdentifier = "ActivityCell"
 
-    open func dequeueReusableCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: "ActivityCell", for: indexPath)
+    /**
+     The cell to dequeue at a given index path. By default, the cell should have a reuse identifier
+     of `SBAActivityTableViewController.defaultReuseIdentifier`
+     */
+    @objc(dequeueReusableCellInTableView:indexPath:)
+    open func dequeueReusableCell(in tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        return tableView.dequeueReusableCell(withIdentifier: SBAActivityTableViewController.defaultReuseIdentifier, for: indexPath)
     }
     
-    open func configureCell(_ cell: UITableViewCell, tableView: UITableView, indexPath: IndexPath) {
+    /**
+     Configure the cell.
+     */
+    @objc(configureCell:tableView:indexPath:)
+    open func configure(cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
         guard let activityCell = cell as? SBAActivityTableViewCell,
-            let schedule = scheduledActivityDataSource.scheduledActivityAtIndexPath(indexPath) else {
+            let schedule = scheduledActivityDataSource.scheduledActivity(at: indexPath) else {
                 return
         }
         
@@ -140,7 +183,7 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
         }
         
         // Modify the label colors if disabled
-        if (scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath)) {
+        if (scheduledActivityDataSource.shouldShowTask(for: indexPath)) {
             activityCell.titleLabel.textColor = UIColor.black
         }
         else {
@@ -156,26 +199,26 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     }
     
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scheduledActivityDataSource.numberOfRowsInSection(section)
+        return scheduledActivityDataSource.numberOfRows(for: section)
     }
     
     override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = dequeueReusableCell(tableView, indexPath: indexPath)
-        configureCell(cell, tableView: tableView, indexPath: indexPath)
+        let cell = dequeueReusableCell(in: tableView, at: indexPath)
+        configure(cell: cell, in: tableView, at: indexPath)
         return cell
     }
     
     override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath) ? indexPath : nil
+        return scheduledActivityDataSource.shouldShowTask(for: indexPath) ? indexPath : nil
     }
     
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        scheduledActivityDataSource.didSelectRowAtIndexPath?(indexPath)
+        scheduledActivityDataSource.didSelectRow?(at: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return scheduledActivityDataSource.sectionTitle?(section)
+        return scheduledActivityDataSource.title?(for: section)
     }
 }
 

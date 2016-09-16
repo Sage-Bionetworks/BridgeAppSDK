@@ -105,7 +105,7 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         for stepResult in activityResultResults {
             if let stepResultResults = stepResult.results {
                 for result in stepResultResults {
-                    if !insertResult(result, stepResult: stepResult, activityResult: activityResult) {
+                    if !insert(result: result, stepResult: stepResult, activityResult: activityResult) {
                         return false
                     }
                 }
@@ -124,7 +124,7 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
     /**
     * Method for inserting a result into an archive. Allows for override by subclasses
     */
-    open func insertResult(_ result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
+    open func insert(result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
         
         guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
             assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")

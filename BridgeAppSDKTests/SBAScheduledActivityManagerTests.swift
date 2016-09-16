@@ -65,7 +65,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     func testCreateTask_MedicationTask() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(medicationTrackingTaskId)
-        let (task, taskRef) = manager.createTask(schedule)
+        let (task, taskRef) = manager.createTask(for: schedule)
         XCTAssertNotNil(task)
         XCTAssertNotNil(taskRef)
     }
@@ -73,7 +73,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     func testCreateTask_ComboTask() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(comboTaskId)
-        let (task, taskRef) = manager.createTask(schedule)
+        let (task, taskRef) = manager.createTask(for: schedule)
         XCTAssertNotNil(task)
         XCTAssertNotNil(taskRef)
     }
@@ -81,7 +81,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     func testCreateTask_TappingTaskWithMeds() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(tappingTaskId)
-        let (task, taskRef) = manager.createTask(schedule)
+        let (task, taskRef) = manager.createTask(for: schedule)
         XCTAssertNotNil(task)
         XCTAssertNotNil(taskRef)
     }
@@ -89,7 +89,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     func testCreateTask_SingleTask() {
         let manager = TestScheduledActivityManager()
         let schedule = createScheduledActivity(memoryTaskId)
-        let (task, taskRef) = manager.createTask(schedule)
+        let (task, taskRef) = manager.createTask(for: schedule)
         XCTAssertNotNil(task)
         XCTAssertNotNil(taskRef)
         
@@ -108,7 +108,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
         let schedule = manager.activities[1]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -116,7 +116,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        manager.updateScheduledActivity(manager.activities[1], taskViewController: taskVC)
+        manager.update(schedule: manager.activities[1], taskViewController: taskVC)
         
         XCTAssertNotNil(manager.updatedScheduledActivities)
         XCTAssertEqual(manager.updatedScheduledActivities!.count, 2)
@@ -131,7 +131,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
         let schedule = manager.activities[0]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -139,7 +139,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1)])
@@ -179,7 +179,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
         let schedule = manager.activities[0]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -187,7 +187,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1 )])
@@ -226,7 +226,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
         let schedule = manager.activities[1]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -234,7 +234,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -264,7 +264,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, comboTaskId, comboTaskId])
         
         let schedule = manager.activities[1]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -272,7 +272,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -304,11 +304,11 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let schedule = manager.activities[1]
         
         // run through the task steps to setup the data store with previous values
-        let (previousTask, _) = manager.createTask(schedule)
+        let (previousTask, _) = manager.createTask(for: schedule)
         let _ = buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
         
         // run again with updated steps
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
         else {
             XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -316,7 +316,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -344,7 +344,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, tappingTaskId])
         
         let schedule = manager.activities[1]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -352,7 +352,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -378,7 +378,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([medicationTrackingTaskId, tappingTaskId])
         
         let schedule = manager.activities[1]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -386,7 +386,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -414,10 +414,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let schedule = manager.activities[1]
         
         // run through the task steps to setup the data store with previous values
-        let (previousTask, _) = manager.createTask(schedule)
+        let (previousTask, _) = manager.createTask(for: schedule)
         let _ = buildTaskResult(previousTask!, selectedMeds: ["Levodopa":3])
         
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -425,7 +425,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         
         // check the schema
         checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
@@ -451,10 +451,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let schedule = manager.activities[1]
         
         // run through the task steps to setup the data store with previous values
-        let (previousTask, _) = manager.createTask(schedule)
+        let (previousTask, _) = manager.createTask(for: schedule)
         let _ = buildTaskResult(previousTask!)
         
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -462,7 +462,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
 
         // check the schema
         checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
@@ -487,7 +487,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([memoryTaskId])
         
         let schedule = manager.activities[0]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -495,7 +495,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         XCTAssertEqual(splitResults.count, 1)
     
         guard let result = splitResults.first else { return }
@@ -520,7 +520,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = createScheduledActivities([voiceTaskId])
         
         let schedule = manager.activities[0]
-        guard let taskVC = manager.createTaskViewControllerForSchedule(schedule) as? TestTaskViewController,
+        guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
             let task = taskVC.task
             else {
                 XCTAssert(false, "Failed to create a task view controller of expected type")
@@ -528,7 +528,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: nil, outputDirectory: nil, tooLoudCount: 2)
         
-        let splitResults = manager.activityResultsForSchedule(schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
         XCTAssertEqual(splitResults.count, 1)
         
         guard let result = splitResults.first else { return }
@@ -681,7 +681,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.activities = schedules
         
         for (section, expectedTaskIds) in expectedTaskIdPerSection.enumerated() {
-            let filteredSchedules = manager.scheduledActivitiesForSection(section)
+            let filteredSchedules = manager.scheduledActivities(for: section)
             let taskIds = filteredSchedules.mapAndFilter({ $0.taskIdentifier })
             XCTAssertEqual(filteredSchedules.count, expectedTaskIds.count)
             XCTAssertEqual(taskIds, expectedTaskIds, "\(section)")
@@ -714,7 +714,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.sections = [.today]
         manager.activities = schedules + [expiredTodaySchedule]
         
-        let filteredSchedules = manager.scheduledActivitiesForSection(0)
+        let filteredSchedules = manager.scheduledActivities(for: 0)
         XCTAssertTrue(filteredSchedules.contains(expiredTodaySchedule))
         
     }
@@ -977,11 +977,11 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     // MARK: test function overrrides
     var updatedScheduledActivities:[SBBScheduledActivity]?
     
-    override func sendUpdatedScheduledActivities(_ scheduledActivities: [SBBScheduledActivity]) {
+    override func sendUpdated(scheduledActivities: [SBBScheduledActivity]) {
         updatedScheduledActivities = scheduledActivities
     }
     
-    override func instantiateTaskViewController(_ schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
+    override func instantiateTaskViewController(for schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
         return TestTaskViewController(task: task, taskRun: nil)
     }
     
