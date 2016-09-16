@@ -33,26 +33,6 @@
 
 import ResearchKit
 import BridgeSDK
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
-
 
 /**
  * The purpose of the Survey Factory is to allow subclassing for custom types of steps
@@ -233,7 +213,7 @@ extension SBAInstructionStepSurveyItem {
 extension SBAFormStepSurveyItem {
     
     func createSubtaskStep(_ factory:SBASurveyFactory) -> SBASubtaskStep {
-        assert(self.items?.count > 0, "A subtask step requires items")
+        assert((self.items?.count ?? 0) > 0, "A subtask step requires items")
         let steps = self.items?.mapAndFilter({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
         let step = self.usesNavigation() ?
             SBASurveySubtaskStep(surveyItem: self, steps: steps) :
