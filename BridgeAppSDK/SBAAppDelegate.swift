@@ -192,19 +192,19 @@ public protocol SBAAppInfoDelegate: class {
     */
     open func showAppropriateViewController(_ animated: Bool) {
         if (self.catastrophicStartupError != nil) {
-            showCatastrophicStartupErrorViewController(animated)
+            showCatastrophicStartupErrorViewController(animated: animated)
         }
         else if (self.currentUser.loginVerified) {
-            showMainViewController(animated)
+            showMainViewController(animated: animated)
             if (!self.currentUser.consentVerified) {
                 showReconsentIfNecessary()
             }
         }
         else if (self.currentUser.hasRegistered) {
-            showEmailVerificationViewController(animated)
+            showEmailVerificationViewController(animated: animated)
         }
         else {
-            showOnboardingViewController(animated)
+            showOnboardingViewController(animated: animated)
         }
     }
     
@@ -218,7 +218,7 @@ public protocol SBAAppInfoDelegate: class {
     /**
      Abstract method for showing the study overview (onboarding) for a user who is not signed in
     */
-    open func showOnboardingViewController(_ animated: Bool) {
+    open func showOnboardingViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
@@ -226,14 +226,14 @@ public protocol SBAAppInfoDelegate: class {
      Abstract method for showing the email verification view controller for a user who registered
      but not signed in
     */
-    open func showEmailVerificationViewController(_ animated: Bool) {
+    open func showEmailVerificationViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
      Abstract method for showing the main view controller for a user who signed in
     */
-    open func showMainViewController(_ animated: Bool) {
+    open func showMainViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
@@ -241,19 +241,19 @@ public protocol SBAAppInfoDelegate: class {
      Convenience method for transitioning to the given view controller as the main window
      rootViewController.
     */
-    open func transitionToRootViewController(_ viewController: UIViewController, animated: Bool) {
+    open func transition(toRootViewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
         if (animated) {
             UIView.transition(with: window,
                 duration: 0.6,
                 options: UIViewAnimationOptions.transitionCrossDissolve,
                 animations: {
-                    window.rootViewController = viewController
+                    window.rootViewController = toRootViewController
                 },
                 completion: nil)
         }
         else {
-            window.rootViewController = viewController
+            window.rootViewController = toRootViewController
         }
     }
     
@@ -281,7 +281,7 @@ public protocol SBAAppInfoDelegate: class {
      this will display a screen that blocks all activity. The user is then asked to 
      update their app.
      */
-    open func showCatastrophicStartupErrorViewController(_ animated: Bool) {
+    open func showCatastrophicStartupErrorViewController(animated: Bool) {
         
         // If we cannot open the catastrophic error view controller (for some reason)
         // then this is a fatal error
@@ -290,7 +290,7 @@ public protocol SBAAppInfoDelegate: class {
         }
         
         // Present the view controller
-        transitionToRootViewController(vc, animated: true)
+        transition(toRootViewController: vc, animated: true)
     }
     
     /**
@@ -330,7 +330,7 @@ public protocol SBAAppInfoDelegate: class {
         registerCatastrophicStartupError(error)
         DispatchQueue.main.async {
             if let _ = self.window?.rootViewController {
-                self.showCatastrophicStartupErrorViewController(true)
+                self.showCatastrophicStartupErrorViewController(animated: true)
             }
         }
         return true
@@ -405,7 +405,7 @@ public protocol SBAAppInfoDelegate: class {
         // Show a plain white view controller while logging out
         let vc = UIViewController()
         vc.view.backgroundColor = UIColor.white
-        transitionToRootViewController(vc, animated: false)
+        transition(toRootViewController: vc, animated: false)
         
         // Logout the user
         self.currentUser.logout()

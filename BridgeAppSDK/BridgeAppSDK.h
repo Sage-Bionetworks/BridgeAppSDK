@@ -39,21 +39,19 @@ FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
 //! Project version string for BridgeAppSDK.
 FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 
+#import <BridgeAppSDK/SBAActivityResult.h>
 #import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
 #import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBALog.h>
 #import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
-#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+#import <BridgeAppSDK/SBADataObject.h>
 #import <BridgeAppSDK/SBAJSONObject.h>
 #import <BridgeAppSDK/SBALog.h>
+#import <BridgeAppSDK/SBAMedication.h>
+#import <BridgeAppSDK/SBANewsFeedItem.h>
+#import <BridgeAppSDK/SBANewsFeedManager.h>
+#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
+#import <BridgeAppSDK/SBAPermissionsManager.h>
+#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
+#import <BridgeAppSDK/SBATrackedDataStore.h>
+#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
+#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>

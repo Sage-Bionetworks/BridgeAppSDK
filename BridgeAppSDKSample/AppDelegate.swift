@@ -41,28 +41,28 @@ class AppDelegate: SBAAppDelegate {
         return [.coremotion, .localNotifications, .microphone]
     }
     
-    override func showMainViewController(_ animated: Bool) {
+    override func showMainViewController(animated: Bool) {
         guard let storyboard = openStoryboard("Main"),
             let vc = storyboard.instantiateInitialViewController()
             else {
                 assertionFailure("Failed to load onboarding storyboard")
                 return
         }
-        self.transitionToRootViewController(vc, animated: animated)
+        self.transition(toRootViewController: vc, animated: animated)
     }
     
-    override func showEmailVerificationViewController(_ animated: Bool) {
-        showOnboardingViewController(animated)
+    override func showEmailVerificationViewController(animated: Bool) {
+        showOnboardingViewController(animated: animated)
     }
     
-    override func showOnboardingViewController(_ animated: Bool) {
+    override func showOnboardingViewController(animated: Bool) {
         guard let storyboard = openStoryboard("Onboarding"),
             let vc = storyboard.instantiateInitialViewController()
             else {
                 assertionFailure("Failed to load onboarding storyboard")
                 return
         }
-        self.transitionToRootViewController(vc, animated: animated)
+        self.transition(toRootViewController: vc, animated: animated)
     }
     
     func openStoryboard(_ name: String) -> UIStoryboard? {
