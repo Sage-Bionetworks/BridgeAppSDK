@@ -142,8 +142,9 @@ public extension SBAUserWrapper {
         }
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
-        guard let appDelegate = SBAAppDelegate.sharedDelegate ,
-            (appDelegate.shouldPerformTestUserEmailCheckOnSignup && email.contains(SBAHiddenTestEmailString)) else {
+        guard email.contains(SBAHiddenTestEmailString),
+            let appDelegate = SBAAppDelegate.sharedDelegate,
+            !appDelegate.bridgeInfo.disableTestUserCheck else {
             completeRegistration(false)
             return
         }

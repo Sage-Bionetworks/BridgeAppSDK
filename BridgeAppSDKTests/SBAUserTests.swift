@@ -78,6 +78,7 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var newsfeedURLString: String?
     var logoImageName: String?
     var appUpdateURLString: String?
+    var disableTestUserCheck: Bool = false
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

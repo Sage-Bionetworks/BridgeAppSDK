@@ -933,6 +933,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var newsfeedURLString: String?
     var logoImageName: String?
     var appUpdateURLString: String?
+    var disableTestUserCheck: Bool = false
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,

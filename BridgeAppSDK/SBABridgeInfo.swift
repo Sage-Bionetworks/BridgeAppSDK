@@ -109,6 +109,12 @@ public protocol SBABridgeInfo: class {
      A custom url for launching an app update.
      */
     var appUpdateURLString: String? { get }
+    
+    /**
+     By default, check the user email for test data group assignment. If disabled, 
+     do not check for a text user.
+    */
+    var disableTestUserCheck: Bool { get }
 }
 
 /**
@@ -197,6 +203,10 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var appUpdateURLString: String? {
         return self.plist["appUpdateURLString"] as? String
+    }
+    
+    public var disableTestUserCheck: Bool {
+        return self.plist["disableTestUserCheck"] as? Bool ?? false
     }
 }
 

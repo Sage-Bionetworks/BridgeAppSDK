@@ -123,19 +123,6 @@ public protocol SBAAppInfoDelegate: class {
         }
     }
     
-    // ------------------------------------------------
-    // MARK: Optional property overrides
-    // ------------------------------------------------
-    
-    /**
-     * Should the email be checked on signUp for the '+test' pattern as part of the email
-     * If YES, sign up process will check for special string in email addresses to auto-detect test users
-     * If NO, sign up will treat all emails and data as valid in production
-     */
-    open var shouldPerformTestUserEmailCheckOnSignup : Bool {
-        // TODO: syoung 09/15/2016 Move this to BridgeInfo
-        return false
-    }
     
     // ------------------------------------------------
     // MARK: Default setup
