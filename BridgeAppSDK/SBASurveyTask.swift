@@ -51,13 +51,13 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
         super.init()
     }
     
-    open func load(survey: SBBSurvey?, error: NSError?) {
+    open func load(survey: SBBSurvey?, error: Error?) {
         // If there was an error or the survey is nil
         if survey == nil {
             let errorStep = ORKInstructionStep(identifier: "error")
             errorStep.title = Localization.localizedString("SBA_NETWORK_FAILURE_TITLE")
             errorStep.text = Localization.localizedString("SBA_NETWORK_FAILURE_MESSAGE")
-            errorStep.detailText = error?.localizedFailureReason
+            errorStep.detailText = error?.localizedDescription
             self.survey = ORKOrderedTask(identifier: self.identifier, steps: [errorStep])
         }
         else {
@@ -178,12 +178,7 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let surveyTask = self.step?.task as? SBASurveyTask {
-            self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask.surveyReference, completion: { [weak self] (object, error) in
-                self?.handleSurveyLoaded(survey: object, error: error)
-            } as! SBABridgeManagerCompletionBlock)
-        }
+        self.loadSurvey()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -191,19 +186,30 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
         self.urlSessionTask?.cancel()
     }
     
-    func handleSurveyLoaded(survey: SBBSurvey?, error: NSError?) {
+    var surveyTask: SBASurveyTask? {
         guard let surveyTask = self.step?.task as? SBASurveyTask else {
             assertionFailure("The task is not of expected type")
-            return
+            return nil
         }
-        
+        return surveyTask
+    }
+    
+    func loadSurvey() {
+        self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask!.surveyReference, completion: { [weak self] (object, error) in
+            let survey = object as? SBBSurvey
+            self?.handleSurveyLoaded(survey: survey, error: error)
+        })
+    }
+    
+    func handleSurveyLoaded(survey: SBBSurvey?, error: Error?) {
+
         // Nil out the pointer to the url session
         self.urlSessionTask = nil
         
         // load the survey into the task and then go forward
-        DispatchQueue.main.async { 
-            surveyTask.load(survey: survey, error: error)
-            self.goForward()
+        DispatchQueue.main.async { [weak self] in
+            self?.surveyTask!.load(survey: survey, error: error)
+            self?.goForward()
         }
     }
 }
