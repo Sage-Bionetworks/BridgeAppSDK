@@ -180,7 +180,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
                 }
             }
             catch let error as NSError {
-                print(error.localizedDescription)
+                print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
             }
         }
     }
