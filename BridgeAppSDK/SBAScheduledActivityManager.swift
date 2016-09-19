@@ -220,7 +220,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     @objc(setupNotificationsForScheduledActivities:)
     open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
         // schedule notifications
-        SBANotificationsManager.sharedManager.setupNotificationsForScheduledActivities(scheduledActivities)
+        SBANotificationsManager.shared.setupNotifications(for: scheduledActivities)
     }
     
     /**
