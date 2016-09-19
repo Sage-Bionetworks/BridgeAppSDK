@@ -41,10 +41,10 @@ import ResearchKit
  */
 public final class SBAUser: NSObject, SBAUserWrapper {
     
-    let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue", attributes: [])
+    let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue")
 
     public func resetStoredUserData() {
-        lockQueue.sync {
+        lockQueue.async {
             self.resetUserDefaults()
             self.resetKeychain()
         }
