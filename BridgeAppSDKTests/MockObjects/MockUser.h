@@ -51,10 +51,10 @@
 @property (nonatomic, copy) NSDate * _Nullable birthdate;
 @property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
 @property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
-@property (nonatomic) BOOL hasRegistered;
-@property (nonatomic) BOOL loginVerified;
-@property (nonatomic) BOOL consentVerified;
-@property (nonatomic) BOOL dataSharingEnabled;
+@property (nonatomic) BOOL isRegistered;
+@property (nonatomic) BOOL isLoginVerified;
+@property (nonatomic) BOOL isConsentVerified;
+@property (nonatomic) BOOL isDataSharingEnabled;
 @property (nonatomic) SBBUserDataSharingScope dataSharingScope;
 @property (nonatomic, copy) NSString * _Nullable onboardingStepIdentifier;
 

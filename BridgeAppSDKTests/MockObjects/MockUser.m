@@ -43,10 +43,10 @@
 @synthesize subpopulationGuid;
 @synthesize consentSignature;
 @synthesize dataGroups;
-@synthesize hasRegistered;
-@synthesize loginVerified;
-@synthesize consentVerified;
-@synthesize dataSharingEnabled;
+@synthesize isRegistered;
+@synthesize isLoginVerified;
+@synthesize isConsentVerified;
+@synthesize isDataSharingEnabled;
 @synthesize dataSharingScope;
 @synthesize onboardingStepIdentifier;
 @synthesize gender;
@@ -73,6 +73,25 @@
 
 - (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken {
     // do nothing
+}
+
+- (void)resetStoredUserData {
+    self.sessionToken = nil;
+    self.name = nil;
+    self.email = nil;
+    self.externalId = nil;
+    self.password = nil;
+    self.subpopulationGuid = nil;
+    self.consentSignature = nil;
+    self.dataGroups = nil;
+    self.isRegistered = NO;
+    self.isLoginVerified = NO;
+    self.isConsentVerified = NO;
+    self.isDataSharingEnabled = NO;
+    self.dataSharingScope = 0;
+    self.onboardingStepIdentifier = nil;
+    self.gender = nil;
+    self.birthdate = nil;
 }
 
 @end

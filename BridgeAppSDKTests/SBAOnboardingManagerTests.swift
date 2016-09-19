@@ -106,7 +106,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         // then only include email verification and those sections AFTER verification
         // However, if the user is being reconsented then include the reconsent section
         
-        manager.mockAppDelegate.mockCurrentUser.hasRegistered = true
+        manager.mockAppDelegate.mockCurrentUser.isRegistered = true
         manager._hasPasscode = true
     
         let taskTypes: [SBAOnboardingTaskType] = [.registration, .reconsent]
