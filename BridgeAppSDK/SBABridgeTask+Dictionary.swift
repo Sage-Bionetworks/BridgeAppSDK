@@ -35,10 +35,10 @@ import Foundation
 
 extension NSDictionary: SBATaskReference {
     
-    public func transformToTask(factory factory: SBASurveyFactory, isLastStep: Bool) -> protocol <ORKTask, NSCopying, NSSecureCoding>? {
+    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
         if !self.taskType.isNilType() {
             // If the task type is non-nil, then create an active task
-            let taskOptions: ORKPredefinedTaskOption = isLastStep ? .None : .ExcludeConclusion
+            let taskOptions: ORKPredefinedTaskOption = isLastStep ? [] : .excludeConclusion
             return factory.createTaskWithActiveTask(self, taskOptions:taskOptions)
         }
         guard let bridgeTask = self.objectWithResourceDictionary() as? SBABridgeTask
@@ -47,11 +47,11 @@ extension NSDictionary: SBATaskReference {
             assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
             return nil
         }
-        if let dictionary = bridgeTask as? NSDictionary where !dictionary.isValidBridgeTask() {
+        if let dictionary = bridgeTask as? NSDictionary , !dictionary.isValidBridgeTask() {
             // If the object returned is a dictionary, check validity and return nil if failed
             return nil
         }
-        return bridgeTask.createORKTask(factory: factory)
+        return bridgeTask.createORKTask(factory)
     }
     
     public var cancelDisabled: Bool {
@@ -104,7 +104,7 @@ extension NSDictionary: SBABridgeTask {
             // "taskIdentifier" key then throw an assertion, but return a UUID so that a production
             // app will not crash.
             assertionFailure("Invalid NSDictionary for SBABridgeTask implementation.")
-            return NSUUID().UUIDString
+            return UUID().uuidString
         }
         return taskIdentifier
     }
@@ -137,7 +137,7 @@ extension NSDictionary: SBABridgeTask {
         return steps.mapAndFilter({ return mapToStepTransformer($0) })
     }
     
-    private func mapToStepTransformer(obj: AnyObject) -> SBAStepTransformer? {
+    fileprivate func mapToStepTransformer(_ obj: AnyObject) -> SBAStepTransformer? {
         // If the object is not a dictionary then just return either the object or nil if not transformable
         guard let dictionary = obj as? NSDictionary,
             let transformer = dictionary.objectWithResourceDictionary() as? SBAStepTransformer else {

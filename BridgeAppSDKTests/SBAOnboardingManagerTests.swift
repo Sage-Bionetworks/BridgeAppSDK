@@ -187,7 +187,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
                                         SBAInstructionStep(identifier: "shareApp"),
                                         SBAInstructionStep(identifier: "eligibleInstruction")]
         XCTAssertEqual(steps.count, expectedSteps.count)
-        for (idx, expectedStep) in expectedSteps.enumerate() {
+        for (idx, expectedStep) in expectedSteps.enumerated() {
             if idx < steps.count {
                 XCTAssertEqual(steps[idx].identifier, expectedStep.identifier)
                 let stepClass = NSStringFromClass(steps[idx].classForCoder)
@@ -209,7 +209,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         }
         
         XCTAssertEqual(step.identifier, "passcode")
-        XCTAssertEqual(step.passcodeType, ORKPasscodeType.Type6Digit)
+        XCTAssertEqual(step.passcodeType, ORKPasscodeType.type6Digit)
         XCTAssertEqual(step.title, "Identification")
         XCTAssertEqual(step.text, "Select a 6-digit passcode. Setting up a passcode will help provide quick and secure access to this application.")
     }
@@ -226,7 +226,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(step.identifier, "login")
     }
     
-    func checkOnboardingSteps(sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
+    func checkOnboardingSteps(_ sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         let manager = MockOnboardingManager(jsonNamed: "Onboarding")
         let section = manager?.section(onboardingSectionType: sectionType)

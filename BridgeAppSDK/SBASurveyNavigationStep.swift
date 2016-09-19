@@ -45,7 +45,7 @@ public protocol SBASurveyNavigationStep: SBANavigationRule {
     var surveyStepResultFilterPredicate: NSPredicate { get }
     
     // Form step that matches with the given result
-    func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol?
+    func matchingSurveyStep(_ stepResult: ORKStepResult) -> SBAFormProtocol?
 }
 
 public final class SBASurveyQuestionStep: ORKQuestionStep, SBASurveyNavigationStep, SBAFormProtocol {
@@ -54,7 +54,7 @@ public final class SBASurveyQuestionStep: ORKQuestionStep, SBASurveyNavigationSt
         return NSPredicate(format: "identifier = %@", self.identifier)
     }
     
-    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
+    public func matchingSurveyStep(_ stepResult: ORKStepResult) -> SBAFormProtocol? {
         guard (stepResult.identifier == self.identifier) else { return nil }
         return self
     }
@@ -95,8 +95,8 @@ public final class SBASurveyQuestionStep: ORKQuestionStep, SBASurveyNavigationSt
     
     // MARK: NSCopying
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBASurveyQuestionStep
+    override public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBASurveyQuestionStep
         copy.rulePredicate = self.rulePredicate
         return self.sharedCopying(copy)
     }
@@ -106,18 +106,18 @@ public final class SBASurveyQuestionStep: ORKQuestionStep, SBASurveyNavigationSt
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
         self.sharedDecoding(coder: aDecoder)
-        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
+        self.rulePredicate = aDecoder.decodeObject(forKey: "rulePredicate") as? NSPredicate
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+    override public func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
         self.sharedEncoding(aCoder)
-        aCoder.encodeObject(self.rulePredicate, forKey: "rulePredicate")
+        aCoder.encode(self.rulePredicate, forKey: "rulePredicate")
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         guard let castObject = object as? SBASurveyQuestionStep else { return false }
         return super.isEqual(object) &&
             sharedEquality(object) &&
@@ -135,7 +135,7 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
         return NSPredicate(format: "identifier = %@", self.identifier)
     }
     
-    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
+    public func matchingSurveyStep(_ stepResult: ORKStepResult) -> SBAFormProtocol? {
         guard (stepResult.identifier == self.identifier) else { return nil }
         return self
     }
@@ -156,8 +156,8 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
     
     // MARK: NSCopying
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         return self.sharedCopying(copy)
     }
     
@@ -168,14 +168,14 @@ public final class SBASurveyFormStep: ORKFormStep, SBASurveyNavigationStep {
         self.sharedDecoding(coder: aDecoder)
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+    override public func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
         self.sharedEncoding(aCoder)
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         return super.isEqual(object) && sharedEquality(object)
     }
     
@@ -190,8 +190,8 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
         return NSPredicate(format: "identifier BEGINSWITH %@", "\(self.identifier).")
     }
     
-    public func matchingSurveyStep(stepResult: ORKStepResult) -> SBAFormProtocol? {
-        return self.stepWithIdentifier(stepResult.identifier) as? SBAFormProtocol
+    public func matchingSurveyStep(_ stepResult: ORKStepResult) -> SBAFormProtocol? {
+        return self.step(withIdentifier: stepResult.identifier) as? SBAFormProtocol
     }
     
     // MARK: Stuff you can't extend on a protocol
@@ -214,8 +214,8 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
     
     // MARK: NSCopying
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         return self.sharedCopying(copy)
     }
     
@@ -226,14 +226,14 @@ public final class SBASurveySubtaskStep: SBASubtaskStep, SBASurveyNavigationStep
         self.sharedDecoding(coder: aDecoder)
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+    override public func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
         self.sharedEncoding(aCoder)
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         return super.isEqual(object) && sharedEquality(object)
     }
     
@@ -256,8 +256,8 @@ public final class SBASurveyFormItem : ORKFormItem {
     
     // MARK: NSCopying
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         guard let formItem = copy as? SBASurveyFormItem else { return copy }
         formItem.rulePredicate = self.rulePredicate
         return formItem
@@ -266,18 +266,18 @@ public final class SBASurveyFormItem : ORKFormItem {
     // MARK: NSSecureCoding
     
     required public init?(coder aDecoder: NSCoder) {
-        self.rulePredicate = aDecoder.decodeObjectForKey("rulePredicate") as? NSPredicate
+        self.rulePredicate = aDecoder.decodeObject(forKey: "rulePredicate") as? NSPredicate
         super.init(coder: aDecoder);
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.rulePredicate, forKey: "rulePredicate")
+    override public func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.rulePredicate, forKey: "rulePredicate")
     }
     
     // MARK: Equality
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBASurveyFormItem else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(self.rulePredicate, object.rulePredicate)
@@ -291,35 +291,35 @@ public final class SBASurveyFormItem : ORKFormItem {
 
 public extension SBASurveyNavigationStep {
     
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+    public func nextStepIdentifier(_ taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
         guard let results = taskResult.results else { return nil }
         let predicate = self.surveyStepResultFilterPredicate
-        let passed = results.filter({ predicate.evaluateWithObject($0) && !matchesExpectedResult($0)}).count == 0
+        let passed = results.filter({ predicate.evaluate(with: $0) && !matchesExpectedResult($0)}).count == 0
         if (passed && self.skipIfPassed) || (!passed && !self.skipIfPassed) {
             return self.skipToStepIdentifier
         }
         return nil;
     }
     
-    func matchesRulePredicate(item: AnyObject, result: ORKResult?) -> Bool? {
+    func matchesRulePredicate(_ item: AnyObject, result: ORKResult?) -> Bool? {
         if let rule = item as? SBASurveyFormItem,
             let predicate = rule.rulePredicate {
                 // If the result is nil then it fails
                 guard let result = result else { return false }
                 // Otherwise, evaluate against the predicate
-                return predicate.evaluateWithObject(result)
+                return predicate.evaluate(with: result)
         }
         return nil
     }
     
-    func matchesExpectedResult(result: ORKResult) -> Bool {
+    func matchesExpectedResult(_ result: ORKResult) -> Bool {
         if let stepResult = result as? ORKStepResult,
             let step = self.matchingSurveyStep(stepResult) {
                 // evaluate each form item
                 if let formItems = step.formItems {
                     for formItem in formItems {
-                        let formResult = stepResult.resultForIdentifier(formItem.identifier)
-                        if let matchingRule = matchesRulePredicate(formItem, result:formResult) where !matchingRule {
+                        let formResult = stepResult.result(forIdentifier: formItem.identifier)
+                        if let matchingRule = matchesRulePredicate(formItem, result:formResult) , !matchingRule {
                             // If a form item does not match the expected result then exit, otherwise keep going
                             return false
                         }
@@ -329,7 +329,7 @@ public extension SBASurveyNavigationStep {
         return true;
     }
     
-    func sharedCopying(copy: AnyObject) -> AnyObject {
+    func sharedCopying(_ copy: Any) -> Any {
         guard let step = copy as? SBASurveyNavigationStep else { return copy }
         step.skipToStepIdentifier = self.skipToStepIdentifier
         step.skipIfPassed = self.skipIfPassed
@@ -337,16 +337,16 @@ public extension SBASurveyNavigationStep {
     }
     
     func sharedDecoding(coder aDecoder: NSCoder) {
-        self.skipToStepIdentifier = aDecoder.decodeObjectForKey("skipToStepIdentifier") as! String
-        self.skipIfPassed = aDecoder.decodeBoolForKey("skipIfPassed")
+        self.skipToStepIdentifier = aDecoder.decodeObject(forKey: "skipToStepIdentifier") as! String
+        self.skipIfPassed = aDecoder.decodeBool(forKey: "skipIfPassed")
     }
     
-    func sharedEncoding(aCoder: NSCoder) {
-        aCoder.encodeObject(self.skipToStepIdentifier, forKey: "skipToStepIdentifier")
-        aCoder.encodeBool(self.skipIfPassed, forKey: "skipIfPassed")
+    func sharedEncoding(_ aCoder: NSCoder) {
+        aCoder.encode(self.skipToStepIdentifier, forKey: "skipToStepIdentifier")
+        aCoder.encode(self.skipIfPassed, forKey: "skipIfPassed")
     }
     
-    func sharedCopyFromSurveyItem(surveyItem: AnyObject) {
+    func sharedCopyFromSurveyItem(_ surveyItem: Any) {
         guard let surveyItem = surveyItem as? SBAFormStepSurveyItem else { return }
         if let skipIdentifier = surveyItem.skipIdentifier {
             self.skipToStepIdentifier = skipIdentifier
@@ -358,7 +358,7 @@ public extension SBASurveyNavigationStep {
         return SBAObjectHash(self.skipToStepIdentifier)
     }
     
-    func sharedEquality(object: AnyObject?) -> Bool {
+    func sharedEquality(_ object: Any?) -> Bool {
         guard let object = object as? SBASurveyNavigationStep else { return false }
         return SBAObjectEquality(self.skipToStepIdentifier, object.skipToStepIdentifier) &&
             self.skipIfPassed == object.skipIfPassed

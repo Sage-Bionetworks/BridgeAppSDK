@@ -43,21 +43,23 @@ public protocol SBAAppInfoDelegate: class {
 }
 
 @UIApplicationMain
-@objc public class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
+@objc open class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
     
-    public var window: UIWindow?
+    open var window: UIWindow?
     
-    public var containerRootViewController: SBARootViewControllerProtocol? {
+    open var containerRootViewController: SBARootViewControllerProtocol? {
         return window?.rootViewController as? SBARootViewControllerProtocol
     }
     
-    public class var sharedDelegate: SBAAppDelegate? {
-        return UIApplication.sharedApplication().delegate as? SBAAppDelegate
+    public final class var sharedDelegate: SBAAppDelegate? {
+        return UIApplication.shared.delegate as? SBAAppDelegate
     }
     
-    public func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    // MARK: UIApplicationDelegate
+    
+    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
-        
+
         self.initializeBridgeServerConnection()
         
         // Set the window tint color if applicable
@@ -71,19 +73,19 @@ public protocol SBAAppInfoDelegate: class {
         return true
     }
 
-    public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         lockScreen()
         return true
     }
     
-    public func applicationWillResignActive(application: UIApplication) {
+    open func applicationWillResignActive(_ application: UIApplication) {
         if shouldShowPasscode() {
             // Hide content so it doesn't appear in the app switcher.
             containerRootViewController?.contentHidden = true
         }
     }
     
-    public func applicationDidBecomeActive(application: UIApplication) {
+    open func applicationDidBecomeActive(_ application: UIApplication) {
         // Make sure that the content view controller is not hiding content
         containerRootViewController?.contentHidden = false
         
@@ -92,11 +94,13 @@ public protocol SBAAppInfoDelegate: class {
             if let error = error, let errorCode = SBBErrorCode(rawValue: error.code) {
                 switch errorCode {
                     
-                case SBBErrorCode.ServerPreconditionNotMet:
+                case SBBErrorCode.serverPreconditionNotMet:
                     self.showReconsentIfNecessary()
                     
-                case SBBErrorCode.UnsupportedAppVersion:
-                    self.handleUnsupportedAppVersionError(error, networkManager: nil)
+                case SBBErrorCode.unsupportedAppVersion:
+                    if !self.handleUnsupportedAppVersionError(error, networkManager: nil) {
+                        self.registerCatastrophicStartupError(error)
+                    }
                     
                 default:
                     break
@@ -105,65 +109,59 @@ public protocol SBAAppInfoDelegate: class {
         }
     }
     
-    public func applicationWillEnterForeground(application: UIApplication) {
+    open func applicationWillEnterForeground(_ application: UIApplication) {
         lockScreen()
     }
     
-    public func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-        SBAPermissionsManager.sharedManager().appDidRegisterForRemoteNotifications(notificationSettings)
+    open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        SBAPermissionsManager.shared().appDidRegister(forRemoteNotifications: notificationSettings)
     }
     
-    public func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+    open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         if identifier == kBackgroundSessionIdentifier {
             SBABridgeManager.restoreBackgroundSession(identifier, completionHandler: completionHandler)
         }
     }
     
-    // ------------------------------------------------
-    // MARK: Optional property overrides
-    // ------------------------------------------------
-    
-    /**
-     * Should the email be checked on signUp for the '+test' pattern as part of the email
-     * If YES, sign up process will check for special string in email addresses to auto-detect test users
-     * If NO, sign up will treat all emails and data as valid in production
-     */
-    public var shouldPerformTestUserEmailCheckOnSignup : Bool {
-        return false
-    }
     
     // ------------------------------------------------
     // MARK: Default setup
     // ------------------------------------------------
     
     /**
-    * Bridge info used for setting up this study. By default, this is defined in a BridgeInfo.plist
-    * but the inheriting AppDelegate subclass can override this to set a different source.
+     Bridge info used for setting up this study. By default, this is defined in a BridgeInfo.plist
+     but the inheriting AppDelegate subclass can override this to set a different source.
     */
-    public var bridgeInfo: SBABridgeInfo {
+    open var bridgeInfo: SBABridgeInfo {
         return _bridgeInfo
     }
     private let _bridgeInfo = SBABridgeInfoPList()
     
     /**
-     * A wrapper object for the current user. By default, this class will instantiate a singleton for
-     * the current user that implements SBAUser.
-     */
-    public var currentUser: SBAUserWrapper {
+     A wrapper object for the current user. By default, this class will instantiate a singleton for
+     the current user that implements SBAUser.
+    */
+    open var currentUser: SBAUserWrapper {
         return _currentUser
     }
     private let _currentUser = SBAUser()
     
     /**
-     * Override to set the permissions for this application.
-     */
-    public var requiredPermissions: SBAPermissionsType {
-        return SBAPermissionsType.None
+     Override to set the permissions for this application.
+    */
+    open var requiredPermissions: SBAPermissionsType {
+        return SBAPermissionsType()
     }
     
-    func initializeBridgeServerConnection() {
+    private func initializeBridgeServerConnection() {
+        
+        // Clearout the keychain if needed. 
+        // WARNING: This will force login
+        currentUser.resetUserKeychainIfNeeded()
+        
+        
         // These two lines actually, you know, set up BridgeSDK
-        BridgeSDK.setupWithStudy(bridgeInfo.studyIdentifier,
+        BridgeSDK.setup(withStudy: bridgeInfo.studyIdentifier,
                                  cacheDaysAhead: bridgeInfo.cacheDaysAhead,
                                  cacheDaysBehind: bridgeInfo.cacheDaysBehind,
                                  environment: bridgeInfo.environment)
@@ -171,15 +169,15 @@ public protocol SBAAppInfoDelegate: class {
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
         // manager instance so its notification handlers get set up in time)
-        let uploadManager = SBBComponentManager.component(SBBUploadManager)
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        let uploadManager = SBBComponentManager.component(SBBUploadManager.self) as! SBBUploadManagerProtocol
+        DispatchQueue.global(qos: .background).async {
             let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
             for file in uploads {
-                let fileUrl = NSURL.fileURLWithPath(file)
+                let fileUrl = URL(fileURLWithPath: file)
                 
                 // (if the upload manager already knows about this file, it won't try to upload again)
                 // (also, use the method that lets BridgeSDK figure out the contentType since we don't have any better info about that)
-                uploadManager.uploadFileToBridge(fileUrl, completion: { (error) in
+                uploadManager.uploadFile(toBridge: fileUrl, completion: { (error) in
                     if error == nil {
                         // clean up the file now that it's been successfully uploaded so we don't keep trying
                         SBAEncryptionHelper.cleanUpEncryptedFile(fileUrl);
@@ -194,80 +192,87 @@ public protocol SBAAppInfoDelegate: class {
     // MARK: RootViewController management
     // ------------------------------------------------
     
-    public func showAppropriateViewController(animated: Bool) {
+    /**
+     Convenience method for setting up and displaying the appropriate view controller
+     for the current user state.
+    */
+    open func showAppropriateViewController(_ animated: Bool) {
         if (self.catastrophicStartupError != nil) {
-            showCatastrophicStartupErrorViewController(animated)
+            showCatastrophicStartupErrorViewController(animated: animated)
         }
         else if (self.currentUser.loginVerified) {
-            showMainViewController(animated)
+            showMainViewController(animated: animated)
             if (!self.currentUser.consentVerified) {
                 showReconsentIfNecessary()
             }
         }
         else if (self.currentUser.hasRegistered) {
-            showEmailVerificationViewController(animated)
+            showEmailVerificationViewController(animated: animated)
         }
         else {
-            showOnboardingViewController(animated)
+            showOnboardingViewController(animated: animated)
         }
     }
     
-    public func showReconsentIfNecessary() {
-        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
-    }
-    
     /**
-    * Abstract method for showing the study overview (onboarding) for a user who is not signed in
+     Abstract method for showing the reconsent flow
     */
-    public func showOnboardingViewController(animated: Bool) {
+    open func showReconsentIfNecessary() {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
-     * Abstract method for showing the email verification view controller for a user who registered 
-     * but not signed in
-     */
-    public func showEmailVerificationViewController(animated: Bool) {
+     Abstract method for showing the study overview (onboarding) for a user who is not signed in
+    */
+    open func showOnboardingViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
-     * Abstract method for showing the main view controller for a user who signed in
-     */
-    public func showMainViewController(animated: Bool) {
+     Abstract method for showing the email verification view controller for a user who registered
+     but not signed in
+    */
+    open func showEmailVerificationViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
-     * Convenience method for transitioning to the given view controller as the main window
-     * rootViewController.
-     */
-    public func transitionToRootViewController(viewController: UIViewController, animated: Bool) {
+     Abstract method for showing the main view controller for a user who signed in
+    */
+    open func showMainViewController(animated: Bool) {
+        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
+    }
+    
+    /**
+     Convenience method for transitioning to the given view controller as the main window
+     rootViewController.
+    */
+    open func transition(toRootViewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
         if (animated) {
-            UIView.transitionWithView(window,
+            UIView.transition(with: window,
                 duration: 0.6,
-                options: UIViewAnimationOptions.TransitionCrossDissolve,
+                options: UIViewAnimationOptions.transitionCrossDissolve,
                 animations: {
-                    window.rootViewController = viewController
+                    window.rootViewController = toRootViewController
                 },
                 completion: nil)
         }
         else {
-            window.rootViewController = viewController
+            window.rootViewController = toRootViewController
         }
     }
     
     /**
-     * Convenience method for presenting a modal view controller.
-     */
-    public func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
+     Convenience method for presenting a modal view controller.
+    */
+    open func presentViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
         guard let rootVC = self.window?.rootViewController else { return }
         var topViewController: UIViewController = rootVC
         while (topViewController.presentedViewController != nil) {
             topViewController = topViewController.presentedViewController!
         }
-        topViewController.presentViewController(viewController, animated: animated, completion: completion)
+        topViewController.present(viewController, animated: animated, completion: completion)
     }
     
     
@@ -275,17 +280,14 @@ public protocol SBAAppInfoDelegate: class {
     // MARK: Catastrophic startup errors
     // ------------------------------------------------
     
-    private var catastrophicStartupError: NSError?
+    private var catastrophicStartupError: Error?
     
-    public var hasCatastrophicError: Bool {
-        return catastrophicStartupError != nil
-    }
-    
-    public func registerCatastrophicStartupError(error: NSError) {
-        self.catastrophicStartupError = error
-    }
-    
-    public func showCatastrophicStartupErrorViewController(animated: Bool) {
+    /**
+     Catastrophic Errors are errors from which the system cannot recover. By default, 
+     this will display a screen that blocks all activity. The user is then asked to 
+     update their app.
+     */
+    open func showCatastrophicStartupErrorViewController(animated: Bool) {
         
         // If we cannot open the catastrophic error view controller (for some reason)
         // then this is a fatal error
@@ -294,24 +296,47 @@ public protocol SBAAppInfoDelegate: class {
         }
         
         // Present the view controller
-        transitionToRootViewController(vc, animated: true)
+        transition(toRootViewController: vc, animated: true)
     }
     
-    public var catastrophicErrorMessage: String {
-        return catastrophicStartupError?.localizedFailureReason ??
+    /**
+     Is there a catastrophic error. 
+     */
+    public final var hasCatastrophicError: Bool {
+        return catastrophicStartupError != nil
+    }
+    
+    /**
+     Register a catastrophic error. Once launch is complete, this will trigger showing 
+     the error.
+     */
+    public final func registerCatastrophicStartupError(_ error: Error) {
+        self.catastrophicStartupError = error
+    }
+    
+    /**
+     The error message to display for a catastrophic error.
+    */
+    open var catastrophicErrorMessage: String {
+        return (catastrophicStartupError as? NSError)?.localizedFailureReason ??
             catastrophicStartupError?.localizedDescription ??
             Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
     }
+    
     
     // ------------------------------------------------
     // MARK: Unsupported App Version
     // ------------------------------------------------
     
-    public func handleUnsupportedAppVersionError(error: NSError, networkManager: SBBNetworkManagerProtocol?) -> Bool {
+    /**
+     Default implementation for handling an unsupported app version is to display a
+     catastrophic error.
+    */
+    open func handleUnsupportedAppVersionError(_ error: Error, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             if let _ = self.window?.rootViewController {
-                self.showCatastrophicStartupErrorViewController(true)
+                self.showCatastrophicStartupErrorViewController(animated: true)
             }
         }
         return true
@@ -322,57 +347,44 @@ public protocol SBAAppInfoDelegate: class {
     // MARK: SBABridgeAppSDKDelegate
     // ------------------------------------------------
 
-    public func resourceBundle() -> NSBundle {
-        return NSBundle.mainBundle()
+    /**
+     Default "main" resource bundle. This allows the application to specific a different bundle
+     for a given resource by overriding this method in the app delegate.
+    */
+    open func resourceBundle() -> Bundle {
+        return Bundle.main
     }
     
-    public func pathForResource(resourceName: String, ofType resourceType: String) -> String? {
-        return self.resourceBundle().pathForResource(resourceName, ofType: resourceType)
+    /**
+     Default path to a resource. This allows the application to specific fine-grain control over
+     where to search for a given resource. By default, this will look in the main bundle.
+    */
+    open func path(forResource resourceName: String, ofType resourceType: String) -> String? {
+        return self.resourceBundle().path(forResource: resourceName, ofType: resourceType)
     }
     
     // ------------------------------------------------
     // MARK: Passcode Display Handling
     // ------------------------------------------------
+
+    private weak var passcodeViewController: UIViewController?
     
-    public func passcodeViewControllerDidFinishWithSuccess(viewController: UIViewController) {
-        dismissPasscodeViewController(true)
-    }
-    
-    public func passcodeViewControllerDidFailAuthentication(viewController: UIViewController) {
-        // Do nothing in default implementation
-    }
-    
-    public func passcodeViewControllerForgotPasscodeTapped(viewController: UIViewController) {
-        
-        let title = Localization.localizedString("SBA_RESET_PASSCODE_TITLE")
-        let message = Localization.localizedString("SBA_RESET_PASSCODE_MESSAGE")
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        
-        let cancelAction = UIAlertAction(title: Localization.buttonCancel(), style: .Cancel, handler: nil)
-        alert.addAction(cancelAction)
-        
-        let logoutAction = UIAlertAction(title: Localization.localizedString("SBA_LOGOUT"), style: .Destructive, handler: { _ in
-            self.resetPasscode()
-        })
-        alert.addAction(logoutAction)
-        
-        viewController.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    public func shouldShowPasscode() -> Bool {
+    /**
+     Should the passcode be displayed. By default, if there isn't a catasrophic error,
+     the user is registered and there is a passcode in the keychain, then show it.
+    */
+    open func shouldShowPasscode() -> Bool {
         return !self.hasCatastrophicError &&
             self.currentUser.hasRegistered &&
             (self.passcodeViewController == nil) &&
             ORKPasscodeViewController.isPasscodeStoredInKeychain()
     }
     
-    public func instantiateViewControllerForPasscode() -> UIViewController? {
-        return ORKPasscodeViewController.passcodeAuthenticationViewControllerWithText(nil, delegate: self)
+    private func instantiateViewControllerForPasscode() -> UIViewController? {
+        return ORKPasscodeViewController.passcodeAuthenticationViewController(withText: nil, delegate: self)
     }
-    
-    private weak var passcodeViewController: UIViewController?
-    
-    func lockScreen() {
+
+    private func lockScreen() {
         
         guard self.shouldShowPasscode(), let vc = instantiateViewControllerForPasscode() else {
             return
@@ -380,32 +392,59 @@ public protocol SBAAppInfoDelegate: class {
         
         window?.makeKeyAndVisible()
         
-        vc.modalPresentationStyle = .FullScreen
-        vc.modalTransitionStyle = .CoverVertical
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .coverVertical
         
         passcodeViewController = vc
         presentViewController(vc, animated: false, completion: nil)        
     }
     
-    func dismissPasscodeViewController(animated: Bool) {
-        self.passcodeViewController?.presentingViewController?.dismissViewControllerAnimated(animated, completion: nil)
+    private func dismissPasscodeViewController(_ animated: Bool) {
+        self.passcodeViewController?.presentingViewController?.dismiss(animated: animated, completion: nil)
     }
     
-    func resetPasscode() {
+    private func resetPasscode() {
         
         // Dismiss the view controller unanimated
         dismissPasscodeViewController(false)
         
         // Show a plain white view controller while logging out
         let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.whiteColor()
-        transitionToRootViewController(vc, animated: false)
+        vc.view.backgroundColor = UIColor.white
+        transition(toRootViewController: vc, animated: false)
         
         // Logout the user
         self.currentUser.logout()
         
         // Show the appropriate view controller
         showAppropriateViewController(true)
+    }
+    
+    // MARK: ORKPasscodeDelegate
+    
+    open func passcodeViewControllerDidFinish(withSuccess viewController: UIViewController) {
+        dismissPasscodeViewController(true)
+    }
+    
+    open func passcodeViewControllerDidFailAuthentication(_ viewController: UIViewController) {
+        // Do nothing in default implementation
+    }
+    
+    open func passcodeViewControllerForgotPasscodeTapped(_ viewController: UIViewController) {
+        
+        let title = Localization.localizedString("SBA_RESET_PASSCODE_TITLE")
+        let message = Localization.localizedString("SBA_RESET_PASSCODE_MESSAGE")
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: Localization.buttonCancel(), style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        let logoutAction = UIAlertAction(title: Localization.localizedString("SBA_LOGOUT"), style: .destructive, handler: { _ in
+            self.resetPasscode()
+        })
+        alert.addAction(logoutAction)
+        
+        viewController.present(alert, animated: true, completion: nil)
     }
     
 

@@ -85,17 +85,17 @@ class SBASubtaskStepTests: XCTestCase {
         
         let taskResult = ORKTaskResult(identifier: "Parent Task")
         
-        let step1 = navTask.stepAfterStep(nil, withResult: taskResult)
+        let step1 = navTask.step(after: nil, with: taskResult)
         XCTAssertNotNil(step1)
         XCTAssertEqual(step1!.identifier, "intruction")
         taskResult.results = [ORKStepResult(identifier: "instruction")]
         
-        let step2 = navTask.stepAfterStep(step1, withResult: taskResult)
+        let step2 = navTask.step(after: step1, with: taskResult)
         XCTAssertNotNil(step2)
         XCTAssertEqual(step2!.identifier, "Mutating Task.intruction")
         taskResult.results! += [ORKStepResult(identifier: "Mutating Task.instruction")]
         
-        let step3 = navTask.stepAfterStep(step2, withResult: taskResult)
+        let step3 = navTask.step(after: step2, with: taskResult)
         XCTAssertNotNil(step3)
         XCTAssertEqual(step3!.identifier, "Mutating Task.question1")
         guard let formStep3 = step3 as? ORKFormStep else {
@@ -104,12 +104,12 @@ class SBASubtaskStepTests: XCTestCase {
         }
         taskResult.results! += [formStep3.instantiateDefaultStepResult(nil)]
         
-        let step4 = navTask.stepAfterStep(step3, withResult: taskResult)
+        let step4 = navTask.step(after: step3, with: taskResult)
         XCTAssertNotNil(step4)
         XCTAssertEqual(step4!.identifier, "Mutating Task.question2")
 
         // Check that mutated task result is returned
-        let stepResult = taskResult.stepResultForStepIdentifier("Mutating Task.question1")
+        let stepResult = taskResult.stepResult(forStepIdentifier: "Mutating Task.question1")
         XCTAssertNotNil(stepResult)
         XCTAssertEqual(stepResult!.results!.count, 2)
         
@@ -119,16 +119,16 @@ class SBASubtaskStepTests: XCTestCase {
 
 class MutatedResultTask: ORKOrderedTask {
     
-    override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    override func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
         if let previousStep = step as? ORKFormStep,
-            let stepResult = result.stepResultForStepIdentifier(previousStep.identifier),
+            let stepResult = result.stepResult(forStepIdentifier: previousStep.identifier),
             let stepResults = stepResult.results {
             let addedResult = ORKResult(identifier: previousStep.identifier + "addedResult")
             stepResult.results = stepResults + [addedResult]
         }
         
-        let nextStep = super.stepAfterStep(step, withResult: result)
+        let nextStep = super.step(after: step, with: result)
         
         return nextStep
     }

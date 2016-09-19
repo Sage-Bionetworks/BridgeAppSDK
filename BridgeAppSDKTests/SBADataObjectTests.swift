@@ -49,7 +49,7 @@ class SBADataObjectTests: ResourceTestCase {
 
     func testClassTypeMap_AutomaticallyMappedBridgeAppObject() {
         
-        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("SBAMedication")
+        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "SBAMedication")
         XCTAssertNotNil(result)
         guard let classType = result as? SBATrackedDataObject.Type else {
             XCTAssert(false, "\(result) not of expected class type")
@@ -67,13 +67,13 @@ class SBADataObjectTests: ResourceTestCase {
     }
     
     func testClassTypeMap_AutomaticallyMappedBundleObject() {
-        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("MockORKTaskWithoutOptionals")
+        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "MockORKTaskWithoutOptionals")
         XCTAssertNotNil(result)
     }
     
     func testClassTypeMap_PlistMappedBridgeAppObjects() {
 
-        let result: AnyClass? = SBAClassTypeMap.sharedMap().classForClassType("Medication")
+        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "Medication")
         XCTAssertNotNil(result)
         guard let _ = result as? SBAMedication.Type else {
             XCTAssert(false, "\(result) not of expected class type")

@@ -36,7 +36,7 @@ import ResearchKit
 public protocol SBATextChoice  {
     var choiceText: String { get }
     var choiceDetail: String? { get }
-    var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { get }
+    var choiceValue: NSCoding & NSCopying & NSObjectProtocol { get }
     var exclusive: Bool { get }
 }
 
@@ -56,8 +56,8 @@ extension NSDictionary: SBATextChoice {
         return self["detailText"] as? String
     }
     
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> {
-        return (self["value"] as? protocol<NSCoding, NSCopying, NSObjectProtocol>) ?? self.choiceText ?? self.identifier
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
+        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString
     }
     
     public var exclusive: Bool {
@@ -69,12 +69,12 @@ extension NSDictionary: SBATextChoice {
 extension ORKTextChoice: SBATextChoice {
     public var choiceText: String { return self.text }
     public var choiceDetail: String? { return self.detailText }
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self.value }
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol { return self.value }
 }
 
 extension NSString: SBATextChoice {
     public var choiceText: String { return self as String }
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> { return self }
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol { return self }
     public var choiceDetail: String? { return nil }
     public var exclusive: Bool { return false }
 }

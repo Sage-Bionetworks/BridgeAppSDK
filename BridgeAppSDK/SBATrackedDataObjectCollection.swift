@@ -47,11 +47,11 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAStepTransformer
     
-    func transformToTaskAndIncludes(factory: SBASurveyFactory, isLastStep: Bool) -> (task: SBANavigableOrderedTask?, include: SBATrackingStepIncludes?)  {
+    func transformToTaskAndIncludes(_ factory: SBASurveyFactory, isLastStep: Bool) -> (task: SBANavigableOrderedTask?, include: SBATrackingStepIncludes?)  {
         
         // Check the dataStore to determine if the momentInDay id map has been setup and do so if needed
         if (self.dataStore.momentInDayResultDefaultIdMap == nil) {
-            self.dataStore.updateMomentInDayIdMap(filteredSteps(.ActivityOnly, factory: factory))
+            self.dataStore.updateMoment(inDayIdMap: filteredSteps(.ActivityOnly, factory: factory))
         }
         
         // Build the approproate steps
@@ -84,7 +84,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         return (task, include)
     }
     
-    public func transformToStep(factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         let (retTask, retInclude) = transformToTaskAndIncludes(factory, isLastStep: isLastStep)
         guard let task = retTask, let include = retInclude else { return nil }
         
@@ -100,7 +100,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAConditionalRule
     
-    public func shouldSkipStep(step: ORKStep?, result: ORKTaskResult) -> Bool {
+    public func shouldSkipStep(_ step: ORKStep?, result: ORKTaskResult) -> Bool {
 
         // Check if this step is a tracked step. If the tracked step is nil then should *not* skip the step
         guard let trackedStep = step as? SBATrackedNavigationStep else { return false }
@@ -110,17 +110,17 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         return trackedStep.shouldSkipStep
     }
     
-    public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
+    public func nextStep(_ previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
         
         if let selectionStep = previousStep as? SBATrackedSelectionStep,
-            let stepResult = result.stepResultForStepIdentifier(selectionStep.identifier),
+            let stepResult = result.stepResult(forStepIdentifier: selectionStep.identifier),
             let trackedResultIdentifier = selectionStep.trackedResultIdentifier,
-            let trackedResult = stepResult.resultForIdentifier(trackedResultIdentifier) as? SBATrackedDataSelectionResult {
+            let trackedResult = stepResult.result(forIdentifier: trackedResultIdentifier) as? SBATrackedDataSelectionResult {
             self.dataStore.selectedItems = trackedResult.selectedItems
         }
-        else if let previous = previousStep as? SBATrackedStep where previous.trackingType == .activity,
-            let stepResult = result.stepResultForStepIdentifier(previousStep!.identifier) {
-            self.dataStore.updateMomentInDayForStepResult(stepResult)
+        else if let previous = previousStep as? SBATrackedStep , previous.trackingType == .activity,
+            let stepResult = result.stepResult(forStepIdentifier: previousStep!.identifier) {
+            self.dataStore.updateMomentInDay(for: stepResult)
         }
         
         return nextStep
@@ -128,11 +128,11 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: Functions for transforming and recording results
     
-    public func filteredSteps(include: SBATrackingStepIncludes) -> [ORKStep] {
+    public func filteredSteps(_ include: SBATrackingStepIncludes) -> [ORKStep] {
         return filteredSteps(include, factory: SBASurveyFactory())
     }
     
-    private func filteredSteps(include: SBATrackingStepIncludes, factory: SBASurveyFactory) -> [ORKStep] {
+    fileprivate func filteredSteps(_ include: SBATrackingStepIncludes, factory: SBASurveyFactory) -> [ORKStep] {
         
         var firstActivityStepIdentifier: String?
         
@@ -171,15 +171,15 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         // Map the next step identifier back into the changed step
         if let changedStep = steps.first as? SBASurveyFormStep,
             let nextStepIdentifier = firstActivityStepIdentifier
-            where include.nextStepIfNoChange == .activity  {
+            , include.nextStepIfNoChange == .activity  {
             changedStep.skipToStepIdentifier = nextStepIdentifier
         }
         
         return steps
     }
     
-    public func findStep(trackingType: SBATrackingStepType) -> SBATrackedStepSurveyItem? {
-        return self.steps.findObject({ (obj) -> Bool in
+    public func findStep(_ trackingType: SBATrackingStepType) -> SBATrackedStepSurveyItem? {
+        return self.steps.find({ (obj) -> Bool in
             guard let trackingItem = obj as? SBATrackedStepSurveyItem,
                 let type = trackingItem.trackingType else { return false }
             return type == trackingType
@@ -188,7 +188,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     func shouldShowChangedStep() -> Bool {
         if let _ = self.findStep(.changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
-            let interval = self.repeatTimeInterval as NSTimeInterval
+            let interval = self.repeatTimeInterval as TimeInterval
             return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
         }
         else {

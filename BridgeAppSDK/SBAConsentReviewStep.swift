@@ -33,48 +33,48 @@
 
 import ResearchKit
 
-public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
+open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     
     static let nameStepIdentifier = "name"
     static let signatureStepIdentifier = "signature"
     static let reviewStepIdentifier = "review"
     static let consentResultIdentifier = "consent"
     
-    public var surveyItemType: SBASurveyItemType {
+    open var surveyItemType: SBASurveyItemType {
         return .consent(.review)
     }
     
-    public var formItems: [ORKFormItem]? {
+    open var formItems: [ORKFormItem]? {
         get { return nameStep?.formItems }
         set (newValue) { nameStep?.formItems = newValue }
     }
     
-    public override var title: String? {
+    open override var title: String? {
         didSet {
             self.nameStep?.title = self.title
         }
     }
     
-    public override var text: String? {
+    open override var text: String? {
         didSet {
             self.nameStep?.text = self.text
         }
     }
     
     var nameStep: ORKFormStep? {
-        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.nameStepIdentifier) as? ORKFormStep
+        guard let step = self.step(withIdentifier: SBAConsentReviewStep.nameStepIdentifier) as? ORKFormStep
             else { return nil }
         return step
     }
     
     var reviewStep: ORKConsentReviewStep? {
-        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.reviewStepIdentifier) as? ORKConsentReviewStep
+        guard let step = self.step(withIdentifier: SBAConsentReviewStep.reviewStepIdentifier) as? ORKConsentReviewStep
             else { return nil }
         return step
     }
     
     var signatureStep: ORKSignatureStep? {
-        guard let step = self.stepWithIdentifier(SBAConsentReviewStep.signatureStepIdentifier) as? ORKSignatureStep
+        guard let step = self.step(withIdentifier: SBAConsentReviewStep.signatureStepIdentifier) as? ORKSignatureStep
             else { return nil }
         return step
     }
@@ -87,20 +87,20 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         let signature = consentDocument.signatures?.first?.copy() as? ORKConsentSignature
         signature?.requiresName = false
         signature?.requiresSignatureImage = false
-        let reviewStep = ORKConsentReviewStep(identifier: SBAConsentReviewStep.reviewStepIdentifier, signature: signature, inDocument: consentDocument)
+        let reviewStep = ORKConsentReviewStep(identifier: SBAConsentReviewStep.reviewStepIdentifier, signature: signature, in: consentDocument)
         reviewStep.reasonForConsent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
         steps.append(reviewStep)
         
         // Only add the name/signature if required
-        if let reviewOptions = inputItem as? SBAConsentReviewOptions where reviewOptions.requiresSignature {
+        if let reviewOptions = inputItem as? SBAConsentReviewOptions , reviewOptions.requiresSignature {
             
             let nameStep = ORKFormStep(identifier: SBAConsentReviewStep.nameStepIdentifier)
             nameStep.title = Localization.localizedString("CONSENT_NAME_TITLE")
-            nameStep.optional = false
+            nameStep.isOptional = false
             steps.append(nameStep)
 
             let signatureStep = ORKSignatureStep(identifier: SBAConsentReviewStep.signatureStepIdentifier)
-            signatureStep.optional = false
+            signatureStep.isOptional = false
             steps.append(signatureStep)
         }
         
@@ -113,41 +113,41 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         }
     }
     
-    public func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.name]   // by default
     }
     
-    public override func validateParameters() {
+    open override func validateParameters() {
         super.validateParameters()
         try! validate(options: self.options)
     }
     
-    public func validate(options options: [SBAProfileInfoOption]?) throws {
+    open func validate(options: [SBAProfileInfoOption]?) throws {
         guard let options = options else {
             return  // nil options is ok
         }
         
         // If the options is not nil, then should contain the name
         guard options.contains(.name) else {
-            throw SBAProfileInfoOptionsError.MissingName
+            throw SBAProfileInfoOptionsError.missingName
         }
     }
     
     // MARK: Step navigation
     
-    override public func stepAfterStepWithIdentifier(identifier: String?, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         // If this is a non-consented review step then do not continue to name/signature
         if identifier == SBAConsentReviewStep.reviewStepIdentifier,
-            let stepResult = result.stepResultForStepIdentifier(identifier!),
-            let reviewResult = stepResult.results?.first as? ORKConsentSignatureResult where !reviewResult.consented {
+            let stepResult = result.stepResult(forStepIdentifier: identifier!),
+            let reviewResult = stepResult.results?.first as? ORKConsentSignatureResult , !reviewResult.consented {
             return nil
         }
-        return super.stepAfterStepWithIdentifier(identifier, withResult: result)
+        return super.stepAfterStep(withIdentifier: identifier, with: result)
     }
     
     // MARK: View controller
     
-    override public func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBAConsentReviewStepViewController.classForCoder()
     }
     
@@ -162,9 +162,9 @@ public class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     }
 }
 
-public class SBAConsentReviewResult: ORKResult {
+open class SBAConsentReviewResult: ORKResult {
     
-    public var consentSignature: SBAConsentSignature? {
+    open var consentSignature: SBAConsentSignature? {
         get {
             return self.userInfo?["consentSignature"] as? SBAConsentSignature
         }
@@ -175,7 +175,7 @@ public class SBAConsentReviewResult: ORKResult {
         }
     }
     
-    public var isConsented: Bool {
+    open var isConsented: Bool {
         get {
             return self.userInfo?["isConsented"] as? Bool ?? false
         }
@@ -190,7 +190,7 @@ public class SBAConsentReviewResult: ORKResult {
 class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController {
     
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
 
     var consentStep: SBAConsentReviewStep? {
@@ -220,7 +220,7 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
                 orkSignature = reviewResult.signature
             }
             else if result.identifier.hasPrefix(namePrefix),
-                let option = SBAProfileInfoOption(rawValue: result.identifier.substringFromIndex(namePrefix.endIndex)) {
+                let option = SBAProfileInfoOption(rawValue: result.identifier.substring(from: namePrefix.endIndex)) {
                 switch option {
                     
                 case .name:
@@ -257,7 +257,7 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
     }
     
     var consentReviewResult: SBAConsentReviewResult? {
-        return self.result?.results?.findObject({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
+        return self.result?.results?.find({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
     }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
@@ -265,7 +265,7 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
     final override func goForward() {
         
         // Check that the user has consented or fail with an error
-        guard let consentResult = self.consentReviewResult where consentResult.isConsented else {
+        guard let consentResult = self.consentReviewResult , consentResult.isConsented else {
             let error = NSError(domain: "SBAConsentReviewStepDomain",
                                 code: -1,
                                 userInfo: [NSLocalizedDescriptionKey : Localization.localizedString("SBA_REGISTRATION_NOT_CONSENTED")])

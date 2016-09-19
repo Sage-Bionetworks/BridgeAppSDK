@@ -38,96 +38,139 @@ import BridgeSDK
 @objc
 public protocol SBAScheduledActivityDataSource: class {
     
+    /**
+     Reload the data source.
+     */
     func reloadData()
-    func numberOfSections() -> Int
-    func numberOfRowsInSection(section: Int) -> Int
-    func scheduledActivityAtIndexPath(indexPath: NSIndexPath) -> SBBScheduledActivity?
-    func shouldShowTaskForIndexPath(indexPath: NSIndexPath) -> Bool
     
-    optional func didSelectRowAtIndexPath(indexPath: NSIndexPath)
-    optional func sectionTitle(section: Int) -> String?
+    /**
+     Number of sections in the data source.
+     */
+    func numberOfSections() -> Int
+    
+    /**
+     Number of rows in the data source.
+     */
+    @objc(numberOfRowsInSection:)
+    func numberOfRows(for section: Int) -> Int
+    
+    /**
+     The scheduled activity at the given index.
+     @param indexPath   The index path for the schedule
+     */
+    @objc(scheduledActivityAtIndexPath:)
+    func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity?
+    
+    /**
+     Should the task associated with the given index path be disabled.
+     */
+    @objc(shouldShowTaskForIndexPath:)
+    func shouldShowTask(for indexPath: IndexPath) -> Bool
+    
+    /**
+     Called when a row is selected.
+     */
+    @objc(didSelectRowAtIndexPath:)
+    optional func didSelectRow(at indexPath: IndexPath)
+    
+    /**
+     Title for the given section (if applicable)
+     */
+    @objc(titleForSection:)
+    optional func title(for section: Int) -> String?
 }
 
-public class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
+open class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
     
-    public var scheduledActivityDataSource: SBAScheduledActivityDataSource {
+    open var scheduledActivityDataSource: SBAScheduledActivityDataSource {
         return _scheduledActivityManager
     }
-    lazy private var _scheduledActivityManager : SBAScheduledActivityManager = {
+    lazy fileprivate var _scheduledActivityManager : SBAScheduledActivityManager = {
         return SBAScheduledActivityManager(delegate: self)
     }()
     
-    private var foregroundNotification: NSObjectProtocol?
+    fileprivate var foregroundNotification: NSObjectProtocol?
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         self.scheduledActivityDataSource.reloadData()
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self.scheduledActivityDataSource, action: #selector(self.scheduledActivityDataSource.reloadData), forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self.scheduledActivityDataSource, action: #selector(self.scheduledActivityDataSource.reloadData), for: .valueChanged)
         self.refreshControl = refreshControl
     }
     
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tableView.reloadData()
 
-        foregroundNotification = NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
+        foregroundNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) {
             [weak self] _ in
             self?.scheduledActivityDataSource.reloadData()
         }
     }
     
-    override public func viewWillDisappear(animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         if let notificationHandler = foregroundNotification {
-            NSNotificationCenter.defaultCenter().removeObserver(notificationHandler)
+            NotificationCenter.default.removeObserver(notificationHandler)
         }
     }
     
     // MARK: data refresh
     
-    public func reloadTable(scheduledActivityManager: SBAScheduledActivityManager) {
+    open func reloadFinished(_ sender: Any?) {
         // reload table
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
     }
     
     // MARK: table cell customization
+    
+    static let defaultReuseIdentifier = "ActivityCell"
 
-    public func dequeueReusableCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCellWithIdentifier("ActivityCell", forIndexPath: indexPath)
+    /**
+     The cell to dequeue at a given index path. By default, the cell should have a reuse identifier
+     of `SBAActivityTableViewController.defaultReuseIdentifier`
+     */
+    @objc(dequeueReusableCellInTableView:indexPath:)
+    open func dequeueReusableCell(in tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        return tableView.dequeueReusableCell(withIdentifier: SBAActivityTableViewController.defaultReuseIdentifier, for: indexPath)
     }
     
-    public func configureCell(cell: UITableViewCell, tableView: UITableView, indexPath: NSIndexPath) {
+    /**
+     Configure the cell.
+     */
+    @objc(configureCell:tableView:indexPath:)
+    open func configure(cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
         guard let activityCell = cell as? SBAActivityTableViewCell,
-            let schedule = scheduledActivityDataSource.scheduledActivityAtIndexPath(indexPath) else {
+            let schedule = scheduledActivityDataSource.scheduledActivity(at: indexPath) else {
                 return
         }
         
         // The only cell type that is supported in the base implementation is an SBAActivityTableViewCell
         let activity = schedule.activity
         activityCell.complete = schedule.isCompleted
-        activityCell.titleLabel.text = activity.label
+        activityCell.titleLabel.text = activity?.label
         
         activityCell.timeLabel?.text = schedule.scheduledTime
         
         // Show a detail that is most appropriate to the schedule status
         if schedule.isCompleted {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_COMPLETE_%@")
-            let dateString = NSDateFormatter.localizedStringFromDate(schedule.finishedOn, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
+            let dateString = DateFormatter.localizedString(from: schedule.finishedOn, dateStyle: .medium, timeStyle: .short)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         else if schedule.isExpired {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_EXPIRED_%@")
-            let dateString = schedule.isToday ? schedule.expiresTime! : NSDateFormatter.localizedStringFromDate(schedule.expiresOn, dateStyle: .MediumStyle, timeStyle: .ShortStyle)
+            let dateString = schedule.isToday ? schedule.expiresTime! : DateFormatter.localizedString(from: schedule.expiresOn, dateStyle: .medium, timeStyle: .short)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         else if schedule.isToday {
-            activityCell.subtitleLabel.text = activity.labelDetail
+            activityCell.subtitleLabel.text = activity?.labelDetail
         }
         else if schedule.isTomorrow {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_TOMORROW_UNTIL_%@")
@@ -135,47 +178,47 @@ public class SBAActivityTableViewController: UITableViewController, SBAScheduled
         }
         else {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_DETAIL_%@_UNTIL_%@")
-            let dateString = NSDateFormatter.localizedStringFromDate(schedule.scheduledOn, dateStyle: .MediumStyle, timeStyle: .NoStyle)
+            let dateString = DateFormatter.localizedString(from: schedule.scheduledOn, dateStyle: .medium, timeStyle: .none)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString, schedule.expiresTime!)
         }
         
         // Modify the label colors if disabled
-        if (scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath)) {
-            activityCell.titleLabel.textColor = UIColor.blackColor()
+        if (scheduledActivityDataSource.shouldShowTask(for: indexPath)) {
+            activityCell.titleLabel.textColor = UIColor.black
         }
         else {
-            activityCell.titleLabel.textColor = UIColor.grayColor()
+            activityCell.titleLabel.textColor = UIColor.gray
         }
     }
     
     
     // Mark: UITableViewController overrides
     
-    override public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override open func numberOfSections(in tableView: UITableView) -> Int {
         return scheduledActivityDataSource.numberOfSections()
     }
     
-    override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scheduledActivityDataSource.numberOfRowsInSection(section)
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return scheduledActivityDataSource.numberOfRows(for: section)
     }
     
-    override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = dequeueReusableCell(tableView, indexPath: indexPath)
-        configureCell(cell, tableView: tableView, indexPath: indexPath)
+    override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = dequeueReusableCell(in: tableView, at: indexPath)
+        configure(cell: cell, in: tableView, at: indexPath)
         return cell
     }
     
-    override public func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        return scheduledActivityDataSource.shouldShowTaskForIndexPath(indexPath) ? indexPath : nil
+    override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return scheduledActivityDataSource.shouldShowTask(for: indexPath) ? indexPath : nil
     }
     
-    override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        scheduledActivityDataSource.didSelectRowAtIndexPath?(indexPath)
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        scheduledActivityDataSource.didSelectRow?(at: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override public func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return scheduledActivityDataSource.sectionTitle?(section)
+    override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return scheduledActivityDataSource.title?(for: section)
     }
 }
 

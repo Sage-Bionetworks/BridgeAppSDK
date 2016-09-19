@@ -31,16 +31,16 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
+open class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     
-    public var trackingType: SBATrackingStepType? {
+    open var trackingType: SBATrackingStepType? {
         return .selection
     }
     
-    public var trackedItems: [SBATrackedDataObject] {
+    open var trackedItems: [SBATrackedDataObject] {
         return _trackedItems
     }
-    private var _trackedItems: [SBATrackedDataObject]
+    fileprivate var _trackedItems: [SBATrackedDataObject]
     
     /** 
     Define a non-generic factory-style initializer to hide the implementation details of creating the 
@@ -61,7 +61,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
             // If the item is not a frequency item then no special handling required
             // so fall back to the base level factory for creating the step
             guard let trackedSurveyItem = element as? SBATrackedStep,
-                let type = trackedSurveyItem.trackingType where type == .frequency,
+                let type = trackedSurveyItem.trackingType , type == .frequency,
                 let formSurveyItem = element as? SBAFormStepSurveyItem
                 else {
                     return factory.createSurveyStep(surveyItem)
@@ -85,27 +85,27 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         super.init(identifier: identifier, steps: steps)
     }
     
-    override public func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBATrackedSelectionStepViewController.classForCoder()
     }
     
     // MARK: Selection filtering
     
     var trackedResultIdentifier: String? {
-        return self.steps.findObject({ (step) -> Bool in
-            if let trackedStep = step as? SBATrackedStep where trackedStep.trackingType == .selection {
+        return self.steps.find({ (step) -> Bool in
+            if let trackedStep = step as? SBATrackedStep , trackedStep.trackingType == .selection {
                 return true
             }
             return false
         })?.identifier
     }
     
-    func filterItems(resultSource resultSource:ORKTaskResultSource) -> [SBATrackedDataObject]? {
+    func filterItems(resultSource:ORKTaskResultSource) -> [SBATrackedDataObject]? {
         var items: [SBATrackedDataObject]? = trackedItems
         for step in self.steps {
             if let filterItems = items,
                 let filterStep = step as? SBATrackedSelectionFilter,
-                let stepResult = resultSource.stepResultForStepIdentifier(step.identifier) {
+                let stepResult = resultSource.stepResult(forStepIdentifier: step.identifier) {
                 items = filterStep.filter(selectedItems: filterItems, stepResult: stepResult)
             }
         }
@@ -114,12 +114,12 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     
     // MARK: Navigation override
     
-    override public func stepAfterStepWithIdentifier(identifier: String?, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         
         // If the identifier is nil, then this is the first step and there isn't any
         // filtering of the selection that needs to occur
         guard identifier != nil else {
-            return super.stepAfterStepWithIdentifier(nil, withResult: result)
+            return super.stepAfterStep(withIdentifier: nil, with: result)
         }
         
         // Check if the current state means that nothing was selected. In this case
@@ -131,7 +131,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         var nextStep: ORKStep?
         var previousIdentifier = identifier
         repeat {
-            nextStep = super.stepAfterStepWithIdentifier(previousIdentifier, withResult: result)
+            nextStep = super.stepAfterStep(withIdentifier: previousIdentifier, with: result)
             shouldSkip = {
                 guard let navStep = nextStep as? SBATrackedNavigationStep else { return false }
                 navStep.update(selectedItems: selectedItems)
@@ -143,7 +143,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         return nextStep
     }
     
-    override public func stepBeforeStepWithIdentifier(identifier: String, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func stepBeforeStep(withIdentifier identifier: String, with result: ORKTaskResult) -> ORKStep? {
         // Check if the current state means that nothing was selected. In this case
         // return to the first step
         guard let _ = filterItems(resultSource: result) else {
@@ -155,7 +155,7 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         var previousStep: ORKStep?
         var previousIdentifier: String? = identifier
         repeat {
-            previousStep = super.stepBeforeStepWithIdentifier(previousIdentifier!, withResult: result)
+            previousStep = super.stepBeforeStep(withIdentifier: previousIdentifier!, with: result)
             shouldSkip = {
                 guard let navStep = previousStep as? SBATrackedNavigationStep else { return false }
                 return navStep.shouldSkipStep
@@ -169,13 +169,13 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        _trackedItems = aDecoder.decodeObjectForKey("trackedItems") as? [SBATrackedDataObject] ?? []
+        _trackedItems = aDecoder.decodeObject(forKey: "trackedItems") as? [SBATrackedDataObject] ?? []
         super.init(coder: aDecoder)
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.trackedItems, forKey: "trackedItems")
+    override open func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.trackedItems, forKey: "trackedItems")
     }
     
     // MARK: NSCopying
@@ -185,21 +185,21 @@ public class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep {
         self.init(identifier: identifier, trackedItems: [], steps:[])
     }
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBATrackedSelectionStep
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBATrackedSelectionStep
         copy._trackedItems = self._trackedItems
         return copy
     }
     
     // MARK: Equality
         
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBATrackedSelectionStep else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(object.trackedItems, self.trackedItems)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.trackedItems)
     }
@@ -231,12 +231,12 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
     let choicesFormItemIdentifier = "choices"
     
     // If this is an optional step, then building the form items will add a skip option
-    override var optional: Bool {
+    override var isOptional: Bool {
         get {
             return false
         }
         set (newValue) {
-            super.optional = newValue
+            super.isOptional = newValue
         }
     }
     
@@ -252,21 +252,21 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
         // Add a choice for none of the above
         let noneChoice = ORKTextChoice(text: Localization.localizedString("SBA_NONE_OF_THE_ABOVE"),
                                        detailText: nil,
-                                       value: noneChoiceValue,
+                                       value: noneChoiceValue as NSString,
                                        exclusive: true)
         choices.append(noneChoice)
         
         // If this is an optional step, then include a choice for skipping
-        if (super.optional) {
+        if (super.isOptional) {
             let skipChoice = ORKTextChoice(text: Localization.localizedString("SBA_SKIP_CHOICE"),
                                            detailText: nil,
-                                           value: skipChoiceValue,
+                                           value: skipChoiceValue as NSString,
                                            exclusive: true)
             choices.append(skipChoice)
         }
         
         // setup the form items
-        let answerFormat = ORKTextChoiceAnswerFormat(style: .MultipleChoice, textChoices: choices)
+        let answerFormat = ORKTextChoiceAnswerFormat(style: .multipleChoice, textChoices: choices)
         let formItem = ORKFormItem(identifier: choicesFormItemIdentifier, text: nil, answerFormat: answerFormat)
         self.formItems = [formItem]
     }
@@ -288,12 +288,12 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
     func filter(selectedItems items: [SBATrackedDataObject], stepResult: ORKStepResult) -> [SBATrackedDataObject]? {
         
         // If the step result does not yet include the result of the step then just return all items
-        guard let choiceResult = stepResult.resultForIdentifier(choicesFormItemIdentifier) as? ORKChoiceQuestionResult else {
+        guard let choiceResult = stepResult.result(forIdentifier: choicesFormItemIdentifier) as? ORKChoiceQuestionResult else {
             return items.map({ $0.copy() as! SBATrackedDataObject })
         }
         
         // If the selection was skipped then return nil
-        guard let choices = choiceResult.choiceAnswers as? [String] where choices != [skipChoiceValue] else {
+        guard let choices = choiceResult.choiceAnswers as? [String] , choices != [skipChoiceValue] else {
             return nil
         }
         
@@ -324,7 +324,7 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
         return (self.formItems == nil) || (self.formItems!.count == 0)
     }
     
-    func update(selectedItems selectedItems:[SBATrackedDataObject]) {
+    func update(selectedItems:[SBATrackedDataObject]) {
         self.formItems = selectedItems.filter({ $0.usesFrequencyRange }).map { (item) -> ORKFormItem in
             return ORKFormItem(identifier: item.identifier, text: item.text, answerFormat: self.frequencyAnswerFormat)
         }
@@ -333,9 +333,9 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     func filter(selectedItems items: [SBATrackedDataObject], stepResult: ORKStepResult) -> [SBATrackedDataObject]? {
         return items.map({ (item) -> SBATrackedDataObject in
             let copy = item.copy() as! SBATrackedDataObject
-            if let scaleResult = stepResult.resultForIdentifier(item.identifier) as? ORKScaleQuestionResult,
+            if let scaleResult = stepResult.result(forIdentifier: item.identifier) as? ORKScaleQuestionResult,
                 let answer = scaleResult.scaleAnswer {
-                copy.frequency = answer.unsignedLongValue
+                copy.frequency = answer.uintValue
             }
             return copy
         })
@@ -345,12 +345,12 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.frequencyAnswerFormat = aDecoder.decodeObjectForKey("frequencyAnswerFormat") as? ORKAnswerFormat
+        self.frequencyAnswerFormat = aDecoder.decodeObject(forKey: "frequencyAnswerFormat") as? ORKAnswerFormat
     }
     
-    override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
+    override func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
     }
     
     // MARK: NSCopying
@@ -359,15 +359,15 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
         super.init(identifier: identifier)
     }
     
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBATrackedFrequencyFormStep
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBATrackedFrequencyFormStep
         copy.frequencyAnswerFormat = self.frequencyAnswerFormat
         return copy
     }
     
     // MARK: Equality
     
-    override func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBATrackedFrequencyFormStep else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(object.frequencyAnswerFormat, self.frequencyAnswerFormat)

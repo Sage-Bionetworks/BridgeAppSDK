@@ -42,7 +42,7 @@ public protocol SBATrackedStepSurveyItem: SBASurveyItem, SBATrackedStep {
 
 public protocol SBATrackedNavigationStep: SBATrackedStep {
     var shouldSkipStep: Bool { get }
-    func update(selectedItems selectedItems:[SBATrackedDataObject])
+    func update(selectedItems:[SBATrackedDataObject])
 }
 
 public protocol SBATrackedSelectionFilter: SBATrackedStep {
@@ -63,7 +63,7 @@ public struct SBATrackingStepIncludes {
     let nextStepIfNoChange: SBATrackingStepType
     let includes:[SBATrackingStepType]
     
-    private init(includes:[SBATrackingStepType]) {
+    fileprivate init(includes:[SBATrackingStepType]) {
         if (includes.contains(.changed) && !includes.contains(.activity)) {
             self.includes = [.changed, .selection, .frequency, .activity]
             self.nextStepIfNoChange = .completion
@@ -85,7 +85,7 @@ public struct SBATrackingStepIncludes {
         return includes.contains(.introduction) || includes.contains(.changed)
     }
     
-    func shouldInclude(trackingType: SBATrackingStepType) -> Bool {
+    func shouldInclude(_ trackingType: SBATrackingStepType) -> Bool {
         return includes.contains(trackingType)
     }
 }
@@ -105,8 +105,8 @@ extension SBATrackedDataObject: SBATextChoice {
     public var choiceDetail: String? {
         return nil
     }
-    public var choiceValue: protocol<NSCoding, NSCopying, NSObjectProtocol> {
-        return self.identifier
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
+        return self.identifier as NSCoding & NSCopying & NSObjectProtocol
     }
     public var exclusive: Bool {
         return false

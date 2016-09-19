@@ -39,22 +39,22 @@ enum SBADefaultFormItemAnswer {
 
 extension ORKStep {
     
-    func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
+    func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
         return ORKStepResult(stepIdentifier: self.identifier, results: nil)
     }
 }
 
 extension ORKFormStep {
-    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
+    override func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
         let results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
-            return formItem.instantiateQuestionResult(.defaultValue, answer: answerMap?[formItem.identifier])
+            return formItem.instantiateQuestionResult(.defaultValue, answer: answerMap?[formItem.identifier] as AnyObject?)
         })
         return ORKStepResult(stepIdentifier: self.identifier, results: results)
     }
 }
 
 extension ORKActiveStep {
-    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
+    override func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
         // add a result to the step (there should be *something* to show)
         let activeResult = ORKFileResult(identifier: "file")
         return ORKStepResult(stepIdentifier: self.identifier, results: [activeResult])
@@ -62,15 +62,15 @@ extension ORKActiveStep {
 }
 
 extension ORKPageStep {
-    override func instantiateDefaultStepResult(answerMap: NSDictionary?) -> ORKStepResult {
+    override func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
         
         var results: [ORKResult] = []
         
-        let taskResult = ORKTaskResult(taskIdentifier: self.identifier, taskRunUUID: NSUUID(), outputDirectory: nil)
+        let taskResult = ORKTaskResult(taskIdentifier: self.identifier, taskRun: NSUUID() as UUID, outputDirectory: nil)
         taskResult.results = []
         
         var previousStepIdentifier: String? = nil
-        while let step = self.stepAfterStepWithIdentifier(previousStepIdentifier, withResult: taskResult) {
+        while let step = self.stepAfterStep(withIdentifier: previousStepIdentifier, with: taskResult) {
             previousStepIdentifier = step.identifier
             let stepResult = step.instantiateDefaultStepResult(answerMap)
             taskResult.addResult(stepResult)
@@ -84,7 +84,7 @@ extension ORKPageStep {
         }
         
         let stepResult = ORKStepResult(stepIdentifier: self.identifier, results: results)
-        let pageVC = self.instantiateStepViewControllerWithResult(stepResult)
+        let pageVC = self.instantiateStepViewController(with: stepResult)
         let mutatedResult = pageVC.result
         
         return mutatedResult ?? stepResult
@@ -93,13 +93,13 @@ extension ORKPageStep {
 
 protocol SBAQuestionResultMapping {
     var questionType: ORKQuestionType { get }
-    func instantiateQuestionResult(identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult?
+    func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult?
 }
 
 extension ORKFormItem {
     
     // Convenience method for adding a default answer or mapped answer for a given form item
-    func instantiateQuestionResult(defaultAnswer: SBADefaultFormItemAnswer, answer: AnyObject?) -> ORKQuestionResult? {
+    func instantiateQuestionResult(_ defaultAnswer: SBADefaultFormItemAnswer, answer: AnyObject?) -> ORKQuestionResult? {
         guard let answerFormat = self.answerFormat as? SBAQuestionResultMapping,
               let questionResult = answerFormat.instantiateQuestionResult(self.identifier, defaultAnswer, answer)
         else {
@@ -112,7 +112,7 @@ extension ORKFormItem {
 
 extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
     
-    func instantiateQuestionResult(identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
+    func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
         
         // Exit early if there are no choices
         guard self.textChoices.count > 0 else { return nil }
@@ -124,7 +124,7 @@ extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
         }
         
         // Check that the choice answers are nil or valid
-        guard (choiceAnswers == nil) || isValidAnswer(choiceAnswers!) else {
+        guard (choiceAnswers == nil) || isValidAnswer(choiceAnswers! as AnyObject) else {
             assertionFailure("\(answer) is invalid")
             return nil
         }
@@ -147,7 +147,7 @@ extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
         return result
     }
     
-    func isValidAnswer(answer: AnyObject) -> Bool {
+    func isValidAnswer(_ answer: AnyObject) -> Bool {
         guard let choiceAnswers = answer as? [NSObject] else {
             return false
         }
@@ -161,7 +161,7 @@ extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
 
 extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
     
-    func instantiateQuestionResult(identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
+    func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
         
         let result = ORKScaleQuestionResult(identifier: identifier)
         if let num = answer as? NSNumber {
@@ -170,11 +170,11 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
         else {
             switch defaultAnswer {
             case .defaultValue:
-                result.scaleAnswer = self.defaultValue
+                result.scaleAnswer = self.defaultValue as NSNumber?
             case .first:
-                result.scaleAnswer = self.minimum
+                result.scaleAnswer = self.minimum as NSNumber?
             case .last:
-                result.scaleAnswer = self.maximum
+                result.scaleAnswer = self.maximum as NSNumber?
             case .skip:
                 result.scaleAnswer = nil
             }

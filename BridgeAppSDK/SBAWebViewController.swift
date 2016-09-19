@@ -33,14 +33,14 @@
 
 import UIKit
 
-public class SBAWebViewController: UIViewController, UIWebViewDelegate {
+open class SBAWebViewController: UIViewController, UIWebViewDelegate {
     
     @IBOutlet weak var webView: UIWebView!
-    public var url : NSURL!
+    open var url : URL!
     
-    private var _webviewLoaded = false
+    fileprivate var _webviewLoaded = false
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         
         if (webView == nil) {
@@ -48,32 +48,32 @@ public class SBAWebViewController: UIViewController, UIWebViewDelegate {
             self.view.addSubview(subview)
             subview.constrainToFillSuperview()
             subview.delegate = self
-            subview.dataDetectorTypes = .All
+            subview.dataDetectorTypes = .all
             self.webView = subview
         }
     
 
     }
     
-    public override func viewWillAppear(animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if (!_webviewLoaded) {
             _webviewLoaded = true
-            let request = NSURLRequest(URL: url)
+            let request = URLRequest(url: url)
             webView.loadRequest(request)
         }
     }
     
-    public func dismissViewController() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    open func dismissViewController() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - UIWebViewDelegate
-    public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 
-        if let url = request.URL where (navigationType == .LinkClicked) {
-            UIApplication.sharedApplication().openURL(url)
+        if let url = request.url , (navigationType == .linkClicked) {
+            UIApplication.shared.openURL(url)
             return false
         }
         else {

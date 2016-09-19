@@ -37,7 +37,7 @@ import UIKit
  * Utility for presenting alerts
  */
 public protocol SBAAlertPresenter: class {
-    func presentViewController(viewController: UIViewController,
+    func presentViewController(_ viewController: UIViewController,
                                animated: Bool,
                                completion: (() -> Void)?)
 }
@@ -47,26 +47,26 @@ extension UIViewController: SBAAlertPresenter {
 
 public extension SBAAlertPresenter {
     
-    public func showAlertWithOk(title: String?, message: String, actionHandler: ((UIAlertAction) -> Void)?) {
+    public func showAlertWithOk(_ title: String?, message: String, actionHandler: ((UIAlertAction) -> Void)?) {
         
-        let okAction = UIAlertAction(title:Localization.buttonOK(), style: .Default, handler: actionHandler)
+        let okAction = UIAlertAction(title:Localization.buttonOK(), style: .default, handler: actionHandler)
         showAlertWithActions(title, message: message, animated: true, actions: [okAction])
     }
     
-    public func showAlertWithYesNo(title: String?, message: String, actionHandler: ((Bool) -> Void)) {
+    public func showAlertWithYesNo(_ title: String?, message: String, actionHandler: @escaping ((Bool) -> Void)) {
         
-        let noAction = UIAlertAction(title: Localization.buttonNo(), style: .Default, handler: { _ in
+        let noAction = UIAlertAction(title: Localization.buttonNo(), style: .default, handler: { _ in
             actionHandler(false)
         })
-        let yesAction = UIAlertAction(title: Localization.buttonYes(), style: .Default, handler: { _ in
+        let yesAction = UIAlertAction(title: Localization.buttonYes(), style: .default, handler: { _ in
             actionHandler(true)
         })
 
         showAlertWithActions(title, message: message, animated: true, actions: [noAction, yesAction])
     }
     
-    public func showAlertWithActions(title: String?, message: String, animated: Bool, actions: [UIAlertAction]) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+    public func showAlertWithActions(_ title: String?, message: String, animated: Bool, actions: [UIAlertAction]) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         for action in actions {
             alert.addAction(action)
         }

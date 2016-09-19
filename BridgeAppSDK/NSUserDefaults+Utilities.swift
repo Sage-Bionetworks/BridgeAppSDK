@@ -33,11 +33,11 @@
 
 import Foundation
 
-public extension NSUserDefaults {
+public extension UserDefaults {
     
     public func flushUserDefaults() {
         for (key, _) in self.dictionaryRepresentation() {
-            self.removeObjectForKey(key)
+            self.removeObject(forKey: key)
         }
         self.synchronize()
     }

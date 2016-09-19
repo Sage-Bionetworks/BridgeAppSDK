@@ -33,16 +33,17 @@
 
 import Foundation
 
-func SBAObjectEquality(objA: NSObject?, _ objB: NSObject?) -> Bool {
+func SBAObjectEquality(_ objA: Any?, _ objB: Any?) -> Bool {
     if objA == nil && objB == nil {
         return true
     }
-    guard let objA = objA, let objB = objB else {
+    guard let objA = objA as? NSObject, let objB = objB as? NSObject else {
         return false
     }
     return objA == objB
 }
 
-func SBAObjectHash(obj: AnyObject?) -> Int {
-    return obj?.hash ?? 0
+func SBAObjectHash(_ obj: Any?) -> Int {
+    return (obj as? NSObject)?.hash ?? 0
 }
+

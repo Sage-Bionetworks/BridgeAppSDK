@@ -107,7 +107,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
         XCTAssertTrue(surveyStep.skipIfPassed)
         
-        guard let formItems = surveyStep.formItems where formItems.count == 3 else {
+        guard let formItems = surveyStep.formItems , formItems.count == 3 else {
             XCTAssert(false, "\(surveyStep.formItems) are not of expected count")
             return
         }
@@ -142,7 +142,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(surveyStep.identifier, "quiz")
         XCTAssertEqual(surveyStep.formItems?.count, 3)
         
-        guard let formItems = surveyStep.formItems where formItems.count == 3 else { return }
+        guard let formItems = surveyStep.formItems , formItems.count == 3 else { return }
         
         XCTAssertEqual(formItems[0].text, "Are you older than 18?")
         XCTAssertEqual(formItems[1].text, "Are you a US resident?")
@@ -278,10 +278,10 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
         questionResult.booleanAnswer = true
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.booleanAnswer = false
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_SingleChoiceQuestion() {
@@ -313,7 +313,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNil(formItem.text)
         XCTAssertEqual(surveyStep.text, "Question 1?")
         XCTAssertNotNil(formItem.rulePredicate)
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 3)
         
         XCTAssertEqual(answerFormat.textChoices.first!.text, "a")
@@ -326,10 +326,10 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
         questionResult.choiceAnswers = ["b"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["c"]
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_MultipleChoiceQuestion() {
@@ -362,7 +362,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertNil(formItem.text)
         XCTAssertEqual(surveyStep.text, "Question 1?")
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.MultipleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.multipleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 3)
         
         let choiceA = answerFormat.textChoices[0]
@@ -414,7 +414,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertNil(formItem.text)
         
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 2)
         if (answerFormat.textChoices.count != 2) {
             return
@@ -435,10 +435,10 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
         questionResult.choiceAnswers = [true]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = [false]
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
     }
     
@@ -479,7 +479,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.constraints = SBBBooleanConstraints();
     
         let ruleNotEqual = SBBSurveyRule(dictionaryRepresentation:         [
-            "value" : NSNumber(bool: true),
+            "value" : NSNumber(value: true as Bool),
             "operator" : "ne",
             "skipTo" : "video-usage",
             "type" : "SurveyRule"
@@ -522,13 +522,13 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.booleanAnswer = false
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.booleanAnswer = true
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_BooleanConstraints_NoRules() {
@@ -609,7 +609,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertNil(formItem.text)
 
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 3)
         
         guard let textChoice = answerFormat.textChoices.first else {
@@ -629,13 +629,13 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
 
     func testFactory_MultiValueConstraints_NotEqual() {
@@ -660,16 +660,16 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["maybe"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_MultiValueConstraints_OtherThan() {
@@ -694,16 +694,16 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["maybe"]
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
         questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_MultiValueConstraints_AllowMultiple() {
@@ -719,7 +719,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.MultipleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.multipleChoice)
     }
     
     func testFactory_MultiValueConstraints_AllowOther_Uppercase() {
@@ -739,7 +739,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 4)
        
         guard let lastChoice = answerFormat.textChoices.last else { return }
@@ -754,7 +754,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.allowOtherValue = true
         for textChoice in constraints.enumeration {
             if let choice = textChoice as? SBBSurveyQuestionOption {
-                choice.label = choice.label.lowercaseString
+                choice.label = choice.label.lowercased()
             }
         }
         
@@ -768,7 +768,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.SingleChoice)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
         XCTAssertEqual(answerFormat.textChoices.count, 4)
         
         guard let lastChoice = answerFormat.textChoices.last else { return }
@@ -850,7 +850,7 @@ class SBASurveyFactoryTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.DateAndTime)
+        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.dateAndTime)
         
         XCTAssertNil(answerFormat.minimumDate)
         XCTAssertNil(answerFormat.defaultDate)
@@ -858,7 +858,7 @@ class SBASurveyFactoryTests: XCTestCase {
         guard let maximumDate = answerFormat.maximumDate else {
             return
         }
-        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, NSTimeInterval(0), accuracy: 5)
+        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
         
     }
     
@@ -899,7 +899,7 @@ class SBASurveyFactoryTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.Date)
+        XCTAssertEqual(answerFormat.style, ORKDateAnswerStyle.date)
         
         XCTAssertNil(answerFormat.minimumDate)
         XCTAssertNil(answerFormat.defaultDate)
@@ -907,7 +907,7 @@ class SBASurveyFactoryTests: XCTestCase {
         guard let maximumDate = answerFormat.maximumDate else {
             return
         }
-        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, NSTimeInterval(0), accuracy: 5)
+        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
         
     }
     
@@ -1004,9 +1004,9 @@ class SBASurveyFactoryTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual(answerFormat.minimum, 0)
-        XCTAssertEqual(answerFormat.maximum, NSIntegerMax)
-        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Integer)
+        XCTAssertEqual(answerFormat.minimum?.intValue, 0)
+        XCTAssertEqual(answerFormat.maximum?.intValue, NSIntegerMax)
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.integer)
         XCTAssertEqual(answerFormat.unit, "weeks")
     }
     
@@ -1017,7 +1017,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "lt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1054,25 +1054,25 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(formItem.rulePredicate)
         
         XCTAssertEqual(answerFormat.unit, "years")
-        XCTAssertEqual(answerFormat.minimum, NSNumber(int: 18))
-        XCTAssertEqual(answerFormat.maximum, NSNumber(int: 100))
-        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Integer)
+        XCTAssertEqual(answerFormat.minimum, NSNumber(value: 18))
+        XCTAssertEqual(answerFormat.maximum, NSNumber(value: 100))
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.integer)
         
         guard let navigationRule = formItem.rulePredicate else {
             return
         }
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
     }
     
@@ -1081,7 +1081,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "eq",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1098,14 +1098,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_IntegerConstraints_NotEqual() {
@@ -1113,7 +1113,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "ne",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1130,14 +1130,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_IntegerConstraints_GreaterThan() {
@@ -1145,7 +1145,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "gt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1162,14 +1162,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_IntegerConstraints_GreaterThanOrEqual() {
@@ -1177,7 +1177,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "ge",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1194,14 +1194,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_IntegerConstraints_LessThanOrEqual() {
@@ -1209,7 +1209,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "le",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1226,14 +1226,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
     func testFactory_IntegerConstraints_OtherThan() {
@@ -1241,7 +1241,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(int: 50),
+                "value" : NSNumber(value: 50 as Int32),
                 "operator" : "ot",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1258,14 +1258,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
         
-        questionResult.numericAnswer = NSNumber(int: 49)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 50)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(int: 51)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
     }
 
     func testFactory_DecimalConstraints() {
@@ -1278,13 +1278,13 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let constraints = SBBDecimalConstraints()
         inputStep.constraints = constraints
-        constraints.minValue = NSNumber(double: 18.3)
-        constraints.maxValue = NSNumber(double: 100.2)
+        constraints.minValue = NSNumber(value: 18.3 as Double)
+        constraints.maxValue = NSNumber(value: 100.2 as Double)
         constraints.unit = "years"
         
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(double: 50.0),
+                "value" : NSNumber(value: 50.0 as Double),
                 "operator" : "lt",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
@@ -1323,25 +1323,25 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(formItem.rulePredicate)
         
         XCTAssertEqual(answerFormat.unit, "years")
-        XCTAssertEqual(answerFormat.minimum, NSNumber(double: 18.3))
-        XCTAssertEqual(answerFormat.maximum, NSNumber(double: 100.2))
-        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.Decimal)
+        XCTAssertEqual(answerFormat.minimum, NSNumber(value: 18.3))
+        XCTAssertEqual(answerFormat.maximum, NSNumber(value: 100.2))
+        XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.decimal)
         
         guard let navigationRule = formItem.rulePredicate else {
             return
         }
         
         let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(double: 49.0)
-        XCTAssertTrue(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 49.0)
+        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(double: 50.0)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 50.0)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
-        questionResult.numericAnswer = NSNumber(double: 51.0)
-        XCTAssertFalse(navigationRule.evaluateWithObject(questionResult))
+        questionResult.numericAnswer = NSNumber(value: 51.0)
+        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
         
     }
     
@@ -1433,10 +1433,11 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        // a step size of 37 is not divisible by 100 so is invalid
+        // a step size of 37 is not divisible by 100 so is invalid as an integer
+        // scale with discrete steps.
         guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
-            let _ = formItem.answerFormat as? ORKNumericAnswerFormat else {
+            let _ = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
             XCTAssert(false, "\(step) Not of expected class")
             return
         }
@@ -1447,7 +1448,7 @@ class SBASurveyFactoryTests: XCTestCase {
     
     // MARK: Helper methods
 
-    func createMultipleChoiceQuestion(allowMultiple allowMultiple: Bool) -> SBBSurveyQuestion {
+    func createMultipleChoiceQuestion(allowMultiple: Bool) -> SBBSurveyQuestion {
         let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
         inputStep.uiHint = "radiobutton"
         inputStep.identifier = "medical-usage"
@@ -1455,7 +1456,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.prompt = "Do you ever use your smartphone to look for health or medical information online?"
         
         let constraints = SBBMultiValueConstraints()
-        constraints.allowMultiple = NSNumber(bool: allowMultiple)
+        constraints.allowMultiple = NSNumber(value: allowMultiple as Bool)
         constraints.dataType = "string"
         constraints.addEnumerationObject(
             SBBSurveyQuestionOption(dictionaryRepresentation:[
@@ -1490,14 +1491,14 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let constraints = SBBIntegerConstraints()
         inputStep.constraints = constraints
-        constraints.minValue = NSNumber(int: 18)
-        constraints.maxValue = NSNumber(int: 100)
+        constraints.minValue = NSNumber(value: 18 as Int32)
+        constraints.maxValue = NSNumber(value: 100 as Int32)
         constraints.unit = "years"
         
         return inputStep;
     }
     
-    func createSliderQuestion(step: Int32?) -> SBBSurveyQuestion {
+    func createSliderQuestion(_ step: Int32?) -> SBBSurveyQuestion {
         
         let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
         inputStep.uiHint = "numberfield"
@@ -1508,11 +1509,11 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let constraints = SBBIntegerConstraints()
         inputStep.constraints = constraints
-        constraints.minValue = NSNumber(int: 0)
-        constraints.maxValue = NSNumber(int: 100)
+        constraints.minValue = NSNumber(value: 0 as Int32)
+        constraints.maxValue = NSNumber(value: 100 as Int32)
         constraints.unit = "years"
         if let step = step {
-            constraints.step = NSNumber(int: step)
+            constraints.step = NSNumber(value: step as Int32)
         }
         
         return inputStep;

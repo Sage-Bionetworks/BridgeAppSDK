@@ -51,7 +51,7 @@ extension NSDictionary: SBATrackedActivitySurveyItem {
 
 extension SBATrackedActivitySurveyItem {
     
-    public func createTrackedActivityStep(items:[SBATrackedDataObject]) -> ORKStep {
+    public func createTrackedActivityStep(_ items:[SBATrackedDataObject]) -> ORKStep {
         
         // Create a base form step
         let baseStep = SBATrackedActivityFormStep(identifier: self.identifier)
@@ -63,7 +63,7 @@ extension SBATrackedActivitySurveyItem {
             // If tracking each then need to create a step for each item that is tracked
             let steps = items.mapAndFilter({ (item) -> SBATrackedActivityFormStep? in
                 guard item.tracking else { return nil }
-                return baseStep.copyWithIdentifier(item.identifier)
+                return baseStep.copy(withIdentifier: item.identifier)
             })
             return SBATrackedActivityPageStep(identifier: self.identifier, steps: steps)
             
@@ -75,7 +75,7 @@ extension SBATrackedActivitySurveyItem {
     }
 }
 
-public class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
+open class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
     
     var textFormat: String?
     
@@ -85,21 +85,21 @@ public class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
     
     // MARK: SBATrackedNavigationStep
     
-    public var trackingType: SBATrackingStepType? {
+    open var trackingType: SBATrackingStepType? {
         return .activity
     }
     
-    public var shouldSkipStep: Bool {
+    open var shouldSkipStep: Bool {
         return _shouldSkipStep
     }
     var _shouldSkipStep: Bool = false
     
-    public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
+    open func update(selectedItems:[SBATrackedDataObject]) {
         // filter out selected items that are not tracked
         let trackedItems = selectedItems.filter({ $0.tracking })
         _shouldSkipStep = (trackedItems.count == 0)
-        if let textFormat = self.textFormat where (trackedItems.count > 0) {
-            let shortText = Localization.localizedJoin(trackedItems.map({ $0.shortText}))
+        if let textFormat = self.textFormat , (trackedItems.count > 0) {
+            let shortText = Localization.localizedJoin(textList: trackedItems.map({ $0.shortText}))
             self.text = String.localizedStringWithFormat(textFormat, shortText)
         }
     }
@@ -108,80 +108,80 @@ public class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.textFormat = aDecoder.decodeObjectForKey("textFormat") as? String
+        self.textFormat = aDecoder.decodeObject(forKey: "textFormat") as? String
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.textFormat, forKey: "textFormat")
+    override open func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.textFormat, forKey: "textFormat")
     }
     
     // MARK: NSCopying
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBATrackedActivityFormStep
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBATrackedActivityFormStep
         copy.textFormat = self.textFormat
         return copy
     }
     
     // MARK: Equality
 
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? SBATrackedActivityFormStep else { return false }
         return super.isEqual(object) &&
             SBAObjectEquality(object.textFormat, self.textFormat)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.textFormat)
     }
     
 }
 
-public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
+open class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
-    private var selectedItemIdentifiers: [String] = []
+    fileprivate var selectedItemIdentifiers: [String] = []
     
     override init(identifier: String, steps: [ORKStep]?) {
         super.init(identifier: identifier, steps: steps)
     }
     
-    override public func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBATrackedActivityPageStepViewController.classForCoder()
     }
     
     // MARK: Navigation override
     
-    override public func stepAfterStepWithIdentifier(identifier: String?, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         // If this step should be skipped then there are no valid steps to display
         if shouldSkipStep { return nil }
         
         // Look for the next match
         guard let nextIdentifier = selectedItemIdentifiers.nextMatch(identifier) else { return nil }
-        return stepWithIdentifier(nextIdentifier)
+        return step(withIdentifier: nextIdentifier)
     }
     
-    override public func stepBeforeStepWithIdentifier(identifier: String, withResult result: ORKTaskResult) -> ORKStep? {
+    override open func stepBeforeStep(withIdentifier identifier: String, with result: ORKTaskResult) -> ORKStep? {
         // If this step should be skipped then there are no valid steps to display
         if shouldSkipStep { return nil }
         
         // Look in reverse order through the selected identifiers
-        guard let nextIdentifier = selectedItemIdentifiers.reverse().nextMatch(identifier) else { return nil }
-        return stepWithIdentifier(nextIdentifier)
+        guard let nextIdentifier = selectedItemIdentifiers.reversed().nextMatch(identifier) else { return nil }
+        return step(withIdentifier: nextIdentifier)
     }
     
     // MARK: SBATrackedNavigationStep
     
-    public var trackingType: SBATrackingStepType? {
+    open var trackingType: SBATrackingStepType? {
         return .activity
     }
     
-    public var shouldSkipStep: Bool {
+    open var shouldSkipStep: Bool {
         return selectedItemIdentifiers.count == 0
     }
     
-    public func update(selectedItems selectedItems:[SBATrackedDataObject]) {
+    open func update(selectedItems:[SBATrackedDataObject]) {
     
         // filter out selected items that are not tracked
         let trackedItems = selectedItems.filter({ $0.tracking })
@@ -191,7 +191,7 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
         
         // update the underlying form steps
         for item in trackedItems {
-            if let step = self.stepWithIdentifier(item.identifier) as? SBATrackedActivityFormStep {
+            if let step = self.step(withIdentifier: item.identifier) as? SBATrackedActivityFormStep {
                 step.update(selectedItems: [item])
             }
         }
@@ -201,12 +201,12 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.selectedItemIdentifiers = aDecoder.decodeObjectForKey("selectedItemIdentifiers") as? [String] ?? []
+        self.selectedItemIdentifiers = aDecoder.decodeObject(forKey: "selectedItemIdentifiers") as? [String] ?? []
     }
     
-    override public func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.selectedItemIdentifiers, forKey: "selectedItemIdentifiers")
+    override open func encode(with aCoder: NSCoder){
+        super.encode(with: aCoder)
+        aCoder.encode(self.selectedItemIdentifiers, forKey: "selectedItemIdentifiers")
     }
     
     // MARK: NSCopying
@@ -216,8 +216,8 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
         super.init(identifier: identifier, steps: nil)
     }
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! SBATrackedActivityPageStep
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBATrackedActivityPageStep
         copy.selectedItemIdentifiers = self.selectedItemIdentifiers
         return copy
     }
@@ -230,9 +230,9 @@ public class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     // step does not need a reverse weak link to the data store.
 }
 
-public class SBATrackedActivityPageStepViewController: ORKPageStepViewController {
+open class SBATrackedActivityPageStepViewController: ORKPageStepViewController {
     
-    override public var result: ORKStepResult? {
+    override open var result: ORKStepResult? {
         guard let stepResult = super.result else { return nil }
         
         // Get the choice answers
@@ -241,7 +241,7 @@ public class SBATrackedActivityPageStepViewController: ORKPageStepViewController
             
             guard let formStep = step as? ORKFormStep,
                 let formItem = formStep.formItems?.first,
-                let formResult = stepResult.resultForIdentifier("\(step.identifier).\(formItem.identifier)") as? ORKQuestionResultAnswerJSON,
+                let formResult = stepResult.result(forIdentifier: "\(step.identifier).\(formItem.identifier)") as? ORKQuestionResultAnswerJSON,
                 let answer = formResult.jsonSerializedAnswer()
                 else {
                     return nil
@@ -253,8 +253,8 @@ public class SBATrackedActivityPageStepViewController: ORKPageStepViewController
             
             // create and return a mapping of identifier to value
             var value = answer.value
-            if let array = value as? NSArray where array.count == 1 {
-                value = array.firstObject!
+            if let array = value as? NSArray , array.count == 1 {
+                value = array.firstObject! as AnyObject
             }
             return ["identifier" : step.identifier, "answer" : value] as NSDictionary
         })
@@ -263,7 +263,7 @@ public class SBATrackedActivityPageStepViewController: ORKPageStepViewController
         let questionResult = ORKChoiceQuestionResult(identifier: formIdentifier)
         questionResult.startDate = stepResult.startDate
         questionResult.endDate = stepResult.endDate
-        questionResult.questionType = ORKQuestionType.MultipleChoice
+        questionResult.questionType = ORKQuestionType.multipleChoice
         questionResult.choiceAnswers = choiceAnswers ?? []
         stepResult.addResult(questionResult)
 

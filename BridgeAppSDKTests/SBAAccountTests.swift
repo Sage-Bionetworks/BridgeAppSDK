@@ -53,20 +53,20 @@ class SBAAccountTests: XCTestCase {
         
         let taskResult = ORKTaskResult(identifier: "registration")
         
-        let firstStep = registrationStep.stepAfterStepWithIdentifier(nil, withResult: taskResult)
+        let firstStep = registrationStep.stepAfterStep(withIdentifier: nil, with: taskResult)
         XCTAssertNotNil(firstStep)
         
         guard let firstStepIdentifier = firstStep?.identifier else { return }
         
-        let secondStep = registrationStep.stepAfterStepWithIdentifier(firstStepIdentifier, withResult: taskResult)
+        let secondStep = registrationStep.stepAfterStep(withIdentifier: firstStepIdentifier, with: taskResult)
         XCTAssertNotNil(secondStep)
         
         guard let secondStepIdentifier = secondStep?.identifier else { return }
         
-        let thirdStep = registrationStep.stepAfterStepWithIdentifier(secondStepIdentifier, withResult: taskResult)
+        let thirdStep = registrationStep.stepAfterStep(withIdentifier: secondStepIdentifier, with: taskResult)
         XCTAssertNil(thirdStep)
         
-        let backStep = registrationStep.stepBeforeStepWithIdentifier(secondStepIdentifier, withResult: taskResult)
+        let backStep = registrationStep.stepBeforeStep(withIdentifier: secondStepIdentifier, with: taskResult)
         XCTAssertEqual(backStep?.identifier, firstStepIdentifier)
         
     }
@@ -101,7 +101,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.Invalid(let reason) {
+        catch SBAExternalIDError.invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -122,7 +122,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.Invalid(let reason) {
+        catch SBAExternalIDError.invalid(let reason) {
             XCTAssertNil(reason)
         }
         catch let error as NSError {
@@ -143,7 +143,7 @@ class SBAAccountTests: XCTestCase {
             XCTAssert(false, "Should throw error")
             XCTAssertNil(externalId)
         }
-        catch SBAExternalIDError.NotMatching {
+        catch SBAExternalIDError.notMatching {
             // Expected error
         }
         catch let error as NSError {
@@ -155,9 +155,9 @@ class SBAAccountTests: XCTestCase {
     
     func testPermssionsType_Some() {
         let permissonsStep = SBAPermissionsStep(identifier: "permissions")
-        permissonsStep.permissions = [.Coremotion, .LocalNotifications, .Microphone]
+        permissonsStep.permissions = [.coremotion, .localNotifications, .microphone]
         
-        let expectedItems = [SBAPermissionsType.Coremotion.rawValue, SBAPermissionsType.LocalNotifications.rawValue, SBAPermissionsType.Microphone.rawValue].sort()
+        let expectedItems = [SBAPermissionsType.coremotion.rawValue, SBAPermissionsType.localNotifications.rawValue, SBAPermissionsType.microphone.rawValue].sorted()
         let actualItems = permissonsStep.items as? [UInt]
         
         XCTAssertNotNil(actualItems)
@@ -167,9 +167,9 @@ class SBAAccountTests: XCTestCase {
     
     func testPermssionsType_PhotoLibrary() {
         let permissonsStep = SBAPermissionsStep(identifier: "permissions")
-        permissonsStep.permissions = [.PhotoLibrary]
+        permissonsStep.permissions = [.photoLibrary]
         
-        let expectedItems = [SBAPermissionsType.PhotoLibrary.rawValue].sort()
+        let expectedItems = [SBAPermissionsType.photoLibrary.rawValue].sorted()
         let actualItems = permissonsStep.items as? [UInt]
         
         XCTAssertNotNil(actualItems)

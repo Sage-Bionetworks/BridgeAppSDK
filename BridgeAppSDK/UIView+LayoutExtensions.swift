@@ -35,7 +35,7 @@ import UIKit
 
 extension UIView {
     
-    func constrainToFillSuperview(insets: UIEdgeInsets = UIEdgeInsets()) {
+    func constrainToFillSuperview(_ insets: UIEdgeInsets = UIEdgeInsets()) {
         guard let superview = self.superview else {
             assertionFailure("Trying to set constraints without first setting superview")
             return
@@ -43,10 +43,10 @@ extension UIView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        let topConstraint = NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: superview, attribute: .TopMargin, multiplier: 1.0, constant: insets.top)
-        let bottomConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: superview, attribute: .BottomMargin, multiplier: 1.0, constant: insets.bottom)
-        let leftConstraint = NSLayoutConstraint(item: self, attribute: .Leading, relatedBy: .Equal, toItem: superview, attribute: .LeadingMargin, multiplier: 1.0, constant: insets.left)
-        let rightConstraint = NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: superview, attribute: .TrailingMargin, multiplier: 1.0, constant: insets.right)
+        let topConstraint = NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: superview, attribute: .topMargin, multiplier: 1.0, constant: insets.top)
+        let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: superview, attribute: .bottomMargin, multiplier: 1.0, constant: insets.bottom)
+        let leftConstraint = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: superview, attribute: .leadingMargin, multiplier: 1.0, constant: insets.left)
+        let rightConstraint = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: superview, attribute: .trailingMargin, multiplier: 1.0, constant: insets.right)
         
         superview.addConstraints([topConstraint, bottomConstraint, leftConstraint, rightConstraint])
     }

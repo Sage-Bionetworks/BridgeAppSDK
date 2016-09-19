@@ -33,28 +33,28 @@
 
 import UIKit
 
-extension NSDate {
+extension Date {
     
-    public func startOfDay() -> NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        let unitFlags: NSCalendarUnit = [.Day, .Month, .Year]
-        let components = calendar.components(unitFlags, fromDate: self)
-        return calendar.dateFromComponents(components) ?? self
+    public func startOfDay() -> Date {
+        let calendar = Calendar.current
+        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
+        let components = (calendar as NSCalendar).components(unitFlags, from: self)
+        return calendar.date(from: components) ?? self
     }
     
     public var isToday: Bool {
-        return self.startOfDay() == NSDate().startOfDay()
+        return self.startOfDay() == Date().startOfDay()
     }
     
     public var isTomorrow: Bool {
-        return self.startOfDay() == NSDate().startOfDay().dateByAddingNumberOfDays(1)
+        return self.startOfDay() == Date().startOfDay().dateByAddingNumberOfDays(1)
     }
     
-    public func dateByAddingNumberOfDays(days: Int) -> NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        let components = NSDateComponents()
+    public func dateByAddingNumberOfDays(_ days: Int) -> Date {
+        let calendar = Calendar.current
+        var components = DateComponents()
         components.day = days
-        return calendar.dateByAddingComponents(components, toDate: self, options: .WrapComponents)!
+        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
     }
 
 }

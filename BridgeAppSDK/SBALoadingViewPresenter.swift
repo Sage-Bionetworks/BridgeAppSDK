@@ -40,14 +40,14 @@ public protocol SBALoadingViewPresenter {
 public extension SBALoadingViewPresenter {
     
     public var loadingView: SBALoadingView? {
-        return self.view.subviews.findObject({ $0 is SBALoadingView }) as? SBALoadingView
+        return self.view.subviews.find({ $0 is SBALoadingView }) as? SBALoadingView
     }
     
     public func showLoadingView() {
         var loadingView: SBALoadingView! = self.loadingView
         if (loadingView == nil) {
             loadingView = SBALoadingView(frame: self.view.bounds)
-            loadingView.hidden = true
+            loadingView.isHidden = true
             self.view.addSubview(loadingView)
             loadingView.constrainToFillSuperview()
         }
@@ -56,8 +56,8 @@ public extension SBALoadingViewPresenter {
         }
     }
     
-    public func hideLoadingView(completion: (() -> Void)?) {
-        guard let view = loadingView where view.isAnimating else {
+    public func hideLoadingView(_ completion: (() -> Void)?) {
+        guard let view = loadingView , view.isAnimating else {
             completion?()
             return
         }

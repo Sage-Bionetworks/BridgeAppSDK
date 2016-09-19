@@ -33,23 +33,23 @@
 
 import ResearchKit
 
-public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
+open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     
-    lazy public var permissionsManager: SBAPermissionsManager = {
-        return SBAPermissionsManager.sharedManager()
+    lazy open var permissionsManager: SBAPermissionsManager = {
+        return SBAPermissionsManager.shared()
     }()
     
-    public class func defaultPermissions() -> SBAPermissionsType {
-        guard let appDelegate = UIApplication.sharedApplication().delegate as? SBAAppInfoDelegate else { return .None }
+    open class func defaultPermissions() -> SBAPermissionsType {
+        guard let appDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate else { return SBAPermissionsType() }
         return appDelegate.requiredPermissions
     }
     
-    public var permissions: SBAPermissionsType {
+    open var permissions: SBAPermissionsType {
         get {
             return SBAPermissionsType(items: self.items as? [UInt])
         }
         set(newValue) {
-            self.items = newValue.items
+            self.items = newValue.items as [NSCopying & NSSecureCoding & NSObjectProtocol]?
         }
     }
     
@@ -64,12 +64,12 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         survey.mapStepValues(self)
         commonInit()
         // Set the permissions if they can be mapped
-        self.permissions = survey.items?.reduce(SBAPermissionsType.None, combine: { (input, item) -> SBAPermissionsType in
+        self.permissions = survey.items?.reduce(SBAPermissionsType(), { (input, item) -> SBAPermissionsType in
             return input.union(SBAPermissionsType(key: item as? String))
         }) ?? SBAPermissionsStep.defaultPermissions()
     }
     
-    private func commonInit() {
+    fileprivate func commonInit() {
         if self.title == nil {
             self.title = Localization.localizedString("SBA_PERMISSIONS_TITLE")
         }
@@ -79,16 +79,16 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         super.init(coder: aDecoder)
     }
     
-    override public func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBAPermissionsStepViewController.classForCoder()
     }
     
-    public func allPermissionsAuthorized() -> Bool {
+    open func allPermissionsAuthorized() -> Bool {
         guard let items = self.items as? [UInt] else { return true }
         for item in items {
             let permission = SBAPermissionsType(rawValue: item)
             // If permission has not yet been granted for a given type then show the step
-            if !self.permissionsManager.isPermissionsGrantedForType(permission) {
+            if !self.permissionsManager.isPermissionsGranted(for: permission) {
                 return false
             }
         }
@@ -98,7 +98,7 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     
     // MARK: SBANavigationSkipRule
     
-    public func shouldSkip(result: ORKTaskResult, additionalTaskResults: [ORKTaskResult]?) -> Bool {
+    open func shouldSkip(_ result: ORKTaskResult, additionalTaskResults: [ORKTaskResult]?) -> Bool {
         return allPermissionsAuthorized()
     }
     
@@ -106,42 +106,42 @@ public class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     
     let cellIdentifier = "PermissionsCell"
     
-    override public func reuseIdentifierForRowAtIndexPath(indexPath: NSIndexPath) -> String {
+    override open func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
         return cellIdentifier
     }
     
-    override public func registerCellsForTableView(tableView: UITableView) {
-        tableView.registerClass(SBAMultipleLineTableViewCell.classForCoder(), forCellReuseIdentifier: cellIdentifier)
+    override open func registerCells(for tableView: UITableView) {
+        tableView.register(SBAMultipleLineTableViewCell.classForCoder(), forCellReuseIdentifier: cellIdentifier)
     }
     
-    override public func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, tableView: UITableView) {
-        guard let item = self.objectForRowAtIndexPath(indexPath) as? UInt,
+    override open func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
+        guard let item = self.objectForRow(at: indexPath) as? UInt,
             let multipleLineCell = cell as? SBAMultipleLineTableViewCell
         else {
             return
         }
         let permission = SBAPermissionsType(rawValue: item)
-        multipleLineCell.titleLabel?.text = permissionsManager.permissionTitleForType(permission)
-        multipleLineCell.subtitleLabel?.text = permissionsManager.permissionDescriptionForType(permission)
+        multipleLineCell.titleLabel?.text = permissionsManager.permissionTitle(for: permission)
+        multipleLineCell.subtitleLabel?.text = permissionsManager.permissionDescription(for: permission)
     }
 }
 
-public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
+open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
     
     var permissionsGranted: Bool = false
     
-    override public var result: ORKStepResult? {
+    override open var result: ORKStepResult? {
         guard let result = super.result else { return nil }
         
         // Add a result for whether or not the permissions were granted
         let grantedResult = ORKBooleanQuestionResult(identifier: result.identifier)
-        grantedResult.booleanAnswer = NSNumber(bool: permissionsGranted)
+        grantedResult.booleanAnswer = NSNumber(value: permissionsGranted)
         result.results = [grantedResult]
         
         return result
     }
     
-    override public func goForward() {
+    override open func goForward() {
         guard let permissionsStep = self.step as? SBAPermissionsStep else {
             assertionFailure("Step is not of expected type")
             super.goForward()
@@ -153,7 +153,7 @@ public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALo
         let permissionsManager = permissionsStep.permissionsManager
         let permissions = permissionsStep.permissions
         permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (granted) in
-            if granted || permissionsStep.optional {
+            if granted || permissionsStep.isOptional {
                 self?.permissionsGranted = granted
                 self?.goNext()
             }
@@ -164,11 +164,11 @@ public class SBAPermissionsStepViewController: ORKTableStepViewController, SBALo
         }
     }
     
-    private func goNext() {
+    fileprivate func goNext() {
         super.goForward()
     }
     
-    public override var cancelButtonItem: UIBarButtonItem? {
+    open override var cancelButtonItem: UIBarButtonItem? {
         // Overrride the cancel button to *not* display. User must tap the "Done" button.
         get { return nil }
         set {}

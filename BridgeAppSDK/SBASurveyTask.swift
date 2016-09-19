@@ -35,15 +35,15 @@
 import BridgeSDK
 import ResearchKit
 
-public class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
+open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
     
     let factory: SBASurveyFactory
     let surveyReference: SBBSurveyReference
     
-    public var title: String?
-    public var schemaRevision: NSNumber?
+    open var title: String?
+    open var schemaRevision: NSNumber?
     
-    private var survey: ORKOrderedTask?
+    fileprivate var survey: ORKOrderedTask?
     
     required public init(surveyReference: SBBSurveyReference, factory: SBASurveyFactory) {
         self.surveyReference = surveyReference
@@ -51,13 +51,13 @@ public class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
         super.init()
     }
     
-    public func load(survey survey: SBBSurvey?, error: NSError?) {
+    open func load(survey: SBBSurvey?, error: Error?) {
         // If there was an error or the survey is nil
         if survey == nil {
             let errorStep = ORKInstructionStep(identifier: "error")
             errorStep.title = Localization.localizedString("SBA_NETWORK_FAILURE_TITLE")
             errorStep.text = Localization.localizedString("SBA_NETWORK_FAILURE_MESSAGE")
-            errorStep.detailText = error?.localizedFailureReason
+            errorStep.detailText = error?.localizedDescription
             self.survey = ORKOrderedTask(identifier: self.identifier, steps: [errorStep])
         }
         else {
@@ -80,18 +80,18 @@ public class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
         return loadingStep
     }
     
-    public var identifier: String {
+    open var identifier: String {
         return surveyReference.identifier
     }
     
-    public func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    open func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         if let task = survey {
             // If there is a task then go off of that for the identifiers
             if step?.identifier == SBASurveyTask.loadingStepIdentifier {
-                return task.stepAfterStep(nil, withResult: result)
+                return task.step(after: nil, with: result)
             }
             else {
-                return task.stepAfterStep(step, withResult: result)
+                return task.step(after: step, with: result)
             }
         }
         else if step == nil {
@@ -103,22 +103,22 @@ public class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
         }
     }
     
-    public func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-        return self.survey?.stepBeforeStep(step, withResult: result)
+    open func step(before step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
+        return self.survey?.step(before: step, with: result)
     }
     
-    public func stepWithIdentifier(identifier: String) -> ORKStep? {
-        return self.survey?.stepWithIdentifier(identifier)
+    open func step(withIdentifier identifier: String) -> ORKStep? {
+        return self.survey?.step(withIdentifier: identifier)
     }
     
-    public func progressOfCurrentStep(step: ORKStep, withResult result: ORKTaskResult) -> ORKTaskProgress {
-        return self.survey?.progressOfCurrentStep(step, withResult: result) ?? ORKTaskProgress()
+    open func progress(ofCurrentStep step: ORKStep, with result: ORKTaskResult) -> ORKTaskProgress {
+        return self.survey?.progress(ofCurrentStep: step, with: result) ?? ORKTaskProgress()
     }
     
     // MARK: NSCopying
     
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(surveyReference: surveyReference, factory: factory)
+    open func copy(with zone: NSZone?) -> Any {
+        let copy = type(of: self).init(surveyReference: surveyReference, factory: factory)
         copy.survey = self.survey
         copy.title = self.title
         copy.schemaRevision = self.schemaRevision
@@ -127,40 +127,40 @@ public class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
     
     // MARK: NSSecureCoding
     
-    public static func supportsSecureCoding() -> Bool {
+    public static var supportsSecureCoding : Bool {
         return true
     }
     
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(self.surveyReference.dictionaryRepresentation(), forKey: "surveyReference")
+    open func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.surveyReference.dictionaryRepresentation(), forKey: "surveyReference")
         if let encodableFactory = factory as? NSSecureCoding {
-            aCoder.encodeObject(encodableFactory, forKey: "factory")
+            aCoder.encode(encodableFactory, forKey: "factory")
         }
-        aCoder.encodeObject(self.survey, forKey: "survey")
-        aCoder.encodeObject(self.title, forKey: "title")
-        aCoder.encodeObject(self.schemaRevision, forKey: "schemaRevision")
+        aCoder.encode(self.survey, forKey: "survey")
+        aCoder.encode(self.title, forKey: "title")
+        aCoder.encode(self.schemaRevision, forKey: "schemaRevision")
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        guard let surveyReferenceDictionary = aDecoder.decodeObjectForKey("surveyReference") as? [NSObject : AnyObject],
+        guard let surveyReferenceDictionary = aDecoder.decodeObject(forKey: "surveyReference") as? [AnyHashable: Any],
             let surveyReference = SBBSurveyReference(dictionaryRepresentation: surveyReferenceDictionary) else {
                 return nil
         }
         self.surveyReference = surveyReference
-        self.factory = aDecoder.decodeObjectForKey("factory") as? SBASurveyFactory ?? SBASurveyFactory()
-        self.survey = aDecoder.decodeObjectForKey("survey") as? ORKOrderedTask
-        self.title = aDecoder.decodeObjectForKey("title") as? String
-        self.schemaRevision = aDecoder.decodeObjectForKey("schemaRevision") as? NSNumber
+        self.factory = aDecoder.decodeObject(forKey: "factory") as? SBASurveyFactory ?? SBASurveyFactory()
+        self.survey = aDecoder.decodeObject(forKey: "survey") as? ORKOrderedTask
+        self.title = aDecoder.decodeObject(forKey: "title") as? String
+        self.schemaRevision = aDecoder.decodeObject(forKey: "schemaRevision") as? NSNumber
         super.init()
     }
 
     // MARK: Equality
     
-    override public var hash: Int {
+    override open var hash: Int {
         return self.surveyReference.hash
     }
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         guard let castObject = object as? SBASurveyTask else { return false }
         return self.surveyReference == castObject.surveyReference
     }
@@ -174,36 +174,42 @@ class SBASurveyLoadingStep: ORKWaitStep {
 
 class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
     
-    var urlSessionTask: NSURLSessionTask?
+    var urlSessionTask: URLSessionTask?
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let surveyTask = self.step?.task as? SBASurveyTask {
-            self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask.surveyReference) { [weak self] (object, error) in
-                self?.handleSurveyLoaded(survey: object as? SBBSurvey, error: error)
-            }
-        }
+        self.loadSurvey()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.urlSessionTask?.cancel()
     }
     
-    func handleSurveyLoaded(survey survey: SBBSurvey?, error: NSError?) {
+    var surveyTask: SBASurveyTask? {
         guard let surveyTask = self.step?.task as? SBASurveyTask else {
             assertionFailure("The task is not of expected type")
-            return
+            return nil
         }
-        
+        return surveyTask
+    }
+    
+    func loadSurvey() {
+        self.urlSessionTask = SBABridgeManager.loadSurvey(surveyTask!.surveyReference, completion: { [weak self] (object, error) in
+            let survey = object as? SBBSurvey
+            self?.handleSurveyLoaded(survey: survey, error: error)
+        })
+    }
+    
+    func handleSurveyLoaded(survey: SBBSurvey?, error: Error?) {
+
         // Nil out the pointer to the url session
         self.urlSessionTask = nil
         
         // load the survey into the task and then go forward
-        dispatch_async(dispatch_get_main_queue()) { 
-            surveyTask.load(survey: survey, error: error)
-            self.goForward()
+        DispatchQueue.main.async { [weak self] in
+            self?.surveyTask!.load(survey: survey, error: error)
+            self?.goForward()
         }
     }
 }

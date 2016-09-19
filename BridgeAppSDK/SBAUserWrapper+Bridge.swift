@@ -53,11 +53,11 @@ extension SBBUserDataSharingScope {
     init(key: String) {
         switch key {
         case "sponsors_and_partners":
-            self = .Study
+            self = .study
         case "all_qualified_researchers":
-            self = .All
+            self = .all
         default:
-            self = .None
+            self = .none
         }
     }
 }
@@ -65,16 +65,24 @@ extension SBBUserDataSharingScope {
 public extension SBAUserWrapper {
     
     /**
+     Logout the current user
+    */
+    public func logout() {
+        resetStoredUserData()
+        // TODO: syoung 09/19/2016 clear the user cache
+    }
+    
+    /**
      * Returns whether or not the data group is contained in the user's data groups
      */
-    public func containsDataGroup(dataGroup: String) -> Bool {
+    public func containsDataGroup(_ dataGroup: String) -> Bool {
         return self.dataGroups?.contains(dataGroup) ?? false
     }
     
     /**
      * Add dataGroup to the user's data groups
      */
-    public func addDataGroup(dataGroup: String, completion: ((NSError?) -> Void)?) {
+    public func addDataGroup(_ dataGroup: String, completion: ((NSError?) -> Void)?) {
         let dataGroups = (self.dataGroups ?? []) + [dataGroup]
         updateDataGroups(dataGroups, completion: completion)
     }
@@ -82,32 +90,32 @@ public extension SBAUserWrapper {
     /**
      * Remove dataGroup from the user's data groups
      */
-    public func removeDataGroup(dataGroup: String, completion: ((NSError?) -> Void)?) {
-        guard let idx = self.dataGroups?.indexOf(dataGroup) else {
+    public func removeDataGroup(_ dataGroup: String, completion: ((NSError?) -> Void)?) {
+        guard let idx = self.dataGroups?.index(of: dataGroup) else {
             completion?(nil)
             return
         }
         var dataGroups = self.dataGroups!
-        dataGroups.removeAtIndex(idx)
+        dataGroups.remove(at: idx)
         updateDataGroups(dataGroups, completion: completion)
     }
     
     /**
      * Update the user's data groups
      */
-    public func updateDataGroups(dataGroups: [String], completion: ((NSError?) -> Void)?) {
+    public func updateDataGroups(_ dataGroups: [String], completion: ((NSError?) -> Void)?) {
         SBABridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
             guard (self != nil) else { return }
 
             self!.dataGroups = dataGroups
-            self!.callCompletionOnMain(error, completion: completion)
+            self!.callCompletionOnMain(error as NSError?, completion: completion)
         })
     }
     
     /**
      * Register a user with an externalId *only*
      */
-    public func registerUser(externalId externalId: String, dataGroups: [String]?, completion: ((NSError?) -> Void)?) {
+    public func registerUser(externalId: String, dataGroups: [String]?, completion: ((NSError?) -> Void)?) {
         let (email, password) = emailAndPasswordForExternalId(externalId)
         guard (email != nil) && (password != nil) else {
             return
@@ -118,9 +126,9 @@ public extension SBAUserWrapper {
     /**
      * Register a new user with an email/password
      */
-    public func registerUser(email email: String, password: String, externalId: String?, dataGroups dataGroupsIn: [String]?, completion: ((NSError?) -> Void)?) {
+    public func registerUser(email: String, password: String, externalId: String?, dataGroups dataGroupsIn: [String]?, completion: ((NSError?) -> Void)?) {
         
-        func completeRegistration(isTester: Bool) {
+        func completeRegistration(_ isTester: Bool) {
             
             // include test_user in the data groups if applicable
             var dataGroups: [String]? = dataGroupsIn
@@ -135,15 +143,16 @@ public extension SBAUserWrapper {
             self.dataGroups = dataGroups
             
             SBABridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
-                let (unhandledError, _) = self!.checkForConsentError(error)
+                let (unhandledError, _) = self!.checkForConsentError(error as NSError?)
                 self?.hasRegistered = (unhandledError == nil)
                 self?.callCompletionOnMain(unhandledError, completion: completion)
             })
         }
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
-        guard let appDelegate = SBAAppDelegate.sharedDelegate where
-            (appDelegate.shouldPerformTestUserEmailCheckOnSignup && email.containsString(SBAHiddenTestEmailString)) else {
+        guard email.contains(SBAHiddenTestEmailString),
+            let appDelegate = SBAAppDelegate.sharedDelegate,
+            !appDelegate.bridgeInfo.disableTestUserCheck else {
             completeRegistration(false)
             return
         }
@@ -159,8 +168,8 @@ public extension SBAUserWrapper {
     /**
      * Verify registration to check that the user has verified their email address.
      */
-    public func verifyRegistration(completion: ((NSError?) -> Void)?) {
-        guard let username = self.emailForAuthManager?(nil), let password = self.passwordForAuthManager?(nil) else {
+    public func verifyRegistration(_ completion: ((NSError?) -> Void)?) {
+        guard let username = self.email?(forAuthManager: nil), let password = self.password?(forAuthManager: nil) else {
             assertionFailure("Attempting to login without a stored username and password")
             return
         }
@@ -170,7 +179,7 @@ public extension SBAUserWrapper {
     /**
      * Login a user on this device via externalId where registration was handled on a different device
      */
-    public func loginUser(externalId externalId: String, completion: ((NSError?) -> Void)?) {
+    public func loginUser(externalId: String, completion: ((NSError?) -> Void)?) {
         let (email, password) = emailAndPasswordForExternalId(externalId)
         guard (email != nil) && (password != nil) else {
             return
@@ -181,15 +190,15 @@ public extension SBAUserWrapper {
     /**
      * Login a user on this device who has previously completed registration on a different device.
      */
-    public func loginUser(email email: String, password: String, completion: ((NSError?) -> Void)?) {
+    public func loginUser(email: String, password: String, completion: ((NSError?) -> Void)?) {
         loginUser(email: email, password: password, externalId: nil, completion: completion)
     }
     
-    private func loginUser(email email: String, password: String, externalId: String?, completion: ((NSError?) -> Void)?) {
+    fileprivate func loginUser(email: String, password: String, externalId: String?, completion: ((NSError?) -> Void)?) {
         signInUser(email, password: password) { [weak self] (error) in
             guard (self != nil) else { return }
             
-            if ((error == nil) || error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue) {
+            if ((error == nil) || error!.code == SBBErrorCode.serverPreconditionNotMet.rawValue) {
                 self!.email = email
                 self!.password = password
                 self!.externalId = externalId
@@ -201,10 +210,10 @@ public extension SBAUserWrapper {
     /**
      * Send user consent signature (if server precondition not met and reconsenting user)
      */
-    public func sendUserConsented(consentSignature: SBAConsentSignatureWrapper, completion: ((NSError?) -> Void)?) {
+    public func sendUserConsented(_ consentSignature: SBAConsentSignatureWrapper, completion: ((NSError?) -> Void)?) {
         
         let name = consentSignature.signatureName ?? self.name ?? "First Last"
-        let birthdate = consentSignature.signatureBirthdate?.startOfDay() ?? NSDate(timeIntervalSince1970: 0)
+        let birthdate = consentSignature.signatureBirthdate?.startOfDay() ?? Date(timeIntervalSince1970: 0)
         let consentImage = consentSignature.signatureImage
         let subpopGuid = self.subpopulationGuid ?? self.bridgeInfo?.studyIdentifier ?? "unknown"
         
@@ -212,45 +221,45 @@ public extension SBAUserWrapper {
             guard (self != nil) else { return }
             
             self!.consentVerified = (error == nil)
-            self!.callCompletionOnMain(error, completion: completion)
+            self!.callCompletionOnMain(error as NSError?, completion: completion)
         }
     }
 
     /**
      * Sign in when app is active if the login and consent have been verified
      */
-    public func ensureSignedInWithCompletion(completion: ((NSError?) -> Void)?) {
+    public func ensureSignedInWithCompletion(_ completion: ((NSError?) -> Void)?) {
         
         // If the user is not logged in or consented then do not attempt login
         // Just return with an error
         guard self.loginVerified && self.consentVerified else {
-            let code = !self.loginVerified ? SBBErrorCode.NoCredentialsAvailable.rawValue : SBBErrorCode.ServerPreconditionNotMet.rawValue
+            let code = !self.loginVerified ? SBBErrorCode.noCredentialsAvailable.rawValue : SBBErrorCode.serverPreconditionNotMet.rawValue
             let error = NSError(domain: SBAUserErrorDomain, code: code, userInfo: nil)
             self.callCompletionOnMain(error, completion: completion)
             return
         }
         
         // Make sure that 
-        SBABridgeManager.ensureSignedInWithCompletion { [weak self] (_, error) in
+        SBABridgeManager.ensureSignedIn { [weak self] (_, error) in
             guard (self != nil) else { return }
             
-            if (error != nil) && error!.code == SBBErrorCode.ServerPreconditionNotMet.rawValue {
+            if let errorCode = (error as? NSError)?.code, errorCode == SBBErrorCode.serverPreconditionNotMet.rawValue {
                 // If the server returns a 412 after login and consent have been verified then need to reconsent
                 self!.consentVerified = false
                 self!.consentSignature = nil
             }
             
-            self!.callCompletionOnMain(error, completion: completion)
+            self!.callCompletionOnMain(error as NSError?, completion: completion)
         }
     }
     
-    private func signInUser(username: String, password: String, completion: ((NSError?) -> Void)?) {
+    fileprivate func signInUser(_ username: String, password: String, completion: ((NSError?) -> Void)?) {
         
-        SBABridgeManager.signIn(username, password: password) { [weak self] (responseObject, error) in
+        SBABridgeManager.sign(in: username, password: password) { [weak self] (responseObject, error) in
             guard (self != nil) else { return }
             
             // If there was an error and it is *not* the consent error then call completion and exit
-            let (unhandledError, requiresConsent) = self!.checkForConsentError(error)
+            let (unhandledError, requiresConsent) = self!.checkForConsentError(error as NSError?)
             guard unhandledError == nil else {
                 self!.callCompletionOnMain(unhandledError, completion: completion)
                 return
@@ -265,7 +274,7 @@ public extension SBAUserWrapper {
                 self!.updateFromUserSession(response)
             }
             
-            if let consentSignature = self!.consentSignature where requiresConsent {
+            if let consentSignature = self!.consentSignature , requiresConsent {
                 // If there is a consent signature object stored for this user then attempt
                 // sending consent once signed in.
                 self!.sendUserConsented(consentSignature, completion: completion)
@@ -274,12 +283,12 @@ public extension SBAUserWrapper {
                 // otherwise, we are done. Set the flag that the consent has been verified and 
                 // call the completion
                 self!.consentVerified = !requiresConsent
-                self!.callCompletionOnMain(error, completion: completion)
+                self!.callCompletionOnMain(error as NSError?, completion: completion)
             }
         }
     }
     
-    private func updateFromUserSession(response: SBAUserSessionInfoWrapper) {
+    fileprivate func updateFromUserSession(_ response: SBAUserSessionInfoWrapper) {
         
         // Get the data groups from the response object
         self.dataGroups = response.dataGroups
@@ -294,7 +303,7 @@ public extension SBAUserWrapper {
         self.subpopulationGuid = response.subpopulationGuid
     }
     
-    public func emailAndPasswordForExternalId(externalId: String) -> (String?, String?) {
+    public func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
         
         guard let emailFormat = self.bridgeInfo?.emailFormatForLoginViaExternalId else {
             assertionFailure("'emailFormatForRegistrationViaExternalId' key missing from BridgeInfo")
@@ -302,21 +311,21 @@ public extension SBAUserWrapper {
         }
         let passwordFormat = self.bridgeInfo?.passwordFormatForLoginViaExternalId ?? "%@"
         
-        let email = NSString(format: emailFormat, externalId) as String
-        let password = NSString(format: passwordFormat, externalId) as String
+        let email = NSString(format: emailFormat as NSString, externalId) as String
+        let password = NSString(format: passwordFormat as NSString, externalId) as String
         
         return (email, password)
     }
     
-    private func callCompletionOnMain(error: NSError?, completion: ((NSError?) -> Void)?) {
-        dispatch_async(dispatch_get_main_queue()) {
+    fileprivate func callCompletionOnMain(_ error: NSError?, completion: ((NSError?) -> Void)?) {
+        DispatchQueue.main.async {
             completion?(error)
         }
     }
     
-    private func checkForConsentError(error: NSError?) -> (error: NSError?, requiresConsent: Bool) {
+    fileprivate func checkForConsentError(_ error: NSError?) -> (error: NSError?, requiresConsent: Bool) {
         guard let error = error else { return (nil, false) }
-        let requiresConsent = error.code == SBBErrorCode.ServerPreconditionNotMet.rawValue
+        let requiresConsent = error.code == SBBErrorCode.serverPreconditionNotMet.rawValue
         let unhandledError: NSError? = requiresConsent ? nil : error
         return (unhandledError, requiresConsent)
     }
@@ -341,8 +350,8 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
     }
     
     var dataSharingScope: SBBUserDataSharingScope {
-        guard let sharingKey = self["sharingScope"] as? String where self.dataSharingEnabled else {
-            return .None
+        guard let sharingKey = self["sharingScope"] as? String , self.dataSharingEnabled else {
+            return .none
         }
         return SBBUserDataSharingScope(key: sharingKey)
     }
@@ -351,7 +360,7 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
         // TODO: Handle multiple consent groups with separate sub populations
         if let consentStatuses = self["consentStatuses"] as? [String : [String : AnyObject]] {
             for (_, subpop) in consentStatuses {
-                if let required = subpop["required"] as? Bool where required {
+                if let required = subpop["required"] as? Bool , required {
                     return subpop["subpopulationGuid"] as? String
                 }
             }

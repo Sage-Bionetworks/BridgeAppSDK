@@ -35,43 +35,43 @@ import ResearchKit
 
 extension ORKPageStep {
     public func firstStep() -> ORKStep? {
-        return self.stepAfterStepWithIdentifier(nil, withResult: ORKTaskResult(identifier: self.identifier))
+        return self.stepAfterStep(withIdentifier: nil, with: ORKTaskResult(identifier: self.identifier))
     }
 }
 
-public enum SBAExternalIDError: ErrorType {
-    case Invalid(reason: String?)
-    case NotMatching
+public enum SBAExternalIDError: Error {
+    case invalid(reason: String?)
+    case notMatching
 }
 
-public class SBAExternalIDStep: ORKPageStep {
+open class SBAExternalIDStep: ORKPageStep {
     
     static let initialStepIdentifier = SBAProfileInfoOption.externalID.rawValue
     static let confirmStepIdentifier = "confirm"
     
-    override public var title: String? {
+    override open var title: String? {
         didSet { didSetTitle() }
     }
-    private func didSetTitle() {
+    fileprivate func didSetTitle() {
         self.steps.first?.title = title
         self.steps.last?.title = title
     }
     
-    override public var text: String? {
+    override open var text: String? {
         didSet { didSetText() }
     }
-    private func didSetText() {
+    fileprivate func didSetText() {
         self.steps.first?.text = text
     }
     
     // Step is never optional
-    override public var optional: Bool {
+    override open var isOptional: Bool {
         get { return false }
         set {}
     }
     
     public init(inputItem: SBASurveyItem) {
-        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options))
+        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options as [NSObject : AnyObject]?))
         super.init(identifier: inputItem.identifier, steps: steps)
         if let title = inputItem.stepTitle {
             self.title = title
@@ -88,14 +88,14 @@ public class SBAExternalIDStep: ORKPageStep {
         super.init(identifier: identifier, steps: steps)
     }
     
-    private class func steps(options: SBAExternalIDOptions = SBAExternalIDOptions()) -> [ORKStep] {
+    fileprivate class func steps(_ options: SBAExternalIDOptions = SBAExternalIDOptions()) -> [ORKStep] {
         // Create the steps that are used by this method
         let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
             let options = SBAProfileInfoOptions(externalIDOptions: options)
             let step = ORKFormStep(identifier: stepIdentifier)
             step.formItems = options.makeFormItems(surveyItemType: .account(.registration))
-            step.optional = false
+            step.isOptional = false
             return step
         }
         
@@ -105,7 +105,7 @@ public class SBAExternalIDStep: ORKPageStep {
         return steps
     }
     
-    override public func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBAExternalIDStepViewController.classForCoder()
     }
     
@@ -116,13 +116,13 @@ public class SBAExternalIDStep: ORKPageStep {
     }
 }
 
-public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
+open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    lazy public var user: SBAUserWrapper = {
+    lazy open var user: SBAUserWrapper = {
         return self.sharedUser
     }()
     
@@ -136,7 +136,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
                 assert(false, "Should not be able to get to the goInitialStep method without a valid first step")
                 return
         }
-        self.goToStep(step, direction: .Reverse, animated: true)
+        self.go(to: step, direction: .reverse, animated: true)
     }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
@@ -154,10 +154,10 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
                 self.loginUser(externalId: externalId, isTestUser: false)
             }
         }
-        catch SBAExternalIDError.NotMatching {
+        catch SBAExternalIDError.notMatching {
             self.handleFailedValidation(failedConfirmationMessage)
         }
-        catch SBAExternalIDError.Invalid(let reason) {
+        catch SBAExternalIDError.invalid(let reason) {
             self.handleFailedValidation(reason)
         }
         catch let error as NSError {
@@ -165,7 +165,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
         }
     }
     
-    func loginUser(externalId externalId: String, isTestUser:Bool) {
+    func loginUser(externalId: String, isTestUser:Bool) {
         showLoadingView()
         user.loginUser(externalId: externalId) { [weak self] error in
             if let error = error {
@@ -190,11 +190,11 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
     // MARK: Validation
     
     // Default RegEx is alphanumeric for the external ID
-    public var validationRegEx: String = "^[a-zA-Z0-9]+$"
+    open var validationRegEx: String = "^[a-zA-Z0-9]+$"
     
-    public func validateParameter(externalId externalId: String) throws {
-        guard NSPredicate(format: "SELF MATCHES %@", self.validationRegEx).evaluateWithObject(externalId) else {
-            throw SBAExternalIDError.Invalid(reason: nil)
+    open func validateParameter(externalId: String) throws {
+        guard NSPredicate(format: "SELF MATCHES %@", self.validationRegEx).evaluate(with: externalId) else {
+            throw SBAExternalIDError.invalid(reason: nil)
         }
     }
     
@@ -203,7 +203,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
         guard let externalIds = externalIdAnswers(),
               let externalId = externalIds.first
         else {
-            throw SBAExternalIDError.Invalid(reason: nil)
+            throw SBAExternalIDError.invalid(reason: nil)
         }
         
         // Check that the external ID is valid
@@ -211,7 +211,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
         
         // Check that the external ID matches
         guard (externalIds.count == 2 && externalId == externalIds.last) else {
-            throw SBAExternalIDError.NotMatching
+            throw SBAExternalIDError.notMatching
         }
         
         return externalId
@@ -231,14 +231,14 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
     // MARK: Test User
     
     // Default RegEx is nil for checking if this is a test user
-    public var testUserRegEx: String?
+    open var testUserRegEx: String?
     
-    public func isTestUser(externalId externalId: String) -> Bool {
+    open func isTestUser(externalId: String) -> Bool {
         guard let testUserRegEx = self.testUserRegEx else { return false }
-        return NSPredicate(format: "SELF MATCHES %@", testUserRegEx).evaluateWithObject(externalId)
+        return NSPredicate(format: "SELF MATCHES %@", testUserRegEx).evaluate(with: externalId)
     }
     
-    public func promptUserForTestDataGroup(externalId externalId: String, loginHandler: ((isTestUser: Bool) -> Void)) {
+    open func promptUserForTestDataGroup(externalId: String, loginHandler: @escaping ((_ isTestUser: Bool) -> Void)) {
         // If this may be a test user, need to first display a prompt to confirm that the user is really QA
         // and then on answering the question, complete the registration
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")
@@ -249,7 +249,7 @@ public class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUser
     
     // MARK: Error handling
     
-    public var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_INVALID_CODE")
-    public var failedConfirmationMessage = Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED")
-    public var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_INVALID_CODE")
+    open var failedConfirmationMessage = Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 }

@@ -33,21 +33,21 @@
 
 import UIKit
 
-@objc public class SBAEncryptionHelper: NSObject {
+@objc open class SBAEncryptionHelper: NSObject {
     
-    public class func pemPath() -> String? {
-        guard let sharedAppDelegate = UIApplication.sharedApplication().delegate as? SBAAppInfoDelegate else { return nil }
-        let certificatePath = NSBundle.mainBundle().pathForResource(sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
+    open class func pemPath() -> String? {
+        guard let sharedAppDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate else { return nil }
+        let certificatePath = Bundle.main.path(forResource: sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
         return certificatePath
     }
     
     static let kEncryptedDataFilename = "encrypted.zip"
     
-    class func isEncryptedURL(file: NSURL) -> Bool {
+    class func isEncryptedURL(_ file: URL) -> Bool {
         return file.lastPathComponent == kEncryptedDataFilename
     }
     
-    class func isEncryptedString(file: NSString) -> Bool {
+    class func isEncryptedString(_ file: NSString) -> Bool {
         return file.lastPathComponent == kEncryptedDataFilename
     }
     
@@ -55,23 +55,23 @@ import UIKit
         return NSTemporaryDirectory()
     }
     
-    public class func encryptedFilesAwaitingUploadResponse() -> [String] {
+    open class func encryptedFilesAwaitingUploadResponse() -> [String] {
         let tmpDir = encryptedDataPathRoot()
-        let fileMan = NSFileManager.defaultManager()
+        let fileMan = FileManager.default
         
-        let tmpContents = fileMan.subpathsAtPath(tmpDir)
+        let tmpContents = fileMan.subpaths(atPath: tmpDir)
         let filesOfInterest = tmpContents?.mapAndFilter({ (file) -> String? in
-            guard isEncryptedString(file) else { return nil }
-            return (tmpDir as NSString).stringByAppendingPathComponent(file)
+            guard isEncryptedString(file as NSString) else { return nil }
+            return (tmpDir as NSString).appendingPathComponent(file)
         })
         return filesOfInterest ?? []
     }
 
-    public class func cleanUpEncryptedFile(file: NSURL) {
-        let dirUrl = isEncryptedURL(file) ? file.URLByDeletingLastPathComponent! : file
+    open class func cleanUpEncryptedFile(_ file: URL) {
+        let dirUrl = isEncryptedURL(file) ? file.deletingLastPathComponent() : file
         
         do {
-            try NSFileManager.defaultManager().removeItemAtURL(dirUrl)
+            try FileManager.default.removeItem(at: dirUrl)
         } catch let error as NSError {
             print("Error thrown attempting to remove %@:\n%@", dirUrl, error)
         }

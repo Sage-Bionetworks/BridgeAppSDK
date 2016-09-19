@@ -36,18 +36,32 @@ import Foundation
 
 extension Dictionary where Value : Equatable {
     
-    public func keyForValue(val : Value) -> Key? {
+    public func key(forValue val : Value) -> Key? {
         return self.filter { $1 == val }.map { $0.0 }.first
     }
 }
 
 extension Dictionary {
     
-    public var allKeys:[AnyObject]? {
-        return self.mapAndFilter({ (key, _) -> AnyObject? in
-            return key as? AnyObject
+    /**
+     All the keys in the dictionary
+    */
+    public var allKeys: [Any]? {
+        return self.map({ (key, _) -> Any in
+            return key
         })
     }
+    
+    /**
+     Return a `Dictionary` that adds or replaces each entry in this instance with the value from the input `Dictionary`
+    */
+    public func merge(from: Dictionary<Key,Value>) -> Dictionary<Key,Value> {
+        var mutableCopy = self
+        for (key, value) in from {
+            // If both dictionaries have a value for same key, the value of the other dictionary is used.
+            mutableCopy[key] = value
+        }
+        return mutableCopy
+    }
 }
-
 

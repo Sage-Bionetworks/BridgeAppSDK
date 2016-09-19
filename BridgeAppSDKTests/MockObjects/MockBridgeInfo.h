@@ -51,5 +51,6 @@
 @property (nonatomic, readwrite, copy) NSString * _Nullable newsfeedURLString;
 @property (nonatomic, readwrite, copy) NSString * _Nullable logoImageName;
 @property (nonatomic, readwrite, copy) NSString * _Nullable appUpdateURLString;
+@property (nonatomic, readwrite) BOOL disableTestUserCheck;
 
 @end

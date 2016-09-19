@@ -36,7 +36,7 @@ import Foundation
 extension SBAPermissionsType {
     
     init(items: [UInt]?) {
-        let rawValue = items?.reduce(0, combine: |) ?? 0
+        let rawValue = items?.reduce(0, |) ?? 0
         self.init(rawValue: rawValue)
     }
     
@@ -47,19 +47,19 @@ extension SBAPermissionsType {
         }
         switch key {
         case "camera":
-            self.init(rawValue:SBAPermissionsType.Camera.rawValue)
+            self.init(rawValue:SBAPermissionsType.camera.rawValue)
         case "coremotion":
-            self.init(rawValue:SBAPermissionsType.Coremotion.rawValue)
+            self.init(rawValue:SBAPermissionsType.coremotion.rawValue)
         case "healthKit":
-            self.init(rawValue:SBAPermissionsType.HealthKit.rawValue)
+            self.init(rawValue:SBAPermissionsType.healthKit.rawValue)
         case "location":
-            self.init(rawValue:SBAPermissionsType.Location.rawValue)
+            self.init(rawValue:SBAPermissionsType.location.rawValue)
         case "localNotifications":
-            self.init(rawValue:SBAPermissionsType.LocalNotifications.rawValue)
+            self.init(rawValue:SBAPermissionsType.localNotifications.rawValue)
         case "microphone":
-            self.init(rawValue:SBAPermissionsType.Microphone.rawValue)
+            self.init(rawValue:SBAPermissionsType.microphone.rawValue)
         case "photoLibrary":
-            self.init(rawValue:SBAPermissionsType.PhotoLibrary.rawValue)
+            self.init(rawValue:SBAPermissionsType.photoLibrary.rawValue)
         default:
             let intValue = UInt(key) ?? 0
             self.init(rawValue: intValue)
@@ -81,7 +81,7 @@ extension SBAPermissionsType {
 
 extension SBAPermissionsManager {
     
-    public func requestPermissions(permissions: SBAPermissionsType, alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
+    public func requestPermissions(_ permissions: SBAPermissionsType, alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
         
         // Exit early if there are no permissions
         let items = permissions.items
@@ -92,32 +92,32 @@ extension SBAPermissionsManager {
         
         // Use a dispatch group to iterate through all the permissions and accept them as
         // a batch, showing an alert for each if not authorized.
-        let dispatchGroup = dispatch_group_create()
+        let dispatchGroup = DispatchGroup()
         var allGranted = true
         
         for item in items {
             let permission = SBAPermissionsType(rawValue: item)
-            if !self.isPermissionsGrantedForType(permission) {
-                dispatch_group_enter(dispatchGroup)
-                self.requestPermissionForType(permission, withCompletion: { [weak alertPresenter] (success, error) in
+            if !self.isPermissionsGranted(for: permission) {
+                dispatchGroup.enter()
+                self.requestPermission(for: permission, withCompletion: { [weak alertPresenter] (success, error) in
                     allGranted = allGranted && success
                     if !success, let presenter = alertPresenter {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
                             let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
                             presenter.showAlertWithOk(title, message: message, actionHandler: { (_) in
-                                dispatch_group_leave(dispatchGroup)
+                                dispatchGroup.leave()
                             })
                         })
                     }
                     else {
-                        dispatch_group_leave(dispatchGroup)
+                        dispatchGroup.leave()
                     }
                 })
             }
         }
         
-        dispatch_group_notify(dispatchGroup, dispatch_get_main_queue()) {
+        dispatchGroup.notify(queue: DispatchQueue.main) {
             completion?(allGranted)
         }
     }

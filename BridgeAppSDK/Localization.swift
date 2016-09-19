@@ -33,17 +33,17 @@
 
 import UIKit
 
-public class Localization: NSObject {
+open class Localization: NSObject {
     
-    static let localeMainBundle = NSBundle.mainBundle()
-    static let localeBundle = NSBundle(forClass: Localization.classForCoder())
-    static let localeORKBundle = NSBundle(forClass: ORKStep.classForCoder())
+    static let localeMainBundle = Bundle.main
+    static let localeBundle = Bundle(for: Localization.classForCoder())
+    static let localeORKBundle = Bundle(for: ORKStep.classForCoder())
     
-    public class var allBundles: [NSBundle] {
+    open class var allBundles: [Bundle] {
         return [localeMainBundle, localeBundle, localeORKBundle]
     }
         
-    public static func localizedString(key: String) -> String {
+    open class func localizedString(_ key: String) -> String {
         // Look in these bundles for a localization for the given key
         for bundle in allBundles {
             let tableName = defaultTableNameForBundle(bundle)
@@ -57,15 +57,15 @@ public class Localization: NSObject {
         return key
     }
     
-    public static func defaultTableNameForBundle(bundle: NSBundle) -> String? {
+    open class func defaultTableNameForBundle(_ bundle: Bundle) -> String? {
         if (bundle == localeORKBundle) { return "ResearchKit" }
         if (bundle == localeBundle) { return "BridgeAppSDK" }
         return nil
     }
     
-    public static func localizedStringWithFormatKey(key: String, _ arguments: CVarArgType...) -> String {
+    public static func localizedStringWithFormatKey(_ key: String, _ arguments: CVarArg...) -> String {
         return withVaList(arguments) {
-            NSString(format: localizedString(key), locale: NSLocale.currentLocale(), arguments: $0)
+            (NSString(format: localizedString(key), locale: Locale.current, arguments: $0) as String)
         } as String
     }
     
@@ -78,74 +78,67 @@ public class Localization: NSObject {
         case 2:
             return String.localizedStringWithFormat(localizedString("SBA_TWO_ITEM_LIST_FORMAT_%1$@_%2$@"), textList[0], textList[1])
         default:
+            var list: [String] = textList
+            let text3 = list.removeLast()
+            let text2 = list.removeLast()
+            let text1 = list.removeLast()
             let endText = String.localizedStringWithFormat(localizedString("SBA_THREE_ITEM_LIST_FORMAT_%1$@_%2$@_%3$@"),
-                                 textList[textList.count - 3],
-                                 textList[textList.count - 2],
-                                 textList[textList.count - 1])
+                                 text1,
+                                 text2,
+                                 text3)
+            list.append(endText)
             let delimiter = localizedString("SBA_LIST_FORMAT_DELIMITER")
-            let list = Array([textList[0..<(textList.count - 3)], [endText]].flatten())
-            return list.joinWithSeparator(delimiter)
+            return list.joined(separator: delimiter)
         }
     }
     
     
     // MARK: Localized App Name
     
-    public static var localizedAppName : String = {
-        let mainBundle = NSBundle.mainBundle()
-        let bundleInfo = mainBundle.infoDictionary
-        let localizedBundleInfo = mainBundle.localizedInfoDictionary
-        
-        func trim(obj: AnyObject?) -> String? {
-            guard let str = obj as? String else { return nil }
-            let result = str.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-            guard result != "" else { return nil }
-            return result
+    open static let localizedAppName : String = {
+        let mainBundle = Bundle.main
+        if let bundleInfo = mainBundle.localizedInfoDictionary ?? mainBundle.infoDictionary {
+            if let name = bundleInfo["CFBundleDisplayName"] as? String {
+                return name
+            }
+            else if let name = bundleInfo["CFBundleName"] as? String {
+                return name
+            }
+            else if let name = bundleInfo["CFBundleExecutable"] as? String {
+                return name
+            }
         }
-        
-        let result =
-                trim(localizedBundleInfo? ["CFBundleDisplayName"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")) ??
-                trim(bundleInfo? ["CFBundleDisplayName"]) ??
-                trim(localizedBundleInfo? ["CFBundleName"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleName")) ??
-                trim(bundleInfo? ["CFBundleName"]) ??
-                trim(localizedBundleInfo? ["CFBundleExecutable"]) ??
-                trim(mainBundle.objectForInfoDictionaryKey("CFBundleExecutable")) ??
-                trim(bundleInfo? ["CFBundleExecutable"]) ??
-                "???"
-        
-        return result
+        return "???"
     }()
     
     
     // MARK: Common button titles that should keep consistent with ResearchKit
     
-    public static func buttonYes() -> String {
+    open class func buttonYes() -> String {
         return localizedString("BOOL_YES")
     }
     
-    public static func buttonNo() -> String {
+    open class func buttonNo() -> String {
         return localizedString("BOOL_NO")
     }
     
-    public static func buttonOK() -> String {
+    open class func buttonOK() -> String {
         return localizedString("BUTTON_OK")
     }
     
-    public static func buttonCancel() -> String {
+    open class func buttonCancel() -> String {
         return localizedString("BUTTON_CANCEL")
     }
     
-    public static func buttonDone() -> String {
+    open class func buttonDone() -> String {
         return localizedString("BUTTON_DONE")
     }
     
-    public static func buttonNext() -> String {
+    open class func buttonNext() -> String {
         return localizedString("BUTTON_NEXT")
     }
     
-    public static func buttonGetStarted() -> String {
+    open class func buttonGetStarted() -> String {
         return localizedString("BUTTON_GET_STARTED")
     }
 }

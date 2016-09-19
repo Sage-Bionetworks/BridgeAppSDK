@@ -43,7 +43,7 @@ public protocol SBADirectNavigationRule: SBANavigationRule {
 }
 
 extension SBADirectNavigationRule {
-    public func nextStepIdentifier(taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+    public func nextStepIdentifier(_ taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
         return self.nextStepIdentifier;
     }
 }

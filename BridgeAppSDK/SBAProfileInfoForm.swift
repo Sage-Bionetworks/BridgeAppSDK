@@ -46,19 +46,19 @@ public enum SBARegistrationGender: String {
     case female, male, other
 }
 
-enum SBAProfileInfoOptionsError: ErrorType {
-    case MissingRequiredOptions
-    case MissingEmail
-    case MissingExternalID
-    case MissingName
-    case NotConsented
-    case UnrecognizedSurveyItemType
+enum SBAProfileInfoOptionsError: Error {
+    case missingRequiredOptions
+    case missingEmail
+    case missingExternalID
+    case missingName
+    case notConsented
+    case unrecognizedSurveyItemType
 }
 
 struct SBAExternalIDOptions {
     
-    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .AllCharacters
-    static let defaultKeyboardType: UIKeyboardType = .ASCIICapable
+    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
+    static let defaultKeyboardType: UIKeyboardType = .asciiCapable
     
     let autocapitalizationType: UITextAutocapitalizationType
     let keyboardType: UIKeyboardType
@@ -73,7 +73,7 @@ struct SBAExternalIDOptions {
         self.keyboardType = keyboardType
     }
     
-    init(options: [NSObject : AnyObject]?) {
+    init(options: [AnyHashable: Any]?) {
         self.autocapitalizationType = {
             if let autocap = options?["autocapitalizationType"] as? String {
                  return UITextAutocapitalizationType(key: autocap)
@@ -96,7 +96,7 @@ struct SBAExternalIDOptions {
 public struct SBAProfileInfoOptions {
     
     public let includes: [SBAProfileInfoOption]
-    public let customOptions: [AnyObject]
+    public let customOptions: [Any]
     let externalIDOptions: SBAExternalIDOptions
     
     public init(includes: [SBAProfileInfoOption]) {
@@ -118,8 +118,8 @@ public struct SBAProfileInfoOptions {
         }
         
         // Map the includes, and if it is an external ID then also map the keyboard options
-        var externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .None, keyboardType: .Default)
-        var customOptions: [AnyObject] = []
+        var externalIDOptions = SBAExternalIDOptions(autocapitalizationType: .none, keyboardType: .default)
+        var customOptions: [Any] = []
         self.includes = items.mapAndFilter({ (obj) -> SBAProfileInfoOption? in
             if let str = obj as? String {
                 return SBAProfileInfoOption(rawValue: str)
@@ -133,7 +133,7 @@ public struct SBAProfileInfoOptions {
                 return option
             }
             else {
-                customOptions += [obj]
+                customOptions.append(obj)
             }
             return nil
         })
@@ -141,7 +141,7 @@ public struct SBAProfileInfoOptions {
         self.customOptions = customOptions
     }
     
-    func makeFormItems(surveyItemType surveyItemType: SBASurveyItemType) -> [ORKFormItem] {
+    func makeFormItems(surveyItemType: SBASurveyItemType) -> [ORKFormItem] {
         
         var formItems: [ORKFormItem] = []
         
@@ -149,107 +149,147 @@ public struct SBAProfileInfoOptions {
             switch option {
                 
             case .email:
-                let answerFormat = ORKAnswerFormat.emailAnswerFormat()
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: Localization.localizedString("EMAIL_FORM_ITEM_TITLE"),
-                                           answerFormat: answerFormat,
-                                           optional: false)
-                formItem.placeholder = Localization.localizedString("EMAIL_FORM_ITEM_PLACEHOLDER")
+                let formItem = makeEmailFormItem(option)
                 formItems.append(formItem)
             
             case .password:
-                let answerFormat = ORKAnswerFormat.textAnswerFormat()
-                answerFormat.multipleLines = false
-                answerFormat.secureTextEntry = true
-                answerFormat.autocapitalizationType = .None
-                answerFormat.autocorrectionType = .No
-                answerFormat.spellCheckingType = .No
-
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                                   text: Localization.localizedString("PASSWORD_FORM_ITEM_TITLE"),
-                                                   answerFormat: answerFormat,
-                                                   optional: false)
-                formItem.placeholder = Localization.localizedString("PASSWORD_FORM_ITEM_PLACEHOLDER")
+                let (formItem, answerFormat) = makePasswordFormItem(option)
                 formItems.append(formItem)
                 
                 // confirmation
                 if (surveyItemType == .account(.registration)) {
-                    
-                    // If this is a registration, go ahead and set the default password verification
-                    let minLength = SBARegistrationStep.defaultPasswordMinLength
-                    let maxLength = SBARegistrationStep.defaultPasswordMaxLength
-                    answerFormat.validationRegex = "[[:ascii:]]{\(minLength),\(maxLength)}"
-                    answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(integer: minLength), NSNumber(integer: maxLength))
-                    
-                    // Add a confirmation field
-                    let confirmIdentifier = SBARegistrationStep.confirmationIdentifier
-                    let confirmText = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE")
-                    let confirmError = Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE")
-                    let confirmFormItem = formItem.confirmationAnswerFormItemWithIdentifier(confirmIdentifier, text: confirmText,
-                                                                                                    errorMessage: confirmError)
-                    
-                    confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
+                    let confirmFormItem = makeConfirmationFormItem(formItem, answerFormat: answerFormat)
                     formItems.append(confirmFormItem)
                 }
                 
             case .externalID:
-                let answerFormat = ORKAnswerFormat.textAnswerFormat()
-                answerFormat.multipleLines = false
-                answerFormat.autocapitalizationType = self.externalIDOptions.autocapitalizationType
-                answerFormat.autocorrectionType = .No
-                answerFormat.spellCheckingType = .No
-                answerFormat.keyboardType = self.externalIDOptions.keyboardType
-                
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: Localization.localizedString("SBA_REGISTRATION_EXTERNALID_TITLE"),
-                                           answerFormat: answerFormat,
-                                           optional: false)
-                formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER")
+                let formItem = makeExternalIDFormItem(option)
                 formItems.append(formItem)
                 
             case .name:
-                let answerFormat = ORKAnswerFormat.textAnswerFormat()
-                answerFormat.multipleLines = false
-                answerFormat.autocapitalizationType = .Words
-                answerFormat.autocorrectionType = .No
-                answerFormat.spellCheckingType = .No
-                answerFormat.keyboardType = .Default
-                
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: Localization.localizedString("SBA_REGISTRATION_FULLNAME_TITLE"),
-                                           answerFormat: answerFormat,
-                                           optional: false)
-                formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER")
+                let formItem = makeNameFormItem(option)
                 formItems.append(formItem)
                 
             case .birthdate:
-                // Calculate default date (20 years old).
-                let defaultDate = NSCalendar.currentCalendar().dateByAddingUnit(.Year, value: -20, toDate: NSDate(), options: NSCalendarOptions(rawValue: 0))
-                let answerFormat = ORKAnswerFormat.dateAnswerFormatWithDefaultDate(defaultDate, minimumDate: nil, maximumDate: NSDate(), calendar: NSCalendar.currentCalendar())
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: Localization.localizedString("DOB_FORM_ITEM_TITLE"),
-                                           answerFormat: answerFormat,
-                                           optional: false)
-                formItem.placeholder = Localization.localizedString("DOB_FORM_ITEM_PLACEHOLDER")
+                let formItem = makeBirthdateFormItem(option)
                 formItems.append(formItem)
                 
             case .gender:
-                let textChoices = [
-                    ORKTextChoice(text: Localization.localizedString("GENDER_FEMALE"), value: SBARegistrationGender.female.rawValue),
-                    ORKTextChoice(text: Localization.localizedString("GENDER_MALE"), value: SBARegistrationGender.male.rawValue),
-                    ORKTextChoice(text: Localization.localizedString("GENDER_OTHER"), value: SBARegistrationGender.other.rawValue),
-                    ]
-                let answerFormat  = ORKValuePickerAnswerFormat(textChoices: textChoices)
-                let formItem = ORKFormItem(identifier: option.rawValue,
-                                           text: Localization.localizedString("GENDER_FORM_ITEM_TITLE"),
-                                           answerFormat: answerFormat,
-                                           optional: false)
-                formItem.placeholder = Localization.localizedString("GENDER_FORM_ITEM_PLACEHOLDER")
+                let formItem = makeGenderFormItem(option)
                 formItems.append(formItem)
                 
             }
         }
         return formItems
+    }
+    
+    func makeEmailFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        let answerFormat = ORKAnswerFormat.emailAnswerFormat()
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("EMAIL_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("EMAIL_FORM_ITEM_PLACEHOLDER")
+        return formItem
+    }
+    
+    func makePasswordFormItem(_ option: SBAProfileInfoOption) -> (ORKFormItem, ORKTextAnswerFormat) {
+        let answerFormat = ORKAnswerFormat.textAnswerFormat()
+        answerFormat.multipleLines = false
+        answerFormat.isSecureTextEntry = true
+        answerFormat.autocapitalizationType = .none
+        answerFormat.autocorrectionType = .no
+        answerFormat.spellCheckingType = .no
+        
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("PASSWORD_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("PASSWORD_FORM_ITEM_PLACEHOLDER")
+        
+        return (formItem, answerFormat)
+    }
+    
+    func makeConfirmationFormItem(_ formItem: ORKFormItem, answerFormat: ORKTextAnswerFormat) -> ORKFormItem {
+        // If this is a registration, go ahead and set the default password verification
+        let minLength = SBARegistrationStep.defaultPasswordMinLength
+        let maxLength = SBARegistrationStep.defaultPasswordMaxLength
+        answerFormat.validationRegex = "[[:ascii:]]{\(minLength),\(maxLength)}"
+        answerFormat.invalidMessage = Localization.localizedStringWithFormatKey("SBA_REGISTRATION_INVALID_PASSWORD_LENGTH_%@_TO_%@", NSNumber(value: minLength), NSNumber(value: maxLength))
+        
+        // Add a confirmation field
+        let confirmIdentifier = SBARegistrationStep.confirmationIdentifier
+        let confirmText = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_TITLE")
+        let confirmError = Localization.localizedString("CONFIRM_PASSWORD_ERROR_MESSAGE")
+        let confirmFormItem = formItem.confirmationAnswer(withIdentifier: confirmIdentifier, text: confirmText,
+                                                                                errorMessage: confirmError)
+        
+        confirmFormItem.placeholder = Localization.localizedString("CONFIRM_PASSWORD_FORM_ITEM_PLACEHOLDER")
+        
+        return confirmFormItem
+    }
+    
+    func makeExternalIDFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        let answerFormat = ORKAnswerFormat.textAnswerFormat()
+        answerFormat.multipleLines = false
+        answerFormat.autocapitalizationType = self.externalIDOptions.autocapitalizationType
+        answerFormat.autocorrectionType = .no
+        answerFormat.spellCheckingType = .no
+        answerFormat.keyboardType = self.externalIDOptions.keyboardType
+        
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("SBA_REGISTRATION_EXTERNALID_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_EXTERNALID_PLACEHOLDER")
+        
+        return formItem
+    }
+    
+    func makeNameFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        let answerFormat = ORKAnswerFormat.textAnswerFormat()
+        answerFormat.multipleLines = false
+        answerFormat.autocapitalizationType = .words
+        answerFormat.autocorrectionType = .no
+        answerFormat.spellCheckingType = .no
+        answerFormat.keyboardType = .default
+        
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("SBA_REGISTRATION_FULLNAME_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("SBA_REGISTRATION_FULLNAME_PLACEHOLDER")
+        
+        return formItem
+    }
+    
+    func makeBirthdateFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        // Calculate default date (20 years old).
+        let defaultDate = (Calendar.current as NSCalendar).date(byAdding: .year, value: -20, to: Date(), options: NSCalendar.Options(rawValue: 0))
+        let answerFormat = ORKAnswerFormat.dateAnswerFormat(withDefaultDate: defaultDate, minimumDate: nil, maximumDate: Date(), calendar: Calendar.current)
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("DOB_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("DOB_FORM_ITEM_PLACEHOLDER")
+        
+        return formItem
+    }
+    
+    func makeGenderFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        let textChoices: [ORKTextChoice] = [
+            ORKTextChoice(text: Localization.localizedString("GENDER_FEMALE"), value: SBARegistrationGender.female.rawValue as NSString),
+            ORKTextChoice(text: Localization.localizedString("GENDER_MALE"), value: SBARegistrationGender.male.rawValue as NSString),
+            ORKTextChoice(text: Localization.localizedString("GENDER_OTHER"), value: SBARegistrationGender.other.rawValue as NSString),
+            ]
+        let answerFormat = ORKValuePickerAnswerFormat(textChoices: textChoices)
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("GENDER_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("GENDER_FORM_ITEM_PLACEHOLDER")
+        
+        return formItem
     }
 }
 
@@ -262,8 +302,8 @@ public protocol SBAFormProtocol : class {
 }
 
 extension SBAFormProtocol {
-    public func formItemForIdentifier(identifier: String) -> ORKFormItem? {
-        return self.formItems?.findObject({ $0.identifier == identifier })
+    public func formItemForIdentifier(_ identifier: String) -> ORKFormItem? {
+        return self.formItems?.find({ $0.identifier == identifier })
     }
 }
 
@@ -272,7 +312,7 @@ extension ORKFormStep: SBAFormProtocol {
 
 public protocol SBAProfileInfoForm : SBAFormProtocol {
     var surveyItemType: SBASurveyItemType { get }
-    func defaultOptions(inputItem: SBASurveyItem?) -> [SBAProfileInfoOption]
+    func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption]
 }
 
 extension SBAProfileInfoForm {
@@ -281,11 +321,11 @@ extension SBAProfileInfoForm {
         return self.formItems?.mapAndFilter({ SBAProfileInfoOption(rawValue: $0.identifier) })
     }
     
-    public func formItemForProfileInfoOption(profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
-        return self.formItems?.findObject({ $0.identifier == profileInfoOption.rawValue })
+    public func formItemForProfileInfoOption(_ profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
+        return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
-    func commonInit(inputItem: SBASurveyItem?) {
+    func commonInit(_ inputItem: SBASurveyItem?) {
         self.title = inputItem?.stepTitle
         self.text = inputItem?.stepText
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))

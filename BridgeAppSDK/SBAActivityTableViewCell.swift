@@ -33,32 +33,32 @@
 
 import UIKit
 
-public class SBAActivityTableViewCell: UITableViewCell {
+open class SBAActivityTableViewCell: UITableViewCell {
     
     @IBOutlet weak var uncheckedView: UIView!
     @IBOutlet weak var checkmarkImageView: UIImageView!
-    @IBOutlet public weak var titleLabel: UILabel!
-    @IBOutlet public weak var subtitleLabel: UILabel!
-    @IBOutlet public weak var timeLabel: UILabel?
+    @IBOutlet open weak var titleLabel: UILabel!
+    @IBOutlet open weak var subtitleLabel: UILabel!
+    @IBOutlet open weak var timeLabel: UILabel?
     
     internal var complete: Bool = false {
         didSet {
-            self.uncheckedView.hidden = complete
-            self.checkmarkImageView.hidden = !complete
+            self.uncheckedView.isHidden = complete
+            self.checkmarkImageView.isHidden = !complete
         }
     }
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
-        self.uncheckedView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        self.uncheckedView.layer.borderColor = UIColor.lightGray.cgColor
         self.uncheckedView.layer.borderWidth = 1
         self.uncheckedView.layer.cornerRadius = self.uncheckedView.bounds.size.height / 2
         
         self.timeLabel?.textColor = self.tintColor
     }
     
-    public override func tintColorDidChange() {
+    open override func tintColorDidChange() {
         super.tintColorDidChange()
         self.timeLabel?.textColor = self.tintColor
     }

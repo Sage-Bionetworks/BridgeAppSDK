@@ -35,18 +35,18 @@ import XCTest
 
 class ResourceTestCase: XCTestCase {
     
-    func jsonForResource(resourceName: String) -> NSDictionary? {
+    func jsonForResource(_ resourceName: String) -> NSDictionary? {
         
-        let resourcePath = NSBundle(forClass: self.classForCoder).pathForResource(resourceName, ofType:"json") ??
-            NSBundle.mainBundle().pathForResource(resourceName, ofType: "json")
+        let resourcePath = Bundle(for: self.classForCoder).path(forResource: resourceName, ofType:"json") ??
+            Bundle.main.path(forResource: resourceName, ofType: "json")
     
-        guard let path = resourcePath, let jsonData = NSData(contentsOfFile: path) else {
+        guard let path = resourcePath, let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
                 XCTAssert(false, "Resource not found: \(resourceName)")
                 return nil
         }
         
         do {
-            guard let json = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(rawValue: 0)) as? NSDictionary else {
+            guard let json = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? NSDictionary else {
                 XCTAssert(false, "Resource not an NSDictionary: \(resourceName)")
                 return nil
             }

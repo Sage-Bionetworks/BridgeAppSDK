@@ -44,34 +44,34 @@ private let kEndDate                          = "endDate"
 private let kDataGroups                       = "dataGroups"
 private let kMetadataFilename                 = "metadata.json"
 
-public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
+open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
     
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.sharedApplication().delegate as! SBAAppInfoDelegate
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
 
-    private var metadata = [String: AnyObject]()
+    fileprivate var metadata = [String: AnyObject]()
     
     public init?(result: SBAActivityResult, jsonValidationMapping: [String: NSPredicate]? = nil) {
         super.init(reference: result.schemaIdentifier, jsonValidationMapping: jsonValidationMapping)
         
         // set up the activity metadata
         // -- always set scheduledActivityGuid and taskRunUUID
-        self.metadata[kScheduledActivityGuidKey] = result.schedule.guid
-        self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.UUIDString
+        self.metadata[kScheduledActivityGuidKey] = result.schedule.guid as AnyObject?
+        self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.uuidString as AnyObject?
         
         // -- if it's a task, also set the taskIdentifier
         if let taskReference = result.schedule.activity.task {
-            self.metadata[kTaskIdentifierKey] = taskReference.identifier
+            self.metadata[kTaskIdentifierKey] = taskReference.identifier as AnyObject?
         }
         
         // -- add the start/end date
-        self.metadata[kStartDate] = result.startDate.ISO8601String()
-        self.metadata[kEndDate] = result.endDate.ISO8601String()
+        self.metadata[kStartDate] = (result.startDate as NSDate).iso8601String() as AnyObject?
+        self.metadata[kEndDate] = (result.endDate as NSDate).iso8601String() as AnyObject?
         
         // -- add data groups
         if let dataGroups = sharedUser.dataGroups {
-            self.metadata[kDataGroups] = dataGroups.joinWithSeparator(",")
+            self.metadata[kDataGroups] = dataGroups.joined(separator: ",") as AnyObject?
         }
         
         // set up the info.json
@@ -81,22 +81,22 @@ public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         // -- if it's a survey, also set the survey's guid and createdOn
         if let surveyReference = result.schedule.activity.survey {
             // Survey schema is better matched by created date and survey guid
-            self.setArchiveInfoObject(surveyReference.guid, forKey: kSurveyGuidKey)
-            let createdOn = surveyReference.createdOn ?? NSDate()
-            self.setArchiveInfoObject(createdOn.ISO8601String(), forKey: kSurveyCreatedOnKey)
+            self.setArchiveInfoObject(surveyReference.guid as SBAJSONObject, forKey: kSurveyGuidKey)
+            let createdOn = surveyReference.createdOn ?? Date()
+            self.setArchiveInfoObject((createdOn as NSDate).iso8601String() as SBAJSONObject, forKey: kSurveyCreatedOnKey)
         }
         
         if !self.buildArchiveForResult(result) {
-            self.removeArchive()
+            self.remove()
             return nil
         }
     }
 
-    func buildArchiveForResult(activityResult: SBAActivityResult) -> Bool {
+    func buildArchiveForResult(_ activityResult: SBAActivityResult) -> Bool {
         
         // exit early with false if nothing to archive
         guard let activityResultResults = activityResult.results as? [ORKStepResult]
-            where activityResultResults.count > 0
+            , activityResultResults.count > 0
         else {
             return false
         }
@@ -105,7 +105,7 @@ public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         for stepResult in activityResultResults {
             if let stepResultResults = stepResult.results {
                 for result in stepResultResults {
-                    if !insertResult(result, stepResult: stepResult, activityResult: activityResult) {
+                    if !insert(result: result, stepResult: stepResult, activityResult: activityResult) {
                         return false
                     }
                 }
@@ -115,7 +115,7 @@ public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         // don't insert the metadata if the archive is otherwise empty
         let builtArchive = !isEmpty()
         if builtArchive {
-            insertDictionaryIntoArchive(self.metadata, filename: kMetadataFilename)
+            insertDictionary(intoArchive: self.metadata, filename: kMetadataFilename)
         }
 
         return builtArchive
@@ -124,7 +124,7 @@ public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
     /**
     * Method for inserting a result into an archive. Allows for override by subclasses
     */
-    public func insertResult(result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
+    open func insert(result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
         
         guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
             assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")
@@ -132,11 +132,11 @@ public class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         }
         
         if let urlResult = archiveableResult.result as? NSURL {
-            self.insertURLIntoArchive(urlResult, fileName: archiveableResult.filename)
-        } else if let dictResult = archiveableResult.result as? [NSObject : AnyObject] {
-            self.insertDictionaryIntoArchive(dictResult, filename: archiveableResult.filename)
+            self.insertURL(intoArchive: urlResult as URL, fileName: archiveableResult.filename)
+        } else if let dictResult = archiveableResult.result as? [AnyHashable: Any] {
+            self.insertDictionary(intoArchive: dictResult, filename: archiveableResult.filename)
         } else if let dataResult = archiveableResult.result as? NSData {
-            self.insertDataIntoArchive(dataResult, filename: archiveableResult.filename)
+            self.insertData(intoArchive: dataResult as Data, filename: archiveableResult.filename)
         } else {
             let className = NSStringFromClass(archiveableResult.result.classForCoder)
             assertionFailure("Unsupported archiveable result type: \(className)")

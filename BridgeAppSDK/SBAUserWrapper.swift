@@ -72,7 +72,7 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     /**
      * Birthdate is stored in the keychain
      */
-    var birthdate: NSDate? { get set }
+    var birthdate: Date? { get set }
 
     /**
      * Subpopulation GUID is used for tracking by certain apps. Stored in the keychain.
@@ -120,11 +120,25 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
      * Tracking that can be set by the app to track the user's onboarding progress
      */
     var onboardingStepIdentifier: String? { get set }
-
+    
     /**
-     * Log the user out and reset
+     Reset the user's keychain
      */
-    func logout()
+    func resetStoredUserData()
 
+}
+
+extension SBAUserWrapper {
+    
+    // With Xcode 8 and iOS 10, the keychain entitlement is required and is *not* reverse-compatible
+    // to previous versions of the app that did not require this. Because of this, it is possible to
+    // have the flags set for registered and verified without an accessible email/password. Because
+    // of this, we need to logout the user, but we want to keep their data that locally cached.
+    // syoung 09/19/2016
+    func resetUserKeychainIfNeeded() {
+        if ((hasRegistered || loginVerified) && email == nil) {
+            resetStoredUserData()
+        }
+    }
 }
 

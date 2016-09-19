@@ -33,14 +33,13 @@
 
 import Foundation
 
-extension SequenceType {
+extension Sequence {
     
     /**
     Returns an `Array` containing the results of mapping and filtered `transform`
     over `self`.
     */
-    @warn_unused_result
-    public func mapAndFilter<T>(@noescape transform: (Self.Generator.Element) throws -> T?) rethrows -> [T] {
+    public func mapAndFilter<T>(_ transform: (Self.Iterator.Element) throws -> T?) rethrows -> [T] {
         var result = [T]()
         for element in self {
             if let t = try transform(element) {
@@ -50,34 +49,39 @@ extension SequenceType {
         return result
     }
     
-    @warn_unused_result
-    public func findObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+    /**
+     Find the first element in the `Sequence` that matches the given criterion.
+    */
+    public func find(_ evaluate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         for element in self {
-            if try transform(element) {
+            if try evaluate(element) {
                 return element
             }
         }
         return nil
     }
     
-    @warn_unused_result
-    public func nextObject(@noescape transform: (Self.Generator.Element) throws -> Bool) rethrows -> Self.Generator.Element? {
+    /**
+     Find the next element in the `Sequence` after the element that matches the given criterion.
+     */
+    public func next(_ evaluate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
         var found = false
         for element in self {
             if found {
                 return element
             }
-            found = try transform(element)
+            found = try evaluate(element)
         }
         return nil
     }
     
-    @warn_unused_result
-    public func objectWithIdentifier(identifier: String) -> Self.Generator.Element? {
+    /**
+     Find the first element with the given `identifier`
+    */
+    public func find(withIdentifier identifier: String) -> Self.Iterator.Element? {
         for element in self {
             if let obj = element as? NSObject,
-                let id = obj.valueForKey("identifier") as? String
-                where (id == identifier) {
+                let id = obj.value(forKey: "identifier") as? String, (id == identifier) {
                 return element
             }
         }

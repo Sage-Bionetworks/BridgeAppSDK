@@ -34,122 +34,135 @@
 import UIKit
 import BridgeSDK
 
+/**
+ This protocol is used as the mapping for information used to customize the study.
+ */
 @objc
 public protocol SBABridgeInfo: class {
     
     /**
-     * Study identifier used to setup the study with Bridge
+     Study identifier used to setup the study with Bridge
      */
     var studyIdentifier: String! { get }
     
     /**
-     * If using BridgeSDK's built-in caching, number of days ahead to cache
+     If using BridgeSDK's built-in caching, number of days ahead to cache
      */
     var cacheDaysAhead: Int { get }
     
     /**
-     * If using BridgeSDK's built-in caching, number of days behind to cache
+     If using BridgeSDK's built-in caching, number of days behind to cache
      */
     var cacheDaysBehind: Int { get }
     
     /**
-     * Environment to load
+     Environment to load
      */
     var environment: SBBEnvironment { get }
     
     /**
-     * App store link for this application. By default, this returns the value pulled from the main bundle
+     App store link for this application. By default, this returns the value pulled from the main bundle
      */
     var appStoreLinkURLString: String? { get }
     
     /**
-     * Email to use for registration or login via externalId
+     Email to use for registration or login via externalId
      */
     var emailForLoginViaExternalId: String? { get }
     
     /**
-     * Password format for use for registration or login via externalId. (optional)
+     Password format for use for registration or login via externalId. (optional)
      */
     var passwordFormatForLoginViaExternalId: String? { get }
     
     /**
-     * Data group for the test user. (optional)
+     Data group for the test user. (optional)
      */
     var testUserDataGroup: String? { get }
     
     /**
-     * Mapping of schema identifier and associated info for creating an archive
+     Mapping of schema identifier and associated info for creating an archive
      */
     var schemaMap: [NSDictionary]? { get }
     
     /**
-     * Mapping of task identifier and associated info for creating a task
+     Mapping of task identifier and associated info for creating a task
      */
     var taskMap: [NSDictionary]? { get }
     
     /**
-     * Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
+     Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
      */
     var certificateName: String? { get }
     
     /**
-     * URL for the news feed for this app.
+     URL for the news feed for this app.
      */
     var newsfeedURLString: String? { get }
 
     /**
-     * The Logo image to use for this app.
+     The Logo image to use for this app.
      */
     var logoImageName: String? { get }
     
     /**
-     * A custom url for launching an app update.
+     A custom url for launching an app update.
      */
     var appUpdateURLString: String? { get }
+    
+    /**
+     By default, check the user email for test data group assignment. If disabled, 
+     do not check for a text user.
+    */
+    var disableTestUserCheck: Bool { get }
 }
 
-public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
+/**
+ This is an implementation of the SBABridgeInfo protocol that uses a dictionary to 
+ define the values required by the BridgeInfo protocol.
+ */
+public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
-    public var studyIdentifier: String!
+    public var studyIdentifier: String {
+        return _studyIdentifier
+    }
+    private let _studyIdentifier: String
+    
     public var cacheDaysAhead: Int = 0
     public var cacheDaysBehind: Int = 0
-    public var environment: SBBEnvironment = .Prod
+    public var environment: SBBEnvironment = .prod
     
-    var plist: NSDictionary!
+    private let plist: [String: Any]
 
     public convenience override init() {
-        let additionalInfo = SBAResourceFinder().plistNamed("BridgeInfo-private") as? [NSObject : AnyObject]
-        self.init(name: "BridgeInfo", additionalInfo: additionalInfo)!
+        var plist = SBAResourceFinder.shared.plist(forResource: "BridgeInfo")!
+        if let additionalInfo = SBAResourceFinder.shared.plist(forResource: "BridgeInfo-private") {
+            plist = plist.merge(from: additionalInfo)
+        }
+        let studyIdentifier = plist["studyIdentifier"] as! String
+        self.init(studyIdentifier: studyIdentifier, plist: plist)
     }
     
-    public init?(name: String, additionalInfo: [NSObject : AnyObject]? = nil) {
-        super.init()
-        guard let plist = SBAResourceFinder().plistNamed(name)?.mutableCopy() as? NSMutableDictionary else {
-            assertionFailure("\(name) plist file not found in the resource bundle")
-            return nil
-        }
-        if let additionalInfo = additionalInfo {
-            plist.addEntriesFromDictionary(additionalInfo)
-        }
-        guard let studyIdentifier = plist["studyIdentifier"] as? String else {
-            assertionFailure("\(name) plist file does not define the 'studyIdentifier'")
-            return nil
-        }
-        self.studyIdentifier = studyIdentifier
+    public init(studyIdentifier:String, plist: [String: Any]) {
         
+        // Set study identifier and plist pointers
+        self._studyIdentifier = studyIdentifier
+        self.plist = plist
+        super.init()
+        
+        // Setup cache days using either days ahead and behind or else using 
+        // default values for days ahead and behind
         let cacheDaysAhead = plist["cacheDaysAhead"] as? Int
         let cacheDaysBehind = plist["cacheDaysBehind"] as? Int
         if (cacheDaysAhead != nil) || (cacheDaysBehind != nil) {
             self.cacheDaysAhead = cacheDaysAhead ?? SBBDefaultCacheDaysAhead
             self.cacheDaysBehind = cacheDaysBehind ?? SBBDefaultCacheDaysBehind
         }
-        else if let useCache = plist["useCache"] as? Bool where useCache {
+        else if let useCache = plist["useCache"] as? Bool , useCache {
             // If this plist has the useCache key then set the ahead and behind to default
             self.cacheDaysAhead = SBBDefaultCacheDaysAhead
             self.cacheDaysBehind = SBBDefaultCacheDaysBehind
         }
-        
-        self.plist = plist
     }
     
     public var appStoreLinkURLString: String? {
@@ -191,34 +204,38 @@ public class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var appUpdateURLString: String? {
         return self.plist["appUpdateURLString"] as? String
     }
+    
+    public var disableTestUserCheck: Bool {
+        return self.plist["disableTestUserCheck"] as? Bool ?? false
+    }
 }
 
 extension SBABridgeInfo {
     
     public var emailFormatForLoginViaExternalId: String? {
-        guard let email = self.emailForLoginViaExternalId, let range = email.rangeOfString("@") else {
+        guard let email = self.emailForLoginViaExternalId, let range = email.range(of: "@") else {
             return nil
         }
-        return email.stringByReplacingCharactersInRange(range, withString: "+%@@")
+        return email.replacingCharacters(in: range, with: "+%@@")
     }
     
-    public var appStoreLinkURL: NSURL! {
+    public var appStoreLinkURL: URL! {
         guard let appStoreLinkURLString = self.appStoreLinkURLString,
-            let url = NSURL(string: appStoreLinkURLString) else {
-                return NSBundle.mainBundle().appStoreLinkURL()
+            let url = URL(string: appStoreLinkURLString) else {
+                return Bundle.main.appStoreLinkURL()
         }
         return url
     }
         
-    public func schemaReferenceWithIdentifier(schemaIdentifier: String) -> SBASchemaReference? {
-        return self.schemaMap?.findObject({ $0.schemaIdentifier == schemaIdentifier})
+    public func schemaReferenceWithIdentifier(_ schemaIdentifier: String) -> SBASchemaReference? {
+        return self.schemaMap?.find({ $0.schemaIdentifier == schemaIdentifier})
     }
     
-    public func taskReferenceWithIdentifier(taskIdentifier: String) -> SBATaskReference? {
-        return self.taskMap?.findObject({ $0.taskIdentifier == taskIdentifier})
+    public func taskReferenceWithIdentifier(_ taskIdentifier: String) -> SBATaskReference? {
+        return self.taskMap?.find({ $0.taskIdentifier == taskIdentifier})
     }
     
-    public func taskReferenceForSchedule(schedule: SBBScheduledActivity) -> SBATaskReference? {
+    public func taskReferenceForSchedule(_ schedule: SBBScheduledActivity) -> SBATaskReference? {
         if let taskId = schedule.taskIdentifier {
             return taskReferenceWithIdentifier(taskId)
         }
@@ -227,9 +244,9 @@ extension SBABridgeInfo {
         }
     }
     
-    public var newsfeedURL: NSURL? {
+    public var newsfeedURL: URL? {
         guard let urlString = newsfeedURLString else { return nil }
-        return NSURL(string: urlString)
+        return URL(string: urlString)
     }
     
     public var logoImage: UIImage? {
@@ -237,9 +254,9 @@ extension SBABridgeInfo {
         return UIImage(named: imageName)
     }
     
-    public var appUpdateURL: NSURL {
-        guard let urlString = appUpdateURLString, let url =  NSURL(string: urlString) else {
-            return NSBundle.mainBundle().appStoreLinkURL()
+    public var appUpdateURL: URL {
+        guard let urlString = appUpdateURLString, let url =  URL(string: urlString) else {
+            return Bundle.main.appStoreLinkURL()
         }
         return url
     }

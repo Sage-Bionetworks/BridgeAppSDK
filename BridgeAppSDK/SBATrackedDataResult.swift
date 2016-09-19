@@ -33,9 +33,9 @@
 
 import UIKit
 
-public class SBATrackedDataSelectionResult: ORKQuestionResult {
+open class SBATrackedDataSelectionResult: ORKQuestionResult {
     
-    public var selectedItems: [SBATrackedDataObject]?
+    open var selectedItems: [SBATrackedDataObject]?
     
     override init() {
         super.init()
@@ -43,25 +43,25 @@ public class SBATrackedDataSelectionResult: ORKQuestionResult {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
-        self.questionType = .MultipleChoice
+        self.questionType = .multipleChoice
     }
     
     // MARK: NSCoding
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.selectedItems = aDecoder.decodeObjectForKey("selectedItems") as? [SBATrackedDataObject]
+        self.selectedItems = aDecoder.decodeObject(forKey: "selectedItems") as? [SBATrackedDataObject]
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(self.selectedItems, forKey: "selectedItems")
+    override open func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(self.selectedItems, forKey: "selectedItems")
     }
     
     // MARK: NSCopying
     
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone)
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
         guard let result = copy as? SBATrackedDataSelectionResult else { return copy }
         result.selectedItems = self.selectedItems
         return result
@@ -69,12 +69,12 @@ public class SBATrackedDataSelectionResult: ORKQuestionResult {
     
     // MARK: Equality
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    open override func isEqual(_ object: Any?) -> Bool {
         guard super.isEqual(object), let obj = object as? SBATrackedDataSelectionResult else { return false }
         return SBAObjectEquality(self.selectedItems, obj.selectedItems)
     }
     
-    override public var hash: Int {
+    override open var hash: Int {
         return super.hash ^ SBAObjectHash(self.selectedItems)
     }
 
@@ -84,9 +84,9 @@ extension SBATrackedDataSelectionResult {
     
     public override func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         // Always return a non-nil result for items
-        let selectedItems: NSArray? = self.selectedItems
+        let selectedItems: NSArray? = self.selectedItems as NSArray?
         let value = selectedItems?.jsonObject() ?? []
-        return AnswerKeyAndValue(key: "items", value: value, questionType: .MultipleChoice)
+        return AnswerKeyAndValue(key: "items", value: value as AnyObject, questionType: .multipleChoice)
     }
     
 }
