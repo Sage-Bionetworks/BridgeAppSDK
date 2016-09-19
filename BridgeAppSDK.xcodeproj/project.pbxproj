@@ -143,6 +143,7 @@
 		FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */; };
 		FF80920F1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */; };
 		FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */; };
+		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
 		FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */; };
 		FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997781D0B585600B26051 /* MockBridgeInfo.m */; };
 		FF8997931D0B589500B26051 /* MockUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997921D0B589500B26051 /* MockUser.m */; };
@@ -503,6 +504,7 @@
 		FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBARegistrationStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKAnswerFormat+KeyboardUtilities.swift"; sourceTree = "<group>"; };
 		FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADirectNavigationRule.swift; sourceTree = "<group>"; };
+		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF8997581D0B3B9800B26051 /* MockAppInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockAppInfoDelegate.h; sourceTree = "<group>"; };
 		FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockAppInfoDelegate.m; sourceTree = "<group>"; };
 		FF8997771D0B585600B26051 /* MockBridgeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockBridgeInfo.h; sourceTree = "<group>"; };
@@ -579,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
+				FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -751,6 +754,7 @@
 		803221DE1CE64207001D5281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF84AB651D90A7D900ABD54C /* HealthKit.framework */,
 				FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */,
 				FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */,
 				FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */,
@@ -1323,9 +1327,16 @@
 				TargetAttributes = {
 					161479BF1BD6CE8F0099A068 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 4B822CZK9N;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
 							com.apple.HealthKit = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 						};
@@ -2081,6 +2092,7 @@
 				CODE_SIGN_ENTITLEMENTS = BridgeAppSDKSample/BridgeAppSDKSample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2101,6 +2113,7 @@
 				CODE_SIGN_ENTITLEMENTS = BridgeAppSDKSample/BridgeAppSDKSample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
