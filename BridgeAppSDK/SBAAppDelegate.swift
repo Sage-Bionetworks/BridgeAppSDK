@@ -59,7 +59,7 @@ public protocol SBAAppInfoDelegate: class {
     
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
-        
+
         self.initializeBridgeServerConnection()
         
         // Set the window tint color if applicable
@@ -154,6 +154,12 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     private func initializeBridgeServerConnection() {
+        
+        // Clearout the keychain if needed. 
+        // WARNING: This will force login
+        currentUser.resetUserKeychainIfNeeded()
+        
+        
         // These two lines actually, you know, set up BridgeSDK
         BridgeSDK.setup(withStudy: bridgeInfo.studyIdentifier,
                                  cacheDaysAhead: bridgeInfo.cacheDaysAhead,

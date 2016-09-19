@@ -65,6 +65,14 @@ extension SBBUserDataSharingScope {
 public extension SBAUserWrapper {
     
     /**
+     Logout the current user
+    */
+    public func logout() {
+        resetStoredUserData()
+        // TODO: syoung 09/19/2016 clear the user cache
+    }
+    
+    /**
      * Returns whether or not the data group is contained in the user's data groups
      */
     public func containsDataGroup(_ dataGroup: String) -> Bool {

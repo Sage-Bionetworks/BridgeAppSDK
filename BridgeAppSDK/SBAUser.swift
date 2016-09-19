@@ -43,8 +43,8 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue", attributes: [])
 
-    public func logout() {
-        lockQueue.async {
+    public func resetStoredUserData() {
+        lockQueue.sync {
             self.resetUserDefaults()
             self.resetKeychain()
         }
@@ -163,7 +163,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
             var err: NSError?
             obj = ORKKeychainWrapper.object(forKey: key, error: &err)
             if let error = err {
-                print("Error accessing keychain: \(error)")
+                print("Error accessing keychain \(key): \(error.code) \(error)")
             }
         }
         return obj
