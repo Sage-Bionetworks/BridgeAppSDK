@@ -33,6 +33,7 @@
 
 import ResearchKit
 
+@objc
 open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
     
     /**

@@ -33,24 +33,34 @@
 
 import ResearchKit
 
+/**
+ The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
+ shown in the `ORKIntructionStepViewController` and subclasses.
+ */
+@objc
 open class SBALearnMoreAction: SBADataObject {
     
-    let learnMoreButtonTextKey = "learnMoreButtonText"
     open dynamic var learnMoreButtonText: String?
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys() + [learnMoreButtonTextKey]
+        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
     }
     
-    open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+    @objc(learnMoreActionForStep:taskViewController:)
+    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
         assertionFailure("Abstract method")
     }
     
 }
 
-open class SBAURLLearnMoreAction: SBALearnMoreAction {
+/**
+ The `SBAURLLearnMoreAction` class is used to define a URL that can be displayed when the user taps the 
+ `learnMore` button.
+ */
+@objc
+public final class SBAURLLearnMoreAction: SBALearnMoreAction {
     
-    open var learnMoreURL: URL! {
+    public var learnMoreURL: URL! {
         get {
             if (_learnMoreURL == nil) {
                 if let url = URL(string: identifier) {
@@ -68,7 +78,7 @@ open class SBAURLLearnMoreAction: SBALearnMoreAction {
     }
     fileprivate var _learnMoreURL: URL!
 
-    override open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
         let vc = SBAWebViewController(nibName: nil, bundle: nil)
         vc.url = learnMoreURL
         vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(vc.dismissViewController))
@@ -77,33 +87,41 @@ open class SBAURLLearnMoreAction: SBALearnMoreAction {
     }
 }
 
-open class SBAPopUpLearnMoreAction: SBALearnMoreAction {
+/**
+ The `SBAPopUpLearnMoreAction` class is used to define text that is displayed in a pop-up alert when the user
+ taps the `learnMore` button.
+ */
+@objc
+public final class SBAPopUpLearnMoreAction: SBALearnMoreAction {
     
-    let learnMoreTextKey = "learnMoreText"
-    open dynamic var learnMoreText: String!
+    public dynamic var learnMoreText: String!
     
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys() + [learnMoreTextKey]
+    override public func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreText))
     }
     
-    open override func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
         taskViewController.showAlertWithOk(nil, message: learnMoreText, actionHandler: nil)
     }
     
 }
 
-open class SBASkipAction: SBALearnMoreAction {
+/**
+ The `SBASkipAction` class is used to skip an active task that is included as a subtask of an activity.
+ */
+@objc
+public final class SBASkipAction: SBALearnMoreAction {
     
-    override open var learnMoreButtonText: String? {
+    override public var learnMoreButtonText: String? {
         get {
             return super.learnMoreButtonText ?? Localization.localizedString("SBA_SKIP_STEP")
         }
-        set(newValue) {
+        set {
             super.learnMoreButtonText = newValue
         }
     }
     
-    override open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
         // Set the next step identifier
         step.nextStepIdentifier = self.identifier
         

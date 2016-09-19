@@ -352,33 +352,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         taskViewController.dismiss(animated: true) {}
     }
-
-    open func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
-        if let learnMoreStep = step as? SBAInstructionStep , learnMoreStep.learnMoreAction != nil {
-            return true
-        }
-        return false
-    }
-    
-    open func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
-        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
-            let learnMore = learnMoreStep.learnMoreAction else {
-                return
-        }
-        learnMore.learnMoreAction(learnMoreStep, taskViewController: taskViewController)
-    }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
-        // If this is a learn more step then set the button title
-        if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
-            let learnMore = learnMoreStep.learnMoreAction {
-            stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
-        }
-        
         // If cancel is disabled then hide on all but the first step
-        if let step = stepViewController.step
-            , shouldHideCancel(for: step, taskViewController: taskViewController) {
+        if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
             stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         }
     }

@@ -40,5 +40,19 @@ extension Array where Element: Equatable {
         return self.next({ (match == $0)
         })
     }
+}
 
+extension Array {
+    
+    public func appending(_ newElement: Element) -> [Element] {
+        var array = self
+        array.append(newElement)
+        return array
+    }
+    
+    public func appending(contentsOf contents: [Element]) -> [Element] {
+        var array = self
+        array.append(contentsOf: contents)
+        return array
+    }
 }

@@ -37,7 +37,7 @@ protocol SBATaskViewControllerStrongReference: class, NSSecureCoding {
     func attachTaskViewController(_ taskViewController: SBATaskViewController)
 }
 
-open class SBATaskViewController: ORKTaskViewController {
+open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDelegate {
     
     /**
      * A strongly held reference to a delegate or result source that is used by the
@@ -90,18 +90,26 @@ open class SBATaskViewController: ORKTaskViewController {
         super.stepViewControllerWillAppear(stepViewController)
         guard let step = stepViewController.step else { return }
         
+        // If this is a learn more step then set the button title
+        if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
+            let learnMore = learnMoreStep.learnMoreAction {
+            stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
+        }
+        
+        // If this is a completion step then change the tint color to green
         let isCompletionStep: Bool = {
             if let directStep = step as? SBAInstructionStep {
                 return directStep.isCompletionStep
             }
             return step is ORKCompletionStep
         }()
-
         if isCompletionStep {
             _finishedOn = Date()
             stepViewController.view.tintColor = UIColor.greenTintColor()
         }
-        else if step is ORKAudioStep {
+        
+        // If this is an audio step then change the tint color to blue
+        if step is ORKAudioStep {
             stepViewController.view.tintColor = UIColor.blueTintColor()
         }
     }
@@ -129,5 +137,79 @@ open class SBATaskViewController: ORKTaskViewController {
         super.encode(with: aCoder)
         aCoder.encode(self.scheduledActivityGUID, forKey: "scheduledActivityGUID")
         aCoder.encode(self.strongReference, forKey: "strongReference")
+    }
+    
+    // MARK: ORKTaskViewControllerDelegate
+    
+    // syoung 09/19/2016 Override the delegate so that this task view controller can catch the learn more
+    // action and respond to it. This allows implementation of learn more (which is restricted by ResearchKit)
+    // while still allowing a delegate pattern for implementation of other functionality.
+    private var _internalDelegate: ORKTaskViewControllerDelegate?
+    override open var delegate: ORKTaskViewControllerDelegate? {
+        get {
+            return self
+        }
+        set {
+            _internalDelegate = newValue
+        }
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        _internalDelegate?.taskViewController(taskViewController, didFinishWith: reason, error: error)
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
+        _internalDelegate?.taskViewController?(taskViewController, recorder: recorder, didFailWithError: error)
+    }
+    
+    public func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController) -> Bool {
+        return _internalDelegate?.taskViewControllerSupportsSaveAndRestore?(taskViewController) ?? false
+    }
+    
+    public func taskViewControllerShouldConfirmCancel(_ taskViewController: ORKTaskViewController) -> Bool {
+        return _internalDelegate?.taskViewControllerShouldConfirmCancel?(taskViewController) ?? true
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
+        if let hasLearnMore = _internalDelegate?.taskViewController?(taskViewController, hasLearnMoreFor: step), hasLearnMore {
+            // If the delegate has a learn more for this step then fallback to that
+            return true
+        }
+        else if let learnMoreStep = step as? SBAInstructionStep, learnMoreStep.learnMoreAction != nil {
+            return true
+        }
+        return false
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
+        // Call internal delegate method
+        _internalDelegate?.taskViewController?(taskViewController, learnMoreForStep: stepViewController)
+        
+        // If there is a learnmore action, then call it
+        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
+            let learnMore = learnMoreStep.learnMoreAction else {
+                return
+        }
+        learnMore.learnMoreAction(for: learnMoreStep, with: taskViewController)
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
+        return _internalDelegate?.taskViewController?(taskViewController, viewControllerFor: step)
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, shouldPresent step: ORKStep) -> Bool {
+        return _internalDelegate?.taskViewController?(taskViewController, shouldPresent: step) ?? true
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillAppear: stepViewController)
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+        _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillDisappear: stepViewController, navigationDirection: direction)
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+        _internalDelegate?.taskViewController?(taskViewController, didChange: result)
     }
 }
