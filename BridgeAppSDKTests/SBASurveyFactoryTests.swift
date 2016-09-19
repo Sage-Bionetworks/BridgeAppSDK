@@ -1433,7 +1433,8 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        // a step size of 37 is not divisible by 100 so is invalid
+        // a step size of 37 is not divisible by 100 so is invalid as an integer
+        // scale with discrete steps.
         guard let surveyStep = step as? SBASurveyQuestionStep,
             let formItem = surveyStep.formItems?.first,
             let _ = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
