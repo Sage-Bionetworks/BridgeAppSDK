@@ -34,7 +34,7 @@
 import ResearchKit
 
 open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
-    
+
     lazy open var permissionsManager: SBAPermissionsManager = {
         return SBAPermissionsManager.shared()
     }()
@@ -61,7 +61,7 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     convenience init?(inputItem: SBASurveyItem) {
         guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
         self.init(identifier: inputItem.identifier)
-        survey.mapStepValues(self)
+        survey.mapStepValues(with: self)
         commonInit()
         // Set the permissions if they can be mapped
         self.permissions = survey.items?.reduce(SBAPermissionsType(), { (input, item) -> SBAPermissionsType in
@@ -98,7 +98,7 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     
     // MARK: SBANavigationSkipRule
     
-    open func shouldSkip(_ result: ORKTaskResult, additionalTaskResults: [ORKTaskResult]?) -> Bool {
+    open func shouldSkipStep(with result: ORKTaskResult, and additionalTaskResults: [ORKTaskResult]?) -> Bool {
         return allPermissionsAuthorized()
     }
     

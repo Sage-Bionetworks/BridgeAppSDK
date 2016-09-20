@@ -84,7 +84,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         return (task, include)
     }
     
-    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         let (retTask, retInclude) = transformToTaskAndIncludes(factory, isLastStep: isLastStep)
         guard let task = retTask, let include = retInclude else { return nil }
         
@@ -100,7 +100,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     // MARK: SBAConditionalRule
     
-    public func shouldSkipStep(_ step: ORKStep?, result: ORKTaskResult) -> Bool {
+    public func shouldSkip(step: ORKStep?, with result: ORKTaskResult) -> Bool {
 
         // Check if this step is a tracked step. If the tracked step is nil then should *not* skip the step
         guard let trackedStep = step as? SBATrackedNavigationStep else { return false }
@@ -110,7 +110,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         return trackedStep.shouldSkipStep
     }
     
-    public func nextStep(_ previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep? {
+    public func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
         if let selectionStep = previousStep as? SBATrackedSelectionStep,
             let stepResult = result.stepResult(forStepIdentifier: selectionStep.identifier),

@@ -89,7 +89,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         }
     }
     
-    override public init(identifier: String) {
+    public override init(identifier: String) {
         super.init(identifier: identifier)
     }
     
@@ -144,18 +144,18 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.nextStepIdentifier = aDecoder.decodeObject(forKey: "nextStepIdentifier") as? String
-        self.learnMoreAction = aDecoder.decodeObject(forKey: "learnMoreAction") as? SBALearnMoreAction
-        self.customTypeIdentifier = aDecoder.decodeObject(forKey: "customTypeIdentifier") as? String
-        self.isCompletionStep = aDecoder.decodeBool(forKey: "isCompletionStep")
+        self.nextStepIdentifier = aDecoder.decodeObject(forKey: #keyPath(nextStepIdentifier)) as? String
+        self.learnMoreAction = aDecoder.decodeObject(forKey: #keyPath(learnMoreAction)) as? SBALearnMoreAction
+        self.customTypeIdentifier = aDecoder.decodeObject(forKey: #keyPath(customTypeIdentifier)) as? String
+        self.isCompletionStep = aDecoder.decodeBool(forKey: #keyPath(isCompletionStep))
     }
     
     override open func encode(with aCoder: NSCoder){
         super.encode(with: aCoder)
-        aCoder.encode(self.nextStepIdentifier, forKey: "nextStepIdentifier")
-        aCoder.encode(self.learnMoreAction, forKey: "learnMoreAction")
-        aCoder.encode(self.customTypeIdentifier, forKey: "customTypeIdentifier")
-        aCoder.encode(self.isCompletionStep, forKey: "isCompletionStep")
+        aCoder.encode(self.nextStepIdentifier, forKey: #keyPath(nextStepIdentifier))
+        aCoder.encode(self.learnMoreAction, forKey: #keyPath(learnMoreAction))
+        aCoder.encode(self.customTypeIdentifier, forKey: #keyPath(customTypeIdentifier))
+        aCoder.encode(self.isCompletionStep, forKey: #keyPath(isCompletionStep))
     }
     
     // MARK: Equality

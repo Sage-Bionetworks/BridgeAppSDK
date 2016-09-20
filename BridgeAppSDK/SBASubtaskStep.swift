@@ -61,20 +61,20 @@ open class SBASubtaskStep: ORKStep {
         super.init(identifier: subtask.identifier);
     }
     
-    func substepIdentifier(_ identifier: String) -> String? {
+    fileprivate func substepIdentifier(_ identifier: String) -> String? {
         guard let range = identifier.range(of: "\(self.subtask.identifier).") else { return nil }
         let stepRange = range.upperBound ..< identifier.endIndex
         let stepIdentifier = identifier.substring(with: stepRange)
         return stepIdentifier
     }
     
-    func replacementStep(_ step: ORKStep?) -> ORKStep? {
+    fileprivate func replacementStep(_ step: ORKStep?) -> ORKStep? {
         guard let step = step else { return nil }
         let stepIdentifier = "\(self.subtask.identifier).\(step.identifier)"
         return step.copy(withIdentifier: stepIdentifier)
     }
     
-    func filteredTaskResult(_ inputResult: ORKTaskResult) -> ORKTaskResult {
+    fileprivate func filteredTaskResult(_ inputResult: ORKTaskResult) -> ORKTaskResult {
         // create a mutated copy of the results that includes only the subtask results
         let subtaskResult: ORKTaskResult = inputResult.copy() as! ORKTaskResult
         if let stepResults = subtaskResult.results as? [ORKStepResult] {
@@ -84,7 +84,7 @@ open class SBASubtaskStep: ORKStep {
         return subtaskResult;
     }
     
-    func filteredStepResults(_ inputResults: [ORKStepResult]) -> (subtaskResults:[ORKStepResult], remainingResults:[ORKStepResult]) {
+    internal func filteredStepResults(_ inputResults: [ORKStepResult]) -> (subtaskResults:[ORKStepResult], remainingResults:[ORKStepResult]) {
         let prefix = "\(self.subtask.identifier)."
         let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
         var subtaskResults:[ORKStepResult] = []
@@ -108,7 +108,7 @@ open class SBASubtaskStep: ORKStep {
         return (subtaskResults, remainingResults)
     }
     
-    func step(withIdentifier identifier: String) -> ORKStep? {
+    internal func step(withIdentifier identifier: String) -> ORKStep? {
         guard let stepIdentifier = substepIdentifier(identifier),
             let step = self.subtask.step?(withIdentifier: stepIdentifier) else {
                 return nil
@@ -116,7 +116,7 @@ open class SBASubtaskStep: ORKStep {
         return replacementStep(step)
     }
     
-    func stepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    internal func stepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
         guard let step = step else {
             return replacementStep(self.subtask.step(after: nil, with: result))
         }
@@ -148,7 +148,8 @@ open class SBASubtaskStep: ORKStep {
     
     // MARK: NSCopy
     
-    open func copyWithTask(_ subtask: ORKTask & NSCopying & NSSecureCoding) -> SBASubtaskStep {
+    @objc(copyWithSubtask:)
+    open func copy(with subtask: ORKTask & NSCopying & NSSecureCoding) -> SBASubtaskStep {
         let copy = self.copy() as! SBASubtaskStep
         copy._subtask = subtask
         return copy
@@ -165,17 +166,17 @@ open class SBASubtaskStep: ORKStep {
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        _subtask = aDecoder.decodeObject(forKey: "subtask") as! ORKTask & NSCopying & NSSecureCoding
-        taskIdentifier = aDecoder.decodeObject(forKey: "taskIdentifier") as? String
-        schemaIdentifier = aDecoder.decodeObject(forKey: "schemaIdentifier") as? String
+        _subtask = aDecoder.decodeObject(forKey: #keyPath(subtask)) as! ORKTask & NSCopying & NSSecureCoding
+        taskIdentifier = aDecoder.decodeObject(forKey: #keyPath(taskIdentifier)) as? String
+        schemaIdentifier = aDecoder.decodeObject(forKey: #keyPath(schemaIdentifier)) as? String
         super.init(coder: aDecoder);
     }
     
     override open func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-        aCoder.encode(_subtask, forKey: "subtask")
-        aCoder.encode(taskIdentifier, forKey: "taskIdentifier")
-        aCoder.encode(schemaIdentifier, forKey: "schemaIdentifier")
+        aCoder.encode(_subtask, forKey: #keyPath(subtask))
+        aCoder.encode(taskIdentifier, forKey: #keyPath(taskIdentifier))
+        aCoder.encode(schemaIdentifier, forKey: #keyPath(schemaIdentifier))
     }
     
     // MARK: Equality

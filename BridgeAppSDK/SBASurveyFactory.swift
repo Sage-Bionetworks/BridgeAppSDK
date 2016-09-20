@@ -161,12 +161,12 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
             
         case .subtask:
             if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createSubtaskStep(self)
+                return form.createSubtaskStep(with: self)
             } else { break }
             
         case .form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createFormStep(isSubtaskStep)
+                return form.createFormStep(isSubtaskStep: isSubtaskStep)
             } else { break }
             
         case .account(let subtype):
@@ -185,7 +185,7 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
         return createSurveyStepWithCustomType(inputItem)
     }
     
-    func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
+    fileprivate func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
         switch (subtype) {
         case .registration:
             return SBARegistrationStep(inputItem: inputItem)
@@ -212,7 +212,7 @@ extension SBAInstructionStepSurveyItem {
 
 extension SBAFormStepSurveyItem {
     
-    func createSubtaskStep(_ factory:SBASurveyFactory) -> SBASubtaskStep {
+    func createSubtaskStep(with factory:SBASurveyFactory) -> SBASubtaskStep {
         assert((self.items?.count ?? 0) > 0, "A subtask step requires items")
         let steps = self.items?.mapAndFilter({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
         let step = self.usesNavigation() ?
@@ -221,7 +221,7 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-    func createFormStep(_ isSubtaskStep: Bool) -> ORKStep {
+    func createFormStep(isSubtaskStep: Bool) -> ORKStep {
         
         // Factory method for determining the proper type of form-style step to return
         // the ORKQuestionStep and ORKFormStep have a different UI presentation
@@ -233,30 +233,30 @@ extension SBAFormStepSurveyItem {
             // Otherwise, use a form step
             ORKFormStep(identifier: self.identifier)
         
-        buildFormItems(step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep)
-        mapStepValues(step)
+        buildFormItems(with: step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep)
+        mapStepValues(with: step)
         return step
     }
     
-    func mapStepValues(_ step: ORKStep) {
+    func mapStepValues(with step: ORKStep) {
         step.title = self.stepTitle?.trim()
         step.text = self.stepText?.trim()
         step.isOptional = self.optional
     }
     
-    func buildFormItems(_ step: SBAFormProtocol, isSubtaskStep: Bool) {
+    func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool) {
         if case SBASurveyItemType.form(.compound) = self.surveyItemType {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
-                return formItem.createFormItem(formItem.stepText)
+                return formItem.createFormItem(text: formItem.stepText)
             })
         }
         else {
-            step.formItems = [self.createFormItem(nil)]
+            step.formItems = [self.createFormItem(text: nil)]
         }
     }
     
-    func createFormItem(_ text: String?) -> ORKFormItem {
+    func createFormItem(text: String?) -> ORKFormItem {
         let answerFormat = self.createAnswerFormat()
         if let rulePredicate = self.rulePredicate {
             // If there is a rule predicate then return a survey form item
@@ -278,7 +278,7 @@ extension SBAFormStepSurveyItem {
         case .text:
             return ORKTextAnswerFormat()
         case .singleChoice, .multipleChoice:
-            guard let textChoices = self.items?.map({createTextChoice($0)}) else { return nil }
+            guard let textChoices = self.items?.map({createTextChoice(from: $0)}) else { return nil }
             let style: ORKChoiceAnswerStyle = (subtype == .singleChoice) ? .singleChoice : .multipleChoice
             return ORKTextChoiceAnswerFormat(style: style, textChoices: textChoices)
         case .date, .dateTime:
@@ -294,7 +294,7 @@ extension SBAFormStepSurveyItem {
                 assertionFailure("\(subtype) requires a valid number range")
                 return nil
             }
-            return range.createAnswerFormat(subtype)
+            return range.createAnswerFormat(with: subtype)
         case .timingRange:
             guard let textChoices = self.items?.mapAndFilter({ (obj) -> ORKTextChoice? in
                 guard let item = obj as? SBANumberRange else { return nil }
@@ -309,7 +309,7 @@ extension SBAFormStepSurveyItem {
         }
     }
     
-    func createTextChoice(_ obj: Any) -> ORKTextChoice {
+    func createTextChoice(from obj: Any) -> ORKTextChoice {
         guard let textChoice = obj as? SBATextChoice else {
             assertionFailure("Passing object \(obj) does not match expected protocol SBATextChoice")
             return ORKTextChoice(text: "", detailText: nil, value: NSNull(), exclusive: false)
@@ -334,7 +334,7 @@ extension SBAFormStepSurveyItem {
 
 extension SBANumberRange {
     
-    func createAnswerFormat(_ subtype: SBASurveyItemType.FormSubtype) -> ORKAnswerFormat {
+    func createAnswerFormat(with subtype: SBASurveyItemType.FormSubtype) -> ORKAnswerFormat {
         
         if (subtype == .scale) && self.stepInterval >= 1,
             // If this is a scale subtype then check that the max, min and step interval are valid
@@ -369,7 +369,7 @@ extension SBANumberRange {
         // Note: in all cases, the value is returned in English so that the localized 
         // values will result in the same answer in any table. It is up to the researcher to translate.
         if let maxNum = self.maxNumber?.intValue,
-            let max = dateComponents(maxNum, calendarUnit: calendarUnit),
+            let max = dateComponents(value: maxNum, calendarUnit: calendarUnit),
             let maxString = formatter.string(from: max) {
             
             if let minNum = self.minNumber?.intValue {
@@ -383,7 +383,7 @@ extension SBANumberRange {
             }
         }
         else if let minNum = self.minNumber?.intValue,
-            let min = dateComponents(minNum, calendarUnit: calendarUnit),
+            let min = dateComponents(value: minNum, calendarUnit: calendarUnit),
             let minString = formatter.string(from: min) {
             
             let text = Localization.localizedStringWithFormatKey("SBA_MORE_THAN_%@_AGO", minString)
@@ -414,7 +414,7 @@ extension SBANumberRange {
         }
     }
     
-    func dateComponents(_ value: Int, calendarUnit: NSCalendar.Unit) -> DateComponents? {
+    func dateComponents(value: Int, calendarUnit: NSCalendar.Unit) -> DateComponents? {
         var components = DateComponents()
         switch(calendarUnit) {
         case NSCalendar.Unit.year:

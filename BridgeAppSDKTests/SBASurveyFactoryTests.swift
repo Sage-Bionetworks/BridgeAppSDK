@@ -557,13 +557,13 @@ class SBASurveyFactoryTests: XCTestCase {
         let taskResult = ORKTaskResult(identifier: "task")
         taskResult.results = [stepResult]
         
-        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
         
         questionResult.booleanAnswer = false
-        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
         
         questionResult.booleanAnswer = true
-        XCTAssertNil(surveyStep.nextStepIdentifier(taskResult, additionalTaskResults: nil))
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
     }
     
     // MARK: MultiValueConstraints

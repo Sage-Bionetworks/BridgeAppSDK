@@ -38,14 +38,14 @@ import ResearchKit
  Currently defined usage is to allow the SBANavigableOrderedTask to check if a step has a navigation rule.
  */
 public protocol SBANavigationRule: class, NSSecureCoding {
-    func nextStepIdentifier(_ result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String?
+    func nextStepIdentifier(with result: ORKTaskResult, and additionalTaskResults:[ORKTaskResult]?) -> String?
 }
 
 /**
  A navigation skip rule applies to this step to allow that step to be skipped.
  */
 public protocol SBANavigationSkipRule: class, NSSecureCoding {
-    func shouldSkip(_ result: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> Bool
+    func shouldSkipStep(with result: ORKTaskResult, and additionalTaskResults:[ORKTaskResult]?) -> Bool
 }
 
 /**
@@ -53,8 +53,8 @@ public protocol SBANavigationSkipRule: class, NSSecureCoding {
  step should be displayed.
  */
 public protocol SBAConditionalRule: class, NSSecureCoding {
-    func shouldSkipStep(_ step: ORKStep?, result: ORKTaskResult) -> Bool
-    func nextStep(_ previousStep: ORKStep?, nextStep: ORKStep?, result: ORKTaskResult) -> ORKStep?
+    func shouldSkip(step: ORKStep?, with result: ORKTaskResult) -> Bool
+    func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, with result: ORKTaskResult) -> ORKStep?
 }
 
 /**
@@ -88,11 +88,11 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         return subtaskStep
     }
     
-    fileprivate func superStepAfterStep(_ step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+    fileprivate func superStep(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
         // Check the conditional rule to see if it returns a next step for the given previous
         // step and return that with an early exit if applicable.
-        if let nextStep = self.conditionalRule?.nextStep(step, nextStep: nil, result: result) {
+        if let nextStep = self.conditionalRule?.nextStep(previousStep: step, nextStep: nil, with: result) {
             return nextStep
         }
         
@@ -103,7 +103,7 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         repeat {
         
             if let navigableStep = previousStep as? SBANavigationRule,
-                let nextStepIdentifier = navigableStep.nextStepIdentifier(result, additionalTaskResults:self.additionalTaskResults) {
+                let nextStepIdentifier = navigableStep.nextStepIdentifier(with: result, and:self.additionalTaskResults) {
                     // If this is a step that conforms to the SBANavigableStep protocol and
                     // the next step identifier is non-nil then get the next step by looking within
                     // the steps associated with this task
@@ -128,9 +128,9 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
             }
             
             // Check to see if this is a conditional step that *should* be skipped
-            shouldSkip = conditionalRule?.shouldSkipStep(returnStep, result: result) ?? false
+            shouldSkip = conditionalRule?.shouldSkip(step: returnStep, with: result) ?? false
             if !shouldSkip, let navigationSkipStep = returnStep as? SBANavigationSkipRule {
-                shouldSkip = navigationSkipStep.shouldSkip(result, additionalTaskResults:self.additionalTaskResults)
+                shouldSkip = navigationSkipStep.shouldSkipStep(with: result, and: self.additionalTaskResults)
             }
             if (shouldSkip) {
                 previousStep = returnStep
@@ -140,7 +140,7 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         
         // If there is a conditionalRule, then check to see if the step should be mutated or replaced
         if let conditionalRule = self.conditionalRule {
-            returnStep = conditionalRule.nextStep(nil, nextStep: returnStep, result: result)
+            returnStep = conditionalRule.nextStep(previousStep: nil, nextStep: returnStep, with: result)
         }
         
         return returnStep;
@@ -158,12 +158,12 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
             if (returnStep == nil) {
                 // If the subtask returns nil then it is at the last step
                 // Check super for more steps
-                returnStep = superStepAfterStep(subtaskStep, withResult: result)
+                returnStep = superStep(after: subtaskStep, with: result)
             }
         }
         else {
             // If this isn't a subtask step then look to super nav for the next step
-            returnStep = superStepAfterStep(step, withResult: result)
+            returnStep = superStep(after: step, with: result)
         }
         
         // Look for step in the ordered steps and lop off everything after this one

@@ -56,13 +56,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = false
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = true
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -75,13 +75,13 @@ class SBASurveyNavigationTests: XCTestCase {
         
         // If the question should skip if it passes then a FAILED result should drop through
         formStep.skipIfPassed = true
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should NOT skip if it passes then a FAILED result should return the
         // skip step identifier
         formStep.skipIfPassed = false
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -95,13 +95,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = false
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = true
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -114,13 +114,13 @@ class SBASurveyNavigationTests: XCTestCase {
         
         // If the question should skip if it passes then a FAILED result should drop through
         formStep.skipIfPassed = true
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should NOT skip if it passes then a FAILED result should return the
         // skip step identifier
         formStep.skipIfPassed = false
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -133,13 +133,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = false
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = true
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -151,13 +151,13 @@ class SBASurveyNavigationTests: XCTestCase {
         
         // If the question should skip if it passes then a FAILED result should drop through
         formStep.skipIfPassed = true
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should NOT skip if it passes then a FAILED result should return the
         // skip step identifier
         formStep.skipIfPassed = false
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -170,13 +170,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = false
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = true
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -189,13 +189,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = true
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = false
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -208,13 +208,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         formStep.skipIfPassed = true
-        let nextStepIdentifier1 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         formStep.skipIfPassed = false
-        let nextStepIdentifier2 = formStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = formStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -226,13 +226,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         subtaskStep.skipIfPassed = false
-        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         subtaskStep.skipIfPassed = true
-        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -244,13 +244,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         subtaskStep.skipIfPassed = true
-        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         subtaskStep.skipIfPassed = false
-        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
@@ -262,13 +262,13 @@ class SBASurveyNavigationTests: XCTestCase {
         // If the question should skip failed passed then the next step identifier is nil
         // which results in a navigation drop through
         subtaskStep.skipIfPassed = true
-        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNil(nextStepIdentifier1)
         
         // If the question should skip if it passes then the next step identifier should
         // be for the step to skip to
         subtaskStep.skipIfPassed = false
-        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(result, additionalTaskResults: nil)
+        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(with: result, and: nil)
         XCTAssertNotNil(nextStepIdentifier2)
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }

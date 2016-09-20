@@ -50,12 +50,12 @@ open class SBATrackedDataSelectionResult: ORKQuestionResult {
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.selectedItems = aDecoder.decodeObject(forKey: "selectedItems") as? [SBATrackedDataObject]
+        self.selectedItems = aDecoder.decodeObject(forKey: #keyPath(selectedItems)) as? [SBATrackedDataObject]
     }
     
     override open func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-        aCoder.encode(self.selectedItems, forKey: "selectedItems")
+        aCoder.encode(self.selectedItems, forKey: #keyPath(selectedItems))
     }
     
     // MARK: NSCopying

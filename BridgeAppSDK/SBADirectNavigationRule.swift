@@ -38,12 +38,16 @@ import Foundation
  * pointer to something other than the next step in the sequential order defined by
  * the ORKOrderedTask steps array. (see SBAQuizFactory for example usage)
  */
-public protocol SBADirectNavigationRule: SBANavigationRule {
+public protocol SBADirectNavigationRule: SBANavigationRule, SBADirectNavigationRuleUsingStepIdentifier {
+}
+
+@objc
+public protocol SBADirectNavigationRuleUsingStepIdentifier: class {
     var nextStepIdentifier: String? { get }
 }
 
 extension SBADirectNavigationRule {
-    public func nextStepIdentifier(_ taskResult: ORKTaskResult, additionalTaskResults:[ORKTaskResult]?) -> String? {
+    public func nextStepIdentifier(with taskResult: ORKTaskResult, and additionalTaskResults:[ORKTaskResult]?) -> String? {
         return self.nextStepIdentifier;
     }
 }

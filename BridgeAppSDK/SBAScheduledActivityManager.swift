@@ -407,7 +407,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     open func createTask(for schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
-        let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
+        let task = taskRef?.transformToTask(with: SBASurveyFactory(), isLastStep: true)
         if let surveyTask = task as? SBASurveyTask {
             surveyTask.title = schedule.activity.label
         }

@@ -37,7 +37,7 @@ import ResearchKit
 
 extension SBBSurveyReference : SBATaskReference {
     
-    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
+    public func transformToTask(with factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
         return SBASurveyTask(surveyReference: self, factory: factory)
     }
     

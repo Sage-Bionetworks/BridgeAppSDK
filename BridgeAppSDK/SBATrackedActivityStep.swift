@@ -56,8 +56,8 @@ extension SBATrackedActivitySurveyItem {
         // Create a base form step
         let baseStep = SBATrackedActivityFormStep(identifier: self.identifier)
         baseStep.textFormat = self.textFormat
-        self.mapStepValues(baseStep)
-        self.buildFormItems(baseStep, isSubtaskStep: false)
+        self.mapStepValues(with: baseStep)
+        self.buildFormItems(with: baseStep, isSubtaskStep: false)
         
         if (self.trackEach) {
             // If tracking each then need to create a step for each item that is tracked
@@ -141,6 +141,7 @@ open class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
 
 open class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
+    @objc
     fileprivate var selectedItemIdentifiers: [String] = []
     
     override init(identifier: String, steps: [ORKStep]?) {
@@ -201,12 +202,12 @@ open class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.selectedItemIdentifiers = aDecoder.decodeObject(forKey: "selectedItemIdentifiers") as? [String] ?? []
+        self.selectedItemIdentifiers = aDecoder.decodeObject(forKey: #keyPath(selectedItemIdentifiers)) as? [String] ?? []
     }
     
     override open func encode(with aCoder: NSCoder){
         super.encode(with: aCoder)
-        aCoder.encode(self.selectedItemIdentifiers, forKey: "selectedItemIdentifiers")
+        aCoder.encode(self.selectedItemIdentifiers, forKey: #keyPath(selectedItemIdentifiers))
     }
     
     // MARK: NSCopying

@@ -242,7 +242,7 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
     
     init(surveyItem: SBAFormStepSurveyItem, items:[SBATrackedDataObject]) {
         super.init(identifier: surveyItem.identifier)
-        surveyItem.mapStepValues(self)
+        surveyItem.mapStepValues(with: self)
 
         // choices
         var choices = items.map { (item) -> ORKTextChoice in
@@ -308,9 +308,9 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     
     init(surveyItem: SBAFormStepSurveyItem) {
         super.init(identifier: surveyItem.identifier)
-        surveyItem.mapStepValues(self)
+        surveyItem.mapStepValues(with: self)
         if let range = surveyItem as? SBANumberRange {
-            self.frequencyAnswerFormat = range.createAnswerFormat(.scale)
+            self.frequencyAnswerFormat = range.createAnswerFormat(with: .scale)
         }
     }
     
@@ -345,12 +345,12 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.frequencyAnswerFormat = aDecoder.decodeObject(forKey: "frequencyAnswerFormat") as? ORKAnswerFormat
+        self.frequencyAnswerFormat = aDecoder.decodeObject(forKey: #keyPath(frequencyAnswerFormat)) as? ORKAnswerFormat
     }
     
     override func encode(with aCoder: NSCoder){
         super.encode(with: aCoder)
-        aCoder.encode(self.frequencyAnswerFormat, forKey: "frequencyAnswerFormat")
+        aCoder.encode(self.frequencyAnswerFormat, forKey: #keyPath(frequencyAnswerFormat))
     }
     
     // MARK: NSCopying

@@ -34,7 +34,7 @@
 import ResearchKit
 
 public protocol SBATaskTransformable: class {
-    func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)?
+    func transformToTask(with factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)?
 }
 
 public protocol SBATaskReference: SBATaskTransformable {
@@ -57,7 +57,7 @@ public protocol SBABridgeTask: class {
 
 public extension SBABridgeTask {
     
-    public func createORKTask(_ factory: SBASurveyFactory = SBASurveyFactory()) -> (ORKTask & NSCopying & NSSecureCoding)? {
+    public func createORKTask(with factory: SBASurveyFactory = SBASurveyFactory()) -> (ORKTask & NSCopying & NSSecureCoding)? {
 
         guard let steps = transformTaskSteps(factory) else { return nil }
         
@@ -73,7 +73,7 @@ public extension SBABridgeTask {
         }
     }
     
-    func transformTaskSteps(_ factory: SBASurveyFactory) -> [ORKStep]? {
+    fileprivate func transformTaskSteps(_ factory: SBASurveyFactory) -> [ORKStep]? {
         let transformableSteps = self.taskSteps
         guard transformableSteps.count > 0 else { return nil }
         
@@ -82,7 +82,7 @@ public extension SBABridgeTask {
         
         // Map the step transformers to ORKSteps
         var subtaskSteps: [ORKStep] = transformableSteps.enumerated().mapAndFilter({ (index, item) in
-            let step = item.transformToStep(factory, isLastStep:(lastIndex == index))
+            let step = item.transformToStep(with: factory, isLastStep:(lastIndex == index))
             if let activeStep = step as? SBASubtaskStep,
                 let task = activeStep.subtask as? SBATaskExtension,
                 let firstStep = task.step(at: 0),
@@ -109,10 +109,10 @@ public extension SBABridgeTask {
         return subtaskSteps
     }
     
-    func addInsertSteps(_ subtaskSteps: [ORKStep], factory: SBASurveyFactory) -> [ORKStep] {
+    fileprivate func addInsertSteps(_ subtaskSteps: [ORKStep], factory: SBASurveyFactory) -> [ORKStep] {
         
         // Map the insert steps
-        guard let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(factory, isLastStep: false) })
+        guard let insertSteps = self.insertSteps?.mapAndFilter({ $0.transformToStep(with: factory, isLastStep: false) })
             , insertSteps.count > 0 else {
                 return subtaskSteps
         }
@@ -129,7 +129,7 @@ public extension SBABridgeTask {
             var mutatableSteps = orderedTask.steps
             introStep = mutatableSteps.removeFirst()
             let mutatedTask = orderedTask.copy(with: mutatableSteps)
-            let mutatedSubtaskStep = subtaskStep.copyWithTask(mutatedTask)
+            let mutatedSubtaskStep = subtaskStep.copy(with: mutatedTask)
             steps.insert(mutatedSubtaskStep, at: 0)
         }
         else {
