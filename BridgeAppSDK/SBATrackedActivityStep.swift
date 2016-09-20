@@ -62,7 +62,7 @@ extension SBATrackedActivitySurveyItem {
         if (self.trackEach) {
             // If tracking each then need to create a step for each item that is tracked
             let steps = items.mapAndFilter({ (item) -> SBATrackedActivityFormStep? in
-                guard item.tracking else { return nil }
+                guard item.isTracking else { return nil }
                 return baseStep.copy(withIdentifier: item.identifier)
             })
             return SBATrackedActivityPageStep(identifier: self.identifier, steps: steps)
@@ -96,7 +96,7 @@ open class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
     
     open func update(selectedItems:[SBATrackedDataObject]) {
         // filter out selected items that are not tracked
-        let trackedItems = selectedItems.filter({ $0.tracking })
+        let trackedItems = selectedItems.filter({ $0.isTracking })
         _shouldSkipStep = (trackedItems.count == 0)
         if let textFormat = self.textFormat , (trackedItems.count > 0) {
             let shortText = Localization.localizedJoin(textList: trackedItems.map({ $0.shortText}))
@@ -185,7 +185,7 @@ open class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     open func update(selectedItems:[SBATrackedDataObject]) {
     
         // filter out selected items that are not tracked
-        let trackedItems = selectedItems.filter({ $0.tracking })
+        let trackedItems = selectedItems.filter({ $0.isTracking })
         
         // update the selectedIdentifiers
         selectedItemIdentifiers = trackedItems.map({ $0.identifier })

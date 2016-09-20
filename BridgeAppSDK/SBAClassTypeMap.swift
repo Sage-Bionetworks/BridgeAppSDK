@@ -1,5 +1,5 @@
 //
-//  SBATrackedDataObject.m
+//  SBAClassTypeMap.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,23 +31,11 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBATrackedDataObject.h"
+import Foundation
 
-@implementation SBATrackedDataObject
+extension SBAClassTypeMap {
 
-- (NSString *)text {
-    return self.identifier;
+    public static var shared: SBAClassTypeMap {
+        return __shared()
+    }
 }
-
-- (NSString *)shortText {
-    return self.text;
-}
-
-// Add tracking and frequency to the dictionary keys
-- (NSArray<NSString *> *)dictionaryRepresentationKeys {
-    NSArray *additionalKeys = @[NSStringFromSelector(@selector(isTracking)),
-                                NSStringFromSelector(@selector(frequency))];
-    return [[super dictionaryRepresentationKeys] arrayByAddingObjectsFromArray:additionalKeys];
-}
-
-@end

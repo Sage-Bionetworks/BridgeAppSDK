@@ -244,7 +244,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")
         let messageFormat = Localization.localizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@")
         let message = String.localizedStringWithFormat(messageFormat, Localization.localizedAppName, Localization.buttonYes())
-        self.showAlertWithYesNo(title, message: message, actionHandler: loginHandler)
+        self.showAlertWithYesNo(title: title, message: message, actionHandler: loginHandler)
     }
     
     // MARK: Error handling

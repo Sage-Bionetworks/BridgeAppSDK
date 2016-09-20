@@ -77,7 +77,7 @@ extension SBAUserRegistrationController {
     func handleFailedValidation(_ reason: String? = nil) {
         let message = reason ?? failedValidationMessage
         self.hideLoadingView({ [weak self] in
-            self?.showAlertWithOk(self?.failedRegistrationTitle, message: message, actionHandler: nil)
+            self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
             })
     }
     

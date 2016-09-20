@@ -79,7 +79,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(duopa.brand, med.brand)
         XCTAssertEqual(duopa.detail, med.detail)
         XCTAssertEqual(duopa.frequency, med.frequency)
-        XCTAssertTrue(duopa.tracking)
+        XCTAssertTrue(duopa.isTracking)
         XCTAssertTrue(duopa.injection)
     }
     
@@ -116,14 +116,14 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(levodopa.name, "Levodopa");
         XCTAssertEqual(levodopa.text, "Levodopa");
         XCTAssertEqual(levodopa.shortText, "Levodopa");
-        XCTAssertTrue(levodopa.tracking);
+        XCTAssertTrue(levodopa.isTracking);
         XCTAssertFalse(levodopa.injection);
         
         XCTAssertEqual(carbidopa.identifier, "Carbidopa");
         XCTAssertEqual(carbidopa.name, "Carbidopa");
         XCTAssertEqual(carbidopa.text, "Carbidopa");
         XCTAssertEqual(carbidopa.shortText, "Carbidopa");
-        XCTAssertFalse(carbidopa.tracking);
+        XCTAssertFalse(carbidopa.isTracking);
         XCTAssertFalse(carbidopa.injection);
         
         XCTAssertEqual(rytary.identifier, "Rytary");
@@ -131,7 +131,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(rytary.brand, "Rytary");
         XCTAssertEqual(rytary.text, "Carbidopa/Levodopa (Rytary)");
         XCTAssertEqual(rytary.shortText, "Rytary");
-        XCTAssertTrue(rytary.tracking);
+        XCTAssertTrue(rytary.isTracking);
         XCTAssertFalse(rytary.injection);
         
         XCTAssertEqual(duopa.identifier, "Duopa");
@@ -140,7 +140,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(duopa.detail, "Continuous Infusion");
         XCTAssertEqual(duopa.text, "Carbidopa/Levodopa Continuous Infusion (Duopa)");
         XCTAssertEqual(duopa.shortText, "Duopa");
-        XCTAssertFalse(duopa.tracking);
+        XCTAssertFalse(duopa.isTracking);
         XCTAssertTrue(duopa.injection);
         
     }
@@ -804,7 +804,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     // Mark: convenience methods
     
     func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
-        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "MockTrackedDataStore")
+        let result: AnyClass? = SBAClassTypeMap.shared.class(forClassType: "MockTrackedDataStore")
         XCTAssertNotNil(result)
         guard let classType = result as? SBATrackedDataStore.Type else {
             XCTAssert(false, "\(result) not of expected class type")

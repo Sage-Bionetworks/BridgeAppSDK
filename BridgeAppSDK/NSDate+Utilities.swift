@@ -47,10 +47,10 @@ extension Date {
     }
     
     public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().dateByAddingNumberOfDays(1)
+        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
     }
     
-    public func dateByAddingNumberOfDays(_ days: Int) -> Date {
+    public func addingNumberOfDays(_ days: Int) -> Date {
         let calendar = Calendar.current
         var components = DateComponents()
         components.day = days

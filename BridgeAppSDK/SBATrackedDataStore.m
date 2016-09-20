@@ -153,7 +153,7 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 }
 
 - (NSArray <NSString *> *)trackedItemDataObjects {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = YES", NSStringFromSelector(@selector(tracking))];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = YES", NSStringFromSelector(@selector(isTracking))];
     NSArray *selectedItems = [self selectedItems];
     return [selectedItems filteredArrayUsingPredicate:predicate];
 }

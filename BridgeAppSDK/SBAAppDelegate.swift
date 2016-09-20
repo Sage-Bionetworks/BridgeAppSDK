@@ -114,7 +114,7 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        SBAPermissionsManager.shared().appDidRegister(forRemoteNotifications: notificationSettings)
+        SBAPermissionsManager.shared.appDidRegister(forRemoteNotifications: notificationSettings)
     }
     
     open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {

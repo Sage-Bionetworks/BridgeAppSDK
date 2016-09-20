@@ -35,7 +35,7 @@ import UIKit
 
 extension UIView {
     
-    func constrainToFillSuperview(_ insets: UIEdgeInsets = UIEdgeInsets()) {
+    func constrainToFillSuperview(insets: UIEdgeInsets = UIEdgeInsets()) {
         guard let superview = self.superview else {
             assertionFailure("Trying to set constraints without first setting superview")
             return

@@ -64,6 +64,7 @@
 		FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */; };
 		FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */; };
 		FF2498251CB78972002DD05F /* SBATrackedDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */; };
+		FF2728881D91CFB900956CFB /* SBAClassTypeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2728871D91CFB900956CFB /* SBAClassTypeMap.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
@@ -423,6 +424,7 @@
 		FF24981E1CB6DC13002DD05F /* SBATrackedStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedStep.swift; sourceTree = "<group>"; };
 		FF2498201CB6E605002DD05F /* SequenceType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Utilities.swift"; sourceTree = "<group>"; };
 		FF2498241CB78972002DD05F /* SBATrackedDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataObjectTests.swift; sourceTree = "<group>"; };
+		FF2728871D91CFB900956CFB /* SBAClassTypeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAClassTypeMap.swift; sourceTree = "<group>"; };
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
@@ -787,6 +789,7 @@
 				FF6410FE1CB2DC21007FB9E1 /* SBAJSONObject.m */,
 				FF6411371CB436B6007FB9E1 /* SBAClassTypeMap.h */,
 				FF6411381CB436B6007FB9E1 /* SBAClassTypeMap.m */,
+				FF2728871D91CFB900956CFB /* SBAClassTypeMap.swift */,
 				FBAD11571CADB2F0005611D0 /* SBADataObject.h */,
 				FBAD11581CADB2F0005611D0 /* SBADataObject.m */,
 				FF6411171CB341EC007FB9E1 /* SBATrackedDataObject.h */,
@@ -1637,6 +1640,7 @@
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
 				80D5F1D31CE557BA002A39DF /* ORKResult+SBAExtension.swift in Sources */,
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
+				FF2728881D91CFB900956CFB /* SBAClassTypeMap.swift in Sources */,
 				FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */,
 				FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */,
 				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,

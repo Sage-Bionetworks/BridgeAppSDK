@@ -109,7 +109,7 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
         }
         // Look for a dictionary that matches the learnMoreActionKey
         if let learnMoreAction = self["learnMoreAction"] as? [AnyHashable: Any] {
-            return SBAClassTypeMap.shared().object(withDictionaryRepresentation: learnMoreAction) as? SBALearnMoreAction
+            return SBAClassTypeMap.shared.object(with: learnMoreAction) as? SBALearnMoreAction
         }
         return nil
     }

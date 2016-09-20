@@ -41,14 +41,14 @@ extension String {
         return result
     }
     
-    public func parseSuffix(_ prefix: String, separator: String = "") -> String? {
+    public func parseSuffix(prefix: String, separator: String = "") -> String? {
         guard self.hasPrefix(prefix) else { return nil }
         let prefixWithSeparator = prefix + separator
         guard let range = self.range(of: prefixWithSeparator) else { return "" }
         return self.substring(from: range.upperBound)
     }
     
-    public func stringByRemovingNewlineCharacters() -> String {
+    public func removingNewlineCharacters() -> String {
         let set = CharacterSet.newlines
         // Since there can be two newline characters in a row, but we only want to replace that with a single 
         // space, use the custom reduce to strip out the new line characters and replace with a single space.

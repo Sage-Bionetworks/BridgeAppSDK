@@ -48,15 +48,15 @@ extension SBBScheduledActivity {
     }
     
     public static func scheduledTomorrowPredicate() -> NSPredicate {
-        return NSPredicate(day: Date().dateByAddingNumberOfDays(1), dateKey: #keyPath(scheduledOn))
+        return NSPredicate(day: Date().addingNumberOfDays(1), dateKey: #keyPath(scheduledOn))
     }
     
     public static func scheduledComingUpPredicate(numberOfDays: Int) -> NSPredicate {
-        return NSPredicate(date: Date().dateByAddingNumberOfDays(1), dateKey: #keyPath(scheduledOn), numberOfDays: numberOfDays)
+        return NSPredicate(date: Date().addingNumberOfDays(1), dateKey: #keyPath(scheduledOn), numberOfDays: numberOfDays)
     }
     
     public static func expiredYesterdayPredicate() -> NSPredicate {
-        return NSPredicate(day: Date().dateByAddingNumberOfDays(-1), dateKey: #keyPath(expiresOn))
+        return NSPredicate(day: Date().addingNumberOfDays(-1), dateKey: #keyPath(expiresOn))
     }
     
     public static func optionalPredicate() -> NSPredicate {
@@ -65,7 +65,7 @@ extension SBBScheduledActivity {
     
     public static func availableTodayPredicate() -> NSPredicate {
         let startOfToday = Date().startOfDay()
-        let startOfTomorrow = startOfToday.dateByAddingNumberOfDays(1)
+        let startOfTomorrow = startOfToday.addingNumberOfDays(1)
         
         // Scheduled today or prior
         let scheduledKey = #keyPath(scheduledOn)

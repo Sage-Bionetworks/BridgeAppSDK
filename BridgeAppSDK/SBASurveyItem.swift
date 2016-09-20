@@ -82,7 +82,7 @@ public protocol SBANumberRange: class {
 
 extension ORKPasscodeType {
     init?(key: String) {
-        guard let passcodeSuffix = key.parseSuffix(SBASurveyItemType.passcodeKey) else { return nil }
+        guard let passcodeSuffix = key.parseSuffix(prefix: SBASurveyItemType.passcodeKey) else { return nil }
         self = (passcodeSuffix == SBASurveyItemType.passcodeType6Digit) ? .type6Digit : .type4Digit
     }
 }

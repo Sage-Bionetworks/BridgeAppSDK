@@ -101,7 +101,7 @@ public final class SBAPopUpLearnMoreAction: SBALearnMoreAction {
     }
     
     override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        taskViewController.showAlertWithOk(nil, message: learnMoreText, actionHandler: nil)
+        taskViewController.showAlertWithOk(title: nil, message: learnMoreText, actionHandler: nil)
     }
     
 }

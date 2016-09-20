@@ -149,7 +149,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         guard isAvailable(schedule: schedule) else {
             // Block performing a task that is scheduled for the future
             let message = messageForUnavailableSchedule(schedule)
-            self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
+            self.delegate?.showAlertWithOk(title: nil, message: message, actionHandler: nil)
             return
         }
         

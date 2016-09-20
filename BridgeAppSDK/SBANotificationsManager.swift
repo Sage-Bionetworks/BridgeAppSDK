@@ -54,7 +54,7 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
     }()
     
     lazy open var permissionsManager: SBAPermissionsManager = {
-        return SBAPermissionsManager.shared()
+        return SBAPermissionsManager.shared
     }()
     
     @objc(setupNotificationsForScheduledActivities:)

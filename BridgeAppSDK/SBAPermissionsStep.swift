@@ -36,7 +36,7 @@ import ResearchKit
 open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
 
     lazy open var permissionsManager: SBAPermissionsManager = {
-        return SBAPermissionsManager.shared()
+        return SBAPermissionsManager.shared
     }()
     
     open class func defaultPermissions() -> SBAPermissionsType {

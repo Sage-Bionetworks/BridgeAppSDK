@@ -47,7 +47,7 @@ extension NSDictionary {
         guard let classType = self["classType"] as? String else {
             return json
         }
-        return SBAClassTypeMap.shared().object(withDictionaryRepresentation: json, classType: classType)
+        return SBAClassTypeMap.shared.object(with: json, classType: classType)
     }
     
 }

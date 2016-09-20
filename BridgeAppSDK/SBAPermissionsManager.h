@@ -59,7 +59,7 @@ typedef void(^SBAPermissionsBlock)(BOOL granted, NSError * _Nullable error);
 
 @property (nonatomic, readonly) HKHealthStore * _Nullable healthStore;
 
-+ (instancetype)sharedManager;
++ (instancetype)sharedManager NS_REFINED_FOR_SWIFT;
 
 - (BOOL)isPermissionsGrantedForType:(SBAPermissionsType)type;
 
