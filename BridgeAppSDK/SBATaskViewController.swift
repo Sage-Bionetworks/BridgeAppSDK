@@ -154,23 +154,23 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         }
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         _internalDelegate?.taskViewController(taskViewController, didFinishWith: reason, error: error)
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
         _internalDelegate?.taskViewController?(taskViewController, recorder: recorder, didFailWithError: error)
     }
     
-    public func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController) -> Bool {
+    open func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController) -> Bool {
         return _internalDelegate?.taskViewControllerSupportsSaveAndRestore?(taskViewController) ?? false
     }
     
-    public func taskViewControllerShouldConfirmCancel(_ taskViewController: ORKTaskViewController) -> Bool {
+    open func taskViewControllerShouldConfirmCancel(_ taskViewController: ORKTaskViewController) -> Bool {
         return _internalDelegate?.taskViewControllerShouldConfirmCancel?(taskViewController) ?? true
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
         if let hasLearnMore = _internalDelegate?.taskViewController?(taskViewController, hasLearnMoreFor: step), hasLearnMore {
             // If the delegate has a learn more for this step then fallback to that
             return true
@@ -181,7 +181,7 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         return false
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
         // Call internal delegate method
         _internalDelegate?.taskViewController?(taskViewController, learnMoreForStep: stepViewController)
         
@@ -193,23 +193,23 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         learnMore.learnMoreAction(for: learnMoreStep, with: taskViewController)
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
         return _internalDelegate?.taskViewController?(taskViewController, viewControllerFor: step)
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, shouldPresent step: ORKStep) -> Bool {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, shouldPresent step: ORKStep) -> Bool {
         return _internalDelegate?.taskViewController?(taskViewController, shouldPresent: step) ?? true
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillAppear: stepViewController)
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
         _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillDisappear: stepViewController, navigationDirection: direction)
     }
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
         _internalDelegate?.taskViewController?(taskViewController, didChange: result)
     }
 }
