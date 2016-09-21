@@ -216,7 +216,7 @@ extension SBAFormStepSurveyItem {
         assert((self.items?.count ?? 0) > 0, "A subtask step requires items")
         let steps = self.items?.mapAndFilter({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
         let step = self.usesNavigation() ?
-            SBASurveySubtaskStep(surveyItem: self, steps: steps) :
+            SBANavigationSubtaskStep(surveyItem: self, steps: steps) :
             SBASubtaskStep(identifier: self.identifier, steps: steps)
         return step
     }
@@ -227,9 +227,9 @@ extension SBAFormStepSurveyItem {
         // the ORKQuestionStep and ORKFormStep have a different UI presentation
         let step: ORKStep =
             // If this is a question style then use the SBA subclass
-            self.questionStyle ? SBASurveyQuestionStep(surveyItem: self) :
+            self.questionStyle ? SBANavigationQuestionStep(surveyItem: self) :
             // If this is *not* a subtask step and it uses navigation then return a survey form step
-            (!isSubtaskStep && self.usesNavigation()) ? SBASurveyFormStep(surveyItem: self) :
+            (!isSubtaskStep && self.usesNavigation()) ? SBANavigationFormStep(surveyItem: self) :
             // Otherwise, use a form step
             ORKFormStep(identifier: self.identifier)
         
@@ -260,7 +260,7 @@ extension SBAFormStepSurveyItem {
         let answerFormat = self.createAnswerFormat()
         if let rulePredicate = self.rulePredicate {
             // If there is a rule predicate then return a survey form item
-            let formItem = SBASurveyFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
+            let formItem = SBANavigationFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
             formItem.rulePredicate = rulePredicate
             return formItem
         }

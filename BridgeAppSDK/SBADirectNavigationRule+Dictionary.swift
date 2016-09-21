@@ -1,5 +1,5 @@
 //
-//  SBALearnMoreAction.swift
+//  SBADirectNavigationRule+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,31 +31,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
-/**
- The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
- shown in the `ORKIntructionStepViewController` and subclasses.
- */
-@objc
-open class SBALearnMoreAction: SBADataObject {
-    
-    open dynamic var learnMoreButtonText: String?
-    
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
+extension NSDictionary: SBADirectNavigationRule {
+    public var nextStepIdentifier: String? {
+        return self["nextIdentifier"] as? String
     }
-    
-    @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        assertionFailure("Abstract method")
-    }
-    
 }
-
-
-
-
-
-
-

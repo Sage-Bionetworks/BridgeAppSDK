@@ -1,5 +1,5 @@
 //
-//  SBALearnMoreAction.swift
+//  SBASkipAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,31 +31,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
 /**
- The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
- shown in the `ORKIntructionStepViewController` and subclasses.
+ The `SBASkipAction` class is used to skip an active task that is included as a subtask of an activity.
  */
 @objc
-open class SBALearnMoreAction: SBADataObject {
+public final class SBASkipAction: SBALearnMoreAction {
     
-    open dynamic var learnMoreButtonText: String?
-    
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
+    override public var learnMoreButtonText: String? {
+        get {
+            return super.learnMoreButtonText ?? Localization.localizedString("SBA_SKIP_STEP")
+        }
+        set {
+            super.learnMoreButtonText = newValue
+        }
     }
     
-    @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        assertionFailure("Abstract method")
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        // Set the next step identifier
+        step.nextStepIdentifier = self.identifier
+        
+        // add a result to this step view controller to mark that the task was skipped
+        let skipResult = ORKTextQuestionResult(identifier: "skip")
+        skipResult.textAnswer = step.task?.identifier ?? self.identifier
+        taskViewController.currentStepViewController?.result?.addResult(skipResult)
+        
+        // go forward
+        taskViewController.goForward()
     }
-    
 }
-
-
-
-
-
-
-

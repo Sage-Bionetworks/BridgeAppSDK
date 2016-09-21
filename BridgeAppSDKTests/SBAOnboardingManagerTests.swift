@@ -182,7 +182,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
 
         guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
         
-        let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
+        let expectedSteps: [ORKStep] = [SBANavigationFormStep(identifier: "inclusionCriteria"),
                                         SBAInstructionStep(identifier: "ineligibleInstruction"),
                                         SBAInstructionStep(identifier: "shareApp"),
                                         SBAInstructionStep(identifier: "eligibleInstruction")]

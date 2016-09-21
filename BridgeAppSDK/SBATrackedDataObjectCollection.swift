@@ -169,7 +169,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }
         
         // Map the next step identifier back into the changed step
-        if let changedStep = steps.first as? SBASurveyFormStep,
+        if let changedStep = steps.first as? SBANavigationFormStep,
             let nextStepIdentifier = firstActivityStepIdentifier
             , include.nextStepIfNoChange == .activity  {
             changedStep.skipToStepIdentifier = nextStepIdentifier

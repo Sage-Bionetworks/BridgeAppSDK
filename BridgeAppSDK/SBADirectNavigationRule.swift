@@ -52,8 +52,4 @@ extension SBADirectNavigationRule {
     }
 }
 
-extension NSDictionary: SBADirectNavigationRule {
-    public var nextStepIdentifier: String? {
-        return self["nextIdentifier"] as? String
-    }
-}
+

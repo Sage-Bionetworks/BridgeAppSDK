@@ -38,17 +38,6 @@ public protocol SBATrackedActivitySurveyItem: SBAFormStepSurveyItem, SBATrackedS
     var textFormat: String? { get }
 }
 
-extension NSDictionary: SBATrackedActivitySurveyItem {
-    
-    public var textFormat: String? {
-        return self["textFormat"] as? String
-    }
-    
-    public var trackEach: Bool {
-        return self["trackEach"] as? Bool ?? false
-    }
-}
-
 extension SBATrackedActivitySurveyItem {
     
     public func createTrackedActivityStep(_ items:[SBATrackedDataObject]) -> ORKStep {

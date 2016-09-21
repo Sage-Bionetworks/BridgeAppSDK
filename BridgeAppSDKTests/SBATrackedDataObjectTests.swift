@@ -422,8 +422,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
-        guard let changedStep = steps.first as? SBASurveyFormStep,
-            let formItem = changedStep.formItems?.first as? SBASurveyFormItem,
+        guard let changedStep = steps.first as? SBANavigationFormStep,
+            let formItem = changedStep.formItems?.first as? SBANavigationFormItem,
             let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
                 XCTAssert(false, "\(steps.first) not of expected type")
                 return

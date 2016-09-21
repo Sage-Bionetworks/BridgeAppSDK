@@ -1,5 +1,5 @@
 //
-//  SBALearnMoreAction.swift
+//  SBAURLLearnMoreAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,31 +31,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
 /**
- The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
- shown in the `ORKIntructionStepViewController` and subclasses.
+ The `SBAURLLearnMoreAction` class is used to define a URL that can be displayed when the user taps the
+ `learnMore` button.
  */
 @objc
-open class SBALearnMoreAction: SBADataObject {
+public final class SBAURLLearnMoreAction: SBALearnMoreAction {
     
-    open dynamic var learnMoreButtonText: String?
-    
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
+    public var learnMoreURL: URL! {
+        get {
+            if (_learnMoreURL == nil) {
+                if let url = URL(string: identifier) {
+                    _learnMoreURL = url
+                }
+                else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
+                    _learnMoreURL = url
+                }
+            }
+            return _learnMoreURL
+        }
+        set(newValue) {
+            _learnMoreURL = newValue
+        }
     }
+    fileprivate var _learnMoreURL: URL!
     
-    @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        assertionFailure("Abstract method")
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        let vc = SBAWebViewController(nibName: nil, bundle: nil)
+        vc.url = learnMoreURL
+        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(vc.dismissViewController))
+        let navVC = UINavigationController(rootViewController: vc)
+        taskViewController.present(navVC, animated: true, completion: nil)
     }
-    
 }
-
-
-
-
-
-
-

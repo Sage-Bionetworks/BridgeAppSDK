@@ -1,5 +1,5 @@
 //
-//  SBALearnMoreAction.swift
+//  SBAPopUpLearnMoreAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,31 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
 /**
- The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
- shown in the `ORKIntructionStepViewController` and subclasses.
+ The `SBAPopUpLearnMoreAction` class is used to define text that is displayed in a pop-up alert when the user
+ taps the `learnMore` button.
  */
 @objc
-open class SBALearnMoreAction: SBADataObject {
+public final class SBAPopUpLearnMoreAction: SBALearnMoreAction {
     
-    open dynamic var learnMoreButtonText: String?
+    public dynamic var learnMoreText: String!
     
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
+    override public func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreText))
     }
     
-    @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        assertionFailure("Abstract method")
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        taskViewController.showAlertWithOk(title: nil, message: learnMoreText, actionHandler: nil)
     }
     
 }
-
-
-
-
-
-
-

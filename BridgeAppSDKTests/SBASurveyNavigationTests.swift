@@ -275,7 +275,7 @@ class SBASurveyNavigationTests: XCTestCase {
     
     // MARK: helper methods
     
-    func createSubtaskQuizStep(_ expectedAnswers: [AnyObject]) -> SBASurveySubtaskStep {
+    func createSubtaskQuizStep(_ expectedAnswers: [AnyObject]) -> SBANavigationSubtaskStep {
         var steps: [ORKStep] = [ORKInstructionStep(identifier: "introduction")]
         for (index, expectedAnswer) in expectedAnswers.enumerated() {
             let identifier = "question\(index+1)"
@@ -290,12 +290,12 @@ class SBASurveyNavigationTests: XCTestCase {
             }
             steps += [formStep]
         }
-        let subtaskStep = SBASurveySubtaskStep(identifier: "quiz", steps: steps)
+        let subtaskStep = SBANavigationSubtaskStep(identifier: "quiz", steps: steps)
         subtaskStep.skipToStepIdentifier = "skip"
         return subtaskStep
     }
     
-    func createBooleanQuizStep(_ expectedAnswers: [Bool]) -> SBASurveyFormStep {
+    func createBooleanQuizStep(_ expectedAnswers: [Bool]) -> SBANavigationFormStep {
         // Create the form step question
         let formStep = self.createQuizStep()
         var formItems: [ORKFormItem] = []
@@ -308,16 +308,16 @@ class SBASurveyNavigationTests: XCTestCase {
         return formStep;
     }
     
-    func createBooleanSurveyFormItem(_ identifier:String, text:String?, expectedAnswer: Bool, optional:Bool) -> SBASurveyFormItem {
+    func createBooleanSurveyFormItem(_ identifier:String, text:String?, expectedAnswer: Bool, optional:Bool) -> SBANavigationFormItem {
         let answerFormat = ORKBooleanAnswerFormat()
-        let formItem = SBASurveyFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
+        let formItem = SBANavigationFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
         formItem.rulePredicate = NSPredicate(format: "answer = %@", expectedAnswer as CVarArg)
         return formItem
     }
     
-    func createSingleTextChoiceSurveyFormItem(_ identifier:String, text:String?, choices:[String], values:[NSCoding & NSCopying & NSObjectProtocol]?, expectedAnswer: NSCoding & NSCopying & NSObjectProtocol, optional:Bool) -> SBASurveyFormItem {
+    func createSingleTextChoiceSurveyFormItem(_ identifier:String, text:String?, choices:[String], values:[NSCoding & NSCopying & NSObjectProtocol]?, expectedAnswer: NSCoding & NSCopying & NSObjectProtocol, optional:Bool) -> SBANavigationFormItem {
         let answerFormat = self.createSingleTextChoiceAnswerFormat(choices, values: values)
-        let formItem = SBASurveyFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
+        let formItem = SBANavigationFormItem(identifier: identifier, text: text, answerFormat: answerFormat, optional: optional)
         formItem.rulePredicate = NSPredicate(format: "answer = %@", [expectedAnswer])
         return formItem
     }
@@ -344,7 +344,7 @@ class SBASurveyNavigationTests: XCTestCase {
         return self.createTaskResult("quiz", questionResults: questionResults)
     }
     
-    func createTextChoiceQuizStep() -> SBASurveyFormStep {
+    func createTextChoiceQuizStep() -> SBANavigationFormStep {
         // Create the form step question
         let formStep = self.createQuizStep()
         let formItem = self.createSingleTextChoiceSurveyFormItem("question1", text: nil, choices: ["a","b","c"], values: nil, expectedAnswer: "b" as NSCoding & NSCopying & NSObjectProtocol, optional: true)
@@ -358,8 +358,8 @@ class SBASurveyNavigationTests: XCTestCase {
         return self.createTaskResult("quiz", questionResults: [questionResult])
     }
     
-    func createQuizStep() -> SBASurveyFormStep {
-        let step = SBASurveyFormStep(identifier: "quiz")
+    func createQuizStep() -> SBANavigationFormStep {
+        let step = SBANavigationFormStep(identifier: "quiz")
         step.skipToStepIdentifier = "skip"
         return step
     }

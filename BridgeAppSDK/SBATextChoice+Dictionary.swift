@@ -1,5 +1,5 @@
 //
-//  SBALearnMoreAction.swift
+//  SBATextChoice+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,31 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
 
-/**
- The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
- shown in the `ORKIntructionStepViewController` and subclasses.
- */
-@objc
-open class SBALearnMoreAction: SBADataObject {
+import Foundation
+
+extension NSDictionary: SBATextChoice {
     
-    open dynamic var learnMoreButtonText: String?
-    
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
+    public var choiceText: String {
+        return (self["text"] as? String) ?? (self["prompt"] as? String) ?? self.identifier
     }
     
-    @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        assertionFailure("Abstract method")
+    public var choiceDetail: String? {
+        return self["detailText"] as? String
     }
     
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
+        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString
+    }
+    
+    public var exclusive: Bool {
+        let exclusive = self["exclusive"] as? Bool
+        return exclusive ?? false
+    }
 }
-
-
-
-
-
-
-
