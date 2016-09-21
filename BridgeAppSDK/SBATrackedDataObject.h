@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Is this data object being tracked with follow-up questions?
  */
-@property (nonatomic, getter=isTracking) BOOL tracking NS_SWIFT_NAME(isTracking);
+@property (nonatomic) BOOL tracking;
 
 /**
  * Frequency of taking/doing (if applicable)

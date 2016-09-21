@@ -45,7 +45,7 @@
 
 // Add tracking and frequency to the dictionary keys
 - (NSArray<NSString *> *)dictionaryRepresentationKeys {
-    NSArray *additionalKeys = @[NSStringFromSelector(@selector(isTracking)),
+    NSArray *additionalKeys = @[NSStringFromSelector(@selector(tracking)),
                                 NSStringFromSelector(@selector(frequency))];
     return [[super dictionaryRepresentationKeys] arrayByAddingObjectsFromArray:additionalKeys];
 }
