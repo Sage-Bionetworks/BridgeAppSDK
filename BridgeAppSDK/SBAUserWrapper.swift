@@ -93,23 +93,23 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
      * The user has registered locally or the server has returned confirmation that the
      * user registered on a different device.
      */
-    var hasRegistered: Bool { get set }   // signedUp
+    var isRegistered: Bool { get set }   // signedUp
 
     /**
      * User email/password login has been verified on the server.
      */
-    var loginVerified: Bool { get set }   // signedIn
+    var isLoginVerified: Bool { get set }   // signedIn
 
     /**
      * The user's consent has been verified by the server.
      */
-    var consentVerified: Bool { get set }
+    var isConsentVerified: Bool { get set }
 
     /**
      * The user has "paused" their participation in the study and their data should *not*
      * be sent to the server.
      */
-    var dataSharingEnabled: Bool { get set }
+    var isDataSharingEnabled: Bool { get set }
 
     /**
      * The sharing scope set by the user during consent
@@ -136,7 +136,7 @@ extension SBAUserWrapper {
     // of this, we need to logout the user, but we want to keep their data that locally cached.
     // syoung 09/19/2016
     func resetUserKeychainIfNeeded() {
-        if ((hasRegistered || loginVerified) && email == nil) {
+        if ((isRegistered || isLoginVerified) && email == nil) {
             resetStoredUserData()
         }
     }

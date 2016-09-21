@@ -35,7 +35,7 @@ import Foundation
 
 extension NSDictionary: SBATaskReference {
     
-    public func transformToTask(factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
+    public func transformToTask(with factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
         if !self.taskType.isNilType() {
             // If the task type is non-nil, then create an active task
             let taskOptions: ORKPredefinedTaskOption = isLastStep ? [] : .excludeConclusion
@@ -51,7 +51,7 @@ extension NSDictionary: SBATaskReference {
             // If the object returned is a dictionary, check validity and return nil if failed
             return nil
         }
-        return bridgeTask.createORKTask(factory)
+        return bridgeTask.createORKTask(with: factory)
     }
     
     public var cancelDisabled: Bool {

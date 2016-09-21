@@ -95,7 +95,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
                 step.text = "\(text)\n\n\(additionalText)"
             }
             if let form = inputItem as? SBAFormStepSurveyItem,
-                let textChoices = form.items?.map({form.createTextChoice($0)}) {
+                let textChoices = form.items?.map({form.createTextChoice(from: $0)}) {
                     step.answerFormat = ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices)
             }
             

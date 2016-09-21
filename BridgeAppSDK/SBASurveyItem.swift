@@ -35,7 +35,7 @@ import ResearchKit
 import BridgeSDK
 
 public protocol SBAStepTransformer: class {
-    func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep?
+    func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep?
 }
 
 public protocol SBASurveyItem: SBAStepTransformer {
@@ -82,11 +82,22 @@ public protocol SBANumberRange: class {
 
 extension ORKPasscodeType {
     init?(key: String) {
-        guard let passcodeSuffix = key.parseSuffix(SBASurveyItemType.passcodeKey) else { return nil }
-        self = (passcodeSuffix == SBASurveyItemType.passcodeType6Digit) ? .type6Digit : .type4Digit
+        switch (key) {
+        case SBASurveyItemType.passcodeType6Digit:
+            self = .type6Digit
+        case SBASurveyItemType.passcodeType4Digit:
+            self = .type4Digit
+        default:
+            return nil
+        }
     }
 }
 
+/**
+ List of all the currently supported step types with the key name for each class type.
+ This is used by the `SBASurveyFactory` to determine which subclass of `ORKStep` to return
+ for a given `SBASurveyItem`.
+ */
 public enum SBASurveyItemType {
     
     case custom(String?)
@@ -137,9 +148,8 @@ public enum SBASurveyItemType {
     }
     
     case passcode(ORKPasscodeType)
-    public static let passcodeKey = "passcode"
-    public static let passcodeType6Digit = "Type6Digit"
-    public static let passcodeType4Digit = "Type4Digit"
+    public static let passcodeType6Digit = "passcodeType6Digit"
+    public static let passcodeType4Digit = "passcodeType4Digit"
     
     init(rawValue: String?) {
         guard let type = rawValue else { self = .custom(nil); return }

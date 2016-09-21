@@ -49,17 +49,17 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     
     public var stepTitle: String? {
         if (self.title == nil) { return nil }
-        return self.title.stringByRemovingNewlineCharacters()
+        return self.title.removingNewlineCharacters()
     }
     
     public var stepText: String? {
         if (self.prompt == nil) { return nil }
-        return self.prompt.stringByRemovingNewlineCharacters()
+        return self.prompt.removingNewlineCharacters()
     }
     
     public var stepDetail: String? {
         if (self.promptDetail == nil) { return nil }
-        return self.promptDetail.stringByRemovingNewlineCharacters()
+        return self.promptDetail.removingNewlineCharacters()
     }
     
     public var stepImage: UIImage? {
@@ -76,7 +76,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
-    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }
@@ -139,12 +139,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
     public var stepText: String? {
         if (self.prompt == nil) { return nil }
-        return self.prompt.stringByRemovingNewlineCharacters()
+        return self.prompt.removingNewlineCharacters()
     }
 
     public var placeholderText: String? {
         if (self.promptDetail == nil) { return nil }
-        return self.promptDetail.stringByRemovingNewlineCharacters()
+        return self.promptDetail.removingNewlineCharacters()
     }
     
     public var optional: Bool {
@@ -215,7 +215,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
     }
     
-    public func transformToStep(_ factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }

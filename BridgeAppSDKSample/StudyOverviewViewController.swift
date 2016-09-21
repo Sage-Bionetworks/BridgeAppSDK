@@ -38,7 +38,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if (sharedUser.hasRegistered) {
+        if (sharedUser.isRegistered) {
             presentOnboarding(.registration, animated: animated)
         }
     }

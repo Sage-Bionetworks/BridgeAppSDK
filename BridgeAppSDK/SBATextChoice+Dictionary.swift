@@ -1,5 +1,5 @@
 //
-//  NSDate+Utilities.swift
+//  SBATextChoice+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,30 +31,25 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
 
-extension Date {
-    
-    public func startOfDay() -> Date {
-        let calendar = Calendar.current
-        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
-        let components = (calendar as NSCalendar).components(unitFlags, from: self)
-        return calendar.date(from: components) ?? self
-    }
-    
-    public var isToday: Bool {
-        return self.startOfDay() == Date().startOfDay()
-    }
-    
-    public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
-    }
-    
-    public func addingNumberOfDays(_ days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
-    }
+import Foundation
 
+extension NSDictionary: SBATextChoice {
+    
+    public var choiceText: String {
+        return (self["text"] as? String) ?? (self["prompt"] as? String) ?? self.identifier
+    }
+    
+    public var choiceDetail: String? {
+        return self["detailText"] as? String
+    }
+    
+    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
+        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString
+    }
+    
+    public var exclusive: Bool {
+        let exclusive = self["exclusive"] as? Bool
+        return exclusive ?? false
+    }
 }

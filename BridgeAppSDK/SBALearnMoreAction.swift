@@ -33,87 +33,29 @@
 
 import ResearchKit
 
+/**
+ The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
+ shown in the `ORKIntructionStepViewController` and subclasses.
+ */
+@objc
 open class SBALearnMoreAction: SBADataObject {
     
-    let learnMoreButtonTextKey = "learnMoreButtonText"
     open dynamic var learnMoreButtonText: String?
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys() + [learnMoreButtonTextKey]
+        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreButtonText))
     }
     
-    open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
+    @objc(learnMoreActionForStep:taskViewController:)
+    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
         assertionFailure("Abstract method")
     }
     
 }
 
-open class SBAURLLearnMoreAction: SBALearnMoreAction {
-    
-    open var learnMoreURL: URL! {
-        get {
-            if (_learnMoreURL == nil) {
-                if let url = URL(string: identifier) {
-                    _learnMoreURL = url
-                }
-                else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
-                    _learnMoreURL = url
-                }
-            }
-            return _learnMoreURL
-        }
-        set(newValue) {
-            _learnMoreURL = newValue
-        }
-    }
-    fileprivate var _learnMoreURL: URL!
 
-    override open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
-        let vc = SBAWebViewController(nibName: nil, bundle: nil)
-        vc.url = learnMoreURL
-        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(vc.dismissViewController))
-        let navVC = UINavigationController(rootViewController: vc)
-        taskViewController.present(navVC, animated: true, completion: nil)
-    }
-}
 
-open class SBAPopUpLearnMoreAction: SBALearnMoreAction {
-    
-    let learnMoreTextKey = "learnMoreText"
-    open dynamic var learnMoreText: String!
-    
-    override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys() + [learnMoreTextKey]
-    }
-    
-    open override func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
-        taskViewController.showAlertWithOk(nil, message: learnMoreText, actionHandler: nil)
-    }
-    
-}
 
-open class SBASkipAction: SBALearnMoreAction {
-    
-    override open var learnMoreButtonText: String? {
-        get {
-            return super.learnMoreButtonText ?? Localization.localizedString("SBA_SKIP_STEP")
-        }
-        set(newValue) {
-            super.learnMoreButtonText = newValue
-        }
-    }
-    
-    override open func learnMoreAction(_ step: SBAInstructionStep, taskViewController: ORKTaskViewController) {
-        // Set the next step identifier
-        step.nextStepIdentifier = self.identifier
-        
-        // add a result to this step view controller to mark that the task was skipped
-        let skipResult = ORKTextQuestionResult(identifier: "skip")
-        skipResult.textAnswer = step.task?.identifier ?? self.identifier
-        taskViewController.currentStepViewController?.result?.addResult(skipResult)
-        
-        // go forward
-        taskViewController.goForward()
-    }
-}
+
+
 

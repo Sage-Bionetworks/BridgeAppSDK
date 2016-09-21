@@ -1,5 +1,5 @@
 //
-//  NSDate+Utilities.swift
+//  SBAURLLearnMoreAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,30 +31,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import Foundation
 
-extension Date {
+/**
+ The `SBAURLLearnMoreAction` class is used to define a URL that can be displayed when the user taps the
+ `learnMore` button.
+ */
+@objc
+public final class SBAURLLearnMoreAction: SBALearnMoreAction {
     
-    public func startOfDay() -> Date {
-        let calendar = Calendar.current
-        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
-        let components = (calendar as NSCalendar).components(unitFlags, from: self)
-        return calendar.date(from: components) ?? self
+    public var learnMoreURL: URL! {
+        get {
+            if (_learnMoreURL == nil) {
+                if let url = URL(string: identifier) {
+                    _learnMoreURL = url
+                }
+                else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
+                    _learnMoreURL = url
+                }
+            }
+            return _learnMoreURL
+        }
+        set(newValue) {
+            _learnMoreURL = newValue
+        }
     }
+    fileprivate var _learnMoreURL: URL!
     
-    public var isToday: Bool {
-        return self.startOfDay() == Date().startOfDay()
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        let vc = SBAWebViewController(nibName: nil, bundle: nil)
+        vc.url = learnMoreURL
+        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(vc.dismissViewController))
+        let navVC = UINavigationController(rootViewController: vc)
+        taskViewController.present(navVC, animated: true, completion: nil)
     }
-    
-    public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
-    }
-    
-    public func addingNumberOfDays(_ days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
-    }
-
 }

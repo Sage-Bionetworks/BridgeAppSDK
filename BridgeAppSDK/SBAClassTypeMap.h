@@ -43,13 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SBAClassTypeMap : NSObject
 
-+ (instancetype)sharedMap;
++ (instancetype)sharedMap NS_REFINED_FOR_SWIFT;
 
 - (Class _Nullable)classForClassType:(NSString *)classType;
 
-- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary*)dictionary;
-- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary *)dictionary classType:(NSString *)classType;
-- (id _Nullable)objectWithIdentifier:(NSString *)identifier classType:(NSString *)classType;
+- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary*)dictionary NS_SWIFT_NAME(object(with:));
+
+- (id _Nullable)objectWithDictionaryRepresentation:(NSDictionary *)dictionary classType:(NSString *)classType NS_SWIFT_NAME(object(with:classType:));
+
+- (id _Nullable)objectWithIdentifier:(NSString *)identifier classType:(NSString *)classType NS_SWIFT_NAME(object(with:classType:));
 
 @end
 

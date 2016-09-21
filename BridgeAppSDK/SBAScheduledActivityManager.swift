@@ -149,7 +149,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         guard isAvailable(schedule: schedule) else {
             // Block performing a task that is scheduled for the future
             let message = messageForUnavailableSchedule(schedule)
-            self.delegate?.showAlertWithOk(nil, message: message, actionHandler: nil)
+            self.delegate?.showAlertWithOk(title: nil, message: message, actionHandler: nil)
             return
         }
         
@@ -220,7 +220,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     @objc(setupNotificationsForScheduledActivities:)
     open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
         // schedule notifications
-        SBANotificationsManager.sharedManager.setupNotificationsForScheduledActivities(scheduledActivities)
+        SBANotificationsManager.shared.setupNotifications(for: scheduledActivities)
     }
     
     /**
@@ -352,33 +352,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         taskViewController.dismiss(animated: true) {}
     }
-
-    open func taskViewController(_ taskViewController: ORKTaskViewController, hasLearnMoreFor step: ORKStep) -> Bool {
-        if let learnMoreStep = step as? SBAInstructionStep , learnMoreStep.learnMoreAction != nil {
-            return true
-        }
-        return false
-    }
-    
-    open func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreForStep stepViewController: ORKStepViewController) {
-        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
-            let learnMore = learnMoreStep.learnMoreAction else {
-                return
-        }
-        learnMore.learnMoreAction(learnMoreStep, taskViewController: taskViewController)
-    }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
-        // If this is a learn more step then set the button title
-        if let learnMoreStep = stepViewController.step as? SBAInstructionStep,
-            let learnMore = learnMoreStep.learnMoreAction {
-            stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
-        }
-        
         // If cancel is disabled then hide on all but the first step
-        if let step = stepViewController.step
-            , shouldHideCancel(for: step, taskViewController: taskViewController) {
+        if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
             stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         }
     }
@@ -429,7 +407,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     open func createTask(for schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
-        let task = taskRef?.transformToTask(factory: SBASurveyFactory(), isLastStep: true)
+        let task = taskRef?.transformToTask(with: SBASurveyFactory(), isLastStep: true)
         if let surveyTask = task as? SBASurveyTask {
             surveyTask.title = schedule.activity.label
         }

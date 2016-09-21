@@ -165,11 +165,11 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             
         case .consent:
             // All types *except* email verification include consent
-            return (onboardingTaskType != .registration) || !sharedUser.hasRegistered
+            return (onboardingTaskType != .registration) || !sharedUser.isRegistered
             
         case .eligibility, .registration:
             // Intro, eligibility and registration are only included in registration
-            return (onboardingTaskType == .registration) && !sharedUser.hasRegistered
+            return (onboardingTaskType == .registration) && !sharedUser.isRegistered
         
         case .passcode:
             // Passcode is included if it has not already been set
@@ -177,7 +177,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         case .emailVerification:
             // Only registration where the login has not been verified includes verification
-            return (onboardingTaskType == .registration) && !sharedUser.loginVerified
+            return (onboardingTaskType == .registration) && !sharedUser.isLoginVerified
         
         case .profile:
             // Additional profile information is included if this is a registration type

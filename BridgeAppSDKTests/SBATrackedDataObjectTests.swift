@@ -422,8 +422,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(steps.count, expectedCount)
         guard steps.count == expectedCount else { return }
         
-        guard let changedStep = steps.first as? SBASurveyFormStep,
-            let formItem = changedStep.formItems?.first as? SBASurveyFormItem,
+        guard let changedStep = steps.first as? SBANavigationFormStep,
+            let formItem = changedStep.formItems?.first as? SBANavigationFormItem,
             let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
                 XCTAssert(false, "\(steps.first) not of expected type")
                 return
@@ -512,7 +512,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             let dataStore = self.dataStoreForMedicationTracking() else { return }
         dataCollection.dataStore = dataStore
         
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: true)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: true)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -532,7 +532,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = []
         
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -554,7 +554,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
         
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -575,7 +575,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         // steps, but do not need to include any of the others
         dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -595,7 +595,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         // 30 days ago then should ask about changes
         dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -615,7 +615,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         // 30 days ago then should ask about changes
         dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = []
-        let step = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -804,7 +804,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     // Mark: convenience methods
     
     func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
-        let result: AnyClass? = SBAClassTypeMap.shared().class(forClassType: "MockTrackedDataStore")
+        let result: AnyClass? = SBAClassTypeMap.shared.class(forClassType: "MockTrackedDataStore")
         XCTAssertNotNil(result)
         guard let classType = result as? SBATrackedDataStore.Type else {
             XCTAssert(false, "\(result) not of expected class type")
@@ -826,7 +826,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             let dataStore = self.dataStoreForMedicationTracking() else { return (nil,nil,nil, nil) }
         dataCollection.dataStore = dataStore
         
-        let transformedStep = dataCollection.transformToStep(SBASurveyFactory(), isLastStep: false)
+        let transformedStep = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         guard let subtaskStep = transformedStep as? SBASubtaskStep
             else {
                 XCTAssert(false, "\(transformedStep) not of expected type")

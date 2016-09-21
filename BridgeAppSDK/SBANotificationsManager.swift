@@ -42,7 +42,8 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
     static let notificationType = "notificationType"
     static let identifier = "identifier"
     
-    open static let sharedManager = SBANotificationsManager()
+    @objc(sharedManager)
+    open static let shared = SBANotificationsManager()
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
@@ -53,13 +54,14 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
     }()
     
     lazy open var permissionsManager: SBAPermissionsManager = {
-        return SBAPermissionsManager.shared()
+        return SBAPermissionsManager.shared
     }()
     
-    open func setupNotificationsForScheduledActivities(_ activities: [SBBScheduledActivity]) {
+    @objc(setupNotificationsForScheduledActivities:)
+    open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
         permissionsManager.requestPermissions(.localNotifications, alertPresenter: nil) { [weak self] (granted) in
             if granted {
-                self?.scheduleNotifications(scheduledActivities: activities)
+                self?.scheduleNotifications(scheduledActivities: scheduledActivities)
             }
         }
     }

@@ -39,18 +39,3 @@ public protocol SBAConsentSharingOptions: SBASurveyItem {
     var localizedLearnMoreHTMLContent: String { get }
 }
 
-extension NSDictionary: SBAConsentSharingOptions {
-    
-    public var investigatorShortDescription: String {
-        return self["investigatorShortDescription"] as? String ?? ""
-    }
-    
-    public var investigatorLongDescription: String {
-        return self["investigatorLongDescription"] as? String ?? ""
-    }
-    
-    public var localizedLearnMoreHTMLContent: String {
-        return self["learnMoreHTMLContentURL"] as? String ?? ""
-    }
-}
-

@@ -90,25 +90,6 @@ public struct SBATrackingStepIncludes {
     }
 }
 
-extension NSDictionary : SBATrackedStepSurveyItem {
-    
-    public var trackingType: SBATrackingStepType? {
-        guard let trackingType = self["trackingType"] as? String else { return nil }
-        return SBATrackingStepType(rawValue: trackingType)
-    }
-}
 
-extension SBATrackedDataObject: SBATextChoice {
-    public var choiceText: String {
-        return self.text
-    }
-    public var choiceDetail: String? {
-        return nil
-    }
-    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
-        return self.identifier as NSCoding & NSCopying & NSObjectProtocol
-    }
-    public var exclusive: Bool {
-        return false
-    }
-}
+
+

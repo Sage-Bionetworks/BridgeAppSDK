@@ -40,7 +40,7 @@ open class SBANewsfeedTableViewCell: UITableViewCell {
     @IBOutlet open weak var dateLabel: UILabel!
     
     open var readColor = UIColor.white
-    open var unreadColor = UIColor.colorForKey("newsfeedHighlightColor") ?? UIColor.white
+    open var unreadColor = UIColor.color(for: "newsfeedHighlightColor") ?? UIColor.white
     
     open var hasRead: Bool = false {
         didSet {

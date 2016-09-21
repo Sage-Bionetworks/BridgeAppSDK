@@ -106,7 +106,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         // then only include email verification and those sections AFTER verification
         // However, if the user is being reconsented then include the reconsent section
         
-        manager.mockAppDelegate.mockCurrentUser.hasRegistered = true
+        manager.mockAppDelegate.mockCurrentUser.isRegistered = true
         manager._hasPasscode = true
     
         let taskTypes: [SBAOnboardingTaskType] = [.registration, .reconsent]
@@ -182,7 +182,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
 
         guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
         
-        let expectedSteps: [ORKStep] = [SBASurveyFormStep(identifier: "inclusionCriteria"),
+        let expectedSteps: [ORKStep] = [SBANavigationFormStep(identifier: "inclusionCriteria"),
                                         SBAInstructionStep(identifier: "ineligibleInstruction"),
                                         SBAInstructionStep(identifier: "shareApp"),
                                         SBAInstructionStep(identifier: "eligibleInstruction")]

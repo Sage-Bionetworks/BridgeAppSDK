@@ -1,5 +1,5 @@
 //
-//  NSDate+Utilities.swift
+//  SBAPopUpLearnMoreAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,30 +31,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import Foundation
 
-extension Date {
+/**
+ The `SBAPopUpLearnMoreAction` class is used to define text that is displayed in a pop-up alert when the user
+ taps the `learnMore` button.
+ */
+@objc
+public final class SBAPopUpLearnMoreAction: SBALearnMoreAction {
     
-    public func startOfDay() -> Date {
-        let calendar = Calendar.current
-        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
-        let components = (calendar as NSCalendar).components(unitFlags, from: self)
-        return calendar.date(from: components) ?? self
+    public dynamic var learnMoreText: String!
+    
+    override public func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreText))
     }
     
-    public var isToday: Bool {
-        return self.startOfDay() == Date().startOfDay()
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        taskViewController.showAlertWithOk(title: nil, message: learnMoreText, actionHandler: nil)
     }
     
-    public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
-    }
-    
-    public func addingNumberOfDays(_ days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
-    }
-
 }

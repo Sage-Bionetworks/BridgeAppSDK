@@ -114,7 +114,7 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        SBAPermissionsManager.shared().appDidRegister(forRemoteNotifications: notificationSettings)
+        SBAPermissionsManager.shared.appDidRegister(forRemoteNotifications: notificationSettings)
     }
     
     open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
@@ -200,13 +200,13 @@ public protocol SBAAppInfoDelegate: class {
         if (self.catastrophicStartupError != nil) {
             showCatastrophicStartupErrorViewController(animated: animated)
         }
-        else if (self.currentUser.loginVerified) {
+        else if (self.currentUser.isLoginVerified) {
             showMainViewController(animated: animated)
-            if (!self.currentUser.consentVerified) {
+            if (!self.currentUser.isConsentVerified) {
                 showReconsentIfNecessary()
             }
         }
-        else if (self.currentUser.hasRegistered) {
+        else if (self.currentUser.isRegistered) {
             showEmailVerificationViewController(animated: animated)
         }
         else {
@@ -375,7 +375,7 @@ public protocol SBAAppInfoDelegate: class {
     */
     open func shouldShowPasscode() -> Bool {
         return !self.hasCatastrophicError &&
-            self.currentUser.hasRegistered &&
+            self.currentUser.isRegistered &&
             (self.passcodeViewController == nil) &&
             ORKPasscodeViewController.isPasscodeStoredInKeychain()
     }

@@ -36,8 +36,8 @@ import Foundation
 
 extension Dictionary where Value : Equatable {
     
-    public func key(forValue val : Value) -> Key? {
-        return self.filter { $1 == val }.map { $0.0 }.first
+    public func key(for value: Value) -> Key? {
+        return self.filter { $1 == value }.map { $0.0 }.first
     }
 }
 

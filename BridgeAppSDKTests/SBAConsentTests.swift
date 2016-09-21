@@ -54,7 +54,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
                                    ORKVisualConsentStep(identifier: "consentVisual"),
-                                   SBASurveySubtaskStep(identifier: "consentQuiz"),
+                                   SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                    SBAInstructionStep(identifier: "consentFailedQuiz"),
                                    SBAInstructionStep(identifier: "consentPassedQuiz"),
                                    ORKConsentSharingStep(identifier: "consentSharingOptions"),
@@ -81,7 +81,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
                                         ORKVisualConsentStep(identifier: "consentVisual"),
-                                        SBASurveySubtaskStep(identifier: "consentQuiz"),
+                                        SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
@@ -106,7 +106,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         let steps = (consentFactory.registrationConsentStep().subtask as! SBANavigableOrderedTask).steps
         
         let expectedSteps: [ORKStep] = [ORKVisualConsentStep(identifier: "consentVisual"),
-                                        SBASurveySubtaskStep(identifier: "consentQuiz"),
+                                        SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),

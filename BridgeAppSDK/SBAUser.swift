@@ -201,13 +201,13 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     let kRegisteredKey = "SignedUp"
     let kLoginVerifiedKey = "SignedIn"
-    let kConsentVerifiedKey = "consentVerified"
+    let kConsentVerifiedKey = "isConsentVerified"
     let kSavedDataGroupsKey = "SavedDataGroups"
-    let kDataSharingEnabledKey = "dataSharingEnabled"
+    let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
     
-    public var hasRegistered: Bool {
+    public var isRegistered: Bool {
         get {
             return syncBoolForKey(kRegisteredKey)
         }
@@ -216,7 +216,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var loginVerified: Bool {
+    public var isLoginVerified: Bool {
         get {
             return syncBoolForKey(kLoginVerifiedKey)
         }
@@ -225,7 +225,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var consentVerified: Bool {
+    public var isConsentVerified: Bool {
         get {
             return syncBoolForKey(kConsentVerifiedKey)
         }
@@ -234,7 +234,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var dataSharingEnabled: Bool {
+    public var isDataSharingEnabled: Bool {
         get {
             return syncBoolForKey(kDataSharingEnabledKey)
         }

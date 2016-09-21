@@ -1,5 +1,5 @@
 //
-//  NSDate+Utilities.swift
+//  SBAConsentSharingOptions+Dictionary.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,30 +31,20 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
 
-extension Date {
-    
-    public func startOfDay() -> Date {
-        let calendar = Calendar.current
-        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
-        let components = (calendar as NSCalendar).components(unitFlags, from: self)
-        return calendar.date(from: components) ?? self
-    }
-    
-    public var isToday: Bool {
-        return self.startOfDay() == Date().startOfDay()
-    }
-    
-    public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
-    }
-    
-    public func addingNumberOfDays(_ days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
-    }
+import Foundation
 
+extension NSDictionary: SBAConsentSharingOptions {
+    
+    public var investigatorShortDescription: String {
+        return self["investigatorShortDescription"] as? String ?? ""
+    }
+    
+    public var investigatorLongDescription: String {
+        return self["investigatorLongDescription"] as? String ?? ""
+    }
+    
+    public var localizedLearnMoreHTMLContent: String {
+        return self["learnMoreHTMLContentURL"] as? String ?? ""
+    }
 }

@@ -81,6 +81,10 @@ extension SBAPermissionsType {
 
 extension SBAPermissionsManager {
     
+    public static var shared: SBAPermissionsManager {
+        return __shared()
+    }
+    
     public func requestPermissions(_ permissions: SBAPermissionsType, alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
         
         // Exit early if there are no permissions
@@ -105,7 +109,7 @@ extension SBAPermissionsManager {
                         DispatchQueue.main.async(execute: {
                             let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
                             let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
-                            presenter.showAlertWithOk(title, message: message, actionHandler: { (_) in
+                            presenter.showAlertWithOk(title: title, message: message, actionHandler: { (_) in
                                 dispatchGroup.leave()
                             })
                         })

@@ -37,8 +37,21 @@ extension Array where Element: Equatable {
     
     public func nextMatch(_ object: Array.Iterator.Element?) -> Array.Iterator.Element? {
         guard let match = object else { return self.first }
-        return self.next({ (match == $0)
-        })
+        return self.next({ (match == $0) })
     }
+}
 
+extension Array {
+    
+    public func appending(_ newElement: Element) -> [Element] {
+        var array = self
+        array.append(newElement)
+        return array
+    }
+    
+    public func appending(contentsOf contents: [Element]) -> [Element] {
+        var array = self
+        array.append(contentsOf: contents)
+        return array
+    }
 }

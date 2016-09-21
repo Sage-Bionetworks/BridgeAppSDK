@@ -144,7 +144,7 @@ public extension SBAUserWrapper {
             
             SBABridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
                 let (unhandledError, _) = self!.checkForConsentError(error as NSError?)
-                self?.hasRegistered = (unhandledError == nil)
+                self?.isRegistered = (unhandledError == nil)
                 self?.callCompletionOnMain(unhandledError, completion: completion)
             })
         }
@@ -162,7 +162,7 @@ public extension SBAUserWrapper {
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")
         let messageFormat = Localization.localizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@")
         let message = String.localizedStringWithFormat(messageFormat, Localization.localizedAppName, Localization.buttonYes())
-        appDelegate.showAlertWithYesNo(title, message: message, actionHandler: completeRegistration)
+        appDelegate.showAlertWithYesNo(title: title, message: message, actionHandler: completeRegistration)
     }
     
     /**
@@ -220,7 +220,7 @@ public extension SBAUserWrapper {
         SBABridgeManager.sendUserConsented(name, birthDate: birthdate, consentImage: consentImage, sharingScope: self.dataSharingScope, subpopulationGuid: subpopGuid) { [weak self] (_, error) in
             guard (self != nil) else { return }
             
-            self!.consentVerified = (error == nil)
+            self!.isConsentVerified = (error == nil)
             self!.callCompletionOnMain(error as NSError?, completion: completion)
         }
     }
@@ -232,8 +232,8 @@ public extension SBAUserWrapper {
         
         // If the user is not logged in or consented then do not attempt login
         // Just return with an error
-        guard self.loginVerified && self.consentVerified else {
-            let code = !self.loginVerified ? SBBErrorCode.noCredentialsAvailable.rawValue : SBBErrorCode.serverPreconditionNotMet.rawValue
+        guard self.isLoginVerified && self.isConsentVerified else {
+            let code = !self.isLoginVerified ? SBBErrorCode.noCredentialsAvailable.rawValue : SBBErrorCode.serverPreconditionNotMet.rawValue
             let error = NSError(domain: SBAUserErrorDomain, code: code, userInfo: nil)
             self.callCompletionOnMain(error, completion: completion)
             return
@@ -245,7 +245,7 @@ public extension SBAUserWrapper {
             
             if let errorCode = (error as? NSError)?.code, errorCode == SBBErrorCode.serverPreconditionNotMet.rawValue {
                 // If the server returns a 412 after login and consent have been verified then need to reconsent
-                self!.consentVerified = false
+                self!.isConsentVerified = false
                 self!.consentSignature = nil
             }
             
@@ -266,8 +266,8 @@ public extension SBAUserWrapper {
             }
             
             // If signed in successfully, then set the registered and verified flags to true
-            self!.hasRegistered = true
-            self!.loginVerified = true
+            self!.isRegistered = true
+            self!.isLoginVerified = true
             
             // Copy info from the user session response object
             if let response = responseObject as? SBAUserSessionInfoWrapper {
@@ -282,7 +282,7 @@ public extension SBAUserWrapper {
             else {
                 // otherwise, we are done. Set the flag that the consent has been verified and 
                 // call the completion
-                self!.consentVerified = !requiresConsent
+                self!.isConsentVerified = !requiresConsent
                 self!.callCompletionOnMain(error as NSError?, completion: completion)
             }
         }
@@ -294,8 +294,8 @@ public extension SBAUserWrapper {
         self.dataGroups = response.dataGroups
         
         // Get whether or not sharing is enabled and the sharing scope
-        self.dataSharingEnabled = response.dataSharingEnabled
-        if self.dataSharingEnabled {
+        self.isDataSharingEnabled = response.isDataSharingEnabled
+        if self.isDataSharingEnabled {
             self.dataSharingScope = response.dataSharingScope
         }
         
@@ -334,7 +334,7 @@ public extension SBAUserWrapper {
 
 protocol SBAUserSessionInfoWrapper : class {
     var dataGroups : [String]? { get }
-    var dataSharingEnabled : Bool { get }
+    var isDataSharingEnabled : Bool { get }
     var dataSharingScope: SBBUserDataSharingScope { get }
     var subpopulationGuid: String? { get }
 }
@@ -345,12 +345,12 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
         return self["dataGroups"] as? [String]
     }
     
-    var dataSharingEnabled : Bool {
+    var isDataSharingEnabled : Bool {
         return self["dataSharing"] as? Bool ?? false
     }
     
     var dataSharingScope: SBBUserDataSharingScope {
-        guard let sharingKey = self["sharingScope"] as? String , self.dataSharingEnabled else {
+        guard let sharingKey = self["sharingScope"] as? String , self.isDataSharingEnabled else {
             return .none
         }
         return SBBUserDataSharingScope(key: sharingKey)

@@ -44,7 +44,7 @@ open class SBAColorInfo : NSObject {
         self.plist = SBAResourceFinder.shared.plist(forResource: name)
     }
     
-    func colorForKey(_ colorKey: String) -> UIColor? {
+    func color(for colorKey: String) -> UIColor? {
         guard let colorHex = plist?[colorKey] as? String else {
             return nil
         }
@@ -55,22 +55,22 @@ open class SBAColorInfo : NSObject {
 
 extension UIColor {
     
-    static public func colorForKey(_ key: String) -> UIColor? {
-        return SBAColorInfo.defaultColorInfo.colorForKey(key)
+    static public func color(for key: String) -> UIColor? {
+        return SBAColorInfo.defaultColorInfo.color(for: key)
     }
     
     static public func primaryTintColor() -> UIColor? {
-        return SBAColorInfo.defaultColorInfo.colorForKey("primaryTintColor")
+        return SBAColorInfo.defaultColorInfo.color(for: "primaryTintColor")
     }
     
     static public func greenTintColor() -> UIColor? {
         // For certain cases, we want to use a green checkmark and will override the default color
-        return SBAColorInfo.defaultColorInfo.colorForKey("greenTintColor") ?? UIColor(hexString: "#44d24e")
+        return SBAColorInfo.defaultColorInfo.color(for: "greenTintColor") ?? UIColor(hexString: "#44d24e")
     }
     
     static public func blueTintColor() -> UIColor? {
         // For certain cases, we want to use a blue tint and will override the default color
-        return SBAColorInfo.defaultColorInfo.colorForKey("blueTintColor") ?? UIColor(red:0.132, green:0.684, blue:0.959, alpha:1.000)
+        return SBAColorInfo.defaultColorInfo.color(for: "blueTintColor") ?? UIColor(red:0.132, green:0.684, blue:0.959, alpha:1.000)
     }
     
     public convenience init?(hexString: String) {

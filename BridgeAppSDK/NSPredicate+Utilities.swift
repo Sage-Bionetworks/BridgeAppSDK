@@ -41,7 +41,7 @@ public extension NSPredicate {
     
     public convenience init(date: Date, dateKey: String, numberOfDays: Int) {
         let start = date.startOfDay()
-        let end = start.dateByAddingNumberOfDays(numberOfDays)
+        let end = start.addingNumberOfDays(numberOfDays)
         self.init(format: "%K <> nil AND %K >= %@ AND %K < %@", dateKey, dateKey, start as CVarArg, dateKey, end as CVarArg)
     }
 }

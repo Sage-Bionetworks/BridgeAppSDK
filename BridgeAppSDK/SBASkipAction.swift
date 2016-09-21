@@ -1,5 +1,5 @@
 //
-//  NSDate+Utilities.swift
+//  SBASkipAction.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,30 +31,33 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import Foundation
 
-extension Date {
+/**
+ The `SBASkipAction` class is used to skip an active task that is included as a subtask of an activity.
+ */
+@objc
+public final class SBASkipAction: SBALearnMoreAction {
     
-    public func startOfDay() -> Date {
-        let calendar = Calendar.current
-        let unitFlags: NSCalendar.Unit = [.day, .month, .year]
-        let components = (calendar as NSCalendar).components(unitFlags, from: self)
-        return calendar.date(from: components) ?? self
+    override public var learnMoreButtonText: String? {
+        get {
+            return super.learnMoreButtonText ?? Localization.localizedString("SBA_SKIP_STEP")
+        }
+        set {
+            super.learnMoreButtonText = newValue
+        }
     }
     
-    public var isToday: Bool {
-        return self.startOfDay() == Date().startOfDay()
+    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+        // Set the next step identifier
+        step.nextStepIdentifier = self.identifier
+        
+        // add a result to this step view controller to mark that the task was skipped
+        let skipResult = ORKTextQuestionResult(identifier: "skip")
+        skipResult.textAnswer = step.task?.identifier ?? self.identifier
+        taskViewController.currentStepViewController?.result?.addResult(skipResult)
+        
+        // go forward
+        taskViewController.goForward()
     }
-    
-    public var isTomorrow: Bool {
-        return self.startOfDay() == Date().startOfDay().addingNumberOfDays(1)
-    }
-    
-    public func addingNumberOfDays(_ days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
-    }
-
 }

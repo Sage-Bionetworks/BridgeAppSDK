@@ -45,36 +45,3 @@ extension SBATextChoice {
         return ORKTextChoice(text: self.choiceText.trim() ?? "", detailText: self.choiceDetail?.trim(), value: self.choiceValue, exclusive: self.exclusive)
     }
 }
-
-extension NSDictionary: SBATextChoice {
-    
-    public var choiceText: String {
-        return (self["text"] as? String) ?? (self["prompt"] as? String) ?? self.identifier
-    }
-    
-    public var choiceDetail: String? {
-        return self["detailText"] as? String
-    }
-    
-    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
-        return (self["value"] as? NSCoding & NSCopying & NSObjectProtocol) ?? self.choiceText as NSString
-    }
-    
-    public var exclusive: Bool {
-        let exclusive = self["exclusive"] as? Bool
-        return exclusive ?? false
-    }
-}
-
-extension ORKTextChoice: SBATextChoice {
-    public var choiceText: String { return self.text }
-    public var choiceDetail: String? { return self.detailText }
-    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol { return self.value }
-}
-
-extension NSString: SBATextChoice {
-    public var choiceText: String { return self as String }
-    public var choiceValue: NSCoding & NSCopying & NSObjectProtocol { return self }
-    public var choiceDetail: String? { return nil }
-    public var exclusive: Bool { return false }
-}
