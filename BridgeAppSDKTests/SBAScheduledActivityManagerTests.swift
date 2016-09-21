@@ -540,17 +540,20 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         checkValidation(splitResults)
         checkDuplicateFilenames(splitResults)
         
-        // TODO: syoung 08/29/2016 See comment in the consolidatedResult code.
-        //        let countdownResult = result.stepResultForStepIdentifier("countdown")
-        //        XCTAssertNotNil(countdownResult)
-        //        XCTAssertNotNil(countdownResult?.results)
-        //        guard let countdownResults = countdownResult?.results else { return }
-        //        XCTAssertEqual(countdownResults.count, 3)
-        //        
-        //        // Additional results should be kept. Only the most recent should *not* have _dup# appended to the identifier
-        //        let resultIdentifiers = countdownResults.map({ $0.identifier })
-        //        let expectedResultIdentifiers = [ "file", "file_dup0", "file_dup1"]
-        //        XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
+        let countdownResult = result.stepResult(forStepIdentifier: "countdown")
+        XCTAssertNotNil(countdownResult)
+        XCTAssertNotNil(countdownResult?.results)
+        guard let countdownResults = countdownResult?.results else { return }
+        XCTAssertEqual(countdownResults.count, 3)
+        
+        // Additional results should be kept. Only the most recent should *not* have _dup# appended to the identifier
+        let resultIdentifiers = countdownResults.map({ $0.identifier })
+        let expectedResultIdentifiers = [ "file", "file_dup1", "file_dup2"]
+        XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
+        
+        let lastCountdownResult = (taskVC.taskResult.results?.findLast(withIdentifier: "countdown") as? ORKStepResult)?.results?.first
+        XCTAssertNotNil(lastCountdownResult)
+        XCTAssertEqual(lastCountdownResult?.identifier, "file")
     }
     
     func checkValidation(_ splitResults: [SBAActivityResult]) {

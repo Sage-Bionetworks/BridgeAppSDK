@@ -84,22 +84,32 @@
         return self.results ?: @[];
     }
     
-    // syoung 08/29/2016 For some reason, ResearchKit is including the same step result
-    // object in the results array multiple times, looping through to include the object
-    // without using a copy of the original. The result is that for the case where the
-    // navigation loops (for example, audio voice countdown) the previous countdowns that
-    // were too loud are lost, and are replaced by the same identical object.
-    // For now, just strip out the duplicate steps and only keep one.
+    NSMutableDictionary <NSString *, NSNumber *> *stepIdentifierCount = [NSMutableDictionary new];
+    NSMutableDictionary <NSString *, ORKStepResult *> *stepResultMap = [NSMutableDictionary new];
     NSMutableArray <ORKStepResult *> *results = [NSMutableArray new];
-    NSMutableArray *identifiers = [NSMutableArray new];
-    NSEnumerator *enumerator = [self.results reverseObjectEnumerator];
-    for (ORKStepResult *stepResult in enumerator) {
-        if (![identifiers containsObject:stepResult.identifier]) {
-            // Add to list of identifiers and add to results
-            [identifiers addObject:stepResult.identifier];
+    
+    [self.results enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(ORKResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        ORKStepResult *stepResult = (ORKStepResult *)obj;
+        NSNumber *identifierCount = stepIdentifierCount[stepResult.identifier];
+        if (identifierCount == nil) {
+            // This is the first instance. Add the step result.
             [results insertObject:stepResult atIndex:0];
+            stepResultMap[stepResult.identifier] = stepResult;
         }
-    }
+        else if (stepResult.results.count) {
+            // This is a duplicate. Add to existing step result.
+            ORKStepResult *previousResult = stepResultMap[stepResult.identifier];
+            NSMutableArray *stepResults = [previousResult.results mutableCopy] ?: [NSMutableArray new];
+            for (ORKResult *result in stepResult.results) {
+                if (![stepResults containsObject:result]) {
+                    result.identifier = [NSString stringWithFormat:@"%@_dup%@", result.identifier, identifierCount];
+                    [stepResults addObject:result];
+                }
+            }
+            previousResult.results = stepResults;
+        }
+        stepIdentifierCount[stepResult.identifier] = @(identifierCount.integerValue + 1);
+    }];
     
     return [results copy];
 }
