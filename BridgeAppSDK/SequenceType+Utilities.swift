@@ -87,5 +87,18 @@ extension Sequence {
         }
         return nil
     }
+    
+    /**
+     Find the last element  with the given `identifier`
+    */
+    public func findLast(withIdentifier identifier: String) -> Self.Iterator.Element? {
+        for element in self.reversed() {
+            if let obj = element as? NSObject,
+                let id = obj.value(forKey: "identifier") as? String, (id == identifier) {
+                return element
+            }
+        }
+        return nil
+    }
 
 }
