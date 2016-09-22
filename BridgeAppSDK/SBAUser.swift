@@ -113,12 +113,12 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
 
-    public var gender: String? {
+    public var gender: HKBiologicalSex {
         get {
-            return getKeychainObject(kGenderKey) as? String
+            return HKBiologicalSex(rawValue: (getKeychainObject(kGenderKey) as? NSNumber)?.intValue ?? 0) ?? .notSet
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kGenderKey)
+            setKeychainObject(NSNumber(value: newValue.rawValue), key: kGenderKey)
         }
     }
     
