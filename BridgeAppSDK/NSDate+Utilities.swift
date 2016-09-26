@@ -52,9 +52,7 @@ extension Date {
     
     public func addingNumberOfDays(_ days: Int) -> Date {
         let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return (calendar as NSCalendar).date(byAdding: components, to: self, options: .wrapComponents)!
+        return calendar.date(byAdding: .day, value: days, to: self, wrappingComponents: false)!
     }
 
 }

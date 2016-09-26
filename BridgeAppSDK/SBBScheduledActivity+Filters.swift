@@ -79,6 +79,8 @@ extension SBBScheduledActivity {
         let notExpired = NSPredicate(format: "%K == nil OR %K > %@", expiredKey, expiredKey, startOfToday as CVarArg)
         
         // And
-        return NSCompoundPredicate(andPredicateWithSubpredicates: [todayOrBefore, unfinishedOrFinishedToday, notExpired])
+        let availableToday = NSCompoundPredicate(andPredicateWithSubpredicates: [todayOrBefore, unfinishedOrFinishedToday, notExpired])
+        
+        return availableToday
     }
 }
