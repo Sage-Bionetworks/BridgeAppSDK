@@ -676,6 +676,40 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
     // MARK: schedule filtering
     
+    func testDateAddingNumberOfDays_July() {
+        
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        var dateComponents = DateComponents()
+        dateComponents.month = 7
+        dateComponents.day = 28
+        dateComponents.year = 2016
+        let sept28 = calendar.date(from: dateComponents)!
+        
+        // For a given date that is known to be *not* Daylight savings change
+        // Check that crossing the month threshold is valid
+        let days = 5
+        let expectedDate = sept28.addingTimeInterval(Double(days * 24 * 60 * 60))
+        let actualDate = sept28.addingNumberOfDays(days)
+        XCTAssertEqual(actualDate, expectedDate)
+    }
+    
+    func testDateAddingNumberOfDays_December() {
+        
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        var dateComponents = DateComponents()
+        dateComponents.month = 12
+        dateComponents.day = 28
+        dateComponents.year = 2016
+        let sept28 = calendar.date(from: dateComponents)!
+        
+        // For a given date that is known to be *not* Daylight savings change
+        // Check that crossing the month threshold is valid
+        let days = 5
+        let expectedDate = sept28.addingTimeInterval(Double(days * 24 * 60 * 60))
+        let actualDate = sept28.addingNumberOfDays(days)
+        XCTAssertEqual(actualDate, expectedDate)
+    }
+    
     func testAllDefaultSectionFilters() {
         let manager = TestScheduledActivityManager()
         manager.daysAhead = 7
@@ -683,11 +717,10 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         manager.sections = sections
         manager.activities = schedules
         
-        for (section, expectedTaskIds) in expectedTaskIdPerSection.enumerated() {
-            let filteredSchedules = manager.scheduledActivities(for: section)
-            let taskIds = filteredSchedules.mapAndFilter({ $0.taskIdentifier })
-            XCTAssertEqual(filteredSchedules.count, expectedTaskIds.count)
-            XCTAssertEqual(taskIds, expectedTaskIds, "\(section)")
+        for (tableSection, expectedTaskIds) in expectedTaskIdPerSection.enumerated() {
+            let filteredSchedules = manager.scheduledActivities(for: tableSection)
+            let taskIds = filteredSchedules.map({ $0.taskIdentifier }) as! [String]
+            XCTAssertEqual(taskIds, expectedTaskIds, "\(tableSection)")
         }
     }
     
@@ -740,26 +773,28 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         
         let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
         let hour: TimeInterval = 60 * 60
-        let day: TimeInterval = 24 * hour
+        //let day: TimeInterval = 24 * hour
         
-        let twoDaysAgo = Date(timeIntervalSinceNow: -2 * day)
-        let yesterday = Date(timeIntervalSinceNow: -1 * day)
         let now = Date()
+        let twoDaysAgo = now.addingNumberOfDays(-2)
+        let yesterday = now.addingNumberOfDays(-1)
         let midnightToday = calendar.startOfDay(for: now)
         let fourAM = midnightToday.addingTimeInterval(4 * hour)
         let tenPM = midnightToday.addingTimeInterval(22 * hour)
-        let tomorrow = Date(timeIntervalSinceNow: day)
-        let twoDaysFromNow = Date(timeIntervalSinceNow: 2 * day)
-        let sevenDaysFromNow = Date(timeIntervalSinceNow: 7 * day)
-        let eightDaysFromNow = Date(timeIntervalSinceNow: 8 * day)
+        let tomorrow = now.addingNumberOfDays(1)
+        let twoDaysFromNow = now.addingNumberOfDays(2)
+        let sevenDaysFromNow = now.addingNumberOfDays(7)
+        let eightDaysFromNow = now.addingNumberOfDays(8)
         
         var schedules: [SBBScheduledActivity] = []
-        var sections: [[String]] = []
+        var sections: [SBAScheduledActivitySection] = []
+        var sectionIdentifiers: [[String]] = []
 
         // Section - Expired Yesterday
         schedules.append(createScheduledActivity("2 Days Ago - Expired Yesterday",
             scheduledOn: twoDaysAgo, expiresOn: yesterday, finishedOn: nil, optional: false))
-        sections.append(["2 Days Ago - Expired Yesterday"])
+        sectionIdentifiers.append(["2 Days Ago - Expired Yesterday"])
+        sections.append(.expiredYesterday)
         
         // Section - Today
         schedules.append(createScheduledActivity("2 Days Ago - Incomplete",
@@ -772,30 +807,33 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             scheduledOn: fourAM, expiresOn: fourAM.addingTimeInterval(hour), finishedOn: fourAM.addingTimeInterval(0.5 * hour), optional: false))
         schedules.append(createScheduledActivity("10PM - Incomplete",
             scheduledOn: tenPM, expiresOn: tenPM.addingTimeInterval(hour), finishedOn: nil, optional: false))
-        sections.append(
+        sectionIdentifiers.append(
             ["2 Days Ago - Incomplete",
             "2 Days Ago - Completed Today",
             "4AM - Incomplete",
             "4AM - Complete",
             "10PM - Incomplete",])
-        
+        sections.append(.today)
+
         // Section - Tomorrow
         schedules.append(createScheduledActivity("Tomorrow",
             scheduledOn: tomorrow, expiresOn: nil, finishedOn: nil, optional: false))
-        sections.append(["Tomorrow"])
+        sectionIdentifiers.append(["Tomorrow"])
+        sections.append(.tomorrow)
         
         // Section - Keep Going
         schedules.append(createScheduledActivity("2 Days Ago - Incomplete - Optional",
             scheduledOn: twoDaysAgo, expiresOn: nil, finishedOn: nil, optional: true))
-        sections.append(["2 Days Ago - Incomplete - Optional"])
+        sectionIdentifiers.append(["2 Days Ago - Incomplete - Optional"])
+        sections.append(.keepGoing)
         
         // Section - Coming Week
         schedules.append(createScheduledActivity("Two Days From Now",
             scheduledOn: twoDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
-        // Section - Coming Week
         schedules.append(createScheduledActivity("Seven Days From Now",
             scheduledOn: sevenDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
-        sections.append(["Tomorrow", "Two Days From Now", "Seven Days From Now"])
+        sectionIdentifiers.append(["Tomorrow", "Two Days From Now", "Seven Days From Now"])
+        sections.append(.comingUp)
         
         // Section - None
         schedules.append(createScheduledActivity("2 Days Ago - Completed Yesterday",
@@ -805,7 +843,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         schedules.append(createScheduledActivity("8 Days From Now",
             scheduledOn: eightDaysFromNow, expiresOn: nil, finishedOn: nil, optional: false))
 
-        return (schedules, [.expiredYesterday, .today, .tomorrow, .keepGoing, .comingUp], sections)
+        return (schedules, sections, sectionIdentifiers)
     }
     
     func createScheduledActivity(_ taskId: String, scheduledOn:Date = Date(), expiresOn:Date? = nil, finishedOn:Date? = nil, optional:Bool = false) -> SBBScheduledActivity {
