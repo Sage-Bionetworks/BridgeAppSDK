@@ -67,7 +67,7 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     /**
      * Gender is stored in the keychain
      */
-    var gender: String? { get set }
+    var gender: HKBiologicalSex { get set }
     
     /**
      * Birthdate is stored in the keychain

@@ -57,9 +57,11 @@ extension SBAUserRegistrationController {
         return textAnswer(.externalID)
     }
     
-    public var gender: String? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult else { return nil }
-        return result.choiceAnswers?.first as? String
+    public var gender: HKBiologicalSex? {
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult,
+            let answer = result.choiceAnswers?.first as? Int
+        else { return nil }
+        return HKBiologicalSex(rawValue: answer)
     }
     
     public var birthdate: Date? {

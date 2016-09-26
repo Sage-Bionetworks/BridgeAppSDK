@@ -42,10 +42,6 @@ public enum SBAProfileInfoOption : String {
     case gender           = "gender"
 }
 
-public enum SBARegistrationGender: String {
-    case female, male, other
-}
-
 enum SBAProfileInfoOptionsError: Error {
     case missingRequiredOptions
     case missingEmail
@@ -278,9 +274,9 @@ public struct SBAProfileInfoOptions {
     
     func makeGenderFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
         let textChoices: [ORKTextChoice] = [
-            ORKTextChoice(text: Localization.localizedString("GENDER_FEMALE"), value: SBARegistrationGender.female.rawValue as NSString),
-            ORKTextChoice(text: Localization.localizedString("GENDER_MALE"), value: SBARegistrationGender.male.rawValue as NSString),
-            ORKTextChoice(text: Localization.localizedString("GENDER_OTHER"), value: SBARegistrationGender.other.rawValue as NSString),
+            ORKTextChoice(text: Localization.localizedString("GENDER_FEMALE"), value: HKBiologicalSex.female.rawValue as NSNumber),
+            ORKTextChoice(text: Localization.localizedString("GENDER_MALE"), value: HKBiologicalSex.male.rawValue as NSNumber),
+            ORKTextChoice(text: Localization.localizedString("GENDER_OTHER"), value: HKBiologicalSex.other.rawValue as NSNumber),
             ]
         let answerFormat = ORKValuePickerAnswerFormat(textChoices: textChoices)
         let formItem = ORKFormItem(identifier: option.rawValue,
