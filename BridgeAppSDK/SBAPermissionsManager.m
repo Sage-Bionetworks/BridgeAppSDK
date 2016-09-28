@@ -34,6 +34,7 @@
 #import "SBAPermissionsManager.h"
 #import "SBABridgeAppSDKDelegate.h"
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
@@ -237,16 +238,27 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
         case SBAPermissionsTypeLocalNotifications:
             return NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Allowing notifications enables the app to show you reminders for activity sessions.", @"");
         case SBAPermissionsTypeLocation:
-            return NSLocalizedStringWithDefaultValue(@"SBA_LOCATION_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared.", @"");
+            return [self bundlePermissionDescriptionForKey: @"NSLocationWhenInUseUsageDescription" defaultValue:@"Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared."];
         case SBAPermissionsTypeCoremotion:
-            return NSLocalizedStringWithDefaultValue(@"SBA_COREMOTION_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease.", @"");
+            return [self bundlePermissionDescriptionForKey: @"NSMotionUsageDescription" defaultValue:@"Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease."];
         case SBAPermissionsTypeMicrophone:
-            return NSLocalizedStringWithDefaultValue(@"SBA_MICROPHONE_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Access to microphone is required for your Voice Recording Activity.", @"");
-        case SBAPermissionsTypeCamera:
+            return [self bundlePermissionDescriptionForKey: @"NSMicrophoneUsageDescription" defaultValue:@"Access to microphone is required for your Voice Recording Activity."];
         case SBAPermissionsTypePhotoLibrary:
+            return [self bundlePermissionDescriptionForKey: @"NSPhotoLibraryUsageDescription" defaultValue:@"Photo Library"];
+        case SBAPermissionsTypeCamera:
         default:
             return [NSString stringWithFormat:@"Unknown permission type: %u", (unsigned int)type];
     }
+}
+
+- (NSString *)bundlePermissionDescriptionForKey:(NSString *)key defaultValue:(NSString*)defaultValue {
+    NSDictionary *info = [[NSBundle mainBundle] localizedInfoDictionary] ?: [[NSBundle mainBundle] infoDictionary];
+    NSString *str = info[key];
+    if (![str isKindOfClass:[NSString class]]) {
+        NSAssert1(NO, @"Missing required main bundle info.plist key %@", key);
+        str = defaultValue;
+    }
+    return str;
 }
 
 + (NSError *)permissionDeniedErrorForType:(SBAPermissionsType)type
