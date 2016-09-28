@@ -34,13 +34,7 @@
 import ResearchKit
 import BridgeSDK
 
-// TODO: syoung 04/14/2016 This is a WIP first draft of an implementation of schedule fetching that
-// works for Lilly but is not complete for Parkinsons (which include a separate section for "keep going"
-// activities *and* includes surveys that are build server-side (currently not supported by this implementation)
-
-
 public enum SBAScheduledActivitySection {
-    
     case none
     case expiredYesterday
     case today
