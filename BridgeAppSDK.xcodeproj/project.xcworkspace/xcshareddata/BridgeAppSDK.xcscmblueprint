@@ -5,20 +5,20 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "CEE2E2DA3B415DB70C257504A5BA6B611A730B63" : 0,
+    "8926BC5FA672AD88F1989CD574C9637E4B06AC6F" : 9223372036854775807,
     "9CF6181E3789E3853840089C16D4B9FDDB9B31E2" : 0,
-    "82DF43EF5CA016D15C41E0AF1AF686E9973475B7" : 0,
     "0B6D8AAAD0FF4C01212E6AB2D110619FA685281D" : 0,
-    "B8291B2279B07F973FECD69C5EEE3C81B0A98D83" : 0,
+    "82DF43EF5CA016D15C41E0AF1AF686E9973475B7" : 0,
     "DEDD58F0BAF28034A74179391A23AC2E0219CDC3" : 0,
     "A312D9A806D0D2A0881387E6F394BB84B63BC0CD" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6C20753D-AB1D-420F-AA92-C05F7EFBF148",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "CEE2E2DA3B415DB70C257504A5BA6B611A730B63" : "BridgeAppSDK\/BridgeSDK\/",
+    "8926BC5FA672AD88F1989CD574C9637E4B06AC6F" : "",
     "9CF6181E3789E3853840089C16D4B9FDDB9B31E2" : "BridgeAppSDK\/ResearchKit\/",
-    "82DF43EF5CA016D15C41E0AF1AF686E9973475B7" : "BridgeAppSDK\/ZipZap\/",
     "0B6D8AAAD0FF4C01212E6AB2D110619FA685281D" : "BridgeAppSDK\/CMSSupport\/",
-    "B8291B2279B07F973FECD69C5EEE3C81B0A98D83" : "",
+    "82DF43EF5CA016D15C41E0AF1AF686E9973475B7" : "BridgeAppSDK\/ZipZap\/",
     "DEDD58F0BAF28034A74179391A23AC2E0219CDC3" : "BridgeAppSDK\/BridgeSDK\/Submodules\/RNCryptor\/",
     "A312D9A806D0D2A0881387E6F394BB84B63BC0CD" : "BridgeAppSDK\/"
   },
@@ -37,6 +37,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "82DF43EF5CA016D15C41E0AF1AF686E9973475B7"
     },
     {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Sage-Bionetworks\/Lilly.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8926BC5FA672AD88F1989CD574C9637E4B06AC6F"
+    },
+    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ResearchKit\/ResearchKit.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9CF6181E3789E3853840089C16D4B9FDDB9B31E2"
@@ -45,11 +50,6 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Sage-Bionetworks\/BridgeAppSDK.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A312D9A806D0D2A0881387E6F394BB84B63BC0CD"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Sage-Bionetworks\/Lilly.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B8291B2279B07F973FECD69C5EEE3C81B0A98D83"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Sage-Bionetworks\/Bridge-iOS-SDK.git",

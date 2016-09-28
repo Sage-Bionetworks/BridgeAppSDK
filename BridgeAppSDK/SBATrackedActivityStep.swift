@@ -72,6 +72,14 @@ open class SBATrackedActivityFormStep: ORKFormStep, SBATrackedNavigationStep {
         super.init(identifier: identifier)
     }
     
+    override public func defaultStepResult() -> ORKStepResult {
+        guard let formItem = self.formItems?.first else { return ORKStepResult(identifier: self.identifier) }
+        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
+        questionResult.questionType = ORKQuestionType.multipleChoice
+        questionResult.choiceAnswers = ["No Tracked Data"]
+        return ORKStepResult(stepIdentifier: self.identifier, results: [questionResult])
+    }
+    
     // MARK: SBATrackedNavigationStep
     
     open var trackingType: SBATrackingStepType? {
@@ -139,6 +147,13 @@ open class SBATrackedActivityPageStep: ORKPageStep, SBATrackedNavigationStep {
     
     override open func stepViewControllerClass() -> AnyClass {
         return SBATrackedActivityPageStepViewController.classForCoder()
+    }
+    
+    override public func defaultStepResult() -> ORKStepResult {
+        let questionResult = ORKChoiceQuestionResult(identifier: self.identifier)
+        questionResult.questionType = ORKQuestionType.multipleChoice
+        questionResult.choiceAnswers = []
+        return ORKStepResult(stepIdentifier: self.identifier, results: [questionResult])
     }
     
     // MARK: Navigation override

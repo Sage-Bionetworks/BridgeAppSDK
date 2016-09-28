@@ -49,34 +49,32 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     
     func transformToTaskAndIncludes(_ factory: SBASurveyFactory, isLastStep: Bool) -> (task: SBANavigableOrderedTask?, include: SBATrackingStepIncludes?)  {
         
-        // Check the dataStore to determine if the momentInDay id map has been setup and do so if needed
-        if (self.dataStore.momentInDayResultDefaultIdMap == nil) {
-            self.dataStore.updateMoment(inDayIdMap: filteredSteps(.ActivityOnly, factory: factory))
-        }
-        
         // Build the approproate steps
-        
         var include: SBATrackingStepIncludes = .None
         if (isLastStep) {
             // If this is the last step then it is not being inserted into another task activity
             include = .StandAloneSurvey
         }
-        else if (!self.dataStore.hasSelectedOrSkipped) {
+        else if (self.dataStore.selectedItems == nil) {
             include = .SurveyAndActivity
         }
-        else if (self.shouldShowChangedStep()) {
-            if (self.dataStore.hasNoTrackedItems) {
+        else if shouldIncludeChangedStep() {
+            if !self.hasTrackedItems() {
                 include = .ChangedOnly
             }
             else {
                 include = .ChangedAndActivity
             }
         }
-        else if (self.dataStore.shouldIncludeMomentInDayStep ||
-                (self.alwaysIncludeActivitySteps && !self.dataStore.hasNoTrackedItems)) {
+        else if shouldIncludeMomentInDayQuestions() {
             include = .ActivityOnly
         }
         
+        // Check the dataStore to determine if the momentInDay step map has been setup and do so if needed
+        if (self.dataStore.momentInDaySteps == nil) {
+            self.dataStore.momentInDaySteps = filteredSteps(.ActivityOnly, factory: factory)
+        }
+
         let steps = filteredSteps(include, factory: factory)
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
         task.conditionalRule = self
@@ -107,6 +105,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         
         // Otherwise, update the step with the selected items and then determine if it should be skipped
         trackedStep.update(selectedItems: self.dataStore.selectedItems ?? [])
+
         return trackedStep.shouldSkipStep
     }
     
@@ -115,11 +114,15 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         if let selectionStep = previousStep as? SBATrackedSelectionStep,
             let stepResult = result.stepResult(forStepIdentifier: selectionStep.identifier),
             let trackedResultIdentifier = selectionStep.trackedResultIdentifier,
-            let trackedResult = stepResult.result(forIdentifier: trackedResultIdentifier) as? SBATrackedDataSelectionResult {
-            self.dataStore.selectedItems = trackedResult.selectedItems
+            let _ = stepResult.result(forIdentifier: trackedResultIdentifier) as? SBATrackedDataSelectionResult {
+            
+            // If the selection step has a tracked data selection step added to it then update the data store
+            self.dataStore.updateTrackedData(for: stepResult)
         }
-        else if let previous = previousStep as? SBATrackedStep , previous.trackingType == .activity,
+        else if let previous = previousStep as? SBATrackedStep, previous.trackingType == .activity,
             let stepResult = result.stepResult(forStepIdentifier: previousStep!.identifier) {
+            
+            // If this is a moment in day step then update the data store
             self.dataStore.updateMomentInDay(for: stepResult)
         }
         
@@ -186,14 +189,34 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }) as? SBATrackedStepSurveyItem
     }
     
-    func shouldShowChangedStep() -> Bool {
+    open func shouldIncludeChangedStep() -> Bool {
         if let _ = self.findStep(.changed), let lastDate = self.dataStore.lastTrackingSurveyDate {
-            let interval = self.repeatTimeInterval as TimeInterval
+            let interval = self.trackingSurveyRepeatTimeInterval as TimeInterval
             return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
         }
         else {
             return false
         }
+    }
+    
+    open func shouldIncludeMomentInDayQuestions() -> Bool {
+        guard hasTrackedItems() else { return false }
+        if !alwaysIncludeActivitySteps,
+            let _ = self.dataStore.momentInDayResults,
+            let lastDate = self.dataStore.lastCompletionDate {
+            let interval = self.momentInDayRepeatTimeInterval as TimeInterval
+            return interval > 0 && lastDate.timeIntervalSinceNow < -1 * interval
+        }
+        else {
+            return true
+        }
+    }
+    
+    open func hasTrackedItems() -> Bool {
+        guard let selectedItems = self.dataStore.selectedItems else {
+            return false
+        }
+        return selectedItems.find({ $0.tracking }) != nil
     }
 
 }

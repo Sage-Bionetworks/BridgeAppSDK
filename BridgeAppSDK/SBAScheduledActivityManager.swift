@@ -551,14 +551,14 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
                             var subsetResults = subResults
                             if !isDataCollection {
                                 for dataStore in dataStores {
-                                    if let momentInDayResult = dataStore.momentInDayResult {
+                                    if let momentInDayResults = dataStore.momentInDayResults {
                                         // Mark the start/end date with the start timestamp of the first step
-                                        for stepResult in momentInDayResult {
+                                        for stepResult in momentInDayResults {
                                             stepResult.startDate = subsetResults.first!.startDate
                                             stepResult.endDate = stepResult.startDate
                                         }
                                         // Add the results at the beginning
-                                        subsetResults = momentInDayResult + subsetResults
+                                        subsetResults = momentInDayResults + subsetResults
                                     }
                                 }
                             }

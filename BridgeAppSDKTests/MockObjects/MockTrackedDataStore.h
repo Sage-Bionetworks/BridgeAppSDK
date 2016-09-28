@@ -46,6 +46,5 @@
 
 @interface MockTrackedDataStore (PrivateTest)
 
-@property (nonatomic, copy, readwrite) NSArray * momentInDayResultDefaultIdMap;
 
 @end
