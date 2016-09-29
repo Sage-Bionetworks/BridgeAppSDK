@@ -82,6 +82,7 @@ extension ORKFormItem: SBAQuestionResultMapping {
         guard let answerFormat = self.answerFormat as? SBAQuestionResultMapping,
             let questionResult = answerFormat.questionResult(identifier: identifier, answer: answer)
             else {
+                assertionFailure("Unsupported answer format \(self.answerFormat)")
                 return nil
         }
         questionResult.questionType = answerFormat.questionType
@@ -141,6 +142,22 @@ extension ORKScaleAnswerFormat : SBAQuestionResultMapping {
         }
         else {
             result.scaleAnswer = (self.defaultValue as NSNumber?)
+        }
+        
+        return result
+    }
+}
+
+extension ORKBooleanAnswerFormat : SBAQuestionResultMapping {
+    
+    func questionResult(identifier: String, answer: Any?) -> ORKQuestionResult? {
+        
+        let result = ORKBooleanQuestionResult(identifier: identifier)
+        if let num = answer as? NSNumber {
+            result.booleanAnswer = num
+        }
+        else {
+            result.booleanAnswer = false
         }
         
         return result

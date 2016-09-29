@@ -37,7 +37,7 @@
 
 @interface SBATrackedDataStore ()
 
-@property (nonatomic, copy, readwrite) NSDictionary <NSString *, id>  * _Nullable managedResults;
+@property (nonatomic, copy, readwrite) NSDictionary<NSString *, NSDictionary *> * _Nullable managedResults;
 
 @property (nonatomic) NSMutableDictionary *changesDictionary;
 
@@ -123,7 +123,7 @@
     [self.storedDefaults setValue:lastTrackingSurveyDate forKey:[[self class] lastTrackingSurveyDateKey]];
 }
 
-- (NSDictionary *)managedResults {
+- (NSDictionary<NSString *, NSDictionary *> *)managedResults {
     NSDictionary *managedResults = self.changesDictionary[[[self class] resultsKey]];
     if (managedResults == nil) {
         NSData *data = [self.storedDefaults objectForKey:[[self class] resultsKey]];
@@ -137,7 +137,7 @@
     return managedResults;
 }
 
-- (void)setManagedResults:(NSDictionary *)managedResults {
+- (void)setManagedResults:(NSDictionary<NSString *, NSDictionary *> *)managedResults {
     [self.changesDictionary setValue:managedResults forKey:[[self class] resultsKey]];
 }
 
@@ -236,7 +236,11 @@
         }
     }
     
-    // TODO: Implement syoung 09/27/2016
+    NSDictionary *storedResult = self.managedResults[step.identifier];
+    if ([storedResult isKindOfClass:[NSDictionary class]]) {
+        return [step stepResultWithBridgeDictionary:storedResult];
+    }
+    
     return nil;
 }
 

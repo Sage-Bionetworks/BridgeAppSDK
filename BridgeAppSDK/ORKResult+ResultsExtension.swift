@@ -145,7 +145,13 @@ extension ORKStepResult {
     override func resultAsDictionary() -> NSMutableDictionary {
         let stepResult = super.resultAsDictionary()
         guard let results = self.results  else { return stepResult }
-        stepResult[kAnswerMapKey] = results.map({ $0.resultAsDictionary().jsonObject() })
+        stepResult[kAnswerMapKey] = results.filteredDictionary({ (result) -> (String?, AnyObject?) in
+            guard let questionResult = result as? ORKQuestionResultAnswerJSON,
+                let answer = questionResult.jsonSerializedAnswer() else {
+                    return (result.identifier, self.resultAsDictionary().jsonObject() as AnyObject)
+            }
+            return (result.identifier, answer.value)
+        })
         return stepResult;
     }
 }

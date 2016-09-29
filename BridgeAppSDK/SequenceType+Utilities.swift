@@ -43,7 +43,22 @@ extension Sequence {
         var result = [T]()
         for element in self {
             if let t = try transform(element) {
-                result += [t]
+                result.append(t)
+            }
+        }
+        return result
+    }
+    
+    /**
+     Returns an `Dictionary` containing the results of mapping and filtered `transform`
+     over `self` where.
+     */
+    public func filteredDictionary<Hashable, T>(_ transform: (Self.Iterator.Element) throws -> (Hashable?, T?)) rethrows -> [Hashable: T] {
+        var result = [Hashable:T]()
+        for element in self {
+            let (key, t) = try transform(element)
+            if let key = key, let t = t {
+                result[key] = t
             }
         }
         return result

@@ -796,6 +796,24 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqualWithAccuracy(dataStore.lastTrackingSurveyDate?.timeIntervalSinceNow ?? 99.0, 0.0, accuracy: 2)
     }
     
+    func testCommitChanges_OtherTrackedResult() {
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        let result = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        result.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedQuestion", results: [result])
+        dataStore.updateTrackedData(for: stepResult)
+        
+        // --- method under test
+        dataStore.commitChanges()
+        
+        // Changes have been saved and does not have changes
+        XCTAssertFalse(dataStore.hasChanges);
+        XCTAssertNotNil(dataStore.storedDefaults.object(forKey: "results"))
+        XCTAssertNotNil(dataStore.lastTrackingSurveyDate)
+        XCTAssertEqualWithAccuracy(dataStore.lastTrackingSurveyDate?.timeIntervalSinceNow ?? 99.0, 0.0, accuracy: 2)
+    }
+    
     func testCommitChanges_WithTrackedMedicationAndMomentInDayResult() {
         let dataStore = self.dataStoreForMedicationTracking()
 
@@ -1003,6 +1021,66 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             XCTAssertEqual(result.answer as! NSObject, (expectedResult as! ORKQuestionResult).answer as! NSObject, "\(expectedResult.identifier)")
         }
     }
+    
+    func testStepResultForStep_OtherTrackedStep_BooleanForm() {
+        
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        // Create the result and commit the changes
+        let questionResult = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        questionResult.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedStep", results: [questionResult])
+        dataStore.updateTrackedData(for: stepResult)
+        dataStore.commitChanges()
+        
+        // Create the step
+        let step = ORKFormStep(identifier: "trackedStep")
+        step.formItems = [ORKFormItem(identifier: "trackedQuestion", text: nil, answerFormat: ORKAnswerFormat.booleanAnswerFormat())]
+        
+        // Get the restored result
+        let storedResult = dataStore.stepResult(for: step)
+        
+        XCTAssertNotNil(storedResult)
+        
+        guard let booleanResult = storedResult?.results?.first as? ORKBooleanQuestionResult else {
+            XCTAssert(false, "\(storedResult) results are nil or not expected type")
+            return
+        }
+     
+        XCTAssertEqual(storedResult!.identifier, "trackedStep")
+        XCTAssertEqual(booleanResult.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.booleanAnswer!, questionResult.booleanAnswer!)
+    }
+    
+    func testStepResultForStep_OtherTrackedStep_BooleanQuestion() {
+        
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        // Create the result and commit the changes
+        let questionResult = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        questionResult.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedQuestion", results: [questionResult])
+        dataStore.updateTrackedData(for: stepResult)
+        dataStore.commitChanges()
+        
+        // Create the step
+        let step = ORKQuestionStep(identifier: "trackedQuestion", title: nil, answer: ORKAnswerFormat.booleanAnswerFormat())
+        
+        // Get the restored result
+        let storedResult = dataStore.stepResult(for: step)
+        
+        XCTAssertNotNil(storedResult)
+        
+        guard let booleanResult = storedResult?.results?.first as? ORKBooleanQuestionResult else {
+            XCTAssert(false, "\(storedResult) results are nil or not expected type")
+            return
+        }
+        
+        XCTAssertEqual(storedResult!.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.booleanAnswer!, questionResult.booleanAnswer!)
+    }
+    
     
     // Mark: convenience methods
     
