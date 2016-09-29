@@ -56,14 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDate *lastCompletionDate;
 
 /**
- Items the tracked data survey questions. Assumes only one set of items.
+ Selected items from the tracked data survey questions. Assumes only one set of items.
  */
 @property (nonatomic, copy, nullable) NSArray<SBATrackedDataObject *> *selectedItems;
 
 /**
- Items the tracked data survey questions that are *tracked* with "Moment in Day" follow-up. 
- Assumes only one set of items. This is a subset of the selected items that includes only the 
- items that are tracked individually.
+ Items from the tracked data survey questions that are *tracked* with "Moment in Day" 
+ follow-up. Assumes only one set of items. This is a subset of the selected items that includes 
+ only the selected items that are tracked with a follow-up question.
  */
 @property (nonatomic, copy, readonly, nullable) NSArray<SBATrackedDataObject *> *trackedItems;
 
@@ -74,22 +74,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSArray<ORKStep *> *momentInDaySteps;
 
 /**
- Subset of results that are used to determine "Moment in Day". 
+ Results that map to "Moment in Day" steps. These results are stored in memory only.
  */
 @property (nonatomic, copy, nullable) NSArray<ORKStepResult *> *momentInDayResults;
 
 /**
  Update the "Moment in Day" result set.
+ @param     stepResult  The step result to add/replace in the "Moment in Day" result set.
  */
 - (void)updateMomentInDayForStepResult:(ORKStepResult *)stepResult;
 
 /**
- Update the tracked data result set.
+ Update the tracked data result set. If this is recognized as including the `selectedItems`
+ then that property will be updated from this result.
+ @param     stepResult  The step result to use to add/replace the tracked data set
  */
 - (void)updateTrackedDataForStepResult:(ORKStepResult *)stepResult;
 
 /**
  Return the step result that is associated with a given step.
+ @param     step    The step for which a result is requested.
+ @returns           The step result for this step (if found in the data store)
  */
 - (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step;
 
