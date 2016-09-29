@@ -93,6 +93,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Items() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        
         XCTAssertEqual(dataCollection.itemsClassType, "Medication")
         
         let expectedCount = 15
@@ -147,6 +148,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_StandAloneSurvey() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.StandAloneSurvey
         let steps = dataCollection.filteredSteps(include)
@@ -196,6 +199,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationSelectionStep_Optional() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let inputItem: NSDictionary = [
             "identifier"   : "medicationSelection",
@@ -318,6 +323,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ActivityOnly() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ActivityOnly
         let steps = dataCollection.filteredSteps(include)
@@ -408,6 +415,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ChangedAndActivity() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ChangedAndActivity
         let steps = dataCollection.filteredSteps(include)
@@ -499,6 +508,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ChangedAndNoMedsPreviouslySelected() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ChangedOnly
         let steps = dataCollection.filteredSteps(include)
@@ -509,6 +520,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_SurveyAndActivity() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.SurveyAndActivity
         let steps = dataCollection.filteredSteps(include)
@@ -564,8 +577,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         dataCollection.dataStore = dataStore
         
         // If the selected items set is empty (but there is one) then do not show the activity steps
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = []
+        dataStore.commitChanges()
         
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         
@@ -588,8 +601,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the selected items set does not include any that are tracked then should
         // return the empty set (for a date in the near past)
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
+        dataStore.commitChanges()
         
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         
@@ -612,8 +625,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item, then should include the activty 
         // steps, but do not need to include any of the others
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date()
+        
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
@@ -631,8 +646,9 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         
         // The moment in day results should have steps for creating default results
@@ -654,8 +670,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = []
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
+        
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
         
         // The moment in day results should have default values
@@ -974,6 +992,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         
         // If it has been over a month, do not include
         dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -32 * 24 * 60 * 60)
+
         XCTAssertTrue(dataCollection.shouldIncludeChangedStep())
     }
     
@@ -1003,8 +1022,10 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         // restored result should have equal answers and identifiers but not be identical objects
         XCTAssertFalse(storedResult === selectionResult)
 
-        // If not equal then inspect the result
+        // Identifier should match
         XCTAssertEqual(storedResult.identifier, selectionResult.identifier)
+        
+        // And start/end date should match
         XCTAssertEqual(storedResult.startDate, dataStore.lastTrackingSurveyDate)
         XCTAssertEqual(storedResult.endDate, dataStore.lastTrackingSurveyDate)
         
@@ -1081,8 +1102,38 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertEqual(booleanResult.booleanAnswer!, questionResult.booleanAnswer!)
     }
     
+    // MARK: ORKTaskResultSource
     
-    // Mark: convenience methods
+    func testStoredTaskResultSource() {
+        
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        // Setup the data store to have selected items and need to include the changed step
+        dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
+        
+        // Create a task
+        let factory = SBASurveyFactory()
+        let introStep = ORKInstructionStep(identifier: "intro")
+        let surveyStep = dataCollection.transformToStep(with: factory, isLastStep: false)!
+        let questionStep = ORKQuestionStep(identifier: "booleanQuestion", title: nil, answer: ORKAnswerFormat.booleanAnswerFormat())
+        let conclusionStep = ORKCompletionStep(identifier: "conclusion")
+        let task = SBANavigableOrderedTask(identifier: "task", steps: [introStep, surveyStep, questionStep, conclusionStep])
+        
+        // check assumptions
+        let selectionStepIdentifier = "Medication Tracker.medicationSelection"
+        let selectionStep = task.step(withIdentifier: selectionStepIdentifier)
+        XCTAssertNotNil(selectionStep)
+        
+        // Check the initial stored result
+        let result = task.stepResult(forStepIdentifier: selectionStepIdentifier)
+        XCTAssertNotNil(result)
+    }
+    
+    // MARK: convenience methods
     
     func dataStoreForMedicationTracking() -> MockTrackedDataStore {
         return MockTrackedDataStore()

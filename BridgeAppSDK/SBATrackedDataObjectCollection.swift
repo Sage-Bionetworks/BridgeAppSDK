@@ -70,14 +70,21 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             include = .ActivityOnly
         }
         
-        // Check the dataStore to determine if the momentInDay step map has been setup and do so if needed
-        if (self.dataStore.momentInDaySteps == nil) {
-            self.dataStore.momentInDaySteps = filteredSteps(.ActivityOnly, factory: factory)
-        }
-
-        let steps = filteredSteps(include, factory: factory)
+        // Setup the steps
+        let (steps, trackedResults) = filteredSteps(include, factory: factory)
         let task = SBANavigableOrderedTask(identifier: self.schemaIdentifier, steps: steps)
         task.conditionalRule = self
+        
+        // Check the dataStore to determine if the momentInDay step map has been setup and do so if needed
+        if (self.dataStore.momentInDaySteps == nil)  {
+            let (activitySteps, _) = filteredSteps(.ActivityOnly, factory: factory)
+            self.dataStore.momentInDaySteps = activitySteps
+        }
+        
+        // Add the tracked results
+        if trackedResults.count > 0 {
+            task.appendInitialResults(contentsOf: trackedResults)
+        }
         
         return (task, include)
     }
@@ -132,12 +139,14 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
     // MARK: Functions for transforming and recording results
     
     public func filteredSteps(_ include: SBATrackingStepIncludes) -> [ORKStep] {
-        return filteredSteps(include, factory: SBASurveyFactory())
+        let (steps, _) = filteredSteps(include, factory: SBASurveyFactory())
+        return steps
     }
     
-    fileprivate func filteredSteps(_ include: SBATrackingStepIncludes, factory: SBASurveyFactory) -> [ORKStep] {
+    fileprivate func filteredSteps(_ include: SBATrackingStepIncludes, factory: SBASurveyFactory) -> (steps: [ORKStep],trackedResults: [ORKStepResult]) {
         
         var firstActivityStepIdentifier: String?
+        var trackedResults:[ORKStepResult] = []
         
         // Filter and map
         let steps: [ORKStep] = self.steps.mapAndFilter { (element) -> ORKStep? in
@@ -149,8 +158,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             if let trackingItem = item as? SBATrackedStepSurveyItem,
                 let trackingType = trackingItem.trackingType {
                 
-                // If should not include the tracking item or the factory returns nil
-                // then just return nil
+                // If the step should be included (or the tracking should include activity
                 guard include.shouldInclude(trackingType),
                     let step = factory.createSurveyStep(item, trackingType: trackingType, trackedItems: self.items)
                 else { return nil }
@@ -158,6 +166,11 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
                 // keep a pointer to the first activity step identifier
                 if trackingType == .activity && firstActivityStepIdentifier == nil {
                     firstActivityStepIdentifier = step.identifier
+                }
+
+                // For selection step, add to tracked results
+                if trackingType == .selection, let result = dataStore.stepResult(for: step) {
+                    trackedResults.append(result)
                 }
                 
                 // return the step created by the factory
@@ -178,7 +191,7 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
             changedStep.skipToStepIdentifier = nextStepIdentifier
         }
         
-        return steps
+        return (steps, trackedResults)
     }
     
     public func findStep(_ trackingType: SBATrackingStepType) -> SBATrackedStepSurveyItem? {

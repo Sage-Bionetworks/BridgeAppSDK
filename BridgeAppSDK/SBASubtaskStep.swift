@@ -139,6 +139,15 @@ open class SBASubtaskStep: ORKStep {
         return replacementStep(nextStep)
     }
     
+    internal func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
+        guard let substepIdentifier = substepIdentifier(stepIdentifier),
+            let resultSource = self.subtask as? ORKTaskResultSource
+        else {
+            return nil
+        }
+        return resultSource.stepResult(forStepIdentifier: substepIdentifier)
+    }
+    
     override open var requestedPermissions: ORKPermissionMask {
         if let permissions = self.subtask.requestedPermissions {
             return permissions

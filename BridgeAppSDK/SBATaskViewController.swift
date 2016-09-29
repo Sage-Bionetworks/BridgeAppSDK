@@ -139,6 +139,19 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         aCoder.encode(self.strongReference, forKey: "strongReference")
     }
     
+    // MARK: ORKTaskResultSource
+    
+    // Look to the task attached to this view controller and return that as the result source
+    // If there is none set as the override.
+    override open var defaultResultSource: ORKTaskResultSource? {
+        get {
+            return super.defaultResultSource ?? (self.task as? ORKTaskResultSource)
+        }
+        set {
+            super.defaultResultSource = newValue
+        }
+    }
+    
     // MARK: ORKTaskViewControllerDelegate
     
     // syoung 09/19/2016 Override the delegate so that this task view controller can catch the learn more

@@ -222,7 +222,7 @@
         return momentInDayResult;
     }
     
-    // Check if the step can be build from the selected items
+    // Check if the step can be built from the selected items
     if ([step conformsToProtocol:@protocol(SBATrackedDataSelectedItemsProtocol)]) {
         NSArray *selectedItems = self.selectedItems;
         if (selectedItems != nil) {
