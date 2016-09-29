@@ -959,6 +959,50 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         XCTAssertTrue(dataCollection.shouldIncludeChangedStep())
     }
     
+    // Mark: - stepResultForStep:
+    
+    func testStepResultForStep_SelectedItemsStep() {
+        
+        // Check shared functionality
+        let (retTask, retDataStore, _, retTaskResult) = stepToActivity(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
+        guard let dataStore = retDataStore,
+            let selectionStep = retTask?.step?(withIdentifier: "medicationSelection"),
+            let selectionResult = retTaskResult?.stepResult(forStepIdentifier: "medicationSelection")
+            else {
+                XCTAssert(false, "preconditions not met")
+                return
+        }
+        
+        // commit the changes
+        dataStore.commitChanges()
+        
+        // --- Rebuild the result from the data store
+        guard let storedResult = dataStore.stepResult(for: selectionStep) else {
+            XCTAssert(false, "restored result is nil")
+            return
+        }
+        
+        // restored result should have equal answers and identifiers but not be identical objects
+        XCTAssertFalse(storedResult === selectionResult)
+
+        // If not equal then inspect the result
+        XCTAssertEqual(storedResult.identifier, selectionResult.identifier)
+        XCTAssertEqual(storedResult.startDate, dataStore.lastTrackingSurveyDate)
+        XCTAssertEqual(storedResult.endDate, dataStore.lastTrackingSurveyDate)
+        
+        guard let storedResults = storedResult.results, let selectionResults = selectionResult.results else {
+            XCTAssert(false, "results are nil or counts do not match")
+            return
+        }
+        
+        XCTAssertEqual(storedResults.count, selectionResults.count)
+        
+        for expectedResult in selectionResults {
+            let result = storedResult.result(forIdentifier: expectedResult.identifier) as! ORKQuestionResult
+            XCTAssertNotNil(result, "\(expectedResult.identifier)")
+            XCTAssertEqual(result.answer as! NSObject, (expectedResult as! ORKQuestionResult).answer as! NSObject, "\(expectedResult.identifier)")
+        }
+    }
     
     // Mark: convenience methods
     

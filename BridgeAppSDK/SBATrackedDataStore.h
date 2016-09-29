@@ -91,8 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Return the step result that is associated with a given step.
  */
-// TODO: Implement syoung 09/27/2016
-//- (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step;
+- (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step;
 
 #pragma mark - Data storage handling
 

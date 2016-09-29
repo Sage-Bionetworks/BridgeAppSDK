@@ -171,10 +171,8 @@
     }
 
     NSMutableArray *momentInDayResults = [self.momentInDayResults mutableCopy] ?: [NSMutableArray new];
+    ORKStepResult *previousResult = [self momentInDayResultWithStepIdentifier:stepIdentifier];
     
-    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
-    NSPredicate *identifierPredicate = [NSPredicate predicateWithFormat:@"%K = %@", identifierKey, stepIdentifier];
-    ORKStepResult *previousResult = [[momentInDayResults filteredArrayUsingPredicate:identifierPredicate] firstObject];
     if (previousResult != nil) {
         // If found in the moment in day results then replace that result
         NSUInteger idx = [momentInDayResults indexOfObject:previousResult];
@@ -217,6 +215,27 @@
 }
 
 - (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step {
+    
+    // Check the moment in day results set for a result that matches the step identifier
+    ORKStepResult *momentInDayResult = [self momentInDayResultWithStepIdentifier:step.identifier];
+    if (momentInDayResult != nil) {
+        return momentInDayResult;
+    }
+    
+    // Check if the step can be build from the selected items
+    if ([step conformsToProtocol:@protocol(SBATrackedDataSelectedItemsProtocol)]) {
+        NSArray *selectedItems = self.selectedItems;
+        if (selectedItems != nil) {
+            ORKStepResult *stepResult =  [(id <SBATrackedDataSelectedItemsProtocol>)step stepResultWithSelectedItems:selectedItems];
+            stepResult.startDate = self.lastTrackingSurveyDate;
+            stepResult.endDate = stepResult.startDate;
+            return stepResult;
+        }
+        else {
+            return nil;
+        }
+    }
+    
     // TODO: Implement syoung 09/27/2016
     return nil;
 }

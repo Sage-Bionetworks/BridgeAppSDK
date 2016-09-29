@@ -111,7 +111,7 @@ open class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep, SBATrackedDataS
             }()
             
             for result in substepResults {
-                result.identifier = "\(self.identifier).\(result.identifier)"
+                result.identifier = "\(step.identifier).\(result.identifier)"
             }
             return substepResults
             
@@ -260,7 +260,7 @@ class SBATrackedSelectionStepViewController: ORKPageStepViewController {
     }
 }
 
-class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
+class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter, SBATrackedDataSelectedItemsProtocol {
     
     let skipChoiceValue = "Skipped"
     let noneChoiceValue = "None"
@@ -351,7 +351,7 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter {
     }
 }
 
-class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATrackedSelectionFilter {
+class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATrackedSelectionFilter, SBATrackedDataSelectedItemsProtocol {
     
     var frequencyAnswerFormat: ORKAnswerFormat?
     
@@ -394,7 +394,8 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     
     @objc(stepResultWithSelectedItems:)
     public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult {
-        let results = selectedItems?.map({ (item) -> ORKScaleQuestionResult in
+        let results = selectedItems?.mapAndFilter({ (item) -> ORKScaleQuestionResult? in
+            guard item.usesFrequencyRange else { return nil }
             let scaleResult = ORKScaleQuestionResult(identifier: item.identifier)
             scaleResult.scaleAnswer = NSNumber(value: item.frequency)
             return scaleResult
