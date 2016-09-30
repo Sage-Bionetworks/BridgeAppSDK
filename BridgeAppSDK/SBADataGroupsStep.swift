@@ -48,7 +48,7 @@ public class SBADataGroupsStep: SBANavigationFormStep {
         
         // map the values
         surveyForm.mapStepValues(with: self)
-        self.formItems = [surveyForm.createFormItem(text: nil, subtype: .singleChoice)]
+        self.formItems = [surveyForm.createFormItem(text: nil, subtype: .multipleChoice)]
     }
     
     public required init(coder aDecoder: NSCoder) {
@@ -73,7 +73,7 @@ public class SBADataGroupsStep: SBANavigationFormStep {
     public func stepResult(currentGroups: [String]?) -> ORKStepResult? {
         
         // Look for a current choice from the input groups
-        let currentChoice: ORKTextChoice? = {
+        let currentChoices: [Any]? = {
             // Check that the current group is non-nil
             guard currentGroups != nil, let answerFormat = self.formItems?.first?.answerFormat as? ORKTextChoiceAnswerFormat
             else {
@@ -84,17 +84,21 @@ public class SBADataGroupsStep: SBANavigationFormStep {
             // If there is no overlap then return nil
             guard currentSet.count > 0 else { return nil }
             // Otherwise, look for an answer that maps to the current set
-            return answerFormat.textChoices.find { Set(convertValueToArray($0.value)) == currentSet }
+            return answerFormat.textChoices.mapAndFilter({ (textChoice) -> Any? in
+                let value = Set(convertValueToArray(textChoice.value))
+                guard value.count > 0, currentSet.intersection(value) == value else { return nil }
+                return textChoice.value
+            })
         }()
         
         // If nothing is found then return a nil results set
-        guard currentChoice != nil else {
+        guard currentChoices != nil else {
             return ORKStepResult(stepIdentifier: self.identifier, results: nil)
         }
         
         // If found, then create a questionResult for that choice
         let questionResult = ORKChoiceQuestionResult(identifier: self.identifier)
-        questionResult.choiceAnswers = [currentChoice!.value]
+        questionResult.choiceAnswers = currentChoices
         return ORKStepResult(stepIdentifier: self.identifier, results: [questionResult])
     }
     

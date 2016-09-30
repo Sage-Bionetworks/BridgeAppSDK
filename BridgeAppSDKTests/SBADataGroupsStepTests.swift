@@ -65,8 +65,11 @@ class SBADataGroupsStepTests: XCTestCase {
         }
     
         XCTAssertEqual(surveyStep.formItems!.first!.identifier, "dataGroupSelection")
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
-        XCTAssertEqual(answerFormat.textChoices.count, 8)
+        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.multipleChoice)
+        XCTAssertEqual(answerFormat.textChoices.count, 6)
+        
+        let noneChoice = answerFormat.textChoices.last!
+        XCTAssertTrue(noneChoice.exclusive)
     }
     
     // MARK: Union
@@ -166,20 +169,20 @@ class SBADataGroupsStepTests: XCTestCase {
         XCTAssertNil(stepResult?.results?.first)
     }
     
-    func testStepResult_GroupD() {
+    func testStepResult_GroupC() {
         guard let surveyStep = createDataGroupsStep() else {
             XCTAssert(false, "could not create step")
             return
         }
         
-        let stepResult = surveyStep.stepResult(currentGroups: ["test_user", "groupD"])
+        let stepResult = surveyStep.stepResult(currentGroups: ["test_user", "groupC"])
         guard let questionResult = stepResult?.results?.first as? ORKChoiceQuestionResult,
             let choices = questionResult.choiceAnswers as? [String] else {
             XCTAssert(false, "\(stepResult) does not have expected choiceAnswers")
             return
         }
         
-        XCTAssertEqual(["groupD"], choices)
+        XCTAssertEqual(["groupC"], choices)
     }
     
     func testStepResult_GroupB() {
@@ -211,7 +214,23 @@ class SBADataGroupsStepTests: XCTestCase {
                 return
         }
         
-        XCTAssertEqual([["groupA", "groupB"]] as NSArray, choices)
+        XCTAssertEqual(["groupA", ["groupB"]] as NSArray, choices)
+    }
+    
+    func testStepResult_GroupEandF() {
+        guard let surveyStep = createDataGroupsStep() else {
+            XCTAssert(false, "could not create step")
+            return
+        }
+        
+        let stepResult = surveyStep.stepResult(currentGroups: ["test_user", "groupE", "groupF"])
+        guard let questionResult = stepResult?.results?.first as? ORKChoiceQuestionResult,
+            let choices = questionResult.choiceAnswers as NSArray? else {
+                XCTAssert(false, "\(stepResult) does not have expected choiceAnswers")
+                return
+        }
+        
+        XCTAssertEqual([["groupE", "groupF"]] as NSArray, choices)
     }
     
     // MARK: helper methods
@@ -231,16 +250,13 @@ class SBADataGroupsStepTests: XCTestCase {
                   "value" : ["groupB"]],
                 [ "text" : "Group C",
                   "value" : "groupC"],
-                [ "text" : "Group A and B",
-                  "value" : ["groupA", "groupB"]],
-                [ "text" : "Group D",
-                  "value" : "groupD"],
+                [ "text" : "Group C and D",
+                  "value" : ["groupC", "groupD"]],
                 [ "text" : "Group E and F",
                   "value" : ["groupE", "groupF"]],
-                [ "text" : "Group F",
-                  "value" : "groupF"],
                 [ "text" : "None",
-                  "value" : ""]]
+                  "value" : "",
+                  "exclusive" : true]]
         ]
         
         let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
