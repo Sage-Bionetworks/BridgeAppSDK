@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Return the step result that is associated with a given step.
  @param     step    The step for which a result is requested.
- @returns           The step result for this step (if found in the data store)
+ @return            The step result for this step (if found in the data store)
  */
 - (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step;
 
@@ -113,6 +113,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
+ @param suiteName   Optional suite name for the user defaults (if nil, standard defaults are used)
+ @return            Tracked data store
  */
 - (instancetype)initWithUserDefaultsWithSuiteName:(NSString * _Nullable)suiteName;
 
