@@ -52,8 +52,6 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
      */
     open var scheduledActivityGUID: String?
     
-
-    
     /**
      Date indicating when the task was finished (verse when the completion handler will fire)
      */
@@ -86,6 +84,15 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         set {
             super.outputDirectory = newValue
         }
+    }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Internally, ORKTaskViewController calls _defaultResultSource and *not*
+        // self.defaultResultSource as would seem the obvious and sensible choice
+        // so overriding the property never gets called. syoung 09/30/2016
+        super.defaultResultSource = self
     }
     
     open override func stepViewControllerWillAppear(_ stepViewController: ORKStepViewController) {
@@ -150,18 +157,15 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     // MARK: ORKTaskResultSource
     
     // syoung 09/30/2016 Override the result source so that this task view controller can forward results
-    // from either the task or an external result source
-    
+    // from either the task or an external result source. This wacky
+    private var _internalResultSource: ORKTaskResultSource?
     override open var defaultResultSource: ORKTaskResultSource? {
         get {
             return self
         }
         set {
-            super.defaultResultSource = newValue
+            _internalResultSource = newValue
         }
-    }
-    private var _internalResultSource: ORKTaskResultSource? {
-        return super.defaultResultSource
     }
     
     public func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
@@ -188,16 +192,14 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     // syoung 09/19/2016 Override the delegate so that this task view controller can catch the learn more
     // action and respond to it. This allows implementation of learn more (which is restricted by ResearchKit)
     // while still allowing a delegate pattern for implementation of other functionality.
+    private var _internalDelegate: ORKTaskViewControllerDelegate?
     override open var delegate: ORKTaskViewControllerDelegate? {
         get {
             return self
         }
         set {
-            super.delegate = newValue
+            _internalDelegate = newValue
         }
-    }
-    private var _internalDelegate: ORKTaskViewControllerDelegate? {
-        return super.delegate
     }
 
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
