@@ -92,8 +92,8 @@ open class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep, SBATrackedDataS
     // MARK: SBATrackedDataSelectedItemsProtocol
     
     @objc(stepResultWithSelectedItems:)
-    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult {
-        guard let items = selectedItems else { return ORKStepResult(stepIdentifier: self.identifier, results: []) }
+    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult? {
+        guard let items = selectedItems else { return nil }
         
         // Map the steps
         var results:[ORKResult] = self.steps.map { (step) -> [ORKResult] in
@@ -101,7 +101,7 @@ open class SBATrackedSelectionStep: ORKPageStep, SBATrackedStep, SBATrackedDataS
             let substepResults: [ORKResult] = {
                 if let trackingStep = step as? SBATrackedDataSelectedItemsProtocol {
                     // If the substeps implement the selected item result protocol then use that
-                    return trackingStep.stepResult(selectedItems: items).results ?? []
+                    return trackingStep.stepResult(selectedItems: items)?.results ?? []
                 }
                 else {
                     // TODO: syoung 09/27/2016 Support mapping the results from steps that are not the 
@@ -318,7 +318,7 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter, SBATr
     // MARK: SBATrackedDataSelectedItemsProtocol
     
     @objc(stepResultWithSelectedItems:)
-    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult {
+    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult? {
         guard let formItem = self.formItems?.first,
             let choices = selectedItems?.map({$0.identifier})
             else {
@@ -393,7 +393,7 @@ class SBATrackedFrequencyFormStep: ORKFormStep, SBATrackedNavigationStep, SBATra
     // MARK: SBATrackedDataSelectedItemsProtocol
     
     @objc(stepResultWithSelectedItems:)
-    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult {
+    public func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult? {
         let results = selectedItems?.mapAndFilter({ (item) -> ORKScaleQuestionResult? in
             guard item.usesFrequencyRange else { return nil }
             let scaleResult = ORKScaleQuestionResult(identifier: item.identifier)

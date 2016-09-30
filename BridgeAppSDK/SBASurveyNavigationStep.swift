@@ -52,7 +52,7 @@ public protocol SBASurveyNavigationStep: SBAPredicateNavigationStep, SBANavigati
     func matchingSurveyStep(for stepResult: ORKStepResult) -> SBAFormProtocol?
 }
 
-public final class SBANavigationQuestionStep: ORKQuestionStep, SBASurveyNavigationStep, SBAFormProtocol {
+public class SBANavigationQuestionStep: ORKQuestionStep, SBASurveyNavigationStep, SBAFormProtocol {
     
     public var surveyStepResultFilterPredicate: NSPredicate {
         return NSPredicate(format: "%K = %@", #keyPath(identifier), self.identifier)
@@ -88,13 +88,13 @@ public final class SBANavigationQuestionStep: ORKQuestionStep, SBASurveyNavigati
     public var skipToStepIdentifier: String = ORKNullStepIdentifier
     public var skipIfPassed: Bool = false
     
-    override public init(identifier: String) {
+    override public required init(identifier: String) {
         super.init(identifier: identifier)
     }
     
-    init(surveyItem: SBASurveyItem) {
-        super.init(identifier: surveyItem.identifier)
-        self.sharedCopyFromSurveyItem(surveyItem)
+    init(inputItem: SBASurveyItem) {
+        super.init(identifier: inputItem.identifier)
+        self.sharedCopyFromSurveyItem(inputItem)
     }
     
     // MARK: NSCopying
@@ -133,7 +133,7 @@ public final class SBANavigationQuestionStep: ORKQuestionStep, SBASurveyNavigati
     }
 }
 
-public final class SBANavigationFormStep: ORKFormStep, SBASurveyNavigationStep {
+public class SBANavigationFormStep: ORKFormStep, SBASurveyNavigationStep {
     
     public var surveyStepResultFilterPredicate: NSPredicate {
         return NSPredicate(format: "%K = %@", #keyPath(identifier), self.identifier)
@@ -153,9 +153,9 @@ public final class SBANavigationFormStep: ORKFormStep, SBASurveyNavigationStep {
         super.init(identifier: identifier)
     }
     
-    init(surveyItem: SBASurveyItem) {
-        super.init(identifier: surveyItem.identifier)
-        self.sharedCopyFromSurveyItem(surveyItem)
+    init(inputItem: SBASurveyItem) {
+        super.init(identifier: inputItem.identifier)
+        self.sharedCopyFromSurveyItem(inputItem)
     }
     
     // MARK: NSCopying
@@ -188,7 +188,7 @@ public final class SBANavigationFormStep: ORKFormStep, SBASurveyNavigationStep {
     }
 }
 
-public final class SBANavigationSubtaskStep: SBASubtaskStep, SBASurveyNavigationStep {
+public class SBANavigationSubtaskStep: SBASubtaskStep, SBASurveyNavigationStep {
     
     public var surveyStepResultFilterPredicate: NSPredicate {
         return NSPredicate(format: "%K BEGINSWITH %@", #keyPath(identifier), "\(self.identifier).")
@@ -211,9 +211,9 @@ public final class SBANavigationSubtaskStep: SBASubtaskStep, SBASurveyNavigation
         super.init(identifier: identifier, steps: steps)
     }
     
-    init(surveyItem: SBASurveyItem, steps: [ORKStep]?) {
-        super.init(identifier: surveyItem.identifier, steps: steps)
-        self.sharedCopyFromSurveyItem(surveyItem)
+    init(inputItem: SBASurveyItem, steps: [ORKStep]?) {
+        super.init(identifier: inputItem.identifier, steps: steps)
+        self.sharedCopyFromSurveyItem(inputItem)
     }
     
     // MARK: NSCopying

@@ -78,6 +78,8 @@
 		FF2729191D92066E00956CFB /* SBAConsentSection+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2729181D92066E00956CFB /* SBAConsentSection+Dictionary.swift */; };
 		FF27291B1D9206C800956CFB /* SBAConsentSharingOptions+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF27291A1D9206C800956CFB /* SBAConsentSharingOptions+Dictionary.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
+		FF35B8EC1D9DA93C00E0DF23 /* SBADataGroupsStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B8EB1D9DA93C00E0DF23 /* SBADataGroupsStep.swift */; };
+		FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
@@ -451,6 +453,8 @@
 		FF2729181D92066E00956CFB /* SBAConsentSection+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAConsentSection+Dictionary.swift"; sourceTree = "<group>"; };
 		FF27291A1D9206C800956CFB /* SBAConsentSharingOptions+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAConsentSharingOptions+Dictionary.swift"; sourceTree = "<group>"; };
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
+		FF35B8EB1D9DA93C00E0DF23 /* SBADataGroupsStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStep.swift; sourceTree = "<group>"; };
+		FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStepTests.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
@@ -751,6 +755,7 @@
 				FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */,
 				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
 				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
+				FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -1038,6 +1043,7 @@
 		FF6410ED1CAF3795007FB9E1 /* Data Tracking */ = {
 			isa = PBXGroup;
 			children = (
+				FF35B8EB1D9DA93C00E0DF23 /* SBADataGroupsStep.swift */,
 				FF6411191CB34766007FB9E1 /* SBAMedication.h */,
 				FF64111A1CB34766007FB9E1 /* SBAMedication.m */,
 				FF6411171CB341EC007FB9E1 /* SBATrackedDataObject.h */,
@@ -1703,6 +1709,7 @@
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
 				80D5F1D31CE557BA002A39DF /* ORKResult+ResultsExtension.swift in Sources */,
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
+				FF35B8EC1D9DA93C00E0DF23 /* SBADataGroupsStep.swift in Sources */,
 				FF2728881D91CFB900956CFB /* SBAClassTypeMap.swift in Sources */,
 				FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */,
 				FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */,
@@ -1767,6 +1774,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */,
 				FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */,
 				FFDECDFF1D0796D200434001 /* SBAOnboardingManagerTests.swift in Sources */,
 				FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */,
