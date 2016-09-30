@@ -108,18 +108,18 @@ public class SBADataGroupsStep: SBANavigationFormStep {
      @param  stepResult     The step result to use to get the new selection
      @return                The union set of data groups based on the current and selected
      */
-    public func union(previousGroups: [String]?, stepResult: ORKStepResult) -> [String] {
+    public func union(previousGroups: Set<String>?, stepResult: ORKStepResult) -> Set<String> {
         let questionResult = stepResult.results?.first as? ORKChoiceQuestionResult
         let choices = convertValueToArray(questionResult?.choiceAnswers?.first)
         
         // Return the choices if there isn't a minus set
-        guard previousGroups != nil else { return choices }
+        guard previousGroups != nil else { return Set(choices) }
         
         // Create a set with only the groups that are *not* selected as a part of this step
         let minusSet = Set(previousGroups!).subtracting(self.dataGroups)
         
         // And the union that minus set with the new choices
-        return Array(minusSet.union(choices))
+        return minusSet.union(choices)
     }
     
     fileprivate func convertValueToArray(_ value: Any?) -> [String] {

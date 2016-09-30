@@ -1,5 +1,5 @@
 {
-     "taskIdentifier"            : "Memory",
+     "taskIdentifier"            : "Memory Activity",
      "schemaIdentifier"          : "Memory Activity",
      "taskType"                  : "memory",
      "intendedUseDescription"    : "In this activity we ask you to remember a pattern. It is an activity that tells us about your short-term memory.",

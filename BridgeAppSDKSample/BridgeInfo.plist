@@ -52,7 +52,7 @@
 			<key>schemaIdentifier</key>
 			<string>Medical Survey</string>
 			<key>schemaRevision</key>
-			<integer>2</integer>
+			<integer>5</integer>
 		</dict>
 	</array>
 	<key>taskMapping</key>
@@ -67,53 +67,43 @@
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
+			<string>Memory Activity</string>
+			<key>resourceName</key>
+			<string>Memory</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
 			<string>Mood Survey</string>
 			<key>taskType</key>
 			<string>moodSurvey</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>Memory Activity</string>
-			<key>taskType</key>
-			<string>memory</string>
-		</dict>
-		<dict>
-			<key>taskIdentifier</key>
 			<string>Tapping Activity</string>
-			<key>taskType</key>
-			<string>tapping</string>
+			<key>resourceName</key>
+			<string>Tapping</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>Walking Activity</string>
-			<key>taskType</key>
-			<string>walking</string>
+			<string>Tremor Activity</string>
+			<key>resourceName</key>
+			<string>Tremor</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
 			<string>Voice Activity</string>
-			<key>taskType</key>
-			<string>voice</string>
-		</dict>
-		<dict>
-			<key>taskIdentifier</key>
-			<string>1-StudyTracker</string>
 			<key>resourceName</key>
-			<string>StudyTracker</string>
-			<key>cancelDisabled</key>
-			<true/>
-			<key>allowMultipleRun</key>
-			<false/>
+			<string>Voice</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-Training</string>
+			<string>Walking Activity</string>
 			<key>resourceName</key>
-			<string>CombinedTask</string>
+			<string>Walking</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>1-Combo</string>
+			<string>Combined Task</string>
 			<key>resourceName</key>
 			<string>CombinedTask</string>
 			<key>cancelDisabled</key>

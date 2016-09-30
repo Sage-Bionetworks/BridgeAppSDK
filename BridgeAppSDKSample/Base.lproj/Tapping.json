@@ -1,5 +1,5 @@
 {
-    "taskIdentifier"            : "Tapping",
+    "taskIdentifier"            : "Tapping Activity",
     "schemaIdentifier"          : "Tapping Activity",
     "taskType"                  : "tapping",
     "intendedUseDescription"    : "In this activity we ask you to tap your fingers. It is an activity that tells us about your fine motor coordination.",

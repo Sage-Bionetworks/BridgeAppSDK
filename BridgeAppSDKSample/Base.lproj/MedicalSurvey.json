@@ -105,6 +105,14 @@
                        {"prompt" : "None of the above", "value" : "control", "exclusive": true}],
      },
      {
+     "identifier"   : "testDataGroup",
+     "type"         : "dataGroups",
+     "prompt"       : "Do you want to be added to the test_user data group?",
+     "optional"     : false,
+     "items"        : [{"prompt" : "Yes", "value" : "test_user", "exclusive": true},
+                       {"prompt" : "No", "value" : "", "exclusive": true}],
+     },
+     {
      "identifier"   : "medicationSelection",
      "trackingType" : "selection",
      "type"         : "trackingSelection",
@@ -128,14 +136,14 @@
      "items"        : ["Right hand","Left hand","Don't know / no preference"],
      },
      {
-     "identifier"     : "momentInDay",
+     "identifier"     : "moment_in_day",
      "trackingType"   : "activity",
      "type"           : "singleChoiceText",
      "text"           : "How awake do you feel right now?",
      "items"          : ["Alert","Tired","Neither alert nor tired"],
      },
      {
-     "identifier"     : "medicationTiming",
+     "identifier"     : "medication_timing",
      "trackingType"   : "activity",
      "trackEach"      : true,
      "type"           : "timingRange",

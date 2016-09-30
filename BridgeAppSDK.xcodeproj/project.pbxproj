@@ -80,6 +80,8 @@
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
 		FF35B8EC1D9DA93C00E0DF23 /* SBADataGroupsStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B8EB1D9DA93C00E0DF23 /* SBADataGroupsStep.swift */; };
 		FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */; };
+		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
+		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
@@ -455,6 +457,8 @@
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
 		FF35B8EB1D9DA93C00E0DF23 /* SBADataGroupsStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStep.swift; sourceTree = "<group>"; };
 		FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStepTests.swift; sourceTree = "<group>"; };
+		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
+		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
@@ -764,6 +768,7 @@
 			isa = PBXGroup;
 			children = (
 				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
+				FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */,
 				FFC15FD71CFE4C7100C29AF7 /* MainTabViewController.swift */,
 				FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */,
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
@@ -1192,12 +1197,13 @@
 		FFC15FE11CFE569100C29AF7 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
-				FFDECDF91D0774EE00434001 /* Onboarding.json */,
 				FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */,
 				FF3E30C31D62CF7100347165 /* CombinedTask.json */,
 				FF78CF4E1D00B6C9002C456D /* Consent.json */,
 				FF78CF601D00C125002C456D /* Memory.json */,
+				FFDECDF91D0774EE00434001 /* Onboarding.json */,
 				FF78CF631D00C12A002C456D /* Tapping.json */,
+				FF35B9351D9EEC2000E0DF23 /* Tremor.json */,
 				FF78CF661D00C130002C456D /* Voice.json */,
 				FF78CF691D00C135002C456D /* Walking.json */,
 				FF78CF531D00BDAE002C456D /* MedicalSurvey.json */,
@@ -1596,6 +1602,7 @@
 				FF3E30C41D62CF7100347165 /* CombinedTask.json in Resources */,
 				FF78CF2B1D00B65C002C456D /* consent_11potential_risk.html in Resources */,
 				FF78CF511D00BDAE002C456D /* MedicalSurvey.json in Resources */,
+				FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */,
 				FFC15FD61CFE452C00C29AF7 /* Onboarding.storyboard in Resources */,
 				FF78CF221D00B646002C456D /* consent_8time.html in Resources */,
 				FF78CF311D00B669002C456D /* consent_13follow_up.html in Resources */,
@@ -1641,6 +1648,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */,
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
 				FFC15FD81CFE4C7100C29AF7 /* MainTabViewController.swift in Sources */,
 				FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */,
@@ -1827,6 +1835,14 @@
 				801040ED1C5AD29300D26E19 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FF35B9351D9EEC2000E0DF23 /* Tremor.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF35B9361D9EEC2000E0DF23 /* Base */,
+			);
+			name = Tremor.json;
 			sourceTree = "<group>";
 		};
 		FF71A6341D71023D00A4EE8A /* BridgeAppSDK.strings */ = {
