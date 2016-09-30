@@ -34,13 +34,7 @@
 import ResearchKit
 import BridgeSDK
 
-// TODO: syoung 04/14/2016 This is a WIP first draft of an implementation of schedule fetching that
-// works for Lilly but is not complete for Parkinsons (which include a separate section for "keep going"
-// activities *and* includes surveys that are build server-side (currently not supported by this implementation)
-
-
 public enum SBAScheduledActivitySection {
-    
     case none
     case expiredYesterday
     case today
@@ -551,14 +545,14 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
                             var subsetResults = subResults
                             if !isDataCollection {
                                 for dataStore in dataStores {
-                                    if let momentInDayResult = dataStore.momentInDayResult {
+                                    if let momentInDayResults = dataStore.momentInDayResults {
                                         // Mark the start/end date with the start timestamp of the first step
-                                        for stepResult in momentInDayResult {
+                                        for stepResult in momentInDayResults {
                                             stepResult.startDate = subsetResults.first!.startDate
                                             stepResult.endDate = stepResult.startDate
                                         }
                                         // Add the results at the beginning
-                                        subsetResults = momentInDayResult + subsetResults
+                                        subsetResults = momentInDayResults + subsetResults
                                     }
                                 }
                             }

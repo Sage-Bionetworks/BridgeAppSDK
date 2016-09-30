@@ -38,53 +38,106 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SBATrackedDataObject;
+
 @interface SBATrackedDataStore : NSObject
 
-+ (instancetype)defaultStore;
-
-@property (nonatomic, copy) NSDate * _Nullable lastCompletionDate;
-@property (nonatomic, copy) NSArray <ORKStepResult *> * _Nullable momentInDayResult;
-@property (nonatomic, copy) NSDate * _Nullable lastTrackingSurveyDate;
-@property (nonatomic, copy) NSArray <SBATrackedDataObject*> * _Nullable selectedItems;
-@property (nonatomic) BOOL skippedSelectionSurveyQuestion;
-
-@property (nonatomic, readonly) NSArray <NSString*> * _Nullable trackedItems;
-@property (nonatomic, readonly) BOOL hasNoTrackedItems;
-@property (nonatomic, readonly) BOOL hasSelectedOrSkipped;
-@property (nonatomic, readonly) BOOL shouldIncludeChangedQuestion;
-@property (nonatomic, readonly) BOOL shouldIncludeMomentInDayStep;
-@property (nonatomic, readonly) BOOL hasChanges;
-
-@property (nonatomic, readonly) NSUserDefaults *storedDefaults;
-@property (nonatomic, copy, readonly) NSArray * _Nullable momentInDayResultDefaultIdMap;
++ (instancetype)sharedStore NS_REFINED_FOR_SWIFT;
 
 /**
- * Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
+ Timestamp for the last time the tracked data survey questions were asked.
+ (ex. What medication, etc.)
+ */
+@property (nonatomic, copy, nullable) NSDate *lastTrackingSurveyDate;
+
+/**
+ Timestamp for the last time the "Moment in Day" survey questions were asked.
+ */
+@property (nonatomic, copy, nullable) NSDate *lastCompletionDate;
+
+/**
+ Selected items from the tracked data survey questions. Assumes only one set of items.
+ */
+@property (nonatomic, copy, nullable) NSArray<SBATrackedDataObject *> *selectedItems;
+
+/**
+ Items from the tracked data survey questions that are *tracked* with "Moment in Day" 
+ follow-up. Assumes only one set of items. This is a subset of the selected items that includes 
+ only the selected items that are tracked with a follow-up question.
+ */
+@property (nonatomic, copy, readonly, nullable) NSArray<SBATrackedDataObject *> *trackedItems;
+
+/**
+ Steps that map to the "Moment in Day" step results. These are used to determine the default
+ result for the case where there are no selected items.
+ */
+@property (nonatomic, copy, nullable) NSArray<ORKStep *> *momentInDaySteps;
+
+/**
+ Results that map to "Moment in Day" steps. These results are stored in memory only.
+ */
+@property (nonatomic, copy, nullable) NSArray<ORKStepResult *> *momentInDayResults;
+
+/**
+ Update the "Moment in Day" result set.
+ @param     stepResult  The step result to add/replace in the "Moment in Day" result set.
+ */
+- (void)updateMomentInDayForStepResult:(ORKStepResult *)stepResult;
+
+/**
+ Update the tracked data result set. If this is recognized as including the `selectedItems`
+ then that property will be updated from this result.
+ @param     stepResult  The step result to use to add/replace the tracked data set
+ */
+- (void)updateTrackedDataForStepResult:(ORKStepResult *)stepResult;
+
+/**
+ Return the step result that is associated with a given step.
+ @param     step    The step for which a result is requested.
+ @return            The step result for this step (if found in the data store)
+ */
+- (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step;
+
+#pragma mark - Data storage handling
+
+/**
+ By default, the tracked data is saved to the user defaults. This allows a shared user defaults
+ to be used by this project.
+ */
+@property (nonatomic, readonly) NSUserDefaults *storedDefaults;
+
+/**
+ Are there changes that need to be commited to the data store?
+ */
+@property (nonatomic, readonly) BOOL hasChanges;
+
+/**
+ Initialize with a user defaults that has a suite name (for sharing defaults across different apps)
+ @param suiteName   Optional suite name for the user defaults (if nil, standard defaults are used)
+ @return            Tracked data store
  */
 - (instancetype)initWithUserDefaultsWithSuiteName:(NSString * _Nullable)suiteName;
 
-- (void)updateSelectedItems:(NSArray<SBATrackedDataObject *> *)items
-             stepIdentifier:(NSString *)stepIdentifier
-                     result:(ORKTaskResult*)result;
-
-- (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
-                                  result:(ORKTaskResult *)result;
-
-- (void)updateMomentInDayForStepResult:(ORKStepResult * _Nullable)result;
-
-- (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps;
-
+/**
+ Commit changes to the data store.
+ */
 - (void)commitChanges;
+
+/**
+ Reset the changes without commiting them.
+ */
 - (void)reset;
+
+/**
+ @Deprecated Use sharedStore instead
+ */
++ (instancetype)defaultStore __deprecated;
 
 // Keys exposed to keep compatibility with existing implementations
 + (NSString *)keyPrefix;
-+ (NSString *)momentInDayResultKey;
-+ (NSString *)skippedSelectionSurveyQuestionKey;
 + (NSString *)lastTrackingSurveyDateKey;
 + (NSString *)selectedItemsKey;
-+ (NSString *)noTrackedItemsAnswer;
-+ (NSString *)skippedAnswer;
++ (NSString *)resultsKey;
 
 @end
 

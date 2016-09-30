@@ -35,30 +35,21 @@
 #import "SBATrackedDataObject.h"
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
-NSString * kSkippedAnswer           = @"Skipped";
-NSString * kNoTrackedData           = @"No Tracked Data";
-
-//
-//    elapsed time delay before asking the user tracking questions again
-//
-static  NSTimeInterval  kMinimumAmountOfTimeToShowMomentInDaySurvey         = 20.0 * 60.0;
-
-//
-//    elapsed time delay before asking the user if their tracked data has changed
-//
-static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.0 * 24.0 * 60.0 * 60.0;
-
 @interface SBATrackedDataStore ()
 
+@property (nonatomic, copy, readwrite) NSDictionary<NSString *, NSDictionary *> * _Nullable managedResults;
+
 @property (nonatomic) NSMutableDictionary *changesDictionary;
-@property (nonatomic, copy, readwrite) NSArray * momentInDayResultDefaultIdMap;
-@property (nonatomic, copy, readwrite) NSDictionary * momentInDayResultTrackEachMap;
 
 @end
 
 @implementation SBATrackedDataStore
 
 + (instancetype)defaultStore {
+    return [self sharedStore];
+}
+
++ (instancetype)sharedStore {
     static id __instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -79,16 +70,10 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
     return self;
 }
 
+#pragma mark - Keys
+
 + (NSString *)keyPrefix {
     return @"";
-}
-
-+ (NSString *)momentInDayResultKey {
-    return [NSString stringWithFormat:@"%@momentInDayResult", [self keyPrefix]];
-}
-
-+ (NSString *)skippedSelectionSurveyQuestionKey {
-    return [NSString stringWithFormat:@"%@skippedSelectionSurveyQuestion", [self keyPrefix]];
 }
 
 + (NSString *)lastTrackingSurveyDateKey {
@@ -99,68 +84,15 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
     return [NSString stringWithFormat:@"%@selectedItems", [self keyPrefix]];
 }
 
-+ (NSString *)noTrackedItemsAnswer {
-    return kNoTrackedData;
++ (NSString *)resultsKey {
+    return [NSString stringWithFormat:@"%@results", [self keyPrefix]];
 }
 
-+ (NSString *)skippedAnswer {
-    return kSkippedAnswer;
++ (NSString *)momentInDayResultsKey {
+    return [NSString stringWithFormat:@"%@momentInDayResults", [self keyPrefix]];
 }
 
-@synthesize momentInDayResult = _momentInDayResult;
-
-- (NSArray<ORKStepResult *> *)momentInDayResult {
-    NSString *momentInDayResultKey = [[self class] momentInDayResultKey];
-    NSArray<ORKStepResult *> *momentInDayResult = [self.changesDictionary objectForKey:momentInDayResultKey] ?: _momentInDayResult;
-    if (momentInDayResult == nil) {
-        NSString *defaultAnswer = nil;
-        if (self.skippedSelectionSurveyQuestion) {
-            defaultAnswer = [[self class] skippedAnswer];
-        }
-        else if (self.hasNoTrackedItems) {
-            defaultAnswer = [[self class] noTrackedItemsAnswer];
-        }
-        NSArray *idMap = self.momentInDayResultDefaultIdMap;
-        if ((defaultAnswer != nil) && (idMap != nil)) {
-            NSMutableArray *results = [NSMutableArray new];
-            NSDate *startDate = [NSDate date];
-            for (NSArray *map in idMap) {
-                ORKChoiceQuestionResult *input = [[ORKChoiceQuestionResult alloc] initWithIdentifier:map.lastObject];
-                input.startDate = startDate;
-                input.endDate = startDate;
-                input.questionType = ORKQuestionTypeSingleChoice;
-                if ([self.momentInDayResultTrackEachMap[map.firstObject] boolValue]) {
-                    // if tracking each then use an empty array
-                    input.choiceAnswers = @[];
-                }
-                else {
-                    // Only include the default answer if *not* trackEach
-                    input.choiceAnswers = @[defaultAnswer];
-                }
-                ORKStepResult *stepResult = [[ORKStepResult alloc] initWithStepIdentifier:map.firstObject
-                                                                                  results:@[input]];
-                [results addObject:stepResult];
-            }
-            momentInDayResult = [results copy];
-            self.changesDictionary[momentInDayResultKey] = momentInDayResult;
-        }
-    }
-    return momentInDayResult;
-}
-
-- (void)setMomentInDayResult:(NSArray<ORKStepResult *> *)momentInDayResult {
-    [self.changesDictionary setValue:[momentInDayResult copy] forKey:[[self class] momentInDayResultKey]];
-}
-
-- (NSArray <NSString *> *)trackedItemDataObjects {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = YES", NSStringFromSelector(@selector(tracking))];
-    NSArray *selectedItems = [self selectedItems];
-    return [selectedItems filteredArrayUsingPredicate:predicate];
-}
-
-- (NSArray <NSString *> *)trackedItems {
-    return [[self trackedItemDataObjects] valueForKey:NSStringFromSelector(@selector(shortText))];
-}
+#pragma mark - Tracked and Stored Accessors
 
 - (NSArray<SBATrackedDataObject *> *)selectedItems {
     NSArray *result = self.changesDictionary[[[self class] selectedItemsKey]];
@@ -175,131 +107,12 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 
 - (void)setSelectedItems:(NSArray<SBATrackedDataObject *> *)selectedItems {
     [self.changesDictionary setValue:selectedItems forKey:[[self class] selectedItemsKey]];
-    [self.changesDictionary setValue:@(selectedItems == nil) forKey:[[self class] skippedSelectionSurveyQuestionKey]];
 }
 
-- (void)updateSelectedItems:(NSArray<SBATrackedDataObject *> *)items
-             stepIdentifier:(NSString *)stepIdentifier
-                     result:(ORKTaskResult*)result {
-
-    ORKStepResult *stepResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
-    ORKChoiceQuestionResult *selectionResult = (ORKChoiceQuestionResult *)[stepResult.results firstObject];
-    
-    if (selectionResult == nil) {
-        return;
-    }
-    if (![selectionResult isKindOfClass:[ORKChoiceQuestionResult class]]) {
-        NSAssert(NO, @"The Medication selection result was not of the expected class of ORKChoiceQuestionResult");
-        return;
-    }
-    
-    // If skipped return nil
-    if ((selectionResult.choiceAnswers == nil) ||
-        ([selectionResult.choiceAnswers isEqualToArray:@[kSkippedAnswer]])) {
-        self.selectedItems = nil;
-        return;
-    }
-    
-    // Get the selected ids
-    NSArray *selectedIds = selectionResult.choiceAnswers;
-    
-    // Get the selected meds by filtering this list
-    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
-    NSPredicate *idsPredicate = [NSPredicate predicateWithFormat:@"%K IN %@", identifierKey, selectedIds];
-    NSArray *sort = @[[NSSortDescriptor sortDescriptorWithKey:identifierKey ascending:YES]];
-    NSArray *selectedItems = [[items filteredArrayUsingPredicate:idsPredicate] sortedArrayUsingDescriptors:sort];
-    if (selectedItems.count > 0) {
-        // Map frequency from the previously stored results
-        NSPredicate *frequencyPredicate = [NSPredicate predicateWithFormat:@"%K > 0", NSStringFromSelector(@selector(frequency))];
-        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[frequencyPredicate, idsPredicate]];
-        NSArray *previousItems = [[self.selectedItems filteredArrayUsingPredicate:predicate] sortedArrayUsingDescriptors:sort];
-        
-        if (previousItems.count > 0) {
-            // If there are frequency results to map, then map them into the returned results
-            // (which may be a different object from the med list in the data store)
-            NSEnumerator *enumerator = [previousItems objectEnumerator];
-            SBATrackedDataObject *previousItem = [enumerator nextObject];
-            for (SBATrackedDataObject *item in selectedItems) {
-                if ([previousItem.identifier isEqualToString:item.identifier]) {
-                    item.frequency = previousItem.frequency;
-                    previousItem = [enumerator nextObject];
-                    if (previousItem == nil) { break; }
-                }
-            }
-        }
-    }
-    
-    self.selectedItems = selectedItems;
-}
-
-- (void)updateFrequencyForStepIdentifier:(NSString *)stepIdentifier
-                                  result:(ORKTaskResult *)result {
-    
-    ORKStepResult *frequencyResult = (ORKStepResult *)[result resultForIdentifier:stepIdentifier];
-    
-    if (frequencyResult != nil) {
-
-        // Get the selected items array
-        NSArray *selectedItems = self.selectedItems;
-        
-        // If there are frequency results to map, then map them into the returned results
-        // (which may be a different object from the med list in the data store)
-        for (SBATrackedDataObject *item in selectedItems) {
-            ORKScaleQuestionResult *scaleResult = (ORKScaleQuestionResult *)[frequencyResult resultForIdentifier:item.identifier];
-            if ([scaleResult isKindOfClass:[ORKScaleQuestionResult class]]) {
-                item.frequency = [scaleResult.scaleAnswer unsignedIntegerValue];
-            }
-        }
-        
-        // Set it back to the selected Items
-        self.selectedItems = selectedItems;
-    }
-}
-
-- (void)updateMomentInDayForStepResult:(ORKStepResult * _Nullable)stepResult {
-    
-    NSString *stepIdentifier = stepResult.identifier;
-    if (stepResult == nil) {
-        return;
-    }
-    
-    // Look for previous result
-    NSString *momentInDayResultKey = [[self class] momentInDayResultKey];
-    NSArray *previous = [self.changesDictionary objectForKey:momentInDayResultKey] ?: _momentInDayResult ?: @[];
-    
-    // Remove previous result
-    NSMutableArray *momentInDayResults = [previous mutableCopy];
-    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", identifierKey, stepIdentifier];
-    NSPredicate *notPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:predicate];
-    [momentInDayResults filterUsingPredicate:notPredicate];
-    
-    // Add new result
-    [momentInDayResults addObject:stepResult];
-    
-    self.momentInDayResult = momentInDayResults;
-}
-
-- (void)updateMomentInDayIdMap:(NSArray <ORKStep *> *)activitySteps {
-    NSMutableArray *idMap = [NSMutableArray new];
-    NSMutableDictionary *trackEachMap = [NSMutableDictionary new];
-    for (ORKStep *step in activitySteps) {
-        ORKStep *formStep = step;
-        // If this is a page step then set the formStep to the first step and map this as a trackEach
-        if ([step isKindOfClass:[SBATrackedActivityPageStep class]]) {
-            trackEachMap[step.identifier] = @YES;
-            formStep = [((SBATrackedActivityPageStep*)step).steps firstObject];
-        }
-        // Look for a formItem identifier to map
-        if ([formStep isKindOfClass:[ORKFormStep class]]) {
-            ORKFormItem *formItem = [((ORKFormStep*)formStep).formItems firstObject];
-            if (formItem != nil) {
-                [idMap addObject:@[step.identifier, formItem.identifier]];
-            }
-        }
-    }
-    self.momentInDayResultDefaultIdMap = idMap;
-    self.momentInDayResultTrackEachMap = trackEachMap;
+- (NSArray <SBATrackedDataObject*> *)trackedItems {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = YES", NSStringFromSelector(@selector(tracking))];
+    NSArray *selectedItems = [self selectedItems];
+    return [selectedItems filteredArrayUsingPredicate:predicate];
 }
 
 - (NSDate *)lastTrackingSurveyDate {
@@ -307,60 +120,141 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 }
 
 - (void)setLastTrackingSurveyDate:(NSDate *)lastTrackingSurveyDate {
-    if (lastTrackingSurveyDate != nil) {
-        [self.storedDefaults setObject:lastTrackingSurveyDate forKey:[[self class] lastTrackingSurveyDateKey]];
+    [self.storedDefaults setValue:lastTrackingSurveyDate forKey:[[self class] lastTrackingSurveyDateKey]];
+}
+
+- (NSDictionary<NSString *, NSDictionary *> *)managedResults {
+    NSDictionary *managedResults = self.changesDictionary[[[self class] resultsKey]];
+    if (managedResults == nil) {
+        NSData *data = [self.storedDefaults objectForKey:[[self class] resultsKey]];
+        if (data != nil) {
+            id obj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                managedResults = obj;
+            }
+        }
     }
+    return managedResults;
 }
 
-- (BOOL)skippedSelectionSurveyQuestion {
-    NSString *key = [[self class] skippedSelectionSurveyQuestionKey];
-    id obj = [self.changesDictionary objectForKey:key] ?: [self.storedDefaults objectForKey:key];
-    return [obj boolValue];
+- (void)setManagedResults:(NSDictionary<NSString *, NSDictionary *> *)managedResults {
+    [self.changesDictionary setValue:managedResults forKey:[[self class] resultsKey]];
 }
 
-- (void)setSkippedSelectionSurveyQuestion:(BOOL)skippedSelectionSurveyQuestion {
-    if (skippedSelectionSurveyQuestion) {
-        self.selectedItems = nil;
+// Moment in day results are only stored in memory.
+@synthesize momentInDayResults = _momentInDayResults;
+
+- (NSArray<ORKStepResult *> *)momentInDayResults {
+    NSString *momentInDayResultsKey = [[self class] momentInDayResultsKey];
+    NSArray *momentInDayResults = [self.changesDictionary objectForKey:momentInDayResultsKey] ?: _momentInDayResults;
+    if ((momentInDayResults == nil) && (self.momentInDaySteps.count > 0) && (self.trackedItems.count == 0)) {
+        // Only set the default result if the selected items set is empty
+        NSMutableArray *results = [NSMutableArray new];
+        for (ORKStep *step in self.momentInDaySteps) {
+            [results addObject:[step defaultStepResult]];
+        }
+        momentInDayResults = [results copy];
+    }
+    return momentInDayResults;
+}
+
+- (void)setMomentInDayResults:(NSArray<ORKStepResult *> *)momentInDayResults {
+    [self.changesDictionary setValue:[momentInDayResults copy] forKey:[[self class] momentInDayResultsKey]];
+}
+
+#pragma mark - Results Handling
+
+- (void)updateMomentInDayForStepResult:(ORKStepResult *)stepResult {
+    NSString *stepIdentifier = stepResult.identifier;
+    if (stepResult == nil) {
+        return;
+    }
+
+    NSMutableArray *momentInDayResults = [self.momentInDayResults mutableCopy] ?: [NSMutableArray new];
+    ORKStepResult *previousResult = [self momentInDayResultWithStepIdentifier:stepIdentifier];
+    
+    if (previousResult != nil) {
+        // If found in the moment in day results then replace that result
+        NSUInteger idx = [momentInDayResults indexOfObject:previousResult];
+        [momentInDayResults replaceObjectAtIndex:idx withObject:stepResult];
     }
     else {
-        [self.changesDictionary setValue:@(NO) forKey:[[self class] skippedSelectionSurveyQuestionKey]];
+        // Otherwise add to the set
+        [momentInDayResults addObject:stepResult];
+    }
+    
+    self.momentInDayResults = momentInDayResults;
+}
+
+- (void)updateTrackedDataForStepResult:(ORKStepResult *)stepResult {
+    
+    NSString *stepIdentifier = stepResult.identifier;
+    if (stepResult == nil) {
+        return;
+    }
+    
+    // Check if this step result has a selected items result
+    __block NSArray *selectedItems = nil;
+    [stepResult.results enumerateObjectsUsingBlock:^(ORKResult * _Nonnull result, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([result isKindOfClass:[SBATrackedDataSelectionResult class]]) {
+            selectedItems = ((SBATrackedDataSelectionResult *)result).selectedItems;
+            *stop = YES;
+        }
+    }];
+    
+    if (selectedItems != nil) {
+        // If the selected Items are found then that is the only result that needs to be set
+        self.selectedItems = selectedItems;
+    }
+    else {
+        // Otherwise, add to a general-purpose result set
+        NSMutableDictionary *managedResults = [self.managedResults mutableCopy] ?: [NSMutableDictionary new];
+        managedResults[stepIdentifier] = [stepResult bridgeData:stepIdentifier].result;
+        self.managedResults = managedResults;
     }
 }
 
-- (BOOL)hasNoTrackedItems {
-    NSArray *trackedObjects = self.trackedItemDataObjects;
-    return (trackedObjects != nil) && (trackedObjects.count == 0);
-}
-
-- (BOOL)hasSelectedOrSkipped {
-    return self.skippedSelectionSurveyQuestion || (self.selectedItems != nil);
-}
-
-- (BOOL)shouldIncludeMomentInDayStep {
-    if (self.trackedItemDataObjects.count == 0) {
-        return NO;
+- (nullable ORKStepResult *)stepResultForStep:(ORKStep *)step {
+    
+    // Check the moment in day results set for a result that matches the step identifier
+    ORKStepResult *momentInDayResult = [self momentInDayResultWithStepIdentifier:step.identifier];
+    if (momentInDayResult != nil) {
+        return momentInDayResult;
     }
     
-    if (self.lastCompletionDate == nil || self.momentInDayResult == nil) {
-        return YES;
+    // Check if the step can be built from the selected items
+    if ([step conformsToProtocol:@protocol(SBATrackedDataSelectedItemsProtocol)]) {
+        NSArray *selectedItems = self.selectedItems;
+        if (selectedItems != nil) {
+            ORKStepResult *stepResult =  [(id <SBATrackedDataSelectedItemsProtocol>)step stepResultWithSelectedItems:selectedItems];
+            stepResult.startDate = self.lastTrackingSurveyDate;
+            stepResult.endDate = stepResult.startDate;
+            return stepResult;
+        }
+        else {
+            return nil;
+        }
     }
     
-    NSTimeInterval numberOfSecondsSinceTaskCompletion = [[NSDate date] timeIntervalSinceDate: self.lastCompletionDate];
-    NSTimeInterval minInterval = kMinimumAmountOfTimeToShowMomentInDaySurvey;
+    NSDictionary *storedResult = self.managedResults[step.identifier];
+    if ([storedResult isKindOfClass:[NSDictionary class]]) {
+        return [step stepResultWithBridgeDictionary:storedResult];
+    }
     
-    return (numberOfSecondsSinceTaskCompletion > minInterval);
+    return nil;
 }
 
-- (BOOL)shouldIncludeChangedQuestion {
-    if (!self.hasSelectedOrSkipped) {
-        // Chould not ask if there has been a change if the question has never been asked
-        return NO;
-    }
-    NSTimeInterval numberOfSecondsSinceTaskCompletion = [[NSDate date] timeIntervalSinceDate: self.lastTrackingSurveyDate];
-    NSTimeInterval minInterval = kMinimumAmountOfTimeToShowMedChangedSurvey;
+- (ORKStepResult *)momentInDayResultWithStepIdentifier:(NSString *)stepIdentifier {
+    NSString *identifierKey = NSStringFromSelector(@selector(identifier));
+    NSPredicate *identifierPredicate = [NSPredicate predicateWithFormat:@"%K = %@", identifierKey, stepIdentifier];
     
-    return (numberOfSecondsSinceTaskCompletion > minInterval);
+    NSArray *momentInDayResults = self.momentInDayResults;
+    ORKStepResult *result = [[momentInDayResults filteredArrayUsingPredicate:identifierPredicate] firstObject];
+    return result;
 }
+
+
+#pragma mark - changes management
 
 - (BOOL)hasChanges {
     return (self.changesDictionary.count > 0);
@@ -368,28 +262,25 @@ static  NSTimeInterval  kMinimumAmountOfTimeToShowMedChangedSurvey         = 30.
 
 - (void)commitChanges {
 
-    // store the moment in day result in memeory
-    NSArray *momentInDayResult = [self.changesDictionary objectForKey:[[self class] momentInDayResultKey]];
-    if (momentInDayResult != nil) {
-        self.lastCompletionDate = [NSDate date];
-        _momentInDayResult = momentInDayResult;
+    // store the moment in day result in memory
+    NSArray *momentInDayResults = [self.changesDictionary objectForKey:[[self class] momentInDayResultsKey]];
+    if (momentInDayResults != nil) {
+        _lastCompletionDate = [NSDate date];
+        _momentInDayResults = momentInDayResults;
     }
     
-    // store the tracked items and skip result in user defaults
-    id skipped = self.changesDictionary[[[self class] skippedSelectionSurveyQuestionKey]];
-    if (skipped != nil) {
+    // store the tracked results in the stored defaults
+    NSArray *selectedItems = self.changesDictionary[[[self class] selectedItemsKey]];
+    NSDictionary *managedResults = self.changesDictionary[[[self class] resultsKey]];
+    if ((selectedItems != nil) || (managedResults != nil)) {
         self.lastTrackingSurveyDate = [NSDate date];
-        [self.storedDefaults setValue:skipped forKey:[[self class] skippedSelectionSurveyQuestionKey]];
-        if ([skipped boolValue]) {
-            [self.storedDefaults removeObjectForKey:[[self class] selectedItemsKey]];
+        if (selectedItems != nil) {
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:selectedItems];
+            [self.storedDefaults setValue:data forKey:[[self class] selectedItemsKey]];
         }
-        else {
-            NSArray *selectedMeds = self.changesDictionary[[[self class] selectedItemsKey]];
-            if (selectedMeds != nil) {
-                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:selectedMeds];
-                [self.storedDefaults setValue:data
-                                       forKey:[[self class] selectedItemsKey]];
-            }
+        if (managedResults != nil) {
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:managedResults];
+            [self.storedDefaults setValue:data forKey:[[self class] resultsKey]];
         }
     }
     

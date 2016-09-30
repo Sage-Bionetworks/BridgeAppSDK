@@ -48,14 +48,14 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         super.setUp()
         
         // flush the defaults
-        SBATrackedDataStore.default().reset()
-        SBATrackedDataStore.default().storedDefaults.flushUserDefaults()
+        SBATrackedDataStore.shared.reset()
+        SBATrackedDataStore.shared.storedDefaults.flushUserDefaults()
     }
     
     override func tearDown() {
         
-        SBATrackedDataStore.default().reset()
-        SBATrackedDataStore.default().storedDefaults.flushUserDefaults()
+        SBATrackedDataStore.shared.reset()
+        SBATrackedDataStore.shared.storedDefaults.flushUserDefaults()
         
         super.tearDown()
     }

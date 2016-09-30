@@ -46,6 +46,17 @@ open class SBATrackedDataSelectionResult: ORKQuestionResult {
         self.questionType = .multipleChoice
     }
     
+    open override var answer: Any? {
+        get { return selectedItems }
+        set {
+            guard let items = newValue as? [SBATrackedDataObject] else {
+                selectedItems = nil
+                return
+            }
+            selectedItems = items
+        }
+    }
+    
     // MARK: NSCoding
     
     public required init?(coder aDecoder: NSCoder) {

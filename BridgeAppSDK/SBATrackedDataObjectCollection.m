@@ -54,16 +54,23 @@ static NSString *kTrackedItemsKey = @"items";
 
 - (SBATrackedDataStore *)dataStore {
     if (_dataStore == nil) {
-        _dataStore = [SBATrackedDataStore defaultStore];
+        _dataStore = [SBATrackedDataStore sharedStore];
     }
     return _dataStore;
 }
 
-- (NSNumber *)repeatTimeInterval {
-    if (_repeatTimeInterval == nil) {
-        _repeatTimeInterval = @(30 * 24 * 60 * 60);   // Every 30 days by default
+- (NSNumber *)trackingSurveyRepeatTimeInterval {
+    if (_trackingSurveyRepeatTimeInterval == nil) {
+        _trackingSurveyRepeatTimeInterval = @(30 * 24 * 60 * 60);   // Every 30 days by default
     }
-    return _repeatTimeInterval;
+    return _trackingSurveyRepeatTimeInterval;
+}
+
+- (NSNumber *)momentInDayRepeatTimeInterval {
+    if (_momentInDayRepeatTimeInterval == nil) {
+        _momentInDayRepeatTimeInterval = @(20 * 60);   // Every 20 minutes by default
+    }
+    return _momentInDayRepeatTimeInterval;
 }
 
 - (NSString *)defaultIdentifierIfNil {
@@ -76,6 +83,8 @@ static NSString *kTrackedItemsKey = @"items";
     NSArray *subkeys = @[NSStringFromSelector(@selector(taskIdentifier)),
                          NSStringFromSelector(@selector(schemaIdentifier)),
                          NSStringFromSelector(@selector(alwaysIncludeActivitySteps)),
+                         NSStringFromSelector(@selector(trackingSurveyRepeatTimeInterval)),
+                         NSStringFromSelector(@selector(momentInDayRepeatTimeInterval)),
                          NSStringFromSelector(@selector(itemsClassType)),
                          kTrackedItemsKey,
                          NSStringFromSelector(@selector(steps))];

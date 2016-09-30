@@ -357,7 +357,7 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
     }
 
     var subpopulationGuid: String? {
-        // TODO: Handle multiple consent groups with separate sub populations
+        // TODO: syoung 03/29/2016 Handle multiple consent groups with separate sub populations
         if let consentStatuses = self["consentStatuses"] as? [String : [String : AnyObject]] {
             for (_, subpop) in consentStatuses {
                 if let required = subpop["required"] as? Bool , required {

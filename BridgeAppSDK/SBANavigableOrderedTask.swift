@@ -52,6 +52,7 @@ public protocol SBANavigationSkipRule: class, NSSecureCoding {
  A conditional rule is appended to the navigable task to check a secondary source for whether or not the
  step should be displayed.
  */
+@objc
 public protocol SBAConditionalRule: class, NSSecureCoding {
     func shouldSkip(step: ORKStep?, with result: ORKTaskResult) -> Bool
     func nextStep(previousStep: ORKStep?, nextStep: ORKStep?, with result: ORKTaskResult) -> ORKStep?
@@ -61,12 +62,12 @@ public protocol SBAConditionalRule: class, NSSecureCoding {
  * SBANavigableOrderedTask can process both SBASubtaskStep steps and as well as any step that conforms
  * to the SBANavigationRule.
  */
-open class SBANavigableOrderedTask: ORKOrderedTask {
+open class SBANavigableOrderedTask: ORKOrderedTask, ORKTaskResultSource {
     
-    open var additionalTaskResults: [ORKTaskResult]?
-    open var conditionalRule: SBAConditionalRule?
+    public var additionalTaskResults: [ORKTaskResult]?
+    public var conditionalRule: SBAConditionalRule?
     
-    fileprivate var orderedStepIdentifiers: [String] = []
+    @objc fileprivate var orderedStepIdentifiers: [String] = []
     
     // Swift Fun Fact: In order to use a superclass initializer it must be overridden 
     // by the subclass. syoung 02/11/2016
@@ -241,6 +242,39 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         return false
     }
     
+    // MARK: ORKTaskResultSource
+    
+    public var initialResult: ORKTaskResult?
+    
+    fileprivate var storedTaskResults: [ORKResult] {
+        if (initialResult == nil) {
+            initialResult = ORKTaskResult(identifier: self.identifier)
+            initialResult!.results = []
+        }
+        return initialResult!.results!
+    }
+    
+    public func appendInitialResults(_ result: ORKStepResult) {
+        var results = storedTaskResults
+        results.append(result)
+        initialResult?.results = results
+    }
+    
+    public func appendInitialResults(contentsOf results: [ORKResult]) {
+        var storedResults = storedTaskResults
+        storedResults.append(contentsOf: results)
+        initialResult?.results = storedResults
+    }
+
+    public func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
+        // If there is an initial result then return that
+        if let result = initialResult?.stepResult(forStepIdentifier: stepIdentifier) {
+            return result
+        }
+        // Otherwise, look at the substeps
+        return subtaskStep(identifier: stepIdentifier)?.stepResult(forStepIdentifier: stepIdentifier)
+    }
+    
     // MARK: NSCopy
     
     override open func copy(with zone: NSZone? = nil) -> Any {
@@ -249,23 +283,26 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         task.additionalTaskResults = self.additionalTaskResults
         task.orderedStepIdentifiers = self.orderedStepIdentifiers
         task.conditionalRule = self.conditionalRule
+        task.initialResult = self.initialResult
         return task
     }
     
     // MARK: NSCoding
     
     required public init(coder aDecoder: NSCoder) {
-        self.additionalTaskResults = aDecoder.decodeObject(forKey: "additionalTaskResults") as? [ORKTaskResult]
-        self.orderedStepIdentifiers = aDecoder.decodeObject(forKey: "orderedStepIdentifiers") as! [String]
-        self.conditionalRule = aDecoder.decodeObject(forKey: "conditionalRule") as? SBAConditionalRule
+        self.additionalTaskResults = aDecoder.decodeObject(forKey: #keyPath(additionalTaskResults)) as? [ORKTaskResult]
+        self.orderedStepIdentifiers = aDecoder.decodeObject(forKey: #keyPath(orderedStepIdentifiers)) as! [String]
+        self.conditionalRule = aDecoder.decodeObject(forKey: #keyPath(conditionalRule)) as? SBAConditionalRule
+        self.initialResult = aDecoder.decodeObject(forKey: #keyPath(initialResult)) as? ORKTaskResult
         super.init(coder: aDecoder);
     }
     
     override open func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-        aCoder.encode(self.additionalTaskResults, forKey: "additionalTaskResults")
-        aCoder.encode(self.conditionalRule, forKey: "conditionalRule")
-        aCoder.encode(self.orderedStepIdentifiers, forKey: "orderedStepIdentifiers")
+        aCoder.encode(self.additionalTaskResults, forKey: #keyPath(additionalTaskResults))
+        aCoder.encode(self.conditionalRule, forKey: #keyPath(conditionalRule))
+        aCoder.encode(self.orderedStepIdentifiers, forKey: #keyPath(orderedStepIdentifiers))
+        aCoder.encode(self.initialResult, forKey: #keyPath(initialResult))
     }
     
     // MARK: Equality
@@ -275,13 +312,16 @@ open class SBANavigableOrderedTask: ORKOrderedTask {
         return super.isEqual(object) &&
             SBAObjectEquality(self.additionalTaskResults, object.additionalTaskResults) &&
             SBAObjectEquality(self.orderedStepIdentifiers, object.orderedStepIdentifiers) &&
-            SBAObjectEquality(self.conditionalRule as? NSObject, object.conditionalRule as? NSObject)
+            SBAObjectEquality(self.conditionalRule as? NSObject, object.conditionalRule as? NSObject) &&
+            SBAObjectEquality(self.initialResult, self.initialResult)
     }
     
     override open var hash: Int {
         return super.hash ^
             SBAObjectHash(self.additionalTaskResults) ^
             SBAObjectHash(self.orderedStepIdentifiers) ^
-            SBAObjectHash(self.conditionalRule)
+            SBAObjectHash(self.conditionalRule) ^
+            SBAObjectHash(self.initialResult)
     }
+
 }

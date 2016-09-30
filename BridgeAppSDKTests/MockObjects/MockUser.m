@@ -90,7 +90,7 @@
     self.isDataSharingEnabled = NO;
     self.dataSharingScope = 0;
     self.onboardingStepIdentifier = nil;
-    self.gender = nil;
+    self.gender = 0;
     self.birthdate = nil;
 }
 

@@ -1,8 +1,8 @@
 //
-//  MockTrackedDataStore.h
+//  SBATrackedDataStore.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright (c) 2016, Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,20 +31,11 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+import Foundation
 
-#import <UIKit/UIKit.h>
-@import BridgeAppSDK;
-
-@interface MockTrackedDataStore : SBATrackedDataStore
-
-@property (nonatomic) NSDate *mockLastCompletionDate;
-
-@property (nonatomic) BOOL commitChanges_called;
-@property (nonatomic) BOOL reset_called;
-
-@end
-
-@interface MockTrackedDataStore (PrivateTest)
-
-
-@end
+extension SBATrackedDataStore {
+    
+    public static var shared: SBATrackedDataStore {
+        return __shared()
+    }
+}

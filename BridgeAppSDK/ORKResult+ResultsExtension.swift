@@ -36,6 +36,7 @@ import ResearchKit
 private let kStartDateKey = "startDate"
 private let kEndDateKey = "endDate"
 private let kIdentifierKey = "identifier"
+private let kAnswerMapKey = "answers"
 
 private let kItemKey = "item"
 
@@ -138,6 +139,40 @@ extension ORKResult: BridgeUploadableData {
         return ArchiveableResult(result: self.resultAsDictionary().jsonObject() as AnyObject, filename: self.filenameForArchive())
     }
     
+}
+
+extension ORKStepResult {
+    override func resultAsDictionary() -> NSMutableDictionary {
+        let stepResult = super.resultAsDictionary()
+        guard let results = self.results  else { return stepResult }
+        stepResult[kAnswerMapKey] = results.filteredDictionary({ (result) -> (String?, AnyObject?) in
+            guard let questionResult = result as? ORKQuestionResultAnswerJSON,
+                let answer = questionResult.jsonSerializedAnswer() else {
+                    return (result.identifier, self.resultAsDictionary().jsonObject() as AnyObject)
+            }
+            return (result.identifier, answer.value)
+        })
+        return stepResult;
+    }
+}
+
+extension ORKStep {
+    @objc(stepResultWithBridgeDictionary:)
+    public func stepResult(bridgeDictionary: [String: AnyObject]) -> ORKStepResult {
+        
+        // Populate the result using the answer map
+        let stepResult = self.stepResult(answerMap: bridgeDictionary[kAnswerMapKey] as? [String: AnyObject])
+        
+        // Add the start/end date
+        if let startDateString = bridgeDictionary[kStartDateKey] as? String {
+            stepResult.startDate = NSDate(iso8601String: startDateString) as Date
+        }
+        if let endDateString = bridgeDictionary[kEndDateKey] as? String {
+            stepResult.endDate = NSDate(iso8601String: endDateString) as Date
+        }
+        
+        return stepResult
+    }
 }
 
 extension ORKFileResult {

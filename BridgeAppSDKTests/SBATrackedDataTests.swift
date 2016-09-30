@@ -47,7 +47,6 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         super.tearDown()
     }
 
-    
     func testMedicationArchiveAndUnarchive() {
         
         // Create a medication
@@ -94,6 +93,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Items() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        
         XCTAssertEqual(dataCollection.itemsClassType, "Medication")
         
         let expectedCount = 15
@@ -148,6 +148,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_StandAloneSurvey() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.StandAloneSurvey
         let steps = dataCollection.filteredSteps(include)
@@ -197,6 +199,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationSelectionStep_Optional() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let inputItem: NSDictionary = [
             "identifier"   : "medicationSelection",
@@ -319,6 +323,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ActivityOnly() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ActivityOnly
         let steps = dataCollection.filteredSteps(include)
@@ -409,11 +415,50 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ChangedAndActivity() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ChangedAndActivity
         let steps = dataCollection.filteredSteps(include)
         
         checkChangedAndActivitySteps(steps, expectedSkipIdentifier: "momentInDay", dataCollection: dataCollection)
+    }
+    
+    func checkDefaultMomentInDayResults(_ dataStore: SBATrackedDataStore) -> Bool {
+        
+        guard let momentInDayResults = dataStore.momentInDayResults, momentInDayResults.count == 3 else {
+            XCTAssert(false, "\(dataStore.momentInDayResults) nil or not expected count")
+            return false
+        }
+        
+        // Moment in day should have
+        let result1 = momentInDayResults[0]
+        XCTAssertEqual(result1.identifier, "momentInDay")
+        XCTAssertNotNil(result1.results)
+        XCTAssertEqual(result1.results!.count, 1)
+        let questionResult1 = result1.results!.first! as! ORKChoiceQuestionResult
+        XCTAssertEqual(questionResult1.identifier, "momentInDayFormat")
+        XCTAssertEqual(questionResult1.choiceAnswers as! [String], ["No Tracked Data"])
+
+        //
+        let result2 = momentInDayResults[1]
+        XCTAssertEqual(result2.identifier, "medicationActivityTiming")
+        XCTAssertNotNil(result2.results)
+        XCTAssertEqual(result2.results!.count, 1)
+        let questionResult2 = result2.results!.first! as! ORKChoiceQuestionResult
+        XCTAssertEqual(questionResult2.identifier, "medicationActivityTiming")
+        XCTAssertEqual(questionResult2.choiceAnswers as! [String], ["No Tracked Data"])
+        
+        let result3 = momentInDayResults[2]
+        XCTAssertEqual(result3.identifier, "medicationTrackEach")
+        XCTAssertNotNil(result3.results)
+        XCTAssertEqual(result3.results!.count, 1)
+        let questionResult3 = result3.results!.first! as! ORKChoiceQuestionResult
+        XCTAssertEqual(questionResult3.identifier, "medicationTrackEach")
+        XCTAssertEqual(questionResult3.choiceAnswers as! [String], [] as [String])
+        
+        return true
+        
     }
     
     func checkChangedAndActivitySteps(_ steps: [ORKStep], expectedSkipIdentifier: String, dataCollection: SBATrackedDataObjectCollection) {
@@ -463,6 +508,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_ChangedAndNoMedsPreviouslySelected() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.ChangedOnly
         let steps = dataCollection.filteredSteps(include)
@@ -473,6 +520,8 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     func testMedicationTrackerFromResourceFile_Steps_SurveyAndActivity() {
         
         guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
         
         let include = SBATrackingStepIncludes.SurveyAndActivity
         let steps = dataCollection.filteredSteps(include)
@@ -508,12 +557,11 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     // MARK: transformToStep tests
 
     func testTransformToStep_StandAlone() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: true)
-        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -524,17 +572,19 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func testTransformToStep_EmptySet_LastSurveyToday() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         // If the selected items set is empty (but there is one) then do not show the activity steps
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = []
+        dataStore.commitChanges()
         
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
-        checkDataStoreDefaultIDMap(dataStore)
         
+        // The moment in day results should have default values
+        XCTAssert(checkDefaultMomentInDayResults(dataStore))
+
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
             return
@@ -545,17 +595,19 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func testTransformToStep_InjectionOnlySet_LastSurveyToday() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         // If the selected items set does not include any that are tracked then should
         // return the empty set (for a date in the near past)
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ !$0.usesFrequencyRange })
+        dataStore.commitChanges()
         
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
-        checkDataStoreDefaultIDMap(dataStore)
+        
+        // The moment in day results should have default values
+        XCTAssert(checkDefaultMomentInDayResults(dataStore))
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -567,16 +619,17 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func testTransformToStep_ActivityOnly() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         // If the activity steps includes a tracked item, then should include the activty 
         // steps, but do not need to include any of the others
-        dataStore.lastTrackingSurveyDate = Date()
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date()
+        
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
-        checkDataStoreDefaultIDMap(dataStore)
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -587,17 +640,21 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func testTransformToStep_ChangedAndActivity_CurrentlyHasTracked() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
-        checkDataStoreDefaultIDMap(dataStore)
         
+        // The moment in day results should have steps for creating default results
+        XCTAssertNil(dataStore.momentInDayResults)
+        XCTAssertNotNil(dataStore.momentInDaySteps)
+
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
             return
@@ -607,16 +664,20 @@ class SBATrackedDataObjectTests: ResourceTestCase {
     }
     
     func testTransformToStep_ChangedAndActivity_NoMedsCurrentlyTracked() {
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return }
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         // If the activity steps includes a tracked item and the last survey was more than
         // 30 days ago then should ask about changes
-        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
         dataStore.selectedItems = []
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
+        
         let step = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
-        checkDataStoreDefaultIDMap(dataStore)
+        
+        // The moment in day results should have default values
+        XCTAssert(checkDefaultMomentInDayResults(dataStore))
         
         guard let taskStep = step as? SBASubtaskStep, let task = taskStep.subtask as? SBANavigableOrderedTask else {
             XCTAssert(false, "\(step) not of expected class type")
@@ -626,191 +687,456 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         checkChangedAndActivitySteps(task.steps, expectedSkipIdentifier: "nextSection", dataCollection: dataCollection)
     }
     
-    func checkDataStoreDefaultIDMap(_ dataStore: SBATrackedDataStore) {
-
-        guard let defaultMap = dataStore.momentInDayResultDefaultIdMap as? [Array <String>] else {
-            XCTAssert(false, "\(dataStore.momentInDayResultDefaultIdMap) not of expected type")
-            return
-        }
-        
-        let expectedMap =
-            [["momentInDay", "momentInDayFormat"],
-             ["medicationActivityTiming", "medicationActivityTiming"],
-             ["medicationTrackEach", "medicationTrackEach"]];
-        
-        XCTAssertEqual(defaultMap.count, expectedMap.count)
-        
-        for (index, pair) in defaultMap.enumerated() {
-            let expected = expectedMap[index]
-            XCTAssertEqual(expected, pair)
-        }
-    }
-    
     // Mark: Navigation tests
     
     func testNavigation_NoMedsSelected() {
-        let (task, dataStore, selectionStep, taskResult) = stepToSelection(["None"])
-        guard task != nil else { return }
+        let (retTask, retDataStore, step, retTaskResult) = stepToActivity(["None"])
+        guard let task = retTask,
+            let dataStore = retDataStore,
+            let taskResult = retTaskResult,
+            let selectedItems = dataStore.selectedItems
+            else {
+                XCTAssert(false, "preconditions not met")
+                return
+        }
 
-        // make selection
-        let nextStep = task!.step(after: selectionStep, with: taskResult!)
-        XCTAssertNotNil(nextStep)
-        XCTAssertNotNil(dataStore!.selectedItems)
-        
-        guard let selectedItems = dataStore!.selectedItems else { return }
+        // Check that there are no selected items
         XCTAssertEqual(selectedItems.count, 0)
         
-        guard let nextStepIdentifier = nextStep?.identifier else { return }
-        XCTAssertEqual(nextStepIdentifier, "dominantHand")
-
+        // And the default moment in day results are given
+        XCTAssert(checkDefaultMomentInDayResults(dataStore))
+        
+        // Tracked steps should not be shown
+        let nextStep = task.step(after: step, with: taskResult)
+        XCTAssertNil(nextStep)
     }
     
-    
-    func testNavigation_MedsSelected_TrackEach() {
+    func testNavigation_WithMedsSelected() {
         
         // Check shared functionality
-        let (retTask, retDataStore, selectionStep, retTaskResult) = stepToSelection(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
-        guard let task = retTask, let dataStore = retDataStore, let taskResult = retTaskResult else { return }
-        
-        // get the next step
-        let nextStep = task.step(after: selectionStep, with: taskResult)
-        XCTAssertNotNil(nextStep)
-        XCTAssertNotNil(dataStore.selectedItems)
-        
-        // check that the selected items is set in the data store
-        guard let selectedItems = dataStore.selectedItems else { return }
-        XCTAssertEqual(selectedItems.count, 4)
-        
-        checkSelectionItemsInserted(dataStore.selectedItems!, taskResult: taskResult)
-        
-        // check that the frequency values are set for the selected items
-        for item in dataStore.selectedItems! {
-            if (item.usesFrequencyRange) {
-                XCTAssertEqual(item.frequency, UInt(item.identifier.characters.count), "\(item.identifier)")
-            }
-        }
-        
-        guard let handStep = nextStep as? ORKFormStep, let handFormItem = handStep.formItems?.first else {
-            XCTAssert(false, "\(nextStep) not of expected type" )
-            return
-        }
-    
-        // Add the hand result
-        let handQuestionResult = ORKChoiceQuestionResult(identifier: handFormItem.identifier)
-        handQuestionResult.choiceAnswers = ["Right hand"]
-        let handResult = ORKStepResult(stepIdentifier: handStep.identifier, results: [handQuestionResult])
-        taskResult.results! += [handResult]
-        
-        // Get moment in day
-        let step2 = task.step(after: handStep, with: taskResult)
-        guard let momentStep = step2 as? SBATrackedActivityFormStep , momentStep.trackingType == .activity,
-            let momentFormItem = momentStep.formItems?.first  else {
-                XCTAssert(false, "\(step2) not of expected type")
+        let (retTask, retDataStore, step, retTaskResult) = stepToActivity(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
+        guard let task = retTask,
+            let dataStore = retDataStore,
+            let taskResult = retTaskResult,
+            let selectedItems = dataStore.selectedItems
+            else {
+                XCTAssert(false, "preconditions not met")
                 return
         }
         
+        // check that the selected items is set in the data store
+        XCTAssertEqual(selectedItems.count, 4)
+        
+        // get the next step
+        let step1 = task.step(after: step, with: taskResult)
+        XCTAssertNotNil(step1)
+
+        // Get moment in day
+        guard let momentStep = step1 as? SBATrackedActivityFormStep , momentStep.trackingType == .activity,
+            let momentFormItem = momentStep.formItems?.first else {
+                XCTAssert(false, "\(step1) not of expected type")
+                return
+        }
+        
+        XCTAssertEqual(momentStep.identifier, "momentInDay")
+        XCTAssertEqual(momentFormItem.identifier, "momentInDayFormat")
+        XCTAssertEqual(momentStep.formItems!.count, 1)
+        
         // Add the moment in day result
-        let questionResult = ORKChoiceQuestionResult(identifier: momentFormItem.identifier)
-        questionResult.choiceAnswers = ["Another time"]
-        let momentResult = ORKStepResult(stepIdentifier: momentStep.identifier, results: [questionResult])
-        taskResult.results! += [momentResult]
+        let momentResult = momentStep.instantiateDefaultStepResult([momentFormItem.identifier : "Another time"])
+        taskResult.results?.append(momentResult)
         
-        let step3 = task.step(after: momentStep, with: taskResult)
-        XCTAssertNotNil(dataStore.momentInDayResult)
-        XCTAssertEqual(dataStore.momentInDayResult!.count, 1)
+        // Get next step
+        let step2 = task.step(after: step1, with: taskResult)
+        XCTAssertNotNil(step2)
         
-        guard let timingStep = step3 as? SBATrackedActivityFormStep , timingStep.trackingType == .activity else {
+        guard let timingStep = step2 as? SBATrackedActivityFormStep, timingStep.trackingType == .activity,
+            let timingFormItem = timingStep.formItems?.first else {
+            XCTAssert(false, "\(step2) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(timingStep.identifier, "medicationActivityTiming")
+        XCTAssertEqual(timingFormItem.identifier, "medicationActivityTiming")
+        XCTAssertEqual(timingStep.formItems!.count, 1)
+        
+        // Add timing result
+        let timingResult = timingStep.instantiateDefaultStepResult([timingFormItem.identifier : "30-60 minutes ago"])
+        taskResult.results?.append(timingResult)
+        
+        // Get track each step
+        let step3 = task.step(after: step2, with: taskResult)
+        XCTAssertNotNil(step3)
+
+        guard let timingEachStep = step3 as? SBATrackedActivityPageStep else {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
-        taskResult.results! += [createTimingStepResult(timingStep, answer: "0-30 minutes")]
-        
-        let step4 = task.step(after: timingStep, with: taskResult)
-        XCTAssertNotNil(dataStore.momentInDayResult)
-        XCTAssertEqual(dataStore.momentInDayResult!.count, 2)
-        
-        guard let timingEachStep = step4 as? SBATrackedActivityPageStep else {
-            XCTAssert(false, "\(step4) not of expected type")
-            return
-        }
-        
+
         XCTAssertEqual(timingEachStep.identifier, "medicationTrackEach")
-        taskResult.addResult(timingEachStep.instantiateDefaultStepResult(nil))
         
-        // progress to next step to set results
-        task.step(after: timingEachStep, with: taskResult)
+        // Add timing each result
+        let timingEachResult = timingEachStep.instantiateDefaultStepResult(nil)
+        taskResult.results?.append(timingEachResult)
         
-        let momentInDayResults = dataStore.momentInDayResult
-        XCTAssertNotNil(momentInDayResults)
-        guard momentInDayResults != nil else { return }
-        
-        XCTAssertEqual(momentInDayResults!.count, 3)
-        
-        let timingResult = momentInDayResults?.last
-        XCTAssertNotNil(timingResult)
-        XCTAssertNotNil(timingResult?.results)
-        guard let timingResults = timingResult?.results else { return }
-    
-        XCTAssertEqual(timingResult!.identifier, "medicationTrackEach")
-        
-        guard let trackQuestionResult = timingResults.last as? ORKChoiceQuestionResult,
-        let choiceAnswers = trackQuestionResult.choiceAnswers as? [[String: String]]
-        else {
-            XCTAssert(false, "\(timingResults) not of expected type")
+        // Check that this is the last step
+        let step4 = task.step(after: step3, with: taskResult)
+        XCTAssertNil(step4)
+
+        guard let momentInDayResults = dataStore.momentInDayResults else {
+            XCTAssert(false, "Data store momentInDayResults are nil")
+            return
+        }
+        guard momentInDayResults.count == 3 else {
+            XCTAssert(false, "results count does not match expected")
             return
         }
         
-        XCTAssertEqual(choiceAnswers.count, 2)
-        guard choiceAnswers.count == 2 else { return }
+        XCTAssertEqual(momentInDayResults[0], momentResult)
+        XCTAssertEqual(momentInDayResults[1], timingResult)
+        XCTAssertEqual(momentInDayResults[2], timingEachResult)
+    }
+    
+    // Mark: Commit/reset
+    
+    func testCommitChanges_NoMedication() {
+        let dataStore = self.dataStoreForMedicationTracking()
         
-        XCTAssertEqual(choiceAnswers.first!["identifier"], "Levodopa")
-        XCTAssertEqual(choiceAnswers.first!["answer"], "0-30 minutes ago")
-        XCTAssertEqual(choiceAnswers.last!["identifier"], "Rytary")
-        XCTAssertEqual(choiceAnswers.last!["answer"], "0-30 minutes ago")
-    }
-    
-    func createTimingStepResult(_ timingStep:SBATrackedActivityFormStep, answer: String) -> ORKStepResult {
-        let formItem = timingStep.formItems!.first!
-        let questionResult = ORKChoiceQuestionResult(identifier: formItem.identifier)
-        questionResult.choiceAnswers = [answer]
-        let momentResult = ORKStepResult(stepIdentifier: timingStep.identifier, results: [questionResult])
-        return momentResult
-    }
-    
-    func checkSelectionItemsInserted(_ selectedItems: [SBATrackedDataObject], taskResult: ORKTaskResult) {
+        dataStore.selectedItems = []
         
-// TODO: FIXME!!! syoung 07/14/2016 In response to changes in RK/master, inserting a result in an
-// ORKStepResult now fails. Code has been changed to mutate the taskResult in the archiving stage.
-//
-//        // Check that the task result includes items
-//        guard let selectionStepResults = taskResult.stepResultForStepIdentifier("medicationSelection")?.results,
-//            let lastResult = selectionStepResults.last
-//            else {
-//                XCTAssert(false, "Selection step results not found in \(taskResult)")
-//                return
-//        }
-//        
-//        XCTAssertEqual(selectionStepResults.count, 2)
-//        guard let formResult = lastResult as? SBATrackedDataSelectionResult,
-//            let resultItems = formResult.selectedItems else {
-//            XCTAssert(false, "Selection step results do not match expected \(lastResult)")
-//            return
-//        }
-//        
-//        XCTAssertEqual(resultItems, selectedItems)
-//        XCTAssertEqual(formResult.identifier, "medicationSelection")
+        // --- method under test
+        dataStore.commitChanges()
+        
+        // Changes have been saved and does not have changes
+        XCTAssertFalse(dataStore.hasChanges);
+        XCTAssertNotNil(dataStore.storedDefaults.object(forKey: "selectedItems"))
+        XCTAssertNotNil(dataStore.lastTrackingSurveyDate)
+        XCTAssertEqualWithAccuracy(dataStore.lastTrackingSurveyDate?.timeIntervalSinceNow ?? 99.0, 0.0, accuracy: 2)
     }
     
-    // Mark: convenience methods
+    func testCommitChanges_OtherTrackedResult() {
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        let result = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        result.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedQuestion", results: [result])
+        dataStore.updateTrackedData(for: stepResult)
+        
+        // --- method under test
+        dataStore.commitChanges()
+        
+        // Changes have been saved and does not have changes
+        XCTAssertFalse(dataStore.hasChanges);
+        XCTAssertNotNil(dataStore.storedDefaults.object(forKey: "results"))
+        XCTAssertNotNil(dataStore.lastTrackingSurveyDate)
+        XCTAssertEqualWithAccuracy(dataStore.lastTrackingSurveyDate?.timeIntervalSinceNow ?? 99.0, 0.0, accuracy: 2)
+    }
     
-    func dataStoreForMedicationTracking() -> SBATrackedDataStore? {
-        let result: AnyClass? = SBAClassTypeMap.shared.class(forClassType: "MockTrackedDataStore")
-        XCTAssertNotNil(result)
-        guard let classType = result as? SBATrackedDataStore.Type else {
-            XCTAssert(false, "\(result) not of expected class type")
-            return nil
+    func testCommitChanges_WithTrackedMedicationAndMomentInDayResult() {
+        let dataStore = self.dataStoreForMedicationTracking()
+
+        let med = SBAMedication(dictionaryRepresentation: ["name": "Levodopa", "tracking": true])
+        dataStore.selectedItems = [med]
+        let momentInDayResults = createMomentInDayResults()
+        dataStore.momentInDayResults = momentInDayResults
+        
+        // --- method under test
+        dataStore.commitChanges()
+        
+        // Changes have been saved and does not have changes
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertNotNil(dataStore.storedDefaults.object(forKey: "selectedItems"))
+        XCTAssertEqual(dataStore.selectedItems?.count ?? 0, 1)
+        XCTAssertEqual(dataStore.selectedItems?.first, med)
+        XCTAssertNotNil(dataStore.momentInDayResults);
+        XCTAssertEqual(dataStore.momentInDayResults!, momentInDayResults)
+    }
+    
+    func testReset() {
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        let med = SBAMedication(dictionaryRepresentation: ["name": "Levodopa", "tracking": true])
+        dataStore.selectedItems = [med]
+        dataStore.commitChanges()
+        
+        let changedMed = SBAMedication(dictionaryRepresentation: ["name": "Rytary", "tracking": true])
+        dataStore.selectedItems = [changedMed]
+        
+        let momentInDayResults = createMomentInDayResults()
+        dataStore.momentInDayResults = momentInDayResults
+        
+        // --- method under test
+        dataStore.reset()
+        
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertEqual(dataStore.selectedItems!, [med])
+        XCTAssertNil(dataStore.momentInDayResults)
+    }
+    
+    // Mark: shouldIncludeMomentInDayQuestions
+    
+    func testShouldIncludeMomentInDayQuestions_LastCompletionNil() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = false
+        dataStore.selectedItems = Array(dataCollection.items[2...3])
+        dataStore.momentInDayResults = createMomentInDayResults()
+        dataStore.commitChanges()
+        dataStore.mockLastCompletionDate = nil
+        
+        // Check assumptions
+        XCTAssertNotEqual(dataStore.trackedItems?.count ?? 99, 0)
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertNotNil(dataStore.momentInDayResults)
+        XCTAssertNil(dataStore.lastCompletionDate)
+        
+        // For a nil date, the collection should show the moment in day questions
+        XCTAssertTrue(dataCollection.shouldIncludeMomentInDayQuestions())
+    }
+    
+    func testShouldIncludeMomentInDayQuestions_StashNil() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = false
+        dataStore.selectedItems = Array(dataCollection.items[2...3])
+        dataStore.commitChanges()
+        dataStore.mockLastCompletionDate = Date()
+        
+        // Check assumptions
+        XCTAssertNotEqual(dataStore.trackedItems?.count ?? 99, 0)
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertNil(dataStore.momentInDayResults)
+        XCTAssertNotNil(dataStore.lastCompletionDate)
+        
+        // For a nil moment in day question set should include
+        XCTAssertTrue(dataCollection.shouldIncludeMomentInDayQuestions())
+    }
+
+    func testShouldIncludeMomentInDayQuestions_TakesMedication() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = false
+        dataStore.selectedItems = Array(dataCollection.items[2...3])
+        dataStore.momentInDayResults = createMomentInDayResults()
+        dataStore.commitChanges()
+        
+        // Check assumptions
+        XCTAssertNotEqual(dataStore.trackedItems?.count ?? 99, 0)
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertNotNil(dataStore.momentInDayResults)
+        
+        // If it has been more than 30 minutes, should ask the question again
+        dataStore.mockLastCompletionDate = Date(timeIntervalSinceNow: -30 * 60)
+        XCTAssertTrue(dataCollection.shouldIncludeMomentInDayQuestions())
+        
+        // For a recent time, should NOT include step
+        dataStore.mockLastCompletionDate = Date(timeIntervalSinceNow: -2 * 60)
+        XCTAssertFalse(dataCollection.shouldIncludeMomentInDayQuestions())
+    
+        // If should always include the timing questions then should be true
+        dataCollection.alwaysIncludeActivitySteps = true
+        XCTAssertTrue(dataCollection.shouldIncludeMomentInDayQuestions())
+    }
+    
+    func testShouldIncludeMomentInDayQuestions_NoMedication() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = true
+        dataStore.selectedItems = []
+        dataStore.momentInDayResults = createMomentInDayResults()
+        dataStore.commitChanges()
+        dataStore.mockLastCompletionDate = Date(timeIntervalSinceNow: -2 * 60)
+        
+        // Check assumptions
+        XCTAssertEqual(dataStore.trackedItems?.count ?? 99, 0)
+        XCTAssertFalse(dataStore.hasChanges)
+        XCTAssertNotNil(dataStore.momentInDayResults)
+        XCTAssertNotNil(dataStore.lastCompletionDate)
+        
+        // If no meds, should not be asked the moment in day question
+        XCTAssertFalse(dataCollection.shouldIncludeMomentInDayQuestions())
+    }
+    
+    // Mark: shouldIncludeChangedQuestion
+    
+    func testShouldIncludeChangedQuestion_NO() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = true
+        dataStore.selectedItems = []
+        dataStore.commitChanges()
+        
+        // If it has been one day, do not include
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -24 * 60 * 60)
+        XCTAssertFalse(dataCollection.shouldIncludeChangedStep())
+    }
+    
+    func testShouldIncludeChangedQuestion_YES() {
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        dataCollection.alwaysIncludeActivitySteps = true
+        dataStore.selectedItems = []
+        dataStore.commitChanges()
+        
+        // If it has been over a month, do not include
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -32 * 24 * 60 * 60)
+
+        XCTAssertTrue(dataCollection.shouldIncludeChangedStep())
+    }
+    
+    // Mark: - stepResultForStep:
+    
+    func testStepResultForStep_SelectedItemsStep() {
+        
+        // Check shared functionality
+        let (retTask, retDataStore, _, retTaskResult) = stepToActivity(["Levodopa", "Carbidopa", "Rytary", "Apokyn"])
+        guard let dataStore = retDataStore,
+            let selectionStep = retTask?.step?(withIdentifier: "medicationSelection"),
+            let selectionResult = retTaskResult?.stepResult(forStepIdentifier: "medicationSelection")
+            else {
+                XCTAssert(false, "preconditions not met")
+                return
         }
-        return classType.init()
+        
+        // commit the changes
+        dataStore.commitChanges()
+        
+        // --- Rebuild the result from the data store
+        guard let storedResult = dataStore.stepResult(for: selectionStep) else {
+            XCTAssert(false, "restored result is nil")
+            return
+        }
+        
+        // restored result should have equal answers and identifiers but not be identical objects
+        XCTAssertFalse(storedResult === selectionResult)
+
+        // Identifier should match
+        XCTAssertEqual(storedResult.identifier, selectionResult.identifier)
+        
+        // And start/end date should match
+        XCTAssertEqual(storedResult.startDate, dataStore.lastTrackingSurveyDate)
+        XCTAssertEqual(storedResult.endDate, dataStore.lastTrackingSurveyDate)
+        
+        guard let storedResults = storedResult.results, let selectionResults = selectionResult.results else {
+            XCTAssert(false, "results are nil or counts do not match")
+            return
+        }
+        
+        XCTAssertEqual(storedResults.count, selectionResults.count)
+        
+        for expectedResult in selectionResults {
+            let result = storedResult.result(forIdentifier: expectedResult.identifier) as! ORKQuestionResult
+            XCTAssertNotNil(result, "\(expectedResult.identifier)")
+            XCTAssertEqual(result.answer as! NSObject, (expectedResult as! ORKQuestionResult).answer as! NSObject, "\(expectedResult.identifier)")
+        }
+    }
+    
+    func testStepResultForStep_OtherTrackedStep_BooleanForm() {
+        
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        // Create the result and commit the changes
+        let questionResult = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        questionResult.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedStep", results: [questionResult])
+        dataStore.updateTrackedData(for: stepResult)
+        dataStore.commitChanges()
+        
+        // Create the step
+        let step = ORKFormStep(identifier: "trackedStep")
+        step.formItems = [ORKFormItem(identifier: "trackedQuestion", text: nil, answerFormat: ORKAnswerFormat.booleanAnswerFormat())]
+        
+        // Get the restored result
+        let storedResult = dataStore.stepResult(for: step)
+        
+        XCTAssertNotNil(storedResult)
+        
+        guard let booleanResult = storedResult?.results?.first as? ORKBooleanQuestionResult else {
+            XCTAssert(false, "\(storedResult) results are nil or not expected type")
+            return
+        }
+     
+        XCTAssertEqual(storedResult!.identifier, "trackedStep")
+        XCTAssertEqual(booleanResult.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.booleanAnswer!, questionResult.booleanAnswer!)
+    }
+    
+    func testStepResultForStep_OtherTrackedStep_BooleanQuestion() {
+        
+        let dataStore = self.dataStoreForMedicationTracking()
+        
+        // Create the result and commit the changes
+        let questionResult = ORKBooleanQuestionResult(identifier: "trackedQuestion")
+        questionResult.booleanAnswer = true
+        let stepResult = ORKStepResult(stepIdentifier: "trackedQuestion", results: [questionResult])
+        dataStore.updateTrackedData(for: stepResult)
+        dataStore.commitChanges()
+        
+        // Create the step
+        let step = ORKQuestionStep(identifier: "trackedQuestion", title: nil, answer: ORKAnswerFormat.booleanAnswerFormat())
+        
+        // Get the restored result
+        let storedResult = dataStore.stepResult(for: step)
+        
+        XCTAssertNotNil(storedResult)
+        
+        guard let booleanResult = storedResult?.results?.first as? ORKBooleanQuestionResult else {
+            XCTAssert(false, "\(storedResult) results are nil or not expected type")
+            return
+        }
+        
+        XCTAssertEqual(storedResult!.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.identifier, "trackedQuestion")
+        XCTAssertEqual(booleanResult.booleanAnswer!, questionResult.booleanAnswer!)
+    }
+    
+    // MARK: ORKTaskResultSource
+    
+    func testStoredTaskResultSource() {
+        
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return }
+        let dataStore = self.dataStoreForMedicationTracking()
+        dataCollection.dataStore = dataStore
+        
+        // Setup the data store to have selected items and need to include the changed step
+        dataStore.selectedItems = dataCollection.items.filter({ $0.identifier == "Levodopa" })
+        dataStore.commitChanges()
+        dataStore.lastTrackingSurveyDate = Date(timeIntervalSinceNow: -40*24*60*60)
+        
+        // Create a task
+        let factory = SBASurveyFactory()
+        let introStep = ORKInstructionStep(identifier: "intro")
+        let surveyStep = dataCollection.transformToStep(with: factory, isLastStep: false)!
+        let questionStep = ORKQuestionStep(identifier: "booleanQuestion", title: nil, answer: ORKAnswerFormat.booleanAnswerFormat())
+        let conclusionStep = ORKCompletionStep(identifier: "conclusion")
+        let task = SBANavigableOrderedTask(identifier: "task", steps: [introStep, surveyStep, questionStep, conclusionStep])
+        
+        // check assumptions
+        let selectionStepIdentifier = "Medication Tracker.medicationSelection"
+        let selectionStep = task.step(withIdentifier: selectionStepIdentifier)
+        XCTAssertNotNil(selectionStep)
+        
+        // Check the initial stored result
+        let result = task.stepResult(forStepIdentifier: selectionStepIdentifier)
+        XCTAssertNotNil(result)
+    }
+    
+    // MARK: convenience methods
+    
+    func dataStoreForMedicationTracking() -> MockTrackedDataStore {
+        return MockTrackedDataStore()
     }
     
     func dataCollectionForMedicationTracking() -> SBATrackedDataObjectCollection? {
@@ -819,11 +1145,22 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         return SBATrackedDataObjectCollection(dictionaryRepresentation: json)
     }
-
-    func stepToSelection(_ choiceAnswers: [String]) -> (task: ORKTask?, dataStore: SBATrackedDataStore?, selectionStep: ORKStep?, taskResult: ORKTaskResult?) {
+    
+    func createMomentInDayResults() -> [ORKStepResult] {
         
-        guard let dataCollection = self.dataCollectionForMedicationTracking(),
-            let dataStore = self.dataStoreForMedicationTracking() else { return (nil,nil,nil, nil) }
+        let momResult = ORKChoiceQuestionResult(identifier: NSUUID().uuidString)
+        momResult.startDate = Date(timeIntervalSinceNow: -2*60)
+        momResult.endDate = momResult.startDate.addingTimeInterval(30)
+        momResult.questionType = .singleChoice
+        momResult.choiceAnswers = ["Another Time"]
+        let stepResult = ORKStepResult(stepIdentifier: "momentInDay", results: [momResult])
+        return [stepResult]
+    }
+
+    func stepToActivity(_ choiceAnswers: [String]) -> (task: ORKTask?, dataStore: SBATrackedDataStore?, selectionStep: ORKStep?, taskResult: ORKTaskResult?) {
+        
+        guard let dataCollection = self.dataCollectionForMedicationTracking() else { return (nil,nil,nil,nil) }
+        let dataStore = self.dataStoreForMedicationTracking()
         dataCollection.dataStore = dataStore
         
         let transformedStep = dataCollection.transformToStep(with: SBASurveyFactory(), isLastStep: false)
@@ -845,7 +1182,7 @@ class SBATrackedDataObjectTests: ResourceTestCase {
             }
             guard let nextStep = task.step(after: step, with: taskResult) else {
                 XCTAssert(false, "\(step) after not expected to be nil")
-                return (nil,nil,nil, nil)
+                return (nil, nil, nil, nil)
             }
             step = nextStep
         } while (step!.identifier != "medicationSelection")
@@ -863,6 +1200,29 @@ class SBATrackedDataObjectTests: ResourceTestCase {
         }
         let stepResult = step!.instantiateDefaultStepResult(answerMap)
         taskResult.results?.append(stepResult)
+        
+        // get the next step
+        step = task.step(after: step, with: taskResult)
+        XCTAssertNotNil(step)
+        XCTAssertNotNil(dataStore.selectedItems)
+        
+        // check that the frequency values are set for the selected items
+        for item in dataStore.selectedItems! {
+            if (item.usesFrequencyRange) {
+                XCTAssertEqual(item.frequency, UInt(item.identifier.characters.count), "\(item.identifier)")
+            }
+        }
+        
+        guard let handStep = step as? ORKFormStep, let handFormItem = handStep.formItems?.first else {
+            XCTAssert(false, "\(step) not of expected type" )
+            return  (nil, nil, nil, nil)
+        }
+        
+        // Add the hand result
+        let handQuestionResult = ORKChoiceQuestionResult(identifier: handFormItem.identifier)
+        handQuestionResult.choiceAnswers = ["Right hand"]
+        let handResult = ORKStepResult(stepIdentifier: handStep.identifier, results: [handQuestionResult])
+        taskResult.results?.append(handResult)
         
         return (task, dataStore, step, taskResult)
     }
