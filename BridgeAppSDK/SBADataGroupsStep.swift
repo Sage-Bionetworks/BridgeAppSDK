@@ -79,7 +79,7 @@ public class SBADataGroupsStep: SBANavigationFormStep {
             else {
                 return nil
             }
-            // Create the itersection set that is the values from the current group that are in this steps subset of data groups
+            // Create the intersection set that is the values from the current group that are in this steps subset of data groups
             let currentSet = Set(currentGroups!).intersection(self.dataGroups)
             // If there is no overlap then return nil
             guard currentSet.count > 0 else { return nil }
@@ -103,10 +103,15 @@ public class SBADataGroupsStep: SBANavigationFormStep {
     }
     
     /**
-     Union the input data groups with the given step result.
-     @param  dataGroups     The current data groups set
+     Return the union/minus set that includes the data groups from the current set of data groups
+     that are *not* edited in this step unioned with the new data groups that are selected values
+     for this step. For example, if this step is used to select either "groupA" OR "groupB" and 
+     the current data groups are "test_user" and "groupA", then the returned groups will include
+     "test_user" AND whichever group has been selected via the step result.
+     
+     @param  previousGroups The current data groups set
      @param  stepResult     The step result to use to get the new selection
-     @return                The union set of data groups based on the current and selected
+     @return                The set of data groups based on the current and step result
      */
     public func union(previousGroups: Set<String>?, stepResult: ORKStepResult) -> Set<String> {
         let questionResult = stepResult.results?.first as? ORKChoiceQuestionResult

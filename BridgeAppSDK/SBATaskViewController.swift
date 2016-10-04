@@ -90,8 +90,8 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         super.viewDidLoad()
         
         // Internally, ORKTaskViewController calls _defaultResultSource and *not*
-        // self.defaultResultSource as would seem the obvious and sensible choice
-        // so overriding the property never gets called. syoung 09/30/2016
+        // self.defaultResultSource as one might (and did) assume, so the overridden 
+        // property never gets called. syoung 09/30/2016
         super.defaultResultSource = self
     }
     
@@ -157,7 +157,7 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     // MARK: ORKTaskResultSource
     
     // syoung 09/30/2016 Override the result source so that this task view controller can forward results
-    // from either the task or an external result source. This wacky
+    // from either the task or an external result source.
     private var _internalResultSource: ORKTaskResultSource?
     override open var defaultResultSource: ORKTaskResultSource? {
         get {

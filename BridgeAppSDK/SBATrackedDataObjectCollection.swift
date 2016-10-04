@@ -231,12 +231,4 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }
         return selectedItems.find({ $0.tracking }) != nil
     }
-
-    open func commitChanges(user: SBAUserWrapper, task: SBANavigableOrderedTask, taskResult: ORKTaskResult) {
-        
-    }
-    
-    open func resetChanges() {
-        dataStore.reset()
-    }
 }
