@@ -37,7 +37,7 @@ protocol SBATaskViewControllerStrongReference: class, NSSecureCoding {
     func attachTaskViewController(_ taskViewController: SBATaskViewController)
 }
 
-open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDelegate {
+open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController, ORKTaskViewControllerDelegate, ORKTaskResultSource {
     
     /**
      * A strongly held reference to a delegate or result source that is used by the
@@ -86,6 +86,15 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         }
     }
     
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Internally, ORKTaskViewController calls _defaultResultSource and *not*
+        // self.defaultResultSource as one might (and did) assume, so the overridden 
+        // property never gets called. syoung 09/30/2016
+        super.defaultResultSource = self
+    }
+    
     open override func stepViewControllerWillAppear(_ stepViewController: ORKStepViewController) {
         super.stepViewControllerWillAppear(stepViewController)
         guard let step = stepViewController.step else { return }
@@ -124,6 +133,12 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
+    // MARK: SBASharedInfoController
+    
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
+    }()
+    
     // MARK: NSCoding
     
     public required init(coder aDecoder: NSCoder) {
@@ -141,15 +156,35 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
     
     // MARK: ORKTaskResultSource
     
-    // Look to the task attached to this view controller and return that as the result source
-    // If there is none set as the override.
+    // syoung 09/30/2016 Override the result source so that this task view controller can forward results
+    // from either the task or an external result source.
+    private var _internalResultSource: ORKTaskResultSource?
     override open var defaultResultSource: ORKTaskResultSource? {
         get {
-            return super.defaultResultSource ?? (self.task as? ORKTaskResultSource)
+            return self
         }
         set {
-            super.defaultResultSource = newValue
+            _internalResultSource = newValue
         }
+    }
+    
+    public func stepResult(forStepIdentifier stepIdentifier: String) -> ORKStepResult? {
+        // Look first to the internal result source and if it returns a value, use that
+        if let result = _internalResultSource?.stepResult(forStepIdentifier: stepIdentifier) {
+            return result
+        }
+        // Next look at the task and check if it has a result associated with the step
+        else if let result = (self.task as? ORKTaskResultSource)?.stepResult(forStepIdentifier: stepIdentifier) {
+            return result
+        }
+        // Finally, look at the step and special-case certain steps
+        else if let step = self.task?.step?(withIdentifier: stepIdentifier) {
+            // Special-case the data groups step
+            if let result = (step as? SBADataGroupsStep)?.stepResult(currentGroups: sharedUser.dataGroups) {
+                return result
+            }
+        }
+        return nil
     }
     
     // MARK: ORKTaskViewControllerDelegate
@@ -166,7 +201,7 @@ open class SBATaskViewController: ORKTaskViewController, ORKTaskViewControllerDe
             _internalDelegate = newValue
         }
     }
-    
+
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         _internalDelegate?.taskViewController(taskViewController, didFinishWith: reason, error: error)
     }

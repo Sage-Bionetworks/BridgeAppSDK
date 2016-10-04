@@ -1,5 +1,5 @@
 {
-    "taskIdentifier"            : "Voice",
+    "taskIdentifier"            : "Voice Activity",
     "schemaIdentifier"          : "Voice Activity",
     "taskType"                  : "voice",
     "intendedUseDescription"    : "In this activity we ask you to say, “Aaaah.”",

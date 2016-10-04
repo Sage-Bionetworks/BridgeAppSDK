@@ -231,5 +231,4 @@ extension SBATrackedDataObjectCollection: SBABridgeTask, SBAStepTransformer, SBA
         }
         return selectedItems.find({ $0.tracking }) != nil
     }
-
 }

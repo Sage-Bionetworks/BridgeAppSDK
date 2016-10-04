@@ -1,0 +1,9 @@
+{
+    "taskIdentifier"            : "Tremor Activity",
+    "schemaIdentifier"          : "Tremor Activity",
+    "taskType"                  : "tremor",
+    "insertSteps"               : [{
+                                    "resourceName"            : "MedicalSurvey",
+                                    "classType"               : "TrackedDataObjectCollection",
+                                    }]
+}

@@ -142,9 +142,8 @@ public enum SBASurveyItemType {
         case emailVerification  = "emailVerification"       // SBAEmailVerificationStep
         case externalID         = "externalID"              // SBAExternalIDStep
         case permissions        = "permissions"             // SBAPermissionsStep
-        case completion         = "onboardingCompletion"
-        //TODO: Implement syoung 06/08/2016
-        //case DataGroups         = "dataGroups"              // data groups step
+        case completion         = "onboardingCompletion"    // SBAOnboardingCompletionStep
+        case dataGroups         = "dataGroups"              // SBADataGroupsStep
     }
     
     case passcode(ORKPasscodeType)

@@ -1,5 +1,5 @@
 {
-     "taskIdentifier"            : "Walking",
+     "taskIdentifier"            : "Walking Activity",
      "schemaIdentifier"          : "Walking Activity",
      "taskType"                  : "walking",
      "intendedUseDescription"    : "In this activity we ask you to walk back and forth. Then we ask you to turn in a full circle and stand still.",

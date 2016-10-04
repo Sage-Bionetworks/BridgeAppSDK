@@ -37,7 +37,7 @@ import ResearchKit
 public protocol SBATrackedDataSelectedItemsProtocol {
     
     @objc(stepResultWithSelectedItems:)
-    func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult
+    func stepResult(selectedItems:[SBATrackedDataObject]?) -> ORKStepResult?
 }
 
 public protocol SBATrackedStep {

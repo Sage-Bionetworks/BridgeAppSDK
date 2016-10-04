@@ -18,7 +18,7 @@
      "optional"     : false
      },
      {
-     "resourceName"            : "MedicationTracking",
+     "resourceName"            : "MedicalSurvey",
      "classType"               : "TrackedDataObjectCollection",
      },
      {

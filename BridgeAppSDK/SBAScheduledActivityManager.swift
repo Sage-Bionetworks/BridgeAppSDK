@@ -329,8 +329,10 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
             let schedule = scheduledActivity(for: taskViewController),
             shouldRecordResult(for: schedule, taskViewController: taskViewController) {
             
-            // Update any data stores associated with this task
-            taskViewController.task?.updateTrackedDataStores(shouldCommit: true)
+            // Update any data stores and groups associated with this task
+            taskViewController.task?.commitTrackedDataChanges(user: sharedUser,
+                                                              taskResult: taskViewController.result,
+                                                              completion:handleDataGroupsUpdate)
             
             // Archive the results
             let results = activityResults(for: schedule, taskViewController: taskViewController)
@@ -341,7 +343,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
             update(schedule: schedule, taskViewController: taskViewController)
         }
         else {
-            taskViewController.task?.updateTrackedDataStores(shouldCommit: false)
+            taskViewController.task?.resetTrackedDataChanges()
         }
         
         taskViewController.dismiss(animated: true) {}
@@ -581,15 +583,35 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         return allResults
     }
+    
+    open func handleDataGroupsUpdate(error: Error?) {
+        if (error != nil) {
+            // syoung 09/30/2016 If there was an error with updating the data groups (offline, etc) then
+            // reset the last tracked survey date to force prompting for the survey again. While this is 
+            // less than ideal UX, it will ensure that there isn't a data sync issue due to the server 
+            // setting data groups and not knowing which are more recent.
+            SBATrackedDataStore.shared.lastTrackingSurveyDate = nil
+        }
+    }
+    
 }
 
 extension ORKTask {
     
-    func updateTrackedDataStores(shouldCommit: Bool) {
+    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+        recursiveUpdateTrackedDataStores(shouldCommit: true)
+        updateDataGroups(user: user, taskResult: taskResult, completion: completion)
+    }
+    
+    func resetTrackedDataChanges() {
+        recursiveUpdateTrackedDataStores(shouldCommit: false)
+    }
+    
+    private func recursiveUpdateTrackedDataStores(shouldCommit: Bool) {
         guard let navTask = self as? SBANavigableOrderedTask else { return }
         
         // If this task has a conditional rule then update it
-        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection , collection.dataStore.hasChanges {
+        if let collection = navTask.conditionalRule as? SBATrackedDataObjectCollection, collection.dataStore.hasChanges {
             if (shouldCommit) {
                 collection.dataStore.commitChanges()
             }
@@ -601,9 +623,41 @@ extension ORKTask {
         // recursively search for subtask with a data store
         for step in navTask.steps {
             if let subtaskStep = step as? SBASubtaskStep {
-                subtaskStep.subtask.updateTrackedDataStores(shouldCommit: shouldCommit)
+                subtaskStep.subtask.recursiveUpdateTrackedDataStores(shouldCommit: shouldCommit)
             }
         }
+    }
+    
+    private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+        let previousGroups: Set<String> = Set(user.dataGroups ?? [])
+        let groups = recursiveUnionDataGroups(previousGroups: previousGroups, taskResult: taskResult)
+        if groups != previousGroups {
+            // If the user groups are changed then update
+            user.updateDataGroups(Array(groups), completion: completion)
+        }
+        else {
+            // Otherwise call completion
+            completion?(nil)
+        }
+    }
+    
+    // recursively search for a data group step
+    private func recursiveUnionDataGroups(previousGroups: Set<String>, taskResult: ORKTaskResult) -> Set<String> {
+        guard let navTask = self as? ORKOrderedTask else { return previousGroups }
+        var dataGroups = previousGroups
+        for step in navTask.steps {
+            if let dataGroupsStep = step as? SBADataGroupsStep,
+                let result = taskResult.stepResult(forStepIdentifier: dataGroupsStep.identifier) {
+                dataGroups = dataGroupsStep.union(previousGroups: dataGroups, stepResult: result)
+            }
+            else if let subtaskStep = step as? SBASubtaskStep {
+                let subtaskResult = ORKTaskResult(identifier: subtaskStep.subtask.identifier)
+                let (subResults, _) = subtaskStep.filteredStepResults(taskResult.results as! [ORKStepResult])
+                subtaskResult.results = subResults
+                dataGroups = subtaskStep.subtask.recursiveUnionDataGroups(previousGroups: dataGroups, taskResult: subtaskResult)
+            }
+        }
+        return dataGroups
     }
     
 }

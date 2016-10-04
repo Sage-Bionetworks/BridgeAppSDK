@@ -99,10 +99,10 @@ open class SBASubtaskStep: ORKStep {
                         }
                     }
                 }
-                subtaskResults += [stepResult]
+                subtaskResults.append(stepResult)
             }
             else {
-                remainingResults += [stepResult]
+                remainingResults.append(stepResult)
             }
         }
         return (subtaskResults, remainingResults)
