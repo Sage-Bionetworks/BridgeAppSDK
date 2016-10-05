@@ -59,8 +59,13 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         self.init()
         
         // Load the sections
+        var previousSectionType: SBAConsentSectionType?
         if let sections = dictionary["sections"] as? [NSDictionary] {
-            self.consentDocument.sections = sections.map({ $0.createConsentSection() })
+            self.consentDocument.sections = sections.map({ (dictionarySection) -> ORKConsentSection in
+                let consentSection = dictionarySection.createConsentSection(previous: previousSectionType)
+                previousSectionType = dictionarySection.consentSectionType
+                return consentSection
+            })
         }
         
         // Load the document for the HTML content

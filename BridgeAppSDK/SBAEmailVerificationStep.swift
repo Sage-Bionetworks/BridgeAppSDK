@@ -52,9 +52,8 @@ open class SBAEmailVerificationStep: SBAInstructionStep {
         if self.title == nil {
             self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
         }
-        if self.text == nil {
+        if self.text == nil, let email = appInfo.currentUser.email {
             let appName = Localization.localizedAppName
-            let email = appInfo.currentUser.email!
             self.text = Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_TEXT_%@_%@", appName, email)
         }
         if self.detailText == nil {

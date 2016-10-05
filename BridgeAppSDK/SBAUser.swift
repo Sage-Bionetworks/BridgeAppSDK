@@ -334,10 +334,13 @@ public final class SBAUser: NSObject, SBAUserWrapper {
 extension SBAUser : SBBAuthManagerDelegateProtocol {
     
     public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
-        return self.sessionToken
+        let token = self.sessionToken
+        print("getting Session Token: \(token)")
+        return token
     }
     
     public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
+        print("setting Session Token: \(sessionToken)")
         self.sessionToken = sessionToken
     }
     

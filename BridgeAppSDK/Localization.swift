@@ -141,4 +141,8 @@ open class Localization: NSObject {
     open class func buttonGetStarted() -> String {
         return localizedString("BUTTON_GET_STARTED")
     }
+    
+    open class func buttonLearnMore() -> String {
+        return localizedString("CONSENT_LEARN_MORE_TITLE")
+    }
 }

@@ -35,20 +35,9 @@ import Foundation
 
 extension NSDictionary: SBAConsentSection {
     
-    public var consentSectionType: ORKConsentSectionType {
+    public var consentSectionType: SBAConsentSectionType {
         guard let sectionType = self["sectionType"] as? String else { return .custom }
-        switch (sectionType) {
-        case "overview"          : return .overview
-        case "privacy"           : return .privacy
-        case "dataGathering"     : return .dataGathering
-        case "dataUse"           : return .dataUse
-        case "timeCommitment"    : return .timeCommitment
-        case "studySurvey"       : return .studySurvey
-        case "studyTasks"        : return .studyTasks
-        case "withdrawing"       : return .withdrawing
-        case "onlyInDocument"    : return .onlyInDocument
-        default                  : return .custom
-        }
+        return SBAConsentSectionType(rawValue: sectionType) ?? .custom
     }
     
     public var sectionTitle: String? {
@@ -81,9 +70,7 @@ extension NSDictionary: SBAConsentSection {
         return SBAResourceFinder.shared.image(forResource: imageNamed)
     }
     
-    public var sectionCustomAnimationURL: URL? {
-        guard let resource = self["sectionAnimationUrl"] as? String else { return nil }
-        let scaleFactor = UIScreen.main.scale >= 3 ? "@3x" : "@2x"
-        return SBAResourceFinder.shared.url(forResource: "\(resource)\(scaleFactor)", withExtension: "m4v")
+    public var sectionCustomAnimationURLString: String? {
+        return self["sectionAnimationUrl"] as? String
     }
 }
