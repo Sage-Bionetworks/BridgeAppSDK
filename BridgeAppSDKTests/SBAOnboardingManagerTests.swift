@@ -52,7 +52,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
         
-        XCTAssertEqual(sections.count, 7)
+        XCTAssertEqual(sections.count, 8)
     }
     
     func testShouldInclude() {
@@ -184,7 +184,6 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         
         let expectedSteps: [ORKStep] = [SBANavigationFormStep(identifier: "inclusionCriteria"),
                                         SBAInstructionStep(identifier: "ineligibleInstruction"),
-                                        SBAInstructionStep(identifier: "shareApp"),
                                         SBAInstructionStep(identifier: "eligibleInstruction")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerated() {

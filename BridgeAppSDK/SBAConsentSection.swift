@@ -82,7 +82,9 @@ public enum SBAConsentSectionType: String {
     var orkSectionType: ORKConsentSectionType {
         switch(self) {
         case .overview:
-            return .overview
+            // syoung 10/05/2016 The layout of the ORKConsentSectionType.overview does not
+            // match the layout of the other views so the animation is janky.
+            return .custom
         case .privacy:
             return .privacy
         case .dataGathering:

@@ -71,5 +71,6 @@ open class SBAOnboardingCompleteStep: ORKTableStep {
         guard let onboardingCell = cell as? SBAOnboardingCompleteTableViewCell else { return }
         onboardingCell.appNameLabel.text = Localization.localizedAppName
         onboardingCell.descriptionLabel.text = self.detailText
+        onboardingCell.logoView.image = (UIApplication.shared.delegate as? SBAAppInfoDelegate)?.bridgeInfo.logoImage
     }
 }

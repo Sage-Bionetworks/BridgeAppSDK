@@ -275,6 +275,12 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
         
         // set the consent to the shared user
         sharedUser.consentSignature = consentResult.consentSignature
+        if sharedUser.name == nil {
+            sharedUser.name = consentResult.consentSignature?.signatureName
+        }
+        if sharedUser.birthdate == nil {
+            sharedUser.birthdate = consentResult.consentSignature?.signatureBirthdate
+        }
         
         // finally call through to super to continue once the consent signature has been stored
         super.goForward()

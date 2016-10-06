@@ -152,8 +152,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         let steps = self.steps?.filter({ (step) -> Bool in
             // If this is a step that conforms to the custom step protocol and the custom step type is 
             // a reconsent subtype, then this is not to be included in the registration steps
-            if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier
-                , customType.hasPrefix("reconsent") {
+            if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier, customType.hasPrefix("reconsent") {
                 return false
             }
             return true

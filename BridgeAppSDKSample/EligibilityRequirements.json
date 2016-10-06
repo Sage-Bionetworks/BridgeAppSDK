@@ -29,15 +29,11 @@
               ]
      },
      {
-     "identifier"   : "ineligibleInstruction",
-     "type"         : "instruction",
-     "text"         : "Unfortunately, you are ineligible to join this study.",
-     "detailText"   : "However, you can help spread the word and share the app with others.",
-     "image"        : "logo",
-     },
-     {
-     "identifier"       : "shareApp",
-     "type"             : "share",
+     "identifier"       : "ineligibleInstruction",
+     "type"             : "instruction",
+     "text"             : "Unfortunately, you are ineligible to join this study.",
+     "detailText"       : "However, you can help spread the word and share the app with others.",
+     "image"            : "logo",
      "nextIdentifier"   : "exit"
      },
      {

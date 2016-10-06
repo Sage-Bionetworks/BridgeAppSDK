@@ -37,6 +37,7 @@ class SBAOnboardingCompleteTableViewCell: UITableViewCell {
 
     @IBOutlet weak var appNameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var logoView: UIImageView!
     
     override func layoutSubviews() {
         super.layoutSubviews()

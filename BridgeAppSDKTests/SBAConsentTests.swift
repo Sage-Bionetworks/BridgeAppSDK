@@ -59,7 +59,6 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                    SBAInstructionStep(identifier: "consentPassedQuiz"),
                                    ORKConsentSharingStep(identifier: "consentSharingOptions"),
                                    SBAConsentReviewStep(identifier: "consentReview"),
-                                   SBARegistrationStep(identifier: "registration"),
                                    SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerated() {
@@ -111,7 +110,6 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
                                         ORKConsentSharingStep(identifier: "consentSharingOptions"),
                                         SBAConsentReviewStep(identifier: "consentReview"),
-                                        SBARegistrationStep(identifier: "registration"),
                                         SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
         for (idx, expectedStep) in expectedSteps.enumerated() {

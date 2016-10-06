@@ -68,27 +68,6 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
      */
     open var learnMoreAction: SBALearnMoreAction?
     
-    /**
-     * The text to display for the continue button
-     */
-    open var continueButtonText: String?
-    
-    // Allow the detail text include formatting for the text of the continue button.
-    override open var detailText: String? {
-        get {
-            let detail = super.detailText
-            guard let detailFormat = detail , detailFormat.contains("%@"),
-                let continueText = continueButtonText
-            else {
-                return detail
-            }
-            return String.localizedStringWithFormat(detail!, continueText)
-        }
-        set {
-            super.detailText = newValue
-        }
-    }
-    
     public override init(identifier: String) {
         super.init(identifier: identifier)
     }
@@ -182,16 +161,6 @@ open class SBAInstructionStepViewController: ORKInstructionStepViewController {
     
     internal var sbaIntructionStep: SBAInstructionStep? {
         return self.step as? SBAInstructionStep
-    }
-    
-    override open var continueButtonTitle: String? {
-        get {
-            return sbaIntructionStep?.continueButtonText ?? super.continueButtonTitle
-        }
-        set {
-            sbaIntructionStep?.continueButtonText = newValue
-            super.continueButtonTitle = newValue
-        }
     }
     
     override open var learnMoreButtonTitle: String? {

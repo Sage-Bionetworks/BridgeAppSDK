@@ -65,18 +65,17 @@
              "identifier": "consentFailedQuiz",
              "title": "Try Again",
              "text": "You answered one or more questions wrong. We want to make sure you understand what this study is about and what is involved. Review the information screens and try again.",
-             "image": "consent_quiz_retry",
+             "image": "icon_retry",
              "type": "instruction",
              "nextIdentifier" : "consentVisual",
              "learnMoreHTMLContentURL": "consent_2quiz_headsup",
          },
          {
              "identifier": "consentPassedQuiz",
+             "type": "instruction",
              "title": "Great Job!",
              "text": "You answered all of the questions correctly.",
              "detailText": "Tap Next to continue.",
-             "image": "Completion-Check",
-             "type": "instruction",
          },
          {
              "identifier": "consentSharingOptions",
@@ -93,13 +92,6 @@
              "identifier"   : "consentReview",
              "type"         : "consentReview",
              "items"        : ["name", "birthdate"]
-         },
-         {
-         "identifier"    : "registration",
-         "type"          : "registration",
-         "title"         : "Registration",
-         "text"          : "Sage Bionetworks, a non-profit biomedical research institute, is helping to collect data for this study and distribute it to the study investigators and other researchers. Please provide a unique email address and password to create a secure account.",
-         "items"         : ["name", "email", "password"]
          },
          {
              "identifier": "consentCompletion",
