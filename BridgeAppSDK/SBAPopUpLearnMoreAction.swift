@@ -46,7 +46,7 @@ public final class SBAPopUpLearnMoreAction: SBALearnMoreAction {
         return super.dictionaryRepresentationKeys().appending(#keyPath(learnMoreText))
     }
     
-    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
         taskViewController.showAlertWithOk(title: nil, message: learnMoreText, actionHandler: nil)
     }
     

@@ -413,8 +413,8 @@ public protocol SBAAppInfoDelegate: class {
         vc.view.backgroundColor = UIColor.white
         transition(toRootViewController: vc, animated: false)
         
-        // Logout the user
-        self.currentUser.logout()
+        // Reset the user
+        self.currentUser.resetStoredUserData()
         
         // Show the appropriate view controller
         showAppropriateViewController(true)

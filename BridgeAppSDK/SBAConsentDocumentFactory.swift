@@ -89,22 +89,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
                 document: self.consentDocument)
             
         case .sharingOptions:
-            let share = inputItem as! SBAConsentSharingOptions
-            let learnMore = SBAResourceFinder.shared.html(forResource: share.localizedLearnMoreHTMLContent) ?? "PLACEHOLDER"
-            let step = ORKConsentSharingStep(identifier: inputItem.identifier,
-                investigatorShortDescription: share.investigatorShortDescription,
-                investigatorLongDescription: share.investigatorLongDescription,
-                localizedLearnMoreHTMLContent: learnMore)
-            
-            if let additionalText = inputItem.stepText, let text = step.text {
-                step.text = "\(text)\n\n\(additionalText)"
-            }
-            if let form = inputItem as? SBAFormStepSurveyItem,
-                let textChoices = form.items?.map({form.createTextChoice(from: $0)}) {
-                    step.answerFormat = ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices)
-            }
-            
-            return step;
+            return SBAConsentSharingStep(inputItem: inputItem)
             
         case .review:
             if let consentReview = inputItem as? SBAConsentReviewOptions

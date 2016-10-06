@@ -223,7 +223,7 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
             // If the delegate has a learn more for this step then fallback to that
             return true
         }
-        else if let learnMoreStep = step as? SBAInstructionStep, learnMoreStep.learnMoreAction != nil {
+        else if let learnMoreStep = step as? SBALearnMoreActionStep, learnMoreStep.learnMoreAction != nil {
             return true
         }
         return false
@@ -234,7 +234,7 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         _internalDelegate?.taskViewController?(taskViewController, learnMoreForStep: stepViewController)
         
         // If there is a learnmore action, then call it
-        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
+        guard let learnMoreStep = stepViewController.step as? SBALearnMoreActionStep,
             let learnMore = learnMoreStep.learnMoreAction else {
                 return
         }

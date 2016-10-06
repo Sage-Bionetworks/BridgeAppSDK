@@ -48,13 +48,15 @@ public final class SBASkipAction: SBALearnMoreAction {
         }
     }
     
-    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+    override public func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
+        guard let instructionStep = step as? SBAInstructionStep else { return }
+        
         // Set the next step identifier
-        step.nextStepIdentifier = self.identifier
+        instructionStep.nextStepIdentifier = self.identifier
         
         // add a result to this step view controller to mark that the task was skipped
         let skipResult = ORKTextQuestionResult(identifier: "skip")
-        skipResult.textAnswer = step.task?.identifier ?? self.identifier
+        skipResult.textAnswer = instructionStep.task?.identifier ?? self.identifier
         taskViewController.currentStepViewController?.result?.addResult(skipResult)
         
         // go forward

@@ -173,6 +173,7 @@
 		FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9055DA1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift */; };
 		FF9055EC1CE527890049D12A /* SBAProgressStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9055EB1CE527890049D12A /* SBAProgressStep.swift */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
+		FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */; };
 		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
 		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
@@ -566,6 +567,7 @@
 		FF9055DA1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserDefaults+Utilities.swift"; sourceTree = "<group>"; };
 		FF9055EB1CE527890049D12A /* SBAProgressStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProgressStep.swift; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
+		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppDelegate.swift; sourceTree = "<group>"; };
 		FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeInfo.swift; sourceTree = "<group>"; };
 		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
@@ -983,6 +985,7 @@
 			isa = PBXGroup;
 			children = (
 				FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */,
+				FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */,
 				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
 				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */,
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
@@ -1830,6 +1833,7 @@
 				FF2729111D9203D700956CFB /* SBAURLLearnMoreAction.swift in Sources */,
 				FF77F4721D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
+				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
 				FF64111C1CB34766007FB9E1 /* SBAMedication.m in Sources */,

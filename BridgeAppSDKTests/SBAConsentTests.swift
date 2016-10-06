@@ -57,7 +57,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                    SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                    SBAInstructionStep(identifier: "consentFailedQuiz"),
                                    SBAInstructionStep(identifier: "consentPassedQuiz"),
-                                   ORKConsentSharingStep(identifier: "consentSharingOptions"),
+                                   SBAConsentSharingStep(identifier: "consentSharingOptions"),
                                    SBAConsentReviewStep(identifier: "consentReview"),
                                    SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
@@ -83,7 +83,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
-                                        ORKConsentSharingStep(identifier: "consentSharingOptions"),
+                                        SBAConsentSharingStep(identifier: "consentSharingOptions"),
                                         SBAConsentReviewStep(identifier: "consentReview"),
                                         SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)
@@ -108,7 +108,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
                                         SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
-                                        ORKConsentSharingStep(identifier: "consentSharingOptions"),
+                                        SBAConsentSharingStep(identifier: "consentSharingOptions"),
                                         SBAConsentReviewStep(identifier: "consentReview"),
                                         SBAInstructionStep(identifier: "consentCompletion")]
         XCTAssertEqual(steps.count, expectedSteps.count)

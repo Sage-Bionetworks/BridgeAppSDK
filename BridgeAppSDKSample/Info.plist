@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Access to microphone is required for your Voice Recording Activity.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -28,10 +24,14 @@
 	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access to microphone is required for your Voice Recording Activity.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

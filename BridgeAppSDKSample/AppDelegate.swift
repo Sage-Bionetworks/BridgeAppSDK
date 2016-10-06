@@ -35,7 +35,7 @@ import UIKit
 import BridgeAppSDK
 
 @UIApplicationMain
-class AppDelegate: SBAAppDelegate {
+class AppDelegate: SBAAppDelegate, ORKTaskViewControllerDelegate {
     
     override var requiredPermissions: SBAPermissionsType {
         return [.coremotion, .localNotifications, .microphone]
@@ -45,14 +45,18 @@ class AppDelegate: SBAAppDelegate {
         guard let storyboard = openStoryboard("Main"),
             let vc = storyboard.instantiateInitialViewController()
             else {
-                assertionFailure("Failed to load onboarding storyboard")
+                assertionFailure("Failed to load main storyboard")
                 return
         }
         self.transition(toRootViewController: vc, animated: animated)
     }
     
     override func showEmailVerificationViewController(animated: Bool) {
-        showOnboardingViewController(animated: animated)
+        let onboardingManager = SBAOnboardingManager(jsonNamed: "Onboarding")!
+        let vc = onboardingManager.initializeTaskViewController(onboardingTaskType: .registration)!
+        
+        vc.delegate = self
+        self.transition(toRootViewController: vc, animated: animated)
     }
     
     override func showOnboardingViewController(animated: Bool) {
@@ -69,4 +73,17 @@ class AppDelegate: SBAAppDelegate {
         return UIStoryboard(name: name, bundle: nil)
     }
     
+    // MARK: ORKTaskViewControllerDelegate
+    
+    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+
+        // Discard the registration information that has been gathered so far if not completed
+        if (reason != .completed) {
+            self.currentUser.resetStoredUserData()
+        }
+        
+        // Show the appropriate view controller
+        showAppropriateViewController(false)
+    }
+
 }

@@ -36,13 +36,6 @@ import BridgeAppSDK
 
 class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate, SBASharedInfoController {
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if (sharedUser.isRegistered) {
-            presentOnboarding(.registration, animated: animated)
-        }
-    }
-    
     // MARK: SBASharedInfoController
     
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -94,9 +87,9 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
                 // If complete, then show the appropriate view controller
                 appDelegate.showAppropriateViewController(false)
             }
-            else if (reason == .discarded) {
+            else {
                 // Discard the registration information that has been gathered so far
-                self.sharedUser.logout()
+                self.sharedUser.resetStoredUserData()
             }
         }
     }

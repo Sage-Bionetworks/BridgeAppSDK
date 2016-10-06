@@ -34,7 +34,7 @@
 import ResearchKit
 
 @objc
-open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
+open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep, SBALearnMoreActionStep {
     
     /**
     * For cases where this type of step is created as a placeholder for a custom step.
