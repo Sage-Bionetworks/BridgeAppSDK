@@ -124,9 +124,23 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     */
     open func reconsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
-        let steps = self.steps?.filter({ !($0 is SBARegistrationStep) && !($0 is ORKRegistrationStep) })
+        let steps = self.steps?.filter({ !isRegistrationStep($0) })
         let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
         return SBASubtaskStep(subtask: task)
+    }
+    
+    /**
+     * Return subtask step with only the steps required for consent or reconsent on login
+     */
+    open func loginConsentStep() -> SBASubtaskStep {
+        // Strip out the registration steps
+        let steps = self.steps?.filter({ !isRegistrationStep($0) })
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
+        return SBAConsentSubtaskStep(subtask: task)
+    }
+    
+    private func isRegistrationStep(_ step: ORKStep) -> Bool {
+        return (step is SBARegistrationStep) || (step is ORKRegistrationStep) || (step is SBAExternalIDStep)
     }
     
     /**

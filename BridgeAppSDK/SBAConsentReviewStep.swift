@@ -187,11 +187,14 @@ open class SBAConsentReviewResult: ORKResult {
     }
 }
 
-class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController {
+class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserRegistrationController {
     
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
+    
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 
     var consentStep: SBAConsentReviewStep? {
         return self.step as? SBAConsentReviewStep
@@ -265,7 +268,8 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
     final override func goForward() {
         
         // Check that the user has consented or fail with an error
-        guard let consentResult = self.consentReviewResult , consentResult.isConsented else {
+        guard let consentResult = self.consentReviewResult, consentResult.isConsented,
+            let consentSignature = consentResult.consentSignature else {
             let error = NSError(domain: "SBAConsentReviewStepDomain",
                                 code: -1,
                                 userInfo: [NSLocalizedDescriptionKey : Localization.localizedString("SBA_REGISTRATION_NOT_CONSENTED")])
@@ -274,16 +278,36 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
         }
         
         // set the consent to the shared user
-        sharedUser.consentSignature = consentResult.consentSignature
+        sharedUser.consentSignature = consentSignature
         if sharedUser.name == nil {
-            sharedUser.name = consentResult.consentSignature?.signatureName
+            sharedUser.name = consentSignature.signatureName
         }
         if sharedUser.birthdate == nil {
-            sharedUser.birthdate = consentResult.consentSignature?.signatureBirthdate
+            sharedUser.birthdate = consentSignature.signatureBirthdate
         }
         
-        // finally call through to super to continue once the consent signature has been stored
+        if sharedUser.isLoginVerified {
+            // If the user has already verified login, then need to send reconsent info
+            self.showLoadingView()
+            sharedUser.sendUserConsented(consentSignature) { [weak self] error in
+                if let error = error {
+                    self?.handleFailedRegistration(error)
+                }
+                else {
+                    self?.goNext()
+                }
+            }            
+        }
+        else {
+            // Otherwise, the consent will be verified later (after registration and email verification)
+            self.goNext()
+        }
+    }
+    
+    func goNext() {
+        // Then call super to go forward
         super.goForward()
     }
+    
 }
 

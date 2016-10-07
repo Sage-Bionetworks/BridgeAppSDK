@@ -97,7 +97,7 @@ open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistr
     final public override func goForward() {
         
         showLoadingView()
-        sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
+        sharedUser.loginUser(email: email!, password: password!) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
             }
@@ -108,30 +108,8 @@ open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistr
     }
     
     func goNext() {
-        
-        // successfully registered. Set the other values from this form.
-        if let gender = self.gender {
-            sharedUser.gender = gender
-        }
-        if let birthdate = self.birthdate {
-            sharedUser.birthdate = birthdate
-        }
-        
         // Then call super to go forward
         super.goForward()
-    }
-    
-    open override var backButtonItem: UIBarButtonItem? {
-        get { return nil }
-        set {}
-    }
-    
-    override open func goBackward() {
-        // Do nothing
-    }
-    
-    open var dataGroups: [String]? {
-        return nil
     }
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")

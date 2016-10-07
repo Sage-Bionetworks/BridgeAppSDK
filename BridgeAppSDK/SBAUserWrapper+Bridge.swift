@@ -274,7 +274,7 @@ public extension SBAUserWrapper {
                 self!.updateFromUserSession(response)
             }
             
-            if let consentSignature = self!.consentSignature , requiresConsent {
+            if let consentSignature = self!.consentSignature, requiresConsent {
                 // If there is a consent signature object stored for this user then attempt
                 // sending consent once signed in.
                 self!.sendUserConsented(consentSignature, completion: completion)
@@ -283,7 +283,7 @@ public extension SBAUserWrapper {
                 // otherwise, we are done. Set the flag that the consent has been verified and 
                 // call the completion
                 self!.isConsentVerified = !requiresConsent
-                self!.callCompletionOnMain(error as NSError?, completion: completion)
+                self!.callCompletionOnMain(unhandledError as NSError?, completion: completion)
             }
         }
     }
@@ -325,7 +325,7 @@ public extension SBAUserWrapper {
     
     fileprivate func checkForConsentError(_ error: NSError?) -> (error: NSError?, requiresConsent: Bool) {
         guard let error = error else { return (nil, false) }
-        let requiresConsent = error.code == SBBErrorCode.serverPreconditionNotMet.rawValue
+        let requiresConsent = (error.code == SBBErrorCode.serverPreconditionNotMet.rawValue)
         let unhandledError: NSError? = requiresConsent ? nil : error
         return (unhandledError, requiresConsent)
     }

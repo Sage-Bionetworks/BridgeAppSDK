@@ -201,8 +201,11 @@ public protocol SBAAppInfoDelegate: class {
             showCatastrophicStartupErrorViewController(animated: animated)
         }
         else if (self.currentUser.isLoginVerified) {
-            showMainViewController(animated: animated)
-            if (!self.currentUser.isConsentVerified) {
+            let isConsentVerified = self.currentUser.isConsentVerified
+            showMainViewController(animated: animated && isConsentVerified)
+            if (!isConsentVerified) {
+                // The reconsent could be triggered on launch or via ensureSignedIn so need to be able 
+                // to display AFTER the main view controller has been displayed.
                 showReconsentIfNecessary()
             }
         }
@@ -215,14 +218,14 @@ public protocol SBAAppInfoDelegate: class {
     }
     
     /**
-     Abstract method for showing the reconsent flow
+     Abstract method for showing the reconsent flow.
     */
     open func showReconsentIfNecessary() {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
-     Abstract method for showing the study overview (onboarding) for a user who is not signed in
+     Abstract method for showing the study overview (onboarding) for a user who is not signed in.
     */
     open func showOnboardingViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
@@ -230,14 +233,14 @@ public protocol SBAAppInfoDelegate: class {
     
     /**
      Abstract method for showing the email verification view controller for a user who registered
-     but not signed in
+     but not signed in.
     */
     open func showEmailVerificationViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
     }
     
     /**
-     Abstract method for showing the main view controller for a user who signed in
+     Abstract method for showing the main view controller for a user who signed in.
     */
     open func showMainViewController(animated: Bool) {
         assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
@@ -413,7 +416,7 @@ public protocol SBAAppInfoDelegate: class {
         vc.view.backgroundColor = UIColor.white
         transition(toRootViewController: vc, animated: false)
         
-        // Reset the user
+        // reset the user
         self.currentUser.resetStoredUserData()
         
         // Show the appropriate view controller
