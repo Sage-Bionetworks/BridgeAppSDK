@@ -51,7 +51,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     }
     
     public var bridgeInfo: SBABridgeInfo? {
-       return SBAAppDelegate.sharedDelegate?.bridgeInfo
+       return SBAAppDelegate.shared?.bridgeInfo
     }
     
     // --------------------------------------------------

@@ -42,7 +42,7 @@ let SBAHiddenTestEmailString = "+test"
 /**
  * Datagroup to set if the user is a test user
  */
-let SBATestDataGroup = SBAAppDelegate.sharedDelegate?.bridgeInfo.testUserDataGroup ?? "test_user"
+let SBATestDataGroup = SBAAppDelegate.shared?.bridgeInfo.testUserDataGroup ?? "test_user"
 
 /**
  * Error domin for user errors
@@ -151,7 +151,7 @@ public extension SBAUserWrapper {
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
         guard email.contains(SBAHiddenTestEmailString),
-            let appDelegate = SBAAppDelegate.sharedDelegate,
+            let appDelegate = SBAAppDelegate.shared,
             !appDelegate.bridgeInfo.disableTestUserCheck else {
             completeRegistration(false)
             return

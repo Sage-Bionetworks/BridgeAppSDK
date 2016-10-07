@@ -45,11 +45,11 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     // MARK: actions
 
     @IBAction func signUpTapped(_ sender: AnyObject) {
-        presentOnboarding(.registration, animated: true)
+        SBAAppDelegate.shared?.presentOnboarding(for: .registration)
     }
     
     @IBAction func loginTapped(_ sender: AnyObject) {
-        presentOnboarding(.login, animated: true)
+        SBAAppDelegate.shared?.presentOnboarding(for: .login)
     }
     
     @IBAction func externalIDTapped(_ sender: AnyObject) {
@@ -65,16 +65,6 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         permissonsStep.permissions = appDelegate.requiredPermissions
         let task = ORKOrderedTask(identifier: "registration", steps: [externalIDStep, permissonsStep])
         let vc = SBATaskViewController(task: task, taskRun: nil)
-        vc.delegate = self
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    // MARK: login and registration
-    
-    func presentOnboarding(_ taskType: SBAOnboardingTaskType, animated: Bool) {
-        let onboardingManager = SBAOnboardingManager(jsonNamed: "Onboarding")!
-        let vc = onboardingManager.initializeTaskViewController(onboardingTaskType: taskType)!
-        
         vc.delegate = self
         self.present(vc, animated: true, completion: nil)
     }
