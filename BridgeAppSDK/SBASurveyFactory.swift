@@ -35,9 +35,9 @@ import ResearchKit
 import BridgeSDK
 
 /**
- * The purpose of the Survey Factory is to allow subclassing for custom types of steps
- * that are not recognized by this factory and to allow usage by Obj-c classes that
- * do not recognize protocol extensions.
+ The purpose of the Survey Factory is to allow subclassing for custom types of steps
+ that are not recognized by this factory and to allow usage by Obj-c classes that
+ do not recognize protocol extensions.
  */
 open class SBASurveyFactory : NSObject, SBASharedInfoController {
     
@@ -68,14 +68,18 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     /**
-     * Factory method for creating an SBANavigableOrderedTask from the current steps
+     Factory method for creating an SBANavigableOrderedTask from the current steps
+     @param identifier  The task identifier
+     @return            Task created with the steps initialized with this factory
      */
     open func createTaskWithIdentifier(_ identifier: String) -> SBANavigableOrderedTask {
         return SBANavigableOrderedTask(identifier: identifier, steps: steps)
     }
     
     /**
-     * Factory method for creating an ORKTask from an SBBSurvey
+     Factory method for creating an ORKTask from an SBBSurvey
+     @param survey      An `SBBSurvey` bridge model object
+     @return            Task created with this survey
      */
     open func createTaskWithSurvey(_ survey: SBBSurvey) -> SBANavigableOrderedTask {
         let lastStepIndex = survey.elements.count - 1
@@ -100,7 +104,10 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     /**
-     * Factory method for creating an ORKTask from an SBAActiveTask
+     Factory method for creating an ORKTask from an SBAActiveTask
+     @param activeTask      An `SBAActiveTask` active task
+     @param taskOptions     Task options for this task
+     @return                An encodable, copyable `ORKTask`
      */
     open func createTaskWithActiveTask(_ activeTask: SBAActiveTask, taskOptions: ORKPredefinedTaskOption) ->
         (ORKTask & NSCopying & NSSecureCoding)? {
@@ -108,14 +115,18 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
 
     /**
-     * Factory method for creating a survey step with a dictionary
+     Factory method for creating a survey step with a dictionary
+     @param dictionary      Dictionary defining the step
+     @return                An `ORKStep`
      */
     open func createSurveyStepWithDictionary(_ dictionary: NSDictionary) -> ORKStep? {
         return self.createSurveyStep(dictionary)
     }
     
     /**
-     * Factory method for creating a survey step with an SBBSurveyElement
+     Factory method for creating a survey step with an SBBSurveyElement
+     @param inputItem       A `SBBSurveyElement` bridge model object
+     @return                An `ORKStep`
      */
     open func createSurveyStepWithSurveyElement(_ inputItem: SBBSurveyElement) -> ORKStep? {
         guard let surveyItem = inputItem as? SBASurveyItem else { return nil }
@@ -123,8 +134,10 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     /**
-     * Factory method for creating a custom type of survey question that is not
-     * defined by this class. Note: Only swift can subclass this method directly
+     Factory method for creating a custom type of survey question that is not
+     defined by this class. Note: Only swift can subclass this method directly
+     @param inputItem       An input item conforming to the `SBASurveyItem` protocol
+     @return                An `ORKStep`
      */
     open func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
         switch (inputItem.surveyItemType) {
@@ -136,13 +149,17 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     }
     
     /**
-     * Factory method for creating a step where the step uses tracked items to build the step.
-     * Note: only swift can subclass this method directly.
+     Factory method for creating a step where the step uses tracked items to build the step.
+     Note: only swift can subclass this method directly.
+     @param inputItem       An input item conforming to the `SBASurveyItem` protocol
+     @param trackingType    The tracking type for the survey item
+     @param trackedItems    The list of all tracked data objects used to define this step
+     @return                An `ORKStep`
      */
-    open func createSurveyStep(_ inputItem: SBASurveyItem, trackingType:SBATrackingStepType, trackedItems:[SBATrackedDataObject]) -> ORKStep? {
+    open func createSurveyStep(_ inputItem: SBASurveyItem, trackingType: SBATrackingStepType, trackedItems: [SBATrackedDataObject]) -> ORKStep? {
         if trackingType == .activity, let activityItem = inputItem as? SBATrackedActivitySurveyItem {
             // Let the activity item return the appropriate instance of the step
-            return activityItem.createTrackedActivityStep(trackedItems)
+            return activityItem.createTrackedActivityStep(trackedItems, factory: self)
         }
         else if trackingType == .selection, let selectionItem = inputItem as? SBAFormStepSurveyItem {
             return SBATrackedSelectionStep(inputItem: selectionItem, trackedItems: trackedItems, factory: self)
@@ -153,7 +170,19 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
         }
     }
     
-    final func createSurveyStep(_ inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
+    /**
+     Factory method for injecting an override of the functionality supported by the `SBAFormStepSurveyItem`
+     protocol extension. Because a protocol extension cannot be overriden, this method allows the injection 
+     of customization of the default answer format.
+     @param inputItem       An input item conforming to the `SBAFormStepSurveyItem` protocol
+     @param subtype         The form subtype to use when creating the answer format
+     @return                An answer format.
+    */
+    open func createAnswerFormat(_ inputItem: SBAFormStepSurveyItem, subtype: SBASurveyItemType.FormSubtype?) -> ORKAnswerFormat? {
+        return inputItem.createAnswerFormat(subtype)
+    }
+    
+    internal final func createSurveyStep(_ inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
         case .instruction(_):
@@ -166,7 +195,7 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
             
         case .form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createFormStep(isSubtaskStep: isSubtaskStep)
+                return form.createFormStep(isSubtaskStep: isSubtaskStep, factory: self)
             } else { break }
             
         case .account(let subtype):
@@ -223,7 +252,7 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-    func createFormStep(isSubtaskStep: Bool) -> ORKStep {
+    func createFormStep(isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) -> ORKStep {
         
         // Factory method for determining the proper type of form-style step to return
         // the ORKQuestionStep and ORKFormStep have a different UI presentation
@@ -235,7 +264,7 @@ extension SBAFormStepSurveyItem {
             // Otherwise, use a form step
             ORKFormStep(identifier: self.identifier)
         
-        buildFormItems(with: step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep)
+        buildFormItems(with: step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep, factory: factory)
         mapStepValues(with: step)
         return step
     }
@@ -246,23 +275,23 @@ extension SBAFormStepSurveyItem {
         step.isOptional = self.optional
     }
     
-    func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool) {
+    func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) {
         
         if case SBASurveyItemType.form(.compound) = self.surveyItemType {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
                 let subtype = formItem.surveyItemType.formSubtype()
-                return formItem.createFormItem(text: formItem.stepText, subtype: subtype)
+                return formItem.createFormItem(text: formItem.stepText, subtype: subtype, factory: factory)
             })
         }
         else {
             let subtype = self.surveyItemType.formSubtype()
-            step.formItems = [self.createFormItem(text: nil, subtype: subtype)]
+            step.formItems = [self.createFormItem(text: nil, subtype: subtype, factory: factory)]
         }
     }
     
-    func createFormItem(text: String?, subtype: SBASurveyItemType.FormSubtype?) -> ORKFormItem {
-        let answerFormat = self.createAnswerFormat(subtype)
+    func createFormItem(text: String?, subtype: SBASurveyItemType.FormSubtype?, factory: SBASurveyFactory? = nil) -> ORKFormItem {
+        let answerFormat = factory?.createAnswerFormat(self, subtype: subtype) ?? self.createAnswerFormat(subtype)
         if let rulePredicate = self.rulePredicate {
             // If there is a rule predicate then return a survey form item
             let formItem = SBANavigationFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
@@ -307,9 +336,8 @@ extension SBAFormStepSurveyItem {
             }) else { return nil }
             let notSure = ORKTextChoice(text: Localization.localizedString("SBA_NOT_SURE_CHOICE"), value: "Not sure" as NSString)
             return ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices + [notSure])
-        
-        default:
-            assertionFailure("Form item question type \(subtype) not implemented")
+        case .compound:
+            assertionFailure("Form item question type .compound is not supported as an answer format")
             return nil
         }
     }
