@@ -57,7 +57,7 @@ extension SBALoadingViewPresenter {
         }
     }
     
-    public func hideLoadingView(_ completion: (() -> Void)?) {
+    public func hideLoadingView(_ completion: (() -> Void)? = nil) {
         guard let loadingView = standardLoadingView, loadingView.isAnimating else {
             completion?()
             return

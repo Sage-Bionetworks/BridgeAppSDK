@@ -63,7 +63,6 @@
                             <constraint firstAttribute="trailing" secondItem="bgW-QZ-Udt" secondAttribute="trailing" constant="8" id="eXU-2M-919"/>
                             <constraint firstAttribute="bottom" secondItem="ZS2-fp-TME" secondAttribute="bottom" constant="20" id="gcg-eB-P1e"/>
                             <constraint firstItem="ZS2-fp-TME" firstAttribute="top" secondItem="bgW-QZ-Udt" secondAttribute="bottom" constant="18" id="opB-SG-pw0"/>
-                            <constraint firstItem="RGc-HD-sFQ" firstAttribute="top" secondItem="XRQ-4C-V62" secondAttribute="bottom" constant="17" id="yWB-um-9pQ"/>
                         </constraints>
                     </view>
                 </subviews>

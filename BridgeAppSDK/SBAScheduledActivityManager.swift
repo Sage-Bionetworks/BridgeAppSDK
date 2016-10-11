@@ -599,7 +599,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
 
 extension ORKTask {
     
-    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
         recursiveUpdateTrackedDataStores(shouldCommit: true)
         updateDataGroups(user: user, taskResult: taskResult, completion: completion)
     }
@@ -629,7 +629,7 @@ extension ORKTask {
         }
     }
     
-    private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+    private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
         let previousGroups: Set<String> = Set(user.dataGroups ?? [])
         let groups = recursiveUnionDataGroups(previousGroups: previousGroups, taskResult: taskResult)
         if groups != previousGroups {

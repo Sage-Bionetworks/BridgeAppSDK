@@ -100,7 +100,7 @@ let SBAMainStoryboardName = "Main"
         
         self.currentUser.ensureSignedInWithCompletion() { (error) in
             // Check if there are any errors during sign in that we need to address
-            if let error = error, let errorCode = SBBErrorCode(rawValue: error.code) {
+            if let error = error, let errorCode = SBBErrorCode(rawValue: (error as NSError).code) {
                 switch errorCode {
                     
                 case SBBErrorCode.serverPreconditionNotMet:

@@ -203,7 +203,12 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
 
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        _internalDelegate?.taskViewController(taskViewController, didFinishWith: reason, error: error)
+        if _internalDelegate != nil {
+            _internalDelegate!.taskViewController(taskViewController, didFinishWith: reason, error: error)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {

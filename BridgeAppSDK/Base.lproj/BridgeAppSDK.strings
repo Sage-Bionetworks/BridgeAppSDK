@@ -108,6 +108,12 @@
 "SBA_REGISTRATION_UNKNOWN_FAILED" = "We're sorry. Registration has failed. Please contact the study coordinator for support"; // Unhandled registration failure
 "REGISTRATION_VERIFICATION_TEXT_%@_%@" = "%1$@ has sent you a verification email at %2$@"; // Email verification instructions where %1$@ is the app name and %2$@ is the email.
 "REGISTRATION_VERIFICATION_DETAIL_%@" = "Once verified, tap %@"; // Email verification detail text where %@ is the title of the continue button
+"REGISTRATION_VERIFICATION_FOOTNOTE" = "A full copy of the consent will be sent to you for your records."; // Email verification footnote text.
+"REGISTRATION_EMAIL_ACTIONS_BUTTON_TEXT" = "Problems?"; // Text to show in the button for email issues (wrong email or resend)
+"REGISTRATION_WRONG_EMAIL" = "Wrong email address?"; // Text to show in the action sheet for a wrong email address
+"REGISTRATION_RESEND_EMAIL" = "Resent verification email"; // Text to show in the action sheet for resending the verification email
+"REGISTRATION_CHANGE_EMAIL_TITLE" = "Change Email"; // Title for view controller for changing email
+
 
 /* State */
 "SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.

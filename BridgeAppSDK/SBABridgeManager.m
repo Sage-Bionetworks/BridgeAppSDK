@@ -189,6 +189,15 @@
                                                     }];
 }
 
++ (void)resendEmailVerification:(NSString*)emailAddress
+                     completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock{
+    [SBBComponent(SBBAuthManager) resendEmailVerification:emailAddress completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
+}
+
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock {
     return [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyReference.href completion:^(id survey, NSError *error) {
         completionBlock(survey, error);
