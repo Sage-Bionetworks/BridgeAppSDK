@@ -273,6 +273,9 @@ extension SBAFormStepSurveyItem {
         step.title = self.stepTitle?.trim()
         step.text = self.stepText?.trim()
         step.isOptional = self.optional
+        if let formStep = step as? ORKFormStep {
+            formStep.footnote = self.stepFootnote
+        }
     }
     
     func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) {

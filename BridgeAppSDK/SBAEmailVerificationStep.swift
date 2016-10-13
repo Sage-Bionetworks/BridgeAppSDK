@@ -57,13 +57,13 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
             self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
         }
         if self.detailText == nil {
-            self.detailText = String.localizedStringWithFormat("%@\n\n%@",
-                Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_DETAIL_%@",
-                                                                        Localization.buttonNext()),
-                Localization.localizedString("REGISTRATION_VERIFICATION_FOOTNOTE"))
+            self.detailText = Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_DETAIL_%@", Localization.buttonNext())
         }
-        if self.image == nil {
-            self.image = self.sharedAppDelegate.bridgeInfo.logoImage
+        if self.footnote == nil {
+            self.footnote = Localization.localizedString("REGISTRATION_VERIFICATION_FOOTNOTE")
+        }
+        if self.iconImage == nil {
+            self.iconImage = self.sharedAppDelegate.bridgeInfo.logoImage
         }
         if self.learnMoreAction == nil {
             self.learnMoreAction = SBAEmailVerificationLearnMoreAction(identifier: "additionalEmailActions")
@@ -115,7 +115,6 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         self.continueButtonTitle = Localization.buttonNext()
         
         // set the back and cancel buttons to empty items
-        self.cancelButtonItem = UIBarButtonItem()
         self.backButtonItem = UIBarButtonItem()
     }
     

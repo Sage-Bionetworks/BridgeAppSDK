@@ -79,6 +79,10 @@ extension NSDictionary: SBASurveyItem {
         return self["detailText"] as? String
     }
     
+    public var stepFootnote: String? {
+        return self["footnote"] as? String
+    }
+    
     public var options: [String : AnyObject]? {
         return self["options"] as? [String : AnyObject]
     }
@@ -99,6 +103,11 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
     
     public var stepImage: UIImage? {
         guard let imageNamed = self["image"] as? String else { return nil }
+        return SBAResourceFinder.shared.image(forResource: imageNamed)
+    }
+    
+    public var iconImage: UIImage? {
+        guard let imageNamed = self["iconImage"] as? String else { return nil }
         return SBAResourceFinder.shared.image(forResource: imageNamed)
     }
     

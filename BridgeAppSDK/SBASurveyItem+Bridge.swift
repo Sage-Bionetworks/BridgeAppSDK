@@ -62,9 +62,17 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return self.promptDetail.removingNewlineCharacters()
     }
     
+    public var stepFootnote: String? {
+        return nil
+    }
+
     public var stepImage: UIImage? {
         // NOTE: syoung 03/15/2015 SBBImage translation not implemented. Requires caching design and currently not used
         // by any supported apps.
+        return nil
+    }
+    
+    public var iconImage: UIImage? {
         return nil
     }
     
@@ -145,6 +153,10 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     public var placeholderText: String? {
         if (self.promptDetail == nil) { return nil }
         return self.promptDetail.removingNewlineCharacters()
+    }
+    
+    public var stepFootnote: String? {
+        return nil
     }
     
     public var optional: Bool {

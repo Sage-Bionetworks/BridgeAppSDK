@@ -72,7 +72,7 @@
          },
          {
              "identifier": "consentPassedQuiz",
-             "type": "instruction",
+             "type": "completion",
              "title": "Great Job!",
              "text": "You answered all of the questions correctly.",
              "detailText": "Tap Next to continue.",
@@ -95,9 +95,9 @@
          },
          {
              "identifier": "consentCompletion",
+             "type": "instruction",
              "title": "Thank You!",
              "text": "Your participation in this study is helping us to better understand the symptoms of SAMPLE.",
-             "type": "instruction",
          },
      ],
     "sections":

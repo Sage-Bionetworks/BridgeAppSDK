@@ -77,6 +77,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         
         self.title = inputItem.stepTitle?.trim()
         self.text = inputItem.stepText?.trim()
+        self.footnote = inputItem.stepFootnote?.trim()
         
         if let directStep = inputItem as? SBADirectNavigationRule {
             self.nextStepIdentifier = directStep.nextStepIdentifier
@@ -92,6 +93,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
             self.learnMoreAction = surveyItem.learnMoreAction()
             self.detailText = surveyItem.stepDetail?.trim()
             self.image = surveyItem.stepImage
+            self.iconImage = surveyItem.iconImage
         }
     }
     
@@ -105,6 +107,15 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         else {
             return SBAInstructionStepViewController.classForCoder()
         }
+    }
+    
+    override open func instantiateStepViewController(with result: ORKResult) -> ORKStepViewController {
+        let vc = super.instantiateStepViewController(with: result)
+        if let completionVC = vc as? ORKCompletionStepViewController {
+            // By default, override showing the continue button in the nav bar
+            completionVC.shouldShowContinueButton = true
+        }
+        return vc
     }
     
     // MARK: NSCopy
