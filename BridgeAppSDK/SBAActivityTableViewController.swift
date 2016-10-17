@@ -173,13 +173,12 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
             activityCell.subtitleLabel.text = activity?.labelDetail
         }
         else if schedule.isTomorrow {
-            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_TOMORROW_UNTIL_%@")
-            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, schedule.expiresTime!)
+            activityCell.subtitleLabel.text = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_AVAILABLE_TOMORROW")
         }
         else {
-            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_DETAIL_%@_UNTIL_%@")
+            let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_AVAILABLE_ON_%@")
             let dateString = DateFormatter.localizedString(from: schedule.scheduledOn, dateStyle: .medium, timeStyle: .none)
-            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString, schedule.expiresTime!)
+            activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         
         // Modify the label colors if disabled
