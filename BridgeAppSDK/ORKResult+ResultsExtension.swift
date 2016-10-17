@@ -307,10 +307,11 @@ extension ORKSpatialSpanMemoryResult {
     
 }
 
-open class AnswerKeyAndValue: NSObject {
+public final class AnswerKeyAndValue: NSObject {
     let key: String
     let value: AnyObject
     let questionType: ORKQuestionType
+    var unit: String?
     
     init(key: String, value: AnyObject, questionType: ORKQuestionType) {
         self.key = key
@@ -367,9 +368,22 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
         choiceQuestionResult[QuestionResultUserInfoKey] = self.userInfo
         if let answer = self.jsonSerializedAnswer() {
             choiceQuestionResult[answer.key] = answer.value
-            choiceQuestionResult[QuestionResultSurveyAnswerKey] = answer.value
+            // special-case the answer field to return *only* the single-choice answer
+            // if this is a singleChoice type and the key is an array.
+            // This is for reverse-compatibility to older schemas. syoung 10/17/2016
+            choiceQuestionResult[QuestionResultSurveyAnswerKey] = {
+                if answer.questionType == .singleChoice, let answerValue = answer.value as? [Any] {
+                    return answerValue.first ?? NSNull()
+                }
+                else {
+                    return answer.value
+                }
+            }()
             choiceQuestionResult[QuestionResultQuestionTypeKey] = answer.questionType.rawValue
             choiceQuestionResult[QuestionResultQuestionTypeNameKey] = answer.questionType.nameValue
+            if let unit = answer.unit {
+                choiceQuestionResult[NumericResultUnitKey] = unit
+            }
         }
         return choiceQuestionResult
     }
@@ -425,16 +439,11 @@ extension ORKNumericQuestionResult {
     
     override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
         guard let answer = self.numericAnswer else { return nil }
-        return AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject() as AnyObject, questionType: self.questionType)
+        let answerKey = AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject() as AnyObject, questionType: self.questionType)
+        answerKey.unit = self.unit
+        return answerKey
     }
-    
-    override func resultAsDictionary() -> NSMutableDictionary {
-        let choiceQuestionResult = super.resultAsDictionary()
-        if let unit = self.unit {
-            choiceQuestionResult[NumericResultUnitKey] = unit
-        }
-        return choiceQuestionResult
-    }
+
 }
 
 extension ORKTimeOfDayQuestionResult {

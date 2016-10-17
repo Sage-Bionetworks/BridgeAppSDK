@@ -66,6 +66,12 @@ class SBAActivityArchive: XCTestCase {
             return
         }
         XCTAssertEqual(choiceAnswers, ["answer"])
+        
+        guard let answer = json["answer"] as? String else {
+            XCTAssert(false, "\(json["answer"]) not of expected type")
+            return
+        }
+        XCTAssertEqual(answer, "answer")
     }
     
     func testMultipleChoiceQuestionResult() {
