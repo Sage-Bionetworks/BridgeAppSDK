@@ -12,15 +12,12 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="316"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <frame key="frameInset" width="320" height="315"/>
+                <frame key="frameInset" width="320" height="315.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Odg-Hb-ODe">
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Set!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XRQ-4C-V62">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="vfP-dX-x1K"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -54,6 +51,7 @@
                             <constraint firstItem="XRQ-4C-V62" firstAttribute="top" secondItem="s4B-UH-xAi" secondAttribute="bottom" constant="20" id="7RE-Ah-MYs"/>
                             <constraint firstAttribute="trailing" secondItem="ZS2-fp-TME" secondAttribute="trailing" constant="16" id="808-cP-26d"/>
                             <constraint firstItem="bgW-QZ-Udt" firstAttribute="leading" secondItem="Odg-Hb-ODe" secondAttribute="leading" constant="8" id="8rZ-e4-bej"/>
+                            <constraint firstItem="RGc-HD-sFQ" firstAttribute="top" secondItem="XRQ-4C-V62" secondAttribute="bottom" constant="17" id="CEd-a9-Bx1"/>
                             <constraint firstItem="bgW-QZ-Udt" firstAttribute="top" secondItem="RGc-HD-sFQ" secondAttribute="bottom" constant="16" id="FIh-wu-2lU"/>
                             <constraint firstItem="s4B-UH-xAi" firstAttribute="top" secondItem="Odg-Hb-ODe" secondAttribute="top" constant="32" id="GyZ-e7-Dvj"/>
                             <constraint firstItem="XRQ-4C-V62" firstAttribute="leading" secondItem="Odg-Hb-ODe" secondAttribute="leading" constant="8" id="HQ5-wW-a5V"/>
