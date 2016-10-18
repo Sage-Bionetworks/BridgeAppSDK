@@ -206,7 +206,7 @@ public extension SBAUserWrapper {
      */
     func resendVerificationEmail(_ completion: ((Error?) -> Void)?) {
         guard let email = self.email?(forAuthManager: nil) else {
-            assertionFailure("Attempting to resent verification email without a stored email")
+            assertionFailure("Attempting to resend verification email without a stored email")
             return
         }
         SBABridgeManager.resendEmailVerification(email) { [weak self] (_, error) in
