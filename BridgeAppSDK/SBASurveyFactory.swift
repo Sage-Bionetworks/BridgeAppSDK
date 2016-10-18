@@ -243,6 +243,14 @@ extension SBAInstructionStepSurveyItem {
 
 extension SBAFormStepSurveyItem {
     
+    var isBooleanToggle: Bool {
+        return SBASurveyItemType.form(.toggle) == self.surveyItemType
+    }
+    
+    var isCompoundStep: Bool {
+        return isBooleanToggle || (SBASurveyItemType.form(.compound) == self.surveyItemType)
+    }
+    
     func createSubtaskStep(with factory:SBASurveyFactory) -> SBASubtaskStep {
         assert((self.items?.count ?? 0) > 0, "A subtask step requires items")
         let steps = self.items?.mapAndFilter({ factory.createSurveyStep($0 as! SBASurveyItem, isSubtaskStep: true) })
@@ -257,6 +265,8 @@ extension SBAFormStepSurveyItem {
         // Factory method for determining the proper type of form-style step to return
         // the ORKQuestionStep and ORKFormStep have a different UI presentation
         let step: ORKStep =
+            // If this is a boolean toggle step then that casting takes priority
+            self.isBooleanToggle ? SBAToggleFormStep(inputItem: self) :
             // If this is a question style then use the SBA subclass
             self.questionStyle ? SBANavigationQuestionStep(inputItem: self) :
             // If this is *not* a subtask step and it uses navigation then return a survey form step
@@ -280,10 +290,10 @@ extension SBAFormStepSurveyItem {
     
     func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) {
         
-        if case SBASurveyItemType.form(.compound) = self.surveyItemType {
+        if self.isCompoundStep {
             step.formItems = self.items?.map({
                 let formItem = $0 as! SBAFormStepSurveyItem
-                let subtype = formItem.surveyItemType.formSubtype()
+                let subtype = formItem.surveyItemType.formSubtype()  ?? SBASurveyItemType.FormSubtype.boolean
                 return formItem.createFormItem(text: formItem.stepText, subtype: subtype, factory: factory)
             })
         }
@@ -339,8 +349,8 @@ extension SBAFormStepSurveyItem {
             }) else { return nil }
             let notSure = ORKTextChoice(text: Localization.localizedString("SBA_NOT_SURE_CHOICE"), value: "Not sure" as NSString)
             return ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices + [notSure])
-        case .compound:
-            assertionFailure("Form item question type .compound is not supported as an answer format")
+        case .compound, .toggle:
+            assertionFailure("Form item question type .compound or .toggle is not supported as an answer format")
             return nil
         }
     }

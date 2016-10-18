@@ -116,6 +116,7 @@ public enum SBASurveyItemType {
     case form(FormSubtype)                              // ORKFormStep
     public enum FormSubtype: String {
         case compound           = "compound"            // ORKFormItems > 1
+        case toggle             = "toggle"              // SBABooleanToggleFormStep 
         case boolean            = "boolean"             // ORKBooleanAnswerFormat
         case singleChoice       = "singleChoiceText"    // ORKTextChoiceAnswerFormat of style SingleChoiceTextQuestion
         case multipleChoice     = "multipleChoiceText"  // ORKTextChoiceAnswerFormat of style MultipleChoiceTextQuestion

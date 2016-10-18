@@ -82,6 +82,9 @@
 		FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */; };
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
 		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
+		FF36DC6F1DB68F230034C85D /* SBAToggleFormStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DC6E1DB68F230034C85D /* SBAToggleFormStep.swift */; };
+		FF36DCBE1DB6CE840034C85D /* SBAToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCBC1DB6CE840034C85D /* SBAToggleTableViewCell.swift */; };
+		FF36DCBF1DB6CE840034C85D /* SBAToggleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF36DCBD1DB6CE840034C85D /* SBAToggleTableViewCell.xib */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
@@ -128,7 +131,7 @@
 		FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */; };
 		FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */; };
-		FF77F4721D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */; };
+		FF77F4721D4AC5E10005503E /* SBAMultipleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF77F4711D4AC5E10005503E /* SBAMultipleLineTableViewCell.swift */; };
 		FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CEF81D00B5C4002C456D /* consent_1welcome.html */; };
 		FF78CF101D00B617002C456D /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */; };
 		FF78CF131D00B620002C456D /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF151D00B620002C456D /* consent_3activities.html */; };
@@ -473,6 +476,9 @@
 		FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStepTests.swift; sourceTree = "<group>"; };
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
 		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
+		FF36DC6E1DB68F230034C85D /* SBAToggleFormStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAToggleFormStep.swift; sourceTree = "<group>"; };
+		FF36DCBC1DB6CE840034C85D /* SBAToggleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAToggleTableViewCell.swift; sourceTree = "<group>"; };
+		FF36DCBD1DB6CE840034C85D /* SBAToggleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAToggleTableViewCell.xib; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
@@ -521,7 +527,7 @@
 		FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedItem.h; sourceTree = "<group>"; };
 		FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedItem.m; sourceTree = "<group>"; };
 		FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEqualityTests.m; sourceTree = "<group>"; };
-		FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBSBAMultipleLineTableViewCell.swift; sourceTree = "<group>"; };
+		FF77F4711D4AC5E10005503E /* SBAMultipleLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAMultipleLineTableViewCell.swift; sourceTree = "<group>"; };
 		FF78CEF71D00B5C4002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_1welcome.html; sourceTree = "<group>"; };
 		FF78CF111D00B617002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_2quiz_headsup.html; sourceTree = "<group>"; };
 		FF78CF141D00B620002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_3activities.html; sourceTree = "<group>"; };
@@ -952,6 +958,7 @@
 				FF9055EB1CE527890049D12A /* SBAProgressStep.swift */,
 				FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */,
 				FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */,
+				FF36DC6E1DB68F230034C85D /* SBAToggleFormStep.swift */,
 			);
 			name = Step;
 			sourceTree = "<group>";
@@ -1185,7 +1192,9 @@
 				FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */,
 				FFCF37DF1CDA99120090452F /* UIView+LayoutExtensions.swift */,
 				FFB30E391D488F4800D175D2 /* SBALoadingView.swift */,
-				FF77F4711D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift */,
+				FF77F4711D4AC5E10005503E /* SBAMultipleLineTableViewCell.swift */,
+				FF36DCBC1DB6CE840034C85D /* SBAToggleTableViewCell.swift */,
+				FF36DCBD1DB6CE840034C85D /* SBAToggleTableViewCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1699,6 +1708,7 @@
 				FFBBED931DA5C68B0010AA83 /* consent_overview_to_activities@2x.m4v in Resources */,
 				FFBBED981DA5C68B0010AA83 /* consent_overview_to_activities@3x.m4v in Resources */,
 				FFBBED991DA5C68B0010AA83 /* consent_overview_to_understanding@3x.m4v in Resources */,
+				FF36DCBF1DB6CE840034C85D /* SBAToggleTableViewCell.xib in Resources */,
 				FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */,
 				FFBBED941DA5C68B0010AA83 /* consent_overview_to_understanding@2x.m4v in Resources */,
 				FFBBED921DA5C68B0010AA83 /* consent_activities_to_sensorData@2x.m4v in Resources */,
@@ -1770,6 +1780,7 @@
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
 				805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */,
+				FF36DC6F1DB68F230034C85D /* SBAToggleFormStep.swift in Sources */,
 				FB68173A1C6B0307006C8FC9 /* SBANavigableOrderedTask.swift in Sources */,
 				FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
@@ -1801,6 +1812,7 @@
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
 				FBAD115A1CADB2F0005611D0 /* SBADataObject.m in Sources */,
 				80D5F1D31CE557BA002A39DF /* ORKResult+ResultsExtension.swift in Sources */,
+				FF36DCBE1DB6CE840034C85D /* SBAToggleTableViewCell.swift in Sources */,
 				FFA8E4AA1CBD6E0B00ED5399 /* NSError+SBBTranslation.swift in Sources */,
 				FF35B8EC1D9DA93C00E0DF23 /* SBADataGroupsStep.swift in Sources */,
 				FF2728881D91CFB900956CFB /* SBAClassTypeMap.swift in Sources */,
@@ -1838,7 +1850,7 @@
 				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				FF641F291D945596001EE1BD /* SBATrackedDataStore.swift in Sources */,
 				FF2729111D9203D700956CFB /* SBAURLLearnMoreAction.swift in Sources */,
-				FF77F4721D4AC5E10005503E /* SBSBAMultipleLineTableViewCell.swift in Sources */,
+				FF77F4721D4AC5E10005503E /* SBAMultipleLineTableViewCell.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
 				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FB0C9EF31CAA52F700BA5B44 /* NSDate+Utilities.swift in Sources */,
