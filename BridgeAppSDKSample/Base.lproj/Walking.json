@@ -20,7 +20,7 @@
                                     {
                                      "identifier" : "conclusion",
                                      "title"      : "Thank You!",
-                                     "text"       : "You’ve completed the activity session.",
+                                     "text"       : "You’ve completed the activity session. Tap Done to record the results.",
                                      "detailText" : "",
                                     },
                                     ],

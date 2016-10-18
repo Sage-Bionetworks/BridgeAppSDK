@@ -74,6 +74,7 @@ public extension SBAUserWrapper {
     
     /**
      Returns whether or not the data group is contained in the user's data groups
+     
      @param dataGroup   The data group to look for
      @return            `YES` if the user is in this data group and `NO` if not
      */
@@ -83,6 +84,7 @@ public extension SBAUserWrapper {
     
     /**
      Add dataGroup to the user's data groups
+     
      @param dataGroup   The data group to add to the user's data groups
      @param completion  Completion handler
      */
@@ -93,6 +95,7 @@ public extension SBAUserWrapper {
     
     /**
      Remove dataGroup from the user's data groups
+     
      @param dataGroup   The data group to remove
      @param completion  Completion handler
      */
@@ -108,6 +111,7 @@ public extension SBAUserWrapper {
     
     /**
      Update the user's data groups
+     
      @param dataGroups  The new set of data groups
      @param completion  Completion handler
      */
@@ -121,16 +125,22 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Register a user with a new email address
+     Register a user with a changed email address
+     
      @param email       The email address to use for the new user
      @param completion  Completion handler
      */
     public func changeUserEmailAddress(_ email: String, completion: ((Error?) -> Void)?) {
-        registerUser(email: email, password: self.password!, externalId: self.externalId, dataGroups: self.dataGroups, completion: completion)
+        guard let password = self.password?(forAuthManager: nil) else {
+            assertionFailure("Attempting to change email without a stored password")
+            return
+        }
+        registerUser(email: email, password: password, externalId: self.externalId, dataGroups: self.dataGroups, completion: completion)
     }
     
     /**
      Register a new user with an email/password
+     
      @param email       The email address to use for the new user
      @param password    The user's password
      @param externalID  The external ID (if any) associated with this registration
@@ -177,7 +187,8 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Verify registration to check that the user has verified their email address.
+     Check that the user has verified their email address.
+     
      @param completion  Completion handler
      */
     public func verifyRegistration(_ completion: ((Error?) -> Void)?) {
@@ -189,12 +200,13 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Verify registration to check that the user has verified their email address.
+     Resend the registration verification email.
+     
      @param completion  Completion handler
      */
     func resendVerificationEmail(_ completion: ((Error?) -> Void)?) {
         guard let email = self.email?(forAuthManager: nil) else {
-            assertionFailure("Attempting to login without a stored username and password")
+            assertionFailure("Attempting to resent verification email without a stored email")
             return
         }
         SBABridgeManager.resendEmailVerification(email) { [weak self] (_, error) in
@@ -203,7 +215,9 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Login a user on this device via externalId where registration was handled on a different device
+     Login a user on this device via externalId where registration was handled on a different device,
+     in the Bridge study UI or after deleting and re-installing.
+     
      @param externalId  External ID to use for login
      @param completion  Completion handler
      */
@@ -216,7 +230,9 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Login a user on this device who has previously completed registration on a different device.
+     Login a user on this device who has previously completed registration on a different device or
+     or in the Bridge study UI.
+     
      @param email       Email address to use for login
      @param password    Password to use for login
      @param completion  Completion handler
@@ -240,6 +256,7 @@ public extension SBAUserWrapper {
 
     /**
      Send user consent signature (if server precondition not met and reconsenting user)
+     
      @param consentSignature    The consent signature 
      @param completion          Completion handler
      */
@@ -259,7 +276,7 @@ public extension SBAUserWrapper {
     }
 
     /**
-     * Sign in when app is active if the login and consent have been verified
+     Sign in when app is active if the login and consent have been verified
      */
     public func ensureSignedInWithCompletion(_ completion: ((Error?) -> Void)?) {
         

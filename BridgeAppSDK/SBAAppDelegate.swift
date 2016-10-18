@@ -68,7 +68,7 @@ let SBAMainStoryboardName = "Main"
         }
         
         // Replace the launch root view controller with an SBARootViewController
-        // This allows transitiioning between root view controllers while a lock screen
+        // This allows transitioning between root view controllers while a lock screen
         // or onboarding view controller is being presented modally.
         self.window?.rootViewController = SBARootViewController(rootViewController: self.window?.rootViewController)
 
@@ -81,7 +81,7 @@ let SBAMainStoryboardName = "Main"
             lockScreen()
         }
         else {
-            showAppropriateViewController(true)
+            showAppropriateViewController(animated: true)
         }
         
         return true
@@ -216,9 +216,10 @@ let SBAMainStoryboardName = "Main"
     /**
      Convenience method for setting up and displaying the appropriate view controller
      for the current user state.
+     
      @param animated  Should the transition be animated
     */
-    open func showAppropriateViewController(_ animated: Bool) {
+    open func showAppropriateViewController(animated: Bool) {
         
         let newState: SBARootViewControllerState = {
             if (self.catastrophicStartupError != nil) {
@@ -248,7 +249,7 @@ let SBAMainStoryboardName = "Main"
     }
     
     /**
-     Convenience method for cintuning an onboarding flow for reconsent or email verification.
+     Convenience method for continuing an onboarding flow for reconsent or email verification.
     */
     open func continueOnboardingFlowIfNeeded() {
         if (self.currentUser.isLoginVerified && !self.currentUser.isConsentVerified) {
@@ -261,8 +262,9 @@ let SBAMainStoryboardName = "Main"
     
     /**
      Method for showing the study overview (onboarding) for a user who is not signed in.
-     By default, this method looks for a storyboard named `SBAStudyOverviewStoryboardName`
-     that is included in the main bundle.
+     By default, this method looks for a storyboard named "StudyOverview" that is included 
+     in the main bundle.
+     
      @param animated  Should the transition be animated
     */
     open func showOnboardingViewController(animated: Bool) {
@@ -280,8 +282,9 @@ let SBAMainStoryboardName = "Main"
     
     /**
      Method for showing the main view controller for a user who signed in.
-     By default, this method looks for a storyboard named `SBAMainStoryboardName`
-     that is included in the main bundle.
+     By default, this method looks for a storyboard named "Main" that is included 
+     in the main bundle.
+     
      @param animated  Should the transition be animated
     */
     open func showMainViewController(animated: Bool) {
@@ -299,6 +302,7 @@ let SBAMainStoryboardName = "Main"
     
     /**
      Convenience method for opening a storyboard
+     
      @param name    Name of the storyboard to open (assumes main bundle)
      @return        Storyboard if found
     */
@@ -309,6 +313,7 @@ let SBAMainStoryboardName = "Main"
     /**
      Convenience method for transitioning to the given view controller as the main window
      rootViewController.
+     
      @param viewController      View controller to transition to
      @param state               State of the app 
      @param animated            Should the transition be animated
@@ -353,8 +358,8 @@ let SBAMainStoryboardName = "Main"
     private weak var onboardingViewController: UIViewController?
     
     /**
-     Should the onboarding be displayed. By default, if there isn't a catasrophic error,
-     the user is registered and there isn't a lockscreen, then show it.
+     Should the onboarding be displayed (or ignored)? By default, if there isn't a catasrophic error,
+     there isn't a lockscreen, and there isn't already an onboarding view controller then show it.
      */
     open func shouldShowOnboarding() -> Bool {
         return !self.hasCatastrophicError &&
@@ -364,8 +369,9 @@ let SBAMainStoryboardName = "Main"
     
     /**
      Get an instance of an onboarding manager for the given `SBAOnboardingTaskType`
-     By default, this assumes a json file named `SBAOnboardingJSONFilename` describes the onboarding for this
-     application.
+     By default, this assumes a json file named "Onboarding" (included in the main bundle) is used 
+     to describe the onboarding for this application.
+     
      @param onboardingTaskType  `SBAOnboardingTaskType` for which to get the manager. (Ingored by default)
     */
     open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType) -> SBAOnboardingManager? {
@@ -374,7 +380,9 @@ let SBAMainStoryboardName = "Main"
     }
     
     /**
-     Present onboarding flow for the given type.
+     Present onboarding flow for the given type. By default, this will present an SBATaskViewController
+     modally with the app delegate as the delegate for the view controller.
+     
      @param onboardingTaskType  `SBAOnboardingTaskType` to present
     */
     open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
@@ -402,22 +410,13 @@ let SBAMainStoryboardName = "Main"
         }
         
         // Show the appropriate view controller
-        showAppropriateViewController(false)
+        showAppropriateViewController(animated: false)
         
         // Hide the taskViewController
         taskViewController.dismiss(animated: true, completion: nil)
         self.onboardingViewController = nil
     }
     
-    open func handleUserNotConsentedError(_ error: Error, sessionInfo: Any, networkManager: SBBNetworkManagerProtocol?) -> Bool {
-        currentUser.isConsentVerified = false
-        DispatchQueue.main.async {
-            if self.rootViewController?.state == .main {
-                self.continueOnboardingFlowIfNeeded()
-            }
-        }
-        return true
-    }
     
     // ------------------------------------------------
     // MARK: Catastrophic startup errors
@@ -469,15 +468,28 @@ let SBAMainStoryboardName = "Main"
             Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
     }
     
+    // ------------------------------------------------
+    // MARK: SBBBridgeAppDelegate
+    // ------------------------------------------------
     
-    // ------------------------------------------------
-    // MARK: Unsupported App Version
-    // ------------------------------------------------
+    /**
+     Default implementation for handling a user who is not consented (because consent has been 
+     revoked by the server).
+    */
+    open func handleUserNotConsentedError(_ error: Error, sessionInfo: Any, networkManager: SBBNetworkManagerProtocol?) -> Bool {
+        currentUser.isConsentVerified = false
+        DispatchQueue.main.async {
+            if self.rootViewController?.state == .main {
+                self.continueOnboardingFlowIfNeeded()
+            }
+        }
+        return true
+    }
     
     /**
      Default implementation for handling an unsupported app version is to display a
      catastrophic error.
-    */
+     */
     open func handleUnsupportedAppVersionError(_ error: Error, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
         DispatchQueue.main.async {
@@ -487,7 +499,6 @@ let SBAMainStoryboardName = "Main"
         }
         return true
     }
-    
     
     // ------------------------------------------------
     // MARK: SBABridgeAppSDKDelegate
@@ -549,7 +560,7 @@ let SBAMainStoryboardName = "Main"
         // Onboarding flow is shown modally (so that the participant can cancel it
         // and return to the study overview). Because of this, the lock screen must be dismissed
         // BEFORE the onboarding is presented. 
-        self.showAppropriateViewController(false)
+        self.showAppropriateViewController(animated: false)
         self.passcodeViewController?.presentingViewController?.dismiss(animated: true) {
             self.continueOnboardingFlowIfNeeded()
         }

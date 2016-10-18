@@ -72,7 +72,7 @@ public enum SBAConsentSectionType: String {
     case dataSharing
     case qualifiedResearchers
     
-    // The section defines it's own image and animation
+    // The section defines its own image and animation
     case custom
     
     /**

@@ -55,9 +55,6 @@ public final class SBAURLLearnMoreAction: SBALearnMoreAction {
     }
     fileprivate var _learnMoreURL: URL?
     
-//    else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
-//        _learnMoreURL = url
-//    }
     public var learnMoreHTML: String? {
         get {
             if (_learnMoreHTML == nil) && (self.learnMoreURL == nil) {
