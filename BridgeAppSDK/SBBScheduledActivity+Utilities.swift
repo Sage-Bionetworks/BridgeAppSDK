@@ -75,4 +75,19 @@ public extension SBBScheduledActivity {
     public dynamic var taskIdentifier: String? {
         return (self.activity.task != nil) ? self.activity.task.identifier : nil
     }
+    
+    public dynamic var surveyIdentifier: String? {
+        guard self.activity.survey != nil else { return nil }
+        return self.activity.survey.identifier
+    }
+    
+    public dynamic var scheduleIdentifier: String {
+        // Strip out the unique part of the guid
+        if let range = self.guid.range(of: ":") {
+            return self.guid.substring(to: range.lowerBound)
+        }
+        else {
+            return self.guid
+        }
+    }
 }
