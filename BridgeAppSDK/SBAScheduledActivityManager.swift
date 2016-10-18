@@ -100,6 +100,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         SBABridgeManager.fetchChanges(toScheduledActivities: activities, daysAhead: daysAhead, daysBehind: daysBehind) {
             [weak self] (obj, error) in
+            
             // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
             // if not, obj will be nil if error is not nil, so we don't need to check error
             guard let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
@@ -598,7 +599,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
 
 extension ORKTask {
     
-    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
         recursiveUpdateTrackedDataStores(shouldCommit: true)
         updateDataGroups(user: user, taskResult: taskResult, completion: completion)
     }
@@ -628,7 +629,7 @@ extension ORKTask {
         }
     }
     
-    private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((NSError?) -> Void)?) {
+    private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
         let previousGroups: Set<String> = Set(user.dataGroups ?? [])
         let groups = recursiveUnionDataGroups(previousGroups: previousGroups, taskResult: taskResult)
         if groups != previousGroups {

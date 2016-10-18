@@ -29,15 +29,11 @@
               ]
      },
      {
-     "identifier"   : "ineligibleInstruction",
-     "type"         : "instruction",
-     "text"         : "Unfortunately, you are ineligible to join this study.",
-     "detailText"   : "However, you can help spread the word and share the app with others.",
-     "image"        : "logo",
-     },
-     {
-     "identifier"       : "shareApp",
-     "type"             : "share",
+     "identifier"       : "ineligibleInstruction",
+     "type"             : "instruction",
+     "text"             : "Unfortunately, you are ineligible to join this study.",
+     "detailText"       : "However, you can help spread the word and share the app with others.",
+     "iconImage"        : "logo",
      "nextIdentifier"   : "exit"
      },
      {
@@ -45,7 +41,7 @@
      "type"             : "instruction",
      "text"             : "You are eligible to join the study.",
      "detailText"       : "Tap the button below to begin the consent process",
-     "image"            : "logo",
+     "iconImage"        : "logo",
      },
      ],
 }

@@ -59,8 +59,13 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         self.init()
         
         // Load the sections
+        var previousSectionType: SBAConsentSectionType?
         if let sections = dictionary["sections"] as? [NSDictionary] {
-            self.consentDocument.sections = sections.map({ $0.createConsentSection() })
+            self.consentDocument.sections = sections.map({ (dictionarySection) -> ORKConsentSection in
+                let consentSection = dictionarySection.createConsentSection(previous: previousSectionType)
+                previousSectionType = dictionarySection.consentSectionType
+                return consentSection
+            })
         }
         
         // Load the document for the HTML content
@@ -84,22 +89,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
                 document: self.consentDocument)
             
         case .sharingOptions:
-            let share = inputItem as! SBAConsentSharingOptions
-            let learnMore = SBAResourceFinder.shared.html(forResource: share.localizedLearnMoreHTMLContent) ?? "PLACEHOLDER"
-            let step = ORKConsentSharingStep(identifier: inputItem.identifier,
-                investigatorShortDescription: share.investigatorShortDescription,
-                investigatorLongDescription: share.investigatorLongDescription,
-                localizedLearnMoreHTMLContent: learnMore)
-            
-            if let additionalText = inputItem.stepText, let text = step.text {
-                step.text = "\(text)\n\n\(additionalText)"
-            }
-            if let form = inputItem as? SBAFormStepSurveyItem,
-                let textChoices = form.items?.map({form.createTextChoice(from: $0)}) {
-                    step.answerFormat = ORKTextChoiceAnswerFormat(style: .singleChoice, textChoices: textChoices)
-            }
-            
-            return step;
+            return SBAConsentSharingStep(inputItem: inputItem)
             
         case .review:
             if let consentReview = inputItem as? SBAConsentReviewOptions
@@ -134,9 +124,23 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     */
     open func reconsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
-        let steps = self.steps?.filter({ !($0 is SBARegistrationStep) && !($0 is ORKRegistrationStep) })
+        let steps = self.steps?.filter({ !isRegistrationStep($0) })
         let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
         return SBASubtaskStep(subtask: task)
+    }
+    
+    /**
+     * Return subtask step with only the steps required for consent or reconsent on login
+     */
+    open func loginConsentStep() -> SBASubtaskStep {
+        // Strip out the registration steps
+        let steps = self.steps?.filter({ !isRegistrationStep($0) })
+        let task = SBANavigableOrderedTask(identifier: SBAOnboardingSectionBaseType.consent.rawValue, steps: steps)
+        return SBAConsentSubtaskStep(subtask: task)
+    }
+    
+    private func isRegistrationStep(_ step: ORKStep) -> Bool {
+        return (step is SBARegistrationStep) || (step is ORKRegistrationStep) || (step is SBAExternalIDStep)
     }
     
     /**
@@ -147,8 +151,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         let steps = self.steps?.filter({ (step) -> Bool in
             // If this is a step that conforms to the custom step protocol and the custom step type is 
             // a reconsent subtype, then this is not to be included in the registration steps
-            if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier
-                , customType.hasPrefix("reconsent") {
+            if let customStep = step as? SBACustomTypeStep, let customType = customStep.customTypeIdentifier, customType.hasPrefix("reconsent") {
                 return false
             }
             return true

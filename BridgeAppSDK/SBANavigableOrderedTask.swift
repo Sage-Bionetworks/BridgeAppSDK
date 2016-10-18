@@ -103,18 +103,31 @@ open class SBANavigableOrderedTask: ORKOrderedTask, ORKTaskResultSource {
         
         repeat {
         
-            if let navigableStep = previousStep as? SBANavigationRule,
-                let nextStepIdentifier = navigableStep.nextStepIdentifier(with: result, and:self.additionalTaskResults) {
-                    // If this is a step that conforms to the SBANavigableStep protocol and
-                    // the next step identifier is non-nil then get the next step by looking within
-                    // the steps associated with this task
-                    returnStep = super.step(withIdentifier: nextStepIdentifier)
-            }
-            else {
-                // If we've dropped through without setting the return step to something non-nil
-                // then look to super for the next step
-                returnStep = super.step(after: previousStep, with: result)
-            }
+            repeat {
+                if let navigableStep = previousStep as? SBANavigationRule,
+                    let nextStepIdentifier = navigableStep.nextStepIdentifier(with: result, and:self.additionalTaskResults) {
+                        // If this is a step that conforms to the SBANavigableStep protocol and
+                        // the next step identifier is non-nil then get the next step by looking within
+                        // the steps associated with this task
+                        returnStep = super.step(withIdentifier: nextStepIdentifier)
+                }
+                else {
+                    // If we've dropped through without setting the return step to something non-nil
+                    // then look to super for the next step
+                    returnStep = super.step(after: previousStep, with: result)
+                }
+                
+                // Check if this is a skipable step
+                if let navigationSkipStep = returnStep as? SBANavigationSkipRule,
+                    navigationSkipStep.shouldSkipStep(with: result, and: self.additionalTaskResults) {
+                    shouldSkip = true
+                    previousStep = returnStep
+                }
+                else {
+                    shouldSkip = false
+                }
+                
+            } while (shouldSkip)
             
             // If the superclass returns a step of type subtask step, then get the first step from the subtask
             // Since it is possible that the subtask will return an empty task (all steps are invalid) then 

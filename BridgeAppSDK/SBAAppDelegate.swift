@@ -42,16 +42,16 @@ public protocol SBAAppInfoDelegate: class {
     var requiredPermissions: SBAPermissionsType { get }
 }
 
+let SBAOnboardingJSONFilename = "Onboarding"
+let SBAStudyOverviewStoryboardName = "StudyOverview"
+let SBAMainStoryboardName = "Main"
+
 @UIApplicationMain
-@objc open class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate  {
+@objc open class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate, ORKTaskViewControllerDelegate  {
     
     open var window: UIWindow?
     
-    open var containerRootViewController: SBARootViewControllerProtocol? {
-        return window?.rootViewController as? SBARootViewControllerProtocol
-    }
-    
-    public final class var sharedDelegate: SBAAppDelegate? {
+    public final class var shared: SBAAppDelegate? {
         return UIApplication.shared.delegate as? SBAAppDelegate
     }
     
@@ -67,35 +67,46 @@ public protocol SBAAppInfoDelegate: class {
             self.window?.tintColor = tintColor
         }
         
-        // Setup the view controller
-        self.showAppropriateViewController(false)
-        
+        // Replace the launch root view controller with an SBARootViewController
+        // This allows transitioning between root view controllers while a lock screen
+        // or onboarding view controller is being presented modally.
+        self.window?.rootViewController = SBARootViewController(rootViewController: self.window?.rootViewController)
+
         return true
     }
 
     open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        lockScreen()
+        
+        if shouldShowPasscode() {
+            lockScreen()
+        }
+        else {
+            showAppropriateViewController(animated: true)
+        }
+        
         return true
     }
     
     open func applicationWillResignActive(_ application: UIApplication) {
         if shouldShowPasscode() {
             // Hide content so it doesn't appear in the app switcher.
-            containerRootViewController?.contentHidden = true
+            rootViewController?.contentHidden = true
         }
     }
     
     open func applicationDidBecomeActive(_ application: UIApplication) {
         // Make sure that the content view controller is not hiding content
-        containerRootViewController?.contentHidden = false
+        rootViewController?.contentHidden = false
         
         self.currentUser.ensureSignedInWithCompletion() { (error) in
             // Check if there are any errors during sign in that we need to address
-            if let error = error, let errorCode = SBBErrorCode(rawValue: error.code) {
+            if let error = error, let errorCode = SBBErrorCode(rawValue: (error as NSError).code) {
                 switch errorCode {
                     
                 case SBBErrorCode.serverPreconditionNotMet:
-                    self.showReconsentIfNecessary()
+                    DispatchQueue.main.async {
+                        self.continueOnboardingFlowIfNeeded()
+                    }
                     
                 case SBBErrorCode.unsupportedAppVersion:
                     if !self.handleUnsupportedAppVersionError(error, networkManager: nil) {
@@ -193,73 +204,138 @@ public protocol SBAAppInfoDelegate: class {
     // ------------------------------------------------
     
     /**
+     The root view controller for this app. By default, this is setup in `willFinishLaunchingWithOptions`
+     as the key window root view controller. This container view controller allows presenting 
+     onboarding flow and/or a passcode modally while transitioning the underlying view controller 
+     for the appropriate app state.
+    */
+    open var rootViewController: SBARootViewController? {
+        return window?.rootViewController as? SBARootViewController
+    }
+    
+    /**
      Convenience method for setting up and displaying the appropriate view controller
      for the current user state.
+     
+     @param animated  Should the transition be animated
     */
-    open func showAppropriateViewController(_ animated: Bool) {
-        if (self.catastrophicStartupError != nil) {
-            showCatastrophicStartupErrorViewController(animated: animated)
-        }
-        else if (self.currentUser.isLoginVerified) {
-            showMainViewController(animated: animated)
-            if (!self.currentUser.isConsentVerified) {
-                showReconsentIfNecessary()
+    open func showAppropriateViewController(animated: Bool) {
+        
+        let newState: SBARootViewControllerState = {
+            if (self.catastrophicStartupError != nil) {
+                return .catastrophicError
+            }
+            else if (self.currentUser.isLoginVerified) {
+                return .main
+            }
+            else {
+                return .onboarding
+            }
+        }()
+        
+        if (newState != self.rootViewController?.state) {
+            switch(newState) {
+            case .catastrophicError:
+                showCatastrophicStartupErrorViewController(animated: animated)
+            case .main:
+                showMainViewController(animated: animated)
+            case .onboarding:
+                showOnboardingViewController(animated: animated)
+            default: break
             }
         }
-        else if (self.currentUser.isRegistered) {
-            showEmailVerificationViewController(animated: animated)
-        }
-        else {
-            showOnboardingViewController(animated: animated)
-        }
+        
+        continueOnboardingFlowIfNeeded()
     }
     
     /**
-     Abstract method for showing the reconsent flow
+     Convenience method for continuing an onboarding flow for reconsent or email verification.
     */
-    open func showReconsentIfNecessary() {
-        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
+    open func continueOnboardingFlowIfNeeded() {
+        if (self.currentUser.isLoginVerified && !self.currentUser.isConsentVerified) {
+            presentOnboarding(for: .reconsent)
+        }
+        else if (!self.currentUser.isLoginVerified && self.currentUser.isRegistered) {
+            presentOnboarding(for: .registration)
+        }
     }
     
     /**
-     Abstract method for showing the study overview (onboarding) for a user who is not signed in
+     Method for showing the study overview (onboarding) for a user who is not signed in.
+     By default, this method looks for a storyboard named "StudyOverview" that is included 
+     in the main bundle.
+     
+     @param animated  Should the transition be animated
     */
     open func showOnboardingViewController(animated: Bool) {
-        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
+        // Check that not already showing onboarding
+        guard self.rootViewController?.state != .onboarding else { return }
+        // Get the default storyboard
+        guard let storyboard = openStoryboard(SBAStudyOverviewStoryboardName),
+            let vc = storyboard.instantiateInitialViewController()
+            else {
+                assertionFailure("Failed to load onboarding storyboard. If default onboarding is used, the storyboard should be implemented at the app level.")
+                return
+        }
+        transition(toRootViewController: vc, state: .onboarding, animated: animated)
     }
     
     /**
-     Abstract method for showing the email verification view controller for a user who registered
-     but not signed in
-    */
-    open func showEmailVerificationViewController(animated: Bool) {
-        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
-    }
-    
-    /**
-     Abstract method for showing the main view controller for a user who signed in
+     Method for showing the main view controller for a user who signed in.
+     By default, this method looks for a storyboard named "Main" that is included 
+     in the main bundle.
+     
+     @param animated  Should the transition be animated
     */
     open func showMainViewController(animated: Bool) {
-        assertionFailure("Not implemented. If used, this feature should be implemented at the app level.")
+        // Check that not already showing main
+        guard self.rootViewController?.state != .main else { return }
+        // Get the default storyboard
+        guard let storyboard = openStoryboard(SBAMainStoryboardName),
+            let vc = storyboard.instantiateInitialViewController()
+            else {
+                assertionFailure("Failed to load main storyboard. If default onboarding is used, the storyboard should be implemented at the app level.")
+                return
+        }
+        transition(toRootViewController: vc, state: .main, animated: animated)
+    }
+    
+    /**
+     Convenience method for opening a storyboard
+     
+     @param name    Name of the storyboard to open (assumes main bundle)
+     @return        Storyboard if found
+    */
+    open func openStoryboard(_ name: String) -> UIStoryboard? {
+        return UIStoryboard(name: name, bundle: nil)
     }
     
     /**
      Convenience method for transitioning to the given view controller as the main window
      rootViewController.
+     
+     @param viewController      View controller to transition to
+     @param state               State of the app 
+     @param animated            Should the transition be animated
     */
-    open func transition(toRootViewController: UIViewController, animated: Bool) {
-        guard let window = self.window else { return }
-        if (animated) {
-            UIView.transition(with: window,
-                duration: 0.6,
-                options: UIViewAnimationOptions.transitionCrossDissolve,
-                animations: {
-                    window.rootViewController = toRootViewController
-                },
-                completion: nil)
+    open func transition(toRootViewController viewController: UIViewController, state: SBARootViewControllerState, animated: Bool) {
+        guard let window = self.window, rootViewController?.state != state else { return }
+        if let root = self.rootViewController {
+            root.set(viewController: viewController, state: state, animated: animated)
         }
         else {
-            window.rootViewController = toRootViewController
+            if (animated) {
+                UIView.transition(with: window,
+                    duration: 0.6,
+                    options: UIViewAnimationOptions.transitionCrossDissolve,
+                    animations: {
+                        window.rootViewController = viewController
+                    },
+                    completion: nil)
+            }
+            else {
+                window.rootViewController = viewController
+            }
         }
     }
     
@@ -275,6 +351,72 @@ public protocol SBAAppInfoDelegate: class {
         topViewController.present(viewController, animated: animated, completion: completion)
     }
     
+    // ------------------------------------------------
+    // MARK: Onboarding
+    // ------------------------------------------------
+    
+    private weak var onboardingViewController: UIViewController?
+    
+    /**
+     Should the onboarding be displayed (or ignored)? By default, if there isn't a catasrophic error,
+     there isn't a lockscreen, and there isn't already an onboarding view controller then show it.
+     */
+    open func shouldShowOnboarding() -> Bool {
+        return !self.hasCatastrophicError &&
+            (self.passcodeViewController == nil) &&
+            (self.onboardingViewController == nil)
+    }
+    
+    /**
+     Get an instance of an onboarding manager for the given `SBAOnboardingTaskType`
+     By default, this assumes a json file named "Onboarding" (included in the main bundle) is used 
+     to describe the onboarding for this application.
+     
+     @param onboardingTaskType  `SBAOnboardingTaskType` for which to get the manager. (Ingored by default)
+    */
+    open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType) -> SBAOnboardingManager? {
+        // By default, the onboarding manager returns an onboarding manager for
+        return SBAOnboardingManager(jsonNamed: SBAOnboardingJSONFilename)
+    }
+    
+    /**
+     Present onboarding flow for the given type. By default, this will present an SBATaskViewController
+     modally with the app delegate as the delegate for the view controller.
+     
+     @param onboardingTaskType  `SBAOnboardingTaskType` to present
+    */
+    open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
+        guard shouldShowOnboarding() else { return }
+        guard let onboardingManager = onboardingManager(for: onboardingTaskType),
+            let taskViewController = onboardingManager.initializeTaskViewController(onboardingTaskType: onboardingTaskType)
+        else {
+            assertionFailure("Failed to create an onboarding manager.")
+            return
+        }
+        
+        // present the onboarding
+        taskViewController.delegate = self
+        self.onboardingViewController = taskViewController
+        self.presentViewController(taskViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: ORKTaskViewControllerDelegate
+    
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        // Discard the registration information that has been gathered so far if not completed
+        if (reason != .completed) {
+            self.currentUser.resetStoredUserData()
+        }
+        
+        // Show the appropriate view controller
+        showAppropriateViewController(animated: false)
+        
+        // Hide the taskViewController
+        taskViewController.dismiss(animated: true, completion: nil)
+        self.onboardingViewController = nil
+    }
+    
     
     // ------------------------------------------------
     // MARK: Catastrophic startup errors
@@ -286,9 +428,12 @@ public protocol SBAAppInfoDelegate: class {
      Catastrophic Errors are errors from which the system cannot recover. By default, 
      this will display a screen that blocks all activity. The user is then asked to 
      update their app.
+     @param animated  Should the transition be animated
      */
     open func showCatastrophicStartupErrorViewController(animated: Bool) {
         
+        guard self.rootViewController?.state != .catastrophicError else { return }
+
         // If we cannot open the catastrophic error view controller (for some reason)
         // then this is a fatal error
         guard let vc = SBACatastrophicErrorViewController.instantiateWithMessage(catastrophicErrorMessage) else {
@@ -296,7 +441,7 @@ public protocol SBAAppInfoDelegate: class {
         }
         
         // Present the view controller
-        transition(toRootViewController: vc, animated: true)
+        transition(toRootViewController: vc, state: .catastrophicError, animated: animated)
     }
     
     /**
@@ -323,15 +468,28 @@ public protocol SBAAppInfoDelegate: class {
             Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
     }
     
+    // ------------------------------------------------
+    // MARK: SBBBridgeAppDelegate
+    // ------------------------------------------------
     
-    // ------------------------------------------------
-    // MARK: Unsupported App Version
-    // ------------------------------------------------
+    /**
+     Default implementation for handling a user who is not consented (because consent has been 
+     revoked by the server).
+    */
+    open func handleUserNotConsentedError(_ error: Error, sessionInfo: Any, networkManager: SBBNetworkManagerProtocol?) -> Bool {
+        currentUser.isConsentVerified = false
+        DispatchQueue.main.async {
+            if self.rootViewController?.state == .main {
+                self.continueOnboardingFlowIfNeeded()
+            }
+        }
+        return true
+    }
     
     /**
      Default implementation for handling an unsupported app version is to display a
      catastrophic error.
-    */
+     */
     open func handleUnsupportedAppVersionError(_ error: Error, networkManager: SBBNetworkManagerProtocol?) -> Bool {
         registerCatastrophicStartupError(error)
         DispatchQueue.main.async {
@@ -341,7 +499,6 @@ public protocol SBAAppInfoDelegate: class {
         }
         return true
     }
-    
     
     // ------------------------------------------------
     // MARK: SBABridgeAppSDKDelegate
@@ -399,31 +556,30 @@ public protocol SBAAppInfoDelegate: class {
         presentViewController(vc, animated: false, completion: nil)        
     }
     
-    private func dismissPasscodeViewController(_ animated: Bool) {
-        self.passcodeViewController?.presentingViewController?.dismiss(animated: animated, completion: nil)
+    private func dismissPasscodeViewController() {
+        // Onboarding flow is shown modally (so that the participant can cancel it
+        // and return to the study overview). Because of this, the lock screen must be dismissed
+        // BEFORE the onboarding is presented. 
+        self.showAppropriateViewController(animated: false)
+        self.passcodeViewController?.presentingViewController?.dismiss(animated: true) {
+            self.continueOnboardingFlowIfNeeded()
+        }
+        self.passcodeViewController = nil
     }
     
     private func resetPasscode() {
         
-        // Dismiss the view controller unanimated
-        dismissPasscodeViewController(false)
-        
-        // Show a plain white view controller while logging out
-        let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.white
-        transition(toRootViewController: vc, animated: false)
-        
-        // Logout the user
-        self.currentUser.logout()
-        
-        // Show the appropriate view controller
-        showAppropriateViewController(true)
+        // reset the user
+        self.currentUser.resetStoredUserData()
+
+        // then dismiss the passcode view controller
+        dismissPasscodeViewController()
     }
     
     // MARK: ORKPasscodeDelegate
     
     open func passcodeViewControllerDidFinish(withSuccess viewController: UIViewController) {
-        dismissPasscodeViewController(true)
+        dismissPasscodeViewController()
     }
     
     open func passcodeViewControllerDidFailAuthentication(_ viewController: UIViewController) {
@@ -446,6 +602,5 @@ public protocol SBAAppInfoDelegate: class {
         
         viewController.present(alert, animated: true, completion: nil)
     }
-    
 
 }

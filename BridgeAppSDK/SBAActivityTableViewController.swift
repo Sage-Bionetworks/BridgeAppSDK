@@ -91,33 +91,34 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     
     fileprivate var foregroundNotification: NSObjectProtocol?
     
+    deinit {
+        if let notification = self.foregroundNotification {
+            NotificationCenter.default.removeObserver(notification)
+        }
+    }
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        // refesh on load
         self.scheduledActivityDataSource.reloadData()
         
+        // setup the refresh controller
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self.scheduledActivityDataSource, action: #selector(self.scheduledActivityDataSource.reloadData), for: .valueChanged)
         self.refreshControl = refreshControl
-    }
-    
-    override open func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
-        self.tableView.reloadData()
-
+        // setup notification to refresh on return to foreground
         foregroundNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) {
             [weak self] _ in
             self?.scheduledActivityDataSource.reloadData()
         }
     }
     
-    override open func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        if let notificationHandler = foregroundNotification {
-            NotificationCenter.default.removeObserver(notificationHandler)
-        }
+        self.tableView.reloadData()
     }
     
     // MARK: data refresh

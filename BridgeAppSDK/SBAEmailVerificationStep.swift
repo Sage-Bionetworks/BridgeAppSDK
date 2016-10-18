@@ -33,39 +33,52 @@
 
 import ResearchKit
 
-open class SBAEmailVerificationStep: SBAInstructionStep {
-    // TODO: syoung 06/08/2016 Implement
+open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController {
+    
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
+    }()
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(nil)
+        commonInit()
     }
     
     public init(inputItem: SBASurveyItem, appInfo: SBAAppInfoDelegate?) {
         super.init(identifier: inputItem.identifier)
-        commonInit(appInfo)
+        if appInfo != nil {
+            self.sharedAppDelegate = appInfo!
+        }
+        commonInit()
     }
     
-    func commonInit(_ appInfoDelegate: SBAAppInfoDelegate?) {
-        let appInfo = appInfoDelegate ?? UIApplication.shared.delegate as! SBAAppInfoDelegate
-        
+    func commonInit() {
         if self.title == nil {
             self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
         }
-        if self.text == nil {
-            let appName = Localization.localizedAppName
-            let email = appInfo.currentUser.email!
-            self.text = Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_TEXT_%@_%@", appName, email)
-        }
         if self.detailText == nil {
-            self.detailText = Localization.localizedString("REGISTRATION_VERIFICATION_DETAIL_%@")
+            self.detailText = Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_DETAIL_%@", Localization.buttonNext())
         }
-        if self.image == nil {
-            self.image = appInfo.bridgeInfo.logoImage
+        if self.footnote == nil {
+            self.footnote = Localization.localizedString("REGISTRATION_VERIFICATION_FOOTNOTE")
+        }
+        if self.iconImage == nil {
+            self.iconImage = self.sharedAppDelegate.bridgeInfo.logoImage
         }
         if self.learnMoreAction == nil {
-            // TODO: syoung 09/08/2016 Add learn more action for resending email or changing email
+            self.learnMoreAction = SBAEmailVerificationLearnMoreAction(identifier: "additionalEmailActions")
+            self.learnMoreAction?.learnMoreButtonText = Localization.localizedString("REGISTRATION_EMAIL_ACTIONS_BUTTON_TEXT")
         }
+    }
+    
+    // Override the text to display the user's email and the app name.
+    open override var text: String? {
+        get {
+            guard let email = sharedUser.email else { return nil }
+            let appName = Localization.localizedAppName
+            return Localization.localizedStringWithFormatKey("REGISTRATION_VERIFICATION_TEXT_%@_%@", appName, email)
+        }
+        set {} // do nothing
     }
     
     open override func stepViewControllerClass() -> AnyClass {
@@ -81,11 +94,29 @@ open class SBAEmailVerificationStep: SBAInstructionStep {
 
 open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserRegistrationController {
     
+    // MARK: SBASharedInfoController
+    
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // Mark: Navigation overrides - cannot go back and override go forward to register
+    // MARK: SBAUserRegistrationController
+    
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    
+    
+    // MARK: Navigation overrides - cannot go back and override go forward to register
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Continue button should always say "Next"
+        self.continueButtonTitle = Localization.buttonNext()
+        
+        // set the back and cancel buttons to empty items
+        self.backButtonItem = UIBarButtonItem()
+    }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
     // to override this method
@@ -108,22 +139,111 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         super.goForward()
     }
     
-    open override var cancelButtonItem: UIBarButtonItem? {
-        get { return nil }
-        set {}
-    }
-    
-    open override var backButtonItem: UIBarButtonItem? {
-        get { return nil }
-        set {}
-    }
-    
     override open func goBackward() {
         // Do nothing
     }
     
-    // MARK: Failure handling
+    func handleWrongEmailAction() {
+        let task = ORKOrderedTask(identifier: "changeEmail", steps: [SBAChangeEmailStep(identifier: "changeEmail")])
+        let taskVC = SBATaskViewController(task: task, taskRun: nil)
+        self.present(taskVC, animated: true, completion: nil)
+    }
+    
+    func handleResendEmailAction() {
+        showLoadingView()
+        sharedUser.resendVerificationEmail { [weak self] (error) in
+            if let error = error {
+                self?.handleFailedRegistration(error)
+            }
+            else {
+                self?.hideLoadingView()
+            }
+        }
+    }
+
+}
+
+@objc
+open class SBAEmailVerificationLearnMoreAction: SBALearnMoreAction {
+    
+    override open func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
+        guard let emailVC = taskViewController.currentStepViewController as? SBAEmailVerificationStepViewController else { return }
+        
+        let alertController = UIAlertController(title: nil,
+                                                message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: Localization.buttonCancel(), style: .cancel) { (_) in
+            // do nothing
+        }
+        
+        let wrongEmailAction = UIAlertAction(title: Localization.localizedString("REGISTRATION_WRONG_EMAIL"), style: .default) { (_) in
+            emailVC.handleWrongEmailAction()
+        }
+        
+        let resentEmailAction = UIAlertAction(title: Localization.localizedString("REGISTRATION_RESEND_EMAIL"), style: .default) { (_) in
+            emailVC.handleResendEmailAction()
+        }
+        
+        alertController.addAction(wrongEmailAction)
+        alertController.addAction(resentEmailAction)
+        alertController.addAction(cancelAction)
+        
+        taskViewController.present(alertController, animated: true, completion: nil)
+    }
+    
+}
+
+class SBAChangeEmailStep: ORKFormStep {
+    
+    override init(identifier: String) {
+        super.init(identifier: identifier)
+        let profileInfo = SBAProfileInfoOptions(includes: [.email])
+        self.title = Localization.localizedString("REGISTRATION_CHANGE_EMAIL_TITLE")
+        self.formItems = profileInfo.makeFormItems(surveyItemType: .account(.emailVerification))
+        self.isOptional = false
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func stepViewControllerClass() -> AnyClass {
+        return SBAChangeEmailStepViewController.classForCoder()
+    }
+}
+
+class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+    
+    // MARK: SBASharedInfoController
+    
+    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+        return UIApplication.shared.delegate as! SBAAppInfoDelegate
+    }()
+    
+    // MARK: SBAUserRegistrationController
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    
+    
+    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+    // to override this method
+    final public override func goForward() {
+        showLoadingView()
+        sharedUser.changeUserEmailAddress(email!) { [weak self] error in
+            if let error = error {
+                self?.handleFailedRegistration(error)
+            }
+            else {
+                self?.goNext()
+            }
+        }
+    }
+    
+    func goNext() {
+        // Then call super to go forward
+        super.goForward()
+    }
+
 }
+

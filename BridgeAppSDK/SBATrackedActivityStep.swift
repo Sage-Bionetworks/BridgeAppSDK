@@ -40,13 +40,13 @@ public protocol SBATrackedActivitySurveyItem: SBAFormStepSurveyItem, SBATrackedS
 
 extension SBATrackedActivitySurveyItem {
     
-    public func createTrackedActivityStep(_ items:[SBATrackedDataObject]) -> ORKStep {
+    public func createTrackedActivityStep(_ items:[SBATrackedDataObject], factory: SBASurveyFactory) -> ORKStep {
         
         // Create a base form step
         let baseStep = SBATrackedActivityFormStep(identifier: self.identifier)
         baseStep.textFormat = self.textFormat
         self.mapStepValues(with: baseStep)
-        self.buildFormItems(with: baseStep, isSubtaskStep: false)
+        self.buildFormItems(with: baseStep, isSubtaskStep: false, factory: factory)
         
         if (self.trackEach) {
             // If tracking each then need to create a step for each item that is tracked

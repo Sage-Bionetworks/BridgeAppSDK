@@ -118,6 +118,8 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             switch (onboardingTaskType) {
             case .registration:
                 return [consentFactory.registrationConsentStep()]
+            case .login:
+                return [consentFactory.loginConsentStep()]
             default:
                 return [consentFactory.reconsentStep()]
             }

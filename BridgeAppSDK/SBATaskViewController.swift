@@ -203,7 +203,12 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
 
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        _internalDelegate?.taskViewController(taskViewController, didFinishWith: reason, error: error)
+        if _internalDelegate != nil {
+            _internalDelegate!.taskViewController(taskViewController, didFinishWith: reason, error: error)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
@@ -223,7 +228,7 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
             // If the delegate has a learn more for this step then fallback to that
             return true
         }
-        else if let learnMoreStep = step as? SBAInstructionStep, learnMoreStep.learnMoreAction != nil {
+        else if let learnMoreStep = step as? SBALearnMoreActionStep, learnMoreStep.learnMoreAction != nil {
             return true
         }
         return false
@@ -234,7 +239,7 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         _internalDelegate?.taskViewController?(taskViewController, learnMoreForStep: stepViewController)
         
         // If there is a learnmore action, then call it
-        guard let learnMoreStep = stepViewController.step as? SBAInstructionStep,
+        guard let learnMoreStep = stepViewController.step as? SBALearnMoreActionStep,
             let learnMore = learnMoreStep.learnMoreAction else {
                 return
         }

@@ -34,7 +34,7 @@
 import ResearchKit
 
 @objc
-open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep {
+open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBACustomTypeStep, SBALearnMoreActionStep {
     
     /**
     * For cases where this type of step is created as a placeholder for a custom step.
@@ -68,27 +68,6 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
      */
     open var learnMoreAction: SBALearnMoreAction?
     
-    /**
-     * The text to display for the continue button
-     */
-    open var continueButtonText: String?
-    
-    // Allow the detail text include formatting for the text of the continue button.
-    override open var detailText: String? {
-        get {
-            let detail = super.detailText
-            guard let detailFormat = detail , detailFormat.contains("%@"),
-                let continueText = continueButtonText
-            else {
-                return detail
-            }
-            return String.localizedStringWithFormat(detail!, continueText)
-        }
-        set {
-            super.detailText = newValue
-        }
-    }
-    
     public override init(identifier: String) {
         super.init(identifier: identifier)
     }
@@ -98,6 +77,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         
         self.title = inputItem.stepTitle?.trim()
         self.text = inputItem.stepText?.trim()
+        self.footnote = inputItem.stepFootnote?.trim()
         
         if let directStep = inputItem as? SBADirectNavigationRule {
             self.nextStepIdentifier = directStep.nextStepIdentifier
@@ -113,6 +93,7 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
             self.learnMoreAction = surveyItem.learnMoreAction()
             self.detailText = surveyItem.stepDetail?.trim()
             self.image = surveyItem.stepImage
+            self.iconImage = surveyItem.iconImage
         }
     }
     
@@ -126,6 +107,15 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         else {
             return SBAInstructionStepViewController.classForCoder()
         }
+    }
+    
+    override open func instantiateStepViewController(with result: ORKResult) -> ORKStepViewController {
+        let vc = super.instantiateStepViewController(with: result)
+        if let completionVC = vc as? ORKCompletionStepViewController {
+            // By default, override showing the continue button in the nav bar
+            completionVC.shouldShowContinueButton = true
+        }
+        return vc
     }
     
     // MARK: NSCopy
@@ -182,16 +172,6 @@ open class SBAInstructionStepViewController: ORKInstructionStepViewController {
     
     internal var sbaIntructionStep: SBAInstructionStep? {
         return self.step as? SBAInstructionStep
-    }
-    
-    override open var continueButtonTitle: String? {
-        get {
-            return sbaIntructionStep?.continueButtonText ?? super.continueButtonTitle
-        }
-        set {
-            sbaIntructionStep?.continueButtonText = newValue
-            super.continueButtonTitle = newValue
-        }
     }
     
     override open var learnMoreButtonTitle: String? {

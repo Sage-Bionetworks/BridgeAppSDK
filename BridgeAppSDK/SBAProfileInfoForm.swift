@@ -324,6 +324,9 @@ extension SBAProfileInfoForm {
     func commonInit(_ inputItem: SBASurveyItem?) {
         self.title = inputItem?.stepTitle
         self.text = inputItem?.stepText
+        if let formStep = self as? ORKFormStep {
+            formStep.footnote = inputItem?.stepFootnote
+        }
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
         self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
     }

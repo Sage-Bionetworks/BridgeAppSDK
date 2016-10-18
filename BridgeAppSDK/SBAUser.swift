@@ -51,7 +51,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     }
     
     public var bridgeInfo: SBABridgeInfo? {
-       return SBAAppDelegate.sharedDelegate?.bridgeInfo
+       return SBAAppDelegate.shared?.bridgeInfo
     }
     
     // --------------------------------------------------
@@ -334,10 +334,17 @@ public final class SBAUser: NSObject, SBAUserWrapper {
 extension SBAUser : SBBAuthManagerDelegateProtocol {
     
     public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
-        return self.sessionToken
+        let token = self.sessionToken
+        #if DEBUG
+        print("getting Session Token: \(token)")
+        #endif
+        return token
     }
     
     public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
+        #if DEBUG
+        print("setting Session Token: \(sessionToken)")
+        #endif
         self.sessionToken = sessionToken
     }
     

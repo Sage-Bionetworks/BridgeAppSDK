@@ -96,11 +96,34 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
 
 open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
+    /**
+     If there are data groups that were set in a previous step or via a custom onboarding manager,
+     set them on the view controller using this property.
+     */
+    open var dataGroups: [String]?
+    
+
+    // MARK: SBASharedInfoController
+    
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // Mark: Navigation overrides - cannot go back and override go forward to register
+    // MARK: SBAUserRegistrationController
+    
+    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    
+    
+    // MARK: Navigation overrides - cannot go back and override go forward to register
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // set the back and cancel buttons to empty items
+        self.cancelButtonItem = UIBarButtonItem()
+        self.backButtonItem = UIBarButtonItem()
+    }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
     // to override this method
@@ -131,25 +154,8 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
         super.goForward()
     }
     
-    open override var cancelButtonItem: UIBarButtonItem? {
-        get { return nil }
-        set {}
-    }
-    
-    open override var backButtonItem: UIBarButtonItem? {
-        get { return nil }
-        set {}
-    }
-    
     override open func goBackward() {
         // Do nothing
     }
     
-    open var dataGroups: [String]? {
-        return nil
-    }
-    
-    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
-    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
-
 }

@@ -37,32 +37,33 @@ public protocol SBALoadingViewPresenter {
     var view: UIView! { get }
 }
 
-public extension SBALoadingViewPresenter {
+extension SBALoadingViewPresenter {
     
-    public var loadingView: SBALoadingView? {
+    public var standardLoadingView: SBALoadingView? {
         return self.view.subviews.find({ $0 is SBALoadingView }) as? SBALoadingView
     }
     
     public func showLoadingView() {
-        var loadingView: SBALoadingView! = self.loadingView
+        var loadingView: SBALoadingView? = self.standardLoadingView
         if (loadingView == nil) {
+            // if nil, create and add the loading view
             loadingView = SBALoadingView(frame: self.view.bounds)
-            loadingView.isHidden = true
-            self.view.addSubview(loadingView)
-            loadingView.constrainToFillSuperview()
+            loadingView!.isHidden = true
+            self.view.addSubview(loadingView!)
+            loadingView!.constrainToFillSuperview()
         }
-        if (loadingView!.isAnimating) {
+        if (!loadingView!.isAnimating || loadingView!.isHidden) {
             loadingView!.startAnimating()
         }
     }
     
-    public func hideLoadingView(_ completion: (() -> Void)?) {
-        guard let view = loadingView , view.isAnimating else {
+    public func hideLoadingView(_ completion: (() -> Void)? = nil) {
+        guard let loadingView = standardLoadingView, loadingView.isAnimating else {
             completion?()
             return
         }
-        view.stopAnimating({
-            view.removeFromSuperview()
+        loadingView.stopAnimating({
+            loadingView.removeFromSuperview()
             completion?()
         })
     }

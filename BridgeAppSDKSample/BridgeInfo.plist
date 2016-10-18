@@ -22,31 +22,31 @@
 			<key>schemaIdentifier</key>
 			<string>Mood Survey</string>
 			<key>schemaRevision</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Tapping Activity</string>
 			<key>schemaRevision</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Voice Activity</string>
 			<key>schemaRevision</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Memory Activity</string>
 			<key>schemaRevision</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>
 			<string>Walking Activity</string>
 			<key>schemaRevision</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>schemaIdentifier</key>

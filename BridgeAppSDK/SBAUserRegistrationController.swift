@@ -83,8 +83,8 @@ extension SBAUserRegistrationController {
             })
     }
     
-    func handleFailedRegistration(_ error: NSError) {
-        let message = error.localizedBridgeErrorMessage
+    func handleFailedRegistration(_ error: Error) {
+        let message = (error as NSError).localizedBridgeErrorMessage
         handleFailedValidation(message)
     }
     

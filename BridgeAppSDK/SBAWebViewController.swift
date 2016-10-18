@@ -36,7 +36,9 @@ import UIKit
 open class SBAWebViewController: UIViewController, UIWebViewDelegate {
     
     @IBOutlet weak var webView: UIWebView!
-    open var url : URL!
+    
+    open var url: URL?
+    open var html: String?
     
     fileprivate var _webviewLoaded = false
 
@@ -44,15 +46,15 @@ open class SBAWebViewController: UIViewController, UIWebViewDelegate {
         super.viewDidLoad()
         
         if (webView == nil) {
+            self.view.backgroundColor = UIColor.white
             let subview = UIWebView(frame: self.view.bounds)
             self.view.addSubview(subview)
             subview.constrainToFillSuperview()
             subview.delegate = self
             subview.dataDetectorTypes = .all
+            subview.backgroundColor = UIColor.white
             self.webView = subview
         }
-    
-
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -60,8 +62,13 @@ open class SBAWebViewController: UIViewController, UIWebViewDelegate {
         
         if (!_webviewLoaded) {
             _webviewLoaded = true
-            let request = URLRequest(url: url)
-            webView.loadRequest(request)
+            if let url = self.url {
+                let request = URLRequest(url: url)
+                webView.loadRequest(request)
+            }
+            else if let html = self.html {
+                webView.loadHTMLString(html, baseURL: nil)
+            }
         }
     }
     

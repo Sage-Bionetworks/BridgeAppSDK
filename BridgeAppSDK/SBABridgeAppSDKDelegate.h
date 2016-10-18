@@ -42,9 +42,6 @@
 - (NSBundle * _Nonnull)resourceBundle;
 - (NSString * _Nullable)pathForResource:(NSString * _Nonnull)resourceName ofType:(NSString * _Nonnull)resourceType;
 
-//
-- (void)showAppropriateViewController:(BOOL)animated;
-
 @end
 
 #endif /* BridgeAppSDKDelegate_h */

@@ -36,13 +36,6 @@ import BridgeAppSDK
 
 class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelegate, SBASharedInfoController {
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if (sharedUser.isRegistered) {
-            presentOnboarding(.registration, animated: animated)
-        }
-    }
-    
     // MARK: SBASharedInfoController
     
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -52,11 +45,11 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     // MARK: actions
 
     @IBAction func signUpTapped(_ sender: AnyObject) {
-        presentOnboarding(.registration, animated: true)
+        SBAAppDelegate.shared?.presentOnboarding(for: .registration)
     }
     
     @IBAction func loginTapped(_ sender: AnyObject) {
-        presentOnboarding(.login, animated: true)
+        SBAAppDelegate.shared?.presentOnboarding(for: .login)
     }
     
     @IBAction func externalIDTapped(_ sender: AnyObject) {
@@ -76,27 +69,17 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         self.present(vc, animated: true, completion: nil)
     }
     
-    // MARK: login and registration
-    
-    func presentOnboarding(_ taskType: SBAOnboardingTaskType, animated: Bool) {
-        let onboardingManager = SBAOnboardingManager(jsonNamed: "Onboarding")!
-        let vc = onboardingManager.initializeTaskViewController(onboardingTaskType: taskType)!
-        
-        vc.delegate = self
-        self.present(vc, animated: true, completion: nil)
-    }
-    
     // MARK: ORKTaskViewControllerDelegate
     
     func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         taskViewController.dismiss(animated: true) { 
-            if (reason == .completed), let appDelegate = UIApplication.shared.delegate as? SBABridgeAppSDKDelegate {
+            if (reason == .completed), let appDelegate = UIApplication.shared.delegate as? SBAAppDelegate {
                 // If complete, then show the appropriate view controller
-                appDelegate.showAppropriateViewController(false)
+                appDelegate.showAppropriateViewController(animated: false)
             }
-            else if (reason == .discarded) {
+            else {
                 // Discard the registration information that has been gathered so far
-                self.sharedUser.logout()
+                self.sharedUser.resetStoredUserData()
             }
         }
     }

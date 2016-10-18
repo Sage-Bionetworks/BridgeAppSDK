@@ -40,14 +40,11 @@ import Foundation
 @objc
 public final class SBAURLLearnMoreAction: SBALearnMoreAction {
     
-    public var learnMoreURL: URL! {
+    public var learnMoreURL: URL? {
         get {
             if (_learnMoreURL == nil) {
-                if let url = URL(string: identifier) {
-                    _learnMoreURL = url
-                }
-                else if let url = SBAResourceFinder.shared.url(forResource: identifier, withExtension: "html") {
-                    _learnMoreURL = url
+                if self.identifier.hasPrefix("http") || self.identifier.hasPrefix("file") {
+                    _learnMoreURL = URL(string: identifier)
                 }
             }
             return _learnMoreURL
@@ -56,11 +53,25 @@ public final class SBAURLLearnMoreAction: SBALearnMoreAction {
             _learnMoreURL = newValue
         }
     }
-    fileprivate var _learnMoreURL: URL!
+    fileprivate var _learnMoreURL: URL?
     
-    override public func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
-        let vc = SBAWebViewController(nibName: nil, bundle: nil)
+    public var learnMoreHTML: String? {
+        get {
+            if (_learnMoreHTML == nil) && (self.learnMoreURL == nil) {
+                _learnMoreHTML = SBAResourceFinder.shared.html(forResource: identifier)
+            }
+            return _learnMoreHTML
+        }
+        set(newValue) {
+            _learnMoreHTML = newValue
+        }
+    }
+    fileprivate var _learnMoreHTML: String?
+    
+    override public func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
+        let vc = SBAWebViewController()
         vc.url = learnMoreURL
+        vc.html = learnMoreHTML
         vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(vc.dismissViewController))
         let navVC = UINavigationController(rootViewController: vc)
         taskViewController.present(navVC, animated: true, completion: nil)

@@ -33,6 +33,11 @@
 
 import ResearchKit
 
+@objc
+public protocol SBALearnMoreActionStep : class {
+    var learnMoreAction: SBALearnMoreAction? { get }
+}
+
 /**
  The `SBALearnMoreAction` class is an abstract class used to create actions for the `learnMore` button that is
  shown in the `ORKIntructionStepViewController` and subclasses.
@@ -47,7 +52,7 @@ open class SBALearnMoreAction: SBADataObject {
     }
     
     @objc(learnMoreActionForStep:taskViewController:)
-    open func learnMoreAction(for step: SBAInstructionStep, with taskViewController: ORKTaskViewController) {
+    open func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
         assertionFailure("Abstract method")
     }
     
