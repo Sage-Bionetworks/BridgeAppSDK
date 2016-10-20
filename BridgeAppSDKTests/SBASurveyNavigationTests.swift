@@ -255,6 +255,26 @@ class SBASurveyNavigationTests: XCTestCase {
         XCTAssertEqual(nextStepIdentifier2, "skip")
     }
     
+    func testSubtaskQuizStep_Loop() {
+        let subtaskStep = self.createSubtaskQuizStep([true as AnyObject, false as AnyObject, "b" as AnyObject])
+        let result = self.createSubtaskTaskResult(loopResults:[
+            [true as AnyObject, true as AnyObject, "b" as AnyObject],       // failed results
+            [true as AnyObject, false as AnyObject, "b" as AnyObject]])     // passed results
+        
+        // If the question should skip failed passed then the next step identifier is nil
+        // which results in a navigation drop through
+        subtaskStep.skipIfPassed = false
+        let nextStepIdentifier1 = subtaskStep.nextStepIdentifier(with: result, and: nil)
+        XCTAssertNil(nextStepIdentifier1)
+        
+        // If the question should skip if it passes then the next step identifier should
+        // be for the step to skip to
+        subtaskStep.skipIfPassed = true
+        let nextStepIdentifier2 = subtaskStep.nextStepIdentifier(with: result, and: nil)
+        XCTAssertNotNil(nextStepIdentifier2)
+        XCTAssertEqual(nextStepIdentifier2, "skip")
+    }
+    
     func testSubtaskQuizStep_Skipped() {
         let subtaskStep = self.createSubtaskQuizStep([true as AnyObject, false as AnyObject, "b" as AnyObject])
         let result = self.createSubtaskTaskResult([true as AnyObject, false as AnyObject, NSNull()])
@@ -373,24 +393,30 @@ class SBASurveyNavigationTests: XCTestCase {
     }
     
     func createSubtaskTaskResult(_ questionResults: [AnyObject]) -> ORKTaskResult {
+        return createSubtaskTaskResult(loopResults: [questionResults])
+    }
+    
+    func createSubtaskTaskResult(loopResults: [[AnyObject]]) -> ORKTaskResult {
         var results: [ORKStepResult] = [ORKStepResult(identifier: "introduction"),
             ORKStepResult(identifier: "quiz.introduction")]
         
-        for (index, answer) in questionResults.enumerated() {
-            let identifier = "question\(index+1)"
-            var itemResults: [ORKResult]?
-            if let answer = answer as? Bool {
-                let questionResult = ORKBooleanQuestionResult(identifier: identifier)
-                questionResult.booleanAnswer = answer as NSNumber?
-                itemResults = [questionResult]
+        for questionResults in loopResults {
+            for (index, answer) in questionResults.enumerated() {
+                let identifier = "question\(index+1)"
+                var itemResults: [ORKResult]?
+                if let answer = answer as? Bool {
+                    let questionResult = ORKBooleanQuestionResult(identifier: identifier)
+                    questionResult.booleanAnswer = answer as NSNumber?
+                    itemResults = [questionResult]
+                }
+                else if let answer = answer as? String {
+                    let questionResult = ORKChoiceQuestionResult(identifier: identifier)
+                    questionResult.choiceAnswers = [answer]
+                    itemResults = [questionResult]
+                }
+                let stepResult = ORKStepResult(stepIdentifier: "quiz.\(identifier)", results: itemResults)
+                results.append(stepResult)
             }
-            else if let answer = answer as? String {
-                let questionResult = ORKChoiceQuestionResult(identifier: identifier)
-                questionResult.choiceAnswers = [answer]
-                itemResults = [questionResult]
-            }
-            let stepResult = ORKStepResult(stepIdentifier: "quiz.\(identifier)", results: itemResults)
-            results += [stepResult]
         }
         
         let taskResult = ORKTaskResult(identifier: "test")

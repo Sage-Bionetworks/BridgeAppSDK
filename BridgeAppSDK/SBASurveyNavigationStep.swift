@@ -296,7 +296,8 @@ public final class SBANavigationFormItem : ORKFormItem {
 public extension SBASurveyNavigationStep {
     
     public func nextStepIdentifier(with taskResult: ORKTaskResult, and additionalTaskResults:[ORKTaskResult]?) -> String? {
-        guard let results = taskResult.results else { return nil }
+        let results = taskResult.consolidatedResults()
+        guard results.count > 0 else { return nil }
         let predicate = self.surveyStepResultFilterPredicate
         let passed = results.filter({ predicate.evaluate(with: $0) && !matchesExpectedResult($0)}).count == 0
         if (passed && self.skipIfPassed) || (!passed && !self.skipIfPassed) {
