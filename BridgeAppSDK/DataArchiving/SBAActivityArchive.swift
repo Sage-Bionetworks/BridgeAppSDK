@@ -57,7 +57,7 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         
         // set up the activity metadata
         // -- always set scheduledActivityGuid and taskRunUUID
-        self.metadata[kScheduledActivityGuidKey] = result.schedule.guid as AnyObject?
+        self.metadata[kScheduledActivityGuidKey] = result.schedule.scheduleIdentifier as AnyObject?
         self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.uuidString as AnyObject?
         
         // -- if it's a task, also set the taskIdentifier
