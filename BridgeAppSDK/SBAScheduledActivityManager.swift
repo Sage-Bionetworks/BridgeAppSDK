@@ -307,11 +307,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     @objc(scheduledActivityForTaskViewController:)
     open func scheduledActivity(for taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
         guard let vc = taskViewController as? SBATaskViewController,
-            let guid = vc.scheduledActivityGUID
+            let scheduleIdentifier = vc.scheduleIdentifier
             else {
                 return nil
         }
-        return activities.find({ $0.guid == guid })
+        return activities.find({ $0.scheduleIdentifier == scheduleIdentifier })
     }
     
     /**
@@ -412,7 +412,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     }
     
     open func setup(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
-        taskViewController.scheduledActivityGUID = schedule.guid
+        taskViewController.scheduleIdentifier = schedule.scheduleIdentifier
         taskViewController.delegate = self
     }
     

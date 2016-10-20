@@ -48,9 +48,9 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     var strongReference: SBATaskViewControllerStrongReference?
 
     /**
-     Pointer to the guid for tracking this task via `SBBScheduledActivity`
+     Pointer to the scheduleIdentifier for tracking this task via `SBBScheduledActivity`
      */
-    open var scheduledActivityGUID: String?
+    open var scheduleIdentifier: String?
     
     /**
      Date indicating when the task was finished (verse when the completion handler will fire)
@@ -143,14 +143,14 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.scheduledActivityGUID = aDecoder.decodeObject(forKey: "scheduledActivityGUID") as? String
+        self.scheduleIdentifier = aDecoder.decodeObject(forKey: "scheduleIdentifier") as? String
         self.strongReference = aDecoder.decodeObject(forKey: "strongReference") as? SBATaskViewControllerStrongReference
         self.strongReference?.attachTaskViewController(self)
     }
     
     open override func encode(with aCoder: NSCoder){
         super.encode(with: aCoder)
-        aCoder.encode(self.scheduledActivityGUID, forKey: "scheduledActivityGUID")
+        aCoder.encode(self.scheduleIdentifier, forKey: "scheduleIdentifier")
         aCoder.encode(self.strongReference, forKey: "strongReference")
     }
     
