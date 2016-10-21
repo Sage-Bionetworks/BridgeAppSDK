@@ -103,9 +103,7 @@ class SBAToggleFormStepViewController: ORKTableStepViewController, ORKTableStepS
         return SBAToggleTableViewCell.reuseIdentifier
     }
     
-    let minCellHeight: CGFloat = 120
-    let maxCellHeight: CGFloat = 175
-    private var preferredCellHeight: CGFloat = 140
+    private var preferredCellHeight: CGFloat = 130
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -121,12 +119,11 @@ class SBAToggleFormStepViewController: ORKTableStepViewController, ORKTableStepS
         let itemCount = self.numberOfRows(inSection: 0)
         if itemCount > 0 {
             let headerHeight = self.tableView.tableHeaderView?.bounds.height ?? 0
-            let footerHeight = self.tableView.tableFooterView?.bounds.height ?? 100
+            let footerHeight = self.tableView.tableFooterView?.bounds.height ?? 0
             let overallHeight = self.tableView.bounds.size.height;
             let desiredCellHeight = floor((overallHeight - headerHeight - footerHeight)/CGFloat(itemCount))
-            let cellHeight = min(maxCellHeight, max(minCellHeight, desiredCellHeight))
-            if cellHeight != preferredCellHeight {
-                preferredCellHeight = cellHeight
+            if desiredCellHeight != preferredCellHeight {
+                preferredCellHeight = desiredCellHeight
                 self.tableView.reloadData()
             }
         }

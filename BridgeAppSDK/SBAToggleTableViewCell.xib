@@ -18,7 +18,9 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLW-4D-ud1" userLabel="Height Constraint View">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="120" id="46h-ta-7jG"/>
                             <constraint firstAttribute="height" priority="750" constant="127" id="XlF-To-1UP"/>
+                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="175" id="iez-Vm-f8P"/>
                         </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="900" text="Do you live in the United States of America?" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pvx-JF-qTf">
