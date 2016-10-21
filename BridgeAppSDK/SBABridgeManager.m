@@ -203,5 +203,39 @@
         completionBlock(survey, error);
     }];
 }
+    
++ (void)withdrawConsentForSubpopulation:(NSString *)subpopGuid reason:(NSString * _Nullable)reason completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBConsentManager) withdrawConsentForSubpopulation:subpopGuid withReason:reason completion:^(id responseObject, NSError *error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
+}
+    
++ (void)updateDataSharingScope:(SBBUserDataSharingScope)scope
+                    completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBUserManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
+}
+    
++ (void)getUserProfileWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id responseObject, NSError *error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];    
+}
+    
++ (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBUserManager) updateUserProfileWithProfile: profile
+                                                    completion: ^(id responseObject, NSError *error) {
+         if (completionBlock) {
+             completionBlock(responseObject, error);
+         }
+     }];
+}
 
 @end

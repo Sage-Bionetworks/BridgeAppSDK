@@ -42,7 +42,10 @@ let SBAHiddenTestEmailString = "+test"
 /**
  * Datagroup to set if the user is a test user
  */
-let SBATestDataGroup = SBAAppDelegate.shared?.bridgeInfo.testUserDataGroup ?? "test_user"
+let SBATestDataGroup: String = {
+    let appDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate
+    return appDelegate?.bridgeInfo.testUserDataGroup ?? "test_user"
+}()
 
 /**
  * Error domin for user errors
@@ -171,9 +174,9 @@ public extension SBAUserWrapper {
         }
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
-        guard email.contains(SBAHiddenTestEmailString),
-            let appDelegate = SBAAppDelegate.shared,
-            !appDelegate.bridgeInfo.disableTestUserCheck else {
+        guard email.contains(SBAHiddenTestEmailString) &&
+            appDelegate != nil &&
+            (bridgeInfo?.disableTestUserCheck ?? false) else {
             completeRegistration(false)
             return
         }
@@ -183,7 +186,7 @@ public extension SBAUserWrapper {
         let title = Localization.localizedString("SBA_TESTER_ALERT_TITLE")
         let messageFormat = Localization.localizedString("SBA_TESTER_ALERT_MESSAGE_%1$@_%2$@")
         let message = String.localizedStringWithFormat(messageFormat, Localization.localizedAppName, Localization.buttonYes())
-        appDelegate.showAlertWithYesNo(title: title, message: message, actionHandler: completeRegistration)
+        appDelegate!.showAlertWithYesNo(title: title, message: message, actionHandler: completeRegistration)
     }
     
     /**
@@ -301,6 +304,68 @@ public extension SBAUserWrapper {
             
             self!.callCompletionOnMain(error, completion: completion)
         }
+    }
+    
+    /**
+     Use default handling to withdraw from the study for the primary subpopulation (stored on this user)
+     
+     @param reason      Reason for withdrawing from study
+     @param completion  Completion handler
+     */
+    public func withdrawFromStudy() {
+        guard let appDelegate = self.appDelegate else {
+            assertionFailure("This method is only applicable for applications that support the SBABridgeAppSDKDelegate")
+            return
+        }
+
+        // Show action sheet to confirm intent
+        let controller = UIAlertController(title: Localization.localizedString("WITHDRAW_TITLE"),
+                                           message: Localization.localizedString("WITHDRAW_CONFIRMATION_MESSAGE"),
+                                           preferredStyle: .actionSheet)
+        
+        controller.addAction(UIAlertAction(title: Localization.buttonCancel(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: Localization.localizedString("WITHDRAW_TITLE"),
+                                           style: .destructive, handler: { [weak self] (_) in
+                                            self?.promptForWithdraw()
+        }))
+        
+        appDelegate.presentViewController(controller, animated: true) { }
+    }
+    
+    fileprivate func promptForWithdraw() {
+        // TODO: show view controller to get reason
+    }
+    
+    /**
+     Withdraw from the study for the primary subpopulation (stored on this user)
+     
+     @param reason      Reason for withdrawing from study
+     @param completion  Completion handler
+     */
+    public func withdrawFromStudy(reason:String, completion: ((Error?) -> Void)?) {
+        guard let subpop = subpopulationGuid else {
+            // Valid subpopulation was not found. Just reset and call completion
+            self.resetStoredUserData()
+            self.callCompletionOnMain(nil, completion: completion)
+            return
+        }
+        self.withdrawFromStudy(subpopulationGuid: subpop, reason: reason, completion: completion)
+    }
+    
+    /**
+     Withdraw from the study for a given subpopulation GUID.
+     
+     @param subpopulationGuid   Subpopulation GUID for the study
+     @param reason              Reason for withdrawing from study
+     @param completion          Completion handler
+     */
+    public func withdrawFromStudy(subpopulationGuid:String, reason:String, completion: ((Error?) -> Void)?) {
+        // Withdraw from the study
+        SBABridgeManager.withdrawConsent(forSubpopulation: subpopulationGuid, reason: reason) { [weak self] (_, error) in
+            self?.callCompletionOnMain(error, completion: completion)
+        }
+        // reset the stored user data immediately
+        self.resetStoredUserData()
     }
     
     fileprivate func signInUser(_ username: String, password: String, completion: ((Error?) -> Void)?) {

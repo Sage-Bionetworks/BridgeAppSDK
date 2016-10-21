@@ -36,7 +36,8 @@ import UIKit
 /**
  * Utility for presenting alerts
  */
-public protocol SBAAlertPresenter: class {
+@objc
+public protocol SBAAlertPresenter: NSObjectProtocol {
     func presentViewController(_ viewController: UIViewController,
                                animated: Bool,
                                completion: (() -> Void)?)

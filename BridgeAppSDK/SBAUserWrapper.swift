@@ -130,6 +130,10 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
 
 extension SBAUserWrapper {
     
+    public var appDelegate: SBABridgeAppSDKDelegate? {
+        return UIApplication.shared.delegate as? SBABridgeAppSDKDelegate
+    }
+    
     // With Xcode 8 and iOS 10, the keychain entitlement is required and is *not* reverse-compatible
     // to previous versions of the app that did not require this. Because of this, it is possible to
     // have the flags set for registered and verified without an accessible email/password. Because

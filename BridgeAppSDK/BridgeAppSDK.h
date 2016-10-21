@@ -40,7 +40,6 @@ FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 
 #import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeAppSDKDelegate.h>
 #import <BridgeAppSDK/SBABridgeManager.h>
 #import <BridgeAppSDK/SBADataArchive.h>
 #import <BridgeAppSDK/SBADataObject.h>
@@ -51,7 +50,6 @@ FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
 #import <BridgeAppSDK/SBANewsFeedManager.h>
 #import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
 #import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBARootViewControllerProtocol.h>
 #import <BridgeAppSDK/SBATrackedDataStore.h>
 #import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
 #import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>

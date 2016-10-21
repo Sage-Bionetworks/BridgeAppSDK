@@ -86,8 +86,20 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 
 + (void)resendEmailVerification:(NSString*)emailAddress
                      completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
+    
++ (void)withdrawConsentForSubpopulation:(NSString *)subpopGuid
+                                 reason:(NSString * _Nullable)reason
+                             completion:(SBABridgeManagerCompletionBlock)completionBlock;
+    
++ (void)updateDataSharingScope:(SBBUserDataSharingScope)scope
+                    completion:(SBABridgeManagerCompletionBlock)completionBlock;
+    
++ (void)getUserProfileWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock;
+    
++ (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock;
+    
 
 @end
 
