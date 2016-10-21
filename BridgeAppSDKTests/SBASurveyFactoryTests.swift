@@ -113,6 +113,56 @@ class SBASurveyFactoryTests: XCTestCase {
         }
     }
     
+    func testFactory_ToggleSurveyQuestion() {
+        
+        let inputStep: NSDictionary = [
+            "identifier" : "quiz",
+            "type" : "toggle",
+            "items" : [
+                [   "identifier" : "question1",
+                    "prompt" : "Are you older than 18?",
+                    "expectedAnswer" : true],
+                [   "identifier" : "question2",
+                    "prompt" : "Are you a US resident?",
+                    "expectedAnswer" : true],
+                [   "identifier" : "question3",
+                    "prompt" : "Can you read English?",
+                    "expectedAnswer" : true],
+            ],
+            "skipIdentifier" : "consent",
+            "skipIfPassed" : true
+        ]
+        
+        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBAToggleFormStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        XCTAssertEqual(surveyStep.identifier, "quiz")
+        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
+        XCTAssertTrue(surveyStep.skipIfPassed)
+        
+        guard let formItems = surveyStep.formItems , formItems.count == 3 else {
+            XCTAssert(false, "\(surveyStep.formItems) are not of expected count")
+            return
+        }
+        
+        for formItem in formItems {
+            let answerFormat = formItem.answerFormat as? ORKBooleanAnswerFormat
+            XCTAssertNotNil(answerFormat)
+        }
+        
+        XCTAssertEqual(formItems[0].identifier, "question1")
+        XCTAssertEqual(formItems[1].identifier, "question2")
+        XCTAssertEqual(formItems[2].identifier, "question3")
+        
+        XCTAssertEqual(formItems[0].text, "Are you older than 18?")
+        XCTAssertEqual(formItems[1].text, "Are you a US resident?")
+        XCTAssertEqual(formItems[2].text, "Can you read English?")
+    }
+    
     func testFactory_CompoundSurveyQuestion_NoRule() {
         
         let inputStep: NSDictionary = [
