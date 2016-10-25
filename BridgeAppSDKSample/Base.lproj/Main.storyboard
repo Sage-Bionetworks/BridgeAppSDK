@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Main Tab View Controller-->
+        <!--Tab Bar Controller-->
         <scene sceneID="9Oz-rN-ss4">
             <objects>
-                <tabBarController id="0kU-2D-nM5" customClass="MainTabViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="0kU-2D-nM5" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Iqa-r1-La0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -20,6 +20,7 @@
                     <connections>
                         <segue destination="gs0-Sz-83y" kind="relationship" relationship="viewControllers" id="xwv-17-ycN"/>
                         <segue destination="ESs-gw-ReN" kind="relationship" relationship="viewControllers" id="iFU-wQ-egd"/>
+                        <segue destination="rdv-jj-Ohi" kind="relationship" relationship="viewControllers" id="dw8-4N-yBm"/>
                         <segue destination="gRB-0l-QeY" kind="relationship" relationship="viewControllers" id="CQD-Xn-VG8"/>
                     </connections>
                 </tabBarController>
@@ -165,7 +166,7 @@
         <scene sceneID="XVu-Y6-5j2">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gs0-Sz-83y" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Activities" image="tab_activities" id="aq0-Bn-d2Q"/>
+                    <tabBarItem key="tabBarItem" title="Activities" image="tab_activities" selectedImage="tab_activities_selected" id="aq0-Bn-d2Q"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="N46-v5-7Nu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -184,7 +185,7 @@
         <scene sceneID="ngC-tD-azD">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gRB-0l-QeY" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profile" image="tab_profile" id="NqH-I6-uby"/>
+                    <tabBarItem key="tabBarItem" title="Profile" image="tab_profile" selectedImage="tab_profile_selected" id="NqH-I6-uby"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Y85-MH-cVB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -203,7 +204,7 @@
         <scene sceneID="PUc-wu-kPZ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ESs-gw-ReN" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Dashboard" image="tab_dashboard" id="Xz8-p9-1z2"/>
+                    <tabBarItem key="tabBarItem" title="Dashboard" image="tab_dashboard" selectedImage="tab_dashboard_selected" id="Xz8-p9-1z2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CCK-5m-aPt">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -218,11 +219,124 @@
             </objects>
             <point key="canvasLocation" x="-205" y="-274"/>
         </scene>
+        <!--Learn-->
+        <scene sceneID="Yf7-xg-e0v">
+            <objects>
+                <tableViewController title="Learn" id="yq6-9s-FnZ" customClass="LearnTableViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="xzE-X3-BLj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="QAm-PI-U4f">
+                            <rect key="frame" x="0.0" y="152" width="375" height="55"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="LearnCell" textLabel="PJf-CV-qWk" imageView="ful-eH-e5D" style="IBUITableViewCellStyleDefault" id="SzE-ad-pjR" customClass="LearnMoreTableViewCell" customModule="BridgeAppSDKSample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="375" height="60"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SzE-ad-pjR" id="Pq3-de-2gL">
+                                    <frame key="frameInset" width="342" height="59"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PJf-CV-qWk">
+                                            <frame key="frameInset" minX="57" width="283" height="59"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="contact-us-icon" id="ful-eH-e5D">
+                                            <frame key="frameInset" minX="15" minY="16" width="27" height="27"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="jXA-W9-Sk0" kind="show" identifier="ShowLearnDetails" id="AV2-qf-gFO">
+                                        <nil key="action"/>
+                                    </segue>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="yq6-9s-FnZ" id="jv9-TI-3UE"/>
+                            <outlet property="delegate" destination="yq6-9s-FnZ" id="SbG-wc-rlS"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Learn" id="jIF-B7-eLA"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="doI-tR-eUW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-170" y="1315"/>
+        </scene>
+        <!--Learn-->
+        <scene sceneID="Hxn-PQ-pZC">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rdv-jj-Ohi" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Learn" image="tab_learn" selectedImage="tab_learn_selected" id="3Eg-fb-pkh"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7EB-rv-q6B">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="yq6-9s-FnZ" kind="relationship" relationship="rootViewController" id="rod-e8-0X7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eia-vb-pKx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-967" y="1315"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="Qb5-NB-xlC">
+            <objects>
+                <viewController id="jXA-W9-Sk0" customClass="SBAWebViewController" customModule="BridgeAppSDK" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4lp-EE-j9n"/>
+                        <viewControllerLayoutGuide type="bottom" id="eSA-Vk-RLt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hZY-Lt-VJA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j53-0q-6uQ">
+                                <color key="backgroundColor" red="0.28958413" green="0.31462949509999999" blue="0.32950475810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="jXA-W9-Sk0" id="Ox3-Rm-7Oa"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="j53-0q-6uQ" firstAttribute="top" secondItem="hZY-Lt-VJA" secondAttribute="top" id="Kj7-tf-rqL"/>
+                            <constraint firstItem="j53-0q-6uQ" firstAttribute="leading" secondItem="hZY-Lt-VJA" secondAttribute="leading" id="T3X-SM-D2Q"/>
+                            <constraint firstAttribute="trailing" secondItem="j53-0q-6uQ" secondAttribute="trailing" id="U0A-qE-upY"/>
+                            <constraint firstItem="j53-0q-6uQ" firstAttribute="height" secondItem="hZY-Lt-VJA" secondAttribute="height" id="y1w-TX-WEs"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="j53-0q-6uQ" id="Fiv-X5-9Hp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pvI-Ql-di5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1404" y="1315"/>
+        </scene>
     </scenes>
     <resources>
         <image name="completion-check" width="88" height="88"/>
+        <image name="contact-us-icon" width="27" height="27"/>
         <image name="tab_activities" width="23" height="23"/>
+        <image name="tab_activities_selected" width="23" height="23"/>
         <image name="tab_dashboard" width="29" height="21"/>
+        <image name="tab_dashboard_selected" width="29" height="21"/>
+        <image name="tab_learn" width="25" height="22"/>
+        <image name="tab_learn_selected" width="26" height="22"/>
         <image name="tab_profile" width="24" height="24"/>
+        <image name="tab_profile_selected" width="24" height="24"/>
     </resources>
 </document>
