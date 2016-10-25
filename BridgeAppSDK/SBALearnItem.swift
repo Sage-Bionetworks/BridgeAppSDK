@@ -1,5 +1,5 @@
 //
-//  MainTabViewController.swift
+//  SBALearnItem.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,61 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
-import BridgeAppSDK
+import Foundation
 
-class MainTabViewController: UITabBarController, SBARootViewControllerProtocol {
+public protocol SBALearnItem: class {
     
-    var contentHidden = false {
-        didSet {
-            guard contentHidden != oldValue && isViewLoaded else { return }
-            self.childViewControllers.first?.view.isHidden = contentHidden
+    /**
+     Check validity as a SBALearnItem
+     */
+    func isValidLearnItem() -> Bool
+    
+    /**
+     Title to show in the Learn tab table view cell
+     */
+    var learnTitle: String! { get }
+    
+    /**
+     Content file (html) to load for the Detail view for this item
+     */
+    var learnURL: URL! { get }
+    
+    /**
+     The image to use as the item's icon in the Learn tab table view cell
+     */
+    var learnIconImage: UIImage? { get }
+}
+
+extension NSDictionary : SBALearnItem {
+    
+    public func isValidLearnItem() -> Bool {
+        guard let _ = self["title"] as? String, let _ = _learnURL
+        else {
+            assertionFailure("\(self) is missing required info")
+            return false
+        }
+        return true
+    }
+    
+    public var learnTitle : String! {
+        return self["title"] as! String
+    }
+    
+    public var learnURL: URL! {
+        return _learnURL!
+    }
+    fileprivate var _learnURL : URL? {
+        guard let urlString = self["details"] as? String else { return nil }
+        if urlString.hasPrefix("http") || urlString.hasPrefix("file") {
+            return URL(string: urlString)
+        }
+        else {
+            return SBAResourceFinder.shared.url(forResource: urlString, withExtension:"html")
         }
     }
-
+    
+    public var learnIconImage : UIImage? {
+        guard let imageName = self["iconImage"] as? String else { return nil }
+        return SBAResourceFinder.shared.image(forResource: imageName)?.withRenderingMode(.alwaysTemplate)
+    }
 }
