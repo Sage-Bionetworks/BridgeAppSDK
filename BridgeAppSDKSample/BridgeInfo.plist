@@ -11,7 +11,7 @@
 	<key>certificateName</key>
 	<string>sample-study</string>
 	<key>newsfeedURL</key>
-	<string>https://notsupported.null</string>
+	<string>https://bridgeappsdk.blogspot.com/feeds/posts/default?alt=rss</string>
 	<key>logoImageName</key>
 	<string>logo</string>
 	<key>appUpdateURL</key>
