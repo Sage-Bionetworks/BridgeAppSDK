@@ -185,6 +185,7 @@
 		FF92A6791DBFF13700614D1F /* Instructions.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A67B1DBFF13700614D1F /* Instructions.html */; };
 		FF92A67F1DBFF14000614D1F /* Withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6811DBFF14000614D1F /* Withdrawl.html */; };
 		FF92A6831DBFF21700614D1F /* LearnInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6821DBFF21700614D1F /* LearnInfo.plist */; };
+		FF92A6C71DC026AC00614D1F /* Withdraw.json in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6C91DC026AC00614D1F /* Withdraw.json */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */; };
 		FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */; };
@@ -593,6 +594,7 @@
 		FF92A67A1DBFF13700614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Instructions.html; sourceTree = "<group>"; };
 		FF92A6801DBFF14000614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Withdrawl.html; sourceTree = "<group>"; };
 		FF92A6821DBFF21700614D1F /* LearnInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LearnInfo.plist; sourceTree = "<group>"; };
+		FF92A6C81DC026AC00614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Withdraw.json; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSubtaskStep.swift; sourceTree = "<group>"; };
@@ -867,6 +869,7 @@
 		FB14FFE51C7686CC00E0D5AF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FF92A6AD1DC0224000614D1F /* Tasks */,
 				FFBBED581DA59B7E0010AA83 /* Animations */,
 				FF63D0FE1CD03EEF007ADEE5 /* Licenses */,
 				FB14FFE61C7686EB00E0D5AF /* SBAResourceFinder.swift */,
@@ -1213,6 +1216,14 @@
 				FF92A6611DBFF10A00614D1F /* pantspocket.png */,
 			);
 			name = Learn;
+			sourceTree = "<group>";
+		};
+		FF92A6AD1DC0224000614D1F /* Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				FF92A6C91DC026AC00614D1F /* Withdraw.json */,
+			);
+			name = Tasks;
 			sourceTree = "<group>";
 		};
 		FF9D4C8E1CA324F9001C293C /* User */ = {
@@ -1764,6 +1775,7 @@
 				FFBBED9B1DA5C68B0010AA83 /* consent_understanding_to_activities@3x.m4v in Resources */,
 				FFBBED931DA5C68B0010AA83 /* consent_overview_to_activities@2x.m4v in Resources */,
 				FFBBED981DA5C68B0010AA83 /* consent_overview_to_activities@3x.m4v in Resources */,
+				FF92A6C71DC026AC00614D1F /* Withdraw.json in Resources */,
 				FFBBED991DA5C68B0010AA83 /* consent_overview_to_understanding@3x.m4v in Resources */,
 				FF36DCBF1DB6CE840034C85D /* SBAToggleTableViewCell.xib in Resources */,
 				FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */,
@@ -2267,6 +2279,14 @@
 				FF92A6801DBFF14000614D1F /* Base */,
 			);
 			name = Withdrawl.html;
+			sourceTree = "<group>";
+		};
+		FF92A6C91DC026AC00614D1F /* Withdraw.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF92A6C81DC026AC00614D1F /* Base */,
+			);
+			name = Withdraw.json;
 			sourceTree = "<group>";
 		};
 		FFC15FD31CFE439500C29AF7 /* Main.storyboard */ = {

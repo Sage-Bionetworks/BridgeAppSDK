@@ -333,7 +333,39 @@ public extension SBAUserWrapper {
     }
     
     fileprivate func promptForWithdraw() {
-        // TODO: show view controller to get reason
+        guard let json = SBAResourceFinder.shared.json(forResource: "Withdraw"),
+            let task = (json as NSDictionary).createORKTask()
+        else {
+            assertionFailure("Failed to create withdrawl survey")
+            self.withdrawFromStudy(reason: nil, completion: { [weak self] (_) in
+                self?.appDelegate?.showAppropriateViewController(animated: true)
+                })
+            return
+        }
+
+        // Setup the task view controller with a finish handler
+        let taskVC = SBATaskViewController(task: task, taskRun: nil)
+        taskVC.continueButtonText = Localization.localizedString("WITHDRAW_TITLE")
+        taskVC.finishTaskHandler = { (taskViewController, reason, _) -> Void in
+            guard reason == .completed else { return }
+            let withdrawReason: String? = {
+                let stepResult = taskViewController.result.results?.last as? ORKStepResult
+                let result = stepResult?.results?.last
+                if let choiceResult = result as? ORKChoiceQuestionResult {
+                    return choiceResult.choiceAnswers?.first as? String
+                }
+                else if let textResult = result as? ORKTextQuestionResult {
+                    return textResult.textAnswer
+                }
+                return nil
+            }()
+            self.withdrawFromStudy(reason: withdrawReason, completion: { [weak self] (_) in
+                self?.appDelegate?.showAppropriateViewController(animated: false)
+                taskViewController.dismiss(animated: true, completion: nil)
+            })
+        }
+        
+        self.appDelegate?.presentViewController(taskVC, animated: true, completion: nil)
     }
     
     /**
@@ -342,7 +374,7 @@ public extension SBAUserWrapper {
      @param reason      Reason for withdrawing from study
      @param completion  Completion handler
      */
-    public func withdrawFromStudy(reason:String, completion: ((Error?) -> Void)?) {
+    public func withdrawFromStudy(reason:String?, completion: ((Error?) -> Void)?) {
         guard let subpop = subpopulationGuid else {
             // Valid subpopulation was not found. Just reset and call completion
             self.resetStoredUserData()
@@ -359,7 +391,7 @@ public extension SBAUserWrapper {
      @param reason              Reason for withdrawing from study
      @param completion          Completion handler
      */
-    public func withdrawFromStudy(subpopulationGuid:String, reason:String, completion: ((Error?) -> Void)?) {
+    public func withdrawFromStudy(subpopulationGuid:String, reason:String?, completion: ((Error?) -> Void)?) {
         // Withdraw from the study
         SBABridgeManager.withdrawConsent(forSubpopulation: subpopulationGuid, reason: reason) { [weak self] (_, error) in
             self?.callCompletionOnMain(error, completion: completion)

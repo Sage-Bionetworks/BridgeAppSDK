@@ -36,6 +36,9 @@ import BridgeAppSDK
 
 class ProfileTableViewController: UITableViewController, SBASharedInfoController {
     
+    // TODO: syoung 10/26/2016 Stub out example of updating demographic info to server
+    // TODO: syoung 10/26/2016 Stub out example for pausing/resuming study
+    
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
