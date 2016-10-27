@@ -183,7 +183,7 @@
 		FF92A6731DBFF12E00614D1F /* Contact Us.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6751DBFF12E00614D1F /* Contact Us.html */; };
 		FF92A6761DBFF13200614D1F /* How Long.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6781DBFF13200614D1F /* How Long.html */; };
 		FF92A6791DBFF13700614D1F /* Instructions.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A67B1DBFF13700614D1F /* Instructions.html */; };
-		FF92A67F1DBFF14000614D1F /* Withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6811DBFF14000614D1F /* Withdrawl.html */; };
+		FF92A67F1DBFF14000614D1F /* Withdrawal.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6811DBFF14000614D1F /* Withdrawal.html */; };
 		FF92A6831DBFF21700614D1F /* LearnInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6821DBFF21700614D1F /* LearnInfo.plist */; };
 		FF92A6C71DC026AC00614D1F /* Withdraw.json in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6C91DC026AC00614D1F /* Withdraw.json */; };
 		FF92A6DA1DC15FE700614D1F /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */; };
@@ -593,10 +593,10 @@
 		FF92A6741DBFF12E00614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = "Base.lproj/Contact Us.html"; sourceTree = "<group>"; };
 		FF92A6771DBFF13200614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = "Base.lproj/How Long.html"; sourceTree = "<group>"; };
 		FF92A67A1DBFF13700614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Instructions.html; sourceTree = "<group>"; };
-		FF92A6801DBFF14000614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Withdrawl.html; sourceTree = "<group>"; };
+		FF92A6801DBFF14000614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Withdrawal.html; sourceTree = "<group>"; };
 		FF92A6821DBFF21700614D1F /* LearnInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LearnInfo.plist; sourceTree = "<group>"; };
-		FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		FF92A6C81DC026AC00614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Withdraw.json; sourceTree = "<group>"; };
+		FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSubtaskStep.swift; sourceTree = "<group>"; };
@@ -1214,7 +1214,7 @@
 				FF92A6751DBFF12E00614D1F /* Contact Us.html */,
 				FF92A6781DBFF13200614D1F /* How Long.html */,
 				FF92A67B1DBFF13700614D1F /* Instructions.html */,
-				FF92A6811DBFF14000614D1F /* Withdrawl.html */,
+				FF92A6811DBFF14000614D1F /* Withdrawal.html */,
 				FF92A6601DBFF10A00614D1F /* Learn_section.css */,
 				FF92A6611DBFF10A00614D1F /* pantspocket.png */,
 			);
@@ -1743,7 +1743,7 @@
 				FF78CF5E1D00C125002C456D /* Memory.json in Resources */,
 				FF78CF641D00C130002C456D /* Voice.json in Resources */,
 				FF78CF3A1D00B67B002C456D /* consent_16future.html in Resources */,
-				FF92A67F1DBFF14000614D1F /* Withdrawl.html in Resources */,
+				FF92A67F1DBFF14000614D1F /* Withdrawal.html in Resources */,
 				FF78CF161D00B628002C456D /* consent_4sensordata.html in Resources */,
 				FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */,
 				FF78CF371D00B675002C456D /* consent_15think.html in Resources */,
@@ -2277,12 +2277,12 @@
 			name = Instructions.html;
 			sourceTree = "<group>";
 		};
-		FF92A6811DBFF14000614D1F /* Withdrawl.html */ = {
+		FF92A6811DBFF14000614D1F /* Withdrawal.html */ = {
 			isa = PBXVariantGroup;
 			children = (
 				FF92A6801DBFF14000614D1F /* Base */,
 			);
-			name = Withdrawl.html;
+			name = Withdrawal.html;
 			sourceTree = "<group>";
 		};
 		FF92A6C91DC026AC00614D1F /* Withdraw.json */ = {

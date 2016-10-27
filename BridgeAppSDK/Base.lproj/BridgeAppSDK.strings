@@ -133,7 +133,7 @@
 "SBA_SURVEY_LOADING_TEXT" = "Please wait while the survey is downloaded."; // Message for a loading a survey.
 "SBA_COPYRIGHT" = "Copyright"; // Text on the copyright button.
 
-/* Withdrawl */
+/* Withdrawal */
 "WITHDRAW_TITLE" = "Withdraw";  // Title for the button and message for confirming intention to withdraw from the study
 "WITHDRAW_CONFIRMATION_MESSAGE" = "Are you sure you want to completely withdraw from the study? You will be logged out of your account and no further data will be collected. If you wish to re-enroll at a later date, you will be asked to give informed consent again."; // Message confirming withdraw from study.
 
