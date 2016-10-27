@@ -336,7 +336,7 @@ public extension SBAUserWrapper {
         guard let json = SBAResourceFinder.shared.json(forResource: "Withdraw"),
             let task = (json as NSDictionary).createORKTask()
         else {
-            assertionFailure("Failed to create withdrawl survey")
+            assertionFailure("Failed to create withdrawal survey")
             self.withdrawFromStudy(reason: nil, completion: { [weak self] (_) in
                 self?.appDelegate?.showAppropriateViewController(animated: true)
                 })

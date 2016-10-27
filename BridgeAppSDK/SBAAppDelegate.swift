@@ -47,7 +47,7 @@ public protocol SBAAppInfoDelegate: NSObjectProtocol {
 
 /**
  The BridgeAppSDK delegate is used to define additional functionality on the app delegate.
- It is used throughout this SDK with the assumtion that the UIAppDelegate will conform to 
+ It is used throughout this SDK with the assumption that the UIAppDelegate will conform to 
  the methods defined by this protocol.
  */
 @objc

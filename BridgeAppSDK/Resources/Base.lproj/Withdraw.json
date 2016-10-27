@@ -5,7 +5,7 @@
      {
      "identifier"       : "withdraw",
      "title"            : "Withdrawal Survey",
-     "text"             : "Please help us make our study better by explaining the reasons for your withdrawl.",
+     "text"             : "Please help us make our study better by explaining the reasons for your withdrawal.",
      "type"             : "singleChoiceText",
      "items" : [
                 "This study was taking up too much of my time.",
