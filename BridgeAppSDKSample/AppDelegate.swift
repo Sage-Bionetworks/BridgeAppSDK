@@ -40,5 +40,39 @@ class AppDelegate: SBAAppDelegate {
     override var requiredPermissions: SBAPermissionsType {
         return [.coremotion, .localNotifications, .microphone]
     }
+    
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        super.applicationDidBecomeActive(application)
+        
+        // Listen for updates to the news feed
+        NotificationCenter.default.addObserver(self, selector: #selector(newsfeedUpdated), name: NSNotification.Name(rawValue: SBANewsFeedUpdateNotificationKey), object: nil)
+        newsfeedManager.fetchFeed(completion: nil)
+    }
+    
+    override func applicationWillResignActive(_ application: UIApplication) {
+        super.applicationWillResignActive(application)
+        
+        // remove notification listener
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: SBANewsFeedUpdateNotificationKey), object: nil)
+    }
+    
+    lazy var newsfeedManager: SBANewsFeedManager = {
+        return SBANewsFeedManager()
+    }()
+    
+    func newsfeedUpdated(_ notification: Notification) {
+        updateNewsFeedBadge()
+    }
+    
+    func updateNewsFeedBadge() {
+        guard let tabController = window?.rootViewController as? UITabBarController,
+            let tabItem = tabController.tabBar.items?.filter({ $0.tag == NewsfeedTableViewController.tabItemTag }).first
+            else {
+                return
+        }
+        
+        let unreadCount = newsfeedManager.unreadPostsCount()
+        tabItem.badgeValue = (unreadCount == 0) ? nil : "\(unreadCount)"
+    }
         
 }

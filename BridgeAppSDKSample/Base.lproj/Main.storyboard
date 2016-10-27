@@ -21,6 +21,7 @@
                         <segue destination="gs0-Sz-83y" kind="relationship" relationship="viewControllers" id="xwv-17-ycN"/>
                         <segue destination="ESs-gw-ReN" kind="relationship" relationship="viewControllers" id="iFU-wQ-egd"/>
                         <segue destination="rdv-jj-Ohi" kind="relationship" relationship="viewControllers" id="dw8-4N-yBm"/>
+                        <segue destination="orR-70-T5G" kind="relationship" relationship="viewControllers" id="fgs-fs-hrV"/>
                         <segue destination="gRB-0l-QeY" kind="relationship" relationship="viewControllers" id="CQD-Xn-VG8"/>
                     </connections>
                 </tabBarController>
@@ -436,6 +437,121 @@
             </objects>
             <point key="canvasLocation" x="1404" y="1315"/>
         </scene>
+        <!--News Feed-->
+        <scene sceneID="sz7-P7-ACD">
+            <objects>
+                <tableViewController title="News Feed" id="3ez-1F-3hc" customClass="NewsfeedTableViewController" customModule="BridgeAppSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="140" sectionHeaderHeight="28" sectionFooterHeight="28" id="NaT-92-76q">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="aGV-jF-NMS">
+                            <rect key="frame" x="0.0" y="292" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsfeedCell" rowHeight="140" id="KkP-Cv-keF" customClass="SBANewsfeedTableViewCell" customModule="BridgeAppSDK">
+                                <rect key="frame" x="0.0" y="92" width="375" height="140"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KkP-Cv-keF" id="5yT-yS-pYS">
+                                    <frame key="frameInset" width="375" height="139"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="06/22/15" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOj-li-btD">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="3hF-yR-tH1"/>
+                                                <constraint firstAttribute="width" constant="63" id="dBP-XD-Tyf"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.5568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today we released an update to the parkinson mPower Study app. Update now from the app store." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eec-cP-c3p">
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xvs-lg-pCh">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="58" id="vTP-pO-iwe"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                            <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="eec-cP-c3p" firstAttribute="top" secondItem="Xvs-lg-pCh" secondAttribute="bottom" constant="8" id="3Sv-wq-W4j"/>
+                                        <constraint firstAttribute="bottom" secondItem="eec-cP-c3p" secondAttribute="bottom" constant="10" id="8wt-zm-Cjj"/>
+                                        <constraint firstAttribute="trailing" secondItem="eec-cP-c3p" secondAttribute="trailing" constant="20" id="CGB-C5-IOf"/>
+                                        <constraint firstItem="Xvs-lg-pCh" firstAttribute="top" secondItem="5yT-yS-pYS" secondAttribute="top" constant="15" id="ICd-Tr-zPw"/>
+                                        <constraint firstAttribute="trailing" secondItem="FOj-li-btD" secondAttribute="trailing" constant="15" id="M5d-Pc-9r2"/>
+                                        <constraint firstItem="Xvs-lg-pCh" firstAttribute="leading" secondItem="5yT-yS-pYS" secondAttribute="leading" constant="15" id="RCW-ee-LoX"/>
+                                        <constraint firstItem="FOj-li-btD" firstAttribute="top" secondItem="5yT-yS-pYS" secondAttribute="top" constant="18" id="UEk-Ta-hpm"/>
+                                        <constraint firstItem="FOj-li-btD" firstAttribute="leading" secondItem="Xvs-lg-pCh" secondAttribute="trailing" constant="8" id="bCs-tx-3HH"/>
+                                        <constraint firstItem="eec-cP-c3p" firstAttribute="leading" secondItem="5yT-yS-pYS" secondAttribute="leading" constant="15" id="lap-rl-NPF"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="FOj-li-btD" id="4jc-CS-JDB"/>
+                                    <outlet property="subtitleLabel" destination="eec-cP-c3p" id="t7v-Js-vWS"/>
+                                    <outlet property="titleLabel" destination="Xvs-lg-pCh" id="tMM-mP-t4w"/>
+                                    <segue destination="jXA-W9-Sk0" kind="show" id="Uta-EE-TCj"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmptyCell" rowHeight="60" id="N5Q-bK-TOh">
+                                <rect key="frame" x="0.0" y="232" width="375" height="60"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="N5Q-bK-TOh" id="hzO-ku-NEs">
+                                    <frame key="frameInset" width="375" height="59"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There's nothing here yet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pV9-do-9S9">
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="pV9-do-9S9" firstAttribute="bottom" secondItem="hzO-ku-NEs" secondAttribute="bottomMargin" id="5hk-xw-9BD"/>
+                                        <constraint firstItem="pV9-do-9S9" firstAttribute="top" secondItem="hzO-ku-NEs" secondAttribute="topMargin" constant="24" id="HLP-oP-Opb"/>
+                                        <constraint firstItem="pV9-do-9S9" firstAttribute="leading" secondItem="hzO-ku-NEs" secondAttribute="leadingMargin" constant="24" id="QcF-cp-eto"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="pV9-do-9S9" secondAttribute="trailing" constant="24" id="hV9-2Y-SoO"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="3ez-1F-3hc" id="cy2-xH-nyY"/>
+                            <outlet property="delegate" destination="3ez-1F-3hc" id="JeG-h9-X7Y"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="News Feed" id="Vn8-V8-GqY"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QDH-Za-KTP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1407" y="2060"/>
+        </scene>
+        <!--News Feed-->
+        <scene sceneID="43Y-5T-2Fy">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="orR-70-T5G" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" tag="4" title="News Feed" image="tab_newsfeed" selectedImage="tab_newsfeed_selected" id="ZSh-bW-Vzj"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="iWe-wr-2P2">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3ez-1F-3hc" kind="relationship" relationship="rootViewController" id="ENw-n8-t9B"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hwf-2g-Y9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2129" y="2060"/>
+        </scene>
     </scenes>
     <resources>
         <image name="completion-check" width="88" height="88"/>
@@ -447,7 +563,12 @@
         <image name="tab_dashboard_selected" width="29" height="21"/>
         <image name="tab_learn" width="25" height="22"/>
         <image name="tab_learn_selected" width="26" height="22"/>
+        <image name="tab_newsfeed" width="21" height="24"/>
+        <image name="tab_newsfeed_selected" width="21" height="24"/>
         <image name="tab_profile" width="24" height="24"/>
         <image name="tab_profile_selected" width="24" height="24"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Uta-EE-TCj"/>
+    </inferredMetricsTieBreakers>
 </document>
