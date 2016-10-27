@@ -186,6 +186,7 @@
 		FF92A6791DBFF13700614D1F /* Instructions.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A67B1DBFF13700614D1F /* Instructions.html */; };
 		FF92A67F1DBFF14000614D1F /* Withdrawl.html in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6811DBFF14000614D1F /* Withdrawl.html */; };
 		FF92A6831DBFF21700614D1F /* LearnInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6821DBFF21700614D1F /* LearnInfo.plist */; };
+		FF92A6DA1DC15FE700614D1F /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */; };
 		FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */; };
@@ -595,6 +596,7 @@
 		FF92A67A1DBFF13700614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Instructions.html; sourceTree = "<group>"; };
 		FF92A6801DBFF14000614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Withdrawl.html; sourceTree = "<group>"; };
 		FF92A6821DBFF21700614D1F /* LearnInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LearnInfo.plist; sourceTree = "<group>"; };
+		FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSubtaskStep.swift; sourceTree = "<group>"; };
@@ -827,6 +829,7 @@
 				FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */,
 				FF92A65C1DBFEF6100614D1F /* LearnTableViewController.swift */,
 				FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */,
+				FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */,
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
@@ -1805,6 +1808,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF92A6DA1DC15FE700614D1F /* NewsfeedTableViewController.swift in Sources */,
 				FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */,
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
 				FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */,
