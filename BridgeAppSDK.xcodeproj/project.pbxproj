@@ -736,6 +736,7 @@
 				FF722BF51D7759EB004B2F8B /* News Feed */,
 				80F554CB1CD3F21D00C38053 /* Notifications */,
 				16BF5B611BE29643007C79C6 /* Onboarding */,
+				FFAAF62A1CC0916800500929 /* Permissions */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
 				FBC45E711C758DBA007AA424 /* Library */,
@@ -772,7 +773,6 @@
 			isa = PBXGroup;
 			children = (
 				FF5051B41D664E130065E677 /* All Set */,
-				FFAAF62A1CC0916800500929 /* Permissions */,
 				FBF1B6A31CAAED02007C1082 /* Consent */,
 				FBF1B6AD1CAAED0F007C1082 /* Account */,
 				FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */,

@@ -38,7 +38,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
 static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManagerErrorDomain";
 
@@ -205,25 +205,25 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
     switch (type) {
             
         case SBAPermissionsTypeHealthKit:
-            return NSLocalizedStringWithDefaultValue(@"SBA_HEALTHKIT_PERMISSIONS_TITLE", nil, SBABundle(), @"Health Kit", @"");
+            return [Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_TITLE"];
             
         case SBAPermissionsTypeLocation:
-            return NSLocalizedStringWithDefaultValue(@"SBA_LOCATION_PERMISSIONS_TITLE", nil, SBABundle(), @"Location Services", @"");
+            return [Localization localizedString:@"SBA_LOCATION_PERMISSIONS_TITLE"];
 
         case SBAPermissionsTypeCoremotion:
-            return NSLocalizedStringWithDefaultValue(@"SBA_COREMOTION_PERMISSIONS_TITLE", nil, SBABundle(), @"Motion Activity", @"");
+            return [Localization localizedString:@"SBA_COREMOTION_PERMISSIONS_TITLE"];
 
         case SBAPermissionsTypeLocalNotifications:
-            return NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_TITLE", nil, SBABundle(), @"Notifications", @"");
+            return [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_TITLE"];
 
         case SBAPermissionsTypeMicrophone:
-            return NSLocalizedStringWithDefaultValue(@"SBA_MICROPHONE_PERMISSIONS_TITLE", nil, SBABundle(), @"Microphone", @"");
+            return [Localization localizedString:@"SBA_MICROPHONE_PERMISSIONS_TITLE"];
             
         case SBAPermissionsTypeCamera:
-            return NSLocalizedStringWithDefaultValue(@"SBA_CAMERA_PERMISSIONS_TITLE", nil, SBABundle(), @"Camera", @"");
+            return [Localization localizedString:@"SBA_CAMERA_PERMISSIONS_TITLE"];
             
         case SBAPermissionsTypePhotoLibrary:
-            return NSLocalizedStringWithDefaultValue(@"SBA_PHOTOLIBRARY_PERMISSIONS_TITLE", nil, SBABundle(), @"Photo Library", @"");
+            return [Localization localizedString:@"SBA_PHOTOLIBRARY_PERMISSIONS_TITLE"];
             
         default:
             return @"";
@@ -233,9 +233,9 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
 - (NSString *)permissionDescriptionForType:(SBAPermissionsType)type {
     switch (type) {
         case SBAPermissionsTypeHealthKit:
-            return NSLocalizedStringWithDefaultValue(@"SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Press “Allow” to individually specify which general health information the app may read from and write to HealthKit", @"");
+            return [Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION"];
         case SBAPermissionsTypeLocalNotifications:
-            return NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_DESCRIPTION", nil, SBABundle(), @"Allowing notifications enables the app to show you reminders for activity sessions.", @"");
+            return [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_DESCRIPTION"];
         case SBAPermissionsTypeLocation:
             return [self bundlePermissionDescriptionForKey: @"NSLocationWhenInUseUsageDescription" defaultValue:@"Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared."];
         case SBAPermissionsTypeCoremotion:
@@ -267,28 +267,28 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
     
     switch (type) {
         case SBAPermissionsTypeHealthKit:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_HEALTHKIT_PERMISSIONS_ERROR", nil, SBABundle(), @"Please go to Settings -> Privacy -> Health -> %@ to re-enable.", nil), appName];
+            message = [NSString localizedStringWithFormat:[Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_ERROR"], appName];
             break;
         case SBAPermissionsTypeLocalNotifications:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_REMINDER_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings -> Notifications and enable 'Allow Notifications'", nil), appName];
+            message = [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_ERROR"];
             break;
         case SBAPermissionsTypeLocation:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_LOCATION_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings -> Location and check 'Always'", nil), appName];
+            message = [Localization localizedString:@"SBA_LOCATION_PERMISSIONS_ERROR"];
             break;
         case SBAPermissionsTypeCoremotion:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_COREMOTION_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings and enable Motion Activity.", nil), appName];
+            message = [Localization localizedString:@"SBA_COREMOTION_PERMISSIONS_ERROR"];
             break;
         case SBAPermissionsTypeMicrophone:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_MICROPHONE_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings and enable Microphone", nil), appName];
+            message = [Localization localizedString:@"SBA_MICROPHONE_PERMISSIONS_ERROR"];
             break;
         case SBAPermissionsTypeCamera:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_CAMERA_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings and enable Camera", nil), appName];
+            message = [Localization localizedString:@"SBA_CAMERA_PERMISSIONS_ERROR"];
             break;
         case SBAPermissionsTypePhotoLibrary:
-            message = [NSString localizedStringWithFormat:NSLocalizedStringWithDefaultValue(@"SBA_PHOTOLIBRARY_PERMISSIONS_ERROR", nil, SBABundle(), @"Tap on Settings and enable Photos", nil), appName];
+            message = [Localization localizedString:@"SBA_PHOTOLIBRARY_PERMISSIONS_ERROR"];
             break;
         default:
-            message = [NSString stringWithFormat:@"Unknown permission type: %u", (unsigned int)type];
+            message = [Localization localizedString:@"SBA_GENERAL_PERMISSIONS_ERROR"];
             break;
     }
 
@@ -513,20 +513,7 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 #if TARGET_IPHONE_SIMULATOR
     return YES;
 #else
-    BOOL permission;
-    
-    // available iOS 9 and later: a way to check motion sensor recorder permissions without explicitly requesting them.
-    // TODO: emm 2016-07-12 redo the whole permissions thing so this situation doesn't even come up. We should
-    // be requesting permissions either ahead of time or as we first need them, but not asking the user for
-    // permission to even *ask* them for the permissions, which winds up with not being able to set them in Settings
-    // later if they don't allow us to ask the first time through.
-    if ([CMSensorRecorder class]) {
-        permission = [CMSensorRecorder isAuthorizedForRecording];
-    } else {
-        permission = (self.coreMotionPermissionStatus == SBAPermissionStatusAuthorized);
-    }
-    
-    return permission;
+    return [CMSensorRecorder isAuthorizedForRecording];
 #endif
 }
 
@@ -613,33 +600,18 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 //---------------------------------------------------------------
 
 - (BOOL)isPermissionsGrantedForPhotoLibrary {
-#if TARGET_IPHONE_SIMULATOR
-    return YES;
-#else
-    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
-    return status == ALAuthorizationStatusAuthorized;
-#endif
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    return (status == PHAuthorizationStatusAuthorized);
 }
 
 - (void)requestForPermissionPhotoLibraryWithCompletion:(SBAPermissionsBlock)completion {
-    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
-
-    [lib enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:^(ALAssetsGroup *group, BOOL * __unused stop) {
-        if (group == nil) {
-            // end of enumeration
-            if (completion) {
-                completion(YES, nil);
-            }
-        }
-
-    } failureBlock:^(NSError *error) {
-        if (error.code == ALAssetsLibraryAccessUserDeniedError) {
-            if (completion) {
-                completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypePhotoLibrary]);
-            }
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        BOOL isAuthorized = (status == PHAuthorizationStatusAuthorized);
+        NSError *error = isAuthorized ? nil : [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypePhotoLibrary];
+        if (completion) {
+            completion(isAuthorized, error);
         }
     }];
-
 }
 
 @end
