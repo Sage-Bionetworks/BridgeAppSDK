@@ -1,6 +1,6 @@
 //
-//  Smart4SURENewsfeedTableViewController.swift
-//  Smart4SURE
+//  NewsfeedTableViewController.swift
+//  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
