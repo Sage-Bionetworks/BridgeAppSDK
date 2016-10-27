@@ -56,7 +56,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         
         // TODO: syoung 06/09/2016 Implement consent and use onboarding manager for external ID
         // Add consent signature.
-        let appDelegate = UIApplication.shared.delegate as! SBAAppInfoDelegate
+        let appDelegate = UIApplication.shared.delegate as! SBABridgeAppSDKDelegate
         appDelegate.currentUser.consentSignature = SBAConsentSignature(identifier: "signature")
         
         // Create a task with an external ID and permissions steps and display the view controller

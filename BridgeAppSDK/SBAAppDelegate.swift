@@ -35,11 +35,33 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
+/**
+ The App Info Delegate is intended as a light-weight implementation for pointing to 
+ a current user and bridge info.
+ */
 @objc
-public protocol SBAAppInfoDelegate: class {
+public protocol SBAAppInfoDelegate: NSObjectProtocol {
     var currentUser: SBAUserWrapper { get }
     var bridgeInfo: SBABridgeInfo { get }
+}
+
+/**
+ The BridgeAppSDK delegate is used to define additional functionality on the app delegate.
+ It is used throughout this SDK with the assumption that the UIAppDelegate will conform to 
+ the methods defined by this protocol.
+ */
+@objc
+public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeAppDelegate, SBAAlertPresenter {
+    
+    // Start-up permissions
     var requiredPermissions: SBAPermissionsType { get }
+    
+    // Resource handling
+    func resourceBundle() -> Bundle
+    func path(forResource resourceName: String, ofType resourceType: String) -> String?
+    
+    // Show the appropriate view controller
+    func showAppropriateViewController(animated: Bool)
 }
 
 let SBAOnboardingJSONFilename = "Onboarding"
@@ -47,7 +69,7 @@ let SBAStudyOverviewStoryboardName = "StudyOverview"
 let SBAMainStoryboardName = "Main"
 
 @UIApplicationMain
-@objc open class SBAAppDelegate: UIResponder, UIApplicationDelegate, SBAAppInfoDelegate, SBABridgeAppSDKDelegate, SBBBridgeAppDelegate, SBAAlertPresenter, ORKPasscodeDelegate, ORKTaskViewControllerDelegate  {
+@objc open class SBAAppDelegate: UIResponder, SBABridgeAppSDKDelegate, ORKPasscodeDelegate, ORKTaskViewControllerDelegate  {
     
     open var window: UIWindow?
     

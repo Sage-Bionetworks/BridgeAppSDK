@@ -40,7 +40,7 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }()
     
     open class func defaultPermissions() -> SBAPermissionsType {
-        guard let appDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate else { return SBAPermissionsType() }
+        guard let appDelegate = UIApplication.shared.delegate as? SBABridgeAppSDKDelegate else { return SBAPermissionsType() }
         return appDelegate.requiredPermissions
     }
     

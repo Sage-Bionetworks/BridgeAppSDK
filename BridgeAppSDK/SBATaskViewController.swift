@@ -40,17 +40,31 @@ protocol SBATaskViewControllerStrongReference: class, NSSecureCoding {
 open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController, ORKTaskViewControllerDelegate, ORKTaskResultSource {
     
     /**
-     * A strongly held reference to a delegate or result source that is used by the
-     * associated view controller. If used, the strongly held reference should ONLY
-     * hold a weak reference to this view controller or else this will result in a 
-     * retain loop. Please excercise caution when using this reference.
+     A strongly held reference to a delegate or result source that is used by the
+     associated view controller. If used, the strongly held reference should ONLY
+     hold a weak reference to this view controller or else this will result in a
+     retain loop. Please excercise caution when using this reference.
      */
     var strongReference: SBATaskViewControllerStrongReference?
+    
+    /**
+     A completion handler that can be called instead of using the delegate pattern.
+    */
+    public var finishTaskHandler: ((ORKTaskViewController, ORKTaskViewControllerFinishReason, Error?) -> Void)?
 
     /**
      Pointer to the scheduleIdentifier for tracking this task via `SBBScheduledActivity`
      */
     open var scheduleIdentifier: String?
+    
+    /**
+     A localized string that represents the title of the Continue button.
+     
+     Most steps display a button that enables forward navigation. This button can have titles
+     such as Next, Continue, or Done. Use this property to override the forward navigation
+     button title for the step.
+     */
+    open var continueButtonText: String?
     
     /**
      Date indicating when the task was finished (verse when the completion handler will fire)
@@ -206,6 +220,9 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         if _internalDelegate != nil {
             _internalDelegate!.taskViewController(taskViewController, didFinishWith: reason, error: error)
         }
+        else if finishTaskHandler != nil {
+            finishTaskHandler?(taskViewController, reason, error)
+        }
         else {
             self.dismiss(animated: true, completion: nil)
         }
@@ -255,6 +272,9 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        if continueButtonText != nil {
+            stepViewController.continueButtonTitle = continueButtonText
+        }
         _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillAppear: stepViewController)
     }
     

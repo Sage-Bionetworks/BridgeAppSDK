@@ -33,7 +33,7 @@
 
 #import "SBAClassTypeMap.h"
 #import "SBAJSONObject.h"
-#import "SBABridgeAppSDKDelegate.h"
+#import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
 static NSString * const kClassTypeMapPListName = @"ClassTypeMap";
 
