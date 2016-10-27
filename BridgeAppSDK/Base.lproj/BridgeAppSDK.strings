@@ -122,6 +122,23 @@
 "SBA_PERMISSIONS_TITLE" = "Permissions"; // Title for the screen showing the required permissions
 "SBA_PERMISSIONS_FAILED_TITLE" = "Not Authorized"; // Title for a popup explaining that not all required permissions have been authorized.
 "SBA_PERMISSIONS_FAILED_MESSAGE" = "Go to Settings to change your permissions."; // General purpose message for a popup explaining that not all required permissions have been authorized.
+"SBA_HEALTHKIT_PERMISSIONS_TITLE" = "Health Kit";
+"SBA_LOCATION_PERMISSIONS_TITLE" = "Location Services";
+"SBA_COREMOTION_PERMISSIONS_TITLE" = "Motion Activity";
+"SBA_REMINDER_PERMISSIONS_TITLE" = "Notifications";
+"SBA_MICROPHONE_PERMISSIONS_TITLE" = "Microphone";
+"SBA_CAMERA_PERMISSIONS_TITLE" = "Camera";
+"SBA_PHOTOLIBRARY_PERMISSIONS_TITLE" = "Photo Library";
+"SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION" = "Press “Allow” to individually specify which general health information the app may read from and write to HealthKit";
+"SBA_REMINDER_PERMISSIONS_DESCRIPTION" = "Allowing notifications enables the app to show you reminders for activity sessions.";
+"SBA_HEALTHKIT_PERMISSIONS_ERROR" = "Please go to Settings -> Privacy -> Health -> %@ to re-enable.";
+"SBA_REMINDER_PERMISSIONS_ERROR" = "Tap on Settings -> Notifications and enable 'Allow Notifications'";
+"SBA_LOCATION_PERMISSIONS_ERROR" = "Tap on Settings -> Location and check 'Always'";
+"SBA_COREMOTION_PERMISSIONS_ERROR" = "Tap on Settings and enable Motion Activity.";
+"SBA_MICROPHONE_PERMISSIONS_ERROR" = "Tap on Settings and enable Microphone";
+"SBA_CAMERA_PERMISSIONS_ERROR" = "Tap on Settings and enable Camera";
+"SBA_PHOTOLIBRARY_PERMISSIONS_ERROR" = "Tap on Settings and enable Photos";
+"SBA_GENERAL_PERMISSIONS_ERROR" = "Please go to Settings and edit your permissions.";
 
 /* Failure messages */
 "SBA_NETWORK_FAILURE_TITLE" = "Could Not Complete"; // Title for a step or alert indicating a network failure
