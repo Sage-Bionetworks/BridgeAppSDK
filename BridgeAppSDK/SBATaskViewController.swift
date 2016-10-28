@@ -128,7 +128,11 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         }()
         if isCompletionStep {
             _finishedOn = Date()
-            stepViewController.view.tintColor = UIColor.greenTintColor()
+        }
+        if let completionVC = stepViewController as? ORKCompletionStepViewController {
+            // Default to green checkmark and showing the Done button
+            completionVC.checkmarkColor = UIColor.greenTintColor()
+            completionVC.shouldShowContinueButton = true
         }
         
         // If this is an audio step then change the tint color to blue
