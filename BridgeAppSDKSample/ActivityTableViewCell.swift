@@ -1,5 +1,5 @@
 //
-//  SBAActivityTableViewCell.swift
+//  ActivityTableViewCell.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,14 +31,40 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import BridgeAppSDK
 
-open class SBAActivityTableViewCell: UITableViewCell {
+class ActivityTableViewCell: SBAActivityTableViewCell {
+
+    @IBOutlet weak var uncheckedView: UIView!
+    @IBOutlet weak var checkmarkView: UIImageView!
     
-    @IBOutlet open var titleLabel: UILabel!
-    @IBOutlet open var subtitleLabel: UILabel!
-    @IBOutlet open var timeLabel: UILabel?
+    override var complete: Bool {
+        didSet {
+            self.checkmarkView.isHidden = !complete
+            self.uncheckedView.isHidden = complete
+        }
+    }
     
-    open var complete: Bool = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // hardcode the corner radius b/c for some reason the bounds
+        // are not correct after laying out subviews
+        self.uncheckedView.layer.borderColor = UIColor.lightGray.cgColor
+        self.uncheckedView.layer.borderWidth = 1
+        self.uncheckedView.layer.cornerRadius = 14
+        
+        updateTintColors()
+    }
+    
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+        updateTintColors()
+    }
+    
+    func updateTintColors() {
+        self.timeLabel?.textColor = self.tintColor
+    }
+    
 
 }

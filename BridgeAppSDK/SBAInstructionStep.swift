@@ -109,15 +109,6 @@ open class SBAInstructionStep: ORKInstructionStep, SBADirectNavigationRule, SBAC
         }
     }
     
-    override open func instantiateStepViewController(with result: ORKResult) -> ORKStepViewController {
-        let vc = super.instantiateStepViewController(with: result)
-        if let completionVC = vc as? ORKCompletionStepViewController {
-            // By default, override showing the continue button in the nav bar
-            completionVC.shouldShowContinueButton = true
-        }
-        return vc
-    }
-    
     // MARK: NSCopy
     
     override open func copy(with zone: NSZone? = nil) -> Any {
