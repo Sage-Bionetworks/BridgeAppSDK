@@ -191,6 +191,7 @@
 		FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */; };
 		FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */; };
 		FF97080B1DA78806006E8252 /* SBARootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF97080A1DA78806006E8252 /* SBARootViewController.swift */; };
+		FF9C47851DC3DA8500200313 /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9C47841DC3DA8500200313 /* ActivityTableViewCell.swift */; };
 		FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */; };
 		FF9D4C5B1CA217A7001C293C /* SBABridgeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */; };
 		FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D4C901CA32536001C293C /* SBAUser.swift */; };
@@ -601,6 +602,7 @@
 		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSubtaskStep.swift; sourceTree = "<group>"; };
 		FF97080A1DA78806006E8252 /* SBARootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBARootViewController.swift; sourceTree = "<group>"; };
+		FF9C47841DC3DA8500200313 /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
 		FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppDelegate.swift; sourceTree = "<group>"; };
 		FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeInfo.swift; sourceTree = "<group>"; };
 		FF9D4C901CA32536001C293C /* SBAUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUser.swift; sourceTree = "<group>"; };
@@ -824,6 +826,7 @@
 			isa = PBXGroup;
 			children = (
 				80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */,
+				FF9C47841DC3DA8500200313 /* ActivityTableViewCell.swift */,
 				FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */,
 				FF92A65C1DBFEF6100614D1F /* LearnTableViewController.swift */,
 				FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */,
@@ -1819,6 +1822,7 @@
 				FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */,
 				FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */,
 				80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */,
+				FF9C47851DC3DA8500200313 /* ActivityTableViewCell.swift in Sources */,
 				FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */,
 				FF92A65D1DBFEF6100614D1F /* LearnTableViewController.swift in Sources */,
 			);
