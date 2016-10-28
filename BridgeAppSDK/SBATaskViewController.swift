@@ -110,7 +110,15 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
     
     open override func stepViewControllerWillAppear(_ stepViewController: ORKStepViewController) {
+        updateStepViewController(stepViewController)
         super.stepViewControllerWillAppear(stepViewController)
+    }
+    
+    /**
+     Handle various customizations of the step view controller BEFORE calling `stepViewControllerWillAppear`
+     on the delegate.
+    */
+    open func updateStepViewController(_ stepViewController: ORKStepViewController) {
         guard let step = stepViewController.step else { return }
         
         // If this is a learn more step then set the button title
@@ -119,7 +127,8 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
             stepViewController.learnMoreButtonTitle = learnMore.learnMoreButtonText
         }
         
-        // If this is a completion step then change the tint color to green
+        // If this is a completion step then mark the finsihed on date
+        // as NOW (instead of when this step is dismissed)
         let isCompletionStep: Bool = {
             if let directStep = step as? SBAInstructionStep {
                 return directStep.isCompletionStep
@@ -129,8 +138,10 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         if isCompletionStep {
             _finishedOn = Date()
         }
+        
+        // If this is an ORKCompletionStepViewController then set the tint color for the 
+        // checkmark and the default Done button placement.
         if let completionVC = stepViewController as? ORKCompletionStepViewController {
-            // Default to green checkmark and showing the Done button
             completionVC.checkmarkColor = UIColor.greenTintColor()
             completionVC.shouldShowContinueButton = true
         }
@@ -138,6 +149,12 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
         // If this is an audio step then change the tint color to blue
         if step is ORKAudioStep {
             stepViewController.view.tintColor = UIColor.blueTintColor()
+        }
+        
+        // If there is a continue button text that should be used for all steps, then
+        // set that here.
+        if continueButtonText != nil {
+            stepViewController.continueButtonTitle = continueButtonText
         }
     }
 
@@ -276,9 +293,6 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
-        if continueButtonText != nil {
-            stepViewController.continueButtonTitle = continueButtonText
-        }
         _internalDelegate?.taskViewController?(taskViewController, stepViewControllerWillAppear: stepViewController)
     }
     
