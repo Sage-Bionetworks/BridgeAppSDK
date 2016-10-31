@@ -33,97 +33,73 @@
 
 import Foundation
 
-extension SBAPermissionsType {
-    
-    init(items: [UInt]?) {
-        let rawValue = items?.reduce(0, |) ?? 0
-        self.init(rawValue: rawValue)
-    }
-    
-    init(key: String?) {
-        guard let key = key else {
-            self.init(rawValue: 0)
-            return
-        }
-        switch key {
-        case "camera":
-            self.init(rawValue:SBAPermissionsType.camera.rawValue)
-        case "coremotion":
-            self.init(rawValue:SBAPermissionsType.coremotion.rawValue)
-        case "healthKit":
-            self.init(rawValue:SBAPermissionsType.healthKit.rawValue)
-        case "location":
-            self.init(rawValue:SBAPermissionsType.location.rawValue)
-        case "localNotifications":
-            self.init(rawValue:SBAPermissionsType.localNotifications.rawValue)
-        case "microphone":
-            self.init(rawValue:SBAPermissionsType.microphone.rawValue)
-        case "photoLibrary":
-            self.init(rawValue:SBAPermissionsType.photoLibrary.rawValue)
-        default:
-            let intValue = UInt(key) ?? 0
-            self.init(rawValue: intValue)
-        }
-    }
-    
-    var items: [UInt] {
-        var items: [UInt] = []
-        for ii in UInt(0)...UInt(16) {
-            let rawValue = 1 << ii
-            let member = SBAPermissionsType(rawValue: rawValue)
-            if self.contains(member) {
-                items.append(rawValue)
-            }
-        }
-        return items
-    }
-}
-
 extension SBAPermissionsManager {
     
     public static var shared: SBAPermissionsManager {
         return __shared()
     }
     
-    public func requestPermissions(_ permissions: SBAPermissionsType, alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
-        
+    public func requestPermissions(for permissions: [SBAPermissionObjectType], alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
+    
         // Exit early if there are no permissions
-        let items = permissions.items
-        guard items.count > 0 else {
+        guard permissions.count > 0 else {
             completion?(true)
             return
         }
-        
-        // Use a dispatch group to iterate through all the permissions and accept them as
-        // a batch, showing an alert for each if not authorized.
-        let dispatchGroup = DispatchGroup()
-        var allGranted = true
-        
-        for item in items {
-            let permission = SBAPermissionsType(rawValue: item)
-            if !self.isPermissionsGranted(for: permission) {
-                dispatchGroup.enter()
-                self.requestPermission(for: permission, withCompletion: { [weak alertPresenter] (success, error) in
-                    allGranted = allGranted && success
-                    if !success, let presenter = alertPresenter {
+
+        DispatchQueue.main.async(execute: {
+            
+            // Use an enumerator to recursively step thorough each permission and request permission
+            // for that type.
+            var allGranted = true
+            let eumerator = (permissions as NSArray).objectEnumerator()
+            
+            func recursiveRequest() {
+                guard let permission = eumerator.nextObject() as? SBAPermissionObjectType else {
+                    completion?(allGranted)
+                    return
+                }
+
+                if self.isPermissionGranted(for: permission) {
+                    recursiveRequest()
+                }
+                else {
+                    self.requestPermission(for: permission, completion: { [weak alertPresenter] (success, error) in
                         DispatchQueue.main.async(execute: {
-                            let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
-                            let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
-                            presenter.showAlertWithOk(title: title, message: message, actionHandler: { (_) in
-                                dispatchGroup.leave()
-                            })
+                            allGranted = allGranted && success
+                            if !success, let presenter = alertPresenter {
+                                
+                                    let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
+                                    let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
+                                    presenter.showAlertWithOk(title: title, message: message, actionHandler: { (_) in
+                                        recursiveRequest()
+                                    })
+                                
+                            }
+                            else {
+                                recursiveRequest()
+                            }
                         })
-                    }
-                    else {
-                        dispatchGroup.leave()
-                    }
-                })
+                    })
+                }
             }
-        }
-        
-        dispatchGroup.notify(queue: DispatchQueue.main) {
-            completion?(allGranted)
-        }
+            
+            recursiveRequest()
+        })
     }
     
+    
+    // MARK: Deprecated methods included for reverse-compatibility
+    
+    @available(*, deprecated)
+    @objc(permissionTitleForType:)
+    open func permissionTitle(for type: SBAPermissionsType) -> String {
+        return self.typeIdentifierFor(for: type)?.defaultTitle() ?? ""
+    }
+    
+    @available(*, deprecated)
+    @objc(permissionDescriptionForType:)
+    open func permissionDescription(for type: SBAPermissionsType) -> String {
+        return self.typeIdentifierFor(for: type)?.defaultDescription() ?? ""
+    }
 }

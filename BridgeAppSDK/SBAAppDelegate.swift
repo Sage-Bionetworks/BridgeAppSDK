@@ -54,6 +54,8 @@ public protocol SBAAppInfoDelegate: NSObjectProtocol {
 public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeAppDelegate, SBAAlertPresenter {
     
     // Start-up permissions
+    @available(*, deprecated, message:"Use `permissionTypeItems` on `SBABridgeInfo` instead.")
+    @objc optional
     var requiredPermissions: SBAPermissionsType { get }
     
     // Resource handling
@@ -147,7 +149,7 @@ let SBAMainStoryboardName = "Main"
     }
     
     open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        SBAPermissionsManager.shared.appDidRegister(forRemoteNotifications: notificationSettings)
+        SBAPermissionsManager.shared.appDidRegister(forNotifications: notificationSettings)
     }
     
     open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
@@ -178,13 +180,6 @@ let SBAMainStoryboardName = "Main"
         return _currentUser
     }
     private let _currentUser = SBAUser()
-    
-    /**
-     Override to set the permissions for this application.
-    */
-    open var requiredPermissions: SBAPermissionsType {
-        return SBAPermissionsType()
-    }
     
     private func initializeBridgeServerConnection() {
         

@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return A new data object.
  */
-- (instancetype)initWithCoder:(NSCoder *)aDecoder;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
 /**
  * Mapping name for the type of object class. By Default, this is the coderForClass.

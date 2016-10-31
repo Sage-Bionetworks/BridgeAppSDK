@@ -37,10 +37,6 @@ import BridgeAppSDK
 @UIApplicationMain
 class AppDelegate: SBAAppDelegate {
     
-    override var requiredPermissions: SBAPermissionsType {
-        return [.coremotion, .localNotifications, .microphone]
-    }
-    
     override func applicationDidBecomeActive(_ application: UIApplication) {
         super.applicationDidBecomeActive(application)
         

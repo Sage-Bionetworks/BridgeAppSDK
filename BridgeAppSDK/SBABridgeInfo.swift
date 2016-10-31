@@ -115,6 +115,11 @@ public protocol SBABridgeInfo: class {
      do not check for a text user.
     */
     var disableTestUserCheck: Bool { get }
+    
+    /**
+     Array of objects that can be converted into `SBAPermissionObjectType` objects.
+    */
+    var permissionTypeItems: [Any]? { get }
 }
 
 /**
@@ -207,6 +212,10 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var disableTestUserCheck: Bool {
         return self.plist["disableTestUserCheck"] as? Bool ?? false
+    }
+    
+    public var permissionTypeItems: [Any]? {
+        return self.plist["permissionTypes"] as? [Any]
     }
 }
 

@@ -40,24 +40,16 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierHealthKit = @"healthKit";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierLocation = @"location";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierNotifications = @"notifications";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCoremotion = @"coremotion";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierMicrophone = @"microphone";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCamera = @"camera";
+SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierPhotoLibrary = @"photoLibrary";
+
+
 static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManagerErrorDomain";
-
-static NSString * const SBARemindersOnKey = @"SBARemindersOnKey";
-
-NSBundle *SBABundle() {
-    static NSBundle *__bundle;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __bundle = [NSBundle bundleForClass:[SBAPermissionsManager class]];
-    });
-    
-    return __bundle;
-}
-
-typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
-    SBAPermissionsErrorCodeAccessDenied = -100,
-};
 
 @interface SBAPermissionsManager () <CLLocationManagerDelegate>
 
@@ -65,13 +57,9 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
 @property (nonatomic, readwrite) CLLocationManager *locationManager;
 @property (nonatomic, readwrite) CMMotionActivityManager *motionActivityManager;
 
-@property (nonatomic) SBAPermissionStatus coreMotionPermissionStatus;
-
-@property (nonatomic, copy) NSArray *healthKitCharacteristicTypesToRead;
-@property (nonatomic, copy) NSArray *healthKitTypesToRead;
-@property (nonatomic, copy) NSArray *healthKitTypesToWrite;
-
+@property (nonatomic) BOOL requestedLocationAlways;
 @property (nonatomic, copy) SBAPermissionsBlock locationCompletionBlock;
+
 @property (nonatomic, copy) SBAPermissionsBlock notificationsCompletionBlock;
 
 @end
@@ -93,6 +81,20 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     _locationManager.delegate = nil;
+}
+
+- (NSUserDefaults *)userDefaults {
+    if (_userDefaults == nil){
+        _userDefaults = [NSUserDefaults standardUserDefaults];
+    }
+    return _userDefaults;
+}
+
+- (SBAPermissionObjectTypeFactory *)permissionsTypeFactory {
+    if (_permissionsTypeFactory == nil) {
+        _permissionsTypeFactory = [SBAPermissionObjectTypeFactory new];
+    }
+    return _permissionsTypeFactory;
 }
 
 - (HKHealthStore *)healthStore {
@@ -117,275 +119,217 @@ typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
     return _motionActivityManager;
 }
 
-- (void)setupHealthKitCharacteristicTypesToRead:(NSArray *)characteristicTypesToRead
-                   healthKitQuantityTypesToRead:(NSArray *)quantityTypesToRead
-                  healthKitQuantityTypesToWrite:(NSArray *)QuantityTypesToWrite {
-    
-    self.healthKitCharacteristicTypesToRead = characteristicTypesToRead;
-    self.healthKitTypesToRead = quantityTypesToRead;
-    self.healthKitTypesToWrite = QuantityTypesToWrite;
+- (NSArray<SBAPermissionObjectType *> *)defaultPermissionTypes {
+    if (_defaultPermissionTypes == nil) {
+        id appDelegate = [[UIApplication sharedApplication] delegate];
+        if ([appDelegate conformsToProtocol:@protocol(SBAAppInfoDelegate)]) {
+            // First look for the permissions in the bridge info
+            NSArray *items = [[appDelegate bridgeInfo] permissionTypeItems];
+            if ((items == nil) && [appDelegate respondsToSelector:@selector(requiredPermissions)]) {
+                // If not found, check the required permissions
+                items = [self typeIdentifiersForPermissionCode:[appDelegate requiredPermissions]];
+            }
+            _defaultPermissionTypes = [self.permissionsTypeFactory permissionTypesFor:items];
+        }
+    }
+    return _defaultPermissionTypes;
 }
 
-#pragma mark - public methods
+#pragma mark - deprecated type conversion
+
+- (NSArray *)typeIdentifierMap {
+    static NSArray *_typeIdentifierMap;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _typeIdentifierMap = @[SBAPermissionTypeIdentifierHealthKit,
+                               SBAPermissionTypeIdentifierLocation,
+                               SBAPermissionTypeIdentifierNotifications,
+                               SBAPermissionTypeIdentifierCoremotion,
+                               SBAPermissionTypeIdentifierMicrophone,
+                               SBAPermissionTypeIdentifierCamera,
+                               SBAPermissionTypeIdentifierPhotoLibrary];
+    });
+    return _typeIdentifierMap;
+}
+
+- (NSUInteger)permissionCodeForTypeIdentifier:(NSString *)typeIdentifier {
+    NSUInteger idx = [[self typeIdentifierMap] indexOfObject:typeIdentifier];
+    if (idx == NSNotFound) { return 0; }
+    return 1 << (idx + 1);
+}
+
+- (NSArray<NSString *> *)typeIdentifiersForPermissionCode:(NSUInteger)permissionCode {
+    NSMutableArray *identifiers = [NSMutableArray new];
+    [[self typeIdentifierMap] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSUInteger code = 1 << (idx + 1);
+        if ((permissionCode | code) == code) {
+            [identifiers addObject:obj];
+        }
+    }];
+    return [identifiers copy];
+}
+
+- (SBAPermissionTypeIdentifier)typeIdentifierForPermissionCode:(NSUInteger)permissionCode {
+    return (SBAPermissionTypeIdentifier)[[self typeIdentifiersForPermissionCode:permissionCode] firstObject];
+}
+
+- (SBAPermissionsType)permissionsTypeForPermissionObjectTypes:(NSArray<SBAPermissionObjectType *> *)objectTypes {
+    NSUInteger permissionCode = 0;
+    for (SBAPermissionObjectType *obj in objectTypes) {
+        permissionCode = permissionCode | [self permissionCodeForTypeIdentifier:obj.identifier];
+    }
+    return permissionCode;
+}
+
+#pragma mark - public deprecated methods
+
+- (SBAPermissionTypeIdentifier _Nullable)typeIdentifierForForType:(SBAPermissionsType)type {
+    return [self typeIdentifierForPermissionCode:type];
+}
+
+- (NSArray<SBAPermissionObjectType *> *)typeObjectsForForType:(SBAPermissionsType)type {
+    NSArray *typeIdentifiers = [self typeIdentifiersForPermissionCode:type];
+    return [self.permissionsTypeFactory permissionTypesFor:typeIdentifiers];
+}
 
 - (BOOL)isPermissionsGrantedForType:(SBAPermissionsType)type {
-    switch (type) {
-            
-        case SBAPermissionsTypeNone:
-            return YES;
-            
-        case SBAPermissionsTypeHealthKit:
-            return [self isPermissionsGrantedForHealthKit];
-            
-        case SBAPermissionsTypeLocation:
-            return [self isPermissionsGrantedForLocation];
-            
-        case SBAPermissionsTypeLocalNotifications:
-            return [self isPermissionsGrantedForNotifications];
-            
-        case SBAPermissionsTypeCoremotion:
-            return [self isPermissionsGrantedForCoreMotion];
-            
-        case SBAPermissionsTypeMicrophone:
-            return [self isPermissionsGrantedForMicrophone];
-
-        case SBAPermissionsTypeCamera:
-            return [self isPermissionsGrantedForCamera];
-
-        case SBAPermissionsTypePhotoLibrary:
-            return [self isPermissionsGrantedForPhotoLibrary];
-            
-        default:
-            return NO;
-    }
+    return [self _isPermissionsGrantedForType:[self typeIdentifierForPermissionCode:type]];
 }
 
 - (void)requestPermissionForType:(SBAPermissionsType)type
                   withCompletion:(SBAPermissionsBlock)completion {
-    switch (type) {
-            
-        case SBAPermissionsTypeHealthKit:
-            [self requestForPermissionHealthKitWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypeLocation:
-            [self requestForPermissionLocationWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypeLocalNotifications:
-            [self requestForPermissionNotificationsWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypeCoremotion:
-            [self requestForPermissionCoreMotionWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypeMicrophone:
-            [self requestForPermissionMicrophoneWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypeCamera:
-            [self requestForPermissionCameraWithCompletion:completion];
-            break;
-            
-        case SBAPermissionsTypePhotoLibrary:
-            [self requestForPermissionPhotoLibraryWithCompletion:completion];
-            break;
-            
-        default:
-            NSAssert(false, @"Unsupported Permission type");
-            if (completion) {
-                completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:type]);
-            }
-            break;
+    [self _requestPermissionForTypeIdentifier:[self typeIdentifierForPermissionCode:type]
+                               withCompletion:completion];
+}
+
+#pragma mark - public methods
+
+- (BOOL)isPermissionGrantedForType:(SBAPermissionObjectType *)permissionType {
+    
+    // Location checks for either always or whenInUse
+    if ([permissionType isKindOfClass:[SBALocationPermissionObjectType class]]) {
+        SBALocationPermissionObjectType *locationType = (SBALocationPermissionObjectType *)permissionType;
+        return [self isPermissionsGrantedForLocation:locationType.always];
+    }
+    
+    // Healthkit uses custom handler
+    if ([permissionType isKindOfClass:[SBAHealthKitPermissionObjectType class]]) {
+        return [self isPermissionGrantedForHealthKitPermissionType:(SBAHealthKitPermissionObjectType *)permissionType];
+    }
+    
+    // Finally look to the base method
+    return [self _isPermissionsGrantedForType:permissionType.identifier];
+}
+
+// These cases can be defined using the original Yes/No implementation
+- (BOOL)_isPermissionsGrantedForType:(SBAPermissionTypeIdentifier)type {
+    if ([type isEqualToString:SBAPermissionTypeIdentifierLocation]) {
+        return [self isPermissionsGrantedForLocation:NO];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierNotifications]) {
+        return [self isPermissionsGrantedForLocalNotifications];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCoremotion]) {
+        return [self isPermissionsGrantedForCoreMotion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierMicrophone]) {
+        return [self isPermissionsGrantedForMicrophone];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCamera]) {
+        return [self isPermissionsGrantedForCamera];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierPhotoLibrary]) {
+        return [self isPermissionsGrantedForPhotoLibrary];
+    }
+    else {
+        return NO;
     }
 }
 
-- (NSString *)permissionTitleForType:(SBAPermissionsType)type {
-    switch (type) {
-            
-        case SBAPermissionsTypeHealthKit:
-            return [Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_TITLE"];
-            
-        case SBAPermissionsTypeLocation:
-            return [Localization localizedString:@"SBA_LOCATION_PERMISSIONS_TITLE"];
-
-        case SBAPermissionsTypeCoremotion:
-            return [Localization localizedString:@"SBA_COREMOTION_PERMISSIONS_TITLE"];
-
-        case SBAPermissionsTypeLocalNotifications:
-            return [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_TITLE"];
-
-        case SBAPermissionsTypeMicrophone:
-            return [Localization localizedString:@"SBA_MICROPHONE_PERMISSIONS_TITLE"];
-            
-        case SBAPermissionsTypeCamera:
-            return [Localization localizedString:@"SBA_CAMERA_PERMISSIONS_TITLE"];
-            
-        case SBAPermissionsTypePhotoLibrary:
-            return [Localization localizedString:@"SBA_PHOTOLIBRARY_PERMISSIONS_TITLE"];
-            
-        default:
-            return @"";
+- (void)requestPermissionForType:(SBAPermissionObjectType *)permissionType
+                      completion:(SBAPermissionsBlock _Nullable)completion {
+    
+    // Location
+    if ([permissionType isKindOfClass:[SBALocationPermissionObjectType class]]) {
+        SBALocationPermissionObjectType *locationType = (SBALocationPermissionObjectType *)permissionType;
+        [self requestForPermissionLocation:locationType.always completion:completion];
+    }
+    
+    // Notification
+    else if ([permissionType isKindOfClass:[SBANotificationPermissionObjectType class]]) {
+        [self requestForPermissionForNotifications:(SBANotificationPermissionObjectType *)permissionType withCompletion:completion];
+    }
+    
+    // Healthkit
+    else if ([permissionType isKindOfClass:[SBAHealthKitPermissionObjectType class]]) {
+        SBAHealthKitPermissionObjectType *healthKitType = (SBAHealthKitPermissionObjectType *)permissionType;
+        [self requestHealthKitPermissionsForReadingTypes:healthKitType.readTypes writingTypes:healthKitType.writeTypes completion:completion];
+    }
+    
+    // Finally look to the base method
+    else {
+        [self _requestPermissionForTypeIdentifier:permissionType.identifier
+                                   withCompletion:completion];
     }
 }
 
-- (NSString *)permissionDescriptionForType:(SBAPermissionsType)type {
-    switch (type) {
-        case SBAPermissionsTypeHealthKit:
-            return [Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION"];
-        case SBAPermissionsTypeLocalNotifications:
-            return [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_DESCRIPTION"];
-        case SBAPermissionsTypeLocation:
-            return [self bundlePermissionDescriptionForKey: @"NSLocationWhenInUseUsageDescription" defaultValue:@"Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared."];
-        case SBAPermissionsTypeCoremotion:
-            return [self bundlePermissionDescriptionForKey: @"NSMotionUsageDescription" defaultValue:@"Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease."];
-        case SBAPermissionsTypeMicrophone:
-            return [self bundlePermissionDescriptionForKey: @"NSMicrophoneUsageDescription" defaultValue:@"Access to microphone is required for your Voice Recording Activity."];
-        case SBAPermissionsTypePhotoLibrary:
-            return [self bundlePermissionDescriptionForKey: @"NSPhotoLibraryUsageDescription" defaultValue:@"Photo Library"];
-        case SBAPermissionsTypeCamera:
-        default:
-            return [NSString stringWithFormat:@"Unknown permission type: %u", (unsigned int)type];
+- (void)_requestPermissionForTypeIdentifier:(SBAPermissionTypeIdentifier)type withCompletion:(SBAPermissionsBlock)completion {
+    if ([type isEqualToString:SBAPermissionTypeIdentifierLocation]) {
+        [self requestForPermissionLocation:YES completion:completion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierNotifications]) {
+        [self requestForPermissionForNotifications:nil withCompletion:completion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCoremotion]) {
+        [self requestForPermissionCoreMotionWithCompletion:completion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierMicrophone]) {
+        [self requestForPermissionMicrophoneWithCompletion:completion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCamera]) {
+        [self requestForPermissionCameraWithCompletion:completion];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierPhotoLibrary]) {
+        [self requestForPermissionPhotoLibraryWithCompletion:completion];
+    }
+    else {
+        NSAssert(false, @"Unsupported Permission type");
+        if (completion) {
+            completion(NO, [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:type]);
+        }
     }
 }
 
-- (NSString *)bundlePermissionDescriptionForKey:(NSString *)key defaultValue:(NSString*)defaultValue {
-    NSDictionary *info = [[NSBundle mainBundle] localizedInfoDictionary] ?: [[NSBundle mainBundle] infoDictionary];
-    NSString *str = info[key];
-    if (![str isKindOfClass:[NSString class]]) {
-        NSAssert1(NO, @"Missing required main bundle info.plist key %@", key);
-        str = defaultValue;
-    }
-    return str;
-}
-
-+ (NSError *)permissionDeniedErrorForType:(SBAPermissionsType)type
++ (NSError *)permissionDeniedErrorForTypeIdentifier:(SBAPermissionTypeIdentifier)type
 {
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     NSString *message = nil;
     
-    switch (type) {
-        case SBAPermissionsTypeHealthKit:
-            message = [NSString localizedStringWithFormat:[Localization localizedString:@"SBA_HEALTHKIT_PERMISSIONS_ERROR"], appName];
-            break;
-        case SBAPermissionsTypeLocalNotifications:
-            message = [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_ERROR"];
-            break;
-        case SBAPermissionsTypeLocation:
-            message = [Localization localizedString:@"SBA_LOCATION_PERMISSIONS_ERROR"];
-            break;
-        case SBAPermissionsTypeCoremotion:
-            message = [Localization localizedString:@"SBA_COREMOTION_PERMISSIONS_ERROR"];
-            break;
-        case SBAPermissionsTypeMicrophone:
-            message = [Localization localizedString:@"SBA_MICROPHONE_PERMISSIONS_ERROR"];
-            break;
-        case SBAPermissionsTypeCamera:
-            message = [Localization localizedString:@"SBA_CAMERA_PERMISSIONS_ERROR"];
-            break;
-        case SBAPermissionsTypePhotoLibrary:
-            message = [Localization localizedString:@"SBA_PHOTOLIBRARY_PERMISSIONS_ERROR"];
-            break;
-        default:
-            message = [Localization localizedString:@"SBA_GENERAL_PERMISSIONS_ERROR"];
-            break;
+    if ([type isEqualToString:SBAPermissionTypeIdentifierLocation]) {
+        message = [Localization localizedString:@"SBA_LOCATION_PERMISSIONS_ERROR"];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierNotifications]) {
+        message = [Localization localizedString:@"SBA_REMINDER_PERMISSIONS_ERROR"];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCoremotion]) {
+        message = [Localization localizedString:@"SBA_COREMOTION_PERMISSIONS_ERROR"];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierMicrophone]) {
+        message = [Localization localizedString:@"SBA_MICROPHONE_PERMISSIONS_ERROR"];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierCamera]) {
+        message = [Localization localizedString:@"SBA_CAMERA_PERMISSIONS_ERROR"];
+    }
+    else if ([type isEqualToString:SBAPermissionTypeIdentifierPhotoLibrary]) {
+        message = [Localization localizedString:@"SBA_PHOTOLIBRARY_PERMISSIONS_ERROR"];
+    }
+    else {
+        message = [Localization localizedString:@"SBA_GENERAL_PERMISSIONS_ERROR"];
     }
 
     NSError *error = [NSError errorWithDomain:SBAPermissionsManagerErrorDomain
                                          code:SBAPermissionsErrorCodeAccessDenied
                                      userInfo:@{NSLocalizedDescriptionKey: message}];
-    
     return error;
-}
-
-//---------------------------------------------------------------
-#pragma mark - HealthKit
-//---------------------------------------------------------------
-
-NSString *const kHKQuantityTypeKey          = @"HKQuantityType";
-NSString *const kHKCategoryTypeKey          = @"HKCategoryType";
-NSString *const kHKCharacteristicTypeKey    = @"HKCharacteristicType";
-NSString *const kHKCorrelationTypeKey       = @"HKCorrelationType";
-NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
-
-- (BOOL)isPermissionsGrantedForHealthKit {
-    HKCharacteristicType *dateOfBirth = [HKCharacteristicType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierDateOfBirth];
-    HKAuthorizationStatus status = [self.healthStore authorizationStatusForType:dateOfBirth];
-    return (status == HKAuthorizationStatusSharingAuthorized);
-}
-
-- (void)requestForPermissionHealthKitWithCompletion:(SBAPermissionsBlock)completion {
-    
-    //------READ TYPES--------
-    NSMutableArray *dataTypesToRead = [NSMutableArray new];
-    
-    // Add Characteristic types
-    for (NSString *typeIdentifier in self.healthKitCharacteristicTypesToRead) {
-        [dataTypesToRead addObject:[HKCharacteristicType characteristicTypeForIdentifier:typeIdentifier]];
-    }
-    
-    //Add other quantity types
-    for (id typeIdentifier in self.healthKitTypesToRead) {
-        if ([typeIdentifier isKindOfClass:[NSString class]]) {
-            [dataTypesToRead addObject:[HKQuantityType quantityTypeForIdentifier:typeIdentifier]];
-        }
-        else if ([typeIdentifier isKindOfClass:[NSDictionary class]])
-        {
-            if (typeIdentifier[kHKWorkoutTypeKey])
-            {
-                [dataTypesToRead addObject:[HKObjectType workoutType]];
-            }
-            else
-            {
-                [dataTypesToRead addObject:[self hkObjectTypeFromDictionary:typeIdentifier]];
-            }
-        }
-    }
-    
-    //-------WRITE TYPES--------
-    NSMutableArray *dataTypesToWrite = [NSMutableArray new];
-    
-    for (id typeIdentifier in self.healthKitTypesToWrite) {
-        if ([typeIdentifier isKindOfClass:[NSString class]]) {
-            [dataTypesToWrite addObject:[HKQuantityType quantityTypeForIdentifier:typeIdentifier]];
-        }
-        else if ([typeIdentifier isKindOfClass:[NSDictionary class]])
-        {
-            [dataTypesToWrite addObject:[self hkObjectTypeFromDictionary:typeIdentifier]];
-        }
-    }
-    
-    [self.healthStore requestAuthorizationToShareTypes:[NSSet setWithArray:dataTypesToWrite] readTypes:[NSSet setWithArray:dataTypesToRead] completion:^(BOOL success, NSError *error) {
-        if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(success, error);
-            });
-        }
-    }];
-}
-
-- (HKObjectType*) hkObjectTypeFromDictionary: (NSDictionary*) dictionary
-{
-    NSString * key = [[dictionary allKeys] firstObject];
-    HKObjectType * retValue;
-    if ([key isEqualToString:kHKQuantityTypeKey])
-    {
-        retValue = [HKQuantityType quantityTypeForIdentifier:dictionary[key]];
-    }
-    else if ([key isEqualToString:kHKCategoryTypeKey])
-    {
-        retValue = [HKCategoryType categoryTypeForIdentifier:dictionary[key]];
-    }
-    else if ([key isEqualToString:kHKCharacteristicTypeKey])
-    {
-        retValue = [HKCharacteristicType characteristicTypeForIdentifier:dictionary[key]];
-    }
-    else if ([key isEqualToString:kHKCorrelationTypeKey])
-    {
-        retValue = [HKCorrelationType correlationTypeForIdentifier:dictionary[key]];
-    }
-    return retValue;
 }
 
 
@@ -393,32 +337,43 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 #pragma mark - Location
 //---------------------------------------------------------------
 
-- (BOOL)isPermissionsGrantedForLocation {
+- (BOOL)isPermissionsGrantedForLocation:(BOOL)always {
 #if TARGET_IPHONE_SIMULATOR
     return YES;
 #else
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    return  (status == kCLAuthorizationStatusAuthorizedWhenInUse) ||
-            (status == kCLAuthorizationStatusAuthorizedAlways);
+    return [self isPermissionsGrantedForLocation:always status:status];
 #endif
 }
 
-- (void)requestForPermissionLocationWithCompletion:(SBAPermissionsBlock)completion {
+- (BOOL)isPermissionsGrantedForLocation:(BOOL)always status:(CLAuthorizationStatus)status {
+    if (always) {
+        return  (status == kCLAuthorizationStatusAuthorizedAlways);
+    }
+    else {
+        return  (status == kCLAuthorizationStatusAuthorizedWhenInUse) ||
+                (status == kCLAuthorizationStatusAuthorizedAlways);
+    }
+}
+
+- (void)requestForPermissionLocation:(BOOL)always
+                          completion:(SBAPermissionsBlock)completion {
 
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
 
     if (status == kCLAuthorizationStatusNotDetermined) {
         // Add pointer to the completion block and fire off request to accept permission
         self.locationCompletionBlock = completion;
-        [self.locationManager requestAlwaysAuthorization];
-        [self.locationManager requestWhenInUseAuthorization];
+        self.requestedLocationAlways = always;
+        if (always) {
+            [self.locationManager requestAlwaysAuthorization];
+        }
+        else {
+            [self.locationManager requestWhenInUseAuthorization];
+        }
     }
     else {
-        // If the status is not determined, then it has not been requested otherwise,
-        // Do not need to ask again. Just call completion.
-        if (completion) {
-            completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeLocation]);
-        }
+        [self handleLocationPermission:always responseStatus:status completion:completion];
     }
 }
 
@@ -427,48 +382,39 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 }
 
 - (void)locationManager:(CLLocationManager *) __unused manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    switch (status) {
-        case kCLAuthorizationStatusNotDetermined:
-            break;
-        case kCLAuthorizationStatusAuthorizedAlways:
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-        {
-            [self.locationManager stopUpdatingLocation];
-            if (self.locationCompletionBlock) {
-                self.locationCompletionBlock(YES, nil);
-            }
-        }
-            break;
-        case kCLAuthorizationStatusDenied:
-        case kCLAuthorizationStatusRestricted: {
-            [self.locationManager stopUpdatingLocation];
-            if (self.locationCompletionBlock) {
-                self.locationCompletionBlock(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeLocation]);
-            }
-            break;
-        }
+    if (status != kCLAuthorizationStatusNotDetermined) {
+        [self.locationManager stopUpdatingLocation];
+        [self handleLocationPermission:self.requestedLocationAlways responseStatus:status completion:self.locationCompletionBlock];
+        self.locationCompletionBlock = nil;
     }
-    
-    self.locationCompletionBlock = nil;
 }
 
+- (void)handleLocationPermission:(BOOL)always
+                  responseStatus:(CLAuthorizationStatus)responseStatus
+                      completion:(SBAPermissionsBlock)completion {
+    if (completion) {
+        BOOL granted = [self isPermissionsGrantedForLocation:always status:responseStatus];
+        NSError *error = granted ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierLocation];
+        completion(granted, error);
+    }
+}
 
 //---------------------------------------------------------------
-#pragma mark - Remote notifications
+#pragma mark - notifications
 //---------------------------------------------------------------
 
-- (BOOL)isPermissionsGrantedForNotifications {
+- (BOOL)isPermissionsGrantedForLocalNotifications {
     return [[UIApplication sharedApplication] currentUserNotificationSettings].types != 0;
 }
 
-- (void)requestForPermissionNotificationsWithCompletion:(SBAPermissionsBlock)completion {
-
+- (void)requestForPermissionForNotifications:(SBANotificationPermissionObjectType *)permissionType withCompletion:(SBAPermissionsBlock)completion {
+    
     if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) {
         self.notificationsCompletionBlock = completion;
 
-        UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;        
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
-                                                                                 categories:nil];
+        UIUserNotificationType notificationTypes = (permissionType != nil) ? permissionType.notificationTypes : UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:notificationTypes
+                                                                                 categories:permissionType.categories];
 
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -477,29 +423,22 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
     }
     else {
         // Request previously granted
-        if (completion) {
-            completion(YES, nil);
-        }
+        [self handleFinishedRegisterForLocalNotifications:YES
+                                          completion:completion];
     }
 }
 
-- (void)appDidRegisterForRemoteNotifications: (UIUserNotificationSettings *)settings
-{
-    if (settings.types != 0) {
-        
-        // TODO: syoung 09/08/2016 Revisit permissions notification handling
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SBARemindersOnKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        if (self.notificationsCompletionBlock) {
-            self.notificationsCompletionBlock(YES, nil);
-        }
-    }
-	else {
-        
-        if (self.notificationsCompletionBlock) {
-            self.notificationsCompletionBlock(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeLocalNotifications]);
-        }
+- (void)appDidRegisterForNotifications: (UIUserNotificationSettings *)settings {
+    BOOL granted = (settings.types != UIUserNotificationTypeNone);
+    [self handleFinishedRegisterForLocalNotifications:granted
+                                      completion:self.notificationsCompletionBlock];
+}
+
+- (void)handleFinishedRegisterForLocalNotifications:(BOOL)granted
+                                         completion:(SBAPermissionsBlock)completion {
+    NSError *error = granted ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierNotifications];
+    if (completion) {
+        completion(granted, error);
     }
     self.notificationsCompletionBlock = nil;
 }
@@ -510,31 +449,17 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 //---------------------------------------------------------------
 
 - (BOOL)isPermissionsGrantedForCoreMotion {
-#if TARGET_IPHONE_SIMULATOR
-    return YES;
-#else
     return [CMSensorRecorder isAuthorizedForRecording];
-#endif
 }
 
 - (void)requestForPermissionCoreMotionWithCompletion:(SBAPermissionsBlock)completion {
-
-    __weak typeof(self) weakSelf = self;
-    
     // Usually this method is called on another thread, but since we are searching
     // within same date to same date, it will return immediately, so put it on the main thread
     [self.motionActivityManager queryActivityStartingFromDate:[NSDate date] toDate:[NSDate date] toQueue:[NSOperationQueue mainQueue] withHandler:^(NSArray * __unused activities, NSError *error) {
-        if (!error) {
-            weakSelf.coreMotionPermissionStatus = SBAPermissionStatusAuthorized;
-            if (completion) {
-                completion(YES, nil);
-            }
-        } else if (error != nil && error.code == CMErrorMotionActivityNotAuthorized) {
-            weakSelf.coreMotionPermissionStatus = SBAPermissionStatusDenied;
-
-            if (completion) {
-                completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeCoremotion]);
-            }
+        if (completion) {
+            BOOL success = (error == nil);
+            NSError *err = success ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierCoremotion];
+            completion(success, err);
         }
     }];
 }
@@ -545,52 +470,35 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 //---------------------------------------------------------------
 
 - (BOOL)isPermissionsGrantedForMicrophone {
-#if TARGET_IPHONE_SIMULATOR
-    return YES;
-#else
-    return ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted);
-#endif
+    AVAudioSessionRecordPermission permission = [[AVAudioSession sharedInstance] recordPermission];
+    return (permission == AVAudioSessionRecordPermissionGranted);
 }
 
 - (void)requestForPermissionMicrophoneWithCompletion:(SBAPermissionsBlock)completion {
-    
     [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        if (granted) {
-            if (completion) {
-                completion(YES, nil);
-            }
-        } else {
-            if (completion) {
-                completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeMicrophone]);
-            }
+        if (completion) {
+            NSError *error = granted ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierMicrophone];
+            completion(granted, error);
         }
     }];
 }
+
 
 //---------------------------------------------------------------
 #pragma mark - Camera
 //---------------------------------------------------------------
     
 - (BOOL)isPermissionsGrantedForCamera {
-#if TARGET_IPHONE_SIMULATOR
-        return YES;
-#else
     AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     return status == AVAuthorizationStatusAuthorized;
-#endif
 }
 
 - (void)requestForPermissionCameraWithCompletion:(SBAPermissionsBlock)completion {
     
     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        if(granted){
-            if (completion) {
-                completion(YES, nil);
-            }
-        } else {
-            if (completion) {
-                completion(NO, [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypeCamera]);
-            }
+        if (completion) {
+            NSError *err = granted ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierCamera];
+            completion(granted, err);
         }
     }];
 }
@@ -607,11 +515,45 @@ NSString *const kHKWorkoutTypeKey           = @"HKWorkoutType";
 - (void)requestForPermissionPhotoLibraryWithCompletion:(SBAPermissionsBlock)completion {
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         BOOL isAuthorized = (status == PHAuthorizationStatusAuthorized);
-        NSError *error = isAuthorized ? nil : [SBAPermissionsManager permissionDeniedErrorForType:SBAPermissionsTypePhotoLibrary];
+        NSError *error = isAuthorized ? nil : [SBAPermissionsManager permissionDeniedErrorForTypeIdentifier:SBAPermissionTypeIdentifierPhotoLibrary];
         if (completion) {
             completion(isAuthorized, error);
         }
     }];
+}
+
+//---------------------------------------------------------------
+#pragma mark - HealthKit
+//---------------------------------------------------------------
+
+- (BOOL)isPermissionGrantedForHealthKitPermissionType:(SBAHealthKitPermissionObjectType *)permissionType {
+    for (HKObjectType *hkType in permissionType.readTypes) {
+        if (![self isPermissionsGrantedForHealthKitType:hkType]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (BOOL)isPermissionsGrantedForHealthKitType:(HKObjectType *)type {
+    HKAuthorizationStatus status = [self.healthStore authorizationStatusForType:type];
+    return (status == HKAuthorizationStatusSharingAuthorized);
+}
+
+- (void)requestHealthKitPermissionsForReadingTypes:(nullable NSSet<HKObjectType *> *)typesToRead
+                                      writingTypes:(nullable NSSet<HKSampleType *> *)typesToWrite
+                                        completion:(void (^)(BOOL success, NSError * _Nullable error))completion {
+    
+    if ([HKHealthStore isHealthDataAvailable]) {
+        [self.healthStore requestAuthorizationToShareTypes:typesToWrite readTypes:typesToRead completion:^(BOOL success, NSError *error) {
+            if (completion) {
+                completion(success, error);
+            }
+        }];
+    }
+    else {
+        completion(NO, nil);
+    }
 }
 
 @end

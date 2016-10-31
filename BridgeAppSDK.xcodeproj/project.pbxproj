@@ -187,6 +187,7 @@
 		FF92A6831DBFF21700614D1F /* LearnInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6821DBFF21700614D1F /* LearnInfo.plist */; };
 		FF92A6C71DC026AC00614D1F /* Withdraw.json in Resources */ = {isa = PBXBuildFile; fileRef = FF92A6C91DC026AC00614D1F /* Withdraw.json */; };
 		FF92A6DA1DC15FE700614D1F /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */; };
+		FF9312391DC93327001A9F86 /* SBAPermissionObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9312381DC93327001A9F86 /* SBAPermissionObjectType.swift */; };
 		FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */; };
 		FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */; };
 		FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */; };
@@ -598,6 +599,7 @@
 		FF92A6821DBFF21700614D1F /* LearnInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LearnInfo.plist; sourceTree = "<group>"; };
 		FF92A6C81DC026AC00614D1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Withdraw.json; sourceTree = "<group>"; };
 		FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
+		FF9312381DC93327001A9F86 /* SBAPermissionObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAPermissionObjectType.swift; sourceTree = "<group>"; };
 		FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBASurveyItem+Bridge.swift"; sourceTree = "<group>"; };
 		FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSharingStep.swift; sourceTree = "<group>"; };
 		FF9708031DA7104F006E8252 /* SBAConsentSubtaskStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSubtaskStep.swift; sourceTree = "<group>"; };
@@ -1260,6 +1262,7 @@
 				FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */,
 				FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */,
 				FFB30EB01D4A8AB000D175D2 /* SBAPermissionsStep.swift */,
+				FF9312381DC93327001A9F86 /* SBAPermissionObjectType.swift */,
 			);
 			name = Permissions;
 			sourceTree = "<group>";
@@ -1863,6 +1866,7 @@
 				FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
 				FFDCB56D1D9AF161004A0CC5 /* ORKStep+ResultsExtension.swift in Sources */,
+				FF9312391DC93327001A9F86 /* SBAPermissionObjectType.swift in Sources */,
 				FF92A6441DBFE16C00614D1F /* SBALearnInfo.swift in Sources */,
 				FF9E48961CF3A2F1005EE7E0 /* StaticUtilities.swift in Sources */,
 				FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */,
