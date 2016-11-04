@@ -50,7 +50,7 @@ open class SBALoadingView: UIView {
     
     lazy var containerView: UIView = {
         let containerView = UIView()
-        containerView.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        containerView.backgroundColor = UIColor(white: 0, alpha: 0.5)
         containerView.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
         containerView.layer.cornerRadius = 5
         self.addSubview(containerView)

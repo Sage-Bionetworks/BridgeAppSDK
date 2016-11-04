@@ -79,6 +79,7 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var logoImageName: String?
     var appUpdateURLString: String?
     var disableTestUserCheck: Bool = false
+    var permissionTypeItems: [Any]?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {

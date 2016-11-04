@@ -114,5 +114,43 @@
 			<true/>
 		</dict>
 	</array>
+	<key>permissionTypes</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>healthKit</string>
+			<key>healthKitTypes</key>
+			<array>
+				<dict>
+					<key>profileKey</key>
+					<string>gender</string>
+					<key>identifier</key>
+					<string>HKCharacteristicTypeIdentifierBiologicalSex</string>
+				</dict>
+				<dict>
+					<key>profileKey</key>
+					<string>dateOfBirth</string>
+					<key>identifier</key>
+					<string>HKCharacteristicTypeIdentifierDateOfBirth</string>
+				</dict>
+				<dict>
+					<key>identifier</key>
+					<string>HKQuantityTypeIdentifierHeight</string>
+					<key>profileKey</key>
+					<string>height</string>
+				</dict>
+				<dict>
+					<key>identifier</key>
+					<string>HKQuantityTypeIdentifierBodyMass</string>
+					<key>profileKey</key>
+					<string>bodyMass</string>
+				</dict>
+				<string>HKQuantityTypeIdentifierStepCount</string>
+			</array>
+		</dict>
+		<string>notifications</string>
+		<string>coremotion</string>
+		<string>microphone</string>
+	</array>
 </dict>
 </plist>

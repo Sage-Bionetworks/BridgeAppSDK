@@ -107,24 +107,16 @@
                                                 <action selector="leaveStudyTapped:" destination="WzD-eA-mg9" eventType="touchUpInside" id="x95-X6-NRP"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s7S-kb-ffn">
-                                            <state key="normal" title="Pause Study"/>
-                                            <connections>
-                                                <action selector="pauseStudyTapped:" destination="WzD-eA-mg9" eventType="touchUpInside" id="hNx-N1-hGn"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="s7S-kb-ffn" secondAttribute="trailing" id="2qt-tY-yJF"/>
                                         <constraint firstItem="pQa-uc-wPG" firstAttribute="top" secondItem="5gW-Uf-QEf" secondAttribute="bottom" constant="7" id="4hk-8Y-ogv"/>
                                         <constraint firstAttribute="trailing" secondItem="z1W-30-kzX" secondAttribute="trailing" id="4xN-1U-3oO"/>
                                         <constraint firstItem="5gW-Uf-QEf" firstAttribute="leading" secondItem="1qM-8O-PFO" secondAttribute="leading" id="8bp-Zg-Eiz"/>
+                                        <constraint firstItem="pQa-uc-wPG" firstAttribute="baseline" secondItem="z1W-30-kzX" secondAttribute="baseline" id="Xd7-g3-kr0"/>
                                         <constraint firstAttribute="bottom" secondItem="pQa-uc-wPG" secondAttribute="bottom" id="Yal-uh-1W7"/>
                                         <constraint firstItem="5gW-Uf-QEf" firstAttribute="top" secondItem="1qM-8O-PFO" secondAttribute="top" id="cOP-Mf-z1T"/>
                                         <constraint firstItem="pQa-uc-wPG" firstAttribute="leading" secondItem="1qM-8O-PFO" secondAttribute="leading" id="chL-K4-XJi"/>
-                                        <constraint firstItem="z1W-30-kzX" firstAttribute="baseline" secondItem="5gW-Uf-QEf" secondAttribute="baseline" id="lP6-gI-GOm"/>
-                                        <constraint firstItem="s7S-kb-ffn" firstAttribute="baseline" secondItem="pQa-uc-wPG" secondAttribute="baseline" id="xVj-oI-eOv"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cB-Ww-mg4" userLabel="Bottom Line">
@@ -189,7 +181,6 @@
                         <outlet property="emailLabel" destination="V8B-Yh-Nqr" id="TA1-Kk-gQe"/>
                         <outlet property="leaveStudyButton" destination="z1W-30-kzX" id="RgD-KV-S1x"/>
                         <outlet property="nameLabel" destination="a7q-VX-kPu" id="0jE-gQ-9hm"/>
-                        <outlet property="pauseStudyButton" destination="s7S-kb-ffn" id="cfO-Yd-uz4"/>
                         <outlet property="versionLabel" destination="LGM-jD-pfF" id="o2a-N2-PLx"/>
                     </connections>
                 </tableViewController>
@@ -350,11 +341,11 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SzE-ad-pjR" id="Pq3-de-2gL">
-                                    <frame key="frameInset" width="342" height="59"/>
+                                    <frame key="frameInset" width="342" height="59.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PJf-CV-qWk">
-                                            <frame key="frameInset" minX="57" width="283" height="59"/>
+                                            <frame key="frameInset" minX="57" width="283" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

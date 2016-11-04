@@ -92,7 +92,17 @@ open class Localization: NSObject {
         }
     }
     
-    
+    public static func localizedBundleString(_ bundleKey: String, localizedKey: String) -> String {
+        guard let info = Bundle.main.localizedInfoDictionary ?? Bundle.main.infoDictionary,
+              let str = info[bundleKey] as? String
+        else {
+            // The calling app is expected to include these keys so assert if missing
+            assertionFailure("Missing required main bundle info.plist key \(bundleKey)")
+            return self.localizedString(localizedKey)
+        }
+        return str
+    }
+            
     // MARK: Localized App Name
     
     open static let localizedAppName : String = {

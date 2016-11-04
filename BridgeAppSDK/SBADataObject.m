@@ -58,17 +58,22 @@
 
 - (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary {
     if ((self = [super init])) {
-        for (NSString *key in [self dictionaryRepresentationKeys]) {
-            id value = dictionary[key];
-            if (value && ![value isKindOfClass:[NSNull class]]) {
-                [self setValue:value forKey:key];
-            }
-        }
-        if (_identifier == nil) {
-            _identifier = [self defaultIdentifierIfNil];
-        }
+        [self commonInitWithDictionaryRepresentation:dictionary];
     }
     return self;
+}
+
+- (void)commonInitWithDictionaryRepresentation:(NSDictionary *)dictionary {
+    for (NSString *key in [self dictionaryRepresentationKeys]) {
+        id value = dictionary[key];
+        if (value && ![value isKindOfClass:[NSNull class]]) {
+            [self setValue:value forKey:key];
+        }
+    }
+    if (_identifier == nil) {
+        _identifier = [self defaultIdentifierIfNil];
+    }
+
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key {
@@ -168,8 +173,11 @@
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    NSDictionary *dictionary = [aDecoder decodeObjectOfClass:[NSDictionary class] forKey:@"dictionary"];
-    return [self initWithDictionaryRepresentation:dictionary];
+    if ((self = [super init])) {
+        NSDictionary *dictionary = [aDecoder decodeObjectOfClass:[NSDictionary class] forKey:@"dictionary"];
+        [self commonInitWithDictionaryRepresentation:dictionary];
+    }
+    return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

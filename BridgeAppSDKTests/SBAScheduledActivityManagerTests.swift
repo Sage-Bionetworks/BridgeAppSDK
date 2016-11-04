@@ -975,6 +975,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var logoImageName: String?
     var appUpdateURLString: String?
     var disableTestUserCheck: Bool = false
+    var permissionTypeItems: [Any]?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,

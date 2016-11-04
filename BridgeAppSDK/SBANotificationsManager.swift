@@ -59,7 +59,7 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
     
     @objc(setupNotificationsForScheduledActivities:)
     open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
-        permissionsManager.requestPermissions(.localNotifications, alertPresenter: nil) { [weak self] (granted) in
+        permissionsManager.requestPermission(for: SBANotificationPermissionObjectType.localNotifications()) { [weak self] (granted, _) in
             if granted {
                 self?.scheduleNotifications(scheduledActivities: scheduledActivities)
             }

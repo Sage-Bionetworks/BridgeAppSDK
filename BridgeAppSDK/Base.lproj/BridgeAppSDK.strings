@@ -130,7 +130,10 @@
 "SBA_CAMERA_PERMISSIONS_TITLE" = "Camera";
 "SBA_PHOTOLIBRARY_PERMISSIONS_TITLE" = "Photo Library";
 "SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION" = "Press “Allow” to individually specify which general health information the app may read from and write to HealthKit";
-"SBA_REMINDER_PERMISSIONS_DESCRIPTION" = "Allowing notifications enables the app to show you reminders for activity sessions.";
+"SBA_NOTIFICATIONS_PERMISSIONS_DESCRIPTION" = "Allowing notifications enables the app to show you reminders for activity sessions.";
+"SBA_LOCATION_PERMISSIONS_DESCRIPTION" = "Using your GPS enables the app to accurately determine distances travelled. Your actual location will never be shared.";
+"SBA_COREMOTION_PERMISSIONS_DESCRIPTION" = "Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease.";
+"SBA_MICROPHONE_PERMISSIONS_DESCRIPTION" = "Access to microphone is required for your Voice Recording Activity.";
 "SBA_HEALTHKIT_PERMISSIONS_ERROR" = "Please go to Settings -> Privacy -> Health -> %@ to re-enable.";
 "SBA_REMINDER_PERMISSIONS_ERROR" = "Tap on Settings -> Notifications and enable 'Allow Notifications'";
 "SBA_LOCATION_PERMISSIONS_ERROR" = "Tap on Settings -> Location and check 'Always'";

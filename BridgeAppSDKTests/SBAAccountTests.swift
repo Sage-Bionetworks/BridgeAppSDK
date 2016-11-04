@@ -154,11 +154,14 @@ class SBAAccountTests: XCTestCase {
     // MARK: Permissions
     
     func testPermssionsType_Some() {
-        let permissonsStep = SBAPermissionsStep(identifier: "permissions")
-        permissonsStep.permissions = [.coremotion, .localNotifications, .microphone]
+        let permissionsStep = SBAPermissionsStep(identifier: "permissions",
+                                                permissions: [.coremotion, .notifications, .microphone])
         
-        let expectedItems = [SBAPermissionsType.coremotion.rawValue, SBAPermissionsType.localNotifications.rawValue, SBAPermissionsType.microphone.rawValue].sorted()
-        let actualItems = permissonsStep.items as? [UInt]
+        let expectedItems = [SBAPermissionObjectType(permissionType: .coremotion),
+                             SBANotificationPermissionObjectType(permissionType: .notifications),
+                             SBAPermissionObjectType(permissionType: .microphone)]
+        
+        let actualItems = permissionsStep.items as? [SBAPermissionObjectType]
         
         XCTAssertNotNil(actualItems)
         guard actualItems != nil else { return }
@@ -166,11 +169,39 @@ class SBAAccountTests: XCTestCase {
     }
     
     func testPermssionsType_PhotoLibrary() {
-        let permissonsStep = SBAPermissionsStep(identifier: "permissions")
-        permissonsStep.permissions = [.photoLibrary]
+        let permissionsStep = SBAPermissionsStep(identifier: "permissions",
+                                                permissions: [.photoLibrary])
         
-        let expectedItems = [SBAPermissionsType.photoLibrary.rawValue].sorted()
-        let actualItems = permissonsStep.items as? [UInt]
+        let expectedItems = [SBAPermissionObjectType(permissionType: .photoLibrary)]
+        let actualItems = permissionsStep.items as? [SBAPermissionObjectType]
+        
+        XCTAssertNotNil(actualItems)
+        guard actualItems != nil else { return }
+        XCTAssertEqual(actualItems!, expectedItems)
+    }
+    
+    func testPermissionsType_InputItem() {
+        
+        let inputItem: NSDictionary =      [
+            "identifier"   : "permissions",
+            "type"         : "permissions",
+            "title"        : "Permissions",
+            "text"         : "The following permissions are required for this activity. Please change these permissions via the iPhone Settings app before continuing.",
+            "items"        : ["coremotion", "microphone"],
+            "optional"     : false,
+        ]
+        let step = SBAPermissionsStep(inputItem: inputItem)
+        
+        XCTAssertNotNil(step)
+        guard let permissionsStep = step else { return }
+        
+        XCTAssertEqual(permissionsStep.identifier, "permissions")
+        XCTAssertFalse(permissionsStep.isOptional)
+        XCTAssertEqual(permissionsStep.title, "Permissions")
+        XCTAssertEqual(permissionsStep.text, "The following permissions are required for this activity. Please change these permissions via the iPhone Settings app before continuing.")
+        
+        let expectedItems = [SBAPermissionObjectType(permissionType: .coremotion), SBAPermissionObjectType(permissionType: .microphone)]
+        let actualItems = permissionsStep.items as? [SBAPermissionObjectType]
         
         XCTAssertNotNil(actualItems)
         guard actualItems != nil else { return }

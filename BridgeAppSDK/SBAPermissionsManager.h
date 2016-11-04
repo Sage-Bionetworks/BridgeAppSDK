@@ -36,9 +36,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SBAPermissionObjectType;
+@class SBAPermissionObjectTypeFactory;
+
 typedef NS_OPTIONS(NSUInteger, SBAPermissionsType) {
     SBAPermissionsTypeNone                      = 0,
-    SBAPermissionsTypeHealthKit                 = 1 << 1,
+    SBAPermissionsTypeHealthKit __attribute__((deprecated("Not supported. Use SBAHealthKitPermissionObjectType."))) = 1 << 1,
     SBAPermissionsTypeLocation                  = 1 << 2,
     SBAPermissionsTypeLocalNotifications        = 1 << 3,
     SBAPermissionsTypeCoremotion                = 1 << 4,
@@ -47,33 +50,87 @@ typedef NS_OPTIONS(NSUInteger, SBAPermissionsType) {
     SBAPermissionsTypePhotoLibrary              = 1 << 7,
 };
 
+typedef NSString * SBAPermissionTypeIdentifier NS_STRING_ENUM;
+
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierHealthKit;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierLocation;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierNotifications;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCoremotion;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierMicrophone;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCamera;
+FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierPhotoLibrary;
+
 typedef NS_ENUM(NSUInteger, SBAPermissionStatus) {
     SBAPermissionStatusNotDetermined = 0,
     SBAPermissionStatusDenied,
     SBAPermissionStatusAuthorized,
 };
 
+typedef NS_ENUM(NSUInteger, SBAPermissionsErrorCode) {
+    SBAPermissionsErrorCodeAccessDenied = -100,
+};
+
 typedef void(^SBAPermissionsBlock)(BOOL granted, NSError * _Nullable error);
 
 @interface SBAPermissionsManager : NSObject
 
-@property (nonatomic, readonly) HKHealthStore * _Nullable healthStore;
-
 + (instancetype)sharedManager NS_REFINED_FOR_SWIFT;
 
-- (BOOL)isPermissionsGrantedForType:(SBAPermissionsType)type;
+/**
+ Shared healthstore object
+ */
+@property (nonatomic, readonly) HKHealthStore * _Nullable healthStore;
+
+/**
+ User defaults storage. default = `standardUserDefaults`
+ */
+@property (nonatomic, readwrite, strong) NSUserDefaults *userDefaults;
+
+/**
+ Factory to use for creating permissions type objects. By default, this uses the base class factorty.
+ */
+@property (nonatomic, readwrite, strong) SBAPermissionObjectTypeFactory *permissionsTypeFactory;
+
+/**
+ Default permission types to display on startup.
+ */
+@property (nonatomic, readwrite, strong) NSArray<SBAPermissionObjectType *> *defaultPermissionTypes;
+
+/**
+ Callback from the app delegate that the user has registered for notifications.
+ */
+- (void)appDidRegisterForNotifications:(UIUserNotificationSettings *)settings;
+
+/**
+ Is permission granted for the given permission object type?
+ 
+ @param  permissionType   Model object with the type of permission to request
+ @return                  `YES` if granted, `NO` if not granted
+ */
+- (BOOL)isPermissionGrantedForType:(SBAPermissionObjectType *)permissionType;
+
+/**
+ Request permission for the given permission type.
+ 
+ @param permissionType   Model object with the type of permission to request
+ @param completion       Completion handler
+ */
+- (void)requestPermissionForType:(SBAPermissionObjectType *)permissionType
+                      completion:(SBAPermissionsBlock _Nullable)completion;
+
+
+// Deprecated methods included for reverse-compatibility
+
+- (SBAPermissionsType)permissionsTypeForPermissionObjectTypes:(NSArray<SBAPermissionObjectType *> *)objectTypes __attribute__((deprecated));
+
+- (SBAPermissionTypeIdentifier _Nullable)typeIdentifierForForType:(SBAPermissionsType)type __attribute__((deprecated));
+
+- (NSArray<SBAPermissionObjectType *> *)typeObjectsForForType:(SBAPermissionsType)type __attribute__((deprecated));
+
+- (BOOL)isPermissionsGrantedForType:(SBAPermissionsType)type __attribute__((deprecated));
 
 - (void)requestPermissionForType:(SBAPermissionsType)type
-                  withCompletion:(SBAPermissionsBlock _Nullable)completion;
-
-- (void)setupHealthKitCharacteristicTypesToRead:(NSArray * _Nullable)characteristicTypesToRead
-                   healthKitQuantityTypesToRead:(NSArray * _Nullable)quantityTypesToRead
-                  healthKitQuantityTypesToWrite:(NSArray * _Nullable)QuantityTypesToWrite;
-
-- (void)appDidRegisterForRemoteNotifications:(UIUserNotificationSettings *)settings;
-
-- (NSString *)permissionTitleForType:(SBAPermissionsType)type;
-- (NSString *)permissionDescriptionForType:(SBAPermissionsType)type;
+                  withCompletion:(SBAPermissionsBlock _Nullable)completion __attribute__((deprecated));
 
 @end
 

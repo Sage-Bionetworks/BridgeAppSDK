@@ -35,21 +35,26 @@ import ResearchKit
 
 open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
 
-    lazy open var permissionsManager: SBAPermissionsManager = {
+    open var permissionsManager: SBAPermissionsManager {
         return SBAPermissionsManager.shared
-    }()
-    
-    open class func defaultPermissions() -> SBAPermissionsType {
-        guard let appDelegate = UIApplication.shared.delegate as? SBABridgeAppSDKDelegate else { return SBAPermissionsType() }
-        return appDelegate.requiredPermissions
     }
     
+    open var permissionTypes: [SBAPermissionObjectType] {
+        get {
+            return self.items as? [SBAPermissionObjectType] ?? []
+        }
+        set {
+            self.items = newValue
+        }
+    }
+    
+    @available(*, deprecated, message: "use `permissionTypes` instead")
     open var permissions: SBAPermissionsType {
         get {
-            return SBAPermissionsType(items: self.items as? [UInt])
+            return permissionsManager.permissionsType(for: self.permissionTypes)
         }
-        set(newValue) {
-            self.items = newValue.items as [NSCopying & NSSecureCoding & NSObjectProtocol]?
+        set {
+            self.items = permissionsManager.typeObjectsFor(for: newValue)
         }
     }
     
@@ -58,20 +63,26 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         commonInit()
     }
     
+    public init(identifier: String, permissions: [SBAPermissionTypeIdentifier]) {
+        super.init(identifier: identifier)
+        self.items = self.permissionsManager.permissionsTypeFactory.permissionTypes(for: permissions)
+        commonInit()
+    }
+    
     convenience init?(inputItem: SBASurveyItem) {
         guard let survey = inputItem as? SBAFormStepSurveyItem else { return nil }
         self.init(identifier: inputItem.identifier)
         survey.mapStepValues(with: self)
+        self.items = self.permissionsManager.permissionsTypeFactory.permissionTypes(for: survey.items)
         commonInit()
-        // Set the permissions if they can be mapped
-        self.permissions = survey.items?.reduce(SBAPermissionsType(), { (input, item) -> SBAPermissionsType in
-            return input.union(SBAPermissionsType(key: item as? String))
-        }) ?? SBAPermissionsStep.defaultPermissions()
     }
     
     fileprivate func commonInit() {
         if self.title == nil {
             self.title = Localization.localizedString("SBA_PERMISSIONS_TITLE")
+        }
+        if self.items == nil {
+            self.items = self.permissionsManager.defaultPermissionTypes
         }
     }
     
@@ -84,15 +95,11 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     open func allPermissionsAuthorized() -> Bool {
-        guard let items = self.items as? [UInt] else { return true }
-        for item in items {
-            let permission = SBAPermissionsType(rawValue: item)
-            // If permission has not yet been granted for a given type then show the step
-            if !self.permissionsManager.isPermissionsGranted(for: permission) {
+        for permissionType in permissionTypes {
+            if !self.permissionsManager.isPermissionGranted(for: permissionType) {
                 return false
             }
         }
-        // If all the checked permissions have been granted then return
         return true
     }
     
@@ -115,14 +122,13 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     override open func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
-        guard let item = self.objectForRow(at: indexPath) as? UInt,
+        guard let item = self.objectForRow(at: indexPath) as? SBAPermissionObjectType,
             let multipleLineCell = cell as? SBAMultipleLineTableViewCell
         else {
             return
         }
-        let permission = SBAPermissionsType(rawValue: item)
-        multipleLineCell.titleLabel?.text = permissionsManager.permissionTitle(for: permission)
-        multipleLineCell.subtitleLabel?.text = permissionsManager.permissionDescription(for: permission)
+        multipleLineCell.titleLabel?.text = item.title
+        multipleLineCell.subtitleLabel?.text = item.detail
     }
 }
 
@@ -151,8 +157,8 @@ open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoad
         // Show a loading view to indicate that something is happening
         self.showLoadingView()
         let permissionsManager = permissionsStep.permissionsManager
-        let permissions = permissionsStep.permissions
-        permissionsManager.requestPermissions(permissions, alertPresenter: self) { [weak self] (granted) in
+        let permissions = permissionsStep.permissionTypes
+        permissionsManager.requestPermissions(for: permissions, alertPresenter: self) { [weak self] (granted) in
             if granted || permissionsStep.isOptional {
                 self?.permissionsGranted = granted
                 self?.goNext()
