@@ -52,16 +52,16 @@ extension SBAPermissionsManager {
             // Use an enumerator to recursively step thorough each permission and request permission
             // for that type.
             var allGranted = true
-            let eumerator = (permissions as NSArray).objectEnumerator()
+            let enumerator = (permissions as NSArray).objectEnumerator()
             
-            func recursiveRequest() {
-                guard let permission = eumerator.nextObject() as? SBAPermissionObjectType else {
+            func enumerateRequest() {
+                guard let permission = enumerator.nextObject() as? SBAPermissionObjectType else {
                     completion?(allGranted)
                     return
                 }
 
                 if self.isPermissionGranted(for: permission) {
-                    recursiveRequest()
+                    enumerateRequest()
                 }
                 else {
                     self.requestPermission(for: permission, completion: { [weak alertPresenter] (success, error) in
@@ -72,19 +72,19 @@ extension SBAPermissionsManager {
                                     let title = Localization.localizedString("SBA_PERMISSIONS_FAILED_TITLE")
                                     let message = error?.localizedDescription ?? Localization.localizedString("SBA_PERMISSIONS_FAILED_MESSAGE")
                                     presenter.showAlertWithOk(title: title, message: message, actionHandler: { (_) in
-                                        recursiveRequest()
+                                        enumerateRequest()
                                     })
                                 
                             }
                             else {
-                                recursiveRequest()
+                                enumerateRequest()
                             }
                         })
                     })
                 }
             }
             
-            recursiveRequest()
+            enumerateRequest()
         })
     }
     

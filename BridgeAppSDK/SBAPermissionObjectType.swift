@@ -1,5 +1,5 @@
 //
-//  SBAPermissionType.swift
+//  SBAPermissionObjectType.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -52,18 +52,18 @@ import HealthKit
     "identifier" = `String` value from the list defined above
  
     SBANotificationPermissionObjectType
-    "notificationTypes" = ["alert", "badge", "sound"]   // Default = ["alert", "badge", "sound"]
+    "notificationTypes" = ["alert", "badge", "sound"], Default = ["alert", "badge", "sound"]
  
     SBALocationPermissionObjectType
-    "always" = true/false  // Default = `NO`
+    "always" = true/false, Default = false
  
     SBAHealthKitPermissionObjectType
     "healthKitTypes" = [SBAHealthKitProfileObject<String or [String : Any]>]
  
         SBAHealthKitProfileObject
         "identifier" = valid HKObjectTypeIdentifier
-        "profileKey" = mapping to a key in the user profile (optional)
-        "readonly" = true/false // Default = `NO`
+        "profileKey" = mapping to a key in the user profile (optional), Default = nil
+        "readonly" = true/false, Default = false
  
  */
 open class SBAPermissionObjectTypeFactory: NSObject {
@@ -336,13 +336,13 @@ public final class SBAHealthKitProfileObject: SBADataObject {
             return type
         }
         
-        // Check if this is a category type
+        // Check if this is a characteristic type
         let characteristicTypeIdentifier = HKCharacteristicTypeIdentifier(rawValue: self.identifier)
         if let type = HKObjectType.characteristicType(forIdentifier: characteristicTypeIdentifier) {
             return type
         }
         
-        // Check if this is a category type
+        // Check if this is a correlation type
         let correlationTypeIdentifier = HKCorrelationTypeIdentifier(rawValue: self.identifier)
         if let type = HKObjectType.correlationType(forIdentifier: correlationTypeIdentifier) {
             return type
@@ -404,7 +404,7 @@ extension SBAPermissionTypeIdentifier {
     public func defaultDescription() -> String {
         switch (self) {
         case SBAPermissionTypeIdentifier.healthKit:
-            return Localization..localizedString("SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION")
+            return Localization.localizedString("SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION")
             
         case SBAPermissionTypeIdentifier.location:
             return Localization.localizedBundleString("NSLocationWhenInUseUsageDescription",

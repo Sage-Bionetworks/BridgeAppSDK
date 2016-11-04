@@ -108,7 +108,7 @@
 - (id)objectWithDictionaryRepresentation:(NSDictionary*)dictionary classType:(NSString*)aClassType {
     
     // SBBObjects use type for the class type so check both the property key for this class and the SBBObject property key
-    NSString *classType = aClassType ?: dictionary[[[self class] classTypeKey]] ?: dictionary[@"classType"];
+    NSString *classType = aClassType ?: dictionary[[[self class] classTypeKey]] ?: dictionary[@"type"];
     if (classType == nil) {
         return dictionary;
     }
