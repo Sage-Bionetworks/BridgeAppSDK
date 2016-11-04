@@ -404,8 +404,8 @@ extension SBAPermissionTypeIdentifier {
     public func defaultDescription() -> String {
         switch (self) {
         case SBAPermissionTypeIdentifier.healthKit:
-            return Localization.localizedBundleString("NSHealthShareUsageDescription",
-                                                      localizedKey: "SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION")
+            return Localization..localizedString("SBA_HEALTHKIT_PERMISSIONS_DESCRIPTION")
+            
         case SBAPermissionTypeIdentifier.location:
             return Localization.localizedBundleString("NSLocationWhenInUseUsageDescription",
                                                       localizedKey: "SBA_LOCATION_PERMISSIONS_DESCRIPTION")
