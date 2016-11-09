@@ -35,7 +35,7 @@ import ResearchKit
 
 open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
-    static let confirmationIdentifier = "confirmation"
+    public static let confirmationIdentifier = "confirmation"
     
     static let defaultPasswordMinLength = 4
     static let defaultPasswordMaxLength = 16

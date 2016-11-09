@@ -66,9 +66,9 @@ public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDeleg
     func showAppropriateViewController(animated: Bool)
 }
 
-let SBAOnboardingJSONFilename = "Onboarding"
-let SBAStudyOverviewStoryboardName = "StudyOverview"
-let SBAMainStoryboardName = "Main"
+public let SBAOnboardingJSONFilename = "Onboarding"
+public let SBAStudyOverviewStoryboardName = "StudyOverview"
+public let SBAMainStoryboardName = "Main"
 
 @UIApplicationMain
 @objc open class SBAAppDelegate: UIResponder, SBABridgeAppSDKDelegate, ORKPasscodeDelegate, ORKTaskViewControllerDelegate  {
