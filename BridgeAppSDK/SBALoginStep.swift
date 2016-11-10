@@ -86,13 +86,11 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
 
 open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-    
-    // Mark: Navigation overrides - cannot go back and override go forward to register
-    
-    // Override the default method for goForward and attempt user registration. Do not allow subclasses
+        
+    // Override the default method for goForward and attempt user login. Do not allow subclasses
     // to override this method
     final public override func goForward() {
         
@@ -107,7 +105,7 @@ open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistr
         }
     }
     
-    func goNext() {
+    open func goNext() {
         // Then call super to go forward
         super.goForward()
     }

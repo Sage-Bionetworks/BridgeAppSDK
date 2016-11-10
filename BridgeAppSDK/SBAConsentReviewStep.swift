@@ -187,20 +187,20 @@ open class SBAConsentReviewResult: ORKResult {
     }
 }
 
-class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserRegistrationController {
+open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserRegistrationController {
     
-    lazy var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 
-    var consentStep: SBAConsentReviewStep? {
+    public var consentStep: SBAConsentReviewStep? {
         return self.step as? SBAConsentReviewStep
     }
     
-    override var result: ORKStepResult? {
+    open override var result: ORKStepResult? {
         guard let stepResult = super.result else { return nil }
         guard let stepResults = stepResult.results else { return stepResult }
         
@@ -259,13 +259,13 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
         return stepResult
     }
     
-    var consentReviewResult: SBAConsentReviewResult? {
+    public var consentReviewResult: SBAConsentReviewResult? {
         return self.result?.results?.find({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
     }
     
-    // Override the default method for goForward and attempt user registration. Do not allow subclasses
-    // to override this method
-    final override func goForward() {
+    // Override the default method for goForward and either consent or set the consent signature
+    // if not yet registered. Do not allow subclasses to override this method
+    final public override func goForward() {
         
         // Check that the user has consented or fail with an error
         guard let consentResult = self.consentReviewResult, consentResult.isConsented,
@@ -304,7 +304,7 @@ class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedIn
         }
     }
     
-    func goNext() {
+    open func goNext() {
         // Then call super to go forward
         super.goForward()
     }

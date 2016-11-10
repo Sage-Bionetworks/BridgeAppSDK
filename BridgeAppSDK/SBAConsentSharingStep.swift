@@ -33,11 +33,11 @@
 
 import ResearchKit
 
-public final class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreActionStep {
+open class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreActionStep {
     
     public var learnMoreAction: SBALearnMoreAction?
     
-    public override func stepViewControllerClass() -> AnyClass {
+    open override func stepViewControllerClass() -> AnyClass {
         return SBAConsentSharingStepViewController.classForCoder()
     }
 
@@ -114,15 +114,15 @@ public final class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreAct
     }
 }
 
-class SBAConsentSharingStepViewController: ORKQuestionStepViewController, SBASharedInfoController {
+open class SBAConsentSharingStepViewController: ORKQuestionStepViewController, SBASharedInfoController {
     
-    lazy var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // Override the default method for goForward and attempt user registration. Do not allow subclasses
-    // to override this method
-    final override func goForward() {
+    // Override the default method for goForward and set the users sharing scope
+    // Do not allow subclasses to override this method
+    final public override func goForward() {
         
         // Set the user's sharing scope
         sharedUser.dataSharingScope = {

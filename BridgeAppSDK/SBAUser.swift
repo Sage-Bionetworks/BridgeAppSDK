@@ -157,7 +157,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    fileprivate func getKeychainObject(_ key: String) -> NSSecureCoding? {
+    public func getKeychainObject(_ key: String) -> NSSecureCoding? {
         var obj: NSSecureCoding?
         lockQueue.sync {
             var err: NSError?
@@ -169,7 +169,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         return obj
     }
     
-    fileprivate func setKeychainObject(_ object: NSSecureCoding?, key: String) {
+    public func setKeychainObject(_ object: NSSecureCoding?, key: String) {
         lockQueue.async {
             do {
                 if let obj = object {

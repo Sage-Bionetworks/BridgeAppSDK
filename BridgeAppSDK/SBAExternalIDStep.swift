@@ -118,12 +118,8 @@ open class SBAExternalIDStep: ORKPageStep {
 
 open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
-    }()
-    
-    lazy open var user: SBAUserWrapper = {
-        return self.sharedUser
     }()
     
     // MARK: Navigation
@@ -165,14 +161,14 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         }
     }
     
-    func loginUser(externalId: String, isTestUser:Bool) {
+    fileprivate func loginUser(externalId: String, isTestUser:Bool) {
         showLoadingView()
-        user.loginUser(externalId: externalId) { [weak self] error in
+        sharedUser.loginUser(externalId: externalId) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
             }
             else if isTestUser, let testUserDataGroup = self?.sharedBridgeInfo.testUserDataGroup {
-                self?.user.addDataGroup(testUserDataGroup, completion: { (_) in
+                self?.sharedUser.addDataGroup(testUserDataGroup, completion: { (_) in
                     self?.goNext()
                 })
             }
@@ -182,7 +178,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         }
     }
     
-    func goNext() {
+    open func goNext() {
         super.goForward()
     }
     
@@ -198,7 +194,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         }
     }
     
-    func externalId() throws -> String {
+    fileprivate func externalId() throws -> String {
         
         guard let externalIds = externalIdAnswers(),
               let externalId = externalIds.first
@@ -217,7 +213,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         return externalId
     }
     
-    func externalIdAnswers() -> [String]? {
+    fileprivate func externalIdAnswers() -> [String]? {
         return self.result?.results?.mapAndFilter { (result) -> String? in
             guard let textResult = result as? ORKTextQuestionResult,
                   let answer = textResult.textAnswer?.trim()
