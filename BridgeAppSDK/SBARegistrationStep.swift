@@ -93,7 +93,6 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
 }
 
-
 open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
     /**
@@ -105,7 +104,7 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
 
     // MARK: SBASharedInfoController
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
@@ -140,7 +139,7 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
         }
     }
     
-    func goNext() {
+    open func goNext() {
         
         // successfully registered. Set the other values from this form.
         if let gender = self.gender {

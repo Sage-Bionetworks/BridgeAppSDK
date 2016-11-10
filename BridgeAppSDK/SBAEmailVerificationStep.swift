@@ -212,11 +212,11 @@ class SBAChangeEmailStep: ORKFormStep {
     }
 }
 
-class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
     
     // MARK: SBASharedInfoController
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
@@ -226,8 +226,8 @@ class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegist
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
     
     
-    // Override the default method for goForward and attempt user registration. Do not allow subclasses
-    // to override this method
+    // Override the default method for goForward and attempt changing email. 
+    // Do not allow subclasses to override this method
     final public override func goForward() {
         showLoadingView()
         sharedUser.changeUserEmailAddress(email!) { [weak self] error in
@@ -240,7 +240,7 @@ class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegist
         }
     }
     
-    func goNext() {
+    open func goNext() {
         // Then call super to go forward
         super.goForward()
     }
