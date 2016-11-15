@@ -50,6 +50,7 @@
 @property (nonatomic) HKBiologicalSex gender;
 @property (nonatomic, copy) NSDate * _Nullable birthdate;
 @property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
+@property (nonatomic, copy) UIImage * _Nullable profileImage;
 @property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
 @property (nonatomic) BOOL isRegistered;
 @property (nonatomic) BOOL isLoginVerified;

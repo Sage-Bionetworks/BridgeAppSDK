@@ -51,6 +51,7 @@
 @synthesize onboardingStepIdentifier;
 @synthesize gender;
 @synthesize birthdate;
+@synthesize profileImage;
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -83,6 +84,7 @@
     self.password = nil;
     self.subpopulationGuid = nil;
     self.consentSignature = nil;
+    self.profileImage = nil;
     self.dataGroups = nil;
     self.isRegistered = NO;
     self.isLoginVerified = NO;
