@@ -47,12 +47,12 @@ extension NSDictionary: SBAActiveTask {
         return self["intendedUseDescription"] as? String
     }
 
-    public var taskOptions: [String : AnyObject]? {
-        return self["taskOptions"] as? [String : AnyObject]
+    public var taskOptions: [String : Any]? {
+        return self["taskOptions"] as? [String : Any]
     }
     
     public var predefinedExclusions: ORKPredefinedTaskOption? {
-        guard let exclusions = self["predefinedExclusions"] as? UInt else { return nil }
+        guard let exclusions = (self["predefinedExclusions"] as? NSNumber)?.uintValue else { return nil }
         return ORKPredefinedTaskOption(rawValue: exclusions)
     }
 

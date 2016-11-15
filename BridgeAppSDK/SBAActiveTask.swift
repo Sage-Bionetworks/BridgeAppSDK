@@ -112,7 +112,7 @@ extension ORKMoodSurveyFrequency {
 public protocol SBAActiveTask: SBABridgeTask, SBAStepTransformer {
     var taskType: SBAActiveTaskType { get }
     var intendedUseDescription: String? { get }
-    var taskOptions: [String : AnyObject]? { get }
+    var taskOptions: [String : Any]? { get }
     var predefinedExclusions: ORKPredefinedTaskOption? { get }
     var localizedSteps: [SBASurveyItem]? { get }
     var optional: Bool { get }
@@ -228,12 +228,12 @@ extension SBAActiveTask {
     
     func memoryTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
         
-        let initialSpan: Int = taskOptions?["initialSpan"] as? Int ?? 3
-        let minimumSpan: Int = taskOptions?["minimumSpan"] as? Int ?? 2
-        let maximumSpan: Int = taskOptions?["maximumSpan"] as? Int ?? 15
+        let initialSpan: Int = (taskOptions?["initialSpan"] as? NSNumber)?.intValue ?? 3
+        let minimumSpan: Int = (taskOptions?["minimumSpan"] as? NSNumber)?.intValue ?? 2
+        let maximumSpan: Int = (taskOptions?["maximumSpan"] as? NSNumber)?.intValue ?? 15
         let playSpeed: TimeInterval = taskOptions?["playSpeed"] as? TimeInterval ?? 1.0
-        let maxTests: Int = taskOptions?["maxTests"] as? Int ?? 5
-        let maxConsecutiveFailures: Int = taskOptions?["maxConsecutiveFailures"] as? Int ?? 3
+        let maxTests: Int = (taskOptions?["maxTests"] as? NSNumber)?.intValue ?? 5
+        let maxConsecutiveFailures: Int = (taskOptions?["maxConsecutiveFailures"] as? NSNumber)?.intValue ?? 3
         var customTargetImage: UIImage? = nil
         if let imageName = taskOptions?["customTargetImageName"] as? String {
             customTargetImage = SBAResourceFinder.shared.image(forResource: imageName)

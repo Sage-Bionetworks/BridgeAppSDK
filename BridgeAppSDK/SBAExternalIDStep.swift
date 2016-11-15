@@ -194,7 +194,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserPr
         }
     }
     
-    fileprivate func externalId() throws -> String {
+    func externalId() throws -> String {
         
         guard let externalIds = externalIdAnswers(),
               let externalId = externalIds.first

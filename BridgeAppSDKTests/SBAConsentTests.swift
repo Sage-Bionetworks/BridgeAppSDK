@@ -32,7 +32,7 @@
 //
 
 import XCTest
-import BridgeAppSDK
+@testable import BridgeAppSDK
 
 class SBAConsentDocumentFactoryTests: ResourceTestCase {
 
@@ -174,16 +174,19 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(reviewStep!.reasonForConsent)
         XCTAssertNotNil(nameStep!.formItems)
         
-        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat",
-                                           "birthdate"   : "ORKDateAnswerFormat"
-                                           ]
-        for (identifier, expectedClassName) in expected {
-            let formItem = nameStep!.formItemForIdentifier(identifier)
-            XCTAssertNotNil(formItem)
-            if let classForCoder = formItem?.answerFormat?.classForCoder {
-                let className = NSStringFromClass(classForCoder)
-                XCTAssertEqual(className, expectedClassName)
-            }
+        let nameItem = nameStep!.formItemForIdentifier("name")
+        XCTAssertNotNil(nameItem)
+        if let _ = nameItem?.answerFormat as? ORKTextAnswerFormat {
+        } else {
+            XCTAssert(false, "\(nameItem?.answerFormat) not of expected type")
+        }
+        
+        let birthdateItem = nameStep!.formItemForIdentifier("birthdate")
+        XCTAssertNotNil(birthdateItem)
+        if let birthdateFormat = birthdateItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat {
+            XCTAssertEqual(birthdateFormat.characteristicType.identifier, HKCharacteristicTypeIdentifier.dateOfBirth.rawValue)
+        } else {
+            XCTAssert(false, "\(birthdateItem?.answerFormat) not of expected type")
         }
     }
     
