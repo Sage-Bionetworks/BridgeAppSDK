@@ -67,6 +67,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     let kExternalIdKey = "externalId"
     let kGenderKey = "gender"
     let kBirthdateKey = "birthdate"
+    let kProfileImagePropertyKey = "profileImage"
     
     public var sessionToken: String? {
         get {
@@ -154,6 +155,24 @@ public final class SBAUser: NSObject, SBAUserWrapper {
                 signature!.signatureName = newValue!.signatureName
             }
             setKeychainObject(signature, key: kConsentSignatureKey)
+        }
+    }
+    
+    public var profileImage: UIImage? {
+        get {
+            if let profileImageData = getKeychainObject(kProfileImagePropertyKey) as? Data {
+                return UIImage(data: profileImageData)
+            } else {
+                return nil
+            }
+        }
+        set (newValue) {
+            if let newValueUnwrapped = newValue {
+                let dataValue = UIImageJPEGRepresentation(newValueUnwrapped, 1.0)
+                setKeychainObject(dataValue as NSSecureCoding?, key: kProfileImagePropertyKey)
+            } else {  // remove the item from the keychain
+                setKeychainObject(nil, key: kProfileImagePropertyKey)
+            }
         }
     }
     

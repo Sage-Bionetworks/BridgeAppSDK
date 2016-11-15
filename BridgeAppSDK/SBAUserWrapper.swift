@@ -85,6 +85,11 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     var consentSignature: SBAConsentSignatureWrapper? { get set }
 
     /**
+     * Profile Image is stored in the keychain
+     */
+    var profileImage: UIImage? { get set }
+    
+    /**
      * Data groups associated with this user.
      */
     var dataGroups: [String]? { get set }
