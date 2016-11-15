@@ -45,12 +45,12 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
     
     public override required init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(inputItem: nil, healthStore: nil)
+        commonInit(inputItem: nil)
     }
     
     public init?(inputItem: SBASurveyItem) {
         super.init(identifier: inputItem.identifier)
-        commonInit(inputItem: inputItem, healthStore: nil)
+        commonInit(inputItem: inputItem)
     }
     
     open override func validateParameters() {

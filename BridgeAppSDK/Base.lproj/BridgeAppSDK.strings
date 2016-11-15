@@ -114,6 +114,13 @@
 "REGISTRATION_RESEND_EMAIL" = "Resent verification email"; // Text to show in the action sheet for resending the verification email
 "REGISTRATION_CHANGE_EMAIL_TITLE" = "Change Email"; // Title for view controller for changing email
 
+/* Profile */
+"BLOOD_TYPE_FORM_ITEM_TITLE" = "Blood Type";    // Title for a form item for entering blood type
+"BLOOD_TYPE_FORM_ITEM_PLACEHOLDER" = "Enter blood type";    // Placeholder for a form item for entering blood type
+"FITZPATRICK_SKIN_TYPE_FORM_ITEM_TITLE" = "Fitzpatrick Skin Type";    // Title for a form item for entering blood type
+"FITZPATRICK_SKIN_TYPE_FORM_ITEM_PLACEHOLDER" = "Enter skin type";    // Placeholder for a form item for entering blood type
+"WHEELCHAIR_USE_FORM_ITEM_TITLE" = "Wheelchair Use";    // Title for form item for entering wheelchair use
+
 
 /* State */
 "SBA_COMPLETED" = "Completed"; // Short phrase to use to indicate that an activity is completed.

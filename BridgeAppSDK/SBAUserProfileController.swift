@@ -60,7 +60,7 @@ extension SBAUserProfileController {
     public var gender: HKBiologicalSex? {
         guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult
         else { return nil }
-        if  let answer = result.choiceAnswers?.first as? Int {
+        if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
             return HKBiologicalSex(rawValue: answer)
         }
         else if let answer = result.choiceAnswers?.first as? String {
@@ -86,6 +86,60 @@ extension SBAUserProfileController {
     public var birthdate: Date? {
         guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer
+    }
+    
+    public var bloodType: HKBloodType? {
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
+            else { return nil }
+        if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
+            return HKBloodType(rawValue: answer)
+        }
+        else if let answer = result.choiceAnswers?.first as? String {
+            // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
+            // than using the HKBloodType enum directly so you have to convert
+            let bloodType = ORKBloodTypeIdentifier(rawValue: answer)
+            switch (bloodType) {
+            case ORKBloodTypeIdentifier.abNegative:
+                return HKBloodType.abNegative
+            case ORKBloodTypeIdentifier.abPositive:
+                return HKBloodType.abPositive
+            case ORKBloodTypeIdentifier.aNegative:
+                return HKBloodType.aNegative
+            case ORKBloodTypeIdentifier.aPositive:
+                return HKBloodType.aPositive
+            case ORKBloodTypeIdentifier.bNegative:
+                return HKBloodType.bNegative
+            case ORKBloodTypeIdentifier.bPositive:
+                return HKBloodType.bPositive
+            case ORKBloodTypeIdentifier.oNegative:
+                return HKBloodType.oNegative
+            case ORKBloodTypeIdentifier.oPositive:
+                return HKBloodType.oPositive
+            default:
+                return nil
+            }
+        }
+        else {
+            return nil
+        }
+    }
+    
+    public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+            let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
+        else {
+            return nil
+        }
+        return HKFitzpatrickSkinType(rawValue: answer)
+    }
+    
+    public var wheelchairUse: Bool? {
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+            let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
+            else {
+                return nil
+        }
+        return answer
     }
     
     func textAnswer(_ field: SBAProfileInfoOption) -> String? {

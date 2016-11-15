@@ -79,7 +79,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         return step
     }
     
-    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument, healthStore:HKHealthStore? = nil) {
+    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument) {
         
         var steps: [ORKStep] = []
         
@@ -109,7 +109,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         
         // Initialize common if there is a name step to initialize
         if let _ = self.nameStep {
-            commonInit(inputItem: inputItem, healthStore: healthStore)
+            commonInit(inputItem: inputItem)
         }
     }
     
