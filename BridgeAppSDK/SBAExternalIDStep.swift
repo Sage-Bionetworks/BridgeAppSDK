@@ -116,7 +116,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
 }
 
-open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
+open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserProfileController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
@@ -194,7 +194,7 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRe
         }
     }
     
-    fileprivate func externalId() throws -> String {
+    func externalId() throws -> String {
         
         guard let externalIds = externalIdAnswers(),
               let externalId = externalIds.first

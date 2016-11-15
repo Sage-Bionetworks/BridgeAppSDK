@@ -55,7 +55,7 @@ class SBAActiveTaskTests: XCTestCase {
             "taskType"                  : "tapping",
             "intendedUseDescription"    : "intended Use Description Text",
             "taskOptions"               : [
-                "duration"      : 10.0,
+                "duration"      : 12.0,
                 "handOptions"   : "right"
             ],
             "localizedSteps"               : [[
@@ -101,6 +101,7 @@ class SBAActiveTaskTests: XCTestCase {
             return
         }
         XCTAssertEqual(rightTappingStep.identifier, "tapping.right")
+        XCTAssertEqual(rightTappingStep.stepDuration, 12.0)
         
         // Step 4 - Completion
         guard let completionStep = task.steps.last as? ORKCompletionStep else {

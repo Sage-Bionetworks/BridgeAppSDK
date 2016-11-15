@@ -25,6 +25,12 @@
                   "onboardingType"  : "registration",
                   "steps"           : [
                                        {
+                                       "identifier"   : "healthKitPermissions",
+                                       "type"         : "permissions",
+                                       "title"        : "Health Data",
+                                       "items"        : ["healthKit"]
+                                       },
+                                       {
                                        "identifier"    : "registration",
                                        "type"          : "registration",
                                        "title"         : "Registration",

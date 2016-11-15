@@ -34,12 +34,15 @@
 import ResearchKit
 
 public enum SBAProfileInfoOption : String {
-    case email            = "email"
-    case password         = "password"
-    case externalID       = "externalID"
-    case name             = "name"
-    case birthdate        = "birthdate"
-    case gender           = "gender"
+    case email                  = "email"
+    case password               = "password"
+    case externalID             = "externalID"
+    case name                   = "name"
+    case birthdate              = "birthdate"
+    case gender                 = "gender"
+    case bloodType              = "bloodType"
+    case fitzpatrickSkinType    = "fitzpatrickSkinType"
+    case wheelchairUse          = "wheelchairUse"
 }
 
 enum SBAProfileInfoOptionsError: Error {
@@ -174,6 +177,17 @@ public struct SBAProfileInfoOptions {
                 let formItem = makeGenderFormItem(option)
                 formItems.append(formItem)
                 
+            case .bloodType:
+                let formItem = makeBloodTypeFormItem(option)
+                formItems.append(formItem)
+                
+            case .fitzpatrickSkinType:
+                let formItem = makeFitzpatrickSkinTypeFormItem(option)
+                formItems.append(formItem)
+                
+            case .wheelchairUse:
+                let formItem = makeWheelchairUseFormItem(option)
+                formItems.append(formItem)
             }
         }
         return formItems
@@ -243,6 +257,7 @@ public struct SBAProfileInfoOptions {
     }
     
     func makeNameFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        
         let answerFormat = ORKAnswerFormat.textAnswerFormat()
         answerFormat.multipleLines = false
         answerFormat.autocapitalizationType = .words
@@ -260,9 +275,10 @@ public struct SBAProfileInfoOptions {
     }
     
     func makeBirthdateFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
-        // Calculate default date (20 years old).
-        let defaultDate = (Calendar.current as NSCalendar).date(byAdding: .year, value: -20, to: Date(), options: NSCalendar.Options(rawValue: 0))
-        let answerFormat = ORKAnswerFormat.dateAnswerFormat(withDefaultDate: defaultDate, minimumDate: nil, maximumDate: Date(), calendar: Calendar.current)
+        
+        let characteristic = HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!
+        let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+        answerFormat.shouldRequestAuthorization = false
         let formItem = ORKFormItem(identifier: option.rawValue,
                                    text: Localization.localizedString("DOB_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
@@ -273,12 +289,10 @@ public struct SBAProfileInfoOptions {
     }
     
     func makeGenderFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
-        let textChoices: [ORKTextChoice] = [
-            ORKTextChoice(text: Localization.localizedString("GENDER_FEMALE"), value: HKBiologicalSex.female.rawValue as NSNumber),
-            ORKTextChoice(text: Localization.localizedString("GENDER_MALE"), value: HKBiologicalSex.male.rawValue as NSNumber),
-            ORKTextChoice(text: Localization.localizedString("GENDER_OTHER"), value: HKBiologicalSex.other.rawValue as NSNumber),
-            ]
-        let answerFormat = ORKValuePickerAnswerFormat(textChoices: textChoices)
+        
+        let characteristic = HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
+        let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+        answerFormat.shouldRequestAuthorization = false
         let formItem = ORKFormItem(identifier: option.rawValue,
                                    text: Localization.localizedString("GENDER_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
@@ -287,6 +301,57 @@ public struct SBAProfileInfoOptions {
         
         return formItem
     }
+    
+    func makeBloodTypeFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        
+        let characteristic = HKObjectType.characteristicType(forIdentifier: .bloodType)!
+        let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+        answerFormat.shouldRequestAuthorization = false
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("BLOOD_TYPE_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("BLOOD_TYPE_FORM_ITEM_PLACEHOLDER")
+        
+        return formItem
+    }
+    
+    func makeFitzpatrickSkinTypeFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        
+        let characteristic = HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)!
+        let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+        answerFormat.shouldRequestAuthorization = false
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("FITZPATRICK_SKIN_TYPE_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        formItem.placeholder = Localization.localizedString("FITZPATRICK_SKIN_TYPE_FORM_ITEM_PLACEHOLDER")
+        
+        return formItem
+    }
+    
+    func makeWheelchairUseFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+        
+        let answerFormat = ORKBooleanAnswerFormat()
+        
+//        if #available(iOS 10.0, *) {
+//            let characteristic = HKObjectType.characteristicType(forIdentifier: .wheelchairUse)!
+//            let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+//            answerFormat.shouldRequestAuthorization = false
+//        } else {
+//            
+//        }
+
+        let formItem = ORKFormItem(identifier: option.rawValue,
+                                   text: Localization.localizedString("WHEELCHAIR_USE_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        
+        return formItem
+    }
+    
+    
+//    case wheelchairUse          = "wheelchairUse"
 }
 
 public protocol SBAFormProtocol : class {
@@ -321,7 +386,7 @@ extension SBAProfileInfoForm {
         return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
-    func commonInit(_ inputItem: SBASurveyItem?) {
+    func commonInit(inputItem: SBASurveyItem?) {
         self.title = inputItem?.stepTitle
         self.text = inputItem?.stepText
         if let formStep = self as? ORKFormStep {
@@ -329,6 +394,18 @@ extension SBAProfileInfoForm {
         }
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
         self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
+    }
+}
+
+class SBAHealthKitCharacteristicTypeAnswerFormat: ORKHealthKitCharacteristicTypeAnswerFormat {
+    override func implied() -> ORKAnswerFormat {
+        let answerFormat = super.implied()
+        if let choiceFormat = answerFormat as? ORKTextChoiceAnswerFormat {
+            return ORKValuePickerAnswerFormat(textChoices: choiceFormat.textChoices)
+        }
+        else {
+            return answerFormat
+        }
     }
 }
 

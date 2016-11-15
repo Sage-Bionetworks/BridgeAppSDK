@@ -247,7 +247,7 @@ class SBAActivityArchive: XCTestCase {
         // Check the values specific to this result type
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "Date")
-        let expectedAnswer = "1969-08-03T04:10:00.000" + timezoneString()
+        let expectedAnswer = "1969-08-03T04:10:00.000" + timezoneString(for: result.dateAnswer!)
         XCTAssertEqual(json["dateAnswer"] as? String, expectedAnswer)
     }
     
@@ -279,10 +279,13 @@ class SBAActivityArchive: XCTestCase {
         
         // NSDate does not carry the timezone and thus, will always be
         // represented in the current timezone
-        let expectedStart = "2016-07-04T08:29:54.000" + timezoneString()
-        let expectedEnd = "2016-07-04T08:30:23.000" + timezoneString()
-        XCTAssertEqual(json["startDate"] as? String, expectedStart)
-        XCTAssertEqual(json["endDate"] as? String, expectedEnd)
+        let expectedStart = "2016-07-04T08:29:54.000" + timezoneString(for: result.startDate)
+        let expectedEnd = "2016-07-04T08:30:23.000" + timezoneString(for: result.endDate)
+        let actualStart = json["startDate"] as? String
+        let actualEnd = json["endDate"] as? String
+        
+        XCTAssertEqual(actualStart, expectedStart)
+        XCTAssertEqual(actualEnd, expectedEnd)
         
         return json
     }
@@ -300,12 +303,14 @@ class SBAActivityArchive: XCTestCase {
         return calendar.date(from: components)!
     }
     
-    func timezoneString() -> String {
+    func timezoneString(for date: Date) -> String {
         let hoursUnit = 60 * 60
         let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-        let timezoneHours: Int = calendar.timeZone.secondsFromGMT() / hoursUnit
-        let timezoneSeconds = abs(calendar.timeZone.secondsFromGMT() - (timezoneHours * hoursUnit))
-        let timezone = String(format: "%+.2d:%02d", timezoneHours, timezoneSeconds)
+        let isDST = calendar.timeZone.isDaylightSavingTime(for: date)
+        let isNowDST = calendar.timeZone.isDaylightSavingTime()
+        let timezoneNowHours: Int = calendar.timeZone.secondsFromGMT() / hoursUnit
+        let timezoneHours: Int = timezoneNowHours + (isDST && !isNowDST ? 1 : 0) + (!isDST && isNowDST ? -1 : 0)
+        let timezone = String(format: "%+.2d:00", timezoneHours)
         return timezone
     }
 

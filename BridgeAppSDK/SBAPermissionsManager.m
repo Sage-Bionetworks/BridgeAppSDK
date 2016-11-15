@@ -528,14 +528,49 @@ static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManag
 
 - (BOOL)isPermissionGrantedForHealthKitPermissionType:(SBAHealthKitPermissionObjectType *)permissionType {
     for (HKObjectType *hkType in permissionType.readTypes) {
-        if (![self isPermissionsGrantedForHealthKitType:hkType]) {
+        if ([hkType isKindOfClass:[HKSampleType class]]) {
+            // Intentionally nest the if statement. This is an early exit from the for-loop if it fail.
+            if (![self isPermissionsGrantedForHealthKitType:(HKSampleType*)hkType]) {
+                return NO;
+            }
+        }
+        else if ([hkType isKindOfClass:[HKCharacteristicType class]]) {
+            // Characteristics are readonly so permission granted can only be checked by attempting to
+            // get the value and check if there is an error (either b/c the permission was denied or
+            // because it was never granted
+            NSError *error = nil;
+            if ([[hkType identifier] isEqualToString:HKCharacteristicTypeIdentifierDateOfBirth]) {
+                [self.healthStore dateOfBirthWithError:&error];
+            }
+            else if ([[hkType identifier] isEqualToString:HKCharacteristicTypeIdentifierBloodType]) {
+                [self.healthStore bloodTypeWithError:&error];
+            }
+            else if ([[hkType identifier] isEqualToString:HKCharacteristicTypeIdentifierBiologicalSex]) {
+                [self.healthStore biologicalSexWithError:&error];
+            }
+            else if ([[hkType identifier] isEqualToString:HKCharacteristicTypeIdentifierFitzpatrickSkinType]) {
+                [self.healthStore fitzpatrickSkinTypeWithError:&error];
+            }
+            else if ([[hkType identifier] isEqualToString:HKCharacteristicTypeIdentifierWheelchairUse]) {
+                [self.healthStore wheelchairUseWithError:&error];
+            }
+            if (error != nil) {
+                return NO;
+            }
+        }
+        else {
+            // If this is *not* a recognized type for writing or a characteristic, then we have no
+            // means of determining if the value is available using this method. This does *not*
+            // mean that this permission has not been granted, but that the default behavior is for
+            // the app to fallback to showing the permissions step and attempt to get permission
+            // before continuing.
             return NO;
         }
     }
     return YES;
 }
 
-- (BOOL)isPermissionsGrantedForHealthKitType:(HKObjectType *)type {
+- (BOOL)isPermissionsGrantedForHealthKitType:(HKSampleType *)type {
     HKAuthorizationStatus status = [self.healthStore authorizationStatusForType:type];
     return (status == HKAuthorizationStatusSharingAuthorized);
 }

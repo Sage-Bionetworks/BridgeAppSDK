@@ -169,15 +169,29 @@ class SBAAccountTests: XCTestCase {
     }
     
     func testPermssionsType_PhotoLibrary() {
-        let permissionsStep = SBAPermissionsStep(identifier: "permissions",
-                                                permissions: [.photoLibrary])
         
-        let expectedItems = [SBAPermissionObjectType(permissionType: .photoLibrary)]
-        let actualItems = permissionsStep.items as? [SBAPermissionObjectType]
+        let inputItem: NSDictionary =      [
+            "identifier"   : "permissions",
+            "type"         : "permissions",
+            "title"        : "Permissions",
+            "text"         : "The following permissions are required for this activity. Please change these permissions via the iPhone Settings app before continuing.",
+            "items"        : [[ "identifier"    : "photoLibrary",
+                                "detail"        : "Allow the app to use the Photo Library"]],
+            "optional"     : false,
+            ]
+        
+        let permissionsStep = SBAPermissionsStep(inputItem: inputItem)
+        XCTAssertNotNil(permissionsStep)
+        
+        let actualItems = permissionsStep?.items as? [SBAPermissionObjectType]
         
         XCTAssertNotNil(actualItems)
-        guard actualItems != nil else { return }
-        XCTAssertEqual(actualItems!, expectedItems)
+        XCTAssertEqual(actualItems?.count ?? 0, 1)
+        
+        guard let item = actualItems?.first else { return }
+        XCTAssertEqual(item.permissionType, SBAPermissionTypeIdentifier.photoLibrary)
+        XCTAssertEqual(item.detail, "Allow the app to use the Photo Library")
+
     }
     
     func testPermissionsType_InputItem() {

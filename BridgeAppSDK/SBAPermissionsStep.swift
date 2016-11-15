@@ -84,6 +84,13 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
         if self.items == nil {
             self.items = self.permissionsManager.defaultPermissionTypes
         }
+        else if let healthKitPermission = self.permissionTypes.find({ $0.permissionType == .healthKit }) as? SBAHealthKitPermissionObjectType,
+            (healthKitPermission.healthKitTypes == nil) || healthKitPermission.healthKitTypes!.count == 0,
+            let replacement = permissionsManager.defaultPermissionTypes.find({ $0.permissionType == .healthKit }) as? SBAHealthKitPermissionObjectType {
+            // If this is a healthkit step and the permission types are not defined, 
+            // then look in the default permission types for the default types to include.
+            healthKitPermission.healthKitTypes = replacement.healthKitTypes
+        }
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -175,7 +182,7 @@ open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoad
     }
     
     open override var cancelButtonItem: UIBarButtonItem? {
-        // Overrride the cancel button to *not* display. User must tap the "Done" button.
+        // Override the cancel button to *not* display. User must tap the "Continue" button.
         get { return nil }
         set {}
     }
