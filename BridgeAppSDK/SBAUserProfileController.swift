@@ -1,5 +1,5 @@
 //
-//  SBAUserRegistrationController.swift
+//  SBAUserProfileController.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,7 +33,7 @@
 
 import Foundation
 
-public protocol SBAUserRegistrationController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
+public protocol SBAUserProfileController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
     
     var result: ORKStepResult? { get }
     
@@ -41,7 +41,7 @@ public protocol SBAUserRegistrationController: class, SBASharedInfoController, S
     var failedRegistrationTitle: String { get }
 }
 
-extension SBAUserRegistrationController {
+extension SBAUserProfileController {
     
     // MARK: Results
     
@@ -58,10 +58,29 @@ extension SBAUserRegistrationController {
     }
     
     public var gender: HKBiologicalSex? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult,
-            let answer = result.choiceAnswers?.first as? Int
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult
         else { return nil }
-        return HKBiologicalSex(rawValue: answer)
+        if  let answer = result.choiceAnswers?.first as? Int {
+            return HKBiologicalSex(rawValue: answer)
+        }
+        else if let answer = result.choiceAnswers?.first as? String {
+            // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
+            // than using the HKBiologicalSex enum directly so you have to convert
+            let biologicalSex = ORKBiologicalSexIdentifier(rawValue: answer)
+            switch (biologicalSex) {
+            case ORKBiologicalSexIdentifier.female:
+                return HKBiologicalSex.female
+            case ORKBiologicalSexIdentifier.male:
+                return HKBiologicalSex.male
+            case ORKBiologicalSexIdentifier.other:
+                return HKBiologicalSex.other
+            default:
+                return nil
+            }
+        }
+        else {
+            return nil
+        }
     }
     
     public var birthdate: Date? {

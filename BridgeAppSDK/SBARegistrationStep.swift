@@ -50,12 +50,12 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
     public override required init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(nil)
+        commonInit(inputItem:nil, healthStore: nil)
     }
     
-    public init(inputItem: SBASurveyItem) {
+    public init(inputItem: SBASurveyItem, healthStore:HKHealthStore? = nil) {
         super.init(identifier: inputItem.identifier)
-        commonInit(inputItem)
+        commonInit(inputItem:inputItem, healthStore: healthStore)
     }
     
     open override func validateParameters() {
@@ -93,7 +93,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
 }
 
-open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserProfileController {
     
     /**
      If there are data groups that were set in a previous step or via a custom onboarding manager,
@@ -108,7 +108,7 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // MARK: SBAUserRegistrationController
+    // MARK: SBAUserProfileController
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
@@ -119,8 +119,7 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // set the back and cancel buttons to empty items
-        self.cancelButtonItem = UIBarButtonItem()
+        // set the back button to empty items
         self.backButtonItem = UIBarButtonItem()
     }
     

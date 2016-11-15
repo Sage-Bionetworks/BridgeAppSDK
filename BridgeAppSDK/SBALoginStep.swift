@@ -45,12 +45,12 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
     
     public override required init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(nil)
+        commonInit(inputItem: nil, healthStore: nil)
     }
     
     public init?(inputItem: SBASurveyItem) {
         super.init(identifier: inputItem.identifier)
-        commonInit(inputItem)
+        commonInit(inputItem: inputItem, healthStore: nil)
     }
     
     open override func validateParameters() {
@@ -84,7 +84,7 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
     }
 }
 
-open class SBALoginStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+open class SBALoginStepViewController: ORKFormStepViewController, SBAUserProfileController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate

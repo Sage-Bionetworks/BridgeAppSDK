@@ -79,7 +79,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         return step
     }
     
-    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument) {
+    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument, healthStore:HKHealthStore? = nil) {
         
         var steps: [ORKStep] = []
         
@@ -109,7 +109,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         
         // Initialize common if there is a name step to initialize
         if let _ = self.nameStep {
-            commonInit(inputItem)
+            commonInit(inputItem: inputItem, healthStore: healthStore)
         }
     }
     
@@ -187,7 +187,7 @@ open class SBAConsentReviewResult: ORKResult {
     }
 }
 
-open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserRegistrationController {
+open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserProfileController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
@@ -279,11 +279,11 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
         
         // set the consent to the shared user
         sharedUser.consentSignature = consentSignature
-        if sharedUser.name == nil {
-            sharedUser.name = consentSignature.signatureName
+        if let name = consentSignature.signatureName {
+            sharedUser.name = name
         }
-        if sharedUser.birthdate == nil {
-            sharedUser.birthdate = consentSignature.signatureBirthdate
+        if let birthdate = consentSignature.signatureBirthdate {
+            sharedUser.birthdate = birthdate
         }
         
         if sharedUser.isLoginVerified {

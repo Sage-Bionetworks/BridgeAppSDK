@@ -92,7 +92,7 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
     }
 }
 
-open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserRegistrationController {
+open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserProfileController {
     
     // MARK: SBASharedInfoController
     
@@ -100,7 +100,7 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // MARK: SBAUserRegistrationController
+    // MARK: SBAUserProfileController
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
@@ -212,7 +212,7 @@ class SBAChangeEmailStep: ORKFormStep {
     }
 }
 
-open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserRegistrationController {
+open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserProfileController {
     
     // MARK: SBASharedInfoController
     
@@ -220,7 +220,7 @@ open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserR
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
-    // MARK: SBAUserRegistrationController
+    // MARK: SBAUserProfileController
     
     open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")

@@ -116,7 +116,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
 }
 
-open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserRegistrationController {
+open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAUserProfileController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
