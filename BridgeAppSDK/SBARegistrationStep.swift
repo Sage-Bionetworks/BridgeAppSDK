@@ -119,7 +119,7 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // set the back button to empty items
+        // Hide the back button
         self.backButtonItem = UIBarButtonItem()
     }
     

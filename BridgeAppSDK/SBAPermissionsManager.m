@@ -529,7 +529,7 @@ static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManag
 - (BOOL)isPermissionGrantedForHealthKitPermissionType:(SBAHealthKitPermissionObjectType *)permissionType {
     for (HKObjectType *hkType in permissionType.readTypes) {
         if ([hkType isKindOfClass:[HKSampleType class]]) {
-            // Intentionally nest the loop. This is an early exit if fail.
+            // Intentionally nest the if statement. This is an early exit from the for-loop if it fail.
             if (![self isPermissionsGrantedForHealthKitType:(HKSampleType*)hkType]) {
                 return NO;
             }

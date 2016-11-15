@@ -182,7 +182,7 @@ open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoad
     }
     
     open override var cancelButtonItem: UIBarButtonItem? {
-        // Overrride the cancel button to *not* display. User must tap the "Continue" button.
+        // Override the cancel button to *not* display. User must tap the "Continue" button.
         get { return nil }
         set {}
     }
