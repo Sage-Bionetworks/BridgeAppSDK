@@ -48,9 +48,10 @@
 @property (nonatomic, copy) NSString * _Nullable password;
 @property (nonatomic, copy) NSString * _Nullable subpopulationGuid;
 @property (nonatomic) HKBiologicalSex gender;
+@property (nonatomic) HKBiologicalSex biologicalSex;
 @property (nonatomic, copy) NSDate * _Nullable birthdate;
 @property (nonatomic, strong) id <SBAConsentSignatureWrapper> _Nullable consentSignature;
-@property (nonatomic, copy) UIImage * _Nullable profileImage;
+@property (nonatomic, strong) UIImage * _Nullable profileImage;
 @property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
 @property (nonatomic) BOOL isRegistered;
 @property (nonatomic) BOOL isLoginVerified;

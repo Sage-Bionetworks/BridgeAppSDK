@@ -56,6 +56,7 @@
 		FF10F4E01D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF10F4DE1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.m */; };
 		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
 		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
+		FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */; };
 		FF23799F1CBC2E5900F3A943 /* NSDictionary+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF23799E1CBC2E5900F3A943 /* NSDictionary+Utilities.swift */; };
 		FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = FF2379A91CBC41C000F3A943 /* SBATrackedDataObjectCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF2379AC1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2379AA1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m */; };
@@ -100,6 +101,10 @@
 		FF5051D31D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */; };
 		FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */; };
 		FF5242B11D81E9D0009043B3 /* SBAUserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5242B01D81E9D0009043B3 /* SBAUserProfileController.swift */; };
+		FF5CDF231DDE395900117218 /* SBADemographicDataObjectType.h in Headers */ = {isa = PBXBuildFile; fileRef = FF5CDF211DDE395900117218 /* SBADemographicDataObjectType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5CDF221DDE395900117218 /* SBADemographicDataObjectType.m */; };
+		FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */; };
+		FF5CDF351DDE8D3600117218 /* SBAAnswerFormatFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5CDF341DDE8D3600117218 /* SBAAnswerFormatFinder.swift */; };
 		FF5E56E61D6F8469008BA2A8 /* SBACheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */; };
 		FF5E56E81D6F8941008BA2A8 /* SBATaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */; };
 		FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */; };
@@ -463,6 +468,7 @@
 		FF10F4DE1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ORKCollectionResult+SBAExtensions.m"; sourceTree = "<group>"; };
 		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
 		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
+		FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADemographicDataArchive.swift; sourceTree = "<group>"; };
 		FF23799E1CBC2E5900F3A943 /* NSDictionary+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Utilities.swift"; sourceTree = "<group>"; };
 		FF2379A91CBC41C000F3A943 /* SBATrackedDataObjectCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBATrackedDataObjectCollection.h; sourceTree = "<group>"; };
 		FF2379AA1CBC41C000F3A943 /* SBATrackedDataObjectCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBATrackedDataObjectCollection.m; sourceTree = "<group>"; };
@@ -508,6 +514,10 @@
 		FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteTableViewCell.swift; sourceTree = "<group>"; };
 		FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteStep.swift; sourceTree = "<group>"; };
 		FF5242B01D81E9D0009043B3 /* SBAUserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserProfileController.swift; sourceTree = "<group>"; };
+		FF5CDF211DDE395900117218 /* SBADemographicDataObjectType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBADemographicDataObjectType.h; sourceTree = "<group>"; };
+		FF5CDF221DDE395900117218 /* SBADemographicDataObjectType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBADemographicDataObjectType.m; sourceTree = "<group>"; };
+		FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADemographicDataConverter.swift; sourceTree = "<group>"; };
+		FF5CDF341DDE8D3600117218 /* SBAAnswerFormatFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAnswerFormatFinder.swift; sourceTree = "<group>"; };
 		FF5E56E51D6F8469008BA2A8 /* SBACheckmarkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACheckmarkView.swift; sourceTree = "<group>"; };
 		FF5E56E71D6F8941008BA2A8 /* SBATaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATaskViewController.swift; sourceTree = "<group>"; };
 		FF63D0C91CCFF517007ADEE5 /* SBAWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAWebViewController.swift; sourceTree = "<group>"; };
@@ -765,6 +775,7 @@
 		168F25701BE05281001D2D65 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
+				FF5CDF331DDE8D1800117218 /* AnswerFormat */,
 				FBE1A9701CAB328800F1F584 /* Step */,
 				FBE1A96F1CAB327700F1F584 /* Task */,
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
@@ -1075,6 +1086,14 @@
 			name = "All Set";
 			sourceTree = "<group>";
 		};
+		FF5CDF331DDE8D1800117218 /* AnswerFormat */ = {
+			isa = PBXGroup;
+			children = (
+				FF5CDF341DDE8D3600117218 /* SBAAnswerFormatFinder.swift */,
+			);
+			name = AnswerFormat;
+			sourceTree = "<group>";
+		};
 		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1092,6 +1111,10 @@
 				FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */,
 				FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */,
 				805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */,
+				FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */,
+				FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */,
+				FF5CDF211DDE395900117218 /* SBADemographicDataObjectType.h */,
+				FF5CDF221DDE395900117218 /* SBADemographicDataObjectType.m */,
 				80D5F1911CE51C40002A39DF /* SBAEncryption.h */,
 				80D5F1921CE51C40002A39DF /* SBAEncryption.m */,
 				80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */,
@@ -1476,6 +1499,7 @@
 				FF2379AB1CBC41C000F3A943 /* SBATrackedDataObjectCollection.h in Headers */,
 				FBAD11591CADB2F0005611D0 /* SBADataObject.h in Headers */,
 				FF10F4DF1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.h in Headers */,
+				FF5CDF231DDE395900117218 /* SBADemographicDataObjectType.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */,
 				FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */,
@@ -1847,6 +1871,7 @@
 				FF4F06D21CEED20D007BD273 /* SBATrackedDataSelectionResult.swift in Sources */,
 				FF24981F1CB6DC13002DD05F /* SBATrackedStep.swift in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
+				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
 				FBAD11671CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
@@ -1891,6 +1916,7 @@
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBAInstructionStep.swift in Sources */,
+				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
 				FF2729191D92066E00956CFB /* SBAConsentSection+Dictionary.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
@@ -1915,6 +1941,7 @@
 				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
 				FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
+				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
 				FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
 				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
@@ -1960,6 +1987,7 @@
 				FFA8E4AF1CBD7CDA00ED5399 /* SBALoadingViewPresenter.swift in Sources */,
 				FF2729051D91FED900956CFB /* SBATextChoice+Dictionary.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
+				FF5CDF351DDE8D3600117218 /* SBAAnswerFormatFinder.swift in Sources */,
 				FF9055DB1CE3E09C0049D12A /* NSUserDefaults+Utilities.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
 				FFAAF6391CC0A42A00500929 /* SBABorderedButton.swift in Sources */,

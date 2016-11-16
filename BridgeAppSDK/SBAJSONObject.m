@@ -36,11 +36,11 @@
 
 @implementation NSString (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return [self jsonObjectWithFormatter:nil];
 }
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
+- (id<NSSecureCoding>)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter numberFromString:self];
     }
@@ -84,11 +84,11 @@
 
 @implementation NSNumber (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return [self jsonObjectWithFormatter:nil];
 }
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
+- (id<NSSecureCoding>)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter  {
     if ([formatter isKindOfClass:[NSNumberFormatter class]]) {
         return [(NSNumberFormatter *)formatter stringFromNumber:self];
     }
@@ -101,7 +101,7 @@
 
 @implementation NSNull (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return self;
 }
 
@@ -109,11 +109,11 @@
 
 @implementation NSDate (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return [self jsonObjectWithFormatter:nil];
 }
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
+- (id<NSSecureCoding>)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
     if ([formatter isKindOfClass:[NSDateFormatter class]]) {
         return [(NSDateFormatter*)formatter stringFromDate:self];
     }
@@ -126,11 +126,11 @@
 
 @implementation NSDateComponents (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return [self jsonObjectWithFormatter:nil];
 }
 
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
+- (id<NSSecureCoding>)jsonObjectWithFormatter:(NSFormatter * _Nullable)formatter {
     
     NSDateFormatter *dateFormatter = [formatter isKindOfClass:[NSDateFormatter class]] ? (NSDateFormatter *)formatter : [self defaultFormatter];
     
@@ -179,7 +179,7 @@
 
 @implementation NSUUID (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
     return self.UUIDString;
 }
 
@@ -210,7 +210,7 @@ id SBAJSONObjectForObject(id <NSObject> object) {
 
 @implementation NSArray (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
 
     NSMutableArray *result = [NSMutableArray new];
     
@@ -226,7 +226,7 @@ id SBAJSONObjectForObject(id <NSObject> object) {
 
 @implementation NSDictionary (SBAJSONObject)
 
-- (id)jsonObject {
+- (id<NSSecureCoding>)jsonObject {
 
     NSMutableDictionary *result = [NSMutableDictionary new];
     

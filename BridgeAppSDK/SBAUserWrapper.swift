@@ -65,9 +65,14 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     var password: String? { get set }
     
     /**
-     * Gender is stored in the keychain
+     * Gender describes the characteristics that a society or culture delineates as masculine or feminine. Stored in the keychain.
      */
     var gender: HKBiologicalSex { get set }
+    
+    /**
+     * Biological sex refers to the biological sex of the person at birth. Stored in the keychain.
+     */
+    var biologicalSex: HKBiologicalSex { get set }
     
     /**
      * Birthdate is stored in the keychain

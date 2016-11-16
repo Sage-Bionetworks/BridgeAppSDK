@@ -40,6 +40,7 @@ public enum SBAProfileInfoOption : String {
     case name                   = "name"
     case birthdate              = "birthdate"
     case gender                 = "gender"
+    case biologicalSex          = "biologicalSex"
     case bloodType              = "bloodType"
     case fitzpatrickSkinType    = "fitzpatrickSkinType"
     case wheelchairUse          = "wheelchairUse"
@@ -174,6 +175,10 @@ public struct SBAProfileInfoOptions {
                 formItems.append(formItem)
                 
             case .gender:
+                let formItem = makeGenderFormItem(option)
+                formItems.append(formItem)
+                
+            case .biologicalSex:
                 let formItem = makeGenderFormItem(option)
                 formItems.append(formItem)
                 
@@ -332,15 +337,16 @@ public struct SBAProfileInfoOptions {
     
     func makeWheelchairUseFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
         
-        let answerFormat = ORKBooleanAnswerFormat()
-        
-//        if #available(iOS 10.0, *) {
-//            let characteristic = HKObjectType.characteristicType(forIdentifier: .wheelchairUse)!
-//            let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
-//            answerFormat.shouldRequestAuthorization = false
-//        } else {
-//            
-//        }
+        let answerFormat: ORKAnswerFormat = {
+            if #available(iOS 10.0, *) {
+                let characteristic = HKObjectType.characteristicType(forIdentifier: .wheelchairUse)!
+                let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+                answerFormat.shouldRequestAuthorization = false
+                return answerFormat
+            } else {
+                return ORKBooleanAnswerFormat()
+            }
+        }()
 
         let formItem = ORKFormItem(identifier: option.rawValue,
                                    text: Localization.localizedString("WHEELCHAIR_USE_FORM_ITEM_TITLE"),
@@ -349,9 +355,6 @@ public struct SBAProfileInfoOptions {
         
         return formItem
     }
-    
-    
-//    case wheelchairUse          = "wheelchairUse"
 }
 
 public protocol SBAFormProtocol : class {

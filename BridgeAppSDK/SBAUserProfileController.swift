@@ -34,16 +34,19 @@
 import Foundation
 
 public protocol SBAStepViewControllerProtocol: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
-    
     var result: ORKStepResult? { get }
 }
 
-public protocol SBAUserProfileController: SBAStepViewControllerProtocol {
+public protocol SBAResearchKitProfileResultConverter {
+    func profileResult(for identifier: String) -> ORKResult?
+}
+
+public protocol SBAUserProfileController: SBAStepViewControllerProtocol, SBAResearchKitProfileResultConverter {
     var failedValidationMessage: String { get }
     var failedRegistrationTitle: String { get }
 }
 
-extension SBAUserProfileController {
+extension SBAResearchKitProfileResultConverter {
     
     // MARK: Results
     
@@ -64,7 +67,15 @@ extension SBAUserProfileController {
     }
     
     public var gender: HKBiologicalSex? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult
+        return convertBiologicalSex(for: SBAProfileInfoOption.gender.rawValue)
+    }
+    
+    public var biologicalSex: HKBiologicalSex? {
+        return convertBiologicalSex(for: SBAProfileInfoOption.biologicalSex.rawValue)
+    }
+    
+    func convertBiologicalSex(for identifier:String) -> HKBiologicalSex? {
+        guard let result = self.profileResult(for: identifier) as? ORKChoiceQuestionResult
         else { return nil }
         if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
             return HKBiologicalSex(rawValue: answer)
@@ -90,12 +101,12 @@ extension SBAUserProfileController {
     }
     
     public var birthdate: Date? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
+        guard let result = self.profileResult(for: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer
     }
     
     public var bloodType: HKBloodType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
+        guard let result = self.profileResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
             else { return nil }
         if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
             return HKBloodType(rawValue: answer)
@@ -131,7 +142,7 @@ extension SBAUserProfileController {
     }
     
     public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.profileResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
         else {
             return nil
@@ -140,7 +151,7 @@ extension SBAUserProfileController {
     }
     
     public var wheelchairUse: Bool? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.profileResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
             else {
                 return nil
@@ -149,8 +160,15 @@ extension SBAUserProfileController {
     }
     
     func textAnswer(_ field: SBAProfileInfoOption) -> String? {
-        guard let result = self.result?.result(forIdentifier: field.rawValue) as? ORKTextQuestionResult else { return nil }
+        guard let result = self.profileResult(for: field.rawValue) as? ORKTextQuestionResult else { return nil }
         return result.textAnswer
+    }
+}
+
+extension SBAUserProfileController {
+    
+    public func profileResult(for identifier: String) -> ORKResult? {
+        return self.result?.result(forIdentifier: identifier)
     }
     
     // MARK: Error handling

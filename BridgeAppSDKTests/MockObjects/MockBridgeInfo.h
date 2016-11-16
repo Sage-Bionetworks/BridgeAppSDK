@@ -52,5 +52,6 @@
 @property (nonatomic, readwrite, copy) NSString * _Nullable logoImageName;
 @property (nonatomic, readwrite, copy) NSString * _Nullable appUpdateURLString;
 @property (nonatomic, readwrite) BOOL disableTestUserCheck;
+@property (nonatomic, readonly, copy) NSArray * _Nullable permissionTypeItems;
 
 @end

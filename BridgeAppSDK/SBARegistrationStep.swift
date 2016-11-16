@@ -128,6 +128,9 @@ extension SBARegistrationStepController {
                 if let gender = self!.gender {
                     self!.sharedUser.gender = gender
                 }
+                if let biologicalSex = self!.biologicalSex {
+                    self!.sharedUser.biologicalSex = biologicalSex
+                }
                 if let birthdate = self!.birthdate {
                     self!.sharedUser.birthdate = birthdate
                 }
