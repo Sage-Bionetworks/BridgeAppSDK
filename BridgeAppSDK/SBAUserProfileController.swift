@@ -33,10 +33,12 @@
 
 import Foundation
 
-public protocol SBAUserProfileController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
+public protocol SBAStepViewControllerProtocol: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
     
     var result: ORKStepResult? { get }
-    
+}
+
+public protocol SBAUserProfileController: SBAStepViewControllerProtocol {
     var failedValidationMessage: String { get }
     var failedRegistrationTitle: String { get }
 }

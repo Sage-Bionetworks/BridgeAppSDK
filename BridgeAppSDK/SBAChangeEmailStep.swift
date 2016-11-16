@@ -1,5 +1,5 @@
 //
-//  SBALoginStep.swift
+//  SBAChangeEmailStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,56 +31,24 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import ResearchKit
+import Foundation
 
-open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
-
-    open var surveyItemType: SBASurveyItemType {
-        return .account(.login)
-    }
+open class SBAChangeEmailStep: ORKFormStep {
     
-    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
-        return [.email, .password]
-    }
-    
-    public override required init(identifier: String) {
+    public override init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(inputItem: nil)
+        let profileInfo = SBAProfileInfoOptions(includes: [.email])
+        self.title = Localization.localizedString("REGISTRATION_CHANGE_EMAIL_TITLE")
+        self.formItems = profileInfo.makeFormItems(surveyItemType: .account(.emailVerification))
+        self.isOptional = false
     }
-    
-    public init?(inputItem: SBASurveyItem) {
-        super.init(identifier: inputItem.identifier)
-        commonInit(inputItem: inputItem)
-    }
-    
-    open override func validateParameters() {
-        super.validateParameters()
-        try! validate(options: self.options)
-    }
-    
-    open func validate(options: [SBAProfileInfoOption]?) throws {
-        guard let options = options else {
-            throw SBAProfileInfoOptionsError.missingRequiredOptions
-        }
-        
-        guard options.contains(.email) && options.contains(.password) else {
-            throw SBAProfileInfoOptionsError.missingEmail
-        }
-    }
-    
-    open override var isOptional: Bool {
-        get { return false }
-        set {}
-    }
-
-    open override func stepViewControllerClass() -> AnyClass {
-        return SBALoginStepViewController.classForCoder()
-    }
-    
-    // MARK: NSCoding
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    open override func stepViewControllerClass() -> AnyClass {
+        return SBAChangeEmailStepViewController.classForCoder()
     }
 }
 
@@ -88,11 +56,11 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
  Allow developers to create their own step view controllers that do not inherit from
  `ORKFormStepViewController`.
  */
-public protocol SBALoginStepStepController: SBAUserProfileController {
+public protocol SBAChangeEmailStepController: SBAUserProfileController {
     func goNext()
 }
 
-extension SBALoginStepStepController {
+extension SBAChangeEmailStepController {
     
     public var failedValidationMessage: String {
         return Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
@@ -102,9 +70,9 @@ extension SBALoginStepStepController {
         return Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
     }
     
-    public func login() {
+    public func changeEmail() {
         showLoadingView()
-        sharedUser.loginUser(email: email!, password: password!) { [weak self] error in
+        sharedUser.changeUserEmailAddress(email!) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
             }
@@ -115,16 +83,18 @@ extension SBALoginStepStepController {
     }
 }
 
-open class SBALoginStepViewController: ORKFormStepViewController, SBALoginStepStepController {
+open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAChangeEmailStepController {
+    
+    // MARK: SBASharedInfoController
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-        
-    // Override the default method for goForward and attempt user login. Do not allow subclasses
-    // to override this method
+    
+    // Override the default method for goForward and attempt changing email.
+    // Do not allow subclasses to override this method
     final public override func goForward() {
-        login()
+        changeEmail()
     }
     
     open func goNext() {
