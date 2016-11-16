@@ -144,9 +144,13 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
     }
     
     func handleWrongEmailAction() {
-        let task = ORKOrderedTask(identifier: "changeEmail", steps: [SBAChangeEmailStep(identifier: "changeEmail")])
+        let task = ORKOrderedTask(identifier: "changeEmail", steps: [instantiateChangeEmailStep()])
         let taskVC = SBATaskViewController(task: task, taskRun: nil)
         self.present(taskVC, animated: true, completion: nil)
+    }
+    
+    open func instantiateChangeEmailStep() -> ORKStep {
+        return SBAChangeEmailStep(identifier: "changeEmail")
     }
     
     func handleResendEmailAction() {
@@ -193,57 +197,5 @@ open class SBAEmailVerificationLearnMoreAction: SBALearnMoreAction {
     
 }
 
-class SBAChangeEmailStep: ORKFormStep {
-    
-    override init(identifier: String) {
-        super.init(identifier: identifier)
-        let profileInfo = SBAProfileInfoOptions(includes: [.email])
-        self.title = Localization.localizedString("REGISTRATION_CHANGE_EMAIL_TITLE")
-        self.formItems = profileInfo.makeFormItems(surveyItemType: .account(.emailVerification))
-        self.isOptional = false
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
 
-    override func stepViewControllerClass() -> AnyClass {
-        return SBAChangeEmailStepViewController.classForCoder()
-    }
-}
-
-open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAUserProfileController {
-    
-    // MARK: SBASharedInfoController
-    
-    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.shared.delegate as! SBAAppInfoDelegate
-    }()
-    
-    // MARK: SBAUserProfileController
-    
-    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
-    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
-    
-    
-    // Override the default method for goForward and attempt changing email. 
-    // Do not allow subclasses to override this method
-    final public override func goForward() {
-        showLoadingView()
-        sharedUser.changeUserEmailAddress(email!) { [weak self] error in
-            if let error = error {
-                self?.handleFailedRegistration(error)
-            }
-            else {
-                self?.goNext()
-            }
-        }
-    }
-    
-    open func goNext() {
-        // Then call super to go forward
-        super.goForward()
-    }
-
-}
 

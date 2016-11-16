@@ -93,7 +93,50 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
 }
 
-open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUserProfileController {
+/**
+ Allow developers to create their own step view controllers that do not inherit from 
+ `ORKFormStepViewController`.
+ */
+public protocol SBARegistrationStepStepController: SBAUserProfileController {
+    var dataGroups: [String]? { get }
+    func goNext()
+}
+
+extension SBARegistrationStepStepController {
+    
+    public var failedValidationMessage: String {
+        return Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
+    }
+    
+    public var failedRegistrationTitle: String {
+        return Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
+    }
+    
+    public func registerUser() {
+        showLoadingView()
+        sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
+            guard self != nil else { return }
+            
+            if let error = error {
+                self!.handleFailedRegistration(error)
+            }
+            else {
+                
+                // successfully registered. Set the other values from this form.
+                if let gender = self!.gender {
+                    self!.sharedUser.gender = gender
+                }
+                if let birthdate = self!.birthdate {
+                    self!.sharedUser.birthdate = birthdate
+                }
+                
+                self!.goNext()
+            }
+        }
+    }
+}
+
+open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepStepController {
     
     /**
      If there are data groups that were set in a previous step or via a custom onboarding manager,
@@ -101,17 +144,11 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
      */
     open var dataGroups: [String]?
     
-
     // MARK: SBASharedInfoController
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-    
-    // MARK: SBAUserProfileController
-    
-    open var failedValidationMessage = Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
-    open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
     
     
     // MARK: Navigation overrides - cannot go back and override go forward to register
@@ -126,34 +163,11 @@ open class SBARegistrationStepViewController: ORKFormStepViewController, SBAUser
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
     // to override this method
     final public override func goForward() {
-        
-        showLoadingView()
-        sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
-            if let error = error {
-                self?.handleFailedRegistration(error)
-            }
-            else {
-                self?.goNext()
-            }
-        }
+        registerUser()
     }
     
     open func goNext() {
-        
-        // successfully registered. Set the other values from this form.
-        if let gender = self.gender {
-            sharedUser.gender = gender
-        }
-        if let birthdate = self.birthdate {
-            sharedUser.birthdate = birthdate
-        }
-        
         // Then call super to go forward
         super.goForward()
     }
-    
-    override open func goBackward() {
-        // Do nothing
-    }
-    
 }

@@ -114,7 +114,33 @@ open class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreActionStep 
     }
 }
 
-open class SBAConsentSharingStepViewController: ORKQuestionStepViewController, SBASharedInfoController {
+/**
+ Allow developers to create their own step view controllers that do not inherit from
+ `ORKQuestionStepViewController`.
+ */
+public protocol SBAConsentSharingStepController: SBAStepViewControllerProtocol {
+    func goNext()
+}
+
+extension SBAConsentSharingStepController {
+    
+    public func updateSharingScope() {
+        
+        // Set the user's sharing scope
+        sharedUser.dataSharingScope = {
+            guard let choice = self.result?.results?.first as? ORKChoiceQuestionResult,
+                let answer = choice.choiceAnswers?.first as? Bool
+                else {
+                    return .none
+            }
+            return answer ? .all : .study
+        }()
+        
+        goNext()
+    }
+}
+
+open class SBAConsentSharingStepViewController: ORKQuestionStepViewController, SBAConsentSharingStepController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
@@ -123,19 +149,11 @@ open class SBAConsentSharingStepViewController: ORKQuestionStepViewController, S
     // Override the default method for goForward and set the users sharing scope
     // Do not allow subclasses to override this method
     final public override func goForward() {
-        
-        // Set the user's sharing scope
-        sharedUser.dataSharingScope = {
-            guard let choice = self.result?.results?.first as? ORKChoiceQuestionResult,
-                let answer = choice.choiceAnswers?.first as? Bool
-            else {
-                return .none
-            }
-            return answer ? .all : .study
-        }()
-        
-        // finally call through to super to continue once the consent sharing scope has been stored
-        super.goForward()
+        self.updateSharingScope()
     }
     
+    open func goNext() {
+        // Then call super to go forward
+        super.goForward()
+    }
 }
