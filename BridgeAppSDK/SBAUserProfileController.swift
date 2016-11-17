@@ -47,6 +47,10 @@ extension SBAUserProfileController {
     
     // MARK: Results
     
+    public var name: String? {
+        return textAnswer(.name)
+    }
+    
     public var email: String? {
         return textAnswer(.email)
     }
@@ -162,5 +166,4 @@ extension SBAUserProfileController {
         let message = (error as NSError).localizedBridgeErrorMessage
         handleFailedValidation(message)
     }
-    
 }

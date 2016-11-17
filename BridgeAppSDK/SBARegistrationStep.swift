@@ -97,12 +97,12 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
  Allow developers to create their own step view controllers that do not inherit from 
  `ORKFormStepViewController`.
  */
-public protocol SBARegistrationStepStepController: SBAUserProfileController {
+public protocol SBARegistrationStepController: SBAUserProfileController {
     var dataGroups: [String]? { get }
     func goNext()
 }
 
-extension SBARegistrationStepStepController {
+extension SBARegistrationStepController {
     
     public var failedValidationMessage: String {
         return Localization.localizedString("SBA_REGISTRATION_UNKNOWN_FAILED")
@@ -121,22 +121,24 @@ extension SBARegistrationStepStepController {
                 self!.handleFailedRegistration(error)
             }
             else {
-                
                 // successfully registered. Set the other values from this form.
+                if let name = self!.name {
+                    self!.sharedUser.name = name
+                }
                 if let gender = self!.gender {
                     self!.sharedUser.gender = gender
                 }
                 if let birthdate = self!.birthdate {
                     self!.sharedUser.birthdate = birthdate
                 }
-                
+
                 self!.goNext()
             }
         }
     }
 }
 
-open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepStepController {
+open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepController {
     
     /**
      If there are data groups that were set in a previous step or via a custom onboarding manager,

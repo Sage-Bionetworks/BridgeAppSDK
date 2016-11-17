@@ -35,10 +35,22 @@ import ResearchKit
 
 open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
 
+    /**
+     Manager for handling requesting permissions
+    */
     open var permissionsManager: SBAPermissionsManager {
         return SBAPermissionsManager.shared
     }
     
+    /**
+     Flag to require the permission and cancel the task if not permitted.
+     Default = `false`
+    */
+    open var required: Bool = false
+    
+    /**
+     Permission types to request for this step of the task.
+    */
     open var permissionTypes: [SBAPermissionObjectType] {
         get {
             return self.items as? [SBAPermissionObjectType] ?? []
@@ -166,7 +178,7 @@ open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoad
         let permissionsManager = permissionsStep.permissionsManager
         let permissions = permissionsStep.permissionTypes
         permissionsManager.requestPermissions(for: permissions, alertPresenter: self) { [weak self] (granted) in
-            if granted || permissionsStep.isOptional {
+            if granted || !permissionsStep.required {
                 self?.permissionsGranted = granted
                 self?.goNext()
             }
