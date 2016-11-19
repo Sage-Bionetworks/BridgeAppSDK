@@ -815,24 +815,16 @@
 				FBC45E7B1C75B069007AA424 /* Test Files */,
 				FBE5515A1C6D265000C9E1AA /* MockObjects */,
 				801040C41C5A843D00D26E19 /* Info.plist */,
+				FF2046481DDE989500A33572 /* TasksAndSteps */,
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
 				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
 				FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */,
-				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
 				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
-				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
-				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
-				FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */,
-				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
-				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
-				FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */,
 				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
-				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
-				FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -1051,6 +1043,22 @@
 				FF5242B01D81E9D0009043B3 /* SBAUserProfileController.swift */,
 			);
 			name = Account;
+			sourceTree = "<group>";
+		};
+		FF2046481DDE989500A33572 /* TasksAndSteps */ = {
+			isa = PBXGroup;
+			children = (
+				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
+				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
+				FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */,
+				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
+				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
+				FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */,
+				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
+				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
+				FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */,
+			);
+			name = TasksAndSteps;
 			sourceTree = "<group>";
 		};
 		FF27290A1D92031F00956CFB /* TextChoice */ = {

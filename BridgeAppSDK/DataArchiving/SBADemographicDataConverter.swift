@@ -44,26 +44,18 @@ public protocol SBADemographicDataConverter {
      Key/Value pair to insert into a dictionary for upload.
     */
     func uploadObject(for identifier: SBADemographicDataIdentifier) -> SBAAnswerKeyAndValue?
-    
-    /**
-     Object that can be stored to the user's keychain using the secure coding protocol.
-    */
-    //func keychainObject(for identifier: String) -> NSSecureCoding?
 }
 
 /**
  Demographics converter for shared key/value pairs included in the base implementation.
  */
 public protocol SBABaseDemographicsUtility {
-    
-    var gender: HKBiologicalSex? { get }
-    var biologicalSex: HKBiologicalSex? { get }
     var birthdate: Date? { get }
-    var bloodType: HKBloodType? { get }
-    var fitzpatrickSkinType: HKFitzpatrickSkinType? { get }
-    var wheelchairUse: Bool? { get }
-    
-    func quantity(for identifier: SBADemographicDataIdentifier) -> HKQuantity?
+    var biologicalSex: HKBiologicalSex? { get }
+    var height: HKQuantity? { get }
+    var weight: HKQuantity? { get }
+    var wakeTime: DateComponents? { get }
+    var sleepTime: DateComponents? { get }
 }
 
 extension SBABaseDemographicsUtility {
@@ -77,21 +69,35 @@ extension SBABaseDemographicsUtility {
             return self.biologicalSex?.demographicDataValue
         }
         else if identifier == SBADemographicDataIdentifier.heightInches,
-            let quantity = quantityValue(for: identifier, with: HKUnit(from: .inch)) {
+            let quantity = quantityValue(for: self.height, with: HKUnit(from: .inch)) {
             return quantity
         }
         else if identifier == SBADemographicDataIdentifier.weightPounds,
-            let quantity = quantityValue(for: identifier, with: HKUnit(from: .pound)) {
+            let quantity = quantityValue(for: self.weight, with: HKUnit(from: .pound)) {
             return quantity
+        }
+        else if identifier == SBADemographicDataIdentifier.wakeUpTime {
+            return jsonTimeOfDay(for: self.wakeTime)
+        }
+        else if identifier == SBADemographicDataIdentifier.sleepTime {
+            return jsonTimeOfDay(for: self.sleepTime)
         }
         return nil
     }
     
-    func quantityValue(for identifier: SBADemographicDataIdentifier, with unit:HKUnit) -> NSNumber? {
-        guard let quantity = quantity(for: identifier),
-            quantity.is(compatibleWith: unit)
-            else {
-                return nil
+    public func jsonTimeOfDay(for dateComponents: DateComponents?) -> NSSecureCoding? {
+        guard let dateComponents = dateComponents else { return nil }
+        var time = dateComponents
+        time.day = 0
+        time.month = 0
+        time.year = 0
+        return (time as NSDateComponents).jsonObject()
+    }
+    
+    public func quantityValue(for quantity: HKQuantity?, with unit:HKUnit) -> NSNumber? {
+        guard let quantity = quantity, quantity.is(compatibleWith: unit)
+        else {
+            return nil
         }
         return NSNumber(value: quantity.doubleValue(for: unit))
     }
@@ -104,12 +110,16 @@ extension SBABaseDemographicsUtility {
 @objc
 open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverter, SBAResearchKitProfileResultConverter, SBABaseDemographicsUtility {
 
-    let answerFormatFinder: SBAAnswerFormatFinder
     let results: [ORKStepResult]
+
+    public var answerFormatFinder: SBAAnswerFormatFinder? {
+        return _answerFormatFinder
+    }
+    let _answerFormatFinder: SBAAnswerFormatFinder
     
     public init(answerFormatFinder: SBAAnswerFormatFinder, results: [ORKStepResult]) {
         self.results = results
-        self.answerFormatFinder = answerFormatFinder
+        self._answerFormatFinder = answerFormatFinder
         super.init()
     }
     
@@ -121,63 +131,15 @@ open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverte
         if let valueOnly = demographicsValue(for: identifier) {
             return SBAAnswerKeyAndValue(key: identifier.rawValue, value: valueOnly, questionType: .none)
         }
-        else if let profileResult = profileResult(for: identifier.rawValue) as? ORKQuestionResult {
-            return profileResult.jsonSerializedAnswer()
+        else if let profileResult = profileResult(for: identifier.rawValue) as? ORKQuestionResult,
+            let answer = profileResult.jsonSerializedAnswer() {
+            let result = SBAAnswerKeyAndValue(key: identifier.rawValue, value: answer.value, questionType: answer.questionType)
+            result.unit = answer.unit
+            return result
         }
         return nil
     }
 
-    /**
-     If the profile result can be converted to an HKQuantitySample and a matching healthKit quantity type
-     can be found in the answer format finder, then create the given quantity sample with the appropriate unit.
-     @param identifier      The demographic data identifier associated with this result
-     @return                The quantity sample
-     */
-    open func quantitySample(for identifier: SBADemographicDataIdentifier) -> HKQuantitySample? {
-        guard let profileResult = profileResult(for: identifier.rawValue) as? ORKQuestionResult,
-            let quantity = quantity(for: identifier),
-            let quantityType = quantityType(for: identifier)
-            else {
-                return nil
-        }
-        return HKQuantitySample(type: quantityType, quantity: quantity, start: profileResult.startDate, end: profileResult.endDate)
-    }
-    
-    /**
-     If the profile result can be converted to an HKQuantity, then create the given quantity
-     with the appropriate unit.
-     @param identifier      The demographic data identifier associated with this result
-     @return                The quantity
-     */
-    open func quantity(for identifier: SBADemographicDataIdentifier) -> HKQuantity? {
-        guard let profileResult = profileResult(for: identifier.rawValue) as? ORKQuestionResult,
-            let answer = profileResult.jsonSerializedAnswer(),
-            let doubleValue = (answer.value as? NSNumber)?.doubleValue,
-            let unitString = answer.unit
-            else {
-                return nil
-        }
-        return HKQuantity(unit: HKUnit(from: unitString), doubleValue: doubleValue)
-    }
-    
-    /**
-     Find the quantity type associated with this identifier.
-     @param identifier      The demographic data identifier associated with this result
-     @return                The quantity type
-     */
-    open func quantityType(for identifier: SBADemographicDataIdentifier) -> HKQuantityType? {
-        if let answerFormat = answerFormatFinder.find(for: identifier.rawValue) as? ORKHealthKitQuantityTypeAnswerFormat {
-            return answerFormat.quantityType
-        }
-        else if identifier == SBADemographicDataIdentifier.heightInches {
-            return HKObjectType.quantityType(forIdentifier: .height)
-        }
-        else if identifier == SBADemographicDataIdentifier.weightPounds {
-            return HKObjectType.quantityType(forIdentifier: .bodyMass)
-        }
-        return nil
-    }
-    
     /**
      Return the result to be used for setting values in a profile.  Allow override. Default implementation
      iterates through the `ORKStepResult` objects until an `ORKResult` is found with a matching identifier.
