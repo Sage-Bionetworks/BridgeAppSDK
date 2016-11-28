@@ -382,6 +382,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertFalse(navigationRule.evaluate(with: questionResult))
     }
     
+    
     func testFactory_MultipleChoiceQuestion() {
         let inputStep: NSDictionary = [
             "identifier" : "question1",
@@ -599,6 +600,49 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
+        XCTAssertNil(surveyStep.title)
+        XCTAssertNotNil(surveyStep.text)
+        XCTAssertEqual(surveyStep.text!, "Do you live alone?")
+        
+        // In every case, the next step identifier should be nil
+        
+        let questionResult = ORKBooleanQuestionResult(identifier:surveyStep.identifier)
+        let stepResult = ORKStepResult(stepIdentifier: surveyStep.identifier, results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [stepResult]
+        
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+        
+        questionResult.booleanAnswer = false
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+        
+        questionResult.booleanAnswer = true
+        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+    }
+    
+    func testFactory_BooleanConstraints_PromptDetail() {
+        
+        let inputStep = SBBSurveyQuestion()
+        inputStep.identifier = "living-alone-status"
+        inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep.uiHint = "checkbox"
+        inputStep.prompt = "Question 1"
+        inputStep.promptDetail = "Do you live alone?"
+        inputStep.constraints = SBBBooleanConstraints();
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "living-alone-status")
+        XCTAssertNotNil(surveyStep.title)
+        XCTAssertEqual(surveyStep.title!, "Question 1")
+        XCTAssertNotNil(surveyStep.text)
+        XCTAssertEqual(surveyStep.text!, "Do you live alone?")
         
         // In every case, the next step identifier should be nil
         
