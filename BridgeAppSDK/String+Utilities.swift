@@ -33,6 +33,11 @@
 
 import Foundation
 
+public struct HtmlRange {
+    let open: Range<String.Index>
+    let close: Range<String.Index>
+}
+
 extension String {
     
     public func trim() -> String? {
@@ -57,7 +62,50 @@ extension String {
             guard input != "" else { return nextTrimmed }
             return input + " " + nextTrimmed
         }
+        return result.replacingBreaklineHtmlTags()
+    }
+    
+    public func replacingBreaklineHtmlTags() -> String {
+        guard let trimmedString = trim() else { return "" }
+        guard let range = trimmedString.htmlSearch(tag: "br", start: nil) else { return trimmedString }
+        var result = trimmedString.substring(to: range.open.lowerBound)
+        if range.open.upperBound < trimmedString.endIndex {
+            result.append("\n")
+            let remaining = trimmedString.substring(from: range.open.upperBound)
+            result.append(remaining.replacingBreaklineHtmlTags())
+        }
         return result
+    }
+
+    public func search(_ str: String, range: Range<String.Index>?) -> Range<String.Index>? {
+        return self.range(of: str, options: .caseInsensitive, range: range, locale: nil)
+    }
+    
+    public func htmlSearch(tag: String, start: String.Index?) -> HtmlRange? {
+        guard (start == nil) || (start! < self.endIndex) else { return nil }
+        
+        // Find the next tag open
+        let startRange: Range<String.Index>? = (start != nil) ? start!..<self.endIndex : nil
+        guard let startOpenRange = search("<\(tag)", range: startRange),
+            let endOpenRange = search(">", range: startOpenRange.upperBound..<self.endIndex)
+        else {
+                return nil
+        }
+
+        // If the end range is the same for the first open and the first end close
+        // then they are the same.
+        let openRange = startOpenRange.lowerBound..<endOpenRange.upperBound
+        if let _ = search("/>", range: openRange) {
+            return HtmlRange(open: openRange, close: openRange)
+        }
+        
+        guard let startCloseRange = search("<\(tag)", range:openRange.upperBound..<self.endIndex),
+            let endCloseRange = search("/>", range: startCloseRange.upperBound..<self.endIndex)
+            else {
+                return nil
+        }
+        
+        return HtmlRange(open: openRange, close: startCloseRange.lowerBound..<endCloseRange.upperBound)
     }
 
 }
