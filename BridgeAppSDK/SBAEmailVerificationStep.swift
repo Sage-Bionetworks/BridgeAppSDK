@@ -143,7 +143,7 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         // Do nothing
     }
     
-    func handleWrongEmailAction() {
+    open func handleWrongEmailAction() {
         let task = ORKOrderedTask(identifier: "changeEmail", steps: [instantiateChangeEmailStep()])
         let taskVC = SBATaskViewController(task: task, taskRun: nil)
         self.present(taskVC, animated: true, completion: nil)
@@ -153,7 +153,7 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         return SBAChangeEmailStep(identifier: "changeEmail")
     }
     
-    func handleResendEmailAction() {
+    open func handleResendEmailAction() {
         showLoadingView()
         sharedUser.resendVerificationEmail { [weak self] (error) in
             if let error = error {
