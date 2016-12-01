@@ -52,5 +52,70 @@ class UtilityExtensionTests: XCTestCase {
         XCTAssertEqual(actual, expected)
     }
     
-    
+    func testORKTaskResult_consolidatedResults() {
+        
+        // Create a result set
+        var stepResults: [ORKStepResult] = []
+        for ii in 0..<5 {
+            if (ii != 3) {
+                let boolResult = ORKBooleanQuestionResult(identifier: "bool")
+                boolResult.booleanAnswer = NSNumber(value: ii < 5)
+                let choiceResult = ORKChoiceQuestionResult(identifier: "choice")
+                choiceResult.choiceAnswers = [NSNumber(value: 0)]
+                stepResults.append(ORKStepResult(stepIdentifier: "step\(ii)", results: [boolResult, choiceResult]))
+            }
+            else {
+                for jj in 0..<3 {
+                    let numResult = ORKNumericQuestionResult(identifier: "number")
+                    numResult.numericAnswer = NSNumber(value: jj)
+                    stepResults.append(ORKStepResult(stepIdentifier: "loopQuestion", results: [numResult]))
+                    if jj < 2 {
+                        stepResults.append(ORKStepResult(stepIdentifier: "loopInstruction", results: nil))
+                    }
+                }
+            }
+        }
+        
+        // Create the task with a copy of the original set
+        let taskResult = ORKTaskResult(identifier: "test")
+        taskResult.results = stepResults.map({  $0.copy() as! ORKResult })
+        
+        // -- method under test
+        let consolidatedResults = taskResult.consolidatedResults()
+        
+        // The consolidated results should be copies
+        for stepResult in consolidatedResults {
+            let isIdentical = stepResults.contains(where: { (sResult) -> Bool in
+                return stepResult === sResult
+            })
+            XCTAssertFalse(isIdentical, "\(stepResult)")
+        }
+        
+        // The task results should be unmutated
+        XCTAssertEqual(stepResults, taskResult.results!)
+        
+        // There should only be one loopInstruction and loopQuestion
+        let loopInstruction = consolidatedResults.filter({ $0.identifier == "loopInstruction" })
+        XCTAssertEqual(loopInstruction.count, 1)
+        
+        let loopQuestions = consolidatedResults.filter({ $0.identifier == "loopQuestion" })
+        XCTAssertEqual(loopQuestions.count, 1)
+        
+        guard let loopQuestion = loopQuestions.first, let results = loopQuestion.results else {
+            XCTAssert(false, "\(loopQuestions) did not match expected")
+            return
+        }
+        XCTAssertEqual(results.count, 3)
+        let lastResult = results.find(withIdentifier: "number")
+        XCTAssertNotNil(lastResult)
+        XCTAssertNotNil(results.find(withIdentifier: "number_dup1"))
+        XCTAssertNotNil(results.find(withIdentifier: "number_dup2"))
+        
+        guard let numResult = lastResult as? ORKNumericQuestionResult, let numAnswer = numResult.numericAnswer else {
+            XCTAssert(false, "\(lastResult) did not match expected")
+            return
+        }
+        
+        XCTAssertEqual(numAnswer.intValue, 2)
+    }
 }
