@@ -93,7 +93,7 @@ class SBASubtaskStepTests: XCTestCase {
         let step2 = navTask.step(after: step1, with: taskResult)
         XCTAssertNotNil(step2)
         XCTAssertEqual(step2!.identifier, "Mutating Task.intruction")
-        taskResult.results! += [ORKStepResult(identifier: "Mutating Task.instruction")]
+        taskResult.results!.append(ORKStepResult(identifier: "Mutating Task.instruction"))
         
         let step3 = navTask.step(after: step2, with: taskResult)
         XCTAssertNotNil(step3)
@@ -102,7 +102,7 @@ class SBASubtaskStepTests: XCTestCase {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
-        taskResult.results! += [formStep3.instantiateDefaultStepResult(nil)]
+        taskResult.results!.append(formStep3.instantiateDefaultStepResult(nil))
         
         let step4 = navTask.step(after: step3, with: taskResult)
         XCTAssertNotNil(step4)

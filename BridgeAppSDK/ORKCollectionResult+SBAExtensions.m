@@ -89,7 +89,7 @@
     NSMutableArray <ORKStepResult *> *results = [NSMutableArray new];
     
     [self.results enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(ORKResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        ORKStepResult *stepResult = (ORKStepResult *)obj;
+        ORKStepResult *stepResult = (ORKStepResult *)[obj copy];
         NSNumber *identifierCount = stepIdentifierCount[stepResult.identifier];
         if (identifierCount == nil) {
             // This is the first instance. Add the step result.
