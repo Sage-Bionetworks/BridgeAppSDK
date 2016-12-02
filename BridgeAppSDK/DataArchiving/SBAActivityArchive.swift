@@ -52,13 +52,6 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
 
     fileprivate var metadata = [String: AnyObject]()
     
-    /**
-     Create an archive from an activity result.
-     
-     When completed, the archive will be ready for encryption and uploading to Bridge.
-     
-     @note This method is destructive, in that it deletes the original ResearchKit recorder files as they are added to the archive. This should be the last thing you do with the activity result.
-     */
     public init?(result: SBAActivityResult, jsonValidationMapping: [String: NSPredicate]? = nil) {
         super.init(reference: result.schemaIdentifier, jsonValidationMapping: jsonValidationMapping)
         
@@ -140,11 +133,6 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         
         if let urlResult = archiveableResult.result as? URL {
             self.insertURL(intoArchive: urlResult, fileName: archiveableResult.filename)
-            do {
-                try FileManager.default.removeItem(at: urlResult as URL)
-            } catch let error as NSError {
-                debugPrint("Unable to remove ResearchKit recorder file at \(urlResult): \(error)")
-            }
         } else if let dictResult = archiveableResult.result as? [AnyHashable: Any] {
             self.insertDictionary(intoArchive: dictResult, filename: archiveableResult.filename)
         } else if let dataResult = archiveableResult.result as? NSData {
