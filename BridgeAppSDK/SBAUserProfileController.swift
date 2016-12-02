@@ -73,16 +73,7 @@ extension SBAUserProfileController {
             // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
             // than using the HKBiologicalSex enum directly so you have to convert
             let biologicalSex = ORKBiologicalSexIdentifier(rawValue: answer)
-            switch (biologicalSex) {
-            case ORKBiologicalSexIdentifier.female:
-                return HKBiologicalSex.female
-            case ORKBiologicalSexIdentifier.male:
-                return HKBiologicalSex.male
-            case ORKBiologicalSexIdentifier.other:
-                return HKBiologicalSex.other
-            default:
-                return nil
-            }
+            return biologicalSex.healthKitBiologicalSex()
         }
         else {
             return nil
@@ -104,26 +95,7 @@ extension SBAUserProfileController {
             // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
             // than using the HKBloodType enum directly so you have to convert
             let bloodType = ORKBloodTypeIdentifier(rawValue: answer)
-            switch (bloodType) {
-            case ORKBloodTypeIdentifier.abNegative:
-                return HKBloodType.abNegative
-            case ORKBloodTypeIdentifier.abPositive:
-                return HKBloodType.abPositive
-            case ORKBloodTypeIdentifier.aNegative:
-                return HKBloodType.aNegative
-            case ORKBloodTypeIdentifier.aPositive:
-                return HKBloodType.aPositive
-            case ORKBloodTypeIdentifier.bNegative:
-                return HKBloodType.bNegative
-            case ORKBloodTypeIdentifier.bPositive:
-                return HKBloodType.bPositive
-            case ORKBloodTypeIdentifier.oNegative:
-                return HKBloodType.oNegative
-            case ORKBloodTypeIdentifier.oPositive:
-                return HKBloodType.oPositive
-            default:
-                return nil
-            }
+            return bloodType.healthKitBloodType()
         }
         else {
             return nil
@@ -131,7 +103,7 @@ extension SBAUserProfileController {
     }
     
     public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
         else {
             return nil
@@ -140,7 +112,7 @@ extension SBAUserProfileController {
     }
     
     public var wheelchairUse: Bool? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
             else {
                 return nil
@@ -167,3 +139,5 @@ extension SBAUserProfileController {
         handleFailedValidation(message)
     }
 }
+
+
