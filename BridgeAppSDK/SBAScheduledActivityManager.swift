@@ -331,7 +331,8 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         do {
             try FileManager.default.removeItem(at: outputDirectory)
         } catch let error as NSError {
-            debugPrint("Unable to remove ResearchKit output directory at \(outputDirectory): \(error)")
+            print("Error removing ResearchKit output directory: \(error.localizedFailureReason)")
+            debugPrint("\tat: \(outputDirectory)")
         }
     }
     
