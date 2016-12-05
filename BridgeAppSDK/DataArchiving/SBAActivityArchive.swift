@@ -131,8 +131,8 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
             return false
         }
         
-        if let urlResult = archiveableResult.result as? NSURL {
-            self.insertURL(intoArchive: urlResult as URL, fileName: archiveableResult.filename)
+        if let urlResult = archiveableResult.result as? URL {
+            self.insertURL(intoArchive: urlResult, fileName: archiveableResult.filename)
         } else if let dictResult = archiveableResult.result as? [AnyHashable: Any] {
             self.insertDictionary(intoArchive: dictResult, filename: archiveableResult.filename)
         } else if let dataResult = archiveableResult.result as? NSData {
