@@ -91,26 +91,7 @@ extension SBAResearchKitProfileResultConverter {
             // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
             // than using the HKBloodType enum directly so you have to convert
             let bloodType = ORKBloodTypeIdentifier(rawValue: answer)
-            switch (bloodType) {
-            case ORKBloodTypeIdentifier.abNegative:
-                return HKBloodType.abNegative
-            case ORKBloodTypeIdentifier.abPositive:
-                return HKBloodType.abPositive
-            case ORKBloodTypeIdentifier.aNegative:
-                return HKBloodType.aNegative
-            case ORKBloodTypeIdentifier.aPositive:
-                return HKBloodType.aPositive
-            case ORKBloodTypeIdentifier.bNegative:
-                return HKBloodType.bNegative
-            case ORKBloodTypeIdentifier.bPositive:
-                return HKBloodType.bPositive
-            case ORKBloodTypeIdentifier.oNegative:
-                return HKBloodType.oNegative
-            case ORKBloodTypeIdentifier.oPositive:
-                return HKBloodType.oPositive
-            default:
-                return nil
-            }
+            return bloodType.healthKitBloodType()
         }
         else {
             return nil
@@ -118,7 +99,7 @@ extension SBAResearchKitProfileResultConverter {
     }
     
     public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
-        guard let result = self.profileResult(for: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
         else {
             return nil
@@ -127,7 +108,7 @@ extension SBAResearchKitProfileResultConverter {
     }
     
     public var wheelchairUse: Bool? {
-        guard let result = self.profileResult(for: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
             else {
                 return nil
@@ -269,3 +250,5 @@ extension SBAUserProfileController {
         handleFailedValidation(message)
     }
 }
+
+
