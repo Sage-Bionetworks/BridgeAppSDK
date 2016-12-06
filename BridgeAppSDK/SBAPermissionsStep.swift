@@ -151,7 +151,7 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
 }
 
-open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoadingViewPresenter {
+open class SBAPermissionsStepViewController: ORKTableStepViewController {
     
     var permissionsGranted: Bool = false
     

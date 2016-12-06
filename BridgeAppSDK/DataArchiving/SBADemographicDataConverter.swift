@@ -33,6 +33,12 @@
 
 import Foundation
 
+// ===== WORK IN PROGRESS =====
+// TODO: WIP syoung 12/06/2016 This is unfinished but b/c it is wrapped up with the profile
+// and onboarding stuff, I don't want the branch lingering unmerged. This is ported from 
+// AppCore and is still untested and *not* intended for production use.
+// ============================
+
 
 /**
  Data converter to use as a factory for converting objects to to an archivable object 
@@ -108,7 +114,7 @@ extension SBABaseDemographicsUtility {
  to an archivable object for upload or saving to user defaults.
  */
 @objc
-open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverter, SBAResearchKitProfileResultConverter, SBABaseDemographicsUtility {
+open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverter, SBAResearchKitResultConverter, SBABaseDemographicsUtility {
 
     let results: [ORKStepResult]
 
@@ -131,7 +137,7 @@ open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverte
         if let valueOnly = demographicsValue(for: identifier) {
             return SBAAnswerKeyAndValue(key: identifier.rawValue, value: valueOnly, questionType: .none)
         }
-        else if let profileResult = profileResult(for: identifier.rawValue) as? ORKQuestionResult,
+        else if let profileResult = findResult(for: identifier.rawValue) as? ORKQuestionResult,
             let answer = profileResult.jsonSerializedAnswer() {
             let result = SBAAnswerKeyAndValue(key: identifier.rawValue, value: answer.value, questionType: answer.questionType)
             result.unit = answer.unit
@@ -145,7 +151,7 @@ open class SBADemographicDataTaskConverter: NSObject, SBADemographicDataConverte
      iterates through the `ORKStepResult` objects until an `ORKResult` is found with a matching identifier.
      @return                Result for the given identifier
     */
-    open func profileResult(for identifier:String) -> ORKResult? {
+    open func findResult(for identifier:String) -> ORKResult? {
         for stepResult in results {
             if let profileResult = stepResult.result(forIdentifier: identifier) {
                 return profileResult

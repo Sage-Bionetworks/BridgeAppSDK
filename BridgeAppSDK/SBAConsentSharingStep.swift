@@ -118,7 +118,7 @@ open class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreActionStep 
  Allow developers to create their own step view controllers that do not inherit from
  `ORKQuestionStepViewController`.
  */
-public protocol SBAConsentSharingStepController: SBAStepViewControllerProtocol {
+public protocol SBAConsentSharingStepController: SBAStepViewControllerProtocol, SBASharedInfoController {
     func goNext()
 }
 
@@ -126,9 +126,14 @@ extension SBAConsentSharingStepController {
     
     public func updateSharingScope() {
         
+        guard let sharingStep = self.step as? SBAConsentSharingStep else {
+            assertionFailure("Step \(self.step) is not of the expected class (SBAConsentSharingStep).")
+            return
+        }
+        
         // Set the user's sharing scope
         sharedUser.dataSharingScope = {
-            guard let choice = self.result?.results?.first as? ORKChoiceQuestionResult,
+            guard let choice = self.result?.result(forIdentifier: sharingStep.identifier) as? ORKChoiceQuestionResult,
                 let answer = choice.choiceAnswers?.first as? Bool
                 else {
                     return .none

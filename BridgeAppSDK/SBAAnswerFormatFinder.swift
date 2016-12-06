@@ -33,13 +33,26 @@
 
 import ResearchKit
 
-public protocol SBAAnswerFormatFinder {
+public class SBAResultIdentifier: NSObject {
+    let stepIdentifier: String
+    let identifier: String
+    
+    public init(identifier: String, stepIdentifier: String?) {
+        self.identifier = identifier
+        self.stepIdentifier = stepIdentifier ?? identifier
+        super.init()
+    }
+}
+
+public protocol SBAAnswerFormatFinder: class {
     func find(for identifier:String) -> ORKAnswerFormat?
+    func resultIdentifier(for identifier:String) -> SBAResultIdentifier?
 }
 
 extension ORKOrderedTask: SBAAnswerFormatFinder {
+    
     public func find(for identifier:String) -> ORKAnswerFormat? {
-        for step in steps {
+        for step in steps.reversed() {
             if let finder = step as? SBAAnswerFormatFinder,
                 let answerFormat = finder.find(for: identifier) {
                 return answerFormat
@@ -47,16 +60,33 @@ extension ORKOrderedTask: SBAAnswerFormatFinder {
         }
         return nil
     }
+    
+    public func resultIdentifier(for identifier: String) -> SBAResultIdentifier? {
+        for step in steps.reversed() {
+            if let finder = step as? SBAAnswerFormatFinder,
+                let resultIdentifier = finder.resultIdentifier(for: identifier) {
+                return resultIdentifier
+            }
+        }
+        return nil
+    }
 }
 
 extension ORKQuestionStep: SBAAnswerFormatFinder {
+    
     public func find(for identifier:String) -> ORKAnswerFormat? {
         guard identifier == self.identifier else { return nil }
         return self.answerFormat
     }
+    
+    public func resultIdentifier(for identifier: String) -> SBAResultIdentifier? {
+        guard identifier == self.identifier else { return nil }
+        return SBAResultIdentifier(identifier: identifier, stepIdentifier: nil)
+    }
 }
 
 extension ORKFormStep: SBAAnswerFormatFinder {
+    
     public func find(for identifier:String) -> ORKAnswerFormat? {
         guard let formItems = self.formItems else { return nil }
         for formItem in formItems {
@@ -66,11 +96,17 @@ extension ORKFormStep: SBAAnswerFormatFinder {
         }
         return nil
     }
+    
+    public func resultIdentifier(for identifier: String) -> SBAResultIdentifier? {
+        guard find(for: identifier) != nil else { return nil }
+        return SBAResultIdentifier(identifier: identifier, stepIdentifier: self.identifier)
+    }
 }
 
 extension ORKPageStep: SBAAnswerFormatFinder {
+    
     public func find(for identifier:String) -> ORKAnswerFormat? {
-        for step in steps {
+        for step in steps.reversed() {
             if let finder = step as? SBAAnswerFormatFinder,
                 let answerFormat = finder.find(for: identifier) {
                 return answerFormat
@@ -78,11 +114,33 @@ extension ORKPageStep: SBAAnswerFormatFinder {
         }
         return nil
     }
+    
+    public func resultIdentifier(for identifier: String) -> SBAResultIdentifier? {
+        for step in steps.reversed() {
+            if let finder = step as? SBAAnswerFormatFinder,
+                let resultIdentifier = finder.resultIdentifier(for: identifier) {
+                let mergedIdentifier = "\(resultIdentifier.stepIdentifier).\(resultIdentifier.identifier)"
+                return SBAResultIdentifier(identifier: mergedIdentifier, stepIdentifier: self.identifier)
+            }
+        }
+        return nil
+    }
 }
 
 extension SBASubtaskStep: SBAAnswerFormatFinder {
+    
     public func find(for identifier:String) -> ORKAnswerFormat? {
         guard let finder = self.subtask as? SBAAnswerFormatFinder else { return nil }
         return finder.find(for: identifier)
+    }
+    
+    public func resultIdentifier(for identifier: String) -> SBAResultIdentifier? {
+        guard let finder = self.subtask as? SBAAnswerFormatFinder,
+            let resultIdentifier = finder.resultIdentifier(for: identifier)
+        else {
+            return nil
+        }
+        let stepIdentifier = "\(self.subtask.identifier).\(resultIdentifier.stepIdentifier)"
+        return SBAResultIdentifier(identifier: identifier, stepIdentifier: stepIdentifier)
     }
 }

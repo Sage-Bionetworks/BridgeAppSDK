@@ -92,7 +92,7 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
     }
 }
 
-open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAUserProfileController {
+open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAAccountController {
     
     // MARK: SBASharedInfoController
     

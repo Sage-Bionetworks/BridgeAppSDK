@@ -33,6 +33,12 @@
 
 import UIKit
 
+// ===== WORK IN PROGRESS =====
+// TODO: WIP syoung 12/06/2016 This is unfinished but b/c it is wrapped up with the profile
+// and onboarding stuff, I don't want the branch lingering unmerged. This is ported from
+// AppCore and is still untested and *not* intended for production use.
+// ============================
+
 public class SBADemographicDataArchive: SBADataArchive, SBASharedInfoController {
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {

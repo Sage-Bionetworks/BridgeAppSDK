@@ -33,22 +33,30 @@
 
 import Foundation
 
-public protocol SBAStepViewControllerProtocol: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
-    var result: ORKStepResult? { get }
-    var step: ORKStep? { get }
+public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter {
 }
 
-public protocol SBAResearchKitProfileResultConverter: class {
-    var answerFormatFinder: SBAAnswerFormatFinder? { get }
-    func profileResult(for identifier: String) -> ORKResult?
-}
-
-public protocol SBAUserProfileController: SBAStepViewControllerProtocol, SBAResearchKitProfileResultConverter {
+public protocol SBAAccountController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
     var failedValidationMessage: String { get }
     var failedRegistrationTitle: String { get }
 }
 
-extension SBAResearchKitProfileResultConverter {
+extension SBAAccountController {
+    
+    func handleFailedValidation(_ reason: String? = nil) {
+        let message = reason ?? failedValidationMessage
+        self.hideLoadingView({ [weak self] in
+            self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
+        })
+    }
+    
+    func handleFailedRegistration(_ error: Error) {
+        let message = (error as NSError).localizedBridgeErrorMessage
+        handleFailedValidation(message)
+    }
+}
+
+extension SBAResearchKitResultConverter {
     
     // MARK: Results
     
@@ -77,12 +85,12 @@ extension SBAResearchKitProfileResultConverter {
     }
     
     public var birthdate: Date? {
-        guard let result = self.profileResult(for: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
+        guard let result = self.findResult(for: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer
     }
     
     public var bloodType: HKBloodType? {
-        guard let result = self.profileResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
+        guard let result = self.findResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
             else { return nil }
         if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
             return HKBloodType(rawValue: answer)
@@ -99,7 +107,7 @@ extension SBAResearchKitProfileResultConverter {
     }
     
     public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.findResult(for: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
         else {
             return nil
@@ -108,7 +116,7 @@ extension SBAResearchKitProfileResultConverter {
     }
     
     public var wheelchairUse: Bool? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.findResult(for: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
             else {
                 return nil
@@ -136,119 +144,15 @@ extension SBAResearchKitProfileResultConverter {
         return timeOfDay(for: option.rawValue)
     }
     
-    public func timeOfDay(for identifier: String) -> DateComponents? {
-        guard let result = self.profileResult(for: identifier) as? ORKTimeOfDayQuestionResult
-            else {
-                return nil
-        }
-        return result.dateComponentsAnswer
-    }
-    
-    public func quantitySample(for identifier: String) -> HKQuantitySample? {
-        guard let profileResult = profileResult(for: identifier) as? ORKQuestionResult,
-            let quantity = quantity(for: identifier),
-            let quantityType = quantityType(for: identifier)
-            else {
-                return nil
-        }
-        return HKQuantitySample(type: quantityType, quantity: quantity, start: profileResult.startDate, end: profileResult.endDate)
-    }
-    
     func quantity(for option: SBAProfileInfoOption) -> HKQuantity? {
         return quantity(for: option.rawValue)
-    }
-    
-    public func quantity(for identifier: String) -> HKQuantity? {
-        guard let profileResult = profileResult(for: identifier) as? ORKQuestionResult,
-            let answer = profileResult.jsonSerializedAnswer(),
-            let doubleValue = (answer.value as? NSNumber)?.doubleValue,
-            let unitString = answer.unit
-            else {
-                return nil
-        }
-        return HKQuantity(unit: HKUnit(from: unitString), doubleValue: doubleValue)
-    }
-    
-    public func quantityType(for identifier: String) -> HKQuantityType? {
-        if let answerFormat = self.answerFormatFinder?.find(for: identifier) as? ORKHealthKitQuantityTypeAnswerFormat {
-            return answerFormat.quantityType
-        }
-        else if let option = SBAProfileInfoOption(rawValue: identifier) {
-            switch (option) {
-            case .height:
-                return HKObjectType.quantityType(forIdentifier: .height)
-            case .weight:
-                return HKObjectType.quantityType(forIdentifier: .bodyMass)
-            default:
-                break
-            }
-        }
-        return HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: identifier))
     }
     
     func convertBiologicalSex(for option: SBAProfileInfoOption) -> HKBiologicalSex? {
         return self.convertBiologicalSex(for: option.rawValue)
     }
     
-    public func convertBiologicalSex(for identifier:String) -> HKBiologicalSex? {
-        guard let result = self.profileResult(for: identifier) as? ORKChoiceQuestionResult
-            else { return nil }
-        if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
-            return HKBiologicalSex(rawValue: answer)
-        }
-        else if let answer = result.choiceAnswers?.first as? String {
-            // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
-            // than using the HKBiologicalSex enum directly so you have to convert
-            let biologicalSex = ORKBiologicalSexIdentifier(rawValue: answer)
-            switch (biologicalSex) {
-            case ORKBiologicalSexIdentifier.female:
-                return HKBiologicalSex.female
-            case ORKBiologicalSexIdentifier.male:
-                return HKBiologicalSex.male
-            case ORKBiologicalSexIdentifier.other:
-                return HKBiologicalSex.other
-            default:
-                return nil
-            }
-        }
-        else {
-            return nil
-        }
-    }
-    
     func textAnswer(for option: SBAProfileInfoOption) -> String? {
         return textAnswer(for: option.rawValue)
     }
-    
-    public func textAnswer(for identifier:String) -> String? {
-        guard let result = self.profileResult(for: identifier) as? ORKTextQuestionResult else { return nil }
-        return result.textAnswer
-    }
 }
-
-extension SBAUserProfileController {
-    
-    public var answerFormatFinder: SBAAnswerFormatFinder? {
-        return self.step as? SBAAnswerFormatFinder
-    }
-    
-    public func profileResult(for identifier: String) -> ORKResult? {
-        return self.result?.result(forIdentifier: identifier)
-    }
-    
-    // MARK: Error handling
-
-    func handleFailedValidation(_ reason: String? = nil) {
-        let message = reason ?? failedValidationMessage
-        self.hideLoadingView({ [weak self] in
-            self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
-            })
-    }
-    
-    func handleFailedRegistration(_ error: Error) {
-        let message = (error as NSError).localizedBridgeErrorMessage
-        handleFailedValidation(message)
-    }
-}
-
-
