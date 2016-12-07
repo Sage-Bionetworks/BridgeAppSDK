@@ -52,6 +52,17 @@ static NSString * const kAPCFeedDateFormat               = @"EEE, dd MMM yyyy HH
 
 @end
 
+dispatch_queue_t feedDispatchQueue()
+{
+    static dispatch_queue_t q;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        q = dispatch_queue_create("org.sagebase.NewsFeedParser", DISPATCH_QUEUE_SERIAL);
+    });
+    
+    return q;
+}
+
 @implementation SBANewsFeedParser
 
 - (instancetype)initWithFeedURL:(NSURL *)feedURL
@@ -84,20 +95,23 @@ static NSString * const kAPCFeedDateFormat               = @"EEE, dd MMM yyyy HH
 
 - (void)fetchFeedWithCompletion:(SBANewsFeedParserCompletionBlock)completion
 {
-    [self setupParser];
-    
-    [self.results removeAllObjects];
-    
-    self.completionBlock = completion;
-    
-    BOOL success = [self.parser parse];
-    
-    if (!success) {
+    dispatch_async(feedDispatchQueue(), ^{
+
+        [self setupParser];
         
-        if (self.completionBlock) {
-            self.completionBlock(nil, self.parser.parserError);
+        [self.results removeAllObjects];
+        
+        self.completionBlock = completion;
+        
+        BOOL success = [self.parser parse];
+        
+        if (!success) {
+            
+            if (self.completionBlock) {
+                self.completionBlock(nil, self.parser.parserError);
+            }
         }
-    }
+    });
 }
 
 #pragma mark - NSXMLParserDelegate methods
