@@ -207,7 +207,7 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     }
     
     public var appUpdateURLString: String? {
-        return self.plist["appUpdateURLString"] as? String
+        return self.plist["appUpdateURL"] as? String
     }
     
     public var disableTestUserCheck: Bool {
@@ -264,7 +264,7 @@ extension SBABridgeInfo {
     }
     
     public var appUpdateURL: URL {
-        guard let urlString = appUpdateURLString, let url =  URL(string: urlString) else {
+        guard let urlString = appUpdateURLString, let url = URL(string: urlString) else {
             return Bundle.main.appStoreLinkURL()
         }
         return url
