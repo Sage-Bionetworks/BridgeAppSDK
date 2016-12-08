@@ -224,7 +224,7 @@ class SBAAccountTests: XCTestCase {
     
     // Mark: SBAProfileInfoForm
     
-    func testCreateProfileInfoForm() {
+    func testCreateProfileInfoForm_RegistrationStep() {
         let input: NSDictionary = [
             "identifier"    : "registration",
             "type"          : "registration",
@@ -274,13 +274,11 @@ class SBAAccountTests: XCTestCase {
         XCTAssertNotNil(gender, "\(genderItem?.answerFormat)")
         XCTAssertEqual(gender!.characteristicType.identifier, HKCharacteristicTypeIdentifier.biologicalSex.rawValue)
 
-        
         let biologicalSexItem = step.formItemForIdentifier("biologicalSex")
         let biologicalSex = biologicalSexItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(biologicalSexItem)
         XCTAssertNotNil(biologicalSex, "\(biologicalSexItem?.answerFormat)")
         XCTAssertEqual(biologicalSex!.characteristicType.identifier, HKCharacteristicTypeIdentifier.biologicalSex.rawValue)
-
         
         let bloodTypeItem = step.formItemForIdentifier("bloodType")
         let bloodType = bloodTypeItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
@@ -288,7 +286,6 @@ class SBAAccountTests: XCTestCase {
         XCTAssertNotNil(bloodType, "\(bloodTypeItem?.answerFormat)")
         XCTAssertEqual(bloodType!.characteristicType.identifier, HKCharacteristicTypeIdentifier.bloodType.rawValue)
 
-    
         let fitzpatrickSkinTypeItem = step.formItemForIdentifier("fitzpatrickSkinType")
         let fitzpatrickSkinType = fitzpatrickSkinTypeItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(fitzpatrickSkinTypeItem)
@@ -334,6 +331,40 @@ class SBAAccountTests: XCTestCase {
         let sleepHour = sleepTime?.defaultComponents?.hour
         XCTAssertNotNil(sleepHour)
         XCTAssertEqual(sleepHour!, 10)
+    }
+    
+    func testCreateProfileInfoForm_ProfileStep() {
+        let input: NSDictionary = [
+            "identifier"    : "profile",
+            "type"          : "profile",
+            "title"         : "Profile Info",
+            "items"         : ["height", "weight",
+                               ["identifier" : "chocolate",
+                                "type" : "boolean",
+                                "text" : "Do you like chocolate?"]]
+        ]
+        
+        let step = SBAProfileFormStep(inputItem: input)
+        XCTAssertEqual(step.identifier, "profile")
+        XCTAssertEqual(step.title, "Profile Info")
+        
+        let heightItem = step.formItemForIdentifier("height")
+        let height = heightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
+        XCTAssertNotNil(heightItem)
+        XCTAssertNotNil(height, "\(heightItem?.answerFormat)")
+        XCTAssertEqual(height!.quantityType.identifier, HKQuantityTypeIdentifier.height.rawValue)
+        
+        let weightItem = step.formItemForIdentifier("weight")
+        let weight = weightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
+        XCTAssertNotNil(weightItem)
+        XCTAssertNotNil(weight, "\(weightItem?.answerFormat)")
+        XCTAssertEqual(weight!.quantityType.identifier, HKQuantityTypeIdentifier.bodyMass.rawValue)
+        
+        let chocolateItem = step.formItemForIdentifier("chocolate")
+        let chocolate = chocolateItem?.answerFormat as? ORKBooleanAnswerFormat
+        XCTAssertNotNil(chocolateItem)
+        XCTAssertNotNil(chocolate, "\(chocolateItem?.answerFormat)")
+        XCTAssertEqual(chocolateItem?.text, "Do you like chocolate?")
     }
 
 }

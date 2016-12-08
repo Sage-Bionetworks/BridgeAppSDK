@@ -94,7 +94,7 @@ class SBAUserProfileControllerTests: ResourceTestCase {
             "items"         : ["externalID", "name", "birthdate"]
         ]
         
-        let step = SBAConsentReviewStep(inputItem: input, inDocument: consentFactory.consentDocument)
+        let step = SBAConsentReviewStep(inputItem: input, inDocument: consentFactory.consentDocument, factory: consentFactory)
         
         let birthdate = Date().addingNumberOfDays(-4000)
         let result = step.instantiateDefaultStepResult(["externalID" : "000111",

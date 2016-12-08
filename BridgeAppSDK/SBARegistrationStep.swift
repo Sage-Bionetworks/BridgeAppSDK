@@ -50,12 +50,12 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
     public override required init(identifier: String) {
         super.init(identifier: identifier)
-        commonInit(inputItem:nil)
+        commonInit(inputItem:nil, factory:nil)
     }
     
-    public init(inputItem: SBASurveyItem) {
+    public init(inputItem: SBASurveyItem, factory: SBASurveyFactory? = nil) {
         super.init(identifier: inputItem.identifier)
-        commonInit(inputItem:inputItem)
+        commonInit(inputItem:inputItem, factory:factory)
     }
     
     open override func validateParameters() {

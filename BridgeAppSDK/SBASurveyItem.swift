@@ -147,6 +147,7 @@ public enum SBASurveyItemType {
         case permissions        = "permissions"             // SBAPermissionsStep
         case completion         = "onboardingCompletion"    // SBAOnboardingCompletionStep
         case dataGroups         = "dataGroups"              // SBADataGroupsStep
+        case profile            = "profile"                 // SBAProfileQuestionStep or ORKProfileFormStep
     }
     
     case passcode(ORKPasscodeType)

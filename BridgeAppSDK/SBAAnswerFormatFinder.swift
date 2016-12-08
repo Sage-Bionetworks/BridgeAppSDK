@@ -33,6 +33,32 @@
 
 import ResearchKit
 
+/**
+ `SBAAnswerFormatFinder` is a protocol for finding an `ORKAnswerFormat` for a matching identifier
+ and for mapping an identifier string to a result. This is currently used by `SBAUserProfileController`
+ and `SBADemographicDataConverter`.
+ */
+public protocol SBAAnswerFormatFinder: class {
+    
+    /**
+     Find the `ORKAnswerFormat` that maps to a given identifier string. Returns `nil` if not found.
+     @param identifier   Identifier for the form item.
+     @return             Answer format for the form item (if found)
+    */
+    func find(for identifier:String) -> ORKAnswerFormat?
+    
+    /**
+     Find the `SBAResultIdentifier` that maps to the given identifier string. Returns `nil` if not found.
+     @param identifier   Identifier for the form item.
+     @return             result identifier (step and subresult) if found.
+    */
+    func resultIdentifier(for identifier:String) -> SBAResultIdentifier?
+}
+
+/**
+ The `SBAResultIdentifier` includes a pointer to the identifier for the `ORKStepResult` 
+ and the `ORKResult` that is a member of the `ORKStepResult.results` collection.
+ */
 public class SBAResultIdentifier: NSObject {
     let stepIdentifier: String
     let identifier: String
@@ -42,11 +68,6 @@ public class SBAResultIdentifier: NSObject {
         self.stepIdentifier = stepIdentifier ?? identifier
         super.init()
     }
-}
-
-public protocol SBAAnswerFormatFinder: class {
-    func find(for identifier:String) -> ORKAnswerFormat?
-    func resultIdentifier(for identifier:String) -> SBAResultIdentifier?
 }
 
 extension ORKOrderedTask: SBAAnswerFormatFinder {

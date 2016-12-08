@@ -105,7 +105,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
             }
             else {
                 let review = inputItem as! SBAFormStepSurveyItem
-                let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument)
+                let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument, factory: self)
                 return step;
             }
         }

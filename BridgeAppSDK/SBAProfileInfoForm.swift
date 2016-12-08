@@ -145,7 +145,7 @@ public struct SBAProfileInfoOptions {
         self.customOptions = customOptions
     }
     
-    func makeFormItems(surveyItemType: SBASurveyItemType) -> [ORKFormItem] {
+    func makeFormItems(surveyItemType: SBASurveyItemType, factory:SBASurveyFactory? = nil) -> [ORKFormItem] {
         
         var formItems: [ORKFormItem] = []
         
@@ -215,6 +215,15 @@ public struct SBAProfileInfoOptions {
                 formItems.append(formItem)
             }
         }
+        
+        let surveyFactory = factory ?? SBASurveyFactory()
+        for item in customOptions {
+            if let surveyItem = item as? SBAFormStepSurveyItem, surveyItem.isValidFormItem {
+                let formItem = surveyFactory.createFormItem(surveyItem)
+                formItems.append(formItem)
+            }
+        }
+        
         return formItems
     }
     
@@ -478,14 +487,14 @@ extension SBAProfileInfoForm {
         return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
-    func commonInit(inputItem: SBASurveyItem?) {
+    func commonInit(inputItem: SBASurveyItem?, factory: SBASurveyFactory?) {
         self.title = inputItem?.stepTitle
         self.text = inputItem?.stepText
         if let formStep = self as? ORKFormStep {
             formStep.footnote = inputItem?.stepFootnote
         }
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
-        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
+        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType, factory: factory)
     }
 }
 

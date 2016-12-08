@@ -271,6 +271,7 @@
 		FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */; };
 		FFDECE0A1D08D0F600434001 /* SBAProfileInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */; };
 		FFF05FAB1D5A4FCC007304FF /* SBAPermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */; };
+		FFF5FFC01DF9F39400E9AC7B /* SBAProfileFormStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF5FFBF1DF9F39400E9AC7B /* SBAProfileFormStep.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -691,6 +692,7 @@
 		FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAConsentReviewStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAProfileInfoForm.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAPermissionsManager.swift; sourceTree = "<group>"; };
+		FFF5FFBF1DF9F39400E9AC7B /* SBAProfileFormStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileFormStep.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1050,6 +1052,7 @@
 				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
 				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */,
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
+				FFF5FFBF1DF9F39400E9AC7B /* SBAProfileFormStep.swift */,
 				FFDECE091D08D0F600434001 /* SBAProfileInfoForm.swift */,
 				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
 				FF5242B01D81E9D0009043B3 /* SBAUserProfileController.swift */,
@@ -1936,6 +1939,7 @@
 				FF2498211CB6E605002DD05F /* SequenceType+Utilities.swift in Sources */,
 				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
+				FFF5FFC01DF9F39400E9AC7B /* SBAProfileFormStep.swift in Sources */,
 				FBF1B6B31CAAF6FC007C1082 /* UIAlertController+Utilities.swift in Sources */,
 				FBAD11701CADE79E005611D0 /* SBABridgeTask+Dictionary.swift in Sources */,
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
