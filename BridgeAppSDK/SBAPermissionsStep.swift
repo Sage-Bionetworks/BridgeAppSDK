@@ -43,12 +43,6 @@ open class SBAPermissionsStep: ORKTableStep, SBANavigationSkipRule {
     }
     
     /**
-     Flag to require the permission and cancel the task if not permitted.
-     Default = `false`
-    */
-    open var required: Bool = false
-    
-    /**
      Permission types to request for this step of the task.
     */
     open var permissionTypes: [SBAPermissionObjectType] {
@@ -178,7 +172,7 @@ open class SBAPermissionsStepViewController: ORKTableStepViewController, SBALoad
         let permissionsManager = permissionsStep.permissionsManager
         let permissions = permissionsStep.permissionTypes
         permissionsManager.requestPermissions(for: permissions, alertPresenter: self) { [weak self] (granted) in
-            if granted || !permissionsStep.required {
+            if granted || permissionsStep.isOptional {
                 self?.permissionsGranted = granted
                 self?.goNext()
             }
