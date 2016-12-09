@@ -106,10 +106,11 @@ dispatch_queue_t feedDispatchQueue()
         BOOL success = [self.parser parse];
         
         if (!success) {
-            
-            if (self.completionBlock) {
-                self.completionBlock(nil, self.parser.parserError);
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.completionBlock) {
+                    self.completionBlock(nil, self.parser.parserError);
+                }
+            });
         }
     });
 }
