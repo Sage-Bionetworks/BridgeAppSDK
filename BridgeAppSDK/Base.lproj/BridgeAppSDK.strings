@@ -120,6 +120,12 @@
 "FITZPATRICK_SKIN_TYPE_FORM_ITEM_TITLE" = "Fitzpatrick Skin Type";    // Title for a form item for entering blood type
 "FITZPATRICK_SKIN_TYPE_FORM_ITEM_PLACEHOLDER" = "Enter skin type";    // Placeholder for a form item for entering blood type
 "WHEELCHAIR_USE_FORM_ITEM_TITLE" = "Wheelchair Use";    // Title for form item for entering wheelchair use
+"HEIGHT_FORM_ITEM_TITLE" = "Height";    // Title for height
+"WEIGHT_FORM_ITEM_TITLE" = "Weight";    // Title for weight
+"WAKE_TIME_FORM_ITEM_TEXT" = "What time do you generally wake up?";
+"SLEEP_TIME_FORM_ITEM_TEXT" = "What time do you generally go to sleep?";
+
+
 
 
 /* State */

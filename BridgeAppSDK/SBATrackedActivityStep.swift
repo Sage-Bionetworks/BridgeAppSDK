@@ -258,8 +258,8 @@ open class SBATrackedActivityPageStepViewController: ORKPageStepViewController {
             
             // create and return a mapping of identifier to value
             var value = answer.value
-            if let array = value as? NSArray , array.count == 1 {
-                value = array.firstObject! as AnyObject
+            if let array = value as? NSArray, array.count == 1 {
+                value = array.firstObject! as! NSSecureCoding
             }
             return ["identifier" : step.identifier, "answer" : value] as NSDictionary
         })

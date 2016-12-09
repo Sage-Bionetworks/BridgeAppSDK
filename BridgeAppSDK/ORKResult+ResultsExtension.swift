@@ -307,13 +307,13 @@ extension ORKSpatialSpanMemoryResult {
     
 }
 
-public final class AnswerKeyAndValue: NSObject {
+public final class SBAAnswerKeyAndValue: NSObject {
     let key: String
-    let value: AnyObject
+    let value: NSSecureCoding
     let questionType: ORKQuestionType
     var unit: String?
     
-    init(key: String, value: AnyObject, questionType: ORKQuestionType) {
+    init(key: String, value: NSSecureCoding, questionType: ORKQuestionType) {
         self.key = key
         self.value = value
         self.questionType = questionType
@@ -322,7 +322,7 @@ public final class AnswerKeyAndValue: NSObject {
 }
 
 public protocol ORKQuestionResultAnswerJSON {
-    func jsonSerializedAnswer() -> AnswerKeyAndValue?
+    func jsonSerializedAnswer() -> SBAAnswerKeyAndValue?
 }
 
 extension ORKQuestionType {
@@ -388,7 +388,7 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
         return choiceQuestionResult
     }
     
-    public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         let className = NSStringFromClass(self.classForCoder)
         fatalError("jsonSerializedAnswer not implemented for \(className)")
     }
@@ -397,49 +397,49 @@ extension ORKQuestionResult: ORKQuestionResultAnswerJSON {
 
 extension ORKChoiceQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let choiceAnswers = self.choiceAnswers else { return nil }
-        return AnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject() as AnyObject, questionType: self.questionType)
+        return SBAAnswerKeyAndValue(key: "choiceAnswers", value: (choiceAnswers as NSArray).jsonObject(), questionType: self.questionType)
     }
 }
 
 extension ORKScaleQuestionResult {
 
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject() as AnyObject, questionType: .scale)
+        return SBAAnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .scale)
     }
 }
 
 extension ORKMoodScaleQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.scaleAnswer else { return nil }
-        return AnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject() as AnyObject, questionType: .scale)
+        return SBAAnswerKeyAndValue(key: "scaleAnswer", value: answer.jsonObject(), questionType: .scale)
     }
 }
 
 extension ORKBooleanQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.booleanAnswer else { return nil }
-        return AnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject() as AnyObject, questionType: .boolean)
+        return SBAAnswerKeyAndValue(key: "booleanAnswer", value: answer.jsonObject(), questionType: .boolean)
     }
 }
 
 extension ORKTextQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.textAnswer else { return nil }
-        return AnswerKeyAndValue(key: "textAnswer", value: answer as AnyObject, questionType: .text)
+        return SBAAnswerKeyAndValue(key: "textAnswer", value: answer as NSSecureCoding, questionType: .text)
     }
 }
 
 extension ORKNumericQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.numericAnswer else { return nil }
-        let answerKey = AnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject() as AnyObject, questionType: self.questionType)
+        let answerKey = SBAAnswerKeyAndValue(key: "numericAnswer", value: answer.jsonObject(), questionType: self.questionType)
         answerKey.unit = self.unit
         return answerKey
     }
@@ -448,35 +448,35 @@ extension ORKNumericQuestionResult {
 
 extension ORKTimeOfDayQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let dateAnswer = self.dateComponentsAnswer else { return nil }
         var answer = dateAnswer
         answer.year = 0
         answer.month = 0
         answer.day = 0
-        return AnswerKeyAndValue(key: "dateComponentsAnswer", value: (answer as NSDateComponents).jsonObject() as AnyObject, questionType: .timeOfDay)
+        return SBAAnswerKeyAndValue(key: "dateComponentsAnswer", value: (answer as NSDateComponents).jsonObject(), questionType: .timeOfDay)
     }
 }
 
 extension ORKTimeIntervalQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.intervalAnswer else { return nil }
         
-        return AnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject() as AnyObject, questionType: .timeInterval)
+        return SBAAnswerKeyAndValue(key: "intervalAnswer", value: answer.jsonObject(), questionType: .timeInterval)
     }
 }
 
 extension ORKDateQuestionResult {
     
-    override public func jsonSerializedAnswer() -> AnswerKeyAndValue? {
+    override public func jsonSerializedAnswer() -> SBAAnswerKeyAndValue? {
         guard let answer = self.dateAnswer else { return nil }
         let key = "dateAnswer"
         if self.questionType == ORKQuestionType.date {
-            return AnswerKeyAndValue(key: key, value: (answer as NSDate).iso8601DateOnlyString() as AnyObject, questionType: self.questionType)
+            return SBAAnswerKeyAndValue(key: key, value: (answer as NSDate).iso8601DateOnlyString() as NSSecureCoding, questionType: self.questionType)
         }
         else {
-            return AnswerKeyAndValue(key: key, value: (answer as NSDate).jsonObject() as AnyObject, questionType: self.questionType)
+            return SBAAnswerKeyAndValue(key: key, value: (answer as NSDate).jsonObject(), questionType: self.questionType)
         }
     }
 }

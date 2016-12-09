@@ -52,13 +52,7 @@
                   "title": "The survey questions may be stressful for some people.",
                   "type": "boolean",
                   "expectedAnswer": true,
-              },
-              {
-                  "identifier": "stopParticipating",
-                  "title": "I can pause/resume participating at any time",
-                  "type": "boolean",
-                  "expectedAnswer": true,
-              },
+              }
               ],
          },
          {

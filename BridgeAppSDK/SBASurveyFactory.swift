@@ -182,6 +182,19 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
         return inputItem.createAnswerFormat(subtype)
     }
     
+    /**
+     Factory method for injecting an override of the functionality supported by the `SBAFormStepSurveyItem`
+     protocol extension. Because a protocol extension cannot be overriden, this method allows the injection
+     of customization of the default form item.
+     @param inputItem       An input item conforming to the `SBAFormStepSurveyItem` protocol
+     @param subtype         The form subtype to use when creating the answer format
+     @return                A form item.
+    */
+    open func createFormItem(_ inputItem:SBAFormStepSurveyItem, subtype: SBASurveyItemType.FormSubtype? = nil) -> ORKFormItem {
+        let subtype = inputItem.surveyItemType.formSubtype() ?? subtype
+        return inputItem.createFormItem(text: inputItem.stepText, subtype: subtype, factory: self)
+    }
+    
     internal final func createSurveyStep(_ inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
@@ -217,9 +230,9 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
     fileprivate func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
         switch (subtype) {
         case .registration:
-            return SBARegistrationStep(inputItem: inputItem)
+            return SBARegistrationStep(inputItem: inputItem, factory: self)
         case .login:
-            return SBALoginStep(inputItem: inputItem)
+            return SBALoginStep(inputItem: inputItem, factory: self)
         case .emailVerification:
             return SBAEmailVerificationStep(inputItem: inputItem, appInfo: self.sharedAppDelegate)
         case .externalID:
@@ -230,6 +243,9 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
             return SBAOnboardingCompleteStep(inputItem: inputItem)
         case .dataGroups:
             return SBADataGroupsStep(inputItem: inputItem)
+        case .profile:
+            return SBAProfileFormStep(inputItem: inputItem, factory: self)
+            
         }
     }
     
@@ -242,6 +258,10 @@ extension SBAInstructionStepSurveyItem {
 }
 
 extension SBAFormStepSurveyItem {
+    
+    var isValidFormItem: Bool {
+        return (self.identifier != nil) && (self.surveyItemType.formSubtype() != nil)
+    }
     
     var isBooleanToggle: Bool {
         return SBASurveyItemType.form(.toggle) == self.surveyItemType
@@ -291,10 +311,9 @@ extension SBAFormStepSurveyItem {
     func buildFormItems(with step: SBAFormProtocol, isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) {
         
         if self.isCompoundStep {
+            let factory = factory ?? SBASurveyFactory()
             step.formItems = self.items?.map({
-                let formItem = $0 as! SBAFormStepSurveyItem
-                let subtype = formItem.surveyItemType.formSubtype()  ?? SBASurveyItemType.FormSubtype.boolean
-                return formItem.createFormItem(text: formItem.stepText, subtype: subtype, factory: factory)
+                return factory.createFormItem($0 as! SBAFormStepSurveyItem)
             })
         }
         else {
@@ -302,7 +321,7 @@ extension SBAFormStepSurveyItem {
             step.formItems = [self.createFormItem(text: nil, subtype: subtype, factory: factory)]
         }
     }
-    
+        
     func createFormItem(text: String?, subtype: SBASurveyItemType.FormSubtype?, factory: SBASurveyFactory? = nil) -> ORKFormItem {
         let answerFormat = factory?.createAnswerFormat(self, subtype: subtype) ?? self.createAnswerFormat(subtype)
         if let rulePredicate = self.rulePredicate {
@@ -318,7 +337,7 @@ extension SBAFormStepSurveyItem {
     }
     
     func createAnswerFormat(_ subtype: SBASurveyItemType.FormSubtype?) -> ORKAnswerFormat? {
-        guard let subtype = subtype else { return nil }
+        let subtype = subtype ?? SBASurveyItemType.FormSubtype.boolean
         switch(subtype) {
         case .boolean:
             return ORKBooleanAnswerFormat()

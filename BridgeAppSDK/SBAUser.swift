@@ -179,28 +179,37 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     public func getKeychainObject(_ key: String) -> NSSecureCoding? {
         var obj: NSSecureCoding?
         lockQueue.sync {
-            var err: NSError?
-            obj = ORKKeychainWrapper.object(forKey: key, error: &err)
-            if let error = err {
-                print("Error accessing keychain \(key): \(error.code) \(error)")
-            }
+            obj = self._getKeychainObject_NoLock(key)
+        }
+        return obj
+    }
+    
+    fileprivate func _getKeychainObject_NoLock(_ key: String) -> NSSecureCoding? {
+        var err: NSError?
+        let obj: NSSecureCoding? = ORKKeychainWrapper.object(forKey: key, error: &err)
+        if let error = err {
+            print("Error accessing keychain \(key): \(error.code) \(error)")
         }
         return obj
     }
     
     public func setKeychainObject(_ object: NSSecureCoding?, key: String) {
         lockQueue.async {
-            do {
-                if let obj = object {
-                    try ORKKeychainWrapper.setObject(obj, forKey: key)
-                }
-                else {
-                    try ORKKeychainWrapper.removeObject(forKey: key)
-                }
+            self._setKeychainObject_NoLock(object, key: key)
+        }
+    }
+    
+    fileprivate func _setKeychainObject_NoLock(_ object: NSSecureCoding?, key: String) {
+        do {
+            if let obj = object {
+                try ORKKeychainWrapper.setObject(obj, forKey: key)
             }
-            catch let error as NSError {
-                print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
+            else {
+                try ORKKeychainWrapper.removeObject(forKey: key)
             }
+        }
+        catch let error as NSError {
+            print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
         }
     }
     
@@ -213,6 +222,67 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
+    // --------------------------------------------------
+    // MARK: HealthKit storage
+    // --------------------------------------------------
+    
+    lazy var healthStore: HKHealthStore? = {
+        return SBAPermissionsManager.shared.healthStore
+    }()
+    
+    public func fetchHealthKitQuantitySample(with identifier: HKQuantityTypeIdentifier, completion: @escaping ((HKQuantitySample?) -> Void)) {
+        
+        guard let sampleType = HKObjectType.quantityType(forIdentifier: identifier) else {
+            assertionFailure("\(identifier) not a recognized quantity type")
+            return
+        }
+        
+        func fetchFallback() {
+            let result = self._getKeychainObject_NoLock(identifier.rawValue) as? HKQuantitySample
+            completion(result)
+        }
+        
+        lockQueue.async {
+            if let healthStore = self.healthStore {
+                let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+                let sampleQuery = HKSampleQuery(sampleType: sampleType, predicate: nil, limit: 1, sortDescriptors: [sortDescriptor], resultsHandler: { (_, results, error) in
+                    let result = results?.first as? HKQuantitySample
+                    if (result == nil) && (error != nil) {
+                        print("Error accessing health data \(identifier): \(error)")
+                        fetchFallback()
+                    }
+                    else {
+                        completion(result)
+                    }
+                })
+                healthStore.execute(sampleQuery)
+            }
+            else {
+                fetchFallback()
+            }
+        }
+    }
+    
+    public func saveHealthKitQuantitySample(_ quantitySample: HKQuantitySample) {
+        
+        func saveFallback() {
+            _setKeychainObject_NoLock(quantitySample, key: quantitySample.quantityType.identifier)
+        }
+        
+        lockQueue.async {
+            if let healthStore = self.healthStore {
+                healthStore.save(quantitySample, withCompletion: { (success, error) in
+                    if !success {
+                        saveFallback()
+                        print("Failed to save to health kit \(quantitySample): \(error)")
+                    }
+                })
+            }
+            else {
+                saveFallback()
+            }
+        }
+    }
     
     // --------------------------------------------------
     // MARK: NSUserDefaults storage

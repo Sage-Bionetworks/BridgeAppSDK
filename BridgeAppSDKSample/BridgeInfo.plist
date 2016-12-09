@@ -129,7 +129,7 @@
 				</dict>
 				<dict>
 					<key>profileKey</key>
-					<string>dateOfBirth</string>
+					<string>birthdate</string>
 					<key>identifier</key>
 					<string>HKCharacteristicTypeIdentifierDateOfBirth</string>
 				</dict>

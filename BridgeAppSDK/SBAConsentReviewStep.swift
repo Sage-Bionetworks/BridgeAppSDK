@@ -79,7 +79,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         return step
     }
     
-    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument) {
+    public init(inputItem: SBAFormStepSurveyItem, inDocument consentDocument: ORKConsentDocument, factory: SBASurveyFactory? = nil) {
         
         var steps: [ORKStep] = []
         
@@ -92,7 +92,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         steps.append(reviewStep)
         
         // Only add the name/signature if required
-        if let reviewOptions = inputItem as? SBAConsentReviewOptions , reviewOptions.requiresSignature {
+        if let reviewOptions = inputItem as? SBAConsentReviewOptions, reviewOptions.requiresSignature {
             
             let nameStep = ORKFormStep(identifier: SBAConsentReviewStep.nameStepIdentifier)
             nameStep.title = Localization.localizedString("CONSENT_NAME_TITLE")
@@ -109,7 +109,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         
         // Initialize common if there is a name step to initialize
         if let _ = self.nameStep {
-            commonInit(inputItem: inputItem)
+            commonInit(inputItem: inputItem, factory: factory)
         }
     }
     

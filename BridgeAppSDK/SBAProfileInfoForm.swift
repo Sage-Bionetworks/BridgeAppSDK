@@ -43,6 +43,10 @@ public enum SBAProfileInfoOption : String {
     case bloodType              = "bloodType"
     case fitzpatrickSkinType    = "fitzpatrickSkinType"
     case wheelchairUse          = "wheelchairUse"
+    case height                 = "height"
+    case weight                 = "weight"
+    case wakeTime               = "wakeTime"
+    case sleepTime              = "sleepTime"
 }
 
 enum SBAProfileInfoOptionsError: Error {
@@ -140,7 +144,7 @@ public struct SBAProfileInfoOptions {
         self.customOptions = customOptions
     }
     
-    func makeFormItems(surveyItemType: SBASurveyItemType) -> [ORKFormItem] {
+    func makeFormItems(surveyItemType: SBASurveyItemType, factory:SBASurveyFactory? = nil) -> [ORKFormItem] {
         
         var formItems: [ORKFormItem] = []
         
@@ -148,54 +152,79 @@ public struct SBAProfileInfoOptions {
             switch option {
                 
             case .email:
-                let formItem = makeEmailFormItem(option)
+                let formItem = makeEmailFormItem(with: option.rawValue)
                 formItems.append(formItem)
             
             case .password:
-                let (formItem, answerFormat) = makePasswordFormItem(option)
+                let (formItem, answerFormat) = makePasswordFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
                 // confirmation
                 if (surveyItemType == .account(.registration)) {
-                    let confirmFormItem = makeConfirmationFormItem(formItem, answerFormat: answerFormat)
+                    let confirmFormItem = makeConfirmationFormItem(formItem: formItem, answerFormat: answerFormat)
                     formItems.append(confirmFormItem)
                 }
                 
             case .externalID:
-                let formItem = makeExternalIDFormItem(option)
+                let formItem = makeExternalIDFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .name:
-                let formItem = makeNameFormItem(option)
+                let formItem = makeNameFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .birthdate:
-                let formItem = makeBirthdateFormItem(option)
+                let formItem = makeBirthdateFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .gender:
-                let formItem = makeGenderFormItem(option)
+                let formItem = makeGenderFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .bloodType:
-                let formItem = makeBloodTypeFormItem(option)
+                let formItem = makeBloodTypeFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .fitzpatrickSkinType:
-                let formItem = makeFitzpatrickSkinTypeFormItem(option)
+                let formItem = makeFitzpatrickSkinTypeFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 
             case .wheelchairUse:
-                let formItem = makeWheelchairUseFormItem(option)
+                let formItem = makeWheelchairUseFormItem(with: option.rawValue)
+                formItems.append(formItem)
+                
+            case .height:
+                let formItem = makeHeightFormItem(with: option.rawValue)
+                formItems.append(formItem)
+                
+            case .weight:
+                let formItem = makeWeightFormItem(with: option.rawValue)
+                formItems.append(formItem)
+                
+            case .wakeTime:
+                let formItem = makeWakeTimeFormItem(with: option.rawValue)
+                formItems.append(formItem)
+                
+            case .sleepTime:
+                let formItem = makeSleepTimeFormItem(with: option.rawValue)
                 formItems.append(formItem)
             }
         }
+        
+        let surveyFactory = factory ?? SBASurveyFactory()
+        for item in customOptions {
+            if let surveyItem = item as? SBAFormStepSurveyItem, surveyItem.isValidFormItem {
+                let formItem = surveyFactory.createFormItem(surveyItem)
+                formItems.append(formItem)
+            }
+        }
+        
         return formItems
     }
     
-    func makeEmailFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeEmailFormItem(with identifier: String) -> ORKFormItem {
         let answerFormat = ORKAnswerFormat.emailAnswerFormat()
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("EMAIL_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -203,7 +232,7 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makePasswordFormItem(_ option: SBAProfileInfoOption) -> (ORKFormItem, ORKTextAnswerFormat) {
+    func makePasswordFormItem(with identifier: String) -> (ORKFormItem, ORKTextAnswerFormat) {
         let answerFormat = ORKAnswerFormat.textAnswerFormat()
         answerFormat.multipleLines = false
         answerFormat.isSecureTextEntry = true
@@ -211,7 +240,7 @@ public struct SBAProfileInfoOptions {
         answerFormat.autocorrectionType = .no
         answerFormat.spellCheckingType = .no
         
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("PASSWORD_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -220,7 +249,7 @@ public struct SBAProfileInfoOptions {
         return (formItem, answerFormat)
     }
     
-    func makeConfirmationFormItem(_ formItem: ORKFormItem, answerFormat: ORKTextAnswerFormat) -> ORKFormItem {
+    func makeConfirmationFormItem(formItem: ORKFormItem, answerFormat: ORKTextAnswerFormat) -> ORKFormItem {
         // If this is a registration, go ahead and set the default password verification
         let minLength = SBARegistrationStep.defaultPasswordMinLength
         let maxLength = SBARegistrationStep.defaultPasswordMaxLength
@@ -239,7 +268,7 @@ public struct SBAProfileInfoOptions {
         return confirmFormItem
     }
     
-    func makeExternalIDFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeExternalIDFormItem(with identifier: String) -> ORKFormItem {
         let answerFormat = ORKAnswerFormat.textAnswerFormat()
         answerFormat.multipleLines = false
         answerFormat.autocapitalizationType = self.externalIDOptions.autocapitalizationType
@@ -247,7 +276,7 @@ public struct SBAProfileInfoOptions {
         answerFormat.spellCheckingType = .no
         answerFormat.keyboardType = self.externalIDOptions.keyboardType
         
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("SBA_REGISTRATION_EXTERNALID_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -256,7 +285,7 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeNameFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeNameFormItem(with identifier: String) -> ORKFormItem {
         
         let answerFormat = ORKAnswerFormat.textAnswerFormat()
         answerFormat.multipleLines = false
@@ -265,7 +294,7 @@ public struct SBAProfileInfoOptions {
         answerFormat.spellCheckingType = .no
         answerFormat.keyboardType = .default
         
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("SBA_REGISTRATION_FULLNAME_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -274,12 +303,12 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeBirthdateFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeBirthdateFormItem(with identifier: String) -> ORKFormItem {
         
         let characteristic = HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!
         let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
         answerFormat.shouldRequestAuthorization = false
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("DOB_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -288,12 +317,12 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeGenderFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeGenderFormItem(with identifier: String) -> ORKFormItem {
         
         let characteristic = HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
         let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
         answerFormat.shouldRequestAuthorization = false
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("GENDER_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -302,12 +331,12 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeBloodTypeFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeBloodTypeFormItem(with identifier: String) -> ORKFormItem {
         
         let characteristic = HKObjectType.characteristicType(forIdentifier: .bloodType)!
         let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
         answerFormat.shouldRequestAuthorization = false
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("BLOOD_TYPE_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -316,12 +345,12 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeFitzpatrickSkinTypeFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeFitzpatrickSkinTypeFormItem(with identifier: String) -> ORKFormItem {
         
         let characteristic = HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)!
         let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
         answerFormat.shouldRequestAuthorization = false
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("FITZPATRICK_SKIN_TYPE_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -330,19 +359,20 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
-    func makeWheelchairUseFormItem(_ option: SBAProfileInfoOption) -> ORKFormItem {
+    func makeWheelchairUseFormItem(with identifier: String) -> ORKFormItem {
         
-        let answerFormat = ORKBooleanAnswerFormat()
-        
-//        if #available(iOS 10.0, *) {
-//            let characteristic = HKObjectType.characteristicType(forIdentifier: .wheelchairUse)!
-//            let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
-//            answerFormat.shouldRequestAuthorization = false
-//        } else {
-//            
-//        }
+        let answerFormat: ORKAnswerFormat = {
+            if #available(iOS 10.0, *) {
+                let characteristic = HKObjectType.characteristicType(forIdentifier: .wheelchairUse)!
+                let answerFormat = SBAHealthKitCharacteristicTypeAnswerFormat(characteristicType: characteristic)
+                answerFormat.shouldRequestAuthorization = false
+                return answerFormat
+            } else {
+                return ORKBooleanAnswerFormat()
+            }
+        }()
 
-        let formItem = ORKFormItem(identifier: option.rawValue,
+        let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("WHEELCHAIR_USE_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
                                    optional: false)
@@ -350,8 +380,74 @@ public struct SBAProfileInfoOptions {
         return formItem
     }
     
+    func makeHeightFormItem(with identifier: String) -> ORKFormItem {
+        
+        // Get the locale unit
+        var formatterUnit = LengthFormatter.Unit.meter
+        let formatter = LengthFormatter()
+        formatter.unitStyle = .medium
+        formatter.isForPersonHeightUse = true
+        formatter.unitString(fromMeters: 2.0, usedUnit: &formatterUnit)
+        
+        let unit: HKUnit = HKUnit(from: formatterUnit)
+        let quantityType = HKObjectType.quantityType(forIdentifier: .height)!
+        let answerFormat = ORKHealthKitQuantityTypeAnswerFormat(quantityType: quantityType, unit: unit, style: .integer)
+        let formItem = ORKFormItem(identifier: identifier,
+                                   text: Localization.localizedString("HEIGHT_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        
+        return formItem
+    }
     
-//    case wheelchairUse          = "wheelchairUse"
+    func makeWeightFormItem(with identifier: String) -> ORKFormItem {
+        
+        // Get the locale unit
+        var formatterUnit = MassFormatter.Unit.kilogram
+        let formatter = MassFormatter()
+        formatter.unitStyle = .medium
+        formatter.isForPersonMassUse = true
+        formatter.unitString(fromKilograms: 60.0, usedUnit: &formatterUnit)
+        
+        let unit: HKUnit = HKUnit(from: formatterUnit)
+        let quantityType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
+        let answerFormat = ORKHealthKitQuantityTypeAnswerFormat(quantityType: quantityType, unit: unit, style: .integer)
+        let formItem = ORKFormItem(identifier: identifier,
+                                   text: Localization.localizedString("WEIGHT_FORM_ITEM_TITLE"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        return formItem
+    }
+    
+    func makeWakeTimeFormItem(with identifier: String) -> ORKFormItem {
+        
+        var components = DateComponents()
+        components.calendar = Calendar(identifier: .gregorian)
+        components.hour = 7
+        components.minute = 0
+        let answerFormat = ORKTimeOfDayAnswerFormat(defaultComponents: components)
+
+        let formItem = ORKFormItem(identifier: identifier,
+                                   text: Localization.localizedString("WAKE_TIME_FORM_ITEM_TEXT"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        return formItem
+    }
+    
+    func makeSleepTimeFormItem(with identifier: String) -> ORKFormItem {
+        
+        var components = DateComponents()
+        components.calendar = Calendar(identifier: .gregorian)
+        components.hour = 10
+        components.minute = 0
+        let answerFormat = ORKTimeOfDayAnswerFormat(defaultComponents: components)
+        
+        let formItem = ORKFormItem(identifier: identifier,
+                                   text: Localization.localizedString("SLEEP_TIME_FORM_ITEM_TEXT"),
+                                   answerFormat: answerFormat,
+                                   optional: false)
+        return formItem
+    }
 }
 
 public protocol SBAFormProtocol : class {
@@ -386,14 +482,14 @@ extension SBAProfileInfoForm {
         return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
-    func commonInit(inputItem: SBASurveyItem?) {
+    func commonInit(inputItem: SBASurveyItem?, factory: SBASurveyFactory?) {
         self.title = inputItem?.stepTitle
         self.text = inputItem?.stepText
         if let formStep = self as? ORKFormStep {
             formStep.footnote = inputItem?.stepFootnote
         }
         let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
-        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType)
+        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType, factory: factory)
     }
 }
 

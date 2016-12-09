@@ -100,7 +100,10 @@ extension ORKFormItem {
     
     // Convenience method for adding a default answer or mapped answer for a given form item
     func instantiateQuestionResult(_ defaultAnswer: SBADefaultFormItemAnswer, answer: AnyObject?) -> ORKQuestionResult? {
-        guard let answerFormat = self.answerFormat as? SBAQuestionResultMapping,
+        
+        let impliedAnswerFormat = self.answerFormat?.implied()
+        print("\(self.identifier): \(impliedAnswerFormat)")
+        guard let answerFormat = impliedAnswerFormat as? SBAQuestionResultMapping,
               let questionResult = answerFormat.instantiateQuestionResult(self.identifier, defaultAnswer, answer)
         else {
             return nil
@@ -110,7 +113,35 @@ extension ORKFormItem {
     }
 }
 
-extension ORKTextChoiceAnswerFormat: SBAQuestionResultMapping {
+extension ORKTextAnswerFormat: SBAQuestionResultMapping {
+    func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) ->ORKQuestionResult? {
+        guard let str = answer as? String else { return nil }
+        let result = ORKTextQuestionResult(identifier: identifier)
+        result.textAnswer = str
+        return result
+    }
+}
+
+extension ORKDateAnswerFormat: SBAQuestionResultMapping {
+    func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) ->ORKQuestionResult? {
+        guard let date = answer as? Date else { return nil }
+        let result = ORKDateQuestionResult(identifier: identifier)
+        result.dateAnswer = date
+        return result
+    }
+}
+
+protocol TextChoicesAnswerFormat: SBAQuestionResultMapping {
+    var textChoices: [ORKTextChoice] { get }
+}
+
+extension ORKValuePickerAnswerFormat: TextChoicesAnswerFormat {
+}
+
+extension ORKTextChoiceAnswerFormat: TextChoicesAnswerFormat {
+}
+
+extension TextChoicesAnswerFormat {
     
     func instantiateQuestionResult(_ identifier: String, _ defaultAnswer: SBADefaultFormItemAnswer, _ answer: AnyObject?) -> ORKQuestionResult? {
         

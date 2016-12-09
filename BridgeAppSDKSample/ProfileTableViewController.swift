@@ -46,16 +46,11 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var leaveStudyButton: UIButton!
-    @IBOutlet weak var pauseStudyButton: UIButton!
     @IBOutlet weak var appLabel: UILabel!
     @IBOutlet weak var versionLabel: UILabel!
     
     @IBAction func leaveStudyTapped(_ sender: AnyObject) {
         sharedUser.withdrawFromStudy()
-    }
-    
-    @IBAction func pauseStudyTapped(_ sender: AnyObject) {
-        
     }
     
     override func viewDidLoad() {
@@ -64,9 +59,6 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")
         versionLabel.text = "\(Localization.localizedAppName) \(version!), build \(Bundle.main.appVersion())"
         appLabel.text = Localization.localizedAppName
-        
-        // TODO: syoung 10/20/2016 Enable pause/resume study. For now, just hide the option.
-        self.pauseStudyButton.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

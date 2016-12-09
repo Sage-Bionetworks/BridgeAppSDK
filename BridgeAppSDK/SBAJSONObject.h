@@ -39,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SBAJSONObject <NSObject>
 
 @required
-- (id)jsonObject;
+- (id<NSSecureCoding>)jsonObject;
 
 @optional
-- (id)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter;
+- (id<NSSecureCoding>)jsonObjectWithFormatter:(NSFormatter * _Nullable) formatter;
 
 @end
 

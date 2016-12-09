@@ -33,60 +33,60 @@
 
 import Foundation
 
-public protocol SBAStepViewControllerProtocol: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
-    
-    var result: ORKStepResult? { get }
+public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter {
 }
 
-public protocol SBAUserProfileController: SBAStepViewControllerProtocol {
+public protocol SBAAccountController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
     var failedValidationMessage: String { get }
     var failedRegistrationTitle: String { get }
 }
 
-extension SBAUserProfileController {
+extension SBAAccountController {
+    
+    func handleFailedValidation(_ reason: String? = nil) {
+        let message = reason ?? failedValidationMessage
+        self.hideLoadingView({ [weak self] in
+            self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
+        })
+    }
+    
+    func handleFailedRegistration(_ error: Error) {
+        let message = (error as NSError).localizedBridgeErrorMessage
+        handleFailedValidation(message)
+    }
+}
+
+extension SBAResearchKitResultConverter {
     
     // MARK: Results
     
     public var name: String? {
-        return textAnswer(.name)
+        return textAnswer(for: .name)
     }
     
     public var email: String? {
-        return textAnswer(.email)
+        return textAnswer(for: .email)
     }
     
     public var password: String? {
-        return textAnswer(.password)
+        return textAnswer(for: .password)
     }
     
     public var externalID: String? {
-        return textAnswer(.externalID)
+        return textAnswer(for: .externalID)
     }
     
     public var gender: HKBiologicalSex? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.gender.rawValue) as? ORKChoiceQuestionResult
-        else { return nil }
-        if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
-            return HKBiologicalSex(rawValue: answer)
-        }
-        else if let answer = result.choiceAnswers?.first as? String {
-            // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
-            // than using the HKBiologicalSex enum directly so you have to convert
-            let biologicalSex = ORKBiologicalSexIdentifier(rawValue: answer)
-            return biologicalSex.healthKitBiologicalSex()
-        }
-        else {
-            return nil
-        }
+        return convertBiologicalSex(for: .gender)
     }
     
     public var birthdate: Date? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
+        guard let result = self.findResult(for: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer
     }
     
     public var bloodType: HKBloodType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
+        guard let result = self.findResult(for: SBAProfileInfoOption.bloodType.rawValue) as? ORKChoiceQuestionResult
             else { return nil }
         if  let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue {
             return HKBloodType(rawValue: answer)
@@ -103,7 +103,7 @@ extension SBAUserProfileController {
     }
     
     public var fitzpatrickSkinType: HKFitzpatrickSkinType? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.findResult(for: SBAProfileInfoOption.fitzpatrickSkinType.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.intValue
         else {
             return nil
@@ -112,7 +112,7 @@ extension SBAUserProfileController {
     }
     
     public var wheelchairUse: Bool? {
-        guard let result = self.result?.result(forIdentifier: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
+        guard let result = self.findResult(for: SBAProfileInfoOption.wheelchairUse.rawValue) as? ORKChoiceQuestionResult,
             let answer = (result.choiceAnswers?.first as? NSNumber)?.boolValue
             else {
                 return nil
@@ -120,24 +120,35 @@ extension SBAUserProfileController {
         return answer
     }
     
-    func textAnswer(_ field: SBAProfileInfoOption) -> String? {
-        guard let result = self.result?.result(forIdentifier: field.rawValue) as? ORKTextQuestionResult else { return nil }
-        return result.textAnswer
+    public var height: HKQuantity? {
+        return quantity(for: .height)
     }
     
-    // MARK: Error handling
-
-    func handleFailedValidation(_ reason: String? = nil) {
-        let message = reason ?? failedValidationMessage
-        self.hideLoadingView({ [weak self] in
-            self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
-            })
+    public var weight: HKQuantity? {
+        return quantity(for: .weight)
     }
     
-    func handleFailedRegistration(_ error: Error) {
-        let message = (error as NSError).localizedBridgeErrorMessage
-        handleFailedValidation(message)
+    public var wakeTime: DateComponents? {
+        return timeOfDay(for: .wakeTime)
+    }
+    
+    public var sleepTime: DateComponents? {
+        return timeOfDay(for: .sleepTime)
+    }
+    
+    func timeOfDay(for option: SBAProfileInfoOption) -> DateComponents? {
+        return timeOfDay(for: option.rawValue)
+    }
+    
+    func quantity(for option: SBAProfileInfoOption) -> HKQuantity? {
+        return quantity(for: option.rawValue)
+    }
+    
+    func convertBiologicalSex(for option: SBAProfileInfoOption) -> HKBiologicalSex? {
+        return self.convertBiologicalSex(for: option.rawValue)
+    }
+    
+    func textAnswer(for option: SBAProfileInfoOption) -> String? {
+        return textAnswer(for: option.rawValue)
     }
 }
-
-

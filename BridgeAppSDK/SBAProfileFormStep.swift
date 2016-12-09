@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAProfileFormStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,31 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import ResearchKit
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
-
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBAJSONObject.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
-#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+open class SBAProfileFormStep: ORKFormStep, SBAProfileInfoForm {
+    
+    open var surveyItemType: SBASurveyItemType {
+        return .account(.profile)
+    }
+    
+    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+        return []
+    }
+    
+    public override required init(identifier: String) {
+        super.init(identifier: identifier)
+        commonInit(inputItem: nil, factory:nil)
+    }
+    
+    public init(inputItem: SBASurveyItem, factory: SBASurveyFactory? = nil) {
+        super.init(identifier: inputItem.identifier)
+        commonInit(inputItem: inputItem, factory:factory)
+    }
+    
+    // MARK: NSCoding
+    
+    public required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}

@@ -65,7 +65,10 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     var password: String? { get set }
     
     /**
-     * Gender is stored in the keychain
+     * "Gender" can mean either biological sex or gender identity. Since older ResearchKit apps
+     * that used AppCore use this term to describe both properties, this is the term that 
+     * BridgeAppSDK will continue to use. It is up to a given app to determine what is the 
+     * appropriate language to use for this field. Stored in the keychain.
      */
     var gender: HKBiologicalSex { get set }
     

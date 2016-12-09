@@ -1,5 +1,5 @@
 //
-//  BridgeAppSDK.h
+//  SBAStepViewControllerProtocol.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,26 +31,12 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+public protocol SBAStepViewControllerProtocol: class, SBAAlertPresenter, SBALoadingViewPresenter {
+    var result: ORKStepResult? { get }
+    var step: ORKStep? { get }
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBAJSONObject.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
-#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+extension ORKStepViewController: SBAStepViewControllerProtocol {
+}

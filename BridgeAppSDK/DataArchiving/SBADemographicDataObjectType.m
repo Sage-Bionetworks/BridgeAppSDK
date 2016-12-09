@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBADemographicDataObjectType.m
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,26 +31,38 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import "SBADemographicDataObjectType.h"
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+SBADemographicDataIdentifier const SBADemographicDataIdentifierCurrentAge       = @"patientCurrentAge";
+SBADemographicDataIdentifier const SBADemographicDataIdentifierBiologicalSex    = @"patientBiologicalSex";
+SBADemographicDataIdentifier const SBADemographicDataIdentifierHeightInches     = @"patientHeightInches";
+SBADemographicDataIdentifier const SBADemographicDataIdentifierWeightPounds     = @"patientWeightPounds";
+SBADemographicDataIdentifier const SBADemographicDataIdentifierWakeUpTime       = @"patientWakeUpTime";
+SBADemographicDataIdentifier const SBADemographicDataIdentifierSleepTime        = @"patientGoSleepTime";
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+@implementation SBADemographicDataObjectType
 
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBAJSONObject.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
-#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+- (instancetype)init {
+    @throw [NSException exceptionWithName: NSInternalInconsistencyException
+                                   reason: @"method unavailable"
+                                 userInfo: nil];
+    return nil;
+}
+
++ (instancetype)new {
+    @throw [NSException exceptionWithName: NSInternalInconsistencyException
+                                   reason: @"method unavailable"
+                                 userInfo: nil];
+    return nil;
+}
+
+- (instancetype)initWithIdentifier:(SBADemographicDataIdentifier)identifier value:(id<NSSecureCoding>)value {
+    self = [super init];
+    if (self) {
+        _identifier = identifier;
+        _value = value;
+    }
+    return self;
+}
+
+@end

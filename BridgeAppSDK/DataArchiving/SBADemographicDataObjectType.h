@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBADemographicDataObjectType.h
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+// Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,26 +31,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+// ===== WORK IN PROGRESS =====
+// TODO: WIP syoung 12/06/2016 This is unfinished but b/c it is wrapped up with the profile
+// and onboarding stuff, I don't want the branch lingering unmerged. This is ported from
+// AppCore and is still untested and *not* intended for production use.
+// ============================
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+NS_ASSUME_NONNULL_BEGIN
 
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBADataObject.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBAJSONObject.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBAMedication.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAPDFPrintPageRenderer.h>
-#import <BridgeAppSDK/SBAPermissionsManager.h>
-#import <BridgeAppSDK/SBATrackedDataStore.h>
-#import <BridgeAppSDK/ORKCollectionResult+SBAExtensions.h>
-#import <BridgeAppSDK/ORKOrderedTask+SBAExtension.h>
+typedef NSString * SBADemographicDataIdentifier NS_EXTENSIBLE_STRING_ENUM;
+
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierCurrentAge;
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierBiologicalSex;
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierHeightInches;
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierWeightPounds;
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierWakeUpTime;
+FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierSleepTime;
+
+@interface SBADemographicDataObjectType: NSObject
+
+@property (nonatomic, copy, readonly) SBADemographicDataIdentifier identifier;
+@property (nonatomic, readonly) id <NSSecureCoding> value;
+
+- (instancetype)initWithIdentifier:(SBADemographicDataIdentifier)identifier value:(id<NSSecureCoding>)value NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END
