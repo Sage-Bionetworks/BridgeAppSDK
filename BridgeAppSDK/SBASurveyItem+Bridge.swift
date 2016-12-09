@@ -141,17 +141,35 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return SBASurveyItemType.custom(nil)
     }
     
+    // The Bridge Study Manager UI includes a `prompt` and a `prompt detail` whereas ResearchKit
+    // describes a `title` and `text` properties. The `title` is bold large size text that is 
+    // not appropriate for a question sentence. Therefore, if there is no prompt detail (or if this
+    // is a textfield) then assign the `SBBSurveyQuestion.prompt` to `ORKQuestionStep.text`. If there
+    // is a non-nil value for `SBBSurveyQuestion.promptDetail` then assign that to `ORKQuestionStep.text`
+    // and `SBBSurveyQuestion.prompt` to `ORKQuestionStep.title`
+    
+    var usesPlaceholderText: Bool {
+        return self.surveyItemType == SBASurveyItemType.form(.text)
+    }
+    
     public var stepTitle: String? {
-        return nil
+        if (self.usesPlaceholderText || (self.promptDetail == nil) || (self.prompt == nil)) { return nil }
+        return self.prompt.removingNewlineCharacters()
     }
     
     public var stepText: String? {
-        if (self.prompt == nil) { return nil }
-        return self.prompt.removingNewlineCharacters()
+        if (self.stepTitle != nil) {
+            if (self.promptDetail == nil) { return nil }
+            return self.promptDetail.removingNewlineCharacters()
+        }
+        else {
+            if (self.prompt == nil) { return nil }
+            return self.prompt.removingNewlineCharacters()
+        }
     }
 
     public var placeholderText: String? {
-        if (self.promptDetail == nil) { return nil }
+        if (self.usesPlaceholderText && self.promptDetail == nil) { return nil }
         return self.promptDetail.removingNewlineCharacters()
     }
     

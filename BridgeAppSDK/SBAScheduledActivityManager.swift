@@ -207,6 +207,14 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         // reload table
         self.delegate?.reloadFinished(self)
+        
+        // preload all the surveys so that they can be accessed offline
+        for schedule in scheduledActivities {
+            if schedule.activity.survey != nil {
+                SBABridgeManager.loadSurvey(schedule.activity.survey, completion:{ (_, _) in
+                })
+            }
+        }
     }
     
     /**
@@ -322,8 +330,23 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return activities.find({ $0.taskIdentifier == taskIdentifier })
     }
     
+    /**
+     Delete the output directory.
+     */
+    @objc(deleteOutputDirectoryForTaskViewController:)
+    open func deleteOutputDirectory(for taskViewController: ORKTaskViewController) {
+        guard let outputDirectory = taskViewController.outputDirectory else { return }
+        do {
+            try FileManager.default.removeItem(at: outputDirectory)
+        } catch let error as NSError {
+            print("Error removing ResearchKit output directory: \(error.localizedFailureReason)")
+            debugPrint("\tat: \(outputDirectory)")
+        }
+    }
+    
     // MARK: ORKTaskViewControllerDelegate
     
+    fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
         if reason == ORKTaskViewControllerFinishReason.completed,
@@ -347,7 +370,38 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
             taskViewController.task?.resetTrackedDataChanges()
         }
         
-        taskViewController.dismiss(animated: true) {}
+        taskViewController.dismiss(animated: true) {
+            self.offMainQueue.async {
+                self.deleteOutputDirectory(for: taskViewController)
+                #if DEBUG
+                DispatchQueue.main.async {
+                        let fileMan = FileManager.default
+                        let homeDir = URL.init(string: NSHomeDirectory())
+                    let directoryEnumerator = fileMan.enumerator(at: homeDir!, includingPropertiesForKeys: [URLResourceKey.nameKey, URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey], options: FileManager.DirectoryEnumerationOptions.init(rawValue:0), errorHandler: nil)
+                        
+                        var mutableFileInfo = Dictionary<URL, Int>()
+                        while let originalURL = directoryEnumerator?.nextObject() as? URL {
+                            let fileURL = originalURL.resolvingSymlinksInPath();
+                            do {
+                                let urlResourceValues = try fileURL.resourceValues(forKeys: [URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey])
+                                if !urlResourceValues.isDirectory! {
+                                    let fileSizeOrNot = urlResourceValues.fileSize ?? -1
+                                    mutableFileInfo[fileURL] = fileSizeOrNot
+                                }
+                            } catch let error as NSError {
+                                debugPrint("Error: \(error.localizedDescription)")
+                            }
+                        }
+                    
+                        debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
+                        for fileURL in mutableFileInfo.keys {
+                            let fileSize = mutableFileInfo[fileURL]
+                            debugPrint("\(fileURL.path) size:\(fileSize)")
+                        };
+                }
+                #endif
+            }
+        }
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
@@ -418,7 +472,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     @objc(shouldRecordResultForSchedule:taskViewController:)
     open func shouldRecordResult(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        // Subclass can override to provide custom implementation. By default, will return true.
+        // Subclass can override to provide custom implementation. By default, will return true
+        // unless this is a survey with an error
+        if let task = taskViewController.task as? SBASurveyTask, task.error != nil {
+            return false
+        }
         return true
     }
     

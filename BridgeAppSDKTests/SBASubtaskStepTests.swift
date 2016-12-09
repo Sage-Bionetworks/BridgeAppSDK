@@ -32,7 +32,7 @@
 //
 
 import XCTest
-import BridgeAppSDK
+@testable import BridgeAppSDK
 import ResearchKit
 
 class SBASubtaskStepTests: XCTestCase {
@@ -49,36 +49,7 @@ class SBASubtaskStepTests: XCTestCase {
     
     func testMutatedResultSet() {
 
-        // If a subtask mutates the result set, these mutated results need to be carried back
-        let inputIntro: NSDictionary = [
-            "identifier" : "intruction",
-            "prompt" : "This is a test",
-            "type"  : "instruction"]
-        
-        let inputQ1: NSDictionary = [
-            "identifier" : "question1",
-            "type" : "singleChoiceText",
-            "prompt" : "Question 1?",
-            "items" : ["a", "b", "c"],
-        ]
-        
-        let inputQ2: NSDictionary = [
-            "identifier" : "question2",
-            "type" : "boolean",
-            "prompt" : "Are you older than 18?",
-        ]
-        
-        let conclusion: NSDictionary = [
-            "identifier" : "completion",
-            "prompt" : "You are done.",
-            "type"  : "completion"]
-        
-        let factory = SBASurveyFactory()
-        let items = [inputIntro, inputQ1, inputQ2, conclusion]
-        let steps = items.mapAndFilter({ factory.createSurveyStepWithDictionary($0) })
-        let task = MutatedResultTask(identifier: "Mutating Task", steps: steps)
-        let subtaskStep = SBASubtaskStep(subtask: task)
-        
+        let (steps, subtaskStep) = createSubtaskStep()
         let firstStep = steps.first!.copy() as! ORKStep
         let lastStep = steps.last!.copy() as! ORKStep
         let navTask = SBANavigableOrderedTask(identifier: "Parent Task", steps: [firstStep, subtaskStep, lastStep])
@@ -93,7 +64,7 @@ class SBASubtaskStepTests: XCTestCase {
         let step2 = navTask.step(after: step1, with: taskResult)
         XCTAssertNotNil(step2)
         XCTAssertEqual(step2!.identifier, "Mutating Task.intruction")
-        taskResult.results! += [ORKStepResult(identifier: "Mutating Task.instruction")]
+        taskResult.results!.append(ORKStepResult(identifier: "Mutating Task.instruction"))
         
         let step3 = navTask.step(after: step2, with: taskResult)
         XCTAssertNotNil(step3)
@@ -102,7 +73,7 @@ class SBASubtaskStepTests: XCTestCase {
             XCTAssert(false, "\(step3) not of expected type")
             return
         }
-        taskResult.results! += [formStep3.instantiateDefaultStepResult(nil)]
+        taskResult.results!.append(formStep3.instantiateDefaultStepResult(nil))
         
         let step4 = navTask.step(after: step3, with: taskResult)
         XCTAssertNotNil(step4)
@@ -113,6 +84,67 @@ class SBASubtaskStepTests: XCTestCase {
         XCTAssertNotNil(stepResult)
         XCTAssertEqual(stepResult!.results!.count, 2)
         
+    }
+    
+
+    
+    func testFilteredStepResults() {
+        
+        let taskResult = ORKTaskResult(identifier: "task")
+        let initialResults = [ORKStepResult(identifier: "instruction"),
+                              ORKStepResult(identifier: "Mutating Task.instruction"),
+                              ORKStepResult(identifier: "Mutating Task.question1")]
+        taskResult.results = initialResults.map({ $0.copy() as! ORKResult })
+        XCTAssertEqual(taskResult.results!, initialResults)
+        
+        let (_, subtaskStep) = createSubtaskStep()
+        
+        let (filteredResults, remainingResults) = subtaskStep.filteredStepResults(taskResult.results! as! [ORKStepResult])
+        
+        // Check that the identifier is correct for each result subset
+        XCTAssertEqual(filteredResults.count, 2)
+        XCTAssertEqual(filteredResults.first!.identifier, "instruction")
+        XCTAssertEqual(filteredResults.last!.identifier, "question1")
+        
+        XCTAssertEqual(remainingResults.count, 1)
+        XCTAssertEqual(remainingResults.first!.identifier, "instruction")
+        
+        // Check that the task results were not mutated
+        XCTAssertEqual(taskResult.results!, initialResults)
+    }
+    
+    func createSubtaskStep() -> ([ORKStep], SBASubtaskStep) {
+        // If a subtask mutates the result set, these mutated results need to be carried back
+        let inputIntro: NSDictionary = [
+            "identifier" : "intruction",
+            "prompt" : "This is a test",
+            "type"  : "instruction"]
+        
+        let inputQ1: NSDictionary = [
+            "identifier" : "question1",
+            "type" : "singleChoiceText",
+            "prompt" : "Question 1?",
+            "items" : ["a", "b", "c"],
+            ]
+        
+        let inputQ2: NSDictionary = [
+            "identifier" : "question2",
+            "type" : "boolean",
+            "prompt" : "Are you older than 18?",
+            ]
+        
+        let conclusion: NSDictionary = [
+            "identifier" : "completion",
+            "prompt" : "You are done.",
+            "type"  : "completion"]
+        
+        let factory = SBASurveyFactory()
+        let items = [inputIntro, inputQ1, inputQ2, conclusion]
+        let steps = items.mapAndFilter({ factory.createSurveyStepWithDictionary($0) })
+        let task = MutatedResultTask(identifier: "Mutating Task", steps: steps)
+        let subtaskStep = SBASubtaskStep(subtask: task)
+        
+        return (steps, subtaskStep)
     }
     
 }

@@ -89,8 +89,9 @@ open class SBASubtaskStep: ORKStep {
         let predicate = NSPredicate(format: "identifier BEGINSWITH %@", prefix)
         var subtaskResults:[ORKStepResult] = []
         var remainingResults:[ORKStepResult] = []
-        for stepResult in inputResults {
-            if (predicate.evaluate(with: stepResult)) {
+        for inResult in inputResults {
+            if (predicate.evaluate(with: inResult)) {
+                let stepResult = inResult.copy() as! ORKStepResult
                 stepResult.identifier = stepResult.identifier.substring(from: prefix.endIndex)
                 if let stepResults = stepResult.results {
                     for result in stepResults {
@@ -102,7 +103,7 @@ open class SBASubtaskStep: ORKStep {
                 subtaskResults.append(stepResult)
             }
             else {
-                remainingResults.append(stepResult)
+                remainingResults.append(inResult)
             }
         }
         return (subtaskResults, remainingResults)
