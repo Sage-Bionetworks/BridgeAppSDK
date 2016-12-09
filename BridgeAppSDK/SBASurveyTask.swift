@@ -45,6 +45,11 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
     
     fileprivate var survey: ORKOrderedTask?
     
+    public var error: Error? {
+        return _error
+    }
+    fileprivate var _error: Error?
+    
     required public init(surveyReference: SBBSurveyReference, factory: SBASurveyFactory) {
         self.surveyReference = surveyReference
         self.factory = factory
@@ -59,6 +64,9 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
             errorStep.text = Localization.localizedString("SBA_NETWORK_FAILURE_MESSAGE")
             errorStep.detailText = error?.localizedDescription
             self.survey = ORKOrderedTask(identifier: self.identifier, steps: [errorStep])
+            _error = error ?? NSError(domain: "SBASurveyTaskDomain",
+                                      code: -1,
+                                      userInfo: nil) as Error
         }
         else {
             self.survey = self.factory.createTaskWithSurvey(survey!)
