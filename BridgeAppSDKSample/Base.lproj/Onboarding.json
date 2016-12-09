@@ -28,7 +28,8 @@
                                        "identifier"   : "healthKitPermissions",
                                        "type"         : "permissions",
                                        "title"        : "Health Data",
-                                       "items"        : ["healthKit"]
+                                       "items"        : ["healthKit"],
+                                       "optional"     : true
                                        },
                                        {
                                        "identifier"    : "registration",
