@@ -57,7 +57,7 @@ public protocol SBADemographicDataConverter {
  */
 public protocol SBABaseDemographicsUtility {
     var birthdate: Date? { get }
-    var biologicalSex: HKBiologicalSex? { get }
+    var gender: HKBiologicalSex? { get }
     var height: HKQuantity? { get }
     var weight: HKQuantity? { get }
     var wakeTime: DateComponents? { get }
@@ -72,7 +72,7 @@ extension SBABaseDemographicsUtility {
             return NSNumber(value:currentAge)
         }
         else if identifier == SBADemographicDataIdentifier.biologicalSex {
-            return self.biologicalSex?.demographicDataValue
+            return self.gender?.demographicDataValue
         }
         else if identifier == SBADemographicDataIdentifier.heightInches,
             let quantity = quantityValue(for: self.height, with: HKUnit(from: .inch)) {

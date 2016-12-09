@@ -65,14 +65,12 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     var password: String? { get set }
     
     /**
-     * Gender describes the characteristics that a society or culture delineates as masculine or feminine. Stored in the keychain.
+     * "Gender" can mean either biological sex or gender identity. Since older ResearchKit apps
+     * that used AppCore use this term to describe both properties, this is the term that 
+     * BridgeAppSDK will continue to use. It is up to a given app to determine what is the 
+     * appropriate language to use for this field. Stored in the keychain.
      */
     var gender: HKBiologicalSex { get set }
-    
-    /**
-     * Biological sex refers to the biological sex of the person at birth. Stored in the keychain.
-     */
-    var biologicalSex: HKBiologicalSex { get set }
     
     /**
      * Birthdate is stored in the keychain

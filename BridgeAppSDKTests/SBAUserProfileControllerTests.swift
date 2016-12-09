@@ -50,7 +50,7 @@ class SBAUserProfileControllerTests: ResourceTestCase {
             "identifier"    : "registration",
             "type"          : "registration",
             "title"         : "Registration",
-            "items"         : ["email", "password", "externalID", "name", "birthdate", "gender", "biologicalSex", "bloodType", "fitzpatrickSkinType", "wheelchairUse"]
+            "items"         : ["email", "password", "externalID", "name", "birthdate", "gender", "bloodType", "fitzpatrickSkinType", "wheelchairUse"]
         ]
         let step = SBARegistrationStep(inputItem: input)
         
@@ -62,7 +62,6 @@ class SBAUserProfileControllerTests: ResourceTestCase {
                                                         "name" : "Jane Doe",
                                                         "birthdate" : birthdate,
                                                         "gender" : "HKBiologicalSexFemale",
-                                                        "biologicalSex" : "HKBiologicalSexFemale",
                                                         "bloodType" : "HKBloodTypeBPositive",
                                                         "fitzpatrickSkinType" : NSNumber(value: HKFitzpatrickSkinType.III.rawValue),
                                                         "wheelchairUse" : NSNumber(value: true),
@@ -76,7 +75,6 @@ class SBAUserProfileControllerTests: ResourceTestCase {
         XCTAssertEqual(stepVC.name, "Jane Doe")
         XCTAssertEqual(stepVC.birthdate, birthdate)
         XCTAssertEqual(stepVC.gender, HKBiologicalSex.female)
-        XCTAssertEqual(stepVC.biologicalSex, HKBiologicalSex.female)
         XCTAssertEqual(stepVC.bloodType, HKBloodType.bPositive)
         XCTAssertEqual(stepVC.fitzpatrickSkinType, HKFitzpatrickSkinType.III)
         XCTAssertEqual(stepVC.wheelchairUse, true)

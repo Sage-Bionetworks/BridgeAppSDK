@@ -40,7 +40,6 @@ public enum SBAProfileInfoOption : String {
     case name                   = "name"
     case birthdate              = "birthdate"
     case gender                 = "gender"
-    case biologicalSex          = "biologicalSex"
     case bloodType              = "bloodType"
     case fitzpatrickSkinType    = "fitzpatrickSkinType"
     case wheelchairUse          = "wheelchairUse"
@@ -179,10 +178,6 @@ public struct SBAProfileInfoOptions {
                 formItems.append(formItem)
                 
             case .gender:
-                let formItem = makeGenderFormItem(with: option.rawValue)
-                formItems.append(formItem)
-                
-            case .biologicalSex:
                 let formItem = makeGenderFormItem(with: option.rawValue)
                 formItems.append(formItem)
                 

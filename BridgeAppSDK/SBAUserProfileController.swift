@@ -80,10 +80,6 @@ extension SBAResearchKitResultConverter {
         return convertBiologicalSex(for: .gender)
     }
     
-    public var biologicalSex: HKBiologicalSex? {
-        return convertBiologicalSex(for: .biologicalSex)
-    }
-    
     public var birthdate: Date? {
         guard let result = self.findResult(for: SBAProfileInfoOption.birthdate.rawValue) as? ORKDateQuestionResult else { return nil }
         return result.dateAnswer

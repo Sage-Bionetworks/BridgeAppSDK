@@ -229,7 +229,7 @@ class SBAAccountTests: XCTestCase {
             "identifier"    : "registration",
             "type"          : "registration",
             "title"         : "Registration",
-            "items"         : ["email", "password", "externalID", "name", "birthdate", "gender", "biologicalSex", "bloodType", "fitzpatrickSkinType", "wheelchairUse", "height", "weight", "wakeTime", "sleepTime"]
+            "items"         : ["email", "password", "externalID", "name", "birthdate", "gender", "bloodType", "fitzpatrickSkinType", "wheelchairUse", "height", "weight", "wakeTime", "sleepTime"]
         ]
         
         let step = SBARegistrationStep(inputItem: input)
@@ -273,12 +273,6 @@ class SBAAccountTests: XCTestCase {
         XCTAssertNotNil(genderItem)
         XCTAssertNotNil(gender, "\(genderItem?.answerFormat)")
         XCTAssertEqual(gender!.characteristicType.identifier, HKCharacteristicTypeIdentifier.biologicalSex.rawValue)
-
-        let biologicalSexItem = step.formItemForIdentifier("biologicalSex")
-        let biologicalSex = biologicalSexItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
-        XCTAssertNotNil(biologicalSexItem)
-        XCTAssertNotNil(biologicalSex, "\(biologicalSexItem?.answerFormat)")
-        XCTAssertEqual(biologicalSex!.characteristicType.identifier, HKCharacteristicTypeIdentifier.biologicalSex.rawValue)
         
         let bloodTypeItem = step.formItemForIdentifier("bloodType")
         let bloodType = bloodTypeItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat

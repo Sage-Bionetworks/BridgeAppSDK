@@ -66,7 +66,6 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     let kConsentSignatureKey = "ConsentSignature"
     let kExternalIdKey = "externalId"
     let kGenderKey = "gender"
-    let kBiologicalSexKey = "biologicalSex"
     let kBirthdateKey = "birthdate"
     let kProfileImagePropertyKey = "profileImage"
     
@@ -118,19 +117,6 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     public var gender: HKBiologicalSex {
         get {
             return HKBiologicalSex(rawValue: (getKeychainObject(kGenderKey) as? NSNumber)?.intValue ?? 0) ?? .notSet
-        }
-        set (newValue) {
-            setKeychainObject(NSNumber(value: newValue.rawValue), key: kGenderKey)
-        }
-    }
-    
-    public var biologicalSex: HKBiologicalSex {
-        get {
-            // syoung 11/17/2016 Older versions of AppCore apps use the gender key and do not differentiate
-            // between gender identity and biological sex (which is defined as sex at birth).
-            // In medical research, a person's biological sex is usually more relevant to the study.
-            guard let result = getKeychainObject(kGenderKey) as? NSNumber else { return self.gender }
-            return HKBiologicalSex(rawValue: result.intValue) ?? .notSet
         }
         set (newValue) {
             setKeychainObject(NSNumber(value: newValue.rawValue), key: kGenderKey)

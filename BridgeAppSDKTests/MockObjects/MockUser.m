@@ -50,7 +50,6 @@
 @synthesize dataSharingScope;
 @synthesize onboardingStepIdentifier;
 @synthesize gender;
-@synthesize biologicalSex;
 @synthesize birthdate;
 @synthesize profileImage;
 
