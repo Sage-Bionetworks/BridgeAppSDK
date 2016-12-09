@@ -127,14 +127,14 @@ extension SBAUserProfileController {
     
     // MARK: Error handling
 
-    public func handleFailedValidation(_ reason: String? = nil) {
+    func handleFailedValidation(_ reason: String? = nil) {
         let message = reason ?? failedValidationMessage
         self.hideLoadingView({ [weak self] in
             self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
             })
     }
     
-    public func handleFailedRegistration(_ error: Error) {
+    func handleFailedRegistration(_ error: Error) {
         let message = (error as NSError).localizedBridgeErrorMessage
         handleFailedValidation(message)
     }
