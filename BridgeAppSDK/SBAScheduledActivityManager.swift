@@ -207,6 +207,14 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         
         // reload table
         self.delegate?.reloadFinished(self)
+        
+        // preload all the surveys so that they can be accessed offline
+        for schedule in scheduledActivities {
+            if schedule.activity.survey != nil {
+                SBABridgeManager.loadSurvey(schedule.activity.survey, completion:{ (_, _) in
+                })
+            }
+        }
     }
     
     /**
@@ -327,7 +335,7 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
      */
     @objc(deleteOutputDirectoryForTaskViewController:)
     open func deleteOutputDirectory(for taskViewController: ORKTaskViewController) {
-        guard let outputDirectory = taskViewController.outputDirectory else {return}
+        guard let outputDirectory = taskViewController.outputDirectory else { return }
         do {
             try FileManager.default.removeItem(at: outputDirectory)
         } catch let error as NSError {
@@ -464,7 +472,11 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     @objc(shouldRecordResultForSchedule:taskViewController:)
     open func shouldRecordResult(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        // Subclass can override to provide custom implementation. By default, will return true.
+        // Subclass can override to provide custom implementation. By default, will return true
+        // unless this is a survey with an error
+        if let task = taskViewController.task as? SBASurveyTask, task.error != nil {
+            return false
+        }
         return true
     }
     
