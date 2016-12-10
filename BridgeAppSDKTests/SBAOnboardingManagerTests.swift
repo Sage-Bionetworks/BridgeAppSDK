@@ -52,7 +52,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
         
-        XCTAssertEqual(sections.count, 8)
+        XCTAssertEqual(sections.count, 9)
     }
     
     func testShouldInclude() {
@@ -223,6 +223,72 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         }
         
         XCTAssertEqual(step.identifier, "login")
+    }
+    
+    func testRegistrationSection() {
+        guard let steps = checkOnboardingSteps( .base(.registration), .registration) else { return }
+        XCTAssertEqual(steps.count, 2)
+        
+        guard let step1 = steps.first as? SBAPermissionsStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step1.identifier, "healthKitPermissions")
+        
+        guard let step2 = steps.last as? SBARegistrationStep else {
+            XCTAssert(false, "\(steps.last) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step2.identifier, "registration")
+    }
+    
+    func testEmailVerificationSection() {
+        guard let steps = checkOnboardingSteps( .base(.emailVerification), .registration) else { return }
+        XCTAssertEqual(steps.count, 1)
+        
+        guard let step = steps.first as? SBAEmailVerificationStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "emailVerification")
+    }
+    
+    func testProfileSection() {
+        guard let steps = checkOnboardingSteps( .base(.profile), .registration) else { return }
+        XCTAssertEqual(steps.count, 3)
+        
+        for step in steps {
+            XCTAssertTrue(step is SBAProfileFormStep)
+        }
+    }
+    
+    func testPermissionsSection() {
+        guard let steps = checkOnboardingSteps( .base(.permissions), .registration) else { return }
+        XCTAssertEqual(steps.count, 1)
+        
+        guard let step = steps.first as? SBAPermissionsStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "permissions")
+    }
+    
+    func testCompletionSection() {
+        guard let steps = checkOnboardingSteps( .base(.completion), .registration) else { return }
+        XCTAssertEqual(steps.count, 1)
+        
+        guard let step = steps.first as? SBAOnboardingCompleteStep else {
+            XCTAssert(false, "\(steps.first) not of expected type")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "onboardingCompletion")
+        XCTAssertEqual(step.title, "Thank You!")
+        XCTAssertEqual(step.detailText, "You are all set.")
     }
     
     func checkOnboardingSteps(_ sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
