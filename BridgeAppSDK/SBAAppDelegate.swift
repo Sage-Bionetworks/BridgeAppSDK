@@ -35,15 +35,6 @@ import UIKit
 import BridgeSDK
 import ResearchKit
 
-/**
- The App Info Delegate is intended as a light-weight implementation for pointing to 
- a current user and bridge info.
- */
-@objc
-public protocol SBAAppInfoDelegate: NSObjectProtocol {
-    var currentUser: SBAUserWrapper { get }
-    var bridgeInfo: SBABridgeInfo { get }
-}
 
 /**
  The BridgeAppSDK delegate is used to define additional functionality on the app delegate.
@@ -180,41 +171,6 @@ public let SBAMainStoryboardName = "Main"
         return _currentUser
     }
     private let _currentUser = SBAUser.shared
-    
-    private func initializeBridgeServerConnection() {
-        
-        // Clearout the keychain if needed. 
-        // WARNING: This will force login
-        currentUser.resetUserKeychainIfNeeded()
-        
-        
-        // These two lines actually, you know, set up BridgeSDK
-        BridgeSDK.setup(withStudy: bridgeInfo.studyIdentifier,
-                                 cacheDaysAhead: bridgeInfo.cacheDaysAhead,
-                                 cacheDaysBehind: bridgeInfo.cacheDaysBehind,
-                                 environment: bridgeInfo.environment)
-        SBABridgeManager.setAuthDelegate(self.currentUser)
-        
-        // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
-        // manager instance so its notification handlers get set up in time)
-        let uploadManager = SBBComponentManager.component(SBBUploadManager.self) as! SBBUploadManagerProtocol
-        DispatchQueue.global(qos: .background).async {
-            let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
-            for file in uploads {
-                let fileUrl = URL(fileURLWithPath: file)
-                
-                // (if the upload manager already knows about this file, it won't try to upload again)
-                // (also, use the method that lets BridgeSDK figure out the contentType since we don't have any better info about that)
-                uploadManager.uploadFile(toBridge: fileUrl, completion: { (error) in
-                    if error == nil {
-                        // clean up the file now that it's been successfully uploaded so we don't keep trying
-                        SBAEncryptionHelper.cleanUpEncryptedFile(fileUrl);
-                    }
-                })
-            }
-        }
-    }
-    
     
     // ------------------------------------------------
     // MARK: RootViewController management
