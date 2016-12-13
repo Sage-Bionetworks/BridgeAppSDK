@@ -45,7 +45,7 @@ public protocol SBAAppInfoDelegate: NSObjectProtocol {
 }
 
 extension SBAAppInfoDelegate {
-    public func initializeBridgeServerConnection() {
+    func initializeBridgeServerConnection() {
         
         // Clearout the keychain if needed.
         // WARNING: This will force login

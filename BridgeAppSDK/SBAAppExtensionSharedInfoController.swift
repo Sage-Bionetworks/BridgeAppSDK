@@ -54,5 +54,10 @@ public final class SBAAppExtensionSharedInfoController: NSObject, SBASharedInfoC
             return SBABridgeInfoPList.shared
         }
     }
+    
+    init() {
+        super.init()
+        self.initializeBridgeServerConnection()
+    }
 
 }
