@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6099B9871E00880500902297 /* SBAAppExtensionSharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */; };
 		801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 801040B41C5A843D00D26E19 /* BridgeAppSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		801040BC1C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
@@ -420,6 +421,7 @@
 /* Begin PBXFileReference section */
 		161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeAppSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161479CF1BD6CE8F0099A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppExtensionSharedInfoController.swift; sourceTree = "<group>"; };
 		801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		801040B41C5A843D00D26E19 /* BridgeAppSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeAppSDK.h; sourceTree = "<group>"; };
 		801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -755,6 +757,7 @@
 				FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */,
 				FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */,
 				FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */,
+				6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */,
 				FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,
 				16BF5B671BE29676007C79C6 /* Activities */,
@@ -1976,6 +1979,7 @@
 				FBE1A9651CAB322700F1F584 /* SBAActiveTask.swift in Sources */,
 				FBAD116E1CADE55C005611D0 /* SBABridgeTask.swift in Sources */,
 				FF5E56E81D6F8941008BA2A8 /* SBATaskViewController.swift in Sources */,
+				6099B9871E00880500902297 /* SBAAppExtensionSharedInfoController.swift in Sources */,
 				FF812A251DDCEC6700A61655 /* SBAChangeEmailStep.swift in Sources */,
 				FFB30E3A1D488F4800D175D2 /* SBALoadingView.swift in Sources */,
 				FFCF385D1CE1172A0090452F /* NSPredicate+Utilities.swift in Sources */,
