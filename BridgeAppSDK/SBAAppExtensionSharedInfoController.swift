@@ -35,7 +35,7 @@ import UIKit
 
 public final class SBAAppExtensionSharedInfoController: NSObject, SBASharedInfoController, SBAAppInfoDelegate {
     
-    public let shared = SBAAppExtensionSharedInfoController()
+    public static let shared = SBAAppExtensionSharedInfoController()
     
     public var sharedAppDelegate: SBAAppInfoDelegate {
         get {
@@ -43,19 +43,19 @@ public final class SBAAppExtensionSharedInfoController: NSObject, SBASharedInfoC
         }
     }
     
-    var currentUser: SBAUserWrapper {
+    public var currentUser: SBAUserWrapper {
         get {
             return SBAUser.shared
         }
     }
     
-    var bridgeInfo: SBABridgeInfo {
+    public var bridgeInfo: SBABridgeInfo {
         get {
             return SBABridgeInfoPList.shared
         }
     }
     
-    private init() {
+    private override init() {
         super.init()
         self.initializeBridgeServerConnection()
     }
