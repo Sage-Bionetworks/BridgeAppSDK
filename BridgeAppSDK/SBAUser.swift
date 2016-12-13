@@ -41,6 +41,8 @@ import ResearchKit
  */
 public final class SBAUser: NSObject, SBAUserWrapper {
     
+    static let shared = SBAUser()
+    
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue")
 
     public func resetStoredUserData() {

@@ -128,6 +128,8 @@ public protocol SBABridgeInfo: class {
  */
 public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
+    static let shared = SBABridgeInfoPList()
+    
     public var studyIdentifier: String {
         return _studyIdentifier
     }

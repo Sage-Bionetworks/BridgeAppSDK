@@ -170,7 +170,7 @@ public let SBAMainStoryboardName = "Main"
     open var bridgeInfo: SBABridgeInfo {
         return _bridgeInfo
     }
-    private let _bridgeInfo = SBABridgeInfoPList()
+    private let _bridgeInfo = SBABridgeInfoPList.shared
     
     /**
      A wrapper object for the current user. By default, this class will instantiate a singleton for
@@ -179,7 +179,7 @@ public let SBAMainStoryboardName = "Main"
     open var currentUser: SBAUserWrapper {
         return _currentUser
     }
-    private let _currentUser = SBAUser()
+    private let _currentUser = SBAUser.shared
     
     private func initializeBridgeServerConnection() {
         

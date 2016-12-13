@@ -36,8 +36,9 @@ import UIKit
 @objc open class SBAEncryptionHelper: NSObject {
     
     open class func pemPath() -> String? {
-        guard let sharedAppDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate else { return nil }
-        let certificatePath = Bundle.main.path(forResource: sharedAppDelegate.bridgeInfo.certificateName, ofType: "pem")
+        let sharedAppDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate
+        let bridgeInfo = sharedAppDelegate?.bridgeInfo ?? SBABridgeInfoPList.shared
+        let certificatePath = Bundle.main.path(forResource: bridgeInfo.certificateName, ofType: "pem")
         return certificatePath
     }
     
