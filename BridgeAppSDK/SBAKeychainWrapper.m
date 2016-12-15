@@ -185,28 +185,33 @@ static NSString *SBAKeychainWrapperDefaultService() {
                 [self removeItemForKey:key service:service accessGroup:accessGroup error:error];
             }
         } else if (status == errSecItemNotFound) {
-            NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-            [attributes setObject:(__bridge id)kSecClassGenericPassword forKey:(__bridge id)kSecClass];
-            [attributes setObject:service forKey:(__bridge id)kSecAttrService];
-            [attributes setObject:key forKey:(__bridge id)kSecAttrAccount];
+            if (data) {
+                NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+                [attributes setObject:(__bridge id)kSecClassGenericPassword forKey:(__bridge id)kSecClass];
+                [attributes setObject:service forKey:(__bridge id)kSecAttrService];
+                [attributes setObject:key forKey:(__bridge id)kSecAttrAccount];
 #if TARGET_OS_IPHONE || (defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
-            [attributes setObject:(__bridge id)kSecAttrAccessibleAfterFirstUnlock forKey:(__bridge id)kSecAttrAccessible];
+                [attributes setObject:(__bridge id)kSecAttrAccessibleAfterFirstUnlock forKey:(__bridge id)kSecAttrAccessible];
 #endif
-            [attributes setObject:data forKey:(__bridge id)kSecValueData];
+                [attributes setObject:data forKey:(__bridge id)kSecValueData];
 #if !TARGET_IPHONE_SIMULATOR && defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-            if (accessGroup) {
-                [attributes setObject:accessGroup forKey:(__bridge id)kSecAttrAccessGroup];
-            }
-#endif
-            
-            status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
-            if (status != errSecSuccess) {
-                if (error) {
-                    *error = [NSError errorWithDomain:NSOSStatusErrorDomain
-                                                 code:status
-                                             userInfo:@{NSLocalizedDescriptionKey: [Localization localizedString:@"KEYCHAIN_ADD_ERROR_MESSAGE"]}];
+                if (accessGroup) {
+                    [attributes setObject:accessGroup forKey:(__bridge id)kSecAttrAccessGroup];
                 }
-                returnValue = NO;
+#endif
+                
+                status = SecItemAdd((__bridge CFDictionaryRef)attributes, NULL);
+                if (status != errSecSuccess) {
+                    if (error) {
+                        *error = [NSError errorWithDomain:NSOSStatusErrorDomain
+                                                     code:status
+                                                 userInfo:@{NSLocalizedDescriptionKey: [Localization localizedString:@"KEYCHAIN_ADD_ERROR_MESSAGE"]}];
+                    }
+                    returnValue = NO;
+                }
+            } else {
+                // Data is already nil, therefore successful.
+                returnValue = YES;
             }
         } else {
             returnValue = NO;
@@ -254,7 +259,7 @@ static NSString *SBAKeychainWrapperDefaultService() {
                      accessGroup:(NSString *)accessGroup
                            error:(NSError **)error {
     NSArray *items = [self itemsForService:service accessGroup:accessGroup error:error];
-    BOOL returnValue = NO;
+    BOOL returnValue = YES;
     for (NSDictionary *item in items) {
         NSMutableDictionary *itemToDelete = [[NSMutableDictionary alloc] initWithDictionary:item];
         [itemToDelete setObject:(__bridge id)kSecClassGenericPassword forKey:(__bridge id)kSecClass];
@@ -267,8 +272,6 @@ static NSString *SBAKeychainWrapperDefaultService() {
                                          userInfo:@{NSLocalizedDescriptionKey: [Localization localizedString:@"KEYCHAIN_DELETE_ERROR_MESSAGE"]}];
             }
             returnValue = NO;
-        } else {
-            returnValue = YES;
         }
     }
     return returnValue;
