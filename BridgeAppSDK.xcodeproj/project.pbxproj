@@ -249,6 +249,8 @@
 		FFC160A61CFE67B600C29AF7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; };
 		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
 		FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; };
+		FFC41F4D1E025DBC0057526E /* SBAKeychainWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = FFC41F4B1E025DBC0057526E /* SBAKeychainWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FFC41F4E1E025DBC0057526E /* SBAKeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC41F4C1E025DBC0057526E /* SBAKeychainWrapper.m */; };
 		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37B21CD94EC80090452F /* ORKOrderedTask+SBAExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -671,6 +673,8 @@
 		FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ColorInfo.plist; sourceTree = "<group>"; };
 		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
+		FFC41F4B1E025DBC0057526E /* SBAKeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAKeychainWrapper.h; sourceTree = "<group>"; };
+		FFC41F4C1E025DBC0057526E /* SBAKeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAKeychainWrapper.m; sourceTree = "<group>"; };
 		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37B01CD94EC80090452F /* ORKOrderedTask+SBAExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORKOrderedTask+SBAExtension.h"; sourceTree = "<group>"; };
@@ -940,6 +944,7 @@
 				FF6410F91CAF39B4007FB9E1 /* String+Utilities.swift */,
 				FF9E48951CF3A2F1005EE7E0 /* StaticUtilities.swift */,
 				FBF1B6B21CAAF6FC007C1082 /* UIAlertController+Utilities.swift */,
+				FFC41F331E025DA50057526E /* Keychain */,
 				FF63D0F51CD03297007ADEE5 /* Logging */,
 				FBAE3CF01C861587003CEC4A /* PDF */,
 			);
@@ -1494,6 +1499,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FFC41F331E025DA50057526E /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				FFC41F4B1E025DBC0057526E /* SBAKeychainWrapper.h */,
+				FFC41F4C1E025DBC0057526E /* SBAKeychainWrapper.m */,
+			);
+			name = Keychain;
+			sourceTree = "<group>";
+		};
 		FFCF38FF1CE267630090452F /* Result */ = {
 			isa = PBXGroup;
 			children = (
@@ -1517,6 +1531,7 @@
 				FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */,
 				FF722C151D775BB8004B2F8B /* SBANewsFeedManager.h in Headers */,
 				FFAAF61E1CC0267E00500929 /* SBAPermissionsManager.h in Headers */,
+				FFC41F4D1E025DBC0057526E /* SBAKeychainWrapper.h in Headers */,
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				FF64111B1CB34766007FB9E1 /* SBAMedication.h in Headers */,
@@ -1973,6 +1988,7 @@
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF5242B11D81E9D0009043B3 /* SBAUserProfileController.swift in Sources */,
 				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
+				FFC41F4E1E025DBC0057526E /* SBAKeychainWrapper.m in Sources */,
 				FF8DDFD61CB62280006D1AFA /* SBATrackedDataStore.m in Sources */,
 				FB6BA0971C7CDB2600C9903F /* SBASubtaskStep.swift in Sources */,
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,

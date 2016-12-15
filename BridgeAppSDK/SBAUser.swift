@@ -52,13 +52,21 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var bridgeInfo: SBABridgeInfo? {
-       return appDelegate?.bridgeInfo
+    open var bridgeInfo: SBABridgeInfo? {
+       return appDelegate?.bridgeInfo ?? SBABridgeInfoPList.shared
     }
     
     // --------------------------------------------------
     // MARK: Keychain storage
     // --------------------------------------------------
+    
+    open var keychain: SBAKeychainWrapper {
+        if _keychain == nil {
+            _keychain = SBAKeychainWrapper(service: bridgeInfo?.keychainService, accessGroup: bridgeInfo?.keychainAccessGroup)
+        }
+        return _keychain!
+    }
+    var _keychain: SBAKeychainWrapper?
     
     let kSessionTokenKey = "sessionToken"
     let kNamePropertyKey = "name"
@@ -188,7 +196,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     fileprivate func _getKeychainObject_NoLock(_ key: String) -> NSSecureCoding? {
         var err: NSError?
-        let obj: NSSecureCoding? = ORKKeychainWrapper.object(forKey: key, error: &err)
+        let obj: NSSecureCoding? = keychain.object(forKey: key, error: &err)
         if let error = err {
             print("Error accessing keychain \(key): \(error.code) \(error)")
         }
@@ -204,10 +212,10 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     fileprivate func _setKeychainObject_NoLock(_ object: NSSecureCoding?, key: String) {
         do {
             if let obj = object {
-                try ORKKeychainWrapper.setObject(obj, forKey: key)
+                try keychain.setObject(obj, forKey: key)
             }
             else {
-                try ORKKeychainWrapper.removeObject(forKey: key)
+                try keychain.removeObject(forKey: key)
             }
         }
         catch let error as NSError {
@@ -217,7 +225,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     fileprivate func resetKeychain() {
         do {
-            try ORKKeychainWrapper.resetKeychain()
+            try keychain.resetKeychain()
         }
         catch let error as NSError {
             print(error.localizedDescription)
