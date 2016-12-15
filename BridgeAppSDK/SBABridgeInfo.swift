@@ -120,6 +120,16 @@ public protocol SBABridgeInfo: class {
      Array of objects that can be converted into `SBAPermissionObjectType` objects.
     */
     var permissionTypeItems: [Any]? { get }
+    
+    /**
+     Keychain service name.
+     */
+    var keychainService: String? { get }
+    
+    /**
+    Keychain access group name.
+    */
+    var keychainAccessGroup: String? { get }
 }
 
 /**
@@ -218,6 +228,14 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     
     public var permissionTypeItems: [Any]? {
         return self.plist["permissionTypes"] as? [Any]
+    }
+    
+    public var keychainService: String? {
+        return self.plist["keychainService"] as? String
+    }
+    
+    public var keychainAccessGroup: String? {
+        return self.plist["keychainAccessGroup"] as? String
     }
 }
 
