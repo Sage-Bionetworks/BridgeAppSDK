@@ -74,6 +74,12 @@ private let kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSample
 private let kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
 private let kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
 
+private let kTrailmakingTapsKey = "trailmakingTaps"
+private let kTrailmakingNumberOfErrorsKey = "numberOfErrors"
+private let kTrailmakingTapTimestampKey = "timestamp"
+private let kTrailmakingTapIndexKey = "index"
+private let kTrailmakingTapIncorrectKey = "incorrect"
+
 private let QuestionResultQuestionTextKey = "questionText"
 private let QuestionResultQuestionTypeKey = "questionType"
 private let QuestionResultQuestionTypeNameKey = "questionTypeName"
@@ -305,6 +311,25 @@ extension ORKSpatialSpanMemoryResult {
         return  rectangles as NSArray
     }
     
+}
+
+extension ORKTrailmakingResult {
+    
+    override func resultAsDictionary() -> NSMutableDictionary {
+        let result = super.resultAsDictionary()
+        
+        let resultTaps = self.taps.map ({ (tap) -> [String: AnyObject] in
+            return [kTrailmakingTapTimestampKey : NSNumber(value: tap.timestamp),
+                    kTrailmakingTapIndexKey     : NSNumber(value: tap.index),
+                    kTrailmakingTapIncorrectKey : NSNumber(value: tap.incorrect)]
+        })
+        
+        result[kTrailmakingTapsKey] = resultTaps
+        result[kTrailmakingNumberOfErrorsKey] = NSNumber(value: self.numberOfErrors)
+        result[kItemKey] = self.filenameForArchive()
+        
+        return result
+    }
 }
 
 public final class SBAAnswerKeyAndValue: NSObject {
