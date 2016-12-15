@@ -141,6 +141,8 @@ extension SBAActiveTask {
             task = tremorTask(predefinedExclusions)
         case .moodSurvey:
             task = moodSurvey(predefinedExclusions)
+        case .trailmaking:
+            task = trailmakingTask(predefinedExclusions)
         default:
             // exit early if not supported by base implementation
             return nil

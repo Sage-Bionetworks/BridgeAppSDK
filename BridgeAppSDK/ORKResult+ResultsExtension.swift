@@ -74,7 +74,7 @@ private let kSpatialSpanMemoryTouchSampleTargetIndexKey = "MemoryGameTouchSample
 private let kSpatialSpanMemoryTouchSampleLocationKey = "MemoryGameTouchSampleLocation"
 private let kSpatialSpanMemoryTouchSampleIsCorrectKey = "MemoryGameTouchSampleIsCorrect"
 
-private let kTrailmakingTapsKey = "trailmakingTaps"
+private let kTrailmakingTapsKey = "taps"
 private let kTrailmakingNumberOfErrorsKey = "numberOfErrors"
 private let kTrailmakingTapTimestampKey = "timestamp"
 private let kTrailmakingTapIndexKey = "index"
@@ -314,6 +314,12 @@ extension ORKSpatialSpanMemoryResult {
 }
 
 extension ORKTrailmakingResult {
+    
+    // Schema mapping in the Researcher UI
+    // trailmaking.json.taps                JSON Table
+    // trailmaking.json.timestamp           Decimal
+    // trailmaking.json.index               Integer
+    // trailmaking.json.numberOfErrors      Integer
     
     override func resultAsDictionary() -> NSMutableDictionary {
         let result = super.resultAsDictionary()

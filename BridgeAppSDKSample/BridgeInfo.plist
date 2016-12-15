@@ -20,6 +20,12 @@
 	<array>
 		<dict>
 			<key>schemaIdentifier</key>
+			<string>Trail Making</string>
+			<key>schemaRevision</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>schemaIdentifier</key>
 			<string>Mood Survey</string>
 			<key>schemaRevision</key>
 			<integer>3</integer>
@@ -76,6 +82,12 @@
 			<string>Mood Survey</string>
 			<key>taskType</key>
 			<string>moodSurvey</string>
+		</dict>
+		<dict>
+			<key>taskIdentifier</key>
+			<string>Trail Making</string>
+			<key>taskType</key>
+			<string>trailmaking</string>
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
