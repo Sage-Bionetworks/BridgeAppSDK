@@ -44,6 +44,7 @@ public enum SBAActiveTaskType {
     case walking
     case tremor
     case moodSurvey
+    case trailmaking
     
     init(name: String?) {
         guard let type = name else { self = .custom(nil); return }
@@ -54,6 +55,7 @@ public enum SBAActiveTaskType {
         case "walking"      : self = .walking
         case "tremor"       : self = .tremor
         case "moodSurvey"   : self = .moodSurvey
+        case "trailmaking"  : self = .trailmaking
         default             : self = .custom(name)
         }
     }
@@ -139,6 +141,8 @@ extension SBAActiveTask {
             task = tremorTask(predefinedExclusions)
         case .moodSurvey:
             task = moodSurvey(predefinedExclusions)
+        case .trailmaking:
+            task = trailmakingTask(predefinedExclusions)
         default:
             // exit early if not supported by base implementation
             return nil
@@ -309,6 +313,23 @@ extension SBAActiveTask {
                                                        frequency: frequency,
                                                        customQuestionText: customQuestionText,
                                                        options: options)
+    }
+    
+    func trailmakingTask(_ options: ORKPredefinedTaskOption) -> ORKOrderedTask {
+        
+        let trailType: ORKTrailMakingTypeIdentifier = {
+            guard let trailType = taskOptions?["trailType"] as? String else {
+                return ORKTrailMakingTypeIdentifier.B
+            }
+            return ORKTrailMakingTypeIdentifier(rawValue: trailType)
+        }()
+        let trailmakingInstruction = taskOptions?["trailmakingInstruction"] as? String
+        
+        return ORKOrderedTask.trailmakingTask(withIdentifier: self.schemaIdentifier,
+                                              intendedUseDescription: self.intendedUseDescription,
+                                              trailmakingInstruction: trailmakingInstruction,
+                                              trailType: trailType,
+                                              options: options)
     }
 }
 

@@ -114,6 +114,89 @@ class SBAActiveTaskTests: XCTestCase {
         XCTAssertEqual(completionStep.detailText, "Detail Text 123")
     }
     
+    func testTrailmakingTask() {
+        
+        let inputTask: NSDictionary = [
+            "taskIdentifier"            : "1-Trail-Making",
+            "schemaIdentifier"          : "Trail Making",
+            "taskType"                  : "trailmaking",
+            "intendedUseDescription"    : "intended Use Description Text",
+            "taskOptions"               : [
+                "trailType"                 : "A",
+                "trailmakingInstruction"    : "trail making instruction"
+            ],
+            "localizedSteps"               : [[
+                "identifier" : "conclusion",
+                "title"      : "Title 123",
+                "text"       : "Text 123",
+                "detailText" : "Detail Text 123"
+                ]
+            ]
+        ]
+        
+        let result = inputTask.createORKTask()
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.identifier, "Trail Making")
+        
+        guard let task = result as? ORKOrderedTask else {
+            XCTAssert(false, "\(result) not of expect class")
+            return
+        }
+        
+        let expectedCount = 6
+        XCTAssertEqual(task.steps.count, expectedCount, "\(task.steps)")
+        guard task.steps.count == expectedCount else { return }
+        
+        // Step 1 - Overview
+        guard let instructionStep = task.steps.first as? ORKInstructionStep else {
+            XCTAssert(false, "\(task.steps.first) not of expect class")
+            return
+        }
+        XCTAssertEqual(instructionStep.identifier, "instruction")
+        XCTAssertEqual(instructionStep.text, "intended Use Description Text")
+        
+        // Step 2 - Instruction
+        guard let instruction1Step = task.steps[1] as? ORKInstructionStep else {
+            XCTAssert(false, "\(task.steps[1]) not of expect class")
+            return
+        }
+        XCTAssertEqual(instruction1Step.identifier, "instruction1")
+        
+        // Step 3 - Instruction
+        guard let instruction2Step = task.steps[2] as? ORKInstructionStep else {
+            XCTAssert(false, "\(task.steps[2]) not of expect class")
+            return
+        }
+        XCTAssertEqual(instruction2Step.identifier, "instruction2")
+        XCTAssertEqual(instruction2Step.text, "trail making instruction")
+
+        
+        // Countdown
+        guard let countdownStep = task.steps[3] as? ORKCountdownStep else {
+            XCTAssert(false, "\(task.steps[3]) not of expect class")
+            return
+        }
+        XCTAssertEqual(countdownStep.identifier, "countdown")
+        
+        // Countdown
+        guard let trailmakingStep = task.steps[4] as? ORKTrailmakingStep else {
+            XCTAssert(false, "\(task.steps[4]) not of expect class")
+            return
+        }
+        XCTAssertEqual(trailmakingStep.identifier, "trailmaking")
+        XCTAssertEqual(trailmakingStep.trailType, ORKTrailMakingTypeIdentifier.A)
+        
+        // Completion
+        guard let completionStep = task.steps.last as? ORKCompletionStep else {
+            XCTAssert(false, "\(task.steps.last) not of expect class")
+            return
+        }
+        XCTAssertEqual(completionStep.identifier, "conclusion")
+        XCTAssertEqual(completionStep.title, "Title 123")
+        XCTAssertEqual(completionStep.text, "Text 123")
+        XCTAssertEqual(completionStep.detailText, "Detail Text 123")
+    }
+    
     func testMemoryTask() {
         
         let inputTask: NSDictionary = [
