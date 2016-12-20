@@ -403,7 +403,7 @@ extension SBANumberRange {
         
         if (subtype == .scale) && self.stepInterval >= 1,
             // If this is a scale subtype then check that the max, min and step interval are valid
-            let min = self.minNumber?.doubleValue, let max = self.maxNumber?.doubleValue , (max > min)
+            let min = self.minNumber?.doubleValue, let max = self.maxNumber?.doubleValue, (max > min)
         {
             // ResearchKit will throw an assertion if the number of steps is greater than 13 so 
             // hardcode a check for whether or not to use a continuous scale based on that number
