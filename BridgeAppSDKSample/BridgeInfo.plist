@@ -2,20 +2,60 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>emailForLoginViaExternalId</key>
-	<string>bridge-testing@sagebase.org</string>
 	<key>studyIdentifier</key>
 	<string>sample-study</string>
-	<key>useCache</key>
-	<true/>
 	<key>certificateName</key>
 	<string>sample-study</string>
+	<key>cacheDaysAhead</key>
+	<integer>7</integer>
+	<key>cacheDaysBehind</key>
+	<integer>3</integer>
+	<key>emailForLoginViaExternalId</key>
+	<string>bridge-testing@sagebase.org</string>
 	<key>newsfeedURL</key>
 	<string>https://bridgeappsdk.blogspot.com/feeds/posts/default?alt=rss</string>
 	<key>logoImageName</key>
 	<string>logo</string>
 	<key>appUpdateURL</key>
 	<string>https://notsupported.null</string>
+	<key>permissionTypes</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>healthKit</string>
+			<key>healthKitTypes</key>
+			<array>
+				<dict>
+					<key>profileKey</key>
+					<string>gender</string>
+					<key>identifier</key>
+					<string>HKCharacteristicTypeIdentifierBiologicalSex</string>
+				</dict>
+				<dict>
+					<key>profileKey</key>
+					<string>birthdate</string>
+					<key>identifier</key>
+					<string>HKCharacteristicTypeIdentifierDateOfBirth</string>
+				</dict>
+				<dict>
+					<key>identifier</key>
+					<string>HKQuantityTypeIdentifierHeight</string>
+					<key>profileKey</key>
+					<string>height</string>
+				</dict>
+				<dict>
+					<key>identifier</key>
+					<string>HKQuantityTypeIdentifierBodyMass</string>
+					<key>profileKey</key>
+					<string>bodyMass</string>
+				</dict>
+				<string>HKQuantityTypeIdentifierStepCount</string>
+			</array>
+		</dict>
+		<string>notifications</string>
+		<string>coremotion</string>
+		<string>microphone</string>
+	</array>
 	<key>schemaMapping</key>
 	<array>
 		<dict>
@@ -125,44 +165,6 @@
 			<key>scheduleNotification</key>
 			<true/>
 		</dict>
-	</array>
-	<key>permissionTypes</key>
-	<array>
-		<dict>
-			<key>identifier</key>
-			<string>healthKit</string>
-			<key>healthKitTypes</key>
-			<array>
-				<dict>
-					<key>profileKey</key>
-					<string>gender</string>
-					<key>identifier</key>
-					<string>HKCharacteristicTypeIdentifierBiologicalSex</string>
-				</dict>
-				<dict>
-					<key>profileKey</key>
-					<string>birthdate</string>
-					<key>identifier</key>
-					<string>HKCharacteristicTypeIdentifierDateOfBirth</string>
-				</dict>
-				<dict>
-					<key>identifier</key>
-					<string>HKQuantityTypeIdentifierHeight</string>
-					<key>profileKey</key>
-					<string>height</string>
-				</dict>
-				<dict>
-					<key>identifier</key>
-					<string>HKQuantityTypeIdentifierBodyMass</string>
-					<key>profileKey</key>
-					<string>bodyMass</string>
-				</dict>
-				<string>HKQuantityTypeIdentifierStepCount</string>
-			</array>
-		</dict>
-		<string>notifications</string>
-		<string>coremotion</string>
-		<string>microphone</string>
 	</array>
 </dict>
 </plist>
