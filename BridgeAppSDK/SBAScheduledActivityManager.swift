@@ -457,12 +457,17 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     }
     
     open func createTask(for schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
-        let taskRef = bridgeInfo.taskReferenceForSchedule(schedule)
-        let task = taskRef?.transformToTask(with: SBASurveyFactory(), isLastStep: true)
+        guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) else { return (nil, nil) }
+        let factory = createFactory(for: taskRef)
+        let task = taskRef.transformToTask(with: factory, isLastStep: true)
         if let surveyTask = task as? SBASurveyTask {
             surveyTask.title = schedule.activity.label
         }
         return (task, taskRef)
+    }
+    
+    open func createFactory(for taskRef:SBATaskReference) -> SBASurveyFactory {
+        return SBASurveyFactory()
     }
     
     open func setup(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
