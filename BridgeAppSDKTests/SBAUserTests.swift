@@ -80,6 +80,8 @@ class MockBridgeInfo : NSObject, SBABridgeInfo {
     var appUpdateURLString: String?
     var disableTestUserCheck: Bool = false
     var permissionTypeItems: [Any]?
+    var keychainService: String?
+    var keychainAccessGroup: String?
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {
