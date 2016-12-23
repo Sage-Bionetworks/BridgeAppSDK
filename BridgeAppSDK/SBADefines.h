@@ -1,8 +1,8 @@
 //
-//  SBADemographicDataObjectType.h
+//  SBADefines.h
 //  BridgeAppSDK
 //
-// Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2016 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,36 +31,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
-#import <BridgeAppSDK/SBADefines.h>
-
-// ===== WORK IN PROGRESS =====
-// TODO: WIP syoung 12/06/2016 This is unfinished but b/c it is wrapped up with the profile
-// and onboarding stuff, I don't want the branch lingering unmerged. This is ported from
-// AppCore and is still untested and *not* intended for production use.
-// ============================
-
-NS_ASSUME_NONNULL_BEGIN
-
-typedef NSString * SBADemographicDataIdentifier NS_EXTENSIBLE_STRING_ENUM;
-
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierCurrentAge;
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierBiologicalSex;
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierHeightInches;
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierWeightPounds;
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierWakeUpTime;
-ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierSleepTime;
-
-@interface SBADemographicDataObjectType: NSObject
-
-@property (nonatomic, copy, readonly) SBADemographicDataIdentifier identifier;
-@property (nonatomic, readonly) id <NSSecureCoding> value;
-
-- (instancetype)initWithIdentifier:(SBADemographicDataIdentifier)identifier value:(id<NSSecureCoding>)value NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-@end
-
-NS_ASSUME_NONNULL_END
+#if defined(__cplusplus)
+#  define ENUM_EXTERN extern "C" __attribute__((visibility("default")))
+#else
+#  define ENUM_EXTERN extern __attribute__((visibility("default")))
+#endif

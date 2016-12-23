@@ -33,6 +33,7 @@
  
 #import <UIKit/UIKit.h>
 #import <HealthKit/HealthKit.h>
+#import <BridgeAppSDK/SBADefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,13 +53,13 @@ typedef NS_OPTIONS(NSUInteger, SBAPermissionsType) {
 
 typedef NSString * SBAPermissionTypeIdentifier NS_STRING_ENUM;
 
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierHealthKit;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierLocation;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierNotifications;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCoremotion;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierMicrophone;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCamera;
-FOUNDATION_EXPORT SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierPhotoLibrary;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierHealthKit;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierLocation;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierNotifications;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCoremotion;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierMicrophone;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierCamera;
+ENUM_EXTERN SBAPermissionTypeIdentifier const SBAPermissionTypeIdentifierPhotoLibrary;
 
 typedef NS_ENUM(NSUInteger, SBAPermissionStatus) {
     SBAPermissionStatusNotDetermined = 0,

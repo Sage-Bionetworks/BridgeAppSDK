@@ -95,6 +95,7 @@
 		FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */; };
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
+		FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3B16111E0CD44B0037D1D0 /* SBADefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
 		FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30541D5A806C00347165 /* SBASurveyTask.swift */; };
 		FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */; };
@@ -518,6 +519,7 @@
 		FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
+		FF3B16111E0CD44B0037D1D0 /* SBADefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBADefines.h; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
 		FF3E30541D5A806C00347165 /* SBASurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyTask.swift; sourceTree = "<group>"; };
 		FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchiveTests.swift; sourceTree = "<group>"; };
@@ -760,7 +762,9 @@
 			isa = PBXGroup;
 			children = (
 				801040B41C5A843D00D26E19 /* BridgeAppSDK.h */,
+				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */,
+				FFB30EB01D4A8AB000D175D2 /* SBAPermissionsStep.swift */,
 				FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */,
 				FF9D4C3E1CA1FC28001C293C /* SBAAppDelegate.swift */,
 				6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */,
@@ -1323,7 +1327,6 @@
 				FFAAF61C1CC0267E00500929 /* SBAPermissionsManager.h */,
 				FFAAF61D1CC0267E00500929 /* SBAPermissionsManager.m */,
 				FFF05FAA1D5A4FCC007304FF /* SBAPermissionsManager.swift */,
-				FFB30EB01D4A8AB000D175D2 /* SBAPermissionsStep.swift */,
 				FF9312381DC93327001A9F86 /* SBAPermissionObjectType.swift */,
 			);
 			name = Permissions;
@@ -1530,6 +1533,7 @@
 			files = (
 				FF8DDFD51CB62280006D1AFA /* SBATrackedDataStore.h in Headers */,
 				FF722C151D775BB8004B2F8B /* SBANewsFeedManager.h in Headers */,
+				FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */,
 				FFAAF61E1CC0267E00500929 /* SBAPermissionsManager.h in Headers */,
 				FFC41F4D1E025DBC0057526E /* SBAKeychainWrapper.h in Headers */,
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
