@@ -1,5 +1,5 @@
 //
-//  MockBridgeInfo.h
+//  SBADefines.h
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,29 +31,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
-@import BridgeAppSDK;
-
-@interface MockBridgeInfo : NSObject <SBABridgeInfo>
-
-@property (nonatomic, readwrite, copy) NSString * _Null_unspecified studyIdentifier;
-@property (nonatomic, readwrite) NSInteger cacheDaysAhead;
-@property (nonatomic, readwrite) NSInteger cacheDaysBehind;
-@property (nonatomic, readwrite) SBBEnvironment environment;
-@property (nonatomic, readwrite, copy) NSString * _Nullable appStoreLinkURLString;
-@property (nonatomic, readwrite, copy) NSString * _Nullable emailForLoginViaExternalId;
-@property (nonatomic, readwrite, copy) NSString * _Nullable passwordFormatForLoginViaExternalId;
-@property (nonatomic, readwrite, copy) NSString * _Nullable testUserDataGroup;
-@property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable schemaMap;
-@property (nonatomic, readwrite, copy) NSArray<NSDictionary *> * _Nullable taskMap;
-@property (nonatomic, readwrite, copy) NSString * _Nullable certificateName;
-@property (nonatomic, readwrite, copy) NSString * _Nullable news;
-@property (nonatomic, readwrite, copy) NSString * _Nullable newsfeedURLString;
-@property (nonatomic, readwrite, copy) NSString * _Nullable logoImageName;
-@property (nonatomic, readwrite, copy) NSString * _Nullable appUpdateURLString;
-@property (nonatomic, readwrite) BOOL disableTestUserCheck;
-@property (nonatomic, readonly, copy) NSArray * _Nullable permissionTypeItems;
-@property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
-@property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
-
-@end
+#if defined(__cplusplus)
+#  define ENUM_EXTERN extern "C" __attribute__((visibility("default")))
+#else
+#  define ENUM_EXTERN extern __attribute__((visibility("default")))
+#endif

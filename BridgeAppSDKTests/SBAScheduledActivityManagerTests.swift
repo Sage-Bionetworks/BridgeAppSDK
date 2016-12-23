@@ -949,7 +949,7 @@ class TestTaskViewController: SBATaskViewController {
 }
 
 class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
-    
+
     // MARK: bridge info
     override var bridgeInfo: SBABridgeInfo {
         return self
@@ -976,6 +976,8 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var appUpdateURLString: String?
     var disableTestUserCheck: Bool = false
     var permissionTypeItems: [Any]?
+    var keychainService: String?
+    var keychainAccessGroup: String?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,

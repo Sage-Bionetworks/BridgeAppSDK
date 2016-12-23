@@ -1441,6 +1441,25 @@ class SBASurveyFactoryTests: XCTestCase {
     
     // MARK: IntegerConstraint with uiHint == slider
     
+    func testFactory_IntegerSlider_step0_10() {
+        
+        let inputStep:SBBSurveyQuestion = createSliderQuestion(1, min:0, max:10)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep,
+            let formItem = surveyStep.formItems?.first,
+            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+                XCTAssert(false, "\(step) Not of expected class")
+                return
+        }
+        
+        XCTAssertEqual(scaleFormat.step, 1)
+        XCTAssertEqual(scaleFormat.minimum, 0)
+        XCTAssertEqual(scaleFormat.maximum, 10)
+    }
+    
     func testFactory_IntegerSlider_step100() {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(100)
@@ -1592,7 +1611,7 @@ class SBASurveyFactoryTests: XCTestCase {
         return inputStep;
     }
     
-    func createSliderQuestion(_ step: Int32?) -> SBBSurveyQuestion {
+    func createSliderQuestion(_ step: Int32?, min:Int32 = 0, max: Int32 = 100) -> SBBSurveyQuestion {
         
         let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
         inputStep.uiHint = "numberfield"
@@ -1603,8 +1622,8 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let constraints = SBBIntegerConstraints()
         inputStep.constraints = constraints
-        constraints.minValue = NSNumber(value: 0 as Int32)
-        constraints.maxValue = NSNumber(value: 100 as Int32)
+        constraints.minValue = NSNumber(value: min)
+        constraints.maxValue = NSNumber(value: max)
         constraints.unit = "years"
         if let step = step {
             constraints.step = NSNumber(value: step as Int32)

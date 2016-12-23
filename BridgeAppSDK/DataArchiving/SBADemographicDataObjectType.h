@@ -32,6 +32,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <BridgeAppSDK/SBADefines.h>
 
 // ===== WORK IN PROGRESS =====
 // TODO: WIP syoung 12/06/2016 This is unfinished but b/c it is wrapped up with the profile
@@ -43,12 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString * SBADemographicDataIdentifier NS_EXTENSIBLE_STRING_ENUM;
 
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierCurrentAge;
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierBiologicalSex;
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierHeightInches;
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierWeightPounds;
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierWakeUpTime;
-FOUNDATION_EXPORT SBADemographicDataIdentifier const SBADemographicDataIdentifierSleepTime;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierCurrentAge;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierBiologicalSex;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierHeightInches;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierWeightPounds;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierWakeUpTime;
+ENUM_EXTERN SBADemographicDataIdentifier const SBADemographicDataIdentifierSleepTime;
 
 @interface SBADemographicDataObjectType: NSObject
 
