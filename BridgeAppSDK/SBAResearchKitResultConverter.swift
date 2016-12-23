@@ -108,16 +108,7 @@ extension SBAResearchKitResultConverter {
             // The ORKHealthKitCharacteristicTypeAnswerFormat uses a string rather
             // than using the HKBiologicalSex enum directly so you have to convert
             let biologicalSex = ORKBiologicalSexIdentifier(rawValue: answer)
-            switch (biologicalSex) {
-            case ORKBiologicalSexIdentifier.female:
-                return HKBiologicalSex.female
-            case ORKBiologicalSexIdentifier.male:
-                return HKBiologicalSex.male
-            case ORKBiologicalSexIdentifier.other:
-                return HKBiologicalSex.other
-            default:
-                return nil
-            }
+            return biologicalSex.healthKitBiologicalSex()
         }
         else {
             return nil
