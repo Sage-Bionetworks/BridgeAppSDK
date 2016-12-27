@@ -49,6 +49,8 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     }
     
     @IBAction func loginTapped(_ sender: AnyObject) {
+        var testField : CustomTextField = CustomTextField()
+        testField.updateOrkAnswer(true)
         SBAAppDelegate.shared?.presentOnboarding(for: .login)
     }
     
