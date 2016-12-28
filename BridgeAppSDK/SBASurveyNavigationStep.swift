@@ -52,87 +52,6 @@ public protocol SBASurveyNavigationStep: SBAPredicateNavigationStep, SBANavigati
     func matchingSurveyStep(for stepResult: ORKStepResult) -> SBAFormProtocol?
 }
 
-public class SBANavigationQuestionStep: ORKQuestionStep, SBASurveyNavigationStep, SBAFormProtocol {
-    
-    public var surveyStepResultFilterPredicate: NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(identifier), self.identifier)
-    }
-    
-    public func matchingSurveyStep(for stepResult: ORKStepResult) -> SBAFormProtocol? {
-        guard (stepResult.identifier == self.identifier) else { return nil }
-        return self
-    }
-    
-    // MARK: SBAFormProtocol
-    
-    public var formItems: [ORKFormItem]? {
-        get {
-            guard let answerFormat = self.answerFormat else { return nil }
-            let formItem = SBANavigationFormItem(identifier: self.identifier, text: nil, answerFormat: answerFormat)
-            formItem.rulePredicate = rulePredicate
-            return [formItem]
-        }
-        set (newValue) {
-            guard let formItem = newValue?.first else { return }
-            self.answerFormat = formItem.answerFormat
-            if let item = formItem as? SBANavigationFormItem {
-                self.rulePredicate = item.rulePredicate
-            }
-        }
-    }
-    
-    // MARK: Stuff you can't extend on a protocol
-    
-    public var rulePredicate: NSPredicate?
-    
-    public var skipToStepIdentifier: String = ORKNullStepIdentifier
-    public var skipIfPassed: Bool = false
-    
-    override public required init(identifier: String) {
-        super.init(identifier: identifier)
-    }
-    
-    init(inputItem: SBASurveyItem) {
-        super.init(identifier: inputItem.identifier)
-        self.sharedCopyFromSurveyItem(inputItem)
-    }
-    
-    // MARK: NSCopying
-    
-    override public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = super.copy(with: zone) as! SBANavigationQuestionStep
-        copy.rulePredicate = self.rulePredicate
-        return self.sharedCopying(copy)
-    }
-    
-    // MARK: NSSecureCoding
-    
-    required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder);
-        self.sharedDecoding(coder: aDecoder)
-        self.rulePredicate = aDecoder.decodeObject(forKey: #keyPath(rulePredicate)) as? NSPredicate
-    }
-    
-    override public func encode(with aCoder: NSCoder){
-        super.encode(with: aCoder)
-        self.sharedEncoding(aCoder)
-        aCoder.encode(self.rulePredicate, forKey: #keyPath(rulePredicate))
-    }
-    
-    // MARK: Equality
-    
-    override public func isEqual(_ object: Any?) -> Bool {
-        guard let castObject = object as? SBANavigationQuestionStep else { return false }
-        return super.isEqual(object) &&
-            sharedEquality(object) &&
-            SBAObjectEquality(castObject.rulePredicate, self.rulePredicate)
-    }
-    
-    override public var hash: Int {
-        return super.hash ^ sharedHash() ^ SBAObjectHash(self.rulePredicate)
-    }
-}
-
 public class SBANavigationFormStep: ORKFormStep, SBASurveyNavigationStep {
     
     public var surveyStepResultFilterPredicate: NSPredicate {
@@ -353,7 +272,7 @@ public extension SBASurveyNavigationStep {
     
     func sharedCopyFromSurveyItem(_ surveyItem: Any) {
         guard let surveyItem = surveyItem as? SBAFormStepSurveyItem else { return }
-        if let skipIdentifier = surveyItem.skipIdentifier {
+        if let skipIdentifier = surveyItem.rules?.first?.skipIdentifier {
             self.skipToStepIdentifier = skipIdentifier
         }
         self.skipIfPassed = surveyItem.skipIfPassed

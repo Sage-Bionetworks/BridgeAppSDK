@@ -211,38 +211,23 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return self.constraints
     }
     
-    public var skipIdentifier: String? {
-        guard let rule = self.constraints.rules?.first as? SBBSurveyRule else { return nil }
-        return rule.skipTo
-    }
-    
     public var skipIfPassed: Bool {
-        return (self.skipIdentifier != nil)
+        return (self.constraints.rules?.first != nil)
     }
     
-    public var rulePredicate: NSPredicate? {
-        guard let skipIdentifier = self.skipIdentifier, let subtype = self.surveyItemType.formSubtype() else {
+    public var rules: [SBASurveyRule]? {
+        guard let subtype = self.surveyItemType.formSubtype() else {
             return nil
         }
-        
-        // build the predicate
-        var predicates: [NSPredicate] = []
-        for obj in self.constraints.rules {
-            if let rule = obj as? SBBSurveyRule, let predicate = rule.rulePredicate(subtype) {
-                guard (rule.skipTo == skipIdentifier) else {
-                    assertionFailure("skipTo conditional with different values not currently supported")
-                    return nil
-                }
-                predicates += [predicate]
+        let rules = self.constraints.rules?.mapAndFilter({ (obj) -> SBASurveyRule? in
+            guard let rule = obj as? SBBSurveyRule, let predicate = rule.rulePredicate(subtype)
+            else {
+                return nil
             }
-        }
-        
-        // If no valid predicate rules found then return
-        guard (predicates.count > 0) else {
-            assertionFailure("rule predicate not currently supported")
-            return nil
-        }
-        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+            let skipIdentifier = rule.skipTo ?? ORKNullStepIdentifier
+            return SBASurveyRuleItem(skipIdentifier: skipIdentifier, rulePredicate: predicate)
+        })
+        return rules
     }
     
     public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {

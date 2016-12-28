@@ -555,31 +555,100 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
         XCTAssertEqual(surveyStep.text, "Do you live alone?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
         
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        XCTAssertNil(formItem.text)
-        XCTAssertNotNil(formItem.rulePredicate)
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(false), and: nil)
+        XCTAssertEqual(skipIdentifierIfFalse, "video-usage")
         
-        guard let navigationRule = formItem.rulePredicate else {
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(true), and: nil)
+        XCTAssertNil(skipIdentifierIfTrue)
+    }
+    
+    func testFactory_BooleanConstraints_MultipleIdentifiers() {
+        
+        let inputStep = SBBSurveyQuestion()
+        inputStep.identifier = "living-alone-status"
+        inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep.uiHint = "checkbox"
+        inputStep.prompt = "Do you live alone?"
+        inputStep.constraints = SBBBooleanConstraints();
+        
+        let ruleTrue = SBBSurveyRule(dictionaryRepresentation:         [
+            "value" : NSNumber(value: true as Bool),
+            "operator" : "eq",
+            "skipTo" : "video-usage",
+            "type" : "SurveyRule"
+            ])
+        let ruleFalse = SBBSurveyRule(dictionaryRepresentation:         [
+            "value" : NSNumber(value: false as Bool),
+            "operator" : "eq",
+            "skipTo" : "next-section",
+            "type" : "SurveyRule"
+            ])
+        
+        inputStep.constraints.addRulesObject(ruleTrue)
+        inputStep.constraints.addRulesObject(ruleFalse)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
-        let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        XCTAssertEqual(surveyStep.identifier, "living-alone-status")
+        XCTAssertEqual(surveyStep.text, "Do you live alone?")
         
-        questionResult.booleanAnswer = false
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.booleanAnswer = true
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(false), and: nil)
+        XCTAssertEqual(skipIdentifierIfFalse, "next-section")
+        
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(true), and: nil)
+        XCTAssertEqual(skipIdentifierIfTrue, "video-usage")
+    }
+    
+    func testFactory_BooleanConstraints_SkipToEnd() {
+        
+        let inputStep = SBBSurveyQuestion()
+        inputStep.identifier = "living-alone-status"
+        inputStep.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep.uiHint = "checkbox"
+        inputStep.prompt = "Do you live alone?"
+        inputStep.constraints = SBBBooleanConstraints();
+        
+        let ruleTrue = SBBSurveyRule(dictionaryRepresentation:         [
+            "value" : NSNumber(value: true as Bool),
+            "operator" : "eq",
+            "endSurvey" : NSNumber(value: true as Bool),
+            "type" : "SurveyRule"
+            ])
+        
+        inputStep.constraints.addRulesObject(ruleTrue)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "living-alone-status")
+        XCTAssertEqual(surveyStep.text, "Do you live alone?")
+        
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
+        
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(false), and: nil)
+        XCTAssertNil(skipIdentifierIfFalse)
+        
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(true), and: nil)
+        XCTAssertEqual(skipIdentifierIfTrue, ORKNullStepIdentifier)
     }
     
     func testFactory_BooleanConstraints_NoRules() {
@@ -605,19 +674,19 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(surveyStep.text!, "Do you live alone?")
         
         // In every case, the next step identifier should be nil
-        
-        let questionResult = ORKBooleanQuestionResult(identifier:surveyStep.identifier)
-        let stepResult = ORKStepResult(stepIdentifier: surveyStep.identifier, results: [questionResult])
+        let questionResult = ORKBooleanQuestionResult(identifier:"living-alone-status")
+        let stepResult = ORKStepResult(stepIdentifier: "living-alone-status", results: [questionResult])
         let taskResult = ORKTaskResult(identifier: "task")
-        taskResult.results = [stepResult]
+        taskResult.results = [ORKStepResult(identifier: "introduction"), stepResult]
         
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.booleanAnswer = false
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(false), and: nil)
+        XCTAssertNil(skipIdentifierIfFalse)
         
-        questionResult.booleanAnswer = true
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(true), and: nil)
+        XCTAssertNil(skipIdentifierIfTrue)
     }
     
     func testFactory_BooleanConstraints_PromptDetail() {
@@ -643,21 +712,6 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(surveyStep.title!, "Question 1")
         XCTAssertNotNil(surveyStep.text)
         XCTAssertEqual(surveyStep.text!, "Do you live alone?")
-        
-        // In every case, the next step identifier should be nil
-        
-        let questionResult = ORKBooleanQuestionResult(identifier:surveyStep.identifier)
-        let stepResult = ORKStepResult(stepIdentifier: surveyStep.identifier, results: [questionResult])
-        let taskResult = ORKTaskResult(identifier: "task")
-        taskResult.results = [stepResult]
-        
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
-        
-        questionResult.booleanAnswer = false
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
-        
-        questionResult.booleanAnswer = true
-        XCTAssertNil(surveyStep.nextStepIdentifier(with: taskResult, and: nil))
     }
     
     // MARK: MultiValueConstraints
@@ -691,45 +745,15 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "medical-usage")
         XCTAssertEqual(surveyStep.text, "Do you ever use your smartphone to look for health or medical information online?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
         
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        XCTAssertNil(formItem.text)
-
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
-        XCTAssertEqual(answerFormat.textChoices.count, 3)
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["false"]), and: nil)
+        XCTAssertEqual(skipIdentifierIfFalse, "video-usage")
         
-        guard let textChoice = answerFormat.textChoices.first else {
-            return
-        }
-        
-        XCTAssertEqual(textChoice.text, "Yes, I have done this")
-        guard let value = textChoice.value as? String else {
-            XCTAssert(false, "\(textChoice.value) is not of expected class type")
-            return
-        }
-        XCTAssertEqual(value, "true")
-        
-        XCTAssertNotNil(formItem.rulePredicate)
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
-        
-        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["true"]), and: nil)
+        XCTAssertNil(skipIdentifierIfTrue)
     }
 
     func testFactory_MultiValueConstraints_NotEqual() {
@@ -746,24 +770,24 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
                 XCTAssert(false, "\(step) does not meet expected format")
                 return
         }
         
-        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let questionResult = ORKChoiceQuestionResult(identifier:"medical-usage")
+        let stepResult = ORKStepResult(stepIdentifier: "medical-usage", results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [ORKStepResult(identifier: "introduction"), stepResult]
         
-        questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        questionResult.choiceAnswers = ["maybe"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["false"]), and: nil)
+        XCTAssertEqual(skipIdentifierIfFalse, "video-usage")
         
-        questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["true"]), and: nil)
+        XCTAssertNil(skipIdentifierIfTrue)
     }
     
     func testFactory_MultiValueConstraints_OtherThan() {
@@ -780,24 +804,19 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
                 XCTAssert(false, "\(step) does not meet expected format")
                 return
         }
         
-        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        questionResult.choiceAnswers = ["false"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["false"]), and: nil)
+        XCTAssertEqual(skipIdentifierIfFalse, "video-usage")
         
-        questionResult.choiceAnswers = ["maybe"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.choiceAnswers = ["true"]
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskChoiceResult(["true"]), and: nil)
+        XCTAssertNil(skipIdentifierIfTrue)
     }
     
     func testFactory_MultiValueConstraints_AllowMultiple() {
@@ -807,8 +826,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+            let answerFormat = surveyStep.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -827,8 +845,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+            let answerFormat = surveyStep.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -856,8 +873,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
+            let answerFormat = surveyStep.answerFormat as? ORKTextChoiceAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -891,18 +907,11 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "feelings")
         XCTAssertEqual(surveyStep.text, "How do you feel?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first else {
-            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+
+        guard let _ = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
-        guard let _ = formItem.answerFormat as? ORKTextAnswerFormat else {
-            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
-            return
-        }
-        
-        XCTAssertNil(formItem.text)
     }
     
     // MARK: DateTimeConstraints
@@ -930,17 +939,9 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
         XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
         
-        guard let formItem = surveyStep.formItems?.first else {
-            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-            return
-        }
-        
-        XCTAssertNil(formItem.text)
-        
-        guard let answerFormat = formItem.answerFormat as? ORKDateAnswerFormat else {
-            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+        guard let answerFormat = surveyStep.answerFormat as? ORKDateAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
         
@@ -979,17 +980,9 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
         XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
         
-        guard let formItem = surveyStep.formItems?.first else {
-            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-            return
-        }
-        
-        XCTAssertNil(formItem.text)
-        
-        guard let answerFormat = formItem.answerFormat as? ORKDateAnswerFormat else {
-            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+        guard let answerFormat = surveyStep.answerFormat as? ORKDateAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
         
@@ -1024,17 +1017,9 @@ class SBASurveyFactoryTests: XCTestCase {
     
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
         XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first else {
-            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-            return
-        }
-        
-        XCTAssertNil(formItem.text)
-        
-        guard let _ = formItem.answerFormat as? ORKTimeOfDayAnswerFormat else {
-            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+
+        guard let _ = surveyStep.answerFormat as? ORKTimeOfDayAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
     }
@@ -1058,17 +1043,9 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "last-smoked")
         XCTAssertEqual(surveyStep.text, "When is the last time you smoked (put todays date if you are still smoking)?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first else {
-            XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-            return
-        }
-        
-        XCTAssertNil(formItem.text)
-        
-        guard let _ = formItem.answerFormat as? ORKTimeIntervalAnswerFormat else {
-            XCTAssert(false, "\(formItem.answerFormat) is not of expected class type")
+
+        guard let _ = surveyStep.answerFormat as? ORKTimeIntervalAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
     }
@@ -1134,40 +1111,28 @@ class SBASurveyFactoryTests: XCTestCase {
         
         XCTAssertEqual(surveyStep.identifier, "age")
         XCTAssertEqual(surveyStep.text, "How old are you?")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
         
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let answerFormat = formItem.answerFormat as? ORKNumericAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+        guard let answerFormat = surveyStep.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
                 return
         }
-        
-        XCTAssertNil(formItem.text)
-        XCTAssertNotNil(formItem.rulePredicate)
         
         XCTAssertEqual(answerFormat.unit, "years")
         XCTAssertEqual(answerFormat.minimum, NSNumber(value: 18))
         XCTAssertEqual(answerFormat.maximum, NSNumber(value: 100))
         XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.integer)
         
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertEqual(skipIdentifierIfLessThan, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertNil(skipIdentifierIfEqualTo)
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-        
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertNil(skipIdentifierIfGreaterThan)
     }
     
     func testFactory_IntegerConstraints_Equal() {
@@ -1183,23 +1148,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(step) does not match expected")
             return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertNil(skipIdentifierIfLessThan)
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertEqual(skipIdentifierIfEqualTo, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertNil(skipIdentifierIfGreaterThan)
     }
     
     func testFactory_IntegerConstraints_NotEqual() {
@@ -1215,23 +1179,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
-                XCTAssert(false, "\(step) does not match expected")
-                return
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) does not match expected")
+            return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertEqual(skipIdentifierIfLessThan, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertNil(skipIdentifierIfEqualTo)
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertEqual(skipIdentifierIfGreaterThan, "video-usage")
     }
     
     func testFactory_IntegerConstraints_GreaterThan() {
@@ -1247,23 +1210,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
-                XCTAssert(false, "\(step) does not match expected")
-                return
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) does not match expected")
+            return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertNil(skipIdentifierIfLessThan)
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertNil(skipIdentifierIfEqualTo)
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertEqual(skipIdentifierIfGreaterThan, "video-usage")
     }
     
     func testFactory_IntegerConstraints_GreaterThanOrEqual() {
@@ -1279,23 +1241,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
-                XCTAssert(false, "\(step) does not match expected")
-                return
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) does not match expected")
+            return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertNil(skipIdentifierIfLessThan)
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertEqual(skipIdentifierIfEqualTo, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertEqual(skipIdentifierIfGreaterThan, "video-usage")
     }
     
     func testFactory_IntegerConstraints_LessThanOrEqual() {
@@ -1311,23 +1272,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
                 XCTAssert(false, "\(step) does not match expected")
                 return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertNil(skipIdentifierIfSkipped)
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertEqual(skipIdentifierIfLessThan, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertEqual(skipIdentifierIfEqualTo, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertNil(skipIdentifierIfGreaterThan)
     }
     
     func testFactory_IntegerConstraints_OtherThan() {
@@ -1343,23 +1303,22 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let navigationRule = formItem.rulePredicate else {
-                XCTAssert(false, "\(step) does not match expected")
-                return
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) does not match expected")
+            return
         }
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 49)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertEqual(skipIdentifierIfLessThan, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 50)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertNil(skipIdentifierIfEqualTo)
         
-        questionResult.numericAnswer = NSNumber(value: 51)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertEqual(skipIdentifierIfGreaterThan, "video-usage")
     }
 
     func testFactory_DecimalConstraints() {
@@ -1394,48 +1353,35 @@ class SBASurveyFactoryTests: XCTestCase {
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
         XCTAssertNotNil(step)
         
-        guard let surveyStep = step as? SBANavigationQuestionStep,
-              let formItems = surveyStep.formItems
-        else {
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(step) is not of expected class type")
             return
         }
         
         XCTAssertEqual(surveyStep.identifier, "age")
         XCTAssertEqual(surveyStep.text, "How old are you?")
-        XCTAssertEqual(formItems.count, 1)
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "video-usage")
         
-        guard let formItem = formItems.first as? SBANavigationFormItem,
-            let answerFormat = formItem.answerFormat as? ORKNumericAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
+        guard let answerFormat = surveyStep.answerFormat as? ORKNumericAnswerFormat else {
+                XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
                 return
         }
-        
-        XCTAssertNil(formItem.text)
-        XCTAssertNotNil(formItem.rulePredicate)
         
         XCTAssertEqual(answerFormat.unit, "years")
         XCTAssertEqual(answerFormat.minimum, NSNumber(value: 18.3))
         XCTAssertEqual(answerFormat.maximum, NSNumber(value: 100.2))
         XCTAssertEqual(answerFormat.style, ORKNumericAnswerStyle.decimal)
         
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskNumberResult(nil), and: nil)
+        XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        let questionResult = ORKNumericQuestionResult(identifier:formItem.identifier)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfLessThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(49), and: nil)
+        XCTAssertEqual(skipIdentifierIfLessThan, "video-usage")
         
-        questionResult.numericAnswer = NSNumber(value: 49.0)
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfEqualTo = surveyStep.nextStepIdentifier(with: createTaskNumberResult(50), and: nil)
+        XCTAssertNil(skipIdentifierIfEqualTo)
         
-        questionResult.numericAnswer = NSNumber(value: 50.0)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.numericAnswer = NSNumber(value: 51.0)
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
+        let skipIdentifierIfGreaterThan = surveyStep.nextStepIdentifier(with: createTaskNumberResult(51), and: nil)
+        XCTAssertNil(skipIdentifierIfGreaterThan)
         
     }
     
@@ -1449,8 +1395,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+            let scaleFormat = surveyStep.answerFormat as? ORKScaleAnswerFormat else {
                 XCTAssert(false, "\(step) Not of expected class")
                 return
         }
@@ -1468,8 +1413,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+            let scaleFormat = surveyStep.answerFormat as? ORKScaleAnswerFormat else {
                 XCTAssert(false, "\(step) Not of expected class")
                 return
         }
@@ -1487,8 +1431,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // ResearchKit requires that number of steps between min and max value are >= 1 and <= 13
         // so if there would be more than 13 steps (100/5 == 20) then use continuous scale
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
+            let scaleFormat = surveyStep.answerFormat as? ORKContinuousScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -1506,8 +1449,7 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let scaleFormat = formItem.answerFormat as? ORKScaleAnswerFormat else {
+            let scaleFormat = surveyStep.answerFormat as? ORKScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -1528,8 +1470,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // then should be step size == 1. This will result in more than 13 step intervals
         // so the returned class should be continuous scale
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let scaleFormat = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
+            let scaleFormat = surveyStep.answerFormat as? ORKContinuousScaleAnswerFormat else {
                 XCTAssert(false, "\(step) is not of expected format")
                 return
         }
@@ -1549,14 +1490,11 @@ class SBASurveyFactoryTests: XCTestCase {
         // a step size of 37 is not divisible by 100 so is invalid as an integer
         // scale with discrete steps.
         guard let surveyStep = step as? SBANavigationQuestionStep,
-            let formItem = surveyStep.formItems?.first,
-            let _ = formItem.answerFormat as? ORKContinuousScaleAnswerFormat else {
+            let _ = surveyStep.answerFormat as? ORKContinuousScaleAnswerFormat else {
             XCTAssert(false, "\(step) Not of expected class")
             return
         }
     }
-    
-
     
     
     // MARK: Helper methods
@@ -1632,5 +1570,35 @@ class SBASurveyFactoryTests: XCTestCase {
         return inputStep;
     }
 
-
+    func createTaskBooleanResult(_ answer: Bool?) -> ORKTaskResult {
+        let questionResult = ORKBooleanQuestionResult(identifier:"living-alone-status")
+        if let booleanAnswer = answer {
+            questionResult.booleanAnswer = booleanAnswer as NSNumber?
+        }
+        let stepResult = ORKStepResult(stepIdentifier: "living-alone-status", results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [ORKStepResult(identifier: "introduction"), stepResult]
+        return taskResult
+    }
+    
+    func createTaskChoiceResult(_ answer: [Any]?) -> ORKTaskResult {
+        let questionResult = ORKChoiceQuestionResult(identifier:"medical-usage")
+        questionResult.choiceAnswers = answer
+        let stepResult = ORKStepResult(stepIdentifier: "medical-usage", results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [ORKStepResult(identifier: "introduction"), stepResult]
+        return taskResult
+    }
+    
+    func createTaskNumberResult(_ answer: Int?) -> ORKTaskResult {
+        let questionResult = ORKNumericQuestionResult(identifier: "age")
+        if let numericAnswer = answer {
+            questionResult.numericAnswer = numericAnswer as NSNumber?
+        }
+        let stepResult = ORKStepResult(stepIdentifier: "age", results: [questionResult])
+        let taskResult = ORKTaskResult(identifier: "task")
+        taskResult.results = [ORKStepResult(identifier: "introduction"), stepResult]
+        return taskResult
+    }
+    
 }

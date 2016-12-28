@@ -195,6 +195,36 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
         return inputItem.createFormItem(text: inputItem.stepText, subtype: subtype, factory: self)
     }
     
+    /**
+     Factory method for injecting an override of the functionality supported by the `SBAFormStepSurveyItem`
+     protocol extension. Because a protocol extension cannot be overriden, this method allows the injection
+     of customization of the default form item.
+     @param inputItem       An input item conforming to the `SBAFormStepSurveyItem` protocol
+     @param isSubtaskStep   Whether or not this is a subtask step
+     @return                step
+     */
+    open func createFormStep(_ inputItem:SBAFormStepSurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
+        
+        // If this item should use the question style then create accordingly
+        if inputItem.questionStyle {
+            return SBANavigationQuestionStep(inputItem: inputItem, factory: self)
+        }
+        
+        // Factory method for determining the proper type of form-style step to return
+        // the ORKQuestionStep and ORKFormStep have a different UI presentation
+        let step: ORKStep =
+            // If this is a boolean toggle step then that casting takes priority
+            inputItem.isBooleanToggle ? SBAToggleFormStep(inputItem: inputItem) :
+            // If this is *not* a subtask step and it uses navigation then return a survey form step
+            (!isSubtaskStep && inputItem.usesNavigation()) ? SBANavigationFormStep(inputItem: inputItem) :
+            // Otherwise, use a form step
+            ORKFormStep(identifier: inputItem.identifier)
+        
+        inputItem.buildFormItems(with: step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep, factory: self)
+        inputItem.mapStepValues(with: step)
+        return step
+    }
+    
     internal final func createSurveyStep(_ inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
         switch (inputItem.surveyItemType) {
             
@@ -208,7 +238,7 @@ open class SBASurveyFactory : NSObject, SBASharedInfoController {
             
         case .form(_):
             if let form = inputItem as? SBAFormStepSurveyItem {
-                return form.createFormStep(isSubtaskStep: isSubtaskStep, factory: self)
+                return createFormStep(form, isSubtaskStep: isSubtaskStep)
             } else { break }
             
         case .account(let subtype):
@@ -280,25 +310,6 @@ extension SBAFormStepSurveyItem {
         return step
     }
     
-    func createFormStep(isSubtaskStep: Bool, factory: SBASurveyFactory? = nil) -> ORKStep {
-        
-        // Factory method for determining the proper type of form-style step to return
-        // the ORKQuestionStep and ORKFormStep have a different UI presentation
-        let step: ORKStep =
-            // If this is a boolean toggle step then that casting takes priority
-            self.isBooleanToggle ? SBAToggleFormStep(inputItem: self) :
-            // If this is a question style then use the SBA subclass
-            self.questionStyle ? SBANavigationQuestionStep(inputItem: self) :
-            // If this is *not* a subtask step and it uses navigation then return a survey form step
-            (!isSubtaskStep && self.usesNavigation()) ? SBANavigationFormStep(inputItem: self) :
-            // Otherwise, use a form step
-            ORKFormStep(identifier: self.identifier)
-        
-        buildFormItems(with: step as! SBAFormProtocol, isSubtaskStep: isSubtaskStep, factory: factory)
-        mapStepValues(with: step)
-        return step
-    }
-    
     func mapStepValues(with step: ORKStep) {
         step.title = self.stepTitle?.trim()
         step.text = self.stepText?.trim()
@@ -324,7 +335,7 @@ extension SBAFormStepSurveyItem {
         
     func createFormItem(text: String?, subtype: SBASurveyItemType.FormSubtype?, factory: SBASurveyFactory? = nil) -> ORKFormItem {
         let answerFormat = factory?.createAnswerFormat(self, subtype: subtype) ?? self.createAnswerFormat(subtype)
-        if let rulePredicate = self.rulePredicate {
+        if let rulePredicate = self.rules?.first?.rulePredicate {
             // If there is a rule predicate then return a survey form item
             let formItem = SBANavigationFormItem(identifier: self.identifier, text: text, answerFormat: answerFormat, optional: self.optional)
             formItem.rulePredicate = rulePredicate
@@ -383,13 +394,13 @@ extension SBAFormStepSurveyItem {
     }
 
     func usesNavigation() -> Bool {
-        if (self.skipIdentifier != nil) || (self.rulePredicate != nil) {
-                return true
+        if let count = self.rules?.count, count > 0 {
+            return true
         }
         guard let items = self.items else { return false }
         for item in items {
             if let item = item as? SBAFormStepSurveyItem,
-                let _ = item.rulePredicate {
+                let count = item.rules?.count, count > 0 {
                     return true
             }
         }

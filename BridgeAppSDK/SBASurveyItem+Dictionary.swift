@@ -124,7 +124,7 @@ extension NSDictionary: SBAInstructionStepSurveyItem {
     }
 }
 
-extension NSDictionary: SBAFormStepSurveyItem {
+extension NSDictionary: SBAFormStepSurveyItem, SBASurveyRule {
     
     public var placeholderText: String? {
         return self["placeholder"] as? String
@@ -141,6 +141,11 @@ extension NSDictionary: SBAFormStepSurveyItem {
     
     public var range: AnyObject? {
         return nil 
+    }
+    
+    public var rules: [SBASurveyRule]? {
+        guard self.rulePredicate != nil || self.skipIdentifier != nil else { return nil }
+        return [self]
     }
     
     public var skipIdentifier: String? {

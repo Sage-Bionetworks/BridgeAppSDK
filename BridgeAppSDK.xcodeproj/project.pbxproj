@@ -96,6 +96,7 @@
 		FF3A354E1CBDAFE600F44E6E /* UIColor+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3B16111E0CD44B0037D1D0 /* SBADefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF3B16301E1314A30037D1D0 /* SBANavigationQuestionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3B162F1E1314A30037D1D0 /* SBANavigationQuestionStep.swift */; };
 		FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */; };
 		FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30541D5A806C00347165 /* SBASurveyTask.swift */; };
 		FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */; };
@@ -520,6 +521,7 @@
 		FF3A354D1CBDAFE600F44E6E /* UIColor+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Utilities.swift"; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3B16111E0CD44B0037D1D0 /* SBADefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBADefines.h; sourceTree = "<group>"; };
+		FF3B162F1E1314A30037D1D0 /* SBANavigationQuestionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANavigationQuestionStep.swift; sourceTree = "<group>"; };
 		FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBABridgeTask+SBBSurveyReference.swift"; sourceTree = "<group>"; };
 		FF3E30541D5A806C00347165 /* SBASurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyTask.swift; sourceTree = "<group>"; };
 		FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchiveTests.swift; sourceTree = "<group>"; };
@@ -1023,6 +1025,7 @@
 				FB6BA0961C7CDB2600C9903F /* SBASubtaskStep.swift */,
 				FBE551681C6D9CBC00C9E1AA /* SBASurveyNavigationStep.swift */,
 				FF36DC6E1DB68F230034C85D /* SBAToggleFormStep.swift */,
+				FF3B162F1E1314A30037D1D0 /* SBANavigationQuestionStep.swift */,
 			);
 			name = Step;
 			sourceTree = "<group>";
@@ -1998,6 +2001,7 @@
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
 				FFBB57261CACEAA00041F120 /* SBAActiveTask+Dictionary.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
+				FF3B16301E1314A30037D1D0 /* SBANavigationQuestionStep.swift in Sources */,
 				6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */,
 				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
 				FBE1A9651CAB322700F1F584 /* SBAActiveTask.swift in Sources */,
