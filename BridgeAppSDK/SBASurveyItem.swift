@@ -52,15 +52,19 @@ public protocol SBAActiveStepSurveyItem: SBASurveyItem {
     var stepFinishedSpokenInstruction: String? { get }
 }
 
+public protocol SBASurveyRule : NSSecureCoding {
+    var skipIdentifier: String? { get }
+    var rulePredicate: NSPredicate? { get }
+}
+
 public protocol SBAFormStepSurveyItem: SBASurveyItem {
     var questionStyle: Bool { get }
     var placeholderText: String? { get }
     var optional: Bool { get }
     var items: [Any]? { get }
     var range: AnyObject? { get }
-    var skipIdentifier: String? { get }
     var skipIfPassed: Bool { get }
-    var rulePredicate: NSPredicate? { get }
+    var rules: [SBASurveyRule]? { get }
 }
 
 public protocol SBAInstructionStepSurveyItem: SBASurveyItem {
