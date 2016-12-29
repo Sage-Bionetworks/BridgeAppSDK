@@ -49,6 +49,11 @@ public enum SBARootViewControllerState: Int {
     case catastrophicError
 }
 
+/**
+ `SBARootViewController` is a root view controller implementation that allows the current "root"
+ to be transitioned while there is a modal view controller displayed on top of the root. For 
+ example, when displaying a passcode or during onboarding.
+ */
 @objc
 open class SBARootViewController: UIViewController {
     
