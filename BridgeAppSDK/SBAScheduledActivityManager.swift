@@ -392,44 +392,16 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     open func scheduledActivity(for taskIdentifier: String) -> SBBScheduledActivity? {
         return activities.find({ $0.taskIdentifier == taskIdentifier })
     }
-    
-    /**
-     Delete the output directory for a task once completed.
-     
-     @param     taskViewController  The task view controller being displayed.
-     */
-    @objc(deleteOutputDirectoryForTaskViewController:)
-    open func deleteOutputDirectory(for taskViewController: ORKTaskViewController) {
-        guard let outputDirectory = taskViewController.outputDirectory else { return }
-        do {
-            try FileManager.default.removeItem(at: outputDirectory)
-        } catch let error as NSError {
-            print("Error removing ResearchKit output directory: \(error.localizedFailureReason)")
-            debugPrint("\tat: \(outputDirectory)")
-        }
-    }
+
     
     // MARK: ORKTaskViewControllerDelegate
     
     fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
-        if reason == ORKTaskViewControllerFinishReason.completed,
-            let schedule = scheduledActivity(for: taskViewController),
-            shouldRecordResult(for: schedule, taskViewController: taskViewController) {
-            
-            // Update any data stores and groups associated with this task
-            taskViewController.task?.commitTrackedDataChanges(user: user,
-                                                              taskResult: taskViewController.result,
-                                                              completion:handleDataGroupsUpdate)
-            
-            // Archive the results
-            let results = activityResults(for: schedule, taskViewController: taskViewController)
-            let archives = results.mapAndFilter({ archive(for: $0) })
-            SBADataArchive.encryptAndUploadArchives(archives)
-            
-            // Update the schedule on the server
-            update(schedule: schedule, taskViewController: taskViewController)
+        // default behavior is to only record the task results if the task completed
+        if reason == ORKTaskViewControllerFinishReason.completed {
+            recordTaskResults(for: taskViewController)
         }
         else {
             taskViewController.task?.resetTrackedDataChanges()
@@ -438,33 +410,7 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         taskViewController.dismiss(animated: true) {
             self.offMainQueue.async {
                 self.deleteOutputDirectory(for: taskViewController)
-                #if DEBUG
-                DispatchQueue.main.async {
-                        let fileMan = FileManager.default
-                        let homeDir = URL.init(string: NSHomeDirectory())
-                    let directoryEnumerator = fileMan.enumerator(at: homeDir!, includingPropertiesForKeys: [URLResourceKey.nameKey, URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey], options: FileManager.DirectoryEnumerationOptions.init(rawValue:0), errorHandler: nil)
-                        
-                        var mutableFileInfo = Dictionary<URL, Int>()
-                        while let originalURL = directoryEnumerator?.nextObject() as? URL {
-                            let fileURL = originalURL.resolvingSymlinksInPath();
-                            do {
-                                let urlResourceValues = try fileURL.resourceValues(forKeys: [URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey])
-                                if !urlResourceValues.isDirectory! {
-                                    let fileSizeOrNot = urlResourceValues.fileSize ?? -1
-                                    mutableFileInfo[fileURL] = fileSizeOrNot
-                                }
-                            } catch let error as NSError {
-                                debugPrint("Error: \(error.localizedDescription)")
-                            }
-                        }
-                    
-                        debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
-                        for fileURL in mutableFileInfo.keys {
-                            let fileSize = mutableFileInfo[fileURL]
-                            debugPrint("\(fileURL.path) size:\(fileSize)")
-                        };
-                }
-                #endif
+                self.debugPrintSandboxFiles()
             }
         }
     }
@@ -474,6 +420,16 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         // If cancel is disabled then hide on all but the first step
         if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
             stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        }
+        
+        // If it is the last step in the task *and* it's a completion step (not a step
+        // that might change the results) then record the task result. This allows the 
+        // results to be recorded and updated prior to ending the task and ensures that
+        // even if the user forgets to tap the "Done" button, their results will be 
+        // recorded.
+        if let step = stepViewController.step, let task = taskViewController.task,
+            task.isCompletion(step: step, with: taskViewController.result) {
+            recordTaskResults(for: taskViewController)
         }
     }
     
@@ -498,6 +454,52 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     }
     
     // MARK: Protected subclass methods
+    
+    /**
+     Delete the output directory for a task once completed.
+     
+     @param     taskViewController  The task view controller being displayed.
+     */
+    @objc(deleteOutputDirectoryForTaskViewController:)
+    open func deleteOutputDirectory(for taskViewController: ORKTaskViewController) {
+        guard let outputDirectory = taskViewController.outputDirectory else { return }
+        do {
+            try FileManager.default.removeItem(at: outputDirectory)
+        } catch let error as NSError {
+            print("Error removing ResearchKit output directory: \(error.localizedFailureReason)")
+            debugPrint("\tat: \(outputDirectory)")
+        }
+    }
+    
+    fileprivate func debugPrintSandboxFiles() {
+        #if DEBUG
+        DispatchQueue.main.async {
+            let fileMan = FileManager.default
+            let homeDir = URL.init(string: NSHomeDirectory())
+            let directoryEnumerator = fileMan.enumerator(at: homeDir!, includingPropertiesForKeys: [URLResourceKey.nameKey, URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey], options: FileManager.DirectoryEnumerationOptions.init(rawValue:0), errorHandler: nil)
+            
+            var mutableFileInfo = Dictionary<URL, Int>()
+            while let originalURL = directoryEnumerator?.nextObject() as? URL {
+                let fileURL = originalURL.resolvingSymlinksInPath();
+                do {
+                    let urlResourceValues = try fileURL.resourceValues(forKeys: [URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey])
+                    if !urlResourceValues.isDirectory! {
+                        let fileSizeOrNot = urlResourceValues.fileSize ?? -1
+                        mutableFileInfo[fileURL] = fileSizeOrNot
+                    }
+                } catch let error as NSError {
+                    debugPrint("Error: \(error.localizedDescription)")
+                }
+            }
+            
+            debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
+            for fileURL in mutableFileInfo.keys {
+                let fileSize = mutableFileInfo[fileURL]
+                debugPrint("\(fileURL.path) size:\(fileSize)")
+            };
+        }
+        #endif
+    }
 
     /**
      Should the cancel button be hidden for this step?
@@ -598,21 +600,70 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     
     /**
      Subclass can override to provide custom implementation. By default, will return `YES`
-     unless this is a survey with an error.
+     unless this is a survey with an error or the results have already been uploaded.
      
      @param     schedule            The schedule associated with this task
      @param     taskViewController  The task view controller that was displayed.
     */
     @objc(shouldRecordResultForSchedule:taskViewController:)
     open func shouldRecordResult(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+        
+        // Check if the flag has been set that the results are already being uploaded.
+        // This allows tasks to be uploaded with the call to task finished *or* in the previous
+        // step if the last step is a completion step, but will keep the results from being
+        // uploaded more than once.
+        if let vc = taskViewController as? SBATaskViewController, vc.hasUploadedResults {
+            return false
+        }
+        
+        // Look to see if this is an online survey which has failed to download
+        // In this case, do not mark on the server as completed.
         if let task = taskViewController.task as? SBASurveyTask, task.error != nil {
             return false
         }
+        
         return true
     }
     
     /**
-     This method is called during task finish to send Bridge server an update to the 
+     This method is called during task finish to handle data sync to the Bridge server.
+     It includes updating tracked data changes (such as data groups), marking the schedule
+     as finished and archiving the results.
+     
+     @param     schedule            The schedule associated with this task
+     @param     taskViewController  The task view controller that was displayed.
+    */
+    @objc(recordTaskResultsForTaskViewController:)
+    open func recordTaskResults(for taskViewController: ORKTaskViewController) {
+        
+        // Check if the results of this survey should be uploaded
+        guard let schedule = scheduledActivity(for: taskViewController),
+            shouldRecordResult(for: schedule, taskViewController:taskViewController)
+        else {
+            return
+        }
+        
+        // Mark the flag that the results are being uploaded for this task
+        if let vc = taskViewController as? SBATaskViewController {
+            vc.hasUploadedResults = true
+        }
+        
+        // Update any data stores and groups associated with this task
+        taskViewController.task?.commitTrackedDataChanges(user: user,
+                                                          taskResult: taskViewController.result,
+                                                          completion:handleDataGroupsUpdate)
+        
+        // Archive the results
+        let results = activityResults(for: schedule, taskViewController: taskViewController)
+        let archives = results.mapAndFilter({ archive(for: $0) })
+        SBADataArchive.encryptAndUploadArchives(archives)
+        
+        // Update the schedule on the server
+        update(schedule: schedule, taskViewController: taskViewController)
+    }
+    
+    /**
+     This method is called during task finish to send Bridge server an update to the
      schedule with the `finishedOn` and `startedOn` values set to the start/end timestamp
      for the task view controller.
      

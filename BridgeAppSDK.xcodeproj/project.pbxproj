@@ -180,6 +180,7 @@
 		FF812A251DDCEC6700A61655 /* SBAChangeEmailStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */; };
 		FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
+		FF882F091E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF882F081E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift */; };
 		FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */; };
 		FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997781D0B585600B26051 /* MockBridgeInfo.m */; };
 		FF8997931D0B589500B26051 /* MockUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997921D0B589500B26051 /* MockUser.m */; };
@@ -608,6 +609,7 @@
 		FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAChangeEmailStep.swift; sourceTree = "<group>"; };
 		FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADirectNavigationRule.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		FF882F081E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTask+SBAExtensions.swift"; sourceTree = "<group>"; };
 		FF8997581D0B3B9800B26051 /* MockAppInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockAppInfoDelegate.h; sourceTree = "<group>"; };
 		FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockAppInfoDelegate.m; sourceTree = "<group>"; };
 		FF8997771D0B585600B26051 /* MockBridgeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockBridgeInfo.h; sourceTree = "<group>"; };
@@ -1241,6 +1243,7 @@
 				FF80920E1D01FD35003FF617 /* ORKAnswerFormat+KeyboardUtilities.swift */,
 				FF10F4DD1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.h */,
 				FF10F4DE1D244ACE005C9BB4 /* ORKCollectionResult+SBAExtensions.m */,
+				FF882F081E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift */,
 			);
 			name = RKExtensions;
 			sourceTree = "<group>";
@@ -1930,6 +1933,7 @@
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
+				FF882F091E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift in Sources */,
 				FBAD11671CADCFE5005611D0 /* SBATrackedDataObjectCollection.swift in Sources */,
 				FB14FFDE1C766DF100E0D5AF /* SBAConsentSection.swift in Sources */,
 				804B30AF1CEA6CB4008CEA89 /* SBAJSONObject.m in Sources */,
