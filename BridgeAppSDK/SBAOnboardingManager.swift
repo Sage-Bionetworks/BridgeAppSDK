@@ -34,14 +34,40 @@
 import Foundation
 import ResearchKit
 
+/**
+ The reason why the user is being onboarded.
+ */
 public enum SBAOnboardingTaskType: String {
-    case registration, login, reconsent
     
+    /**
+     New participant who needs to be registered and (if applicable) consented.
+    */
+    case registration   = "registration"
+    
+    /**
+     Existing participant who is signing in with an existing account that needs
+     to login on a new device.
+    */
+    case login          = "login"
+    
+    /**
+     An existing participant who is signed in but has not consented to a new 
+     consent that is required (due to changes in the IRB).
+    */
+    case reconsent      = "reconsent"
+    
+    /**
+     List of all the types.
+    */
     public static var all: [SBAOnboardingTaskType] {
         return [.registration, .login, .reconsent]
     }
 }
 
+/**
+ The onboarding manager can be used with a json file that defines the different onboarding sections.
+ This manager will vend the sections that are required for each different `SBAOnboardingTaskType`.
+ */
 open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
     open var sections: [SBAOnboardingSection]?
@@ -64,13 +90,15 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     /**
      Returns an initialized task view controller for the given task type with this manager as its delegate.
+     @param  onboardingTaskType     The task type for this view controller
+     @return                        A new task view controller
     */
-    open func initializeTaskViewController(onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
+    open func initializeTaskViewController(for onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
         guard let sections = self.sections else { return nil }
         
         // Get the steps from the sections
         let steps: [ORKStep] = sections.mapAndFilter({
-            self.steps(section: $0, onboardingTaskType: onboardingTaskType)
+            self.steps(for: $0, with: onboardingTaskType)
         }).flatMap({$0})
         
         // Create the task view controller
@@ -91,8 +119,11 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     /**
      Convenience method for getting the section for a given section type.
+     
+     @param     sectionType     The section type
+     @return                    The onboarding section for this section type
     */
-    open func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
+    open func section(for sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
         return self.sections?.find({ $0.onboardingSectionType == sectionType })
     }
     
@@ -100,9 +131,12 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
      Get the steps that should be included for a given `SBAOnboardingSection` and `SBAOnboardingTaskType`.
      By default, this will return the steps created using the default onboarding survey factory for that section
      or nil if the steps for that section should not be included for the given task.
+     
+     @param     section               The onboarding section
+     @param     onboardingTaskType    The task type
      @return    Optional array of `ORKStep`
     */
-    open func steps(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
+    open func steps(for section: SBAOnboardingSection, with onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         // Check to see that the steps for this section should be included
         guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
@@ -150,6 +184,9 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     /**
      Define the rules for including a given section in a given task type.
+     
+     @param     section              The section to be included
+     @param     onboardingTaskType   The onboarding task type
      @return    `true` if the `SBAOnboardingSection` should be included for this `SBAOnboardingTaskType`
     */
     open func shouldInclude(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> Bool {

@@ -181,6 +181,7 @@
 		FF8359231D6FACED0028B899 /* SBADirectNavigationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
 		FF882F091E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF882F081E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift */; };
+		FF882F221E173DB7002CFB63 /* SBAFormProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF882F211E173DB7002CFB63 /* SBAFormProtocol.swift */; };
 		FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */; };
 		FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997781D0B585600B26051 /* MockBridgeInfo.m */; };
 		FF8997931D0B589500B26051 /* MockUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997921D0B589500B26051 /* MockUser.m */; };
@@ -610,6 +611,7 @@
 		FF8359221D6FACED0028B899 /* SBADirectNavigationRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADirectNavigationRule.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF882F081E16FC0F002CFB63 /* ORKTask+SBAExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTask+SBAExtensions.swift"; sourceTree = "<group>"; };
+		FF882F211E173DB7002CFB63 /* SBAFormProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAFormProtocol.swift; sourceTree = "<group>"; };
 		FF8997581D0B3B9800B26051 /* MockAppInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockAppInfoDelegate.h; sourceTree = "<group>"; };
 		FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockAppInfoDelegate.m; sourceTree = "<group>"; };
 		FF8997771D0B585600B26051 /* MockBridgeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockBridgeInfo.h; sourceTree = "<group>"; };
@@ -809,6 +811,7 @@
 				FF5CDF331DDE8D1800117218 /* AnswerFormat */,
 				FBE1A9701CAB328800F1F584 /* Step */,
 				FBE1A96F1CAB327700F1F584 /* Task */,
+				FF882F211E173DB7002CFB63 /* SBAFormProtocol.swift */,
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
 				FB84392E1C7519340086E961 /* SBASurveyItem.swift */,
 				FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */,
@@ -1980,6 +1983,7 @@
 				FF63D0CA1CCFF517007ADEE5 /* SBAWebViewController.swift in Sources */,
 				FB6BA0951C7CDA6000C9903F /* SBAInstructionStep.swift in Sources */,
 				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
+				FF882F221E173DB7002CFB63 /* SBAFormProtocol.swift in Sources */,
 				FF2729191D92066E00956CFB /* SBAConsentSection+Dictionary.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,

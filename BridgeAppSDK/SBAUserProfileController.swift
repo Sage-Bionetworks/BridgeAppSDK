@@ -33,9 +33,17 @@
 
 import Foundation
 
+/**
+ Protocols for sharing functionality between different classes that do not share inheritance.
+ This set of protocols are used to handle account access.
+ */
 public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter {
 }
 
+/**
+ The `SBAAccountController`can be attached to an `ORKStepViewController` that implements account management
+ functionality and uses a shared method for alerting the user when there is a problem.
+ */
 public protocol SBAAccountController: class, SBASharedInfoController, SBAAlertPresenter, SBALoadingViewPresenter {
     var failedValidationMessage: String { get }
     var failedRegistrationTitle: String { get }
@@ -43,6 +51,9 @@ public protocol SBAAccountController: class, SBASharedInfoController, SBAAlertPr
 
 extension SBAAccountController {
     
+    /**
+     Handle failed account validation by displaying a message string.
+    */
     func handleFailedValidation(_ reason: String? = nil) {
         let message = reason ?? failedValidationMessage
         self.hideLoadingView({ [weak self] in
@@ -50,12 +61,19 @@ extension SBAAccountController {
         })
     }
     
+    /**
+     Handle a failed registration or login step by displaying the bridge error message.
+    */
     func handleFailedRegistration(_ error: Error) {
         let message = (error as NSError).localizedBridgeErrorMessage
         handleFailedValidation(message)
     }
 }
 
+/**
+ For any given result, get the result associated with the given `SBAProfileInfoOption`.
+ This could be used in both updating demographics from a user profile and in onboarding.
+ */
 extension SBAResearchKitResultConverter {
     
     // MARK: Results

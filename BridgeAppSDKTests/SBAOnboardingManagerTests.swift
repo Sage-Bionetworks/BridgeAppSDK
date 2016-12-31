@@ -228,11 +228,11 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     func checkOnboardingSteps(_ sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         let manager = MockOnboardingManager(jsonNamed: "Onboarding")
-        let section = manager?.section(onboardingSectionType: sectionType)
+        let section = manager?.section(for: sectionType)
         XCTAssertNotNil(section, "sectionType:\(sectionType) taskType:\(taskType)")
         guard section != nil else { return  nil}
         
-        let steps = manager?.steps(section: section!, onboardingTaskType: taskType)
+        let steps = manager?.steps(for: section!, with: taskType)
         XCTAssertNotNil(steps, "sectionType:\(sectionType) taskType:\(taskType)")
         
         return steps

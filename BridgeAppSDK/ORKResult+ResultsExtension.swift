@@ -164,10 +164,10 @@ extension ORKStepResult {
 
 extension ORKStep {
     @objc(stepResultWithBridgeDictionary:)
-    public func stepResult(bridgeDictionary: [String: AnyObject]) -> ORKStepResult {
+    public func stepResult(with bridgeDictionary: [String: AnyObject]) -> ORKStepResult {
         
         // Populate the result using the answer map
-        let stepResult = self.stepResult(answerMap: bridgeDictionary[kAnswerMapKey] as? [String: AnyObject])
+        let stepResult = self.stepResult(with: bridgeDictionary[kAnswerMapKey] as? [String: AnyObject])
         
         // Add the start/end date
         if let startDateString = bridgeDictionary[kStartDateKey] as? String {

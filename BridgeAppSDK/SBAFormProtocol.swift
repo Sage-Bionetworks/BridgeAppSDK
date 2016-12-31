@@ -1,5 +1,5 @@
 //
-//  SBAProfileFormStep.swift
+//  SBAFormProtocol.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -34,34 +34,23 @@
 import ResearchKit
 
 /**
- The profile step can be used to map certain form items to a predefined list of 
- `SBAProfileInfoOption` options. These values are often included on the registration
- form and/or the consent review form and are included here as common demographics
- that many research studies include.
+ A class that conforms to the properties of the `ORKFormStep` but does not require
+ inheritance from `ORKFormStep`
  */
-open class SBAProfileFormStep: ORKFormStep, SBAProfileInfoForm {
-    
-    open var shouldConfirmPassword: Bool {
-        return false
+@objc
+public protocol SBAFormProtocol : class {
+    var identifier: String { get }
+    var title: String? { get set }
+    var text: String? { get set }
+    var formItems: [ORKFormItem]? { get set }
+    init(identifier: String)
+}
+
+extension SBAFormProtocol {
+    public func formItemForIdentifier(_ identifier: String) -> ORKFormItem? {
+        return self.formItems?.find({ $0.identifier == identifier })
     }
-    
-    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
-        return []
-    }
-    
-    public override required init(identifier: String) {
-        super.init(identifier: identifier)
-        commonInit(inputItem: nil, factory:nil)
-    }
-    
-    public init(inputItem: SBASurveyItem, factory: SBASurveyFactory? = nil) {
-        super.init(identifier: inputItem.identifier)
-        commonInit(inputItem: inputItem, factory:factory)
-    }
-    
-    // MARK: NSCoding
-    
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+}
+
+extension ORKFormStep: SBAFormProtocol {
 }

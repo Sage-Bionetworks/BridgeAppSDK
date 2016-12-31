@@ -379,7 +379,7 @@ public let SBAMainStoryboardName = "Main"
     open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
         guard shouldShowOnboarding() else { return }
         guard let onboardingManager = onboardingManager(for: onboardingTaskType),
-            let taskViewController = onboardingManager.initializeTaskViewController(onboardingTaskType: onboardingTaskType)
+            let taskViewController = onboardingManager.initializeTaskViewController(for: onboardingTaskType)
         else {
             assertionFailure("Failed to create an onboarding manager.")
             return

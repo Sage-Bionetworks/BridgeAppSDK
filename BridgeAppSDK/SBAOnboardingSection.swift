@@ -34,18 +34,71 @@
 import Foundation
 import ResearchKit
 
+/**
+ Onboarding can be broken into different sections. Which section is required depends upon the 
+ type of onboarding.
+ */
 public enum SBAOnboardingSectionBaseType: String {
     
+    /**
+     Section to include for login with a previously registered account.
+     
+     Included with `SBAOnboardingTaskType.login`
+    */
     case login              = "login"
+    
+    /**
+     Section to include for checking a potential participant's eligibility.
+     Included with `SBAOnboardingTaskType.registration`
+    */
     case eligibility        = "eligibility"
+    
+    /**
+     Section to include for consenting a user. Either because the user is registering
+     a new account or because there is a new consent document that the user must accept to
+     continue participating in the study. Included with all onboarding types.
+     */
     case consent            = "consent"
+    
+    /**
+     Section to include to register a new account.
+     Included with `SBAOnboardingTaskType.registration`
+     */
     case registration       = "registration"
+    
+    /**
+     Section to include if a passcode is to be setup for the app to lock the screen.
+     Included with all types if there isn't already a passcode setup.
+    */
     case passcode           = "passcode"
+    
+    /**
+     Section to include during registration to allow the user to acknowledge that they have
+     verified their email address.
+     Included with `SBAOnboardingTaskType.registration`
+    */
     case emailVerification  = "emailVerification"
+    
+    /**
+     Section to include to setup any permissions that are included with either login or 
+     registration.
+    */
     case permissions        = "permissions"
+    
+    /**
+     Additional profile information is included if this is a new user.
+     Included with `SBAOnboardingTaskType.registration`
+    */
     case profile            = "profile"
+    
+    /**
+     An optional completion section that is included wioth either login or registration.
+    */
     case completion         = "completion"
     
+    /**
+     The sort order for the sections.
+    */
     func ordinal() -> Int {
         let order:[SBAOnboardingSectionBaseType] = SBAOnboardingSectionBaseType.all
         guard let ret = order.index(of: self) else {
@@ -55,6 +108,9 @@ public enum SBAOnboardingSectionBaseType: String {
         return ret
     }
     
+    /**
+     List of all the sections include in the base types
+    */
     public static var all: [SBAOnboardingSectionBaseType] {
         return [.login,
                 .eligibility,
@@ -68,6 +124,9 @@ public enum SBAOnboardingSectionBaseType: String {
     }
 }
 
+/**
+ Enum for extending the base sections defined in this SDK.
+ */
 public enum SBAOnboardingSectionType {
     
     case base(SBAOnboardingSectionBaseType)
@@ -113,9 +172,25 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
     }
 }
 
-public protocol SBAOnboardingSection {
+/**
+ Protocol for defining an onboarding section.
+ */
+public protocol SBAOnboardingSection: NSSecureCoding {
+    
+    /**
+     The onboarding section type for this section. Determines into which types of onboarding
+     this section should be included.
+    */
     var onboardingSectionType: SBAOnboardingSectionType? { get }
+    
+    /**
+     The survey factory to be used by default with this section.
+    */
     func defaultOnboardingSurveyFactory() -> SBASurveyFactory
+    
+    /**
+     A dictionary representation for this class that can be used to encode it
+    */
     func dictionaryRepresentation() -> [AnyHashable: Any]
 }
 

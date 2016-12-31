@@ -33,21 +33,25 @@
 
 import ResearchKit
 
+/**
+ Methods for returning a default result for a given type of `ORKStep`. This is used in 
+ unit testing and for data tracking.
+ */
 extension ORKStep {
     
     public func defaultStepResult() -> ORKStepResult {
-        return stepResult(answerMap: nil)
+        return stepResult(with: nil)
     }
     
     @objc(stepResultWithAnswerMap:)
-    public func stepResult(answerMap: [String: Any]?) -> ORKStepResult {
+    public func stepResult(with answerMap: [String: Any]?) -> ORKStepResult {
         return ORKStepResult(stepIdentifier: self.identifier, results: nil)
     }
 }
 
 extension ORKFormStep {
-    override public func stepResult(answerMap: [String: Any]?) -> ORKStepResult {
-        let stepResult = super.stepResult(answerMap: answerMap)
+    override public func stepResult(with answerMap: [String: Any]?) -> ORKStepResult {
+        let stepResult = super.stepResult(with: answerMap)
         stepResult.results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
             return formItem.questionResult(identifier: formItem.identifier, answer: answerMap?[formItem.identifier])
         })
@@ -56,8 +60,8 @@ extension ORKFormStep {
 }
 
 extension ORKQuestionStep {
-    override public func stepResult(answerMap: [String: Any]?) -> ORKStepResult {
-        let stepResult = super.stepResult(answerMap: answerMap)
+    override public func stepResult(with answerMap: [String: Any]?) -> ORKStepResult {
+        let stepResult = super.stepResult(with: answerMap)
         if let answerFormat = self.answerFormat as? SBAQuestionResultMapping,
             let questionResult = answerFormat.questionResult(identifier: self.identifier, answer: answerMap?[self.identifier]) {
             stepResult.results = [questionResult]

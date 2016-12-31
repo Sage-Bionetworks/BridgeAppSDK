@@ -33,6 +33,11 @@
 
 import ResearchKit
 
+/**
+ The consent sharing step is used to determine the sharing scope for consent.
+ This allows the user to share their results *only* with the research team 
+ running the study or else more broadly with other researchers.
+ */
 open class SBAConsentSharingStep: ORKConsentSharingStep, SBALearnMoreActionStep {
     
     public var learnMoreAction: SBALearnMoreAction?

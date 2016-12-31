@@ -33,6 +33,10 @@
 
 import ResearchKit
 
+/**
+ The `SBAProfileInfoOption` enum includes the list of demographics and account 
+ registration items that are commonly required by research studies.
+ */
 public enum SBAProfileInfoOption : String {
     case email                  = "email"
     case password               = "password"
@@ -49,6 +53,9 @@ public enum SBAProfileInfoOption : String {
     case sleepTime              = "sleepTime"
 }
 
+/**
+ List of possible errors for a given stage of onboarding
+ */
 enum SBAProfileInfoOptionsError: Error {
     case missingRequiredOptions
     case missingEmail
@@ -58,48 +65,66 @@ enum SBAProfileInfoOptionsError: Error {
     case unrecognizedSurveyItemType
 }
 
-struct SBAExternalIDOptions {
+/**
+ Protocol for extending all the profile info steps (used by the factory to create the
+ appropriate default form items).
+ */
+public protocol SBAProfileInfoForm: SBAFormProtocol {
     
-    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
-    static let defaultKeyboardType: UIKeyboardType = .asciiCapable
+    /**
+     Should this form step include password confirmation.
+     */
+    var shouldConfirmPassword: Bool { get }
     
-    let autocapitalizationType: UITextAutocapitalizationType
-    let keyboardType: UIKeyboardType
+    /**
+     Used in common initialization to get the default options if the included options are nil.
+     */
+    func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption]
+}
+
+/**
+ Shared factory methods for creating profile form steps.
+ */
+extension SBAProfileInfoForm {
     
-    init() {
-        self.autocapitalizationType = SBAExternalIDOptions.defaultAutocapitalizationType
-        self.keyboardType = SBAExternalIDOptions.defaultKeyboardType
+    public var options: [SBAProfileInfoOption]? {
+        return self.formItems?.mapAndFilter({ SBAProfileInfoOption(rawValue: $0.identifier) })
     }
     
-    init(autocapitalizationType: UITextAutocapitalizationType, keyboardType: UIKeyboardType) {
-        self.autocapitalizationType = autocapitalizationType
-        self.keyboardType = keyboardType
+    public func formItemForProfileInfoOption(_ profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
+        return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
     }
     
-    init(options: [AnyHashable: Any]?) {
-        self.autocapitalizationType = {
-            if let autocap = options?["autocapitalizationType"] as? String {
-                 return UITextAutocapitalizationType(key: autocap)
-            }
-            else {
-                return SBAExternalIDOptions.defaultAutocapitalizationType
-            }
-        }()
-        self.keyboardType = {
-            if let keyboard = options?["keyboardType"] as? String {
-                return UIKeyboardType(key: keyboard)
-            }
-            else {
-                return SBAExternalIDOptions.defaultKeyboardType
-            }
-        }()
+    func commonInit(inputItem: SBASurveyItem?, factory: SBASurveyFactory?) {
+        self.title = inputItem?.stepTitle
+        self.text = inputItem?.stepText
+        if let formStep = self as? ORKFormStep {
+            formStep.footnote = inputItem?.stepFootnote
+        }
+        let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
+        self.formItems = options.makeFormItems(shouldConfirmPassword: self.shouldConfirmPassword, factory: factory)
     }
 }
 
+/**
+ Model object for converting profile form items into `ORKFormItem` using a string key that
+ maps to `SBAProfileInfoOption`
+ */
 public struct SBAProfileInfoOptions {
     
+    /**
+     Parsed list of common options to be included with this form.
+    */
     public let includes: [SBAProfileInfoOption]
+    
+    /**
+     iVar for storing custom options
+    */
     public let customOptions: [Any]
+    
+    /**
+     The Auto-capitalization and Keyboard for entering the external ID (if applicable)
+    */
     let externalIDOptions: SBAExternalIDOptions
     
     public init(includes: [SBAProfileInfoOption]) {
@@ -144,7 +169,10 @@ public struct SBAProfileInfoOptions {
         self.customOptions = customOptions
     }
     
-    func makeFormItems(surveyItemType: SBASurveyItemType, factory:SBASurveyFactory? = nil) -> [ORKFormItem] {
+    /**
+     Factory method for converting to `ORKFormItem` array.
+    */
+    func makeFormItems(shouldConfirmPassword: Bool, factory:SBASurveyFactory? = nil) -> [ORKFormItem] {
         
         var formItems: [ORKFormItem] = []
         
@@ -160,7 +188,7 @@ public struct SBAProfileInfoOptions {
                 formItems.append(formItem)
                 
                 // confirmation
-                if (surveyItemType == .account(.registration)) {
+                if (shouldConfirmPassword) {
                     let confirmFormItem = makeConfirmationFormItem(formItem: formItem, answerFormat: answerFormat)
                     formItems.append(confirmFormItem)
                 }
@@ -447,49 +475,6 @@ public struct SBAProfileInfoOptions {
                                    answerFormat: answerFormat,
                                    optional: false)
         return formItem
-    }
-}
-
-public protocol SBAFormProtocol : class {
-    var identifier: String { get }
-    var title: String? { get set }
-    var text: String? { get set }
-    var formItems: [ORKFormItem]? { get set }
-    init(identifier: String)
-}
-
-extension SBAFormProtocol {
-    public func formItemForIdentifier(_ identifier: String) -> ORKFormItem? {
-        return self.formItems?.find({ $0.identifier == identifier })
-    }
-}
-
-extension ORKFormStep: SBAFormProtocol {
-}
-
-public protocol SBAProfileInfoForm : SBAFormProtocol {
-    var surveyItemType: SBASurveyItemType { get }
-    func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption]
-}
-
-extension SBAProfileInfoForm {
-    
-    public var options: [SBAProfileInfoOption]? {
-        return self.formItems?.mapAndFilter({ SBAProfileInfoOption(rawValue: $0.identifier) })
-    }
-    
-    public func formItemForProfileInfoOption(_ profileInfoOption: SBAProfileInfoOption) -> ORKFormItem? {
-        return self.formItems?.find({ $0.identifier == profileInfoOption.rawValue })
-    }
-    
-    func commonInit(inputItem: SBASurveyItem?, factory: SBASurveyFactory?) {
-        self.title = inputItem?.stepTitle
-        self.text = inputItem?.stepText
-        if let formStep = self as? ORKFormStep {
-            formStep.footnote = inputItem?.stepFootnote
-        }
-        let options = SBAProfileInfoOptions(inputItem: inputItem) ?? SBAProfileInfoOptions(includes: defaultOptions(inputItem))
-        self.formItems = options.makeFormItems(surveyItemType: self.surveyItemType, factory: factory)
     }
 }
 

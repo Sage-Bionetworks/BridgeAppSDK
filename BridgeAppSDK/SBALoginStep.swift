@@ -33,16 +33,20 @@
 
 import ResearchKit
 
+/**
+ The `SBALoginStep` allows for login of an existing user via email/password
+ */
+@objc
 open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
-
-    open var surveyItemType: SBASurveyItemType {
-        return .account(.login)
+    
+    open var shouldConfirmPassword: Bool {
+        return false
     }
     
-    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+    public func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.email, .password]
     }
-    
+
     public override required init(identifier: String) {
         super.init(identifier: identifier)
         commonInit(inputItem: nil, factory: nil)
