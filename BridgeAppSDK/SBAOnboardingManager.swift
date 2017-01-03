@@ -287,5 +287,22 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         guard let encodableSections = self.sections?.map({ $0.dictionaryRepresentation() as NSDictionary }) else { return }
         aCoder.encode(encodableSections, forKey: "sections")
     }
+    
+    // MARK: Deprecated methods
+    
+    @available(*, deprecated)
+    open func initializeTaskViewController(onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
+        return initializeTaskViewController(for: onboardingTaskType)
+    }
+    
+    @available(*, deprecated)
+    open func section(onboardingSectionType sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
+        return section(for: sectionType)
+    }
+    
+    @available(*, deprecated)
+    open func steps(section: SBAOnboardingSection, onboardingTaskType: SBAOnboardingTaskType) -> [ORKStep]? {
+        return steps(for: section, with: onboardingTaskType)
+    }
 
 }
