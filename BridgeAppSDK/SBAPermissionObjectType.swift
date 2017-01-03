@@ -118,6 +118,10 @@ open class SBAPermissionObjectTypeFactory: NSObject {
     }
 }
 
+/**
+ Base class for creating a permission type object. This object stores information about how
+ to display the permission (of a given type).
+ */
 open class SBAPermissionObjectType: SBADataObject {
     
     open var permissionType: SBAPermissionTypeIdentifier {
@@ -182,6 +186,10 @@ extension UIUserNotificationType {
     }
 }
 
+/**
+ The `SBANotificationPermissionObjectType` is used to define information for permission
+ handling that is specific to requesting permission to send the user notifications.
+ */
 public final class SBANotificationPermissionObjectType: SBAPermissionObjectType {
     
     class func localNotifications() -> SBANotificationPermissionObjectType {
@@ -228,6 +236,10 @@ public final class SBANotificationPermissionObjectType: SBAPermissionObjectType 
     }
 }
 
+/**
+ The `SBALocationPermissionObjectType` is used to define information for permission
+ handling that is specific to requesting permission to access the user's location.
+ */
 public final class SBALocationPermissionObjectType: SBAPermissionObjectType {
     
     public dynamic var always: Bool = true
@@ -243,8 +255,15 @@ public final class SBALocationPermissionObjectType: SBAPermissionObjectType {
     }
 }
 
+/**
+ The `SBAHealthKitPermissionObjectType` is used to define information for permission
+ handling that is specific to requesting permission to access the user's health data.
+ */
 public final class SBAHealthKitPermissionObjectType: SBAPermissionObjectType {
     
+    /**
+     The collection of health kit data types that are being requested.
+    */
     public dynamic var healthKitTypes: [SBAHealthKitProfileObject]?
     
     public var writeTypes: Set<HKSampleType>? {
@@ -307,6 +326,10 @@ public final class SBAHealthKitPermissionObjectType: SBAPermissionObjectType {
     }
 }
 
+/**
+ Model object for storing iformation about each healthkit type for which the app needs 
+ read/write accesss.
+ */
 public final class SBAHealthKitProfileObject: SBADataObject {
     
     public dynamic var profileKey: String?

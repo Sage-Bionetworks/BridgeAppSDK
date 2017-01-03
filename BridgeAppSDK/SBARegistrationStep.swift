@@ -40,11 +40,11 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     static let defaultPasswordMinLength = 4
     static let defaultPasswordMaxLength = 16
     
-    open var surveyItemType: SBASurveyItemType {
-        return .account(.registration)
+    public var shouldConfirmPassword: Bool {
+        return true
     }
     
-    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+    public func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.name, .email, .password]
     }
     

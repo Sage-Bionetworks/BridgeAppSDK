@@ -37,7 +37,7 @@
                                        "title"         : "Registration",
                                        "text"          : "Please provide a unique email address and password to create a secure account.",
                                        "footnote"      : "Sage Bionetworks, a non-profit biomedical research institute, is helping to collect data for this study and distribute it to the study investigators and other researchers.",
-                                       "items"         : ["name", "email", "password"]
+                                       "items"         : ["email", "password"]
                                        }
                                        ]
                   },
@@ -60,6 +60,28 @@
                              {
                              "identifier"   : "emailVerification",
                              "type"         : "emailVerification"
+                             }
+                             ]
+                  },
+                  
+                  {
+                  "onboardingType" : "profile",
+                  "steps" : [
+                             {
+                             "identifier"   : "gender",
+                             "type"         : "profile",
+                             "prompt"       : "What was your sex at birth?",
+                             "items"        : ["gender"]
+                             },
+                             {
+                             "identifier"   : "size",
+                             "type"         : "profile",
+                             "items"        : ["height","weight"]
+                             },
+                             {
+                             "identifier"   : "sleep",
+                             "type"         : "profile",
+                             "items"        : ["wakeTime","sleepTime"]
                              }
                              ]
                   },

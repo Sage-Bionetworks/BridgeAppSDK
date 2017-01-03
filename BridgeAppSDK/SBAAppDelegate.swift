@@ -57,8 +57,26 @@ public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDeleg
     func showAppropriateViewController(animated: Bool)
 }
 
+/**
+ Default name for a embedded json file that can be used to create a `SBAOnboardingManager`.
+ (See Onboarding.json in the sample app for an example.)
+ */
 public let SBAOnboardingJSONFilename = "Onboarding"
+
+/**
+ Default name for the storyboard that defines the view controllers to display to a new user
+ who has not registered or logged in. If this is not applicable to your application, you should
+ override `showOnboardingViewController` to set a different view controller as the "root" using
+ the method `transition(toRootViewController:state:animated:)`.
+ */
 public let SBAStudyOverviewStoryboardName = "StudyOverview"
+
+/**
+ Default name for the storyboard that defines the view controllers to display to a user who
+ has completed registration. If this is not applicable to your application, you should
+ override `showMainViewController` to set a different view controller as the "root" using
+ the method `transition(toRootViewController:state:animated:)`.
+ */
 public let SBAMainStoryboardName = "Main"
 
 @UIApplicationMain
@@ -361,7 +379,7 @@ public let SBAMainStoryboardName = "Main"
     open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
         guard shouldShowOnboarding() else { return }
         guard let onboardingManager = onboardingManager(for: onboardingTaskType),
-            let taskViewController = onboardingManager.initializeTaskViewController(onboardingTaskType: onboardingTaskType)
+            let taskViewController = onboardingManager.initializeTaskViewController(for: onboardingTaskType)
         else {
             assertionFailure("Failed to create an onboarding manager.")
             return

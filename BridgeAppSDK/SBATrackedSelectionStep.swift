@@ -325,7 +325,7 @@ class SBATrackedSelectionFormStep: ORKFormStep, SBATrackedSelectionFilter, SBATr
                 return self.defaultStepResult()
         }
         let answer: Any = (choices.count > 0) ? choices : noneChoiceValue
-        return stepResult(answerMap: [formItem.identifier : answer] )
+        return stepResult(with: [formItem.identifier : answer] )
     }
     
     // MARK: SBATrackedSelectionFilter

@@ -33,6 +33,10 @@
 
 import ResearchKit
 
+/**
+ Mapping used to define each section in the consent document. This is used for both 
+ visual consent and consent review.
+ */
 public protocol SBAConsentSection: class {
     var consentSectionType: SBAConsentSectionType { get }
     var sectionTitle: String? { get }

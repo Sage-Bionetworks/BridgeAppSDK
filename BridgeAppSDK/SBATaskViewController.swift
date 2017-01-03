@@ -74,6 +74,11 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     }
     fileprivate var _finishedOn: Date?
     
+    /**
+     A flag that can be used to mark results as having already been uploaded.
+    */
+    open var hasUploadedResults: Bool = false
+    
     open override var outputDirectory: URL? {
         get {
             if let superDirectory = super.outputDirectory {
@@ -303,4 +308,5 @@ open class SBATaskViewController: ORKTaskViewController, SBASharedInfoController
     open func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
         _internalDelegate?.taskViewController?(taskViewController, didChange: result)
     }
+    
 }

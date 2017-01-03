@@ -33,11 +33,28 @@
 
 import Foundation
 
+/**
+ Protocol for use in extending ResearchKit model objects and view controllers to 
+ process the results.
+ */
 public protocol SBAResearchKitResultConverter: class {
+    
+    /**
+     Returns an answer format finder that can be used to get the answer format for a 
+     given identifier.
+    */
     var answerFormatFinder: SBAAnswerFormatFinder? { get }
+    
+    /**
+     Find the result associated with a given identifier.
+    */
     func findResult(for identifier: String) -> ORKResult?
 }
 
+/**
+ The base class of a step view controller can be extended to return the step as a `SBAAnswerFormatFinder`
+ and to search for a form result as a subresult of this step view controller's `ORKStepResult`
+ */
 extension ORKStepViewController: SBAResearchKitResultConverter {
     
     public var answerFormatFinder: SBAAnswerFormatFinder? {
@@ -45,13 +62,21 @@ extension ORKStepViewController: SBAResearchKitResultConverter {
     }
     
     public func findResult(for identifier: String) -> ORKResult? {
+        // Use the answer format finder to find the result identifier associated with this result
         guard let resultIdentifier = self.answerFormatFinder?.resultIdentifier(for: identifier) else { return nil }
+        // If found, return the result from the results included in this step result
         return self.result?.result(forIdentifier: resultIdentifier.identifier)
     }
 }
 
+/**
+ Various convenience methods for converting a result into the appropriate object that defines that result.
+ */
 extension SBAResearchKitResultConverter {
     
+    /**
+     Look for an `ORKTimeOfDayQuestionResult` and get the date components from the result.
+    */
     public func timeOfDay(for identifier: String) -> DateComponents? {
         guard let result = self.findResult(for: identifier) as? ORKTimeOfDayQuestionResult
             else {
@@ -60,6 +85,10 @@ extension SBAResearchKitResultConverter {
         return result.dateComponentsAnswer
     }
     
+    /**
+     If the associated identifier can be mapped to a result from an `HKQuantitySample` then
+     return the object created from that result.
+    */
     public func quantitySample(for identifier: String) -> HKQuantitySample? {
         guard let profileResult = findResult(for: identifier) as? ORKQuestionResult,
             let quantity = quantity(for: identifier),
@@ -70,6 +99,9 @@ extension SBAResearchKitResultConverter {
         return HKQuantitySample(type: quantityType, quantity: quantity, start: profileResult.startDate, end: profileResult.endDate)
     }
     
+    /**
+     Get the `HKQuantity` associated with a given result to an `ORKFormItem` with a matching type.
+    */
     public func quantity(for identifier: String) -> HKQuantity? {
         guard let profileResult = findResult(for: identifier) as? ORKQuestionResult,
             let answer = profileResult.jsonSerializedAnswer(),
@@ -81,6 +113,9 @@ extension SBAResearchKitResultConverter {
         return HKQuantity(unit: HKUnit(from: unitString), doubleValue: doubleValue)
     }
     
+    /**
+     Get the `HKQuantityType` associated with a given answer format with a matching type.
+    */
     public func quantityType(for identifier: String) -> HKQuantityType? {
         if let answerFormat = self.answerFormatFinder?.find(for: identifier) as? ORKHealthKitQuantityTypeAnswerFormat {
             return answerFormat.quantityType
@@ -98,6 +133,10 @@ extension SBAResearchKitResultConverter {
         return HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: identifier))
     }
     
+    /**
+     Convert an `ORKHealthKitCharacteristicTypeAnswerFormat` survey question into 
+     an `HKBiologicalSex` enum value.
+    */
     public func convertBiologicalSex(for identifier:String) -> HKBiologicalSex? {
         guard let result = self.findResult(for: identifier) as? ORKChoiceQuestionResult
             else { return nil }
@@ -115,6 +154,9 @@ extension SBAResearchKitResultConverter {
         }
     }
     
+    /**
+     Convert an `ORKTextQuestionResult` for a given result into a string.
+    */
     public func textAnswer(for identifier:String) -> String? {
         guard let result = self.findResult(for: identifier) as? ORKTextQuestionResult else { return nil }
         return result.textAnswer

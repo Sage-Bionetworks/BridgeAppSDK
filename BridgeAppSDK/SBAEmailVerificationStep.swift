@@ -33,6 +33,10 @@
 
 import ResearchKit
 
+/**
+ The `SBAEmailVerificationStep` is used to stop the user's progress through registration
+ until they confirm that they have verified their email address.
+ */
 open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController {
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -92,6 +96,10 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
     }
 }
 
+/**
+ The `SBAEmailVerificationStepViewController` works with the `SBAEmailVerificationStep` to handle
+ email verification, change email, and resend verification email.
+ */
 open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAAccountController {
     
     // MARK: SBASharedInfoController
@@ -143,16 +151,25 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         // Do nothing
     }
     
+    /**
+     Method for handling when the user taps the "Wrong email" button
+    */
     open func handleWrongEmailAction() {
         let task = ORKOrderedTask(identifier: "changeEmail", steps: [instantiateChangeEmailStep()])
         let taskVC = SBATaskViewController(task: task, taskRun: nil)
         self.present(taskVC, animated: true, completion: nil)
     }
     
+    /**
+     Method for instantiating the step used to display a change of email
+    */
     open func instantiateChangeEmailStep() -> ORKStep {
         return SBAChangeEmailStep(identifier: "changeEmail")
     }
     
+    /**
+     Method for handling when the user taps the "resend" button
+    */
     open func handleResendEmailAction() {
         showLoadingView()
         sharedUser.resendVerificationEmail { [weak self] (error) in
@@ -167,6 +184,11 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
 
 }
 
+/**
+ The `SBAEmailVerificationLearnMoreAction` shows an action sheet when the user taps the 
+ email verification "learn more" button. This button action is used to display options to
+ the user for handling problems with registration.
+ */
 @objc
 open class SBAEmailVerificationLearnMoreAction: SBALearnMoreAction {
     

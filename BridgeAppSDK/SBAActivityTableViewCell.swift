@@ -33,12 +33,30 @@
 
 import UIKit
 
+/**
+ Example base-level cell for displaying `SBBScheduledActivity` objects.
+ */
 open class SBAActivityTableViewCell: UITableViewCell {
     
+    /**
+     The title label.
+    */
     @IBOutlet open var titleLabel: UILabel!
+    
+    /**
+     The subtitle label.
+    */
     @IBOutlet open var subtitleLabel: UILabel!
+    
+    /**
+     A label displaying the time of day when the activity is scheduled.
+    */
     @IBOutlet open var timeLabel: UILabel?
     
+    /**
+     Variable for setting whether or not the scheduled activity has been completed.
+     Use `didSet` override to implement custom UI if applicable.
+    */
     open var complete: Bool = false
 
 }

@@ -33,13 +33,17 @@
 
 import Foundation
 
+/**
+ The `SBAChangeEmailStep` is used to change a person's email address in case the user entered
+ their email incorrectly during registration.
+ */
 open class SBAChangeEmailStep: ORKFormStep {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
         let profileInfo = SBAProfileInfoOptions(includes: [.email])
         self.title = Localization.localizedString("REGISTRATION_CHANGE_EMAIL_TITLE")
-        self.formItems = profileInfo.makeFormItems(surveyItemType: .account(.emailVerification))
+        self.formItems = profileInfo.makeFormItems(shouldConfirmPassword: false)
         self.isOptional = false
     }
     

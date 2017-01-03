@@ -1,5 +1,5 @@
 //
-//  SBAProfileFormStep.swift
+//  ORKTask+SBAExtensions.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -31,37 +31,27 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+
 import ResearchKit
 
-/**
- The profile step can be used to map certain form items to a predefined list of 
- `SBAProfileInfoOption` options. These values are often included on the registration
- form and/or the consent review form and are included here as common demographics
- that many research studies include.
- */
-open class SBAProfileFormStep: ORKFormStep, SBAProfileInfoForm {
+extension ORKTask {
     
-    open var shouldConfirmPassword: Bool {
-        return false
-    }
-    
-    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
-        return []
-    }
-    
-    public override required init(identifier: String) {
-        super.init(identifier: identifier)
-        commonInit(inputItem: nil, factory:nil)
-    }
-    
-    public init(inputItem: SBASurveyItem, factory: SBASurveyFactory? = nil) {
-        super.init(identifier: inputItem.identifier)
-        commonInit(inputItem: inputItem, factory:factory)
-    }
-    
-    // MARK: NSCoding
-    
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    /**
+     Look to see if the given step is both of the "completion" type and that it is
+     the last step in the task.
+     @return    `YES` if these conditions are met
+    */
+    public func isCompletion(step: ORKStep, with taskResult: ORKTaskResult) -> Bool {
+        let isCompletionType: Bool = {
+            if let directStep = step as? SBAInstructionStep {
+                return directStep.isCompletionStep
+            }
+            return step is ORKCompletionStep
+        }()
+        guard isCompletionType, self.step(after: step, with: taskResult) == nil
+        else {
+            return false
+        }
+        return true
     }
 }

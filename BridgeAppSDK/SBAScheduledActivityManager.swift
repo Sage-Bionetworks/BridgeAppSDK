@@ -34,6 +34,10 @@
 import ResearchKit
 import BridgeSDK
 
+/**
+ Enum defining the default sections used by the `SBAScheduledActivityManager` to display 
+ scheduled activities.
+ */
 public enum SBAScheduledActivitySection {
     case none
     case expiredYesterday
@@ -43,13 +47,46 @@ public enum SBAScheduledActivitySection {
     case comingUp
 }
 
+/**
+ UI Delegate for the data source.
+ */
 public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
+    
+    /**
+     Callback that a reload of the scheduled activities has finished.
+    */
     func reloadFinished(_ sender: Any?)
 }
 
-open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
+/**
+ Default data source handler for scheduled activities. This manager is intended to get `SBBScheduledActivity`
+ objects from the Bridge server and can present the associated tasks.
+ */
+open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
     
+    /**
+     The delegate is required for presenting tasks and refreshing the UI.
+    */
     open weak var delegate: SBAScheduledActivityManagerDelegate?
+    
+    /**
+     `SBABridgeInfo` instance. By default, this is the shared bridge info defined by the app delegate.
+     */
+    open var bridgeInfo: SBABridgeInfo! {
+        return _bridgeInfo
+    }
+    fileprivate var _bridgeInfo: SBABridgeInfo!
+    
+    /**
+     `SBAUserWrapper` instance. By default, this is the shared user defined by the app delegate.
+    */
+    open var user: SBAUserWrapper! {
+        return _user
+    }
+    fileprivate var _user: SBAUserWrapper!
+    
+    
+    // MARK: initializers
     
     public override init() {
         super.init()
@@ -63,30 +100,34 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     }
     
     func commonInit() {
+        guard let appDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate else { return }
+        _bridgeInfo = appDelegate.bridgeInfo
+        _user = appDelegate.currentUser
         self.daysAhead = self.bridgeInfo.cacheDaysAhead
         self.daysBehind = self.bridgeInfo.cacheDaysBehind
     }
+
+    // MARK: Data source management
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.shared.delegate as! SBAAppInfoDelegate
-    }()
-    
-    open var bridgeInfo: SBABridgeInfo {
-        return self.sharedBridgeInfo
-    }
-    
-    // Sections to display - this sets up the predicates for filtering activities
+    /**
+     Sections to display - this sets up the predicates for filtering activities
+    */
     open var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
     
-    // By default, this is an array of the activities fetched by the call to the server in `reloadData`
+    /**
+     By default, this is an array of the activities fetched by the call to the server in `reloadData`.
+    */
     open var activities: [SBBScheduledActivity] = []
     
-    // Number of days ahead to fetch
+    /**
+     Number of days ahead to fetch
+    */
     open var daysAhead: Int!
     
-    // Number of days behind to fetch
+    /**
+     Number of days behind to fetch
+    */
     open var daysBehind: Int!
-    
 
     // MARK: SBAScheduledActivityDataSource
     
@@ -188,6 +229,8 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     /**
      Called once the response from the server returns the scheduled activities.
+     
+     @param     scheduledActivities     The list of activities returned by the service.
      */
     open func load(scheduledActivities: [SBBScheduledActivity]) {
         
@@ -219,6 +262,8 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     /**
      Called on load to setup notifications for the returned scheduled activities.
+     
+     @param     scheduledActivities     The list of activities for which to schedule notifications
      */
     @objc(setupNotificationsForScheduledActivities:)
     open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
@@ -228,6 +273,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     /**
      Array of `SBBScheduledActivity` objects for a given table section
+     
+     @param     tableSection    The section index into the table (maps to IndexPath)
+     @return                    The list of `SBBScheduledActivity` objects for this table section.
      */
     @objc(scheduledActivitiesForTableSection:)
     open func scheduledActivities(for tableSection: Int) -> [SBBScheduledActivity] {
@@ -242,6 +290,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
 
     /**
      Predicate to use to filter the activities for a given table section
+     
+     @param     tableSection    The section index into the table (maps to IndexPath)
+     @return                    The predicate to use to filter the table section
      */
     @objc(filterPredicateForTableSection:)
     open func filterPredicate(for tableSection: Int) -> NSPredicate? {
@@ -283,6 +334,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     /**
      By default, a scheduled activity is available if it is available now or
      it is completed.
+     
+     @param     schedule    The schedule to check
+     @return                `YES` if the task can be run and `NO` if the task is scheduled for the future or expired.
      */
     open func isAvailable(schedule: SBBScheduledActivity) -> Bool {
         return schedule.isNow || schedule.isCompleted
@@ -291,6 +345,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     /**
      If a schedule is unavailable, then the user is shown an alert explaining when it will 
      become available.
+     
+     @param     schedule    The schedule to check
+     @return                The message to display in an alert for a schedule that is not currently available.
      */
     open func messageForUnavailableSchedule(_ schedule: SBBScheduledActivity) -> String {
         var scheduledTime: String!
@@ -311,6 +368,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     /**
      Get the scheduled activity that is associated with this task view controller.
+     
+     @param     taskViewController  The task view controller being displayed.
+     @return                        The schedule associated with this task view controller (if available)
      */
     @objc(scheduledActivityForTaskViewController:)
     open func scheduledActivity(for taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
@@ -324,14 +384,81 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
     
     /**
      Get the scheduled activity that is associated with this task identifier.
+     
+     @param     taskIdentifier  The task identifier for a given schedule
+     @return                    The task identifier associated with the given schedule (if available)
      */
     @objc(scheduledActivityForTaskIdentifier:)
     open func scheduledActivity(for taskIdentifier: String) -> SBBScheduledActivity? {
         return activities.find({ $0.taskIdentifier == taskIdentifier })
     }
+
+    
+    // MARK: ORKTaskViewControllerDelegate
+    
+    fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        // default behavior is to only record the task results if the task completed
+        if reason == ORKTaskViewControllerFinishReason.completed {
+            recordTaskResults(for: taskViewController)
+        }
+        else {
+            taskViewController.task?.resetTrackedDataChanges()
+        }
+        
+        taskViewController.dismiss(animated: true) {
+            self.offMainQueue.async {
+                self.deleteOutputDirectory(for: taskViewController)
+                self.debugPrintSandboxFiles()
+            }
+        }
+    }
+    
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        
+        // If cancel is disabled then hide on all but the first step
+        if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
+            stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        }
+        
+        // If it is the last step in the task *and* it's a completion step (not a step
+        // that might change the results) then record the task result. This allows the 
+        // results to be recorded and updated prior to ending the task and ensures that
+        // even if the user forgets to tap the "Done" button, their results will be 
+        // recorded.
+        if let step = stepViewController.step, let task = taskViewController.task,
+            task.isCompletion(step: step, with: taskViewController.result) {
+            recordTaskResults(for: taskViewController)
+        }
+    }
+    
+    
+    // MARK: Convenience methods
     
     /**
-     Delete the output directory.
+     Method for creating the task view controller. This is marked final with the intention that any class
+     that has a custom implementation should override one of the protected subclass methods used to
+     create the view controller.
+     
+     @param     schedule    The schedule to use to create the task
+     @return                The created task view controller
+    */
+    @objc(createTaskViewControllerForSchedule:)
+    public final func createTaskViewController(for schedule: SBBScheduledActivity) -> SBATaskViewController? {
+        let (inTask, inTaskRef) = createTask(for: schedule)
+        guard let task = inTask, let taskRef = inTaskRef else { return nil }
+        let taskViewController = instantiateTaskViewController(for: schedule, task: task, taskRef: taskRef)
+        setup(taskViewController: taskViewController, schedule: schedule, taskRef: taskRef)
+        return taskViewController
+    }
+    
+    // MARK: Protected subclass methods
+    
+    /**
+     Delete the output directory for a task once completed.
+     
+     @param     taskViewController  The task view controller being displayed.
      */
     @objc(deleteOutputDirectoryForTaskViewController:)
     open func deleteOutputDirectory(for taskViewController: ORKTaskViewController) {
@@ -344,87 +471,43 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         }
     }
     
-    // MARK: ORKTaskViewControllerDelegate
-    
-    fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
-    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        
-        if reason == ORKTaskViewControllerFinishReason.completed,
-            let schedule = scheduledActivity(for: taskViewController),
-            shouldRecordResult(for: schedule, taskViewController: taskViewController) {
+    fileprivate func debugPrintSandboxFiles() {
+        #if DEBUG
+        DispatchQueue.main.async {
+            let fileMan = FileManager.default
+            let homeDir = URL.init(string: NSHomeDirectory())
+            let directoryEnumerator = fileMan.enumerator(at: homeDir!, includingPropertiesForKeys: [URLResourceKey.nameKey, URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey], options: FileManager.DirectoryEnumerationOptions.init(rawValue:0), errorHandler: nil)
             
-            // Update any data stores and groups associated with this task
-            taskViewController.task?.commitTrackedDataChanges(user: sharedUser,
-                                                              taskResult: taskViewController.result,
-                                                              completion:handleDataGroupsUpdate)
-            
-            // Archive the results
-            let results = activityResults(for: schedule, taskViewController: taskViewController)
-            let archives = results.mapAndFilter({ archive(for: $0) })
-            SBADataArchive.encryptAndUploadArchives(archives)
-            
-            // Update the schedule on the server
-            update(schedule: schedule, taskViewController: taskViewController)
-        }
-        else {
-            taskViewController.task?.resetTrackedDataChanges()
-        }
-        
-        taskViewController.dismiss(animated: true) {
-            self.offMainQueue.async {
-                self.deleteOutputDirectory(for: taskViewController)
-                #if DEBUG
-                DispatchQueue.main.async {
-                        let fileMan = FileManager.default
-                        let homeDir = URL.init(string: NSHomeDirectory())
-                    let directoryEnumerator = fileMan.enumerator(at: homeDir!, includingPropertiesForKeys: [URLResourceKey.nameKey, URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey], options: FileManager.DirectoryEnumerationOptions.init(rawValue:0), errorHandler: nil)
-                        
-                        var mutableFileInfo = Dictionary<URL, Int>()
-                        while let originalURL = directoryEnumerator?.nextObject() as? URL {
-                            let fileURL = originalURL.resolvingSymlinksInPath();
-                            do {
-                                let urlResourceValues = try fileURL.resourceValues(forKeys: [URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey])
-                                if !urlResourceValues.isDirectory! {
-                                    let fileSizeOrNot = urlResourceValues.fileSize ?? -1
-                                    mutableFileInfo[fileURL] = fileSizeOrNot
-                                }
-                            } catch let error as NSError {
-                                debugPrint("Error: \(error.localizedDescription)")
-                            }
-                        }
-                    
-                        debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
-                        for fileURL in mutableFileInfo.keys {
-                            let fileSize = mutableFileInfo[fileURL]
-                            debugPrint("\(fileURL.path) size:\(fileSize)")
-                        };
+            var mutableFileInfo = Dictionary<URL, Int>()
+            while let originalURL = directoryEnumerator?.nextObject() as? URL {
+                let fileURL = originalURL.resolvingSymlinksInPath();
+                do {
+                    let urlResourceValues = try fileURL.resourceValues(forKeys: [URLResourceKey.isDirectoryKey, URLResourceKey.fileSizeKey])
+                    if !urlResourceValues.isDirectory! {
+                        let fileSizeOrNot = urlResourceValues.fileSize ?? -1
+                        mutableFileInfo[fileURL] = fileSizeOrNot
+                    }
+                } catch let error as NSError {
+                    debugPrint("Error: \(error.localizedDescription)")
                 }
-                #endif
             }
+            
+            debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
+            for fileURL in mutableFileInfo.keys {
+                let fileSize = mutableFileInfo[fileURL]
+                debugPrint("\(fileURL.path) size:\(fileSize)")
+            };
         }
+        #endif
     }
-    
-    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
-        
-        // If cancel is disabled then hide on all but the first step
-        if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
-            stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
-        }
-    }
-    
-    
-    // MARK: Convenience methods
-    @objc(createTaskViewControllerForSchedule:)
-    public final func createTaskViewController(for schedule: SBBScheduledActivity) -> SBATaskViewController? {
-        let (inTask, inTaskRef) = createTask(for: schedule)
-        guard let task = inTask, let taskRef = inTaskRef else { return nil }
-        let taskViewController = instantiateTaskViewController(for: schedule, task: task, taskRef: taskRef)
-        setup(taskViewController: taskViewController, schedule: schedule, taskRef: taskRef)
-        return taskViewController
-    }
-    
-    // MARK: Protected subclass methods
 
+    /**
+     Should the cancel button be hidden for this step?
+     
+     @param     step                The step to be displayed
+     @param     taskViewController  The task view controller being displayed.
+     @return                        `YES` if the cancel button should be hidden, otherwise `NO`
+    */
     @objc(shouldHideCancelForStep:taskViewController:)
     open func shouldHideCancel(for step: ORKStep, taskViewController: ORKTaskViewController) -> Bool {
         
@@ -445,6 +528,14 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return task.stepCount() == 1 || task.index(of: step) > 0;
     }
 
+    /**
+     Whether or not the task should be enabled. This is different from whether or not a task is "available"
+     in that it *only* applies to activities that are "greyed out" because they are expired, or because
+     the task does not allow multiple runs of a completed activity.
+     
+     @param     schedule    The schedule to check
+     @return                `YES` if this schedule is displayed as `enabled` (now or future)
+    */
     @objc(shouldShowTaskForSchedule:)
     open func shouldShowTask(for schedule: SBBScheduledActivity) -> Bool {
         // Allow user to perform a task again as long as the task is not expired
@@ -452,13 +543,28 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return !schedule.isExpired && (!schedule.isCompleted || taskRef.allowMultipleRun)
     }
     
+    /**
+     Instantiate the appropriate task view controller.
+     
+     @param     schedule    The schedule associated with this task
+     @param     task        The task to use to instantiate the view controller
+     @param     taskRef     The task reference associated with this task
+     @return                A new instance of a `SBATaskReference`
+    */
     open func instantiateTaskViewController(for schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
         return SBATaskViewController(task: task, taskRun: nil)
     }
     
+    /**
+     Create the task and task reference for the given schedule.
+     
+     @param     schedule    The schedule associated with this task
+     @return    task        The task instantiated from this schedule
+                taskRef     The task reference associated with this task
+    */
     open func createTask(for schedule: SBBScheduledActivity) -> (task: ORKTask?, taskRef: SBATaskReference?) {
         guard let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) else { return (nil, nil) }
-        let factory = createFactory(for: taskRef)
+        let factory = createFactory(for: schedule, taskRef: taskRef)
         let task = taskRef.transformToTask(with: factory, isLastStep: true)
         if let surveyTask = task as? SBASurveyTask {
             surveyTask.title = schedule.activity.label
@@ -466,25 +572,103 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return (task, taskRef)
     }
     
-    open func createFactory(for taskRef:SBATaskReference) -> SBASurveyFactory {
+    /**
+     Create a factory to use when creating a survey or active task. Override to create a custom
+     survey factory that can be used to vend custom steps.
+     
+     @param     schedule    The schedule associated with this task
+     @param     taskRef     The task reference associated with this task
+     @return                The factory to use for creating the task
+    */
+    open func createFactory(for schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBASurveyFactory {
         return SBASurveyFactory()
     }
     
+    /**
+     Once the task view controller is instantiated, set up the delegate and schedule identifier.
+     Override to setup any custom handling associated with this view controller.
+     
+     @param     taskViewController  The task view controller to be displayed.
+     @param     schedule            The schedule associated with this task
+     @param     taskRef             The task reference associated with this task
+    */
     open func setup(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
         taskViewController.scheduleIdentifier = schedule.scheduleIdentifier
         taskViewController.delegate = self
     }
     
+    /**
+     Subclass can override to provide custom implementation. By default, will return `YES`
+     unless this is a survey with an error or the results have already been uploaded.
+     
+     @param     schedule            The schedule associated with this task
+     @param     taskViewController  The task view controller that was displayed.
+    */
     @objc(shouldRecordResultForSchedule:taskViewController:)
     open func shouldRecordResult(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        // Subclass can override to provide custom implementation. By default, will return true
-        // unless this is a survey with an error
+        
+        // Check if the flag has been set that the results are already being uploaded.
+        // This allows tasks to be uploaded with the call to task finished *or* in the previous
+        // step if the last step is a completion step, but will keep the results from being
+        // uploaded more than once.
+        if let vc = taskViewController as? SBATaskViewController, vc.hasUploadedResults {
+            return false
+        }
+        
+        // Look to see if this is an online survey which has failed to download
+        // In this case, do not mark on the server as completed.
         if let task = taskViewController.task as? SBASurveyTask, task.error != nil {
             return false
         }
+        
         return true
     }
     
+    /**
+     This method is called during task finish to handle data sync to the Bridge server.
+     It includes updating tracked data changes (such as data groups), marking the schedule
+     as finished and archiving the results.
+     
+     @param     schedule            The schedule associated with this task
+     @param     taskViewController  The task view controller that was displayed.
+    */
+    @objc(recordTaskResultsForTaskViewController:)
+    open func recordTaskResults(for taskViewController: ORKTaskViewController) {
+        
+        // Check if the results of this survey should be uploaded
+        guard let schedule = scheduledActivity(for: taskViewController),
+            shouldRecordResult(for: schedule, taskViewController:taskViewController)
+        else {
+            return
+        }
+        
+        // Mark the flag that the results are being uploaded for this task
+        if let vc = taskViewController as? SBATaskViewController {
+            vc.hasUploadedResults = true
+        }
+        
+        // Update any data stores and groups associated with this task
+        taskViewController.task?.commitTrackedDataChanges(user: user,
+                                                          taskResult: taskViewController.result,
+                                                          completion:handleDataGroupsUpdate)
+        
+        // Archive the results
+        let results = activityResults(for: schedule, taskViewController: taskViewController)
+        let archives = results.mapAndFilter({ archive(for: $0) })
+        SBADataArchive.encryptAndUploadArchives(archives)
+        
+        // Update the schedule on the server
+        update(schedule: schedule, taskViewController: taskViewController)
+    }
+    
+    /**
+     This method is called during task finish to send Bridge server an update to the
+     schedule with the `finishedOn` and `startedOn` values set to the start/end timestamp
+     for the task view controller.
+     
+     @param     schedule            The schedule associated with this task
+     @param     taskViewController  The task view controller that was displayed.
+    */
     open func update(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         
         // Set finish and start timestamps
@@ -520,13 +704,23 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         sendUpdated(scheduledActivities: scheduledActivities)
     }
     
+    /**
+     Send message to Bridge server to update the given schedules. This includes both the task
+     that was completed and any tasks that were performed as a requirement of completion of the
+     primary task (such as a required one-time survey).
+    */
     open func sendUpdated(scheduledActivities: [SBBScheduledActivity]) {
         SBABridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
             self?.reloadData()
         }
     }
     
-    // Expose method for building archive to allow for testing and subclass override
+    /**
+     Expose method for building archive to allow for testing and subclass override. This method is 
+     called during task finish to archive the result for each activity result included in this task.
+     @param     activityResult      The `SBAActivityResult` to archive
+     @return                        The `SBAActivityArchive` object created with the results for this activity.
+    */
     @objc(archiveForActivityResult:)
     open func archive(for activityResult: SBAActivityResult) -> SBAActivityArchive? {
         if let archive = SBAActivityArchive(result: activityResult,
@@ -540,12 +734,24 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return nil
     }
     
+    
+    /**
+     Optional method for inserting json prevalidation for a given activity result.
+    */
     @objc(jsonValidationMappingForActivityResult:)
     open func jsonValidationMapping(activityResult: SBAActivityResult) -> [String: NSPredicate]?{
         return nil
     }
     
-    // Expose method for building results to allow for testing and subclass override
+    /**
+     Expose method for building results to allow for testing and subclass override. This method is
+     called during task finish to parse the `ORKTaskResult` into one or more subtask results. By default,
+     this method can split a task into different schema tables for upload to the Bridge server. 
+     
+     @param     schedule            The schedule associated with this task
+     @param     taskViewController  The task view controller that was displayed.
+     @return                        An array of `SBAActivityResult` that can be used to build an archive.
+     */
     @objc(activityResultsForSchedule:taskViewController:)
     open func activityResults(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
         
@@ -648,6 +854,9 @@ open class SBAScheduledActivityManager: NSObject, SBASharedInfoController, ORKTa
         return allResults
     }
     
+    /**
+     Expose method for handling data groups updating to allow for testing and subclass override.
+    */
     open func handleDataGroupsUpdate(error: Error?) {
         if (error != nil) {
             // syoung 09/30/2016 If there was an error with updating the data groups (offline, etc) then

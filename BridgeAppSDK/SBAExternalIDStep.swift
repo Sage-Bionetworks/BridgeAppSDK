@@ -33,17 +33,13 @@
 
 import ResearchKit
 
-extension ORKPageStep {
-    public func firstStep() -> ORKStep? {
-        return self.stepAfterStep(withIdentifier: nil, with: ORKTaskResult(identifier: self.identifier))
-    }
-}
-
-public enum SBAExternalIDError: Error {
-    case invalid(reason: String?)
-    case notMatching
-}
-
+/**
+ The `SBAExternalIDStep` is used to handle registering a user where the user must be linked 
+ to the app via an external ID. This is used primarily by research clinics that require registering
+ users anonymously without using an email account. This step requires entering the external ID twice
+ to validate the ID. Then the view controller will attempt to login the user by using the external
+ ID to match to a server-side list.
+ */
 open class SBAExternalIDStep: ORKPageStep {
     
     static let initialStepIdentifier = SBAProfileInfoOption.externalID.rawValue
@@ -94,7 +90,7 @@ open class SBAExternalIDStep: ORKPageStep {
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
             let options = SBAProfileInfoOptions(externalIDOptions: options)
             let step = ORKFormStep(identifier: stepIdentifier)
-            step.formItems = options.makeFormItems(surveyItemType: .account(.registration))
+            step.formItems = options.makeFormItems(shouldConfirmPassword: false)
             step.isOptional = false
             return step
         }
@@ -116,6 +112,64 @@ open class SBAExternalIDStep: ORKPageStep {
     }
 }
 
+/**
+ Object with the options for the external ID form item `ORKAnswerFormat`
+ */
+struct SBAExternalIDOptions {
+    
+    /**
+     By default, the autocapitalization type is all characters
+    */
+    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
+    
+    /**
+     By default, the keyboard type is ASCII
+    */
+    static let defaultKeyboardType: UIKeyboardType = .asciiCapable
+    
+    /**
+     Auto-capitalization type for the text field
+    */
+    let autocapitalizationType: UITextAutocapitalizationType
+    
+    /**
+     Keyboard type for the text field
+    */
+    let keyboardType: UIKeyboardType
+    
+    init() {
+        self.autocapitalizationType = SBAExternalIDOptions.defaultAutocapitalizationType
+        self.keyboardType = SBAExternalIDOptions.defaultKeyboardType
+    }
+    
+    init(autocapitalizationType: UITextAutocapitalizationType, keyboardType: UIKeyboardType) {
+        self.autocapitalizationType = autocapitalizationType
+        self.keyboardType = keyboardType
+    }
+    
+    init(options: [AnyHashable: Any]?) {
+        self.autocapitalizationType = {
+            if let autocap = options?["autocapitalizationType"] as? String {
+                return UITextAutocapitalizationType(key: autocap)
+            }
+            else {
+                return SBAExternalIDOptions.defaultAutocapitalizationType
+            }
+        }()
+        self.keyboardType = {
+            if let keyboard = options?["keyboardType"] as? String {
+                return UIKeyboardType(key: keyboard)
+            }
+            else {
+                return SBAExternalIDOptions.defaultKeyboardType
+            }
+        }()
+    }
+}
+
+/**
+ Default class used to handle registration or login via External ID
+ */
 open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAAccountController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -249,3 +303,16 @@ open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAAccoun
     open var failedConfirmationMessage = Localization.localizedString("SBA_REGISTRATION_MATCH_FAILED")
     open var failedRegistrationTitle = Localization.localizedString("SBA_REGISTRATION_FAILED_TITLE")
 }
+
+public enum SBAExternalIDError: Error {
+    case invalid(reason: String?)
+    case notMatching
+}
+
+extension ORKPageStep {
+    public func firstStep() -> ORKStep? {
+        return self.stepAfterStep(withIdentifier: nil, with: ORKTaskResult(identifier: self.identifier))
+    }
+}
+
+

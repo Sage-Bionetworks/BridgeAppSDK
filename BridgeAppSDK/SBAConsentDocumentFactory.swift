@@ -33,6 +33,12 @@
 
 import ResearchKit
 
+/**
+ Specialized subclass of a survey factory that can be used to describe consent using the json
+ format used by AppCore. This model includes a list of consent sections that are used to create
+ the consent document. The `ORKConsentDocument` is used by the `ORKVisualConsentStep` and the 
+ `ORKConsentReviewStep` to display the consent document.
+ */
 open class SBAConsentDocumentFactory: SBASurveyFactory {
     
     lazy open var consentDocument: ORKConsentDocument = {
@@ -78,6 +84,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
         self.mapSteps(dictionary)
     }
     
+    // Override the base class to implement creating consent steps
     override open func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
         guard let subtype = inputItem.surveyItemType.consentSubtype() else {
             return super.createSurveyStepWithCustomType(inputItem)
@@ -112,7 +119,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     }
     
     /**
-     * Return visual consent step
+     Return visual consent step
      */
     open func visualConsentStep() -> ORKVisualConsentStep {
         return self.steps?.find({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
@@ -120,7 +127,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     }
     
     /**
-    * Return subtask step with only the steps required for reconsent
+    Return subtask step with only the steps required for reconsent
     */
     open func reconsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
@@ -130,7 +137,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     }
     
     /**
-     * Return subtask step with only the steps required for consent or reconsent on login
+     Return subtask step with only the steps required for consent or reconsent on login
      */
     open func loginConsentStep() -> SBASubtaskStep {
         // Strip out the registration steps
@@ -144,7 +151,7 @@ open class SBAConsentDocumentFactory: SBASurveyFactory {
     }
     
     /**
-    * Return subtask step with only the steps required for initial registration
+     Return subtask step with only the steps required for initial registration
     */
     open func registrationConsentStep() -> SBASubtaskStep {
         // Strip out the reconsent steps

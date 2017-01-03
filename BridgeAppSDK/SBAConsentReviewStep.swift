@@ -33,6 +33,14 @@
 
 import ResearchKit
 
+/**
+ The SBAConsentReviewStep is a class used to show consent review to the user.
+ This includes the consent document in full form as a PDF, and can optionally include
+ registration information or just include the person's name and/or birthdate.
+ It can also be set up to include a signature. When using this version of the 
+ consent review, the name is entered as a single field rather than as first name
+ and last name.
+ */
 open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     
     static let nameStepIdentifier = "name"
@@ -40,8 +48,8 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     static let reviewStepIdentifier = "review"
     static let consentResultIdentifier = "consent"
     
-    open var surveyItemType: SBASurveyItemType {
-        return .consent(.review)
+    public var shouldConfirmPassword: Bool {
+        return false
     }
     
     open var formItems: [ORKFormItem]? {
@@ -162,6 +170,10 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     }
 }
 
+/**
+ The `SBAConsentReviewResult` is used to store information about a result
+ that is sent to the Bridge server.
+ */
 open class SBAConsentReviewResult: ORKResult {
     
     open var consentSignature: SBAConsentSignature? {

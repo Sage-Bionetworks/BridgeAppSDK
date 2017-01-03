@@ -35,51 +35,10 @@ import UIKit
 import ResearchKit
 import BridgeSDK
 
-@objc
-public protocol SBAScheduledActivityDataSource: class {
-    
-    /**
-     Reload the data source.
-     */
-    func reloadData()
-    
-    /**
-     Number of sections in the data source.
-     */
-    func numberOfSections() -> Int
-    
-    /**
-     Number of rows in the data source.
-     */
-    @objc(numberOfRowsInSection:)
-    func numberOfRows(for section: Int) -> Int
-    
-    /**
-     The scheduled activity at the given index.
-     @param indexPath   The index path for the schedule
-     */
-    @objc(scheduledActivityAtIndexPath:)
-    func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity?
-    
-    /**
-     Should the task associated with the given index path be disabled.
-     */
-    @objc(shouldShowTaskForIndexPath:)
-    func shouldShowTask(for indexPath: IndexPath) -> Bool
-    
-    /**
-     Called when a row is selected.
-     */
-    @objc(didSelectRowAtIndexPath:)
-    optional func didSelectRow(at indexPath: IndexPath)
-    
-    /**
-     Title for the given section (if applicable)
-     */
-    @objc(titleForSection:)
-    optional func title(for section: Int) -> String?
-}
-
+/**
+ Example use-case for displaying a tableview with a list of scheduled activities. The default instance 
+ uses a `SBAScheduledActivityManager` as its `SBAScheduledActivityDataSource`.
+ */
 open class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
     
     open var scheduledActivityDataSource: SBAScheduledActivityDataSource {
@@ -121,7 +80,7 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
         self.tableView.reloadData()
     }
     
-    // MARK: data refresh
+    // MARK: SBAScheduledActivityManagerDelegate
     
     open func reloadFinished(_ sender: Any?) {
         // reload table
@@ -131,11 +90,17 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     
     // MARK: table cell customization
     
-    static let defaultReuseIdentifier = "ActivityCell"
+    /**
+     Default reuse identifier for the cells in this table.
+    */
+    public static let defaultReuseIdentifier = "ActivityCell"
 
     /**
      The cell to dequeue at a given index path. By default, the cell should have a reuse identifier
-     of `SBAActivityTableViewController.defaultReuseIdentifier`
+     of `SBAActivityTableViewController.defaultReuseIdentifier = "ActivityCell"`
+     @param     tableView   The tableview associated with this cell
+     @param     indexPath   The index path for this cell
+     @return                The cell to display for this table and index path.
      */
     @objc(dequeueReusableCellInTableView:indexPath:)
     open func dequeueReusableCell(in tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
@@ -143,7 +108,11 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     }
     
     /**
-     Configure the cell.
+     Configure the cell. By default, the vended cell is assumed to be an instance of `SBAActivityTableViewCell`
+     which will be set up with the appropriate information.
+     @param     cell        The cell to configure
+     @param     tableView   The tableview associated with this cell
+     @param     indexPath   The index path for this cell
      */
     @objc(configureCell:tableView:indexPath:)
     open func configure(cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {

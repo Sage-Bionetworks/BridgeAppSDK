@@ -39,6 +39,13 @@ extension SBAPermissionsManager {
         return __shared()
     }
     
+    /**
+     Request permission for each permission in the list.
+     
+     @param     permissions     List of the permissions being requested
+     @param     alertPresenter  Alert presenter to use for showing alert messages
+     @param     completion      Completion handler to call when all the permissions have been requested
+    */
     public func requestPermissions(for permissions: [SBAPermissionObjectType], alertPresenter: SBAAlertPresenter?, completion: ((Bool) -> Void)?) {
     
         // Exit early if there are no permissions
