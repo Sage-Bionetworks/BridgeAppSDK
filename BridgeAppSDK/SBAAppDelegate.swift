@@ -58,7 +58,7 @@ public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDeleg
 }
 
 /**
- Default name for a embedded json file that can be used to create an `SBAOnboardingManager`.
+ Default name for a embedded json file that can be used to create a `SBAOnboardingManager`.
  (See Onboarding.json in the sample app for an example.)
  */
 public let SBAOnboardingJSONFilename = "Onboarding"

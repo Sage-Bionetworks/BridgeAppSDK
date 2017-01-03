@@ -35,7 +35,7 @@ import UIKit
 
 /**
  Special class that can be used to skip the consent steps if the user is already consented.
- This is used in login to show consent if the user has an account but has ot been marked 
+ This is used in login to show consent if the user has an account but has not been marked 
  as having given consent.
  */
 class SBAConsentSubtaskStep: SBASubtaskStep, SBANavigationSkipRule, SBASharedInfoController {

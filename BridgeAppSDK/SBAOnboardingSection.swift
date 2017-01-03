@@ -67,8 +67,8 @@ public enum SBAOnboardingSectionBaseType: String {
     case registration       = "registration"
     
     /**
-     Section to include if a passcode is to be setup for the app to lock the screen.
-     Included with all types if there isn't already a passcode setup.
+     Section to include if a passcode is to be set up for the app to lock the screen.
+     Included with all types if there isn't already a passcode set up.
     */
     case passcode           = "passcode"
     
@@ -80,7 +80,7 @@ public enum SBAOnboardingSectionBaseType: String {
     case emailVerification  = "emailVerification"
     
     /**
-     Section to include to setup any permissions that are included with either login or 
+     Section to include to set up any permissions that are included with either login or 
      registration.
     */
     case permissions        = "permissions"
@@ -92,7 +92,7 @@ public enum SBAOnboardingSectionBaseType: String {
     case profile            = "profile"
     
     /**
-     An optional completion section that is included wioth either login or registration.
+     An optional completion section that is included with either login or registration.
     */
     case completion         = "completion"
     

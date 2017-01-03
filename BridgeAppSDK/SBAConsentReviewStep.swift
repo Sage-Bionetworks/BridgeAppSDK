@@ -37,7 +37,7 @@ import ResearchKit
  The SBAConsentReviewStep is a class used to show consent review to the user.
  This includes the consent document in full form as a PDF, and can optionally include
  registration information or just include the person's name and/or birthdate.
- It can also be setup to include a signature. When using this version of the 
+ It can also be set up to include a signature. When using this version of the 
  consent review, the name is entered as a single field rather than as first name
  and last name.
  */

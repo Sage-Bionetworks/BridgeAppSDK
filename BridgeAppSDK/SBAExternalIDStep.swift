@@ -118,7 +118,7 @@ open class SBAExternalIDStep: ORKPageStep {
 struct SBAExternalIDOptions {
     
     /**
-     By default, the autocapitolization type is all characters
+     By default, the autocapitalization type is all characters
     */
     static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
     
@@ -128,7 +128,7 @@ struct SBAExternalIDOptions {
     static let defaultKeyboardType: UIKeyboardType = .asciiCapable
     
     /**
-     Auto-capitolization type for the text field
+     Auto-capitalization type for the text field
     */
     let autocapitalizationType: UITextAutocapitalizationType
     

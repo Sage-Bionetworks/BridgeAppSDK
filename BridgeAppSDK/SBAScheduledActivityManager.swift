@@ -529,8 +529,8 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     }
 
     /**
-     Whether or not the task is disabled. This is different from whether or not a task is "available"
-     in that it *only* applies to activities that are "disabled" because they are expired or else 
+     Whether or not the task should be enabled. This is different from whether or not a task is "available"
+     in that it *only* applies to activities that are "greyed out" because they are expired, or because
      the task does not allow multiple runs of a completed activity.
      
      @param     schedule    The schedule to check
@@ -574,19 +574,18 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     
     /**
      Create a factory to use when creating a survey or active task. Override to create a custom
-     survey factory that can be used to insert custom steps and are not handled by the base 
-     factory.
+     survey factory that can be used to vend custom steps.
      
      @param     schedule    The schedule associated with this task
      @param     taskRef     The task reference associated with this task
      @return                The factory to use for creating the task
     */
-    open func createFactory(for schedule: SBBScheduledActivity, taskRef:SBATaskReference) -> SBASurveyFactory {
+    open func createFactory(for schedule: SBBScheduledActivity, taskRef: SBATaskReference) -> SBASurveyFactory {
         return SBASurveyFactory()
     }
     
     /**
-     Once the task view controller is instantiated, setup the delegate and schedule identifier.
+     Once the task view controller is instantiated, set up the delegate and schedule identifier.
      Override to setup any custom handling associated with this view controller.
      
      @param     taskViewController  The task view controller to be displayed.

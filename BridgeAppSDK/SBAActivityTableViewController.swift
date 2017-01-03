@@ -37,7 +37,7 @@ import BridgeSDK
 
 /**
  Example use-case for displaying a tableview with a list of scheduled activities. The default instance 
- uses a `SBAScheduledActivityManager` as it's `SBAScheduledActivityDataSource`.
+ uses a `SBAScheduledActivityManager` as its `SBAScheduledActivityDataSource`.
  */
 open class SBAActivityTableViewController: UITableViewController, SBAScheduledActivityManagerDelegate {
     
@@ -109,7 +109,7 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
     
     /**
      Configure the cell. By default, the vended cell is assumed to be an instance of `SBAActivityTableViewCell`
-     which will be setup with the appropriate information.
+     which will be set up with the appropriate information.
      @param     cell        The cell to configure
      @param     tableView   The tableview associated with this cell
      @param     indexPath   The index path for this cell

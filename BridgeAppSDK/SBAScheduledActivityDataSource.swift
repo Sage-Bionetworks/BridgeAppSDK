@@ -70,9 +70,12 @@ public protocol SBAScheduledActivityDataSource: class {
     func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity?
     
     /**
-     Should the task associated with the given index path be disabled.
+     Whether or not the task should be enabled. This is different from whether or not a task is "available"
+     in that it *only* applies to activities that are "greyed out" because they are expired, or because
+     the task does not allow multiple runs of a completed activity.
+     
      @param indexPath   The index path for the schedule
-     @return            `YES` if the task should be shown. `NO` if it is disabled.
+     @return            `YES` if the task should be displayed as enabled. `NO` if it is disabled.
      */
     @objc(shouldShowTaskForIndexPath:)
     func shouldShowTask(for indexPath: IndexPath) -> Bool
