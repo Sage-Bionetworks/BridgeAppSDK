@@ -51,10 +51,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 
 + (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
 
-+ (void)signUp:(NSString *)email
-      password:(NSString *)password
-    externalId:(NSString * _Nullable)externalId
-    dataGroups:(NSArray<NSString *> * _Nullable)dataGroups
++ (void)signUp:(SBBSignUp *)signup
     completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 + (void)signIn:(NSString *)username
@@ -64,7 +61,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 + (void)sendUserConsented:(NSString *)name
                 birthDate:(NSDate *)birthDate
              consentImage:(UIImage * _Nullable)consentImage
-             sharingScope:(SBBUserDataSharingScope)sharingScope
+             sharingScope:(SBBParticipantDataSharingScope)sharingScope
         subpopulationGuid:(NSString *)subpopGuid
                completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
@@ -91,15 +88,26 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
                                  reason:(NSString * _Nullable)reason
                              completion:(SBABridgeManagerCompletionBlock)completionBlock;
     
-+ (void)updateDataSharingScope:(SBBUserDataSharingScope)scope
++ (void)updateDataSharingScope:(SBBParticipantDataSharingScope)scope
                     completion:(SBABridgeManagerCompletionBlock)completionBlock;
-    
-+ (void)getUserProfileWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock;
-    
-+ (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock;
+
++ (void)getParticipantRecordWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock;
+
++ (void)updateParticipantRecord:(id)participant completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock;
-    
+
+#pragma mark - deprecated
+
++ (void)signUp:(NSString *)email
+      password:(NSString *)password
+    externalId:(NSString * _Nullable)externalId
+    dataGroups:(NSArray<NSString *> * _Nullable)dataGroups
+    completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock __attribute__((deprecated("Use +signUp:completion: instead.")));
+
++ (void)getUserProfileWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock __attribute__((deprecated("Use +getParticipantRecordWithCompletion: instead.")));
+
++ (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock __attribute__((deprecated("Use +updateParticipantRecord:copmletion: instead.")));
 
 @end
 

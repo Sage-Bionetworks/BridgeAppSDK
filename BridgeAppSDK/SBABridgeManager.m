@@ -52,18 +52,29 @@
     
     NSParameterAssert(email);
     NSParameterAssert(password);
-    [SBBComponent(SBBAuthManager) signUpWithEmail: email
-                                         username: externalId ?: email
-                                         password: password
-                                       dataGroups: dataGroups
-                                       completion: ^(NSURLSessionTask * __unused task,
-                                                     id responseObject,
-                                                     NSError *error)
-     {
+    
+    SBBSignUp *signup = [[SBBSignUp alloc] init];
+    signup.email = email;
+    signup.password = password;
+    signup.externalId = externalId;
+    if (dataGroups != nil) {
+        signup.dataGroups = [NSSet setWithArray:dataGroups];
+    }
+    
+    [self signUp:signup completion:completionBlock];
+}
+
++ (void)signUp:(SBBSignUp *)signup
+    completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
+    
+    [SBBComponent(SBBAuthManager) signUpStudyParticipant:signup
+                                              completion: ^(NSURLSessionTask * __unused task,
+                                                            id responseObject,
+                                                            NSError *error) {
+#if DEBUG
          if (!error) {
              NSLog(@"User Signed Up");
          }
-#if DEBUG
          else {
              NSLog(@"Error with signup: %@", error);
          }
@@ -97,7 +108,7 @@
 + (void)sendUserConsented:(NSString *)name
                 birthDate:(NSDate *)birthDate
              consentImage:(UIImage * _Nullable)consentImage
-             sharingScope:(SBBUserDataSharingScope)sharingScope
+             sharingScope:(SBBParticipantDataSharingScope)sharingScope
         subpopulationGuid:(NSString *)subpopGuid
                completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock
 {
@@ -140,10 +151,7 @@
 
 + (void) updateDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock
 {
-    SBBDataGroups *groups = [SBBDataGroups new];
-    groups.dataGroups = [NSSet setWithArray:dataGroups];
-    
-    [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups
+    [SBBComponent(SBBParticipantManager) updateDataGroupsWithGroups:[NSSet setWithArray:dataGroups]
                                                   completion: ^(id responseObject,
                                                                 NSError *error) {
 #if DEBUG
@@ -211,10 +219,26 @@
         }
     }];
 }
+
++ (void)getParticipantRecordWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBParticipantManager) getParticipantRecordWithCompletion:^(id  _Nullable studyParticipant, NSError * _Nullable error) {
+        if (completionBlock) {
+            completionBlock(studyParticipant, error);
+        }
+    }];
+}
+
++ (void)updateParticipantRecord:(id)participant completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBParticipantManager) updateParticipantRecordWithRecord:participant completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
+}
     
-+ (void)updateDataSharingScope:(SBBUserDataSharingScope)scope
++ (void)updateDataSharingScope:(SBBParticipantDataSharingScope)scope
                     completion:(SBABridgeManagerCompletionBlock)completionBlock {
-    [SBBComponent(SBBUserManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBParticipantManager) setSharingScope:scope completion:^(id responseObject, NSError *error) {
         if (completionBlock) {
             completionBlock(responseObject, error);
         }
@@ -226,7 +250,7 @@
         if (completionBlock) {
             completionBlock(responseObject, error);
         }
-    }];    
+    }];
 }
     
 + (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock {

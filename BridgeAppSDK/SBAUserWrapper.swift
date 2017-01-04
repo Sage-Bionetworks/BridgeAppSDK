@@ -122,7 +122,7 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     /**
      * The sharing scope set by the user during consent
      */
-    var dataSharingScope: SBBUserDataSharingScope { get set }
+    var dataSharingScope: SBBParticipantDataSharingScope { get set }
     
     /**
      * Tracking that can be set by the app to track the user's onboarding progress
@@ -133,7 +133,6 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
      Reset the user's keychain
      */
     func resetStoredUserData()
-
 }
 
 extension SBAUserWrapper {
