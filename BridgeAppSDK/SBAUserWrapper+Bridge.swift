@@ -52,7 +52,7 @@ let SBATestDataGroup: String = {
  */
 let SBAUserErrorDomain = "SBAUserError"
 
-extension SBBUserDataSharingScope {
+extension SBBParticipantDataSharingScope {
     init(key: String) {
         switch key {
         case "sponsors_and_partners":
@@ -140,7 +140,7 @@ public extension SBAUserWrapper {
         }
         registerUser(email: email, password: password, externalId: self.externalId, dataGroups: self.dataGroups, completion: completion)
     }
-    
+
     /**
      Register a new user with an email/password
      
@@ -152,21 +152,43 @@ public extension SBAUserWrapper {
      */
     public func registerUser(email: String, password: String, externalId: String?, dataGroups dataGroupsIn: [String]?, completion: ((Error?) -> Void)?) {
         
+        let signup = SBBSignUp()
+        signup.email = email
+        signup.password = password
+        if let dataGroups = dataGroupsIn {
+            signup.dataGroups = Set(dataGroups)
+        }
+        if externalId != nil {
+            signup.externalId = externalId!
+        }
+        registerUser(signup: signup, completion: completion)
+    }
+    
+    public func registerUser(signup: SBBSignUp, completion: ((Error?) -> Void)?) {
+    
         func completeRegistration(_ isTester: Bool) {
             
             // include test_user in the data groups if applicable
-            var dataGroups: [String]? = dataGroupsIn
+            var dataGroups: [String]? = {
+                if signup.dataGroups != nil {
+                    return Array(signup.dataGroups)
+                }
+                else {
+                    return nil
+                }
+            }()
             if (isTester) {
                 dataGroups = (dataGroups ?? []) + [SBATestDataGroup]
+                signup.dataGroups = Set(dataGroups!)
             }
             
             // Store the values used in registration
-            self.email = email
-            self.password = password
-            self.externalId = externalId
+            self.email = signup.email
+            self.password = signup.password
+            self.externalId = signup.externalId
             self.dataGroups = dataGroups
             
-            SBABridgeManager.signUp(email, password: password, externalId: externalId, dataGroups: dataGroups, completion: { [weak self] (_, error) in
+            SBABridgeManager.signUp(signup, completion: { [weak self] (_, error) in
                 let (unhandledError, _) = self!.checkForConsentError(error)
                 self?.isRegistered = (unhandledError == nil)
                 self?.callCompletionOnMain(unhandledError, completion: completion)
@@ -174,7 +196,7 @@ public extension SBAUserWrapper {
         }
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
-        guard email.contains(SBAHiddenTestEmailString) &&
+        guard signup.email.contains(SBAHiddenTestEmailString) &&
             appDelegate != nil &&
             (bridgeInfo?.disableTestUserCheck ?? false) else {
             completeRegistration(false)
@@ -199,7 +221,10 @@ public extension SBAUserWrapper {
             assertionFailure("Attempting to login without a stored username and password")
             return
         }
-        signInUser(username, password: password, completion: completion)
+        self.signInUser(username, password: password, completion: { [weak self] (error) in
+                self?.callCompletionOnMain(error, completion: completion)
+            }
+        )
     }
     
     /**
@@ -264,7 +289,12 @@ public extension SBAUserWrapper {
      @param completion          Completion handler
      */
     public func sendUserConsented(_ consentSignature: SBAConsentSignatureWrapper, completion: ((Error?) -> Void)?) {
-        
+        backgroundSendUserConsented(consentSignature) { [weak self] (error) in
+            self?.callCompletionOnMain(error, completion: completion)
+        }
+    }
+    
+    fileprivate func backgroundSendUserConsented(_ consentSignature: SBAConsentSignatureWrapper, completion: ((Error?) -> Void)?) {
         let name = consentSignature.signatureName ?? self.name ?? "First Last"
         let birthdate = consentSignature.signatureBirthdate?.startOfDay() ?? Date(timeIntervalSince1970: 0)
         let consentImage = consentSignature.signatureImage
@@ -274,7 +304,7 @@ public extension SBAUserWrapper {
             guard (self != nil) else { return }
             
             self!.isConsentVerified = (error == nil)
-            self!.callCompletionOnMain(error, completion: completion)
+            completion?(error)
         }
     }
 
@@ -408,7 +438,7 @@ public extension SBAUserWrapper {
             // If there was an error and it is *not* the consent error then call completion and exit
             let (unhandledError, requiresConsent) = self!.checkForConsentError(error)
             guard unhandledError == nil else {
-                self!.callCompletionOnMain(unhandledError, completion: completion)
+                completion?(unhandledError)
                 return
             }
             
@@ -424,13 +454,13 @@ public extension SBAUserWrapper {
             if let consentSignature = self!.consentSignature, requiresConsent {
                 // If there is a consent signature object stored for this user then attempt
                 // sending consent once signed in.
-                self!.sendUserConsented(consentSignature, completion: completion)
+                self!.backgroundSendUserConsented(consentSignature, completion: completion)
             }
             else {
                 // otherwise, we are done. Set the flag that the consent has been verified and 
                 // call the completion
                 self!.isConsentVerified = !requiresConsent
-                self!.callCompletionOnMain(unhandledError, completion: completion)
+                completion?(unhandledError)
             }
         }
     }
@@ -489,7 +519,7 @@ extension Error {
 protocol SBAUserSessionInfoWrapper : class {
     var dataGroups : [String]? { get }
     var isDataSharingEnabled : Bool { get }
-    var dataSharingScope: SBBUserDataSharingScope { get }
+    var dataSharingScope: SBBParticipantDataSharingScope { get }
     var subpopulationGuid: String? { get }
 }
 
@@ -503,11 +533,11 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
         return self["dataSharing"] as? Bool ?? false
     }
     
-    var dataSharingScope: SBBUserDataSharingScope {
+    var dataSharingScope: SBBParticipantDataSharingScope {
         guard let sharingKey = self["sharingScope"] as? String , self.isDataSharingEnabled else {
             return .none
         }
-        return SBBUserDataSharingScope(key: sharingKey)
+        return SBBParticipantDataSharingScope(key: sharingKey)
     }
 
     var subpopulationGuid: String? {

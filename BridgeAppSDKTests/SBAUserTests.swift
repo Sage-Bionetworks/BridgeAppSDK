@@ -60,77 +60,197 @@ class SBAUserTests: XCTestCase {
         let emailFormat = bridgeInfo.emailFormatForLoginViaExternalId
         XCTAssertEqual(emailFormat, "test+%@@sagebase.org")
     }
-}
+    
+    func testLoginUser_NoDataSharing() {
+        
+        // Set up the mock auth manager
+        let email = "test+1002@sagebase.org"
+        let password = "abcd1234"
+        authMock.responseObject = createLoginResponseObject(dataSharing: false, sharingScope: "no_sharing", email: email)
+        
+        // --- method under test
+        let user = MockUser()
+        user.loginUser(email: email, password: password, completion: nil)
+        
+        // Verify the login
+        XCTAssertEqual(authMock.loginEmail, email)
+        XCTAssertEqual(authMock.loginPassword, password)
+        XCTAssertTrue(authMock.signIn_called)
+        XCTAssertEqual(user.email, email)
+        XCTAssertEqual(user.password, password)
+        XCTAssertEqual(user.subpopulationGuid, "sample-study")
+        XCTAssertTrue(user.isConsentVerified)
+        XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
+        XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.none)
+        XCTAssertFalse(user.isDataSharingEnabled)
 
-class MockBridgeInfo : NSObject, SBABridgeInfo {
-    var studyIdentifier: String! = "study"
-    var cacheDaysAhead: Int = 0
-    var cacheDaysBehind: Int = 0
-    var environment: SBBEnvironment = .staging
-    var appStoreLinkURLString: String?
-    var emailForLoginViaExternalId: String? = "test@sagebase.org"
-    var passwordFormatForLoginViaExternalId: String?
-    var testUserDataGroup: String?
-    var taskMap: [NSDictionary]?
-    var schemaMap: [NSDictionary]?
-    var filenameMap: NSDictionary?
-    var certificateName: String?
-    var newsfeedURLString: String?
-    var logoImageName: String?
-    var appUpdateURLString: String?
-    var disableTestUserCheck: Bool = false
-    var permissionTypeItems: [Any]?
-    var keychainService: String?
-    var keychainAccessGroup: String?
+    }
+    
+    func testLoginUser_SharingAll() {
+        
+        // Set up the mock auth manager
+        let email = "test+1002@sagebase.org"
+        let password = "abcd1234"
+        authMock.responseObject = createLoginResponseObject(dataSharing: true, sharingScope: "all_qualified_researchers", email: email)
+        
+        // --- method under test
+        let user = MockUser()
+        user.loginUser(email: email, password: password, completion: nil)
+        
+        // Verify the login
+        XCTAssertEqual(authMock.loginEmail, email)
+        XCTAssertEqual(authMock.loginPassword, password)
+        XCTAssertTrue(authMock.signIn_called)
+        XCTAssertEqual(user.email, email)
+        XCTAssertEqual(user.password, password)
+        XCTAssertEqual(user.subpopulationGuid, "sample-study")
+        XCTAssertTrue(user.isConsentVerified)
+        XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
+        XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
+        XCTAssertTrue(user.isDataSharingEnabled)
+    }
+    
+    func testLoginUser_ExternalId() {
+        
+        // Set up the mock auth manager
+        let email = "test+1002@sagebase.org"
+        let password = "1002"
+        authMock.responseObject = createLoginResponseObject(dataSharing: true, sharingScope: "all_qualified_researchers", email: email)
+        
+        // --- method under test
+        let user = MockUser()
+        user.loginUser(externalId: "1002", completion: nil)
+        
+        // Verify the login
+        XCTAssertEqual(authMock.loginEmail, email)
+        XCTAssertEqual(authMock.loginPassword, password)
+        XCTAssertTrue(authMock.signIn_called)
+        XCTAssertEqual(user.email, email)
+        XCTAssertEqual(user.password, password)
+        XCTAssertEqual(user.subpopulationGuid, "sample-study")
+        XCTAssertTrue(user.isConsentVerified)
+        XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
+        XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
+        XCTAssertTrue(user.isDataSharingEnabled)
+    }
+    
+    // MARK: helper methods
+    
+    func createLoginResponseObject(dataSharing: Bool, sharingScope: String, email: String) -> NSDictionary {
+        
+        let dictionary: NSDictionary = [
+            "notifyByEmail" : true,
+            "languages" : ["en"],
+            "roles" : [],
+            "status" : "enabled",
+            "createdOn" : NSDate(iso8601String: "2016-08-09T04:47:52.169Z"),
+            "signedMostRecentConsent" : true,
+            "sessionToken" : "217ee580-8950-4f37-98bb-2f770d9a331c",
+            "id" : "3LglxfsJ3Moo9NymdS6qem",
+            "type" : "UserSessionInfo",
+            "authenticated" : true,
+            "dataGroups" : ["test_user","group_afternoon"],
+            "consentStatuses" : [
+                "sample-study" : [
+                    "signedMostRecentConsent" : true,
+                    "consented" : true,
+                    "type" : "ConsentStatus",
+                    "name" : "Default Consent Group",
+                    "required" : true,
+                    "subpopulationGuid" : "sample-study"
+                ]
+            ],
+            "dataSharing" : dataSharing,
+            "consented" : true,
+            "username" : email,
+            "attributes" : [],
+            "environment" : "production",
+            "email" : email,
+            "sharingScope" : sharingScope
+        ]
+        return dictionary
+    }
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {
+    
+    var responseObject: Any?
+    var responseError: Error?
+    
+    var signUpStudyParticipant_called: Bool = false
+    var signUp: SBBSignUp?
+    
+    var signIn_called: Bool = false
+    var loginEmail: String?
+    var loginPassword: String?
+    
     weak var authDelegate: SBBAuthManagerDelegateProtocol?
-    
-    func signUp(withEmail email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
-        return URLSessionDataTask()
+
+    public func signUpStudyParticipant(_ signUp: SBBSignUp, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask {
+        let session = URLSessionDataTask()
+        signUpStudyParticipant_called = true
+        self.signUp = signUp
+        completion?(session, responseObject, responseError)
+        return session
     }
-    
-    func signUp(withEmail email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
-        return URLSessionDataTask()
+
+    func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        let session = URLSessionDataTask()
+        signIn_called = true
+        self.loginEmail = email
+        self.loginPassword = password
+        completion?(session, responseObject, responseError)
+        return session
     }
     
     func resendEmailVerification(_ email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
-        return URLSessionDataTask()
-    }
-    
-    func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Not implemented")
         return URLSessionDataTask()
     }
     
     func signOut(completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Not implemented")
         return URLSessionDataTask()
     }
 
     func ensureSignedIn(completion: SBBNetworkManagerCompletionBlock?) {
-        
+        assertionFailure("Not implemented")
     }
     
     func requestPasswordReset(forEmail email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Not implemented")
         return URLSessionDataTask()
     }
 
     func resetPassword(toNewPassword password: String, resetToken token: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Not implemented")
         return URLSessionDataTask()
     }
 
     func addAuthHeader(toHeaders headers: NSMutableDictionary) {
-        
+        assertionFailure("Not implemented")
+    }
+    
+    // MARK: deprecated methods
+    
+    func signUp(withEmail email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Deprecated method. Do not use.")
+        return URLSessionDataTask()
+    }
+    
+    func signUp(withEmail email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+        assertionFailure("Deprecated method. Do not use.")
+        return URLSessionDataTask()
     }
 }
 
 class MockConsentManager: NSObject, SBBConsentManagerProtocol {
-    
-    func consentSignature(_ name: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+
+    public func consentSignature(_ name: String, forSubpopulationGuid subpopGuid: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
         return URLSessionDataTask()
     }
 
-    func consentSignature(_ name: String, forSubpopulationGuid subpopGuid: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBUserDataSharingScope, completion: SBBConsentManagerCompletionBlock?) -> URLSessionTask {
+    public func consentSignature(_ name: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
         return URLSessionDataTask()
     }
 

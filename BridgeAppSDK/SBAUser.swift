@@ -342,9 +342,9 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
-    public var dataSharingScope: SBBUserDataSharingScope {
+    public var dataSharingScope: SBBParticipantDataSharingScope {
         get {
-            return SBBUserDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .none
+            return SBBParticipantDataSharingScope(rawValue: syncIntForKey(kDataSharingScopeKey)) ?? .none
         }
         set (newValue) {
             syncSetInteger(newValue.rawValue, forKey: kDataSharingScopeKey)

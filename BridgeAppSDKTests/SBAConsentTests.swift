@@ -145,7 +145,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
         for (identifier, expectedClassName) in expected {
-            let formItem = nameStep!.formItemForIdentifier(identifier)
+            let formItem = nameStep!.formItem(for: identifier)
             XCTAssertNotNil(formItem)
             if let classForCoder = formItem?.answerFormat?.classForCoder {
                 let className = NSStringFromClass(classForCoder)
@@ -174,14 +174,14 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(reviewStep!.reasonForConsent)
         XCTAssertNotNil(nameStep!.formItems)
         
-        let nameItem = nameStep!.formItemForIdentifier("name")
+        let nameItem = nameStep!.formItem(for: "name")
         XCTAssertNotNil(nameItem)
         if let _ = nameItem?.answerFormat as? ORKTextAnswerFormat {
         } else {
             XCTAssert(false, "\(nameItem?.answerFormat) not of expected type")
         }
         
-        let birthdateItem = nameStep!.formItemForIdentifier("birthdate")
+        let birthdateItem = nameStep!.formItem(for: "birthdate")
         XCTAssertNotNil(birthdateItem)
         if let birthdateFormat = birthdateItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat {
             XCTAssertEqual(birthdateFormat.characteristicType.identifier, HKCharacteristicTypeIdentifier.dateOfBirth.rawValue)
@@ -213,7 +213,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
         for (identifier, expectedClassName) in expected {
-            let formItem = nameStep!.formItemForIdentifier(identifier)
+            let formItem = nameStep!.formItem(for: identifier)
             XCTAssertNotNil(formItem)
             if let classForCoder = formItem?.answerFormat?.classForCoder {
                 let className = NSStringFromClass(classForCoder)

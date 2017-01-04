@@ -79,7 +79,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
     
     open var passwordAnswerFormat: ORKTextAnswerFormat? {
-        return self.formItemForIdentifier(SBAProfileInfoOption.password.rawValue)?.answerFormat as? ORKTextAnswerFormat
+        return self.formItem(for: SBAProfileInfoOption.password.rawValue)?.answerFormat as? ORKTextAnswerFormat
     }
     
     open override func stepViewControllerClass() -> AnyClass {

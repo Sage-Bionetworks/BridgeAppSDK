@@ -47,7 +47,14 @@ public protocol SBAFormProtocol : class {
 }
 
 extension SBAFormProtocol {
-    public func formItemForIdentifier(_ identifier: String) -> ORKFormItem? {
+    
+    /**
+     Convenience method for finding a form item with the given identifier.
+     
+     @param     identifier  The identifier string for the `ORKFormItem`
+     @return                The form item (if found)
+    */
+    public func formItem(for identifier: String) -> ORKFormItem? {
         return self.formItems?.find({ $0.identifier == identifier })
     }
 }

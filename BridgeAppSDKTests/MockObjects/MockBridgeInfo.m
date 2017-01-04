@@ -35,4 +35,13 @@
 
 @implementation MockBridgeInfo
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _studyIdentifier = @"sample-study";
+        _emailForLoginViaExternalId = @"test@sagebase.org";
+    }
+    return self;
+}
+
 @end
