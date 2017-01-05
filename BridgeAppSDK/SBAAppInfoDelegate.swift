@@ -40,7 +40,21 @@ import Foundation
  */
 @objc
 public protocol SBAAppInfoDelegate: NSObjectProtocol {
+    
+    /**
+     The current user object points to a model object that implements the `SBAUserWrapper` protocol.
+     The user is designed to handle participant state specific to the current user such as login, 
+     consent, name, etc.
+    */
     var currentUser: SBAUserWrapper { get }
+    
+    /**
+     The bridge info object points to a model object that implements the `SBABridgeInfo` protocol.
+     The bridge info object is designed to vend information needed to sync this app to the Bridge
+     server. This includes mapping a task identifier to a task and schema, setting the study identifier,
+     handling caching requirements, storing the name of the pem file used for archiving, as well as
+     other information that is less commonly required by the app.
+    */
     var bridgeInfo: SBABridgeInfo { get }
 }
 
@@ -51,13 +65,11 @@ extension SBAAppInfoDelegate {
         // WARNING: This will force login
         currentUser.resetUserKeychainIfNeeded()
         
-        
-        // These two lines actually, you know, set up BridgeSDK
-        BridgeSDK.setup(withStudy: bridgeInfo.studyIdentifier,
-                        cacheDaysAhead: bridgeInfo.cacheDaysAhead,
-                        cacheDaysBehind: bridgeInfo.cacheDaysBehind,
-                        environment: bridgeInfo.environment)
-        SBABridgeManager.setAuthDelegate(self.currentUser)
+        // Setup the study
+        SBABridgeManager.setup(withStudy: bridgeInfo.studyIdentifier,
+                               cacheDaysAhead: bridgeInfo.cacheDaysAhead,
+                               cacheDaysBehind: bridgeInfo.cacheDaysAhead,
+                               authDelegate: currentUser)
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
         // manager instance so its notification handlers get set up in time)
