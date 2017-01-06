@@ -83,11 +83,6 @@ typedef void(^SBAPermissionsBlock)(BOOL granted, NSError * _Nullable error);
 @property (nonatomic, readonly) HKHealthStore * _Nullable healthStore;
 
 /**
- User defaults storage. default = `standardUserDefaults`
- */
-@property (nonatomic, readwrite, strong) NSUserDefaults *userDefaults;
-
-/**
  Factory to use for creating permissions type objects. By default, this uses the base class factorty.
  */
 @property (nonatomic, readwrite, strong) SBAPermissionObjectTypeFactory *permissionsTypeFactory;

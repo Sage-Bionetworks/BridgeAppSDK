@@ -1643,6 +1643,9 @@
 						DevelopmentTeam = 4B822CZK9N;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.DataProtection = {
 								enabled = 1;
 							};

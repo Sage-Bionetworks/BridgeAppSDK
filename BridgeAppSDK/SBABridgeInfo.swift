@@ -130,6 +130,11 @@ public protocol SBABridgeInfo: class {
     Keychain access group name.
     */
     var keychainAccessGroup: String? { get }
+    
+    /**
+     App group identifier used for the suite name of NSUserDefaults (if provided).
+    */
+    var appGroupIdentifier: String? { get }
 }
 
 /**
@@ -237,6 +242,11 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var keychainAccessGroup: String? {
         return self.plist["keychainAccessGroup"] as? String
     }
+    
+    public var appGroupIdentifier: String? {
+        return self.plist["appGroupIdentifier"] as? String
+    }
+
 }
 
 extension SBABridgeInfo {
@@ -288,6 +298,10 @@ extension SBABridgeInfo {
             return Bundle.main.appStoreLinkURL()
         }
         return url
+    }
+    
+    public var userDefaults: UserDefaults {
+        return UserDefaults(suiteName: self.appGroupIdentifier) ?? UserDefaults.standard
     }
 }
 

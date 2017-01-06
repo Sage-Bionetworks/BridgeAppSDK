@@ -83,13 +83,6 @@ static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManag
     _locationManager.delegate = nil;
 }
 
-- (NSUserDefaults *)userDefaults {
-    if (_userDefaults == nil){
-        _userDefaults = [NSUserDefaults standardUserDefaults];
-    }
-    return _userDefaults;
-}
-
 - (SBAPermissionObjectTypeFactory *)permissionsTypeFactory {
     if (_permissionsTypeFactory == nil) {
         _permissionsTypeFactory = [SBAPermissionObjectTypeFactory new];
@@ -417,7 +410,6 @@ static NSString * const SBAPermissionsManagerErrorDomain = @"SBAPermissionsManag
                                                                                  categories:permissionType.categories];
 
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        [[NSUserDefaults standardUserDefaults] synchronize];
         // In the case of notifications, callbacks are used to fire the completion block.
         // Callbacks are delivered to appDidRegisterForRemoteNotifications:
     }
