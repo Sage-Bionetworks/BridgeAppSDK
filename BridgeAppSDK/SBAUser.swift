@@ -370,7 +370,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     }
     
     fileprivate func userDefaults() -> UserDefaults {
-        return UserDefaults.standard
+        return bridgeInfo?.userDefaults ?? UserDefaults.standard
     }
     
     fileprivate func syncBoolForKey(_ key: String) -> Bool {

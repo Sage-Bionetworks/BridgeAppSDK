@@ -55,5 +55,6 @@
 @property (nonatomic, readonly, copy) NSArray * _Nullable permissionTypeItems;
 @property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
 @property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
+@property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
 
 @end

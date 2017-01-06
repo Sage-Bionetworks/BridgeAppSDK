@@ -59,7 +59,12 @@
 }
 
 - (instancetype)init {
-    return [self initWithUserDefaultsWithSuiteName:nil];
+    NSString *suiteName = nil;
+    id appDelegate = [[UIApplication sharedApplication] delegate];
+    if ([appDelegate conformsToProtocol:@protocol(SBAAppInfoDelegate)]) {
+        suiteName = [[appDelegate bridgeInfo] appGroupIdentifier];
+    }
+    return [self initWithUserDefaultsWithSuiteName:suiteName];
 }
 
 - (instancetype)initWithUserDefaultsWithSuiteName:(NSString * _Nullable)suiteName {
