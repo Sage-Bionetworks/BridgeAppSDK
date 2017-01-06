@@ -67,11 +67,13 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
  @param cacheDaysAhead Number of days ahead to cache.
  @param cacheDaysBehind Number of days behind to cache.
+ @param environment Which server environment to run against.
  @param authDelegate AuthManager delegate
  */
 + (void)setupWithStudy:(NSString *)study
         cacheDaysAhead:(NSInteger)cacheDaysAhead
        cacheDaysBehind:(NSInteger)cacheDaysBehind
+           environment:(SBBEnvironment)environment
           authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
 
 /*!
@@ -256,6 +258,8 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 
 
 #pragma mark - deprecated
+
++ (void)setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate __attribute__((deprecated("Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment:authDelegate: instead.")));
 
 + (void)signUp:(NSString *)email
       password:(NSString *)password

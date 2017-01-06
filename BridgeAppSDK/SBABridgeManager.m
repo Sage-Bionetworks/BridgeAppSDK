@@ -39,9 +39,14 @@
 + (void)setupWithStudy:(NSString *)study
         cacheDaysAhead:(NSInteger)cacheDaysAhead
        cacheDaysBehind:(NSInteger)cacheDaysBehind
+           environment:(SBBEnvironment)environment
           authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
     
-    [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind];
+    [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
+    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
+}
+
++ (void)setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
 
