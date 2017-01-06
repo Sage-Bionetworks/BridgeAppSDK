@@ -33,15 +33,18 @@
 
 import UIKit
 
-public final class SBAAppExtensionSharedInfoController: NSObject, SBASharedInfoController, SBAAppInfoDelegate {
+/**
+ The `SBAAppExtensionSharedInfoController` is a light-weight object that can be used to 
+ manage the user and bridge info for an app extension. This class assumes that the current
+ user and bridge info use the shared singletons defined on `SBAUser` and `SBABridgeInfoPList`,
+ respectively.
+ 
+ @note syoung 10/05/2017 WIP that is not tested by any of Sage Bionetworks' currently
+ released applications.
+ */
+public final class SBAAppExtensionSharedInfoController: NSObject, SBAAppInfoDelegate {
     
     public static let shared = SBAAppExtensionSharedInfoController()
-    
-    public var sharedAppDelegate: SBAAppInfoDelegate {
-        get {
-            return self
-        }
-    }
     
     public var currentUser: SBAUserWrapper {
         get {

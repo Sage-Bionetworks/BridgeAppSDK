@@ -32,10 +32,16 @@
 //
 
 #import "SBABridgeManager.h"
+#import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 
 @implementation SBABridgeManager
 
-+ (void) setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
++ (void)setupWithStudy:(NSString *)study
+        cacheDaysAhead:(NSInteger)cacheDaysAhead
+       cacheDaysBehind:(NSInteger)cacheDaysBehind
+          authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
+    
+    [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind];
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
 
@@ -207,7 +213,8 @@
 }
 
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock {
-    return [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyReference.href completion:^(id survey, NSError *error) {
+    return [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyReference.href
+                                               completion:^(id survey, NSError *error) {
         completionBlock(survey, error);
     }];
 }

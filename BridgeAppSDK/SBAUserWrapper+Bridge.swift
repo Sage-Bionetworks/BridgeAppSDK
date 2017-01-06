@@ -164,6 +164,12 @@ public extension SBAUserWrapper {
         registerUser(signup: signup, completion: completion)
     }
     
+    /**
+     Register a new user with an `SBBSignUp` object.
+     
+     @param signup      A valid signup object should include a non-nil password and non-nil email. Other fields are optional.
+     @param completion  Completion handler
+     */
     public func registerUser(signup: SBBSignUp, completion: ((Error?) -> Void)?) {
     
         func completeRegistration(_ isTester: Bool) {
