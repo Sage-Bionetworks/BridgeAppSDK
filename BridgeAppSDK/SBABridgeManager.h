@@ -37,7 +37,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
- Typedef for SBBNetworkManager data methods' completion block.
+ Typedef for SBABridgeManager data methods' completion block.
  
  @param responseObject The JSON object from the response, if any.
  @param error          Any error that occurred.
@@ -110,7 +110,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
     completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 /*!
- Call this at app active to ensure the user is logged in to their account (if any).
+ Call this when app becomes active to ensure the user is logged in to their account (if any).
  
  @param completion A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
  */

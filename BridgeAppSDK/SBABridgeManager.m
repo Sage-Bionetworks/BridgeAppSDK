@@ -214,7 +214,6 @@
 
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock {
     return [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyReference.href
-                                            cachingPolicy:SBBCachingPolicyFallBackToCached
                                                completion:^(id survey, NSError *error) {
         completionBlock(survey, error);
     }];

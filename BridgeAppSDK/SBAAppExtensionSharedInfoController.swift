@@ -36,10 +36,10 @@ import UIKit
 /**
  The `SBAAppExtensionSharedInfoController` is a light-weight object that can be used to 
  manage the user and bridge info for an app extension. This class assumes that the current
- user and bride info use the shared singletons defined on `SBAUser` and `SBABridgeInfoPList`,
+ user and bridge info use the shared singletons defined on `SBAUser` and `SBABridgeInfoPList`,
  respectively.
  
- Note: syoung 10/05/2017 WIP that is not tested by any of Sage Bionetworks' currently
+ @note syoung 10/05/2017 WIP that is not tested by any of Sage Bionetworks' currently
  released applications.
  */
 public final class SBAAppExtensionSharedInfoController: NSObject, SBAAppInfoDelegate {
