@@ -38,6 +38,7 @@ private let kSurveyGuidKey                    = "surveyGuid"
 private let kSchemaRevisionKey                = "schemaRevision"
 private let kTaskIdentifierKey                = "taskIdentifier"
 private let kScheduledActivityGuidKey         = "scheduledActivityGuid"
+private let kScheduledActivityLabelKey        = "activityLabel"
 private let kTaskRunUUIDKey                   = "taskRunUUID"
 private let kStartDate                        = "startDate"
 private let kEndDate                          = "endDate"
@@ -56,8 +57,9 @@ open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
         super.init(reference: result.schemaIdentifier, jsonValidationMapping: jsonValidationMapping)
         
         // set up the activity metadata
-        // -- always set scheduledActivityGuid and taskRunUUID
+        // -- always set scheduledActivityGuid, activityLabel, and taskRunUUID
         self.metadata[kScheduledActivityGuidKey] = result.schedule.scheduleIdentifier as AnyObject?
+        self.metadata[kScheduledActivityLabelKey] = result.schedule.activity.label as AnyObject?
         self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.uuidString as AnyObject?
         
         // -- if it's a task, also set the taskIdentifier
