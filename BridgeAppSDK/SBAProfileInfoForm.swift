@@ -420,6 +420,7 @@ public struct SBAProfileInfoOptions {
         let unit: HKUnit = HKUnit(from: formatterUnit)
         let quantityType = HKObjectType.quantityType(forIdentifier: .height)!
         let answerFormat = ORKHealthKitQuantityTypeAnswerFormat(quantityType: quantityType, unit: unit, style: .integer)
+        answerFormat.shouldRequestAuthorization = false
         let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("HEIGHT_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
@@ -440,6 +441,7 @@ public struct SBAProfileInfoOptions {
         let unit: HKUnit = HKUnit(from: formatterUnit)
         let quantityType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
         let answerFormat = ORKHealthKitQuantityTypeAnswerFormat(quantityType: quantityType, unit: unit, style: .integer)
+        answerFormat.shouldRequestAuthorization = false
         let formItem = ORKFormItem(identifier: identifier,
                                    text: Localization.localizedString("WEIGHT_FORM_ITEM_TITLE"),
                                    answerFormat: answerFormat,
