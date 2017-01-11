@@ -170,6 +170,11 @@ extension NSDictionary: SBAFormStepSurveyItem, SBASurveyRule {
                 let answerArray = [expectedAnswer]
                 return NSPredicate(format: "answer = %@", answerArray)
             }
+            else if case .multipleChoice = subtype,
+                let expectedAnswer = self.expectedAnswer as? [AnyObject]
+            {
+                return NSPredicate(format: "answer = %@", expectedAnswer)
+            }
         }
         return nil;
     }
