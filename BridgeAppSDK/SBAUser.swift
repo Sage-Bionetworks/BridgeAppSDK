@@ -70,6 +70,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     let kSessionTokenKey = "sessionToken"
     let kNamePropertyKey = "name"
+    let kFamilyNamePropertyKey = "familyName"
     let kEmailPropertyKey = "email"
     let kPasswordPropertyKey = "password"
     let kSubpopulationGuidKey = "SavedSubpopulationGuid"
@@ -97,6 +98,15 @@ public final class SBAUser: NSObject, SBAUserWrapper {
         }
     }
     
+    public var familyName: String? {
+        get {
+            return getKeychainObject(kFamilyNamePropertyKey) as? String
+        }
+        set (newValue) {
+            setKeychainObject(newValue as NSSecureCoding?, key: kFamilyNamePropertyKey)
+        }
+    }
+
     public var email: String? {
         get {
             return getKeychainObject(kEmailPropertyKey) as? String

@@ -161,6 +161,12 @@ public extension SBAUserWrapper {
         if externalId != nil {
             signup.externalId = externalId!
         }
+        if let name = self.name {
+            signup.firstName = name
+        }
+        if let familyName = self.familyName {
+            signup.lastName = familyName
+        }
         registerUser(signup: signup, completion: completion)
     }
     
@@ -484,6 +490,10 @@ public extension SBAUserWrapper {
         
         // Get the subpopulation consent status
         self.subpopulationGuid = response.subpopulationGuid
+        
+        // Get the user's name
+        self.name = response.firstName
+        self.familyName = response.lastName
     }
     
     public func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
@@ -527,6 +537,8 @@ protocol SBAUserSessionInfoWrapper : class {
     var isDataSharingEnabled : Bool { get }
     var dataSharingScope: SBBParticipantDataSharingScope { get }
     var subpopulationGuid: String? { get }
+    var firstName: String? { get }
+    var lastName: String? { get }
 }
 
 extension NSDictionary: SBAUserSessionInfoWrapper {
@@ -537,6 +549,14 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
     
     var isDataSharingEnabled : Bool {
         return self["dataSharing"] as? Bool ?? false
+    }
+    
+    var firstName : String? {
+        return self["firstName"] as? String
+    }
+    
+    var lastName : String? {
+        return self["lastName"] as? String
     }
     
     var dataSharingScope: SBBParticipantDataSharingScope {
