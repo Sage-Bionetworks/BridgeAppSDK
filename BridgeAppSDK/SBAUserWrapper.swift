@@ -45,9 +45,15 @@ public protocol SBAUserWrapper: class, SBBAuthManagerDelegateProtocol {
     var sessionToken: String? { get set }
 
     /**
-     * Name is stored in the keychain
+     * Name is stored in the keychain. This can either be the full name or
+     * the given name for the user. (First name in Western cultures)
      */
     var name: String? { get set }
+    
+    /**
+     * Family name is stored in the keychain. (Optional)
+     */
+    var familyName: String? { get set }
 
     /**
      * Email is stored in the keychain.

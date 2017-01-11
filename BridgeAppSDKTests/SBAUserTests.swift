@@ -83,7 +83,8 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.none)
         XCTAssertFalse(user.isDataSharingEnabled)
-
+        XCTAssertEqual(user.name, "Jane")
+        XCTAssertEqual(user.familyName, "Doe")
     }
     
     func testLoginUser_SharingAll() {
@@ -108,6 +109,8 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
         XCTAssertTrue(user.isDataSharingEnabled)
+        XCTAssertEqual(user.name, "Jane")
+        XCTAssertEqual(user.familyName, "Doe")
     }
     
     func testLoginUser_ExternalId() {
@@ -132,6 +135,8 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
         XCTAssertTrue(user.isDataSharingEnabled)
+        XCTAssertEqual(user.name, "Jane")
+        XCTAssertEqual(user.familyName, "Doe")
     }
     
     // MARK: helper methods
@@ -166,7 +171,9 @@ class SBAUserTests: XCTestCase {
             "attributes" : [],
             "environment" : "production",
             "email" : email,
-            "sharingScope" : sharingScope
+            "sharingScope" : sharingScope,
+            "firstName" : "Jane",
+            "lastName" : "Doe"
         ]
         return dictionary
     }

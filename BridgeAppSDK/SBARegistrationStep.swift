@@ -114,25 +114,24 @@ extension SBARegistrationStepController {
     
     public func registerUser() {
         showLoadingView()
+        
+        // Set the other values from this form.
+        if let name = self.name {
+            self.sharedUser.name = name
+        }
+        if let gender = self.gender {
+            self.sharedUser.gender = gender
+        }
+        if let birthdate = self.birthdate {
+            self.sharedUser.birthdate = birthdate
+        }
+        
         sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
-            guard self != nil else { return }
-            
             if let error = error {
-                self!.handleFailedRegistration(error)
+                self?.handleFailedRegistration(error)
             }
             else {
-                // successfully registered. Set the other values from this form.
-                if let name = self!.name {
-                    self!.sharedUser.name = name
-                }
-                if let gender = self!.gender {
-                    self!.sharedUser.gender = gender
-                }
-                if let birthdate = self!.birthdate {
-                    self!.sharedUser.birthdate = birthdate
-                }
-
-                self!.goNext()
+                self?.goNext()
             }
         }
     }

@@ -43,6 +43,7 @@
 
 @property (nonatomic, copy) NSString * _Nullable sessionToken;
 @property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, copy) NSString * _Nullable familyName;
 @property (nonatomic, copy) NSString * _Nullable email;
 @property (nonatomic, copy) NSString * _Nullable externalId;
 @property (nonatomic, copy) NSString * _Nullable password;
