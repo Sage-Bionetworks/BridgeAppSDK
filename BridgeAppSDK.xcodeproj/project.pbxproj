@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04AFE0161E11E11D00BC3C2A /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AFE0151E11E11D00BC3C2A /* CustomTextField.swift */; };
+		04AFE0691E130CB200BC3C2A /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; };
+		04AFE06A1E130CB200BC3C2A /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC1609F1CFE672100C29AF7 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04AFE0811E130D0000BC3C2A /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; };
+		04AFE0821E130D0000BC3C2A /* openssl.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04AFE0851E130D0A00BC3C2A /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
+		04AFE0861E130D0A00BC3C2A /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04AFE0891E130D2D00BC3C2A /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
+		04AFE08A1E130D2D00BC3C2A /* ZipZap.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6099B9871E00880500902297 /* SBAAppExtensionSharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */; };
 		6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */; };
 		801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 801040B41C5A843D00D26E19 /* BridgeAppSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -284,6 +293,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		04AFE06B1E130CB200BC3C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395F21CFE283F00245DE3 /* ResearchKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B183A4731A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
+		04AFE0831E130D0000BC3C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 60674AE21B30A93900A1917D;
+			remoteInfo = openssl;
+		};
+		04AFE0871E130D0A00BC3C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 80855F4F19BE258C006601C7;
+			remoteInfo = BridgeSDK;
+		};
+		04AFE08B1E130D2D00BC3C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D87BA1F71B3D6DEA00ED7EB3;
+			remoteInfo = "ZipZap (iOS Framework)";
+		};
 		801040BD1C5A843D00D26E19 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 161479B81BD6CE8F0099A068 /* Project object */;
@@ -419,6 +456,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				04AFE0821E130D0000BC3C2A /* openssl.framework in Embed Frameworks */,
+				04AFE06A1E130CB200BC3C2A /* ResearchKit.framework in Embed Frameworks */,
+				04AFE0861E130D0A00BC3C2A /* BridgeSDK.framework in Embed Frameworks */,
+				04AFE08A1E130D2D00BC3C2A /* ZipZap.framework in Embed Frameworks */,
 				801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -427,6 +468,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04AFE0151E11E11D00BC3C2A /* CustomTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeAppSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161479CF1BD6CE8F0099A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppExtensionSharedInfoController.swift; sourceTree = "<group>"; };
@@ -718,8 +760,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04AFE0891E130D2D00BC3C2A /* ZipZap.framework in Frameworks */,
 				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
+				04AFE0851E130D0A00BC3C2A /* BridgeSDK.framework in Frameworks */,
+				04AFE0811E130D0000BC3C2A /* openssl.framework in Frameworks */,
 				FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */,
+				04AFE0691E130CB200BC3C2A /* ResearchKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -876,6 +922,7 @@
 				FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */,
 				FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */,
 				FF92A6D91DC15FE700614D1F /* NewsfeedTableViewController.swift */,
+				04AFE0151E11E11D00BC3C2A /* CustomTextField.swift */,
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
@@ -1585,6 +1632,10 @@
 			);
 			dependencies = (
 				801040C61C5A843D00D26E19 /* PBXTargetDependency */,
+				04AFE06C1E130CB200BC3C2A /* PBXTargetDependency */,
+				04AFE0841E130D0000BC3C2A /* PBXTargetDependency */,
+				04AFE0881E130D0A00BC3C2A /* PBXTargetDependency */,
+				04AFE08C1E130D2D00BC3C2A /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1922,6 +1973,7 @@
 				FF9C47851DC3DA8500200313 /* ActivityTableViewCell.swift in Sources */,
 				FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */,
 				FF92A65D1DBFEF6100614D1F /* LearnTableViewController.swift in Sources */,
+				04AFE0161E11E11D00BC3C2A /* CustomTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,6 +2159,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		04AFE06C1E130CB200BC3C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchKit;
+			targetProxy = 04AFE06B1E130CB200BC3C2A /* PBXContainerItemProxy */;
+		};
+		04AFE0841E130D0000BC3C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = openssl;
+			targetProxy = 04AFE0831E130D0000BC3C2A /* PBXContainerItemProxy */;
+		};
+		04AFE0881E130D0A00BC3C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BridgeSDK;
+			targetProxy = 04AFE0871E130D0A00BC3C2A /* PBXContainerItemProxy */;
+		};
+		04AFE08C1E130D2D00BC3C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ZipZap (iOS Framework)";
+			targetProxy = 04AFE08B1E130D2D00BC3C2A /* PBXContainerItemProxy */;
+		};
 		801040BE1C5A843D00D26E19 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 801040B11C5A843D00D26E19 /* BridgeAppSDK */;
@@ -2529,6 +2601,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BridgeAppSDKSample/BridgeAppSDKSample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2550,6 +2623,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BridgeAppSDKSample/BridgeAppSDKSample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
