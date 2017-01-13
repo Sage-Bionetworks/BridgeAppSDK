@@ -32,6 +32,7 @@
 //
 
 import ResearchKit
+import ResearchUXFactory
 
 /**
  Specialized subclass of a survey factory that can be used to describe consent using the json
@@ -39,50 +40,8 @@ import ResearchKit
  the consent document. The `ORKConsentDocument` is used by the `ORKVisualConsentStep` and the 
  `ORKConsentReviewStep` to display the consent document.
  */
-open class SBAConsentDocumentFactory: SBASurveyFactory {
+open class SBAConsentDocumentFactory: SBABaseConsentDocumentFactory {
     
-    lazy open var consentDocument: ORKConsentDocument = {
-        
-        // Setup the consent document
-        let consentDocument = ORKConsentDocument()
-        consentDocument.title = Localization.localizedString("SBA_CONSENT_TITLE")
-        consentDocument.signaturePageTitle = Localization.localizedString("SBA_CONSENT_TITLE")
-        consentDocument.signaturePageContent = Localization.localizedString("SBA_CONSENT_SIGNATURE_CONTENT")
-        
-        // Add the signature
-        let signature = ORKConsentSignature(forPersonWithTitle: Localization.localizedString("SBA_CONSENT_PERSON_TITLE"), dateFormatString: nil, identifier: "participant")
-        consentDocument.addSignature(signature)
-        
-        return consentDocument
-    }()
-    
-    public convenience init?(jsonNamed: String) {
-        guard let json = SBAResourceFinder.shared.json(forResource: jsonNamed) else { return nil }
-        self.init(dictionary: json as NSDictionary)
-    }
-    
-    public convenience init(dictionary: NSDictionary) {
-        self.init()
-        
-        // Load the sections
-        var previousSectionType: SBAConsentSectionType?
-        if let sections = dictionary["sections"] as? [NSDictionary] {
-            self.consentDocument.sections = sections.map({ (dictionarySection) -> ORKConsentSection in
-                let consentSection = dictionarySection.createConsentSection(previous: previousSectionType)
-                previousSectionType = dictionarySection.consentSectionType
-                return consentSection
-            })
-        }
-        
-        // Load the document for the HTML content
-        if let properties = dictionary["documentProperties"] as? NSDictionary,
-            let documentHtmlContent = properties["htmlDocument"] as? String {
-            self.consentDocument.htmlReviewContent = SBAResourceFinder.shared.html(forResource: documentHtmlContent)
-        }
-        
-        // After loading the consentDocument, map the steps
-        self.mapSteps(dictionary)
-    }
     
     // Override the base class to implement creating consent steps
     override open func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {

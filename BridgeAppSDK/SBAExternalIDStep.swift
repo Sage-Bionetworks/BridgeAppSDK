@@ -113,61 +113,6 @@ open class SBAExternalIDStep: ORKPageStep {
 }
 
 /**
- Object with the options for the external ID form item `ORKAnswerFormat`
- */
-struct SBAExternalIDOptions {
-    
-    /**
-     By default, the autocapitalization type is all characters
-    */
-    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
-    
-    /**
-     By default, the keyboard type is ASCII
-    */
-    static let defaultKeyboardType: UIKeyboardType = .asciiCapable
-    
-    /**
-     Auto-capitalization type for the text field
-    */
-    let autocapitalizationType: UITextAutocapitalizationType
-    
-    /**
-     Keyboard type for the text field
-    */
-    let keyboardType: UIKeyboardType
-    
-    init() {
-        self.autocapitalizationType = SBAExternalIDOptions.defaultAutocapitalizationType
-        self.keyboardType = SBAExternalIDOptions.defaultKeyboardType
-    }
-    
-    init(autocapitalizationType: UITextAutocapitalizationType, keyboardType: UIKeyboardType) {
-        self.autocapitalizationType = autocapitalizationType
-        self.keyboardType = keyboardType
-    }
-    
-    init(options: [AnyHashable: Any]?) {
-        self.autocapitalizationType = {
-            if let autocap = options?["autocapitalizationType"] as? String {
-                return UITextAutocapitalizationType(key: autocap)
-            }
-            else {
-                return SBAExternalIDOptions.defaultAutocapitalizationType
-            }
-        }()
-        self.keyboardType = {
-            if let keyboard = options?["keyboardType"] as? String {
-                return UIKeyboardType(key: keyboard)
-            }
-            else {
-                return SBAExternalIDOptions.defaultKeyboardType
-            }
-        }()
-    }
-}
-
-/**
  Default class used to handle registration or login via External ID
  */
 open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAAccountController {
