@@ -33,6 +33,7 @@
 
 #import "SBABridgeManager.h"
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
+@import ResearchUXFactory;
 
 @implementation SBABridgeManager
 
@@ -41,6 +42,19 @@
        cacheDaysBehind:(NSInteger)cacheDaysBehind
            environment:(SBBEnvironment)environment
           authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
+    
+    // Add this bundle to the resource bundles
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SBAInfoManager *infoManager = [SBAInfoManager sharedManager];
+        NSMutableArray *bundles = [infoManager.resourceBundles mutableCopy];
+        NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
+        if (![bundles containsObject:thisBundle]) {
+            NSUInteger idx = bundles.count > 0 ? 1 : 0;
+            [bundles insertObject:thisBundle atIndex:idx];
+            infoManager.resourceBundles = bundles;
+        }
+    });
     
     [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
