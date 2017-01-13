@@ -54,7 +54,7 @@ public final class SBAAppExtensionSharedInfoController: NSObject, SBAAppInfoDele
     
     public var bridgeInfo: SBABridgeInfo {
         get {
-            return SBABridgeInfoManager.shared as! SBABridgeInfo
+            return SBAInfoManager.shared
         }
     }
     

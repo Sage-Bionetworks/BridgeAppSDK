@@ -37,7 +37,7 @@ import UIKit
     
     open class func pemPath() -> String? {
         let sharedAppDelegate = UIApplication.shared.delegate as? SBAAppInfoDelegate
-        let bridgeInfo: SBABridgeInfo = sharedAppDelegate?.bridgeInfo ?? SBABridgeInfoManager.shared as! SBABridgeInfo
+        let bridgeInfo: SBABridgeInfo = sharedAppDelegate?.bridgeInfo ?? SBAInfoManager.shared
         let certificatePath = Bundle.main.path(forResource: bridgeInfo.certificateName, ofType: "pem")
         return certificatePath
     }

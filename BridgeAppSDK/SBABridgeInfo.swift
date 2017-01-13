@@ -117,34 +117,44 @@ public protocol SBABridgeInfo: SBASharedAppInfo {
  This is an implementation of the SBABridgeInfo protocol that uses a dictionary to 
  define the values required by the BridgeInfo protocol.
  */
-open class SBABridgeInfoManager : SBAInfoManager, SBABridgeInfo {
+extension SBAInfoManager: SBABridgeInfo {
         
     public var studyIdentifier: String {
         return self.plist["studyIdentifier"] as! String
     }
     
-    public var cacheDaysAhead: Int = 0
-    public var cacheDaysBehind: Int = 0
-    public var environment: SBBEnvironment = .prod
-
-    public override init() {
-        super.init()
-
-        // TODO: FIXME!!! Set info manager to self. syoung 01/13/2017
-        
+    public var environment: SBBEnvironment {
+        guard let rawValue = self.plist["environment"] as? NSNumber,
+            let environment = SBBEnvironment(rawValue: rawValue.intValue)
+        else {
+            return .prod
+        }
+        return environment
+    }
+    
+    public var cacheDaysAhead: Int {
+        let (cacheDaysAhead, _) = parseCacheDays()
+        return cacheDaysAhead
+    }
+    
+    public var cacheDaysBehind: Int {
+        let (_, cacheDaysBehind) = parseCacheDays()
+        return cacheDaysBehind
+    }
+    
+    fileprivate func parseCacheDays() -> (cacheDaysAhead: Int, cacheDaysBehind: Int) {
         // Setup cache days using either days ahead and behind or else using 
         // default values for days ahead and behind
         let cacheDaysAhead = self.plist["cacheDaysAhead"] as? Int
         let cacheDaysBehind = self.plist["cacheDaysBehind"] as? Int
         if (cacheDaysAhead != nil) || (cacheDaysBehind != nil) {
-            self.cacheDaysAhead = cacheDaysAhead ?? SBBDefaultCacheDaysAhead
-            self.cacheDaysBehind = cacheDaysBehind ?? SBBDefaultCacheDaysBehind
+            return (cacheDaysAhead ?? SBBDefaultCacheDaysAhead, cacheDaysBehind ?? SBBDefaultCacheDaysBehind)
         }
-        else if let useCache = self.plist["useCache"] as? Bool , useCache {
+        else if let useCache = self.plist["useCache"] as? Bool, useCache {
             // If this plist has the useCache key then set the ahead and behind to default
-            self.cacheDaysAhead = SBBDefaultCacheDaysAhead
-            self.cacheDaysBehind = SBBDefaultCacheDaysBehind
+            return (SBBDefaultCacheDaysAhead, SBBDefaultCacheDaysBehind)
         }
+        return (0,0)
     }
     
     public var appStoreLinkURLString: String? {
