@@ -39,10 +39,7 @@ import ResearchUXFactory
  Custom step types recognized by this Framework
  */
 public enum BridgeSurveyItemSubtype: String {
-    case login              = "login"                   // SBALoginStep
-    case emailVerification  = "emailVerification"       // SBAEmailVerificationStep
-    case externalID         = "externalID"              // SBAExternalIDStep
-    case completion         = "onboardingCompletion"    // SBAOnboardingCompletionStep
+    case onboardingCompletion   = "onboardingCompletion"    // SBAOnboardingCompletionStep
 }
 
 /**
@@ -105,24 +102,23 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         guard let bridgeSubtype = inputItem.surveyItemType.bridgeSubtype() else {
             return super.createSurveyStepWithCustomType(inputItem)
         }
-        
         switch (bridgeSubtype) {
+        case .onboardingCompletion:
+            return SBAOnboardingCompleteStep(inputItem: inputItem)
+        }
+    }
+    
+    open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
+        switch (subtype) {
+        case .registration:
+            return SBARegistrationStep(inputItem: inputItem, factory: self)
         case .login:
             return SBALoginStep(inputItem: inputItem, factory: self)
         case .emailVerification:
             return SBAEmailVerificationStep(inputItem: inputItem)
         case .externalID:
             return SBAExternalIDStep(inputItem: inputItem)
-        case .completion:
-            return SBAOnboardingCompleteStep(inputItem: inputItem)
-        }
-    }
-    
-    open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
-        if (subtype == .registration) {
-            return SBARegistrationStep(inputItem: inputItem, factory: self)
-        }
-        else {
+        default:
             return super.createAccountStep(inputItem:inputItem, subtype: subtype)
         }
     }

@@ -67,7 +67,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
     
     public init(inputItem: SBASurveyItem) {
-        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options as [NSObject : AnyObject]?))
+        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options))
         super.init(identifier: inputItem.identifier, steps: steps)
         if let title = inputItem.stepTitle {
             self.title = title
@@ -88,9 +88,9 @@ open class SBAExternalIDStep: ORKPageStep {
         // Create the steps that are used by this method
         let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
-            let options = SBAProfileInfoOptions(externalIDOptions: options)
+            let options = SBAProfileInfoOptions(include: .externalID, surveyItemType: .custom("externalID"), extendedOption: options)
             let step = ORKFormStep(identifier: stepIdentifier)
-            step.formItems = options.makeFormItems(shouldConfirmPassword: false)
+            step.formItems = options.makeFormItems()
             step.isOptional = false
             return step
         }

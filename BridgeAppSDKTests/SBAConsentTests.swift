@@ -415,9 +415,9 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         return (pageStep, reviewStep, formStep, signatureStep)
     }
     
-    func createConsentFactory() -> SBAConsentDocumentFactory? {
+    func createConsentFactory() -> SBASurveyFactory? {
         guard let input = jsonForResource("Consent") else { return nil }
-        return SBAConsentDocumentFactory(dictionary: input)
+        return SBASurveyFactory(dictionary: input)
     }
 
 }

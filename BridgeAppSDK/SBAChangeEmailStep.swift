@@ -43,7 +43,7 @@ open class SBAChangeEmailStep: ORKFormStep {
         super.init(identifier: identifier)
         let profileInfo = SBAProfileInfoOptions(includes: [.email])
         self.title = Localization.localizedString("REGISTRATION_CHANGE_EMAIL_TITLE")
-        self.formItems = profileInfo.makeFormItems(shouldConfirmPassword: false)
+        self.formItems = profileInfo.makeFormItems()
         self.isOptional = false
     }
     

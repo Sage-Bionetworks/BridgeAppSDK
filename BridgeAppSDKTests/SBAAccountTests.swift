@@ -247,7 +247,7 @@ class SBAAccountTests: XCTestCase {
         XCTAssertNotNil(passwordItem)
         XCTAssertNotNil(password, "\(passwordItem?.answerFormat)")
         
-        let confirmationItem = step.formItem(for:"confirmation")
+        let confirmationItem = step.formItem(for:SBAProfileInfoOptions.confirmationIdentifier)
         let confirmation = confirmationItem?.answerFormat as? ORKTextAnswerFormat
         XCTAssertNotNil(confirmationItem)
         XCTAssertNotNil(confirmation, "\(confirmationItem?.answerFormat)")
