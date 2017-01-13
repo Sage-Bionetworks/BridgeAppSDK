@@ -37,6 +37,14 @@
 		FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */; };
 		FF2498141CB6C1F0002DD05F /* MockTrackedDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2498131CB6C1F0002DD05F /* MockTrackedDataStore.m */; };
 		FF2498251CB78972002DD05F /* SBATrackedDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */; };
+		FF24FF211E28C3DF0016C4DF /* ResearchUXFactory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEE61E28AF4E0016C4DF /* ResearchUXFactory.framework */; };
+		FF24FF221E28C3DF0016C4DF /* ResearchUXFactory.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEE61E28AF4E0016C4DF /* ResearchUXFactory.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF24FF251E28C3E80016C4DF /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; };
+		FF24FF261E28C3E80016C4DF /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF24FF291E28C4120016C4DF /* ResearchUXFactory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEE61E28AF4E0016C4DF /* ResearchUXFactory.framework */; };
+		FF24FF2A1E28C4180016C4DF /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; };
+		FF24FF2B1E28C55F0016C4DF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
+		FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
 		FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */; };
@@ -235,6 +243,27 @@
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
 		};
+		FF24FF231E28C3DF0016C4DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 801040B11C5A843D00D26E19;
+			remoteInfo = ResearchUXFactory;
+		};
+		FF24FF271E28C3E80016C4DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B183A4731A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
+		FF24FF2D1E28C55F0016C4DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 80855F4F19BE258C006601C7;
+			remoteInfo = BridgeSDK;
+		};
 		FFC160771CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
@@ -336,6 +365,9 @@
 			dstSubfolderSpec = 10;
 			files = (
 				801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */,
+				FF24FF221E28C3DF0016C4DF /* ResearchUXFactory.framework in Embed Frameworks */,
+				FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */,
+				FF24FF261E28C3E80016C4DF /* ResearchKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -524,8 +556,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
 				FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */,
+				FF24FF2B1E28C55F0016C4DF /* BridgeSDK.framework in Frameworks */,
+				FF24FF251E28C3E80016C4DF /* ResearchKit.framework in Frameworks */,
+				FF24FF211E28C3DF0016C4DF /* ResearchUXFactory.framework in Frameworks */,
+				801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,6 +568,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF24FF2A1E28C4180016C4DF /* ResearchKit.framework in Frameworks */,
+				FF24FF291E28C4120016C4DF /* ResearchUXFactory.framework in Frameworks */,
 				FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */,
 				FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */,
 				FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */,
@@ -1151,6 +1188,9 @@
 			);
 			dependencies = (
 				801040C61C5A843D00D26E19 /* PBXTargetDependency */,
+				FF24FF241E28C3DF0016C4DF /* PBXTargetDependency */,
+				FF24FF281E28C3E80016C4DF /* PBXTargetDependency */,
+				FF24FF2E1E28C55F0016C4DF /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1620,6 +1660,21 @@
 			isa = PBXTargetDependency;
 			target = 801040B11C5A843D00D26E19 /* BridgeAppSDK */;
 			targetProxy = 801040C51C5A843D00D26E19 /* PBXContainerItemProxy */;
+		};
+		FF24FF241E28C3DF0016C4DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchUXFactory;
+			targetProxy = FF24FF231E28C3DF0016C4DF /* PBXContainerItemProxy */;
+		};
+		FF24FF281E28C3E80016C4DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchKit;
+			targetProxy = FF24FF271E28C3E80016C4DF /* PBXContainerItemProxy */;
+		};
+		FF24FF2E1E28C55F0016C4DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BridgeSDK;
+			targetProxy = FF24FF2D1E28C55F0016C4DF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

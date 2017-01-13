@@ -33,12 +33,13 @@
 
 import UIKit
 import BridgeSDK
+import ResearchUXFactory
 
 /**
  This protocol is used as the mapping for information used to customize the study.
  */
 @objc
-public protocol SBABridgeInfo: class {
+public protocol SBABridgeInfo: SBASharedAppInfo {
     
     /**
      Study identifier used to setup the study with Bridge
@@ -99,11 +100,6 @@ public protocol SBABridgeInfo: class {
      URL for the news feed for this app.
      */
     var newsfeedURLString: String? { get }
-
-    /**
-     The Logo image to use for this app.
-     */
-    var logoImageName: String? { get }
     
     /**
      A custom url for launching an app update.
@@ -115,72 +111,36 @@ public protocol SBABridgeInfo: class {
      do not check for a text user.
     */
     var disableTestUserCheck: Bool { get }
-    
-    /**
-     Array of objects that can be converted into `SBAPermissionObjectType` objects.
-    */
-    var permissionTypeItems: [Any]? { get }
-    
-    /**
-     Keychain service name.
-     */
-    var keychainService: String? { get }
-    
-    /**
-    Keychain access group name.
-    */
-    var keychainAccessGroup: String? { get }
-    
-    /**
-     App group identifier used for the suite name of NSUserDefaults (if provided).
-    */
-    var appGroupIdentifier: String? { get }
 }
 
 /**
  This is an implementation of the SBABridgeInfo protocol that uses a dictionary to 
  define the values required by the BridgeInfo protocol.
  */
-public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
-    
-    static let shared = SBABridgeInfoPList()
-    
+open class SBABridgeInfoManager : SBAInfoManager, SBABridgeInfo {
+        
     public var studyIdentifier: String {
-        return _studyIdentifier
+        return self.plist["studyIdentifier"] as! String
     }
-    private let _studyIdentifier: String
     
     public var cacheDaysAhead: Int = 0
     public var cacheDaysBehind: Int = 0
     public var environment: SBBEnvironment = .prod
-    
-    private let plist: [String: Any]
 
-    public convenience override init() {
-        var plist = SBAResourceFinder.shared.plist(forResource: "BridgeInfo")!
-        if let additionalInfo = SBAResourceFinder.shared.plist(forResource: "BridgeInfo-private") {
-            plist = plist.merge(from: additionalInfo)
-        }
-        let studyIdentifier = plist["studyIdentifier"] as! String
-        self.init(studyIdentifier: studyIdentifier, plist: plist)
-    }
-    
-    public init(studyIdentifier:String, plist: [String: Any]) {
-        
-        // Set study identifier and plist pointers
-        self._studyIdentifier = studyIdentifier
-        self.plist = plist
+    public override init() {
         super.init()
+
+        // TODO: FIXME!!! Set info manager to self. syoung 01/13/2017
         
         // Setup cache days using either days ahead and behind or else using 
         // default values for days ahead and behind
-        let cacheDaysAhead = plist["cacheDaysAhead"] as? Int
-        let cacheDaysBehind = plist["cacheDaysBehind"] as? Int
+        let cacheDaysAhead = self.plist["cacheDaysAhead"] as? Int
+        let cacheDaysBehind = self.plist["cacheDaysBehind"] as? Int
         if (cacheDaysAhead != nil) || (cacheDaysBehind != nil) {
             self.cacheDaysAhead = cacheDaysAhead ?? SBBDefaultCacheDaysAhead
             self.cacheDaysBehind = cacheDaysBehind ?? SBBDefaultCacheDaysBehind
         }
-        else if let useCache = plist["useCache"] as? Bool , useCache {
+        else if let useCache = self.plist["useCache"] as? Bool , useCache {
             // If this plist has the useCache key then set the ahead and behind to default
             self.cacheDaysAhead = SBBDefaultCacheDaysAhead
             self.cacheDaysBehind = SBBDefaultCacheDaysBehind
@@ -219,32 +179,12 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
         return self.plist["newsfeedURL"] as? String
     }
     
-    public var logoImageName: String? {
-        return self.plist["logoImageName"] as? String
-    }
-    
     public var appUpdateURLString: String? {
         return self.plist["appUpdateURL"] as? String
     }
     
     public var disableTestUserCheck: Bool {
         return self.plist["disableTestUserCheck"] as? Bool ?? false
-    }
-    
-    public var permissionTypeItems: [Any]? {
-        return self.plist["permissionTypes"] as? [Any]
-    }
-    
-    public var keychainService: String? {
-        return self.plist["keychainService"] as? String
-    }
-    
-    public var keychainAccessGroup: String? {
-        return self.plist["keychainAccessGroup"] as? String
-    }
-    
-    public var appGroupIdentifier: String? {
-        return self.plist["appGroupIdentifier"] as? String
     }
 
 }
@@ -288,20 +228,11 @@ extension SBABridgeInfo {
         return URL(string: urlString)
     }
     
-    public var logoImage: UIImage? {
-        guard let imageName = logoImageName else { return nil }
-        return UIImage(named: imageName)
-    }
-    
     public var appUpdateURL: URL {
         guard let urlString = appUpdateURLString, let url = URL(string: urlString) else {
             return Bundle.main.appStoreLinkURL()
         }
         return url
-    }
-    
-    public var userDefaults: UserDefaults {
-        return UserDefaults(suiteName: self.appGroupIdentifier) ?? UserDefaults.standard
     }
 }
 

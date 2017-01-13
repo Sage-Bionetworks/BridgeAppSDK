@@ -35,47 +35,9 @@ import ResearchKit
 import ResearchUXFactory
 
 /**
- Specialized subclass of a survey factory that can be used to describe consent using the json
- format used by AppCore. This model includes a list of consent sections that are used to create
- the consent document. The `ORKConsentDocument` is used by the `ORKVisualConsentStep` and the 
- `ORKConsentReviewStep` to display the consent document.
+ Extension used by the `SBAOnboardingManager` to build the appropriate steps for a consent flow.
  */
-open class SBAConsentDocumentFactory: SBABaseConsentDocumentFactory {
-    
-    
-    // Override the base class to implement creating consent steps
-    override open func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
-        guard let subtype = inputItem.surveyItemType.consentSubtype() else {
-            return super.createSurveyStepWithCustomType(inputItem)
-        }
-        switch (subtype) {
-            
-        case .visual:
-            return ORKVisualConsentStep(identifier: inputItem.identifier,
-                document: self.consentDocument)
-            
-        case .sharingOptions:
-            return SBAConsentSharingStep(inputItem: inputItem)
-            
-        case .review:
-            if let consentReview = inputItem as? SBAConsentReviewOptions
-                , consentReview.usesDeprecatedOnboarding {
-                // If this uses the deprecated onboarding (consent review defined by ORKConsentReviewStep)
-                // then return that object type.
-                let signature = self.consentDocument.signatures?.first
-                signature?.requiresName = consentReview.requiresSignature
-                signature?.requiresSignatureImage = consentReview.requiresSignature
-                return ORKConsentReviewStep(identifier: inputItem.identifier,
-                                            signature: signature,
-                                            in: self.consentDocument)
-            }
-            else {
-                let review = inputItem as! SBAFormStepSurveyItem
-                let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument, factory: self)
-                return step;
-            }
-        }
-    }
+extension SBASurveyFactory {
     
     /**
      Return visual consent step

@@ -33,7 +33,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBAJSONObject.h"
+#import <ResearchUXFactory/ResearchUXFactory.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

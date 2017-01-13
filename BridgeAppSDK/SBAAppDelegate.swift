@@ -179,7 +179,7 @@ public let SBAMainStoryboardName = "Main"
     open var bridgeInfo: SBABridgeInfo {
         return _bridgeInfo
     }
-    private let _bridgeInfo = SBABridgeInfoPList.shared
+    private let _bridgeInfo: SBABridgeInfo = SBABridgeInfoManager.shared as! SBABridgeInfo
     
     /**
      A wrapper object for the current user. By default, this class will instantiate a singleton for

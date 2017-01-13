@@ -50,8 +50,8 @@ public enum BridgeSurveyItemSubtype: String {
  */
 extension SBASurveyItemType {
     func bridgeSubtype() -> BridgeSurveyItemSubtype? {
-        if case .custom(let subtype) = self {
-            return BridgeSurveyItemSubtype(rawValue: subtype)
+        if case .custom(let subtype) = self, subtype != nil {
+            return BridgeSurveyItemSubtype(rawValue: subtype!)
         }
         return nil
     }
@@ -110,7 +110,7 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         case .login:
             return SBALoginStep(inputItem: inputItem, factory: self)
         case .emailVerification:
-            return SBAEmailVerificationStep(inputItem: inputItem, appInfo: self.sharedAppDelegate)
+            return SBAEmailVerificationStep(inputItem: inputItem)
         case .externalID:
             return SBAExternalIDStep(inputItem: inputItem)
         case .completion:
@@ -124,6 +124,37 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         }
         else {
             return super.createAccountStep(inputItem:inputItem, subtype: subtype)
+        }
+    }
+    
+    // Override the base class to implement creating consent steps
+    override open func createConsentStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.ConsentSubtype) -> ORKStep? {
+        switch (subtype) {
+            
+        case .visual:
+            return ORKVisualConsentStep(identifier: inputItem.identifier,
+                                        document: self.consentDocument)
+            
+        case .sharingOptions:
+            return SBAConsentSharingStep(inputItem: inputItem)
+            
+        case .review:
+            if let consentReview = inputItem as? SBAConsentReviewOptions
+                , consentReview.usesDeprecatedOnboarding {
+                // If this uses the deprecated onboarding (consent review defined by ORKConsentReviewStep)
+                // then return that object type.
+                let signature = self.consentDocument.signatures?.first
+                signature?.requiresName = consentReview.requiresSignature
+                signature?.requiresSignatureImage = consentReview.requiresSignature
+                return ORKConsentReviewStep(identifier: inputItem.identifier,
+                                            signature: signature,
+                                            in: self.consentDocument)
+            }
+            else {
+                let review = inputItem as! SBAFormStepSurveyItem
+                let step = SBAConsentReviewStep(inputItem: review, inDocument: self.consentDocument, factory: self)
+                return step;
+            }
         }
     }
     

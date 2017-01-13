@@ -148,14 +148,14 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         // This is to facilitate skipping reconsent for a user who is logging in where it is unknown whether
         // or not the user needs to reconsent. Returned this way because the steps in a subclass of ORKOrderedTask 
         // are immutable but can be skipped using navigation rules.
-        if let consentFactory = factory as? SBAConsentDocumentFactory {
+        if let baseType = section.onboardingSectionType?.baseType(), baseType == .consent {
             switch (onboardingTaskType) {
             case .registration:
-                return [consentFactory.registrationConsentStep()]
+                return [factory.registrationConsentStep()]
             case .login:
-                return [consentFactory.loginConsentStep()]
+                return [factory.loginConsentStep()]
             default:
-                return [consentFactory.reconsentStep()]
+                return [factory.reconsentStep()]
             }
         }
         
@@ -266,7 +266,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     weak fileprivate var _taskViewController: SBATaskViewController?
     
-    func attachTaskViewController(_ taskViewController: SBATaskViewController) {
+    public func attachTaskViewController(_ taskViewController: SBATaskViewController) {
         _taskViewController = taskViewController
         taskViewController.defaultResultSource = self
     }
