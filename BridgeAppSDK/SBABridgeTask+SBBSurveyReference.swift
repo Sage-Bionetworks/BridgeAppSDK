@@ -37,8 +37,12 @@ import ResearchKit
 
 extension SBBSurveyReference : SBATaskReference {
     
-    public func transformToTask(with factory: SBASurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
-        return SBASurveyTask(surveyReference: self, factory: factory)
+    public func transformToTask(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
+        guard let bridgeFactory = factory as? SBASurveyFactory else {
+            assertionFailure("\(factory) must be a subclass of SBASurveyFactory.")
+            return nil
+        }
+        return SBASurveyTask(surveyReference: self, factory: bridgeFactory)
     }
     
     public var cancelDisabled: Bool {
