@@ -122,7 +122,10 @@ public extension SBAUserWrapper {
         SBABridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
             guard (self != nil) else { return }
 
-            self!.dataGroups = dataGroups
+            // Only update the data groups if the error is nil
+            if error == nil {
+                self!.dataGroups = dataGroups
+            }
             self!.callCompletionOnMain(error, completion: completion)
         })
     }
