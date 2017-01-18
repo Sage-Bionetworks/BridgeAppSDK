@@ -65,6 +65,9 @@ extension SBAAppInfoDelegate {
         // WARNING: This will force login
         currentUser.resetUserKeychainIfNeeded()
         
+        // Point the shared info manager current participant at the current user
+        SBAInfoManager.shared.currentParticipant = currentUser
+        
         // Setup the study
         SBABridgeManager.setup(withStudy: bridgeInfo.studyIdentifier,
                                cacheDaysAhead: bridgeInfo.cacheDaysAhead,
