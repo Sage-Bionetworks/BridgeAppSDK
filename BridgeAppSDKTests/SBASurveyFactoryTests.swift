@@ -940,6 +940,41 @@ class SBASurveyFactoryTests: XCTestCase {
         
     }
     
+    func testFactory_DecimalConstraints_Slider() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "slider"
+        inputStep.identifier = "age"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How old\n\nare you?"
+        
+        let constraints = SBBDecimalConstraints()
+        inputStep.constraints = constraints
+        constraints.minValue = NSNumber(value: 18.3 as Double)
+        constraints.maxValue = NSNumber(value: 100.2 as Double)
+        constraints.step = NSNumber(value: 0.1 as Double)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "age")
+        XCTAssertEqual(surveyStep.text, "How old are you?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKContinuousScaleAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(answerFormat.minimum, 18.3)
+        XCTAssertEqual(answerFormat.maximum, 100.2)
+        XCTAssertEqual(answerFormat.maximumFractionDigits, 1)
+    }
+    
     // MARK: IntegerConstraint with uiHint == slider
     
     func testFactory_IntegerSlider_step0_10() {
@@ -1107,7 +1142,6 @@ class SBASurveyFactoryTests: XCTestCase {
     func createSliderQuestion(_ step: Int32?, min:Int32 = 0, max: Int32 = 100) -> SBBSurveyQuestion {
         
         let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
-        inputStep.uiHint = "numberfield"
         inputStep.identifier = "age"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
         inputStep.prompt = "How old are you?"

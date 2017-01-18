@@ -136,7 +136,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
             }
         }
         else if let _ = self.constraints as? SBBDecimalConstraints {
-            return .form(.decimal)
+            if (self.uiHint == "slider") {
+                return .form(.continuousScale)
+            }
+            else {
+                return .form(.decimal)
+            }
         }
         return SBASurveyItemType.custom(nil)
     }
@@ -381,9 +386,9 @@ extension sbb_NumberRange {
         return maxValue
     }
     
-    public var stepInterval: Int {
+    public var stepInterval: Double {
         guard (self.step != nil) else { return 1 }
-        return self.step.intValue
+        return self.step.doubleValue
     }
     
     public var unitLabel: String? {
