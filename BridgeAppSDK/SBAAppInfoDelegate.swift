@@ -65,14 +65,9 @@ extension SBAAppInfoDelegate {
         // WARNING: This will force login
         currentUser.resetUserKeychainIfNeeded()
         
-        // Point the shared info manager current participant at the current user
-        SBAInfoManager.shared.currentParticipant = currentUser
-        
         // Setup the study
-        SBABridgeManager.setup(withStudy: bridgeInfo.studyIdentifier,
-                               cacheDaysAhead: bridgeInfo.cacheDaysAhead,
-                               cacheDaysBehind: bridgeInfo.cacheDaysAhead,
-                               environment: bridgeInfo.environment,
+        SBABridgeManager.setup(bridgeInfo: bridgeInfo,
+                               participant: currentUser,
                                authDelegate: currentUser)
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload

@@ -39,27 +39,7 @@ import ResearchUXFactory
  This protocol is used as the mapping for information used to customize the study.
  */
 @objc
-public protocol SBABridgeInfo: SBASharedAppInfo {
-    
-    /**
-     Study identifier used to setup the study with Bridge
-     */
-    var studyIdentifier: String! { get }
-    
-    /**
-     If using BridgeSDK's built-in caching, number of days ahead to cache
-     */
-    var cacheDaysAhead: Int { get }
-    
-    /**
-     If using BridgeSDK's built-in caching, number of days behind to cache
-     */
-    var cacheDaysBehind: Int { get }
-    
-    /**
-     Environment to load
-     */
-    var environment: SBBEnvironment { get }
+public protocol SBABridgeInfo: SBASharedAppInfo, SBBBridgeInfoProtocol {
     
     /**
      App store link for this application. By default, this returns the value pulled from the main bundle
@@ -90,11 +70,6 @@ public protocol SBABridgeInfo: SBASharedAppInfo {
      Mapping of task identifier and associated info for creating a task
      */
     var taskMap: [NSDictionary]? { get }
-    
-    /**
-     Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
-     */
-    var certificateName: String? { get }
     
     /**
      URL for the news feed for this app.
