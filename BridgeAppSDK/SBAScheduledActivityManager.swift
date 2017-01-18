@@ -877,12 +877,12 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
 
 extension ORKTask {
     
-    func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
+    public func commitTrackedDataChanges(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
         recursiveUpdateTrackedDataStores(shouldCommit: true)
         updateDataGroups(user: user, taskResult: taskResult, completion: completion)
     }
     
-    func resetTrackedDataChanges() {
+    public func resetTrackedDataChanges() {
         recursiveUpdateTrackedDataStores(shouldCommit: false)
     }
     
@@ -908,37 +908,16 @@ extension ORKTask {
     }
     
     private func updateDataGroups(user: SBAUserWrapper, taskResult: ORKTaskResult, completion: ((Error?) -> Void)?) {
-        let previousGroups: Set<String> = Set(user.dataGroups ?? [])
-        let groups = recursiveUnionDataGroups(previousGroups: previousGroups, taskResult: taskResult)
-        if groups != previousGroups {
+        let (groups, changed) = self.union(currentGroups: user.dataGroups, with: taskResult)
+        if changed, let dataGroups = groups {
             // If the user groups are changed then update
-            user.updateDataGroups(Array(groups), completion: completion)
+            user.updateDataGroups(dataGroups, completion: completion)
         }
         else {
             // Otherwise call completion
             completion?(nil)
         }
     }
-    
-    // recursively search for a data group step
-    private func recursiveUnionDataGroups(previousGroups: Set<String>, taskResult: ORKTaskResult) -> Set<String> {
-        guard let navTask = self as? ORKOrderedTask else { return previousGroups }
-        var dataGroups = previousGroups
-        for step in navTask.steps {
-            if let dataGroupsStep = step as? SBADataGroupsStep,
-                let result = taskResult.stepResult(forStepIdentifier: dataGroupsStep.identifier) {
-                dataGroups = dataGroupsStep.union(previousGroups: dataGroups, stepResult: result)
-            }
-            else if let subtaskStep = step as? SBASubtaskStep {
-                let subtaskResult = ORKTaskResult(identifier: subtaskStep.subtask.identifier)
-                let (subResults, _) = subtaskStep.filteredStepResults(taskResult.results as! [ORKStepResult])
-                subtaskResult.results = subResults
-                dataGroups = subtaskStep.subtask.recursiveUnionDataGroups(previousGroups: dataGroups, taskResult: subtaskResult)
-            }
-        }
-        return dataGroups
-    }
-    
 }
 
 

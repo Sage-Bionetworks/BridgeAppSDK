@@ -56,6 +56,12 @@
         }
     });
     
+    // If the auth delegate is also the current user then set that
+    if ([authDelegate conformsToProtocol:@protocol(SBAParticipantInfo)]) {
+        [SBAInfoManager sharedManager].currentParticipant = (id <SBAParticipantInfo>)authDelegate;
+    }
+    
+    // Finally setup bridge
     [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
