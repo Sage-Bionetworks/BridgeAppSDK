@@ -24,19 +24,14 @@
 		80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */; };
 		80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */; };
 		FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */; };
-		FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */; };
 		FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */; };
 		FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */; };
 		FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */; };
-		FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */; };
 		FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE5515C1C6D267100C9E1AA /* MockORKTask.m */; };
-		FF0158711DF6047600F417E1 /* SBAAnswerFormatFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0158701DF6047600F417E1 /* SBAAnswerFormatFinderTests.swift */; };
-		FF08C9301DEE1EBC00235711 /* UtilityExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF08C92F1DEE1EBC00235711 /* UtilityExtensionTests.swift */; };
 		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
 		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
 		FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */; };
 		FF2498141CB6C1F0002DD05F /* MockTrackedDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2498131CB6C1F0002DD05F /* MockTrackedDataStore.m */; };
-		FF2498251CB78972002DD05F /* SBATrackedDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */; };
 		FF24FF211E28C3DF0016C4DF /* ResearchUXFactory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEE61E28AF4E0016C4DF /* ResearchUXFactory.framework */; };
 		FF24FF221E28C3DF0016C4DF /* ResearchUXFactory.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEE61E28AF4E0016C4DF /* ResearchUXFactory.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF24FF251E28C3E80016C4DF /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; };
@@ -47,7 +42,6 @@
 		FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
-		FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */; };
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
 		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
 		FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */; };
@@ -61,7 +55,6 @@
 		FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */; };
 		FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */; };
-		FF4F06E81CEF7DE5007BD273 /* SBASubtaskStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */; };
 		FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */; };
 		FF5051D31D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */; };
 		FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */; };
@@ -154,7 +147,6 @@
 		FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */; };
 		FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */; };
 		FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */; };
-		FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */; };
 		FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD31CFE439500C29AF7 /* Main.storyboard */; };
 		FFC15FD61CFE452C00C29AF7 /* StudyOverview.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD51CFE452C00C29AF7 /* StudyOverview.storyboard */; };
 		FFC15FDA1CFE4E8700C29AF7 /* BridgeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */; };
@@ -163,7 +155,6 @@
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
 		FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; };
-		FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCB98861CAC9000005078EF /* DeprecationTests.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
@@ -395,30 +386,24 @@
 		80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANotificationsManager.swift; sourceTree = "<group>"; };
 		FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBBScheduledActivity+Filters.swift"; sourceTree = "<group>"; };
-		FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyNavigationTests.swift; sourceTree = "<group>"; };
 		FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactory.swift; sourceTree = "<group>"; };
 		FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactoryTests.swift; sourceTree = "<group>"; };
 		FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentDocumentFactory.swift; sourceTree = "<group>"; };
 		FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANavigableOrderedTaskTests.m; sourceTree = "<group>"; };
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
 		FBE5515C1C6D267100C9E1AA /* MockORKTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockORKTask.m; sourceTree = "<group>"; };
-		FF0158701DF6047600F417E1 /* SBAAnswerFormatFinderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAnswerFormatFinderTests.swift; sourceTree = "<group>"; };
 		FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
 		FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
 		FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
-		FF08C92F1DEE1EBC00235711 /* UtilityExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityExtensionTests.swift; sourceTree = "<group>"; };
 		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
 		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
 		FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADemographicDataArchive.swift; sourceTree = "<group>"; };
 		FF2498121CB6C1F0002DD05F /* MockTrackedDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockTrackedDataStore.h; sourceTree = "<group>"; };
 		FF2498131CB6C1F0002DD05F /* MockTrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockTrackedDataStore.m; sourceTree = "<group>"; };
-		FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATrackedDataTests.swift; sourceTree = "<group>"; };
 		FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchUXFactory.xcodeproj; path = ResearchUXFactory/ResearchUXFactory.xcodeproj; sourceTree = "<group>"; };
 		FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchUXFactory/ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserProfileControllerTests.swift; sourceTree = "<group>"; };
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
-		FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataGroupsStepTests.swift; sourceTree = "<group>"; };
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
 		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -432,7 +417,6 @@
 		FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBABridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBABridgeManager.m; sourceTree = "<group>"; };
 		FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAUserWrapper+Bridge.swift"; sourceTree = "<group>"; };
-		FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASubtaskStepTests.swift; sourceTree = "<group>"; };
 		FF5051CE1D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAOnboardingCompleteTableViewCell.xib; sourceTree = "<group>"; };
 		FF5051D21D6650D20065E677 /* SBAOnboardingCompleteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteTableViewCell.swift; sourceTree = "<group>"; };
 		FF5051D41D6653670065E677 /* SBAOnboardingCompleteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingCompleteStep.swift; sourceTree = "<group>"; };
@@ -528,13 +512,11 @@
 		FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewCell.swift; sourceTree = "<group>"; };
 		FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKFormStep+Result.swift"; sourceTree = "<group>"; };
 		FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAccountTests.swift; sourceTree = "<group>"; };
-		FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActiveTaskTests.swift; sourceTree = "<group>"; };
 		FFC15FD21CFE439500C29AF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FFC15FD51CFE452C00C29AF7 /* StudyOverview.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StudyOverview.storyboard; sourceTree = "<group>"; };
 		FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ColorInfo.plist; sourceTree = "<group>"; };
 		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
-		FFCB98861CAC9000005078EF /* DeprecationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeprecationTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
@@ -681,13 +663,14 @@
 		801040C11C5A843D00D26E19 /* BridgeAppSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				FFF65A901E2F37050043FB40 /* Support Files */,
 				FFB30D631D40891900D175D2 /* Utilities */,
 				FBC45E7B1C75B069007AA424 /* Test Files */,
 				FBE5515A1C6D265000C9E1AA /* MockObjects */,
-				801040C41C5A843D00D26E19 /* Info.plist */,
-				FF2046481DDE989500A33572 /* TasksAndSteps */,
-				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
-				FFCB98861CAC9000005078EF /* DeprecationTests.swift */,
+				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
+				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
+				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
+				FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */,
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
 				FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
@@ -695,7 +678,6 @@
 				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
 				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
-				FF08C92F1DEE1EBC00235711 /* UtilityExtensionTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -837,24 +819,6 @@
 				FF5242B01D81E9D0009043B3 /* SBAUserProfileController.swift */,
 			);
 			name = Account;
-			sourceTree = "<group>";
-		};
-		FF2046481DDE989500A33572 /* TasksAndSteps */ = {
-			isa = PBXGroup;
-			children = (
-				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
-				FFBB57301CACEADF0041F120 /* SBAActiveTaskTests.swift */,
-				FF35B9041D9DABC800E0DF23 /* SBADataGroupsStepTests.swift */,
-				FBE551581C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m */,
-				FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */,
-				FF4F06E71CEF7DE5007BD273 /* SBASubtaskStepTests.swift */,
-				FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */,
-				FB8439121C6E9C2A0086E961 /* SBASurveyNavigationTests.swift */,
-				FF2498241CB78972002DD05F /* SBATrackedDataTests.swift */,
-				FF0158701DF6047600F417E1 /* SBAAnswerFormatFinderTests.swift */,
-				FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */,
-			);
-			name = TasksAndSteps;
 			sourceTree = "<group>";
 		};
 		FF24FECD1E28AF4D0016C4DF /* Products */ = {
@@ -1149,6 +1113,15 @@
 			);
 			name = Result;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		FFF65A901E2F37050043FB40 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				801040C41C5A843D00D26E19 /* Info.plist */,
+				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
+			);
+			name = "Support Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1614,32 +1587,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF35B9051D9DABC800E0DF23 /* SBADataGroupsStepTests.swift in Sources */,
-				FBE551591C6D204B00C9E1AA /* SBANavigableOrderedTaskTests.m in Sources */,
 				FFDECDFF1D0796D200434001 /* SBAOnboardingManagerTests.swift in Sources */,
 				FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */,
 				FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */,
-				FF4F06E81CEF7DE5007BD273 /* SBASubtaskStepTests.swift in Sources */,
-				FF2498251CB78972002DD05F /* SBATrackedDataTests.swift in Sources */,
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */,
-				FF0158711DF6047600F417E1 /* SBAAnswerFormatFinderTests.swift in Sources */,
 				FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */,
-				FF08C9301DEE1EBC00235711 /* UtilityExtensionTests.swift in Sources */,
 				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
-				FFBB57311CACEADF0041F120 /* SBAActiveTaskTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,
 				FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */,
-				FB8439131C6E9C2A0086E961 /* SBASurveyNavigationTests.swift in Sources */,
 				FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */,
 				FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */,
 				FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */,
 				FF2498141CB6C1F0002DD05F /* MockTrackedDataStore.m in Sources */,
 				FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */,
-				FFCB98871CAC9000005078EF /* DeprecationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

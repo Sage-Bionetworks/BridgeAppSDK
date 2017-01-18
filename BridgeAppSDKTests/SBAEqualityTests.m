@@ -115,23 +115,8 @@ MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID
 
 - (NSArray <Class> *)classesWithCopyingAndCoding {
     // Swift classes are not registered with obj-c runtime so instead just use a list
-    return @[[SBATrackedDataObjectCollection class],
-             [SBAMedication class],
-             [SBATrackedDataObject class],
-             [SBADataObject class],
-             //[SBAActivityResult class], TODO: FIXME!! syoung 07/15/2016 BridgeSDK objects do not implement Equality or Encoding
-             [SBAConsentSignature class],
-             [SBANavigableOrderedTask class],
-             [SBAInstructionStep class],
-             [SBASubtaskStep class],
-             [SBANavigationFormStep class],
-             [SBANavigationSubtaskStep class],
-             [SBANavigationFormItem class],
-             [SBATrackedSelectionStep class],
-             [SBATrackedDataSelectionResult class],
-             [SBATrackedActivityFormStep class],
+    return @[[SBAConsentSignature class],
              [SBAExternalIDStep class],
-             [SBAPermissionsStep class],
              ];
 }
 
