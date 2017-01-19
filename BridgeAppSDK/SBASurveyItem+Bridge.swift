@@ -91,7 +91,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
 
 extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
-    public var questionStyle: Bool {
+    public var shouldUseQuestionStyle: Bool {
         return true
     }
     
@@ -214,10 +214,6 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
     public var range: AnyObject? {
         return self.constraints
-    }
-    
-    public var skipIfPassed: Bool {
-        return (self.constraints.rules?.first != nil)
     }
     
     public var rules: [SBASurveyRule]? {
