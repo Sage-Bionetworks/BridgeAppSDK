@@ -67,7 +67,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
     
     public init(inputItem: SBASurveyItem) {
-        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options as [NSObject : AnyObject]?))
+        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options))
         super.init(identifier: inputItem.identifier, steps: steps)
         if let title = inputItem.stepTitle {
             self.title = title
@@ -88,9 +88,9 @@ open class SBAExternalIDStep: ORKPageStep {
         // Create the steps that are used by this method
         let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
-            let options = SBAProfileInfoOptions(externalIDOptions: options)
+            let options = SBAProfileInfoOptions(include: .externalID, surveyItemType: .custom("externalID"), extendedOption: options)
             let step = ORKFormStep(identifier: stepIdentifier)
-            step.formItems = options.makeFormItems(shouldConfirmPassword: false)
+            step.formItems = options.makeFormItems()
             step.isOptional = false
             return step
         }
@@ -109,61 +109,6 @@ open class SBAExternalIDStep: ORKPageStep {
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-    }
-}
-
-/**
- Object with the options for the external ID form item `ORKAnswerFormat`
- */
-struct SBAExternalIDOptions {
-    
-    /**
-     By default, the autocapitalization type is all characters
-    */
-    static let defaultAutocapitalizationType: UITextAutocapitalizationType = .allCharacters
-    
-    /**
-     By default, the keyboard type is ASCII
-    */
-    static let defaultKeyboardType: UIKeyboardType = .asciiCapable
-    
-    /**
-     Auto-capitalization type for the text field
-    */
-    let autocapitalizationType: UITextAutocapitalizationType
-    
-    /**
-     Keyboard type for the text field
-    */
-    let keyboardType: UIKeyboardType
-    
-    init() {
-        self.autocapitalizationType = SBAExternalIDOptions.defaultAutocapitalizationType
-        self.keyboardType = SBAExternalIDOptions.defaultKeyboardType
-    }
-    
-    init(autocapitalizationType: UITextAutocapitalizationType, keyboardType: UIKeyboardType) {
-        self.autocapitalizationType = autocapitalizationType
-        self.keyboardType = keyboardType
-    }
-    
-    init(options: [AnyHashable: Any]?) {
-        self.autocapitalizationType = {
-            if let autocap = options?["autocapitalizationType"] as? String {
-                return UITextAutocapitalizationType(key: autocap)
-            }
-            else {
-                return SBAExternalIDOptions.defaultAutocapitalizationType
-            }
-        }()
-        self.keyboardType = {
-            if let keyboard = options?["keyboardType"] as? String {
-                return UIKeyboardType(key: keyboard)
-            }
-            else {
-                return SBAExternalIDOptions.defaultKeyboardType
-            }
-        }()
     }
 }
 

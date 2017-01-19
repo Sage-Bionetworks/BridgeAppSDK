@@ -148,6 +148,8 @@ public enum SBAOnboardingSectionType {
         return nil
     }
     
+    
+    
     public var identifier: String {
         switch (self) {
         case .base(let baseType):
@@ -203,12 +205,7 @@ extension NSDictionary: SBAOnboardingSection {
     
     public func defaultOnboardingSurveyFactory() -> SBASurveyFactory {
         let dictionary = self.objectWithResourceDictionary() as? NSDictionary ?? self
-        if onboardingSectionType == .base(.consent) {
-            return SBAConsentDocumentFactory(dictionary: dictionary)
-        }
-        else {
-            return SBASurveyFactory(dictionary: dictionary)
-        }
+        return SBASurveyFactory(dictionary: dictionary)
     }
     
     public func dictionaryRepresentation()  -> [AnyHashable: Any] {

@@ -47,452 +47,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    // -------------------------------------------------
-    // MARK: NSDictionary
-    // -------------------------------------------------
-    
-    func testCustomType() {
-        let inputStep: NSDictionary = [
-            "identifier"    : "customStep",
-            "type"          : "customStepType",
-            "title"         : "Title",
-            "text"          : "Text for this step",
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? SBAInstructionStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        XCTAssertEqual(surveyStep.identifier, "customStep")
-        XCTAssertEqual(surveyStep.customTypeIdentifier, "customStepType")
-        XCTAssertEqual(surveyStep.title, "Title")
-        XCTAssertEqual(surveyStep.text, "Text for this step")
-    }
-    
-    func testFactory_CompoundSurveyQuestion_WithRule() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "quiz",
-            "type" : "compound",
-            "items" : [
-                [   "identifier" : "question1",
-                    "type" : "boolean",
-                    "prompt" : "Are you older than 18?",
-                    "expectedAnswer" : true],
-                [   "identifier" : "question2",
-                    "type" : "boolean",
-                    "prompt" : "Are you a US resident?",
-                    "expectedAnswer" : true],
-                [   "identifier" : "question3",
-                    "type" : "boolean",
-                    "prompt" : "Can you read English?",
-                    "expectedAnswer" : true],
-            ],
-            "skipIdentifier" : "consent",
-            "skipIfPassed" : true
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? SBANavigationFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        XCTAssertEqual(surveyStep.identifier, "quiz")
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        
-        guard let formItems = surveyStep.formItems , formItems.count == 3 else {
-            XCTAssert(false, "\(surveyStep.formItems) are not of expected count")
-            return
-        }
-    }
-    
-    func testFactory_ToggleSurveyQuestion() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "quiz",
-            "type" : "toggle",
-            "items" : [
-                [   "identifier" : "question1",
-                    "prompt" : "Are you older than 18?",
-                    "expectedAnswer" : true],
-                [   "identifier" : "question2",
-                    "prompt" : "Are you a US resident?",
-                    "expectedAnswer" : true],
-                [   "identifier" : "question3",
-                    "prompt" : "Can you read English?",
-                    "expectedAnswer" : true],
-            ],
-            "skipIdentifier" : "consent",
-            "skipIfPassed" : true
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? SBAToggleFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        XCTAssertEqual(surveyStep.identifier, "quiz")
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        
-        guard let formItems = surveyStep.formItems , formItems.count == 3 else {
-            XCTAssert(false, "\(surveyStep.formItems) are not of expected count")
-            return
-        }
-        
-        for formItem in formItems {
-            let answerFormat = formItem.answerFormat as? ORKBooleanAnswerFormat
-            XCTAssertNotNil(answerFormat)
-        }
-        
-        XCTAssertEqual(formItems[0].identifier, "question1")
-        XCTAssertEqual(formItems[1].identifier, "question2")
-        XCTAssertEqual(formItems[2].identifier, "question3")
-        
-        XCTAssertEqual(formItems[0].text, "Are you older than 18?")
-        XCTAssertEqual(formItems[1].text, "Are you a US resident?")
-        XCTAssertEqual(formItems[2].text, "Can you read English?")
-    }
-    
-    func testFactory_CompoundSurveyQuestion_NoRule() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "quiz",
-            "type" : "compound",
-            "items" : [
-                [   "identifier" : "question1",
-                    "type" : "boolean",
-                    "prompt" : "Are you older than 18?"],
-                [   "identifier" : "question2",
-                    "type" : "boolean",
-                    "text" : "Are you a US resident?"],
-                [   "identifier" : "question3",
-                    "type" : "boolean",
-                    "prompt" : "Can you read English?"],
-            ],
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "quiz")
-        XCTAssertEqual(surveyStep.formItems?.count, 3)
-        
-        guard let formItems = surveyStep.formItems , formItems.count == 3 else { return }
-        
-        XCTAssertEqual(formItems[0].text, "Are you older than 18?")
-        XCTAssertEqual(formItems[1].text, "Are you a US resident?")
-        XCTAssertEqual(formItems[2].text, "Can you read English?")
-        
-    }
-    
-    func testFactory_SubtaskSurveyQuestion_WithRule() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "quiz",
-            "type" : "subtask",
-            "items" : [
-                [   "identifier" : "question1",
-                    "type" : "boolean",
-                    "prompt" : "I can share my data broadly or only with Sage?",
-                    "expectedAnswer" : true],
-                [   "identifier" : "question2",
-                    "type" : "boolean",
-                    "prompt" : "My name is stored with my results?",
-                    "expectedAnswer" : false],
-                [   "identifier" : "question3",
-                    "type" : "boolean",
-                    "prompt" : "I can leave the study at any time?",
-                    "expectedAnswer" : true],
-            ],
-            "skipIdentifier" : "consent",
-            "skipIfPassed" : true
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? SBANavigationSubtaskStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "quiz")
-        XCTAssertEqual(surveyStep.skipToStepIdentifier, "consent")
-        XCTAssertTrue(surveyStep.skipIfPassed)
-        
-        guard let subtask = surveyStep.subtask as? ORKOrderedTask else {
-            XCTAssert(false, "\(surveyStep.subtask) is not of expected class")
-            return
-        }
-        XCTAssertEqual(subtask.steps.count, 3)
-    }
-    
-    func testFactory_DirectNavigationRule() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "ineligible",
-            "prompt" : "You can't get there from here",
-            "detailText": "Tap the button below to begin the consent process",
-            "type"  : "instruction",
-            "nextIdentifier" : "exit"
-        ]
-        
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? SBAInstructionStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "ineligible")
-        XCTAssertEqual(surveyStep.text, "You can't get there from here")
-        XCTAssertEqual(surveyStep.detailText, "Tap the button below to begin the consent process")
-        XCTAssertEqual(surveyStep.nextStepIdentifier, "exit")
-    }
-    
-    func testFactory_CompletionStep() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "quizComplete",
-            "title" : "Great Job!",
-            "text" : "You answered correctly",
-            "detailText": "Tap the button below to begin the consent process",
-            "type"  : "completion",
-        ]
-        
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKInstructionStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "quizComplete")
-        XCTAssertEqual(surveyStep.title, "Great Job!")
-        XCTAssertEqual(surveyStep.text, "You answered correctly")
-        XCTAssertEqual(surveyStep.detailText, "Tap the button below to begin the consent process")
-    }
-    
-    func testFactory_BooleanQuestion() {
-        
-        let inputStep: NSDictionary = [
-            "identifier" : "question1",
-            "type" : "boolean",
-            "prompt" : "Are you older than 18?",
-            "expectedAnswer" : true
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "question1")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let _ = formItem.answerFormat as? ORKBooleanAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
-        
-        XCTAssertNil(formItem.text)
-        XCTAssertEqual(surveyStep.text, "Are you older than 18?")
-        XCTAssertNotNil(formItem.rulePredicate)
-        
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
-        
-        let questionResult = ORKBooleanQuestionResult(identifier:formItem.identifier)
-        questionResult.booleanAnswer = true
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.booleanAnswer = false
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-    }
-    
-    func testFactory_SingleChoiceQuestion() {
-        let inputStep: NSDictionary = [
-            "identifier" : "question1",
-            "type" : "singleChoiceText",
-            "prompt" : "Question 1?",
-            "items" : ["a", "b", "c"],
-            "expectedAnswer" : "b"
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "question1")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
-        
-        XCTAssertNil(formItem.text)
-        XCTAssertEqual(surveyStep.text, "Question 1?")
-        XCTAssertNotNil(formItem.rulePredicate)
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
-        XCTAssertEqual(answerFormat.textChoices.count, 3)
-        
-        XCTAssertEqual(answerFormat.textChoices.first!.text, "a")
-        let firstValue = answerFormat.textChoices.first!.value as? String
-        XCTAssertEqual(firstValue, "a")
-        
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
-        
-        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        questionResult.choiceAnswers = ["b"]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.choiceAnswers = ["c"]
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-    }
-    
-    
-    func testFactory_MultipleChoiceQuestion() {
-        let inputStep: NSDictionary = [
-            "identifier" : "question1",
-            "type" : "multipleChoiceText",
-            "prompt" : "Question 1?",
-            "items" : [
-                ["prompt" : "a", "value" : 0],
-                ["prompt" : "b", "value" : 1, "detailText": "good"],
-                ["prompt" : "c", "value" : 2, "exclusive": true]],
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "question1")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
-        
-        XCTAssertNil(formItem.text)
-        XCTAssertEqual(surveyStep.text, "Question 1?")
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.multipleChoice)
-        XCTAssertEqual(answerFormat.textChoices.count, 3)
-        
-        let choiceA = answerFormat.textChoices[0]
-        XCTAssertEqual(choiceA.text, "a")
-        XCTAssertEqual(choiceA.value as? Int, 0)
-        XCTAssertFalse(choiceA.exclusive)
-        
-        let choiceB = answerFormat.textChoices[1]
-        XCTAssertEqual(choiceB.text, "b")
-        XCTAssertEqual(choiceB.value as? Int, 1)
-        XCTAssertEqual(choiceB.detailText, "good")
-        XCTAssertFalse(choiceB.exclusive)
-        
-        let choiceC = answerFormat.textChoices[2]
-        XCTAssertEqual(choiceC.text, "c")
-        XCTAssertEqual(choiceC.value as? Int, 2)
-        XCTAssertTrue(choiceC.exclusive)
-    }
-    
-    func testFactory_TextChoice() {
-        
-        let inputStep: NSDictionary = [
-            "identifier": "purpose",
-            "title": "What is the purpose of this study?",
-            "type": "singleChoiceText",
-            "items":[
-                ["text" :"Understand the fluctuations of Parkinson disease symptoms", "value" : true],
-                ["text" :"Treating Parkinson disease", "value": false],
-            ],
-            "expectedAnswer": true,
-        ]
-        
-        let step = SBASurveyFactory().createSurveyStepWithDictionary(inputStep)
-        XCTAssertNotNil(step)
-        
-        guard let surveyStep = step as? ORKFormStep else {
-            XCTAssert(false, "\(step) is not of expected class type")
-            return
-        }
-        
-        XCTAssertEqual(surveyStep.identifier, "purpose")
-        XCTAssertEqual(surveyStep.formItems?.count, 1)
-        
-        guard let formItem = surveyStep.formItems?.first as? SBANavigationFormItem,
-            let answerFormat = formItem.answerFormat as? ORKTextChoiceAnswerFormat else {
-                XCTAssert(false, "\(surveyStep.formItems) is not of expected class type")
-                return
-        }
-        
-        XCTAssertNil(formItem.text)
-        
-        XCTAssertEqual(answerFormat.style, ORKChoiceAnswerStyle.singleChoice)
-        XCTAssertEqual(answerFormat.textChoices.count, 2)
-        if (answerFormat.textChoices.count != 2) {
-            return
-        }
-        
-        XCTAssertEqual(answerFormat.textChoices.first!.text, "Understand the fluctuations of Parkinson disease symptoms")
-        let firstValue = answerFormat.textChoices.first!.value as? Bool
-        XCTAssertEqual(firstValue, true)
-        
-        XCTAssertEqual(answerFormat.textChoices.last!.text, "Treating Parkinson disease")
-        let lastValue = answerFormat.textChoices.last!.value as? Bool
-        XCTAssertEqual(lastValue, false)
-        
-        XCTAssertNotNil(formItem.rulePredicate)
-        guard let navigationRule = formItem.rulePredicate else {
-            return
-        }
-        
-        let questionResult = ORKChoiceQuestionResult(identifier:formItem.identifier)
-        questionResult.choiceAnswers = [true]
-        XCTAssertTrue(navigationRule.evaluate(with: questionResult))
-        
-        questionResult.choiceAnswers = [false]
-        XCTAssertFalse(navigationRule.evaluate(with: questionResult))
-        
-    }
-    
+
     // -------------------------------------------------
     // MARK: SBBSurvey
     // -------------------------------------------------
@@ -894,7 +449,6 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.identifier = "feelings"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
         inputStep.prompt = "How do you feel?"
-        // pattern, maxLength and minLength are currently unsupported
         inputStep.constraints = SBBStringConstraints()
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
@@ -912,6 +466,139 @@ class SBASurveyFactoryTests: XCTestCase {
             XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
+    }
+    
+    func testFactory_TextAnswer_ValidationRegEx() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.pattern = "^[0-9A-F]+$"
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, constraints.pattern)
+        XCTAssertEqual(answerFormat.maximumLength, 0)
+    }
+    
+    func testFactory_TextAnswer_MinAndMaxLength() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.minLength = NSNumber(value: 4)
+        constraints.maxLength = NSNumber(value: 8)
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.maximumLength, 8)
+    }
+    
+    func testFactory_TextAnswer_MinLengthOnly() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.minLength = NSNumber(value: 4)
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.maximumLength, 0)
+    }
+    
+    func testFactory_TextAnswer_MultipleLine() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "multilinetext"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        inputStep.constraints = SBBStringConstraints()
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertTrue(answerFormat.multipleLines)
     }
     
     // MARK: DateTimeConstraints
@@ -1385,6 +1072,41 @@ class SBASurveyFactoryTests: XCTestCase {
         
     }
     
+    func testFactory_DecimalConstraints_Slider() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "slider"
+        inputStep.identifier = "age"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How old\n\nare you?"
+        
+        let constraints = SBBDecimalConstraints()
+        inputStep.constraints = constraints
+        constraints.minValue = NSNumber(value: 18.3 as Double)
+        constraints.maxValue = NSNumber(value: 100.2 as Double)
+        constraints.step = NSNumber(value: 0.1 as Double)
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "age")
+        XCTAssertEqual(surveyStep.text, "How old are you?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKContinuousScaleAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(answerFormat.minimum, 18.3)
+        XCTAssertEqual(answerFormat.maximum, 100.2)
+        XCTAssertEqual(answerFormat.maximumFractionDigits, 1)
+    }
+    
     // MARK: IntegerConstraint with uiHint == slider
     
     func testFactory_IntegerSlider_step0_10() {
@@ -1552,7 +1274,6 @@ class SBASurveyFactoryTests: XCTestCase {
     func createSliderQuestion(_ step: Int32?, min:Int32 = 0, max: Int32 = 100) -> SBBSurveyQuestion {
         
         let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
-        inputStep.uiHint = "numberfield"
         inputStep.identifier = "age"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
         inputStep.prompt = "How old are you?"

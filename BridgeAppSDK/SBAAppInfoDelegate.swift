@@ -66,10 +66,8 @@ extension SBAAppInfoDelegate {
         currentUser.resetUserKeychainIfNeeded()
         
         // Setup the study
-        SBABridgeManager.setup(withStudy: bridgeInfo.studyIdentifier,
-                               cacheDaysAhead: bridgeInfo.cacheDaysAhead,
-                               cacheDaysBehind: bridgeInfo.cacheDaysAhead,
-                               environment: bridgeInfo.environment,
+        SBABridgeManager.setup(bridgeInfo: bridgeInfo,
+                               participant: currentUser,
                                authDelegate: currentUser)
         
         // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload

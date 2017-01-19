@@ -135,9 +135,9 @@ class SBAUserProfileControllerTests: ResourceTestCase {
         XCTAssertEqual(stepVC.password, "abcd1234")
     }
         
-    func createConsentFactory() -> SBAConsentDocumentFactory? {
+    func createConsentFactory() -> SBASurveyFactory? {
         guard let input = jsonForResource("Consent") else { return nil }
-        return SBAConsentDocumentFactory(dictionary: input)
+        return SBASurveyFactory(dictionary: input)
     }
     
 }

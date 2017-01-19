@@ -33,8 +33,39 @@
 
 #import "SBABridgeManager.h"
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
+@import ResearchUXFactory;
 
 @implementation SBABridgeManager
+
++ (void)addResourceBundleIfNeeded {
+    // Add this bundle to the resource bundles
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SBAInfoManager *infoManager = [SBAInfoManager sharedManager];
+        NSMutableArray *bundles = [infoManager.resourceBundles mutableCopy];
+        NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
+        if (![bundles containsObject:thisBundle]) {
+            NSUInteger idx = bundles.count > 0 ? 1 : 0;
+            [bundles insertObject:thisBundle atIndex:idx];
+            infoManager.resourceBundles = bundles;
+        }
+    });
+}
+
++ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo
+                participant:(id <SBAParticipantInfo>)participant
+               authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
+    
+    // Add the resource bundle (if needed)
+    [self addResourceBundleIfNeeded];
+    
+    // Set the participant
+    [SBAInfoManager sharedManager].currentParticipant = participant;
+    
+    // Setup the Bridge study
+    [BridgeSDK setupWithBridgeInfo:bridgeInfo];
+    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
+}
 
 + (void)setupWithStudy:(NSString *)study
         cacheDaysAhead:(NSInteger)cacheDaysAhead
@@ -42,6 +73,14 @@
            environment:(SBBEnvironment)environment
           authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
     
+    [self addResourceBundleIfNeeded];
+    
+    // If the auth delegate is also the current user then set that
+    if ([authDelegate conformsToProtocol:@protocol(SBAParticipantInfo)]) {
+        [SBAInfoManager sharedManager].currentParticipant = (id <SBAParticipantInfo>)authDelegate;
+    }
+    
+    // Finally setup bridge
     [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }

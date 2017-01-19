@@ -39,7 +39,7 @@ import ResearchKit
  */
 open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController {
     
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
+    lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
     
@@ -48,11 +48,8 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
         commonInit()
     }
     
-    public init(inputItem: SBASurveyItem, appInfo: SBAAppInfoDelegate?) {
-        super.init(identifier: inputItem.identifier)
-        if appInfo != nil {
-            self.sharedAppDelegate = appInfo!
-        }
+    public override init(inputItem: SBASurveyItem) {
+        super.init(inputItem: inputItem)
         commonInit()
     }
     
@@ -67,7 +64,7 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
             self.footnote = Localization.localizedString("REGISTRATION_VERIFICATION_FOOTNOTE")
         }
         if self.iconImage == nil {
-            self.iconImage = self.sharedAppDelegate.bridgeInfo.logoImage
+            self.iconImage = SBAInfoManager.shared.logoImage
         }
         if self.learnMoreAction == nil {
             self.learnMoreAction = SBAEmailVerificationLearnMoreAction(identifier: "additionalEmailActions")

@@ -33,6 +33,7 @@
 
 @import Foundation;
 @import BridgeSDK;
+@import ResearchUXFactory;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,17 +65,13 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  
  Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
  
- @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
- @param cacheDaysAhead Number of days ahead to cache.
- @param cacheDaysBehind Number of days behind to cache.
- @param environment Which server environment to run against.
- @param authDelegate AuthManager delegate
+ @param bridgeInfo    Pointer to a model object that supports the bridge info protocol
+ @param participant   Pointer to the participant info object
+ @param authDelegate  Pointer to the auth delegate (Optional)
  */
-+ (void)setupWithStudy:(NSString *)study
-        cacheDaysAhead:(NSInteger)cacheDaysAhead
-       cacheDaysBehind:(NSInteger)cacheDaysBehind
-           environment:(SBBEnvironment)environment
-          authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate;
++ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo
+                participant:(id <SBAParticipantInfo>)participant
+               authDelegate:(id <SBBAuthManagerDelegateProtocol> _Nullable)authDelegate NS_SWIFT_NAME(setup(bridgeInfo:participant:authDelegate:));
 
 /*!
  This method should be called from your app delegate's
@@ -270,6 +267,12 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 + (void)getUserProfileWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock __attribute__((deprecated("Use +getParticipantRecordWithCompletion: instead.")));
 
 + (void)updateUserProfile:(id)profile completion:(SBABridgeManagerCompletionBlock)completionBlock __attribute__((deprecated("Use +updateParticipantRecord:copmletion: instead.")));
+
++ (void)setupWithStudy:(NSString *)study
+        cacheDaysAhead:(NSInteger)cacheDaysAhead
+       cacheDaysBehind:(NSInteger)cacheDaysBehind
+           environment:(SBBEnvironment)environment
+          authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate  __attribute__((deprecated("Use +setupWithBridgeInfo:participant: instead.")));
 
 @end
 

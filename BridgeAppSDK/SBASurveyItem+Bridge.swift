@@ -84,14 +84,14 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
         return nil
     }
     
-    public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }
 
 extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     
-    public var questionStyle: Bool {
+    public var shouldUseQuestionStyle: Bool {
         return true
     }
     
@@ -100,7 +100,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
             return .form(.boolean)
         }
         else if let _ = self.constraints as? SBBStringConstraints {
-            return .form(.text)
+            if (self.uiHint == "textfield") {
+                return .form(.text)
+            }
+            else {
+                return .form(.multipleLineText)
+            }
         }
         else if let multiConstraints = self.constraints as? SBBMultiValueConstraints {
             if (multiConstraints.allowMultipleValue) {
@@ -136,7 +141,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
             }
         }
         else if let _ = self.constraints as? SBBDecimalConstraints {
-            return .form(.decimal)
+            if (self.uiHint == "slider") {
+                return .form(.continuousScale)
+            }
+            else {
+                return .form(.decimal)
+            }
         }
         return SBASurveyItemType.custom(nil)
     }
@@ -211,10 +221,6 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return self.constraints
     }
     
-    public var skipIfPassed: Bool {
-        return (self.constraints.rules?.first != nil)
-    }
-    
     public var rules: [SBASurveyRule]? {
         guard let subtype = self.surveyItemType.formSubtype() else {
             return nil
@@ -230,7 +236,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return rules
     }
     
-    public func transformToStep(with factory: SBASurveyFactory, isLastStep: Bool) -> ORKStep? {
+    public func transformToStep(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> ORKStep? {
         return factory.createSurveyStep(self)
     }
 }
@@ -381,14 +387,39 @@ extension sbb_NumberRange {
         return maxValue
     }
     
-    public var stepInterval: Int {
+    public var stepInterval: Double {
         guard (self.step != nil) else { return 1 }
-        return self.step.intValue
+        return self.step.doubleValue
     }
     
     public var unitLabel: String? {
         guard (self.unit != "") else { return nil }
         return self.unit
+    }
+}
+
+extension SBBStringConstraints: SBATextFieldRange {
+    
+    public var validationRegex: String? {
+        if self.pattern != nil {
+            return self.pattern
+        }
+        else if self.minLengthValue > 0 {
+            assert(self.pattern == nil, "Factory does not currently support items with both a min length and a regex pattern.")
+            return "^.{\(self.minLengthValue),}$"
+        }
+        else {
+            return nil
+        }
+    }
+    
+    public var invalidMessage: String? {
+        // Not currently supported by Bridge
+        return nil
+    }
+    
+    public var maximumLength: Int {
+        return Int(self.maxLengthValue)
     }
 }
 
