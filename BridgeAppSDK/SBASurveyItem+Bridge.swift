@@ -100,7 +100,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
             return .form(.boolean)
         }
         else if let _ = self.constraints as? SBBStringConstraints {
-            return .form(.text)
+            if (self.uiHint == "textfield") {
+                return .form(.text)
+            }
+            else {
+                return .form(.multipleLineText)
+            }
         }
         else if let multiConstraints = self.constraints as? SBBMultiValueConstraints {
             if (multiConstraints.allowMultipleValue) {
@@ -390,6 +395,31 @@ extension sbb_NumberRange {
     public var unitLabel: String? {
         guard (self.unit != "") else { return nil }
         return self.unit
+    }
+}
+
+extension SBBStringConstraints: SBATextFieldRange {
+    
+    public var validationRegex: String? {
+        if self.pattern != nil {
+            return self.pattern
+        }
+        else if self.minLengthValue > 0 {
+            assert(self.pattern == nil, "Factory does not currently support items with both a min length and a regex pattern.")
+            return "^.{\(self.minLengthValue),}$"
+        }
+        else {
+            return nil
+        }
+    }
+    
+    public var invalidMessage: String? {
+        // Not currently supported by Bridge
+        return nil
+    }
+    
+    public var maximumLength: Int {
+        return Int(self.maxLengthValue)
     }
 }
 

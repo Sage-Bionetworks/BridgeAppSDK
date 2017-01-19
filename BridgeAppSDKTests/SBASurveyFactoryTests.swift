@@ -449,7 +449,6 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.identifier = "feelings"
         inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
         inputStep.prompt = "How do you feel?"
-        // pattern, maxLength and minLength are currently unsupported
         inputStep.constraints = SBBStringConstraints()
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
@@ -467,6 +466,139 @@ class SBASurveyFactoryTests: XCTestCase {
             XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
             return
         }
+    }
+    
+    func testFactory_TextAnswer_ValidationRegEx() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.pattern = "^[0-9A-F]+$"
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, constraints.pattern)
+        XCTAssertEqual(answerFormat.maximumLength, 0)
+    }
+    
+    func testFactory_TextAnswer_MinAndMaxLength() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.minLength = NSNumber(value: 4)
+        constraints.maxLength = NSNumber(value: 8)
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.maximumLength, 8)
+    }
+    
+    func testFactory_TextAnswer_MinLengthOnly() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "textfield"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        let constraints = SBBStringConstraints()
+        constraints.minLength = NSNumber(value: 4)
+        inputStep.constraints = constraints
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertFalse(answerFormat.multipleLines)
+        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.maximumLength, 0)
+    }
+    
+    func testFactory_TextAnswer_MultipleLine() {
+        
+        let inputStep:SBBSurveyQuestion = SBBSurveyQuestion()
+        inputStep.uiHint = "multilinetext"
+        inputStep.identifier = "feelings"
+        inputStep.guid = "c096d808-2b5b-4151-9e09-0c4ada6028e9"
+        inputStep.prompt = "How do you feel?"
+        
+        // pattern, maxLength and minLength are currently unsupported
+        inputStep.constraints = SBBStringConstraints()
+        
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        XCTAssertNotNil(step)
+        
+        guard let surveyStep = step as? SBANavigationQuestionStep else {
+            XCTAssert(false, "\(step) is not of expected class type")
+            return
+        }
+        
+        XCTAssertEqual(surveyStep.identifier, "feelings")
+        XCTAssertEqual(surveyStep.text, "How do you feel?")
+        
+        guard let answerFormat = surveyStep.answerFormat as? ORKTextAnswerFormat else {
+            XCTAssert(false, "\(surveyStep.answerFormat) is not of expected class type")
+            return
+        }
+        
+        XCTAssertTrue(answerFormat.multipleLines)
     }
     
     // MARK: DateTimeConstraints
