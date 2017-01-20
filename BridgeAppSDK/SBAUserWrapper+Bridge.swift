@@ -137,7 +137,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     public func changeUserEmailAddress(_ email: String, completion: ((Error?) -> Void)?) {
-        guard let password = self.password?(forAuthManager: nil) else {
+        guard let password = self.password(forAuthManager: nil) else {
             assertionFailure("Attempting to change email without a stored password")
             return
         }
@@ -232,7 +232,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     public func verifyRegistration(_ completion: ((Error?) -> Void)?) {
-        guard let username = self.email?(forAuthManager: nil), let password = self.password?(forAuthManager: nil) else {
+        guard let username = self.email?(forAuthManager: nil), let password = self.password(forAuthManager: nil) else {
             assertionFailure("Attempting to login without a stored username and password")
             return
         }

@@ -450,13 +450,6 @@ extension SBAUser : SBBAuthManagerDelegateProtocol {
         return token
     }
     
-    public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?) {
-        #if DEBUG
-            print("setting Session Token: \(sessionToken)")
-        #endif
-        self.sessionToken = sessionToken
-    }
-    
     public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?, forEmail email: String?, andPassword password: String?) {
         #if DEBUG
             print("setting Session Token: \(sessionToken)")
