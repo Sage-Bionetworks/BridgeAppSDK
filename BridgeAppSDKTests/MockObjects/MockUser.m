@@ -72,8 +72,19 @@
     return self.sessionToken;
 }
 
-- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken {
-    // do nothing
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)aSessionToken forEmail:(NSString *)aEmail andPassword:(NSString *)aPassword {
+    _sessionToken_called_count++;
+    self.email = aEmail;
+    self.password = aPassword;
+    self.sessionToken = aSessionToken;
+}
+
+- (NSString *)emailForAuthManager:(id<SBBAuthManagerProtocol>)authManager {
+    return self.email;
+}
+
+- (NSString *)passwordForAuthManager:(id<SBBAuthManagerProtocol>)authManager {
+    return self.password;
 }
 
 - (void)resetStoredUserData {
