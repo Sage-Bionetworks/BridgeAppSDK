@@ -143,6 +143,19 @@ public extension SBAUserWrapper {
         }
         registerUser(email: email, password: password, externalId: self.externalId, dataGroups: self.dataGroups, completion: completion)
     }
+    
+    /**
+     Request a password reset sent to the given email address.
+     
+     @param email       The email address to send the forget password message
+     @param completion  Completion handler
+    */
+    public func forgotPassword(_ email: String, completion: ((Error?) -> Void)?) {
+        SBABridgeManager.forgotPassword(email) { [weak self] (_, error) in
+            self?.callCompletionOnMain(error, completion: completion)
+        }
+    }
+
 
     /**
      Register a new user with an email/password
