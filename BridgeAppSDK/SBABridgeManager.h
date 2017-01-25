@@ -140,7 +140,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 /*!
  Request Bridge to send the forgot password email link to the specified email address.
  
- @param email       The email address for which to re-send the verification link.
+ @param email       The email address for which to send the password reset link.
  @param completion  A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
  */
 + (void)forgotPassword:(NSString*)emailAddress
