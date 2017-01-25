@@ -37,11 +37,20 @@ import ResearchKit
  The `SBALoginStep` allows for login of an existing user via email/password
  */
 @objc
-open class SBALoginStep: ORKFormStep, SBAProfileInfoForm {
+open class SBALoginStep: ORKFormStep, SBAProfileInfoForm, SBALearnMoreActionStep {
     
     open var shouldConfirmPassword: Bool {
         return false
     }
+    
+    public var learnMoreAction: SBALearnMoreAction? {
+        return _learnMoreAction
+    }
+    let _learnMoreAction: SBALearnMoreAction = {
+        let action = SBAForgotPasswordLearnMoreAction(identifier: "forgotPassword")
+        action.learnMoreButtonText = Localization.localizedString("REGISTRATION_FORGOT_PASSWORD")
+        return action
+    }()
     
     public func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.email, .password]
@@ -135,4 +144,33 @@ open class SBALoginStepViewController: ORKFormStepViewController, SBALoginStepSt
         // Then call super to go forward
         super.goForward()
     }
+}
+
+/**
+ The `SBAForgotPasswordLearnMoreAction` sends a "forgot password" email to the user
+ */
+@objc
+public final class SBAForgotPasswordLearnMoreAction: SBALearnMoreAction {
+    
+    override public func learnMoreAction(for step: SBALearnMoreActionStep, with taskViewController: ORKTaskViewController) {
+        guard let vc = taskViewController.currentStepViewController as? SBALoginStepStepController, let email = vc.email
+        else {
+            taskViewController.showAlertWithOk(title: nil,
+                                               message: Localization.localizedString("REGISTRATION_MISSING_EMAIL"),
+                                               actionHandler: nil)
+            return
+        }
+        
+        vc.sharedUser.forgotPassword(email) { (error) in
+            if let error = error {
+                vc.handleFailedRegistration(error)
+            }
+            else {
+                vc.showAlertWithOk(title: nil,
+                                   message: Localization.localizedString("REGISTRATION_PASSWORD_RESET_SENT"),
+                                   actionHandler: nil)
+            }
+        }
+    }
+    
 }

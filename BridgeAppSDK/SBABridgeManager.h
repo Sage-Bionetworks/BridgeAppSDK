@@ -138,6 +138,15 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
                      completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 /*!
+ Request Bridge to send the forgot password email link to the specified email address.
+ 
+ @param email       The email address for which to re-send the verification link.
+ @param completion  A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
+ */
++ (void)forgotPassword:(NSString*)emailAddress
+            completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
+
+/*!
  Fetch the StudyParticipant record from cache if caching is turned on, otherwise from the Bridge API.
  
  Note that if BridgeSDK was initialized with caching, the StudyParticipant record will always exist in the cache
