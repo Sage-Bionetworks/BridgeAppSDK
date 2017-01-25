@@ -111,14 +111,25 @@ class SBASurveyFactoryTests: XCTestCase {
         XCTAssertEqual(surveyStep.identifier, "living-alone-status")
         XCTAssertEqual(surveyStep.text, "Do you live alone?")
         
-        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(nil), and: nil)
+        let skipTaskResult = createTaskBooleanResult(nil)
+        let skipIdentifierIfSkipped = surveyStep.nextStepIdentifier(with: skipTaskResult, and: nil)
         XCTAssertEqual(skipIdentifierIfSkipped, "video-usage")
         
-        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(false), and: nil)
+        let neTaskResult = createTaskBooleanResult(false)
+        let skipIdentifierIfFalse = surveyStep.nextStepIdentifier(with: neTaskResult, and: nil)
         XCTAssertEqual(skipIdentifierIfFalse, "video-usage")
         
-        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: createTaskBooleanResult(true), and: nil)
+        let eqTaskResult = createTaskBooleanResult(true)
+        let skipIdentifierIfTrue = surveyStep.nextStepIdentifier(with: eqTaskResult, and: nil)
         XCTAssertNil(skipIdentifierIfTrue)
+        
+        guard let rules = surveyStep.rules, rules.count == 1, let rule = rules.first else {
+            XCTAssert(false, "\(surveyStep.rules) is not of expected count")
+            return
+        }
+        
+        XCTAssertEqual(rule.resultIdentifier, "living-alone-status")
+        XCTAssertEqual(rule.skipIdentifier, "video-usage")
     }
     
     func testFactory_BooleanConstraints_MultipleIdentifiers() {

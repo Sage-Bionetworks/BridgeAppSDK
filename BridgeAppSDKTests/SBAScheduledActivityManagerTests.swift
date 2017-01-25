@@ -955,7 +955,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
         return self
     }
     
-    var studyIdentifier: String!
+    var studyIdentifier: String = "study"
     var cacheDaysAhead: Int = 0
     var cacheDaysBehind: Int = 0
     var environment: SBBEnvironment = .prod

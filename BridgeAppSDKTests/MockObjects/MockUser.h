@@ -61,5 +61,6 @@
 @property (nonatomic, copy) NSString * _Nullable onboardingStepIdentifier;
 
 @property (nonatomic, readonly) NSUInteger logout_called_count;
+@property (nonatomic, readonly) NSUInteger sessionToken_called_count;
 
 @end

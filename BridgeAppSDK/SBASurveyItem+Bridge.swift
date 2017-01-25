@@ -89,7 +89,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     }
 }
 
-extension SBBSurveyQuestion : SBAFormStepSurveyItem {
+extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     
     public var shouldUseQuestionStyle: Bool {
         return true
@@ -221,19 +221,21 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
         return self.constraints
     }
     
-    public var rules: [SBASurveyRule]? {
-        guard let subtype = self.surveyItemType.formSubtype() else {
-            return nil
-        }
-        let rules = self.constraints.rules?.mapAndFilter({ (obj) -> SBASurveyRule? in
-            guard let rule = obj as? SBBSurveyRule, let predicate = rule.rulePredicate(subtype)
-            else {
-                return nil
-            }
-            let skipIdentifier = rule.skipTo ?? ORKNullStepIdentifier
-            return SBASurveyRuleItem(skipIdentifier: skipIdentifier, rulePredicate: predicate)
-        })
-        return rules
+    public var skipIdentifier: String? {
+        return nil
+    }
+    
+    public var skipIfPassed: Bool {
+        return true
+    }
+    
+    public var rules: [SBASurveyRuleItem]? {
+        return self.constraints.rules as? [SBASurveyRuleItem]
+    }
+    
+    public func hasNavigationRules() -> Bool {
+        guard let rules = self.constraints.rules, rules.count > 0 else { return false }
+        return true
     }
     
     public func transformToStep(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> ORKStep? {
@@ -241,58 +243,26 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem {
     }
 }
 
-enum SBBSurveyRuleOperator: String {
-    case skip               = "de"
-    case equal              = "eq"
-    case notEqual           = "ne"
-    case lessThan           = "lt"
-    case greaterThan        = "gt"
-    case lessThanEqual      = "le"
-    case greaterThanEqual   = "ge"
-    case otherThan          = "ot"
-}
-
-extension SBBSurveyRule {
+extension SBBSurveyRule: SBASurveyRuleItem {
     
-    var ruleOperator: SBBSurveyRuleOperator? {
-        return SBBSurveyRuleOperator(rawValue: self.`operator`)
+    public var formSubtype:SBASurveyItemType.FormSubtype? {
+        return nil
     }
     
-    func rulePredicate(_ subtype: SBASurveyItemType.FormSubtype) -> NSPredicate? {
-        // Exit early if operator or value are unsupported
-        guard let op = self.ruleOperator, let value = self.value as? NSObject
-        else { return nil }
-
-        // For the case where the answer format is a choice, then the answer
-        // is returned as an array of choices
-        let isArray = (subtype == .singleChoice) || (subtype == .multipleChoice)
-        
-        switch(op) {
-        case .skip:
-            return NSPredicate(format: "answer = NULL")
-        case .equal:
-            let answer: CVarArg = isArray ? [value] : value
-            return NSPredicate(format: "answer = %@", answer)
-        case .notEqual:
-            let answer: CVarArg = isArray ? [value] : value
-            return NSPredicate(format: "answer <> %@", answer)
-        case .otherThan:
-            if (isArray) {
-                return NSCompoundPredicate(notPredicateWithSubpredicate:
-                    NSPredicate(format: "%@ IN answer", value))
-            }
-            else {
-                return NSPredicate(format: "answer <> %@", value)
-            }
-        case .greaterThan:
-            return NSPredicate(format: "answer > %@", value)
-        case .greaterThanEqual:
-            return NSPredicate(format: "answer >= %@", value)
-        case .lessThan:
-            return NSPredicate(format: "answer < %@", value)
-        case .lessThanEqual:
-            return NSPredicate(format: "answer <= %@", value)
-        }
+    public var resultIdentifier: String? {
+        return nil
+    }
+    
+    public var skipIdentifier: String? {
+        return self.skipTo ?? ORKNullStepIdentifier
+    }
+    
+    public var expectedAnswer: Any? {
+        return self.value
+    }
+    
+    public var ruleOperator: SBASurveyRuleOperator? {
+        return SBASurveyRuleOperator(rawValue: self.`operator`)
     }
 }
 
