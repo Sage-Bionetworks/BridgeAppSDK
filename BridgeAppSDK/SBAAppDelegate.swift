@@ -42,7 +42,7 @@ import ResearchKit
  the methods defined by this protocol.
  */
 @objc
-public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeAppDelegate, SBAAlertPresenter {
+public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeErrorUIDelegate, SBAAlertPresenter {
     
     // Start-up permissions
     @available(*, deprecated, message:"Use `permissionTypeItems` on `SBABridgeInfo` instead.")
@@ -460,7 +460,7 @@ public let SBAMainStoryboardName = "Main"
     }
     
     // ------------------------------------------------
-    // MARK: SBBBridgeAppDelegate
+    // MARK: SBBBridgeErrorUIDelegate
     // ------------------------------------------------
     
     /**

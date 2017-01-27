@@ -661,7 +661,7 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         // Archive the results
         let results = activityResults(for: schedule, taskViewController: taskViewController)
         let archives = results.mapAndFilter({ archive(for: $0) })
-        SBADataArchive.encryptAndUploadArchives(archives)
+        SBBDataArchive.encryptAndUploadArchives(archives)
         
         // Update the schedule on the server
         update(schedule: schedule, taskViewController: taskViewController)

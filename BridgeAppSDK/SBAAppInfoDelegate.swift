@@ -69,24 +69,5 @@ extension SBAAppInfoDelegate {
         SBABridgeManager.setup(bridgeInfo: bridgeInfo,
                                participant: currentUser,
                                authDelegate: currentUser)
-        
-        // This is to kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
-        // manager instance so its notification handlers get set up in time)
-        let uploadManager = SBBComponentManager.component(SBBUploadManager.self) as! SBBUploadManagerProtocol
-        DispatchQueue.global(qos: .background).async {
-            let uploads = SBAEncryptionHelper.encryptedFilesAwaitingUploadResponse()
-            for file in uploads {
-                let fileUrl = URL(fileURLWithPath: file)
-                
-                // (if the upload manager already knows about this file, it won't try to upload again)
-                // (also, use the method that lets BridgeSDK figure out the contentType since we don't have any better info about that)
-                uploadManager.uploadFile(toBridge: fileUrl, completion: { (error) in
-                    if error == nil {
-                        // clean up the file now that it's been successfully uploaded so we don't keep trying
-                        SBAEncryptionHelper.cleanUpEncryptedFile(fileUrl);
-                    }
-                })
-            }
-        }
     }
 }
