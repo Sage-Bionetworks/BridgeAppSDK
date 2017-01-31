@@ -32,6 +32,7 @@
 //
 
 import Foundation
+import BridgeSDK
 
 private let kSurveyCreatedOnKey               = "surveyCreatedOn"
 private let kSurveyGuidKey                    = "surveyGuid"
@@ -47,7 +48,7 @@ private let kEndDate                          = "endDate"
 private let kDataGroups                       = "dataGroups"
 private let kMetadataFilename                 = "metadata.json"
 
-open class SBAActivityArchive: SBADataArchive, SBASharedInfoController {
+open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate

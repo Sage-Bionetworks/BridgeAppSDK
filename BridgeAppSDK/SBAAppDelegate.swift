@@ -42,7 +42,7 @@ import ResearchKit
  the methods defined by this protocol.
  */
 @objc
-public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeAppDelegate, SBAAlertPresenter {
+public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeErrorUIDelegate, SBAAlertPresenter {
     
     // Start-up permissions
     @available(*, deprecated, message:"Use `permissionTypeItems` on `SBABridgeInfo` instead.")
@@ -94,6 +94,7 @@ public let SBAMainStoryboardName = "Main"
         // Override point for customization before application launch.
 
         self.initializeBridgeServerConnection()
+        BridgeSDK.setErrorUIDelegate(self)
         
         // Set the tint colors if applicable
         if let tintColor = UIColor.primaryTintColor {
@@ -466,7 +467,7 @@ public let SBAMainStoryboardName = "Main"
     }
     
     // ------------------------------------------------
-    // MARK: SBBBridgeAppDelegate
+    // MARK: SBBBridgeErrorUIDelegate
     // ------------------------------------------------
     
     /**

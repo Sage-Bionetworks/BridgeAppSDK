@@ -39,7 +39,7 @@ import UIKit
 // AppCore and is still untested and *not* intended for production use.
 // ============================
 
-public class SBADemographicDataArchive: SBADataArchive, SBASharedInfoController {
+public class SBADemographicDataArchive: SBBDataArchive, SBASharedInfoController {
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate

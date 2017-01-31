@@ -64,7 +64,7 @@
     
     // Setup the Bridge study
     [BridgeSDK setupWithBridgeInfo:bridgeInfo];
-    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
+    [BridgeSDK setAuthDelegate:authDelegate];
 }
 
 + (void)setupWithStudy:(NSString *)study

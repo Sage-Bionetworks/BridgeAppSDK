@@ -155,7 +155,7 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     public var subpopulationGuid: String? {
         get {
             // if no subpopulationGuid found for user, return study identifier instead
-            return getKeychainObject(kSubpopulationGuidKey) as? String ?? gSBBAppStudy
+            return getKeychainObject(kSubpopulationGuidKey) as? String ?? SBBBridgeInfo.shared().studyIdentifier
         }
         set (newValue) {
             setKeychainObject(newValue as NSSecureCoding?, key: kSubpopulationGuidKey)

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		603242491E4001A100C184AD /* SBADataArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 603242471E4001A100C184AD /* SBADataArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6032424A1E4001A100C184AD /* SBADataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 603242481E4001A100C184AD /* SBADataArchive.m */; };
 		6099B9871E00880500902297 /* SBAAppExtensionSharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */; };
 		6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */; };
 		801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 801040B41C5A843D00D26E19 /* BridgeAppSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -16,8 +18,6 @@
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
-		80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D5F1911CE51C40002A39DF /* SBAEncryption.h */; };
-		80D5F1941CE51C40002A39DF /* SBAEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1921CE51C40002A39DF /* SBAEncryption.m */; };
 		80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */; };
 		80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF390D1CE26DE40090452F /* SBAActivityResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
@@ -64,8 +64,6 @@
 		FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */; };
 		FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */ = {isa = PBXBuildFile; fileRef = FF63D0F61CD032B4007ADEE5 /* SBALog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0F71CD032B4007ADEE5 /* SBALog.m */; };
-		FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */; };
 		FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */; };
 		FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */; };
 		FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */; };
@@ -153,8 +151,6 @@
 		FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */; };
 		FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDE1CFE513200C29AF7 /* sample-study.pem */; };
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
-		FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160781CFE672100C29AF7 /* ZipZap.framework */; };
-		FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160CE1CFE6DC300C29AF7 /* openssl.framework */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
@@ -255,55 +251,6 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
-		FFC160771CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D87BA1F81B3D6DEA00ED7EB3;
-			remoteInfo = "ZipZap (iOS Framework)";
-		};
-		FFC160791CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CFB0162C5EEB00112F49;
-			remoteInfo = "ZipZap (iOS Static Library)";
-		};
-		FFC1607B1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D8D140D31B423B1100C411B0;
-			remoteInfo = "ZipZap (OS X Framework)";
-		};
-		FFC1607D1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CF82162C5EC100112F49;
-			remoteInfo = "ZipZap (OS X Static Library)";
-		};
-		FFC1607F1CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF8624CB1BB7495200C12EEE;
-			remoteInfo = "ZipZap (tvOS Framework)";
-		};
-		FFC160811CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BF8624EF1BB74B1F00C12EEE;
-			remoteInfo = "ZipZap (tvOS Static Library)";
-		};
-		FFC160831CFE672100C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D899CF96162C5EC100112F49;
-			remoteInfo = ZipZapTests;
-		};
 		FFC160911CFE672100C29AF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
@@ -332,20 +279,6 @@
 			remoteGlobalIDString = 807AE29F1B60330C002588BB;
 			remoteInfo = BridgeSDKIntegrationTests;
 		};
-		FFC160CD1CFE6DC300C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AE31B30A93900A1917D;
-			remoteInfo = openssl;
-		};
-		FFC160CF1CFE6DC300C29AF7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
-			remoteInfo = opensslTests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -368,6 +301,8 @@
 /* Begin PBXFileReference section */
 		161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeAppSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161479CF1BD6CE8F0099A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		603242471E4001A100C184AD /* SBADataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBADataArchive.h; sourceTree = "<group>"; };
+		603242481E4001A100C184AD /* SBADataArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBADataArchive.m; sourceTree = "<group>"; };
 		6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppExtensionSharedInfoController.swift; sourceTree = "<group>"; };
 		6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppInfoDelegate.swift; sourceTree = "<group>"; };
 		801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -378,8 +313,6 @@
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
-		80D5F1911CE51C40002A39DF /* SBAEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAEncryption.h; sourceTree = "<group>"; };
-		80D5F1921CE51C40002A39DF /* SBAEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEncryption.m; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
 		80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = BridgeAppSDKSample.entitlements; sourceTree = "<group>"; };
 		80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKSample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -393,8 +326,6 @@
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
 		FBE5515C1C6D267100C9E1AA /* MockORKTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockORKTask.m; sourceTree = "<group>"; };
 		FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
-		FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
-		FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
 		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
 		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
 		FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADemographicDataArchive.swift; sourceTree = "<group>"; };
@@ -426,8 +357,6 @@
 		FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBADemographicDataConverter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		FF63D0F61CD032B4007ADEE5 /* SBALog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBALog.h; sourceTree = "<group>"; };
 		FF63D0F71CD032B4007ADEE5 /* SBALog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBALog.m; sourceTree = "<group>"; };
-		FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBADataArchive.h; sourceTree = "<group>"; };
-		FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBADataArchive.m; sourceTree = "<group>"; };
 		FF63D0FF1CD03F89007ADEE5 /* License_BridgeSDK.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License_BridgeSDK.txt; sourceTree = "<group>"; };
 		FF63D1001CD03F89007ADEE5 /* License_ZipZap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License_ZipZap.txt; sourceTree = "<group>"; };
 		FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADataObjectTests.swift; sourceTree = "<group>"; };
@@ -552,8 +481,6 @@
 			files = (
 				FF24FF2A1E28C4180016C4DF /* ResearchKit.framework in Frameworks */,
 				FF24FF291E28C4120016C4DF /* ResearchUXFactory.framework in Frameworks */,
-				FFC160DB1CFE6E1000C29AF7 /* openssl.framework in Frameworks */,
-				FFC160A71CFE69DB00C29AF7 /* ZipZap.framework in Frameworks */,
 				FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -716,8 +643,6 @@
 			isa = PBXGroup;
 			children = (
 				FF84AB651D90A7D900ABD54C /* HealthKit.framework */,
-				FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */,
-				FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */,
 				FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */,
 				FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */,
 				FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */,
@@ -864,15 +789,13 @@
 			isa = PBXGroup;
 			children = (
 				FFCF38FF1CE267630090452F /* Result */,
-				FF63D0FA1CD03DCA007ADEE5 /* SBADataArchive.h */,
-				FF63D0FB1CD03DCA007ADEE5 /* SBADataArchive.m */,
 				805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */,
+				603242471E4001A100C184AD /* SBADataArchive.h */,
+				603242481E4001A100C184AD /* SBADataArchive.m */,
 				FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */,
 				FF5CDF251DDE440F00117218 /* SBADemographicDataConverter.swift */,
 				FF5CDF211DDE395900117218 /* SBADemographicDataObjectType.h */,
 				FF5CDF221DDE395900117218 /* SBADemographicDataObjectType.m */,
-				80D5F1911CE51C40002A39DF /* SBAEncryption.h */,
-				80D5F1921CE51C40002A39DF /* SBAEncryption.m */,
 				80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */,
 			);
 			name = "Data Archiving";
@@ -1071,20 +994,6 @@
 			name = HTML;
 			sourceTree = "<group>";
 		};
-		FFC1606E1CFE672100C29AF7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FFC160781CFE672100C29AF7 /* ZipZap.framework */,
-				FFC1607A1CFE672100C29AF7 /* libZipZap.a */,
-				FFC1607C1CFE672100C29AF7 /* ZipZap.framework */,
-				FFC1607E1CFE672100C29AF7 /* libZipZap.a */,
-				FFC160801CFE672100C29AF7 /* ZipZap.framework */,
-				FFC160821CFE672100C29AF7 /* libZipZap.a */,
-				FFC160841CFE672100C29AF7 /* ZipZapTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		FFC160851CFE672100C29AF7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1092,15 +1001,6 @@
 				FFC160941CFE672100C29AF7 /* BridgeSDKTests.xctest */,
 				FFC160961CFE672100C29AF7 /* BridgeSDKIntegration.app */,
 				FFC160981CFE672100C29AF7 /* BridgeSDKIntegrationTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		FFC160BE1CFE6DC300C29AF7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FFC160CE1CFE6DC300C29AF7 /* openssl.framework */,
-				FFC160D01CFE6DC300C29AF7 /* opensslTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1136,9 +1036,8 @@
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
-				80D5F1931CE51C40002A39DF /* SBAEncryption.h in Headers */,
-				FF63D0FC1CD03DCA007ADEE5 /* SBADataArchive.h in Headers */,
 				FF722C131D775BB8004B2F8B /* SBANewsFeedParser.h in Headers */,
+				603242491E4001A100C184AD /* SBADataArchive.h in Headers */,
 				FF5CDF231DDE395900117218 /* SBADemographicDataObjectType.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */,
@@ -1265,20 +1164,12 @@
 					ProjectRef = FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */;
 				},
 				{
-					ProductGroup = FFC160BE1CFE6DC300C29AF7 /* Products */;
-					ProjectRef = FF03961C1CFE28C800245DE3 /* openssl.xcodeproj */;
-				},
-				{
 					ProductGroup = FF24FEF11E28AF5A0016C4DF /* Products */;
 					ProjectRef = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
 				},
 				{
 					ProductGroup = FF24FECD1E28AF4D0016C4DF /* Products */;
 					ProjectRef = FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */;
-				},
-				{
-					ProductGroup = FFC1606E1CFE672100C29AF7 /* Products */;
-					ProjectRef = FF0395FC1CFE284D00245DE3 /* ZipZap.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1333,55 +1224,6 @@
 			remoteRef = FF24FEF81E28AF5B0016C4DF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FFC160781CFE672100C29AF7 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = FFC160771CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC1607A1CFE672100C29AF7 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = FFC160791CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC1607C1CFE672100C29AF7 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = FFC1607B1CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC1607E1CFE672100C29AF7 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = FFC1607D1CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC160801CFE672100C29AF7 /* ZipZap.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ZipZap.framework;
-			remoteRef = FFC1607F1CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC160821CFE672100C29AF7 /* libZipZap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZipZap.a;
-			remoteRef = FFC160811CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC160841CFE672100C29AF7 /* ZipZapTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ZipZapTests.xctest;
-			remoteRef = FFC160831CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		FFC160921CFE672100C29AF7 /* BridgeSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1408,20 +1250,6 @@
 			fileType = wrapper.cfbundle;
 			path = BridgeSDKIntegrationTests.xctest;
 			remoteRef = FFC160971CFE672100C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC160CE1CFE6DC300C29AF7 /* openssl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = openssl.framework;
-			remoteRef = FFC160CD1CFE6DC300C29AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FFC160D01CFE6DC300C29AF7 /* opensslTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = opensslTests.xctest;
-			remoteRef = FFC160CF1CFE6DC300C29AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1536,6 +1364,7 @@
 				FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */,
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,
 				FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */,
+				6032424A1E4001A100C184AD /* SBADataArchive.m in Sources */,
 				805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
 				FF92A6441DBFE16C00614D1F /* SBALearnInfo.swift in Sources */,
@@ -1554,7 +1383,6 @@
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF5242B11D81E9D0009043B3 /* SBAUserProfileController.swift in Sources */,
-				FF63D0FD1CD03DCA007ADEE5 /* SBADataArchive.m in Sources */,
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
 				6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */,
@@ -1574,7 +1402,6 @@
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
 				FF97080B1DA78806006E8252 /* SBARootViewController.swift in Sources */,
 				FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */,
-				80D5F1941CE51C40002A39DF /* SBAEncryption.m in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
