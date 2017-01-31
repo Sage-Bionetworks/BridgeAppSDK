@@ -94,6 +94,7 @@ public let SBAMainStoryboardName = "Main"
         // Override point for customization before application launch.
 
         self.initializeBridgeServerConnection()
+        BridgeSDK.setErrorUIDelegate(self)
         
         // Set the window tint color if applicable
         if let tintColor = UIColor.primaryTintColor() {

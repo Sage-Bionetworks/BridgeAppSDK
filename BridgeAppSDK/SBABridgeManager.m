@@ -63,8 +63,8 @@
     [SBAInfoManager sharedManager].currentParticipant = participant;
     
     // Setup the Bridge study
-    [BridgeSDK setupWithBridgeInfo:bridgeInfo errorUIDelegate:SBAAppDelegate.shared];
-    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
+    [BridgeSDK setupWithBridgeInfo:bridgeInfo];
+    [BridgeSDK setAuthDelegate:authDelegate];
 }
 
 + (void)setupWithStudy:(NSString *)study
