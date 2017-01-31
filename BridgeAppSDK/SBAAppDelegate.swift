@@ -95,9 +95,15 @@ public let SBAMainStoryboardName = "Main"
 
         self.initializeBridgeServerConnection()
         
-        // Set the window tint color if applicable
-        if let tintColor = UIColor.primaryTintColor() {
+        // Set the tint colors if applicable
+        if let tintColor = UIColor.primaryTintColor {
             self.window?.tintColor = tintColor
+        }
+        if let tintColor = UIColor.taskNavigationBarTintColor {
+            UINavigationBar.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).barTintColor = tintColor
+        }
+        if let tintColor = UIColor.taskNavigationButtonTintColor {
+            UINavigationBar.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor = tintColor
         }
         
         // Replace the launch root view controller with an SBARootViewController
