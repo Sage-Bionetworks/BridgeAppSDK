@@ -4,7 +4,13 @@
 <dict>
 	<key>greenTintColor</key>
 	<string>#44D24E</string>
+	<key>blueTintColor</key>
+	<string>#3B8CE3</string>
 	<key>primaryTintColor</key>
 	<string>#8E35EF</string>
+	<key>taskNavigationBarTintColor</key>
+	<string>#A868ED</string>
+	<key>taskNavigationButtonTintColor</key>
+	<string>#F7F2F2</string>
 </dict>
 </plist>
