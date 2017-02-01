@@ -78,6 +78,6 @@ public class SBADemographicDataArchive: SBBDataArchive, SBASharedInfoController 
         }
         
         // Add to archive
-        insertDictionary(intoArchive: demographics, filename: kFileIdentifierKey)
+        insertDictionary(intoArchive: demographics, filename: kFileIdentifierKey, createdOn: Date())
     }
 }

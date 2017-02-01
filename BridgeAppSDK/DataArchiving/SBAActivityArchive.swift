@@ -122,7 +122,7 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         // don't insert the metadata if the archive is otherwise empty
         let builtArchive = !isEmpty()
         if builtArchive {
-            insertDictionary(intoArchive: self.metadata, filename: kMetadataFilename)
+            insertDictionary(intoArchive: self.metadata, filename: kMetadataFilename, createdOn: activityResult.startDate)
         }
 
         return builtArchive
@@ -141,9 +141,9 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         if let urlResult = archiveableResult.result as? URL {
             self.insertURL(intoArchive: urlResult, fileName: archiveableResult.filename)
         } else if let dictResult = archiveableResult.result as? [AnyHashable: Any] {
-            self.insertDictionary(intoArchive: dictResult, filename: archiveableResult.filename)
+            self.insertDictionary(intoArchive: dictResult, filename: archiveableResult.filename, createdOn: result.startDate)
         } else if let dataResult = archiveableResult.result as? NSData {
-            self.insertData(intoArchive: dataResult as Data, filename: archiveableResult.filename)
+            self.insertData(intoArchive: dataResult as Data, filename: archiveableResult.filename, createdOn: result.startDate)
         } else {
             let className = NSStringFromClass(archiveableResult.result.classForCoder)
             assertionFailure("Unsupported archiveable result type: \(className)")
