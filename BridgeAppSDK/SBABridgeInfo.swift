@@ -66,6 +66,11 @@ public protocol SBABridgeInfo: class {
     var appStoreLinkURLString: String? { get }
     
     /**
+     Privacy policy link for this application. By default, this returns the value pulled from the main bundle
+     */
+    var privacyPolicyLinkURLString: String? { get }
+
+    /**
      Email to use for registration or login via externalId
      */
     var emailForLoginViaExternalId: String? { get }
@@ -190,7 +195,11 @@ public final class SBABridgeInfoPList : NSObject, SBABridgeInfo {
     public var appStoreLinkURLString: String? {
         return  self.plist["appStoreLinkURL"] as? String
     }
-    
+
+    public var privacyPolicyLinkURLString: String? {
+        return  self.plist["privacyPolicyLinkURL"] as? String
+    }
+
     public var emailForLoginViaExternalId: String? {
         return self.plist["emailForLoginViaExternalId"] as? String
     }
