@@ -56,5 +56,6 @@
 @property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
 @property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
 @property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
+@property (nonatomic, readonly, copy) NSString * _Nullable privacyPolicyLinkURL;
 
 @end
