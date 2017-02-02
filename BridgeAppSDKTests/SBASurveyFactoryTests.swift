@@ -490,6 +490,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // pattern, maxLength and minLength are currently unsupported
         let constraints = SBBStringConstraints()
         constraints.pattern = "^[0-9A-F]+$"
+        constraints.patternErrorMessage = "Should be hexidecimal"
         inputStep.constraints = constraints
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
@@ -509,7 +510,8 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertFalse(answerFormat.multipleLines)
-        XCTAssertEqual(answerFormat.validationRegex, constraints.pattern)
+        XCTAssertEqual(answerFormat.validationRegex, "^[0-9A-F]+$")
+        XCTAssertEqual(answerFormat.invalidMessage, "Should be hexidecimal")
         XCTAssertEqual(answerFormat.maximumLength, 0)
     }
     
@@ -838,7 +840,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(value: 50 as Int32),
+                "value" : "50",
                 "operator" : "eq",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"

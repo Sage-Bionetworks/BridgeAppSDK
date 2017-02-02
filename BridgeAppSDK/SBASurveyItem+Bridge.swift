@@ -153,17 +153,35 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     
     // The Bridge Study Manager UI includes a `prompt` and a `prompt detail` whereas ResearchKit
     // describes a `title` and `text` properties. The `title` is bold large size text that is 
-    // not appropriate for a question sentence. Therefore, if there is no prompt detail (or if this
-    // is a textfield) then assign the `SBBSurveyQuestion.prompt` to `ORKQuestionStep.text`. If there
-    // is a non-nil value for `SBBSurveyQuestion.promptDetail` then assign that to `ORKQuestionStep.text`
-    // and `SBBSurveyQuestion.prompt` to `ORKQuestionStep.title`
+    // not appropriate for a question sentence. 
+    //
+    // Therefore, if there is no prompt detail (or if this is a textfield WITHOUT a `patternPlaceholder`) 
+    // then assign the `SBBSurveyQuestion.prompt` to `ORKQuestionStep.text`. If there is a non-nil value 
+    // for `SBBSurveyQuestion.promptDetail` (and the `patternPlaceholder` is non-nil) then assign that 
+    // to `ORKQuestionStep.text` and `SBBSurveyQuestion.prompt` to `ORKQuestionStep.title`. If there is a
+    // nil placeholder value for the `patternPlaceholder` (which is only valid if there is a pattern)
+    // but this is a String constraint then use the `promptDetail` as the placeholder text.
     
-    var usesPlaceholderText: Bool {
-        return self.surveyItemType == SBASurveyItemType.form(.text)
+    
+    var detailPlaceholder: String? {
+        guard let constraint = self.constraints as? SBBStringConstraints,
+            (constraint.patternPlaceholder == nil) &&
+            (self.promptDetail != nil) &&
+            (self.promptDetail!.characters.count <= 12)
+        else {
+            return nil
+        }
+        return self.promptDetail.removingNewlineCharacters()
+    }
+    
+    var regexPlaceholder: String? {
+        guard let constraint = self.constraints as? SBBStringConstraints else { return nil }
+        return constraint.patternPlaceholder
     }
     
     public var stepTitle: String? {
-        if (self.usesPlaceholderText || (self.promptDetail == nil) || (self.prompt == nil)) { return nil }
+        // If either the prompt or the promptDetail is nil then the title is not used
+        guard (self.promptDetail != nil) && (self.prompt != nil) && (self.detailPlaceholder == nil) else { return nil }
         return self.prompt.removingNewlineCharacters()
     }
     
@@ -179,8 +197,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     }
 
     public var placeholderText: String? {
-        if (self.usesPlaceholderText && self.promptDetail == nil) { return nil }
-        return self.promptDetail.removingNewlineCharacters()
+        return self.regexPlaceholder ?? self.detailPlaceholder
     }
     
     public var stepFootnote: String? {
@@ -384,8 +401,7 @@ extension SBBStringConstraints: SBATextFieldRange {
     }
     
     public var invalidMessage: String? {
-        // Not currently supported by Bridge
-        return nil
+        return self.patternErrorMessage
     }
     
     public var maximumLength: Int {
