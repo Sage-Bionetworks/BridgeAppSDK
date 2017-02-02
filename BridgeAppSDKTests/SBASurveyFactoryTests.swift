@@ -840,7 +840,7 @@ class SBASurveyFactoryTests: XCTestCase {
         let inputStep:SBBSurveyQuestion = createIntegerQuestion()
         inputStep.constraints.addRulesObject(
             SBBSurveyRule(dictionaryRepresentation:         [
-                "value" : NSNumber(value: 50 as Int32),
+                "value" : "50",
                 "operator" : "eq",
                 "skipTo" : "video-usage",
                 "type" : "SurveyRule"
