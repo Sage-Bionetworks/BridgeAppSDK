@@ -52,9 +52,10 @@
 @property (nonatomic, readwrite, copy) NSString * _Nullable logoImageName;
 @property (nonatomic, readwrite, copy) NSString * _Nullable appUpdateURLString;
 @property (nonatomic, readwrite) BOOL disableTestUserCheck;
-@property (nonatomic, readonly, copy) NSArray * _Nullable permissionTypes;
-@property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
-@property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
-@property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
+@property (nonatomic, readwrite, copy) NSArray * _Nullable permissionTypes;
+@property (nonatomic, readwrite, copy) NSString * _Nullable keychainService;
+@property (nonatomic, readwrite, copy) NSString * _Nullable keychainAccessGroup;
+@property (nonatomic, readwrite, copy) NSString * _Nullable appGroupIdentifier;
+@property (nonatomic, readwrite, copy) NSString * _Nullable privacyPolicyLinkURLString;
 
 @end

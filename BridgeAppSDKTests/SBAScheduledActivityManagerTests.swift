@@ -979,6 +979,7 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var keychainService: String?
     var keychainAccessGroup: String?
     var appGroupIdentifier: String?
+    var privacyPolicyLinkURLString: String?
     
     let medTaskRef = [
         "taskIdentifier"    : medicationTrackingTaskId,
