@@ -128,23 +128,17 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         switch (subtype) {
             
         case .visual:
-            return ORKVisualConsentStep(identifier: inputItem.identifier,
-                                        document: self.consentDocument)
+            // Use the superclass instance of the review step
+            return super.createConsentStep(inputItem: inputItem, subtype: subtype)
             
         case .sharingOptions:
             return SBAConsentSharingStep(inputItem: inputItem)
             
         case .review:
-            if let consentReview = inputItem as? SBAConsentReviewOptions
-                , consentReview.usesDeprecatedOnboarding {
-                // If this uses the deprecated onboarding (consent review defined by ORKConsentReviewStep)
-                // then return that object type.
-                let signature = self.consentDocument.signatures?.first
-                signature?.requiresName = consentReview.requiresSignature
-                signature?.requiresSignatureImage = consentReview.requiresSignature
-                return ORKConsentReviewStep(identifier: inputItem.identifier,
-                                            signature: signature,
-                                            in: self.consentDocument)
+            if let consentReview = inputItem as? SBAConsentReviewOptions,
+                consentReview.usesDeprecatedOnboarding {
+                // Use the superclass instance of the review step
+                return super.createConsentStep(inputItem: inputItem, subtype: subtype)
             }
             else {
                 let review = inputItem as! SBAFormStepSurveyItem
