@@ -1231,6 +1231,123 @@ class SBASurveyFactoryTests: XCTestCase {
         }
     }
     
+    func testFactory_UsesTitleAndText() {
+        
+        let instructionStep = SBBSurveyInfoScreen()
+        instructionStep.identifier = "abc123"
+        instructionStep.title = "Title"
+        instructionStep.prompt = "Text"
+        instructionStep.promptDetail = "Detail"
+        
+        let inputStep1 = SBBSurveyQuestion()
+        inputStep1.identifier = "question1"
+        inputStep1.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep1.uiHint = "checkbox"
+        inputStep1.prompt = "Question 1"
+        inputStep1.promptDetail = "Do you live alone?"
+        inputStep1.constraints = SBBBooleanConstraints();
+        
+        let inputStep2 = SBBSurveyQuestion()
+        inputStep2.identifier = "question2"
+        inputStep2.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep2.uiHint = "checkbox"
+        inputStep2.prompt = "Question 2"
+        inputStep2.constraints = SBBBooleanConstraints();
+        
+        let inputStep3 = SBBSurveyQuestion()
+        inputStep3.identifier = "question3"
+        inputStep3.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep3.uiHint = "checkbox"
+        inputStep3.prompt = "Question 3"
+        inputStep3.constraints = SBBBooleanConstraints();
+        
+        let survey = SBBSurvey()
+        survey.createdOn = Date()
+        survey.guid = NSUUID().uuidString
+        survey.identifier = "test"
+        survey.addElementsObject(instructionStep)
+        survey.addElementsObject(inputStep1)
+        survey.addElementsObject(inputStep2)
+        survey.addElementsObject(inputStep3)
+        
+        let task = SBASurveyFactory().createTaskWithSurvey(survey)
+        let steps = task.steps
+        
+        guard steps.count == 4 else {
+            XCTAssert(false, "\(task) does not have expected steps: \(task.steps)")
+            return
+        }
+        
+        // If one of the questions has a title, then all the questions should
+        XCTAssertEqual(steps[0].title, "Title")
+        XCTAssertEqual(steps[1].title, "Question 1")
+        XCTAssertEqual(steps[2].title, "Question 2")
+        XCTAssertEqual(steps[3].title, "Question 3")
+        
+        XCTAssertEqual(steps[0].text, "Text")
+        XCTAssertEqual(steps[1].text, "Do you live alone?")
+        XCTAssertNil(steps[2].text)
+        XCTAssertNil(steps[3].text)
+    }
+    
+    func testFactory_UsesTextOnly() {
+        
+        let instructionStep = SBBSurveyInfoScreen()
+        instructionStep.identifier = "abc123"
+        instructionStep.title = "Title"
+        instructionStep.prompt = "Text"
+        instructionStep.promptDetail = "Detail"
+        
+        let inputStep1 = SBBSurveyQuestion()
+        inputStep1.identifier = "question1"
+        inputStep1.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep1.uiHint = "checkbox"
+        inputStep1.prompt = "Question 1"
+        inputStep1.constraints = SBBBooleanConstraints();
+        
+        let inputStep2 = SBBSurveyQuestion()
+        inputStep2.identifier = "question2"
+        inputStep2.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep2.uiHint = "checkbox"
+        inputStep2.prompt = "Question 2"
+        inputStep2.constraints = SBBBooleanConstraints();
+        
+        let inputStep3 = SBBSurveyQuestion()
+        inputStep3.identifier = "question3"
+        inputStep3.guid = "216a6a73-86dc-432a-bb6a-71a8b7cf4be1"
+        inputStep3.uiHint = "checkbox"
+        inputStep3.prompt = "Question 3"
+        inputStep3.constraints = SBBBooleanConstraints();
+        
+        let survey = SBBSurvey()
+        survey.createdOn = Date()
+        survey.guid = NSUUID().uuidString
+        survey.identifier = "test"
+        survey.addElementsObject(instructionStep)
+        survey.addElementsObject(inputStep1)
+        survey.addElementsObject(inputStep2)
+        survey.addElementsObject(inputStep3)
+        
+        let task = SBASurveyFactory().createTaskWithSurvey(survey)
+        let steps = task.steps
+        
+        guard steps.count == 4 else {
+            XCTAssert(false, "\(task) does not have expected steps: \(task.steps)")
+            return
+        }
+        
+        // If one of the questions has a title, then all the questions should
+        XCTAssertEqual(steps[0].title, "Title")
+        XCTAssertNil(steps[1].title)
+        XCTAssertNil(steps[2].title)
+        XCTAssertNil(steps[3].title)
+        
+        XCTAssertEqual(steps[0].text, "Text")
+        XCTAssertEqual(steps[1].text, "Question 1")
+        XCTAssertEqual(steps[2].text, "Question 2")
+        XCTAssertEqual(steps[3].text, "Question 3")
+    }
+    
     
     // MARK: Helper methods
 
