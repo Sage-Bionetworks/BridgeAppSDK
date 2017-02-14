@@ -67,11 +67,30 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
      @return            Task created with this survey
      */
     open func createTaskWithSurvey(_ survey: SBBSurvey) -> SBANavigableOrderedTask {
+        
+        // Build the steps
         let lastStepIndex = survey.elements.count - 1
+        var usesTitleAndText: Bool = false
         let steps: [ORKStep] = survey.elements.enumerated().mapAndFilter({ (offset: Int, element: Any) -> ORKStep? in
             guard let surveyItem = element as? SBBSurveyElement else { return nil }
-            return createSurveyStepWithSurveyElement(surveyItem, isLastStep: (offset == lastStepIndex))
+            let step = self.createSurveyStepWithSurveyElement(surveyItem, isLastStep: (offset == lastStepIndex))
+            if let qStep = step as? ORKQuestionStep, qStep.title != nil {
+                usesTitleAndText = true
+            }
+            return step
         })
+        
+        // If some of the questions use the title field, then set all the questions to 
+        // use the title field if the prompt was initially set to the text.
+        if usesTitleAndText {
+            for step in steps {
+                if step is ORKQuestionStep, step.title == nil {
+                    step.title = step.text
+                    step.text = nil
+                }
+            }
+        }
+        
         return SBANavigableOrderedTask(identifier: survey.identifier, steps: steps)
     }
     
