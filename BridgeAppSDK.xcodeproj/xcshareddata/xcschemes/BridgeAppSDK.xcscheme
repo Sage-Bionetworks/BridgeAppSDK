@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "801040BA1C5A843D00D26E19"
+               BuildableName = "BridgeAppSDKTests.xctest"
+               BlueprintName = "BridgeAppSDKTests"
+               ReferencedContainer = "container:BridgeAppSDK.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "801040B11C5A843D00D26E19"
+            BuildableName = "BridgeAppSDK.framework"
+            BlueprintName = "BridgeAppSDK"
+            ReferencedContainer = "container:BridgeAppSDK.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
