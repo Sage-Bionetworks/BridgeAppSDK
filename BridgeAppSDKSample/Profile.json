@@ -1,0 +1,58 @@
+{
+    "sections": [
+        {
+            "title": "Items from keychain",
+            "items": [
+                      "title": "keychain string profile item",
+                      "storageType": "keychain",
+                      "key": "keychainItem1",
+                      "editType": "String"
+                 ],
+            "items": [
+                      "title": "keychain date profile item",
+                      "storageType": "keychain",
+                      "key": "keychainItem2",
+                      "editType": "Date"
+                 ]
+        },
+        {
+            "title": "Items from UserDefaults",
+                 "items": [
+                           "title": "UserDefaults string profile item",
+                           "storageType": "UserDefaults",
+                           "key": "defaultsItem1",
+                           "editType": "String"
+                           ],
+                 "items": [
+                           "title": "UserDefaults date profile item",
+                           "storageType": "UserDefaults",
+                           "key": "defaultsItem2",
+                           "editType": "Date"
+                           ]
+        },
+        {
+            "title": "Items from SBAUserWrapper",
+                 "items": [
+                           "title": "SBAUserWrapper string profile item: Name",
+                           "storageType": "SBAUserWrapper",
+                           "key": "name",
+                           "editType": "String"
+                           ],
+                 "items": [
+                           "title": "SBAUserWrapper read-only profile item: Data Groups",
+                           "storageType": "SBAUserWrapper",
+                           "key": "dataGroups"
+                           ]
+        },
+        {
+            "title": "Items from HealthKit",
+            "items": [
+                 ]
+        },
+        {
+            "title": "Items from SBBStudyParticipant",
+            "items": [
+                 ]
+        }
+    ]
+}

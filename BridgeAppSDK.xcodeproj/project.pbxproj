@@ -23,6 +23,9 @@
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
 		80E5A1901C5ADF1300E0DFE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */; };
 		80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */; };
+		80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */; };
+		80FDDC961E661BF70010DFA7 /* SBAProfileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FDDC951E661BF70010DFA7 /* SBAProfileItem.swift */; };
+		80FDDC981E665B3C0010DFA7 /* Profile.json in Resources */ = {isa = PBXBuildFile; fileRef = 80FDDC971E665B3C0010DFA7 /* Profile.json */; };
 		FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */; };
 		FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */; };
 		FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */; };
@@ -418,6 +421,9 @@
 		80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKSample-Bridging-Header.h"; sourceTree = "<group>"; };
 		80E5A18F1C5ADF1300E0DFE9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBANotificationsManager.swift; sourceTree = "<group>"; };
+		80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileSection.swift; sourceTree = "<group>"; };
+		80FDDC951E661BF70010DFA7 /* SBAProfileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileItem.swift; sourceTree = "<group>"; };
+		80FDDC971E665B3C0010DFA7 /* Profile.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Profile.json; sourceTree = "<group>"; };
 		FB1BBBA51D8B5844009F765E /* SBBScheduledActivity+Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBBScheduledActivity+Filters.swift"; sourceTree = "<group>"; };
 		FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyFactory.swift; sourceTree = "<group>"; };
 		FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBASurveyFactoryTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -673,6 +679,7 @@
 				FF722BF51D7759EB004B2F8B /* News Feed */,
 				80F554CB1CD3F21D00C38053 /* Notifications */,
 				16BF5B611BE29643007C79C6 /* Onboarding */,
+				80FDDC821E6605020010DFA7 /* Profile */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
 				FBC45E711C758DBA007AA424 /* Library */,
@@ -804,6 +811,15 @@
 				80F554D71CD3F25800C38053 /* SBANotificationsManager.swift */,
 			);
 			name = Notifications;
+			sourceTree = "<group>";
+		};
+		80FDDC821E6605020010DFA7 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */,
+				80FDDC951E661BF70010DFA7 /* SBAProfileItem.swift */,
+			);
+			name = Profile;
 			sourceTree = "<group>";
 		};
 		FB14FFE51C7686CC00E0D5AF /* Resources */ = {
@@ -1159,6 +1175,7 @@
 				FF78CF4E1D00B6C9002C456D /* Consent.json */,
 				FF78CF601D00C125002C456D /* Memory.json */,
 				FFDECDF91D0774EE00434001 /* Onboarding.json */,
+				80FDDC971E665B3C0010DFA7 /* Profile.json */,
 				FF78CF631D00C12A002C456D /* Tapping.json */,
 				FF35B9351D9EEC2000E0DF23 /* Tremor.json */,
 				FF78CF661D00C130002C456D /* Voice.json */,
@@ -1522,6 +1539,7 @@
 				FF78CF4C1D00B6C9002C456D /* Consent.json in Resources */,
 				FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */,
 				80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */,
+				80FDDC981E665B3C0010DFA7 /* Profile.json in Resources */,
 				FF92A6631DBFF10A00614D1F /* pantspocket.png in Resources */,
 				FF78CF2E1D00B663002C456D /* consent_12medical_care.html in Resources */,
 				FF78CF5E1D00C125002C456D /* Memory.json in Resources */,
@@ -1653,6 +1671,7 @@
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF5242B11D81E9D0009043B3 /* SBAOnboardingStepController.swift in Sources */,
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
+				80FDDC961E661BF70010DFA7 /* SBAProfileItem.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
 				6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */,
 				FF9D4C3F1CA1FC28001C293C /* SBAAppDelegate.swift in Sources */,
@@ -1676,6 +1695,7 @@
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
+				80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
 				FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */,
 			);
