@@ -639,13 +639,17 @@ class SBAScheduledActivityManagerTests: XCTestCase {
                 XCTAssertNotNil(stepResult, "\(stepIdentifier)")
                 XCTAssertTrue(stepResult?.hasResults ?? false, "\(stepIdentifier)")
                 if let results = stepResult?.results {
-                    for questionResult in results {
-                        let bridgeData = questionResult.bridgeData(stepIdentifier)
-                        XCTAssertNotNil(bridgeData, "\(stepIdentifier) \(questionResult.identifier)")
-                        let dictionary = bridgeData?.result as? NSDictionary
-                        XCTAssertNotNil(dictionary, "\(stepIdentifier) \(questionResult.identifier)")
-                        let choiceAnswers = dictionary?["choiceAnswers"]
-                        XCTAssertNotNil(choiceAnswers, "\(stepIdentifier) \(questionResult.identifier)")
+                    for subResult in results {
+                        if let questionResult = subResult as? ORKQuestionResult {
+                            let bridgeData = questionResult.bridgeData(stepIdentifier)
+                            XCTAssertNotNil(bridgeData, "\(stepIdentifier) \(questionResult.identifier)")
+                            let dictionary = bridgeData?.result as? NSDictionary
+                            XCTAssertNotNil(dictionary, "\(stepIdentifier) \(questionResult.identifier)")
+                            let choiceAnswers = dictionary?["choiceAnswers"]
+                            XCTAssertNotNil(choiceAnswers, "\(stepIdentifier) \(questionResult.identifier)")
+                        } else {
+                            XCTAssertTrue(subResult.identifier.hasPrefix("step."))
+                        }
                     }
                 }
             }
