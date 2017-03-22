@@ -38,16 +38,50 @@ public protocol SBAProfileItem: NSObjectProtocol {
     var title: String { get }
     var detail: String? { get }
     var isEditable: Bool { get }
-    var value: Any { get set }
+    var value: Any? { get set }
 }
 
 class SBAKeychainProfileItem: NSObject, SBAProfileItem {
     private var key: String
     private var keychain: SBAKeychainWrapper
+    open var title: String
+    open var detail: String?
+    open var isEditable: Bool
     
-    public init(key: String, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
+    public init(title: String, detail: String?, isEditable: Bool = true, key: String, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
         self.key = key
         self.keychain = keychain
+        self.title = title
+        self.detail = detail
+        self.isEditable = isEditable
+        super.init()
     }
     
+    open var value: Any? {
+        get {
+            var err: NSError?
+            let obj = keychain.object(forKey: key, error: &err)
+            if let error = err {
+                print("Error accessing keychain \(key): \(error.code) \(error)")
+            }
+            return obj
+        }
+        
+        set {
+            do {
+                if newValue == nil {
+                    try keychain.removeObject(forKey: key)
+                } else {
+                    guard let secureVal = newValue as? NSSecureCoding else {
+                        print("Error setting \(key) in keychain: \(newValue) does not conform to NSSecureCoding")
+                        return
+                    }
+                    try keychain.setObject(secureVal, forKey: key)
+                }
+            }
+            catch let error as NSError {
+                print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
+            }
+        }
+    }
 }

@@ -34,10 +34,11 @@
 import Foundation
 
 protocol SBAProfileSection: NSObjectProtocol {
-    var title: String?
-    var items: [SBAProfileItem]
+    var title: String? { get }
+    var items: [SBAProfileItem] { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
-    
+    open dynamic var title: String?
+    open dynamic var items: [SBAProfileItem] = []
 }
