@@ -85,3 +85,67 @@ class SBAKeychainProfileItem: NSObject, SBAProfileItem {
         }
     }
 }
+
+public protocol PlistValue {}
+
+extension NSData: PlistValue {}
+extension NSString: PlistValue {}
+extension NSNumber: PlistValue {}
+extension NSDate: PlistValue {}
+extension NSArray: PlistValue {}
+extension NSDictionary: PlistValue {}
+extension Data: PlistValue {}
+extension String: PlistValue {}
+extension Bool: PlistValue {}
+extension Double: PlistValue {}
+extension Float: PlistValue {}
+extension Float80: PlistValue {}
+extension Int: PlistValue {}
+extension Int8: PlistValue {}
+extension Int16: PlistValue {}
+extension Int32: PlistValue {}
+extension Int64: PlistValue {}
+extension UInt: PlistValue {}
+extension UInt8: PlistValue {}
+extension UInt16: PlistValue {}
+extension UInt32: PlistValue {}
+extension UInt64: PlistValue {}
+extension Date: PlistValue {}
+extension Array: PlistValue {}
+extension Dictionary: PlistValue {}
+
+
+class SBAUserDefaultsProfileItem: NSObject, SBAProfileItem {
+    private var key: String
+    private var defaults: UserDefaults
+    open var title: String
+    open var detail: String?
+    open var isEditable: Bool
+    
+    public init(title: String, detail: String?, isEditable: Bool = true, key: String, defaults: UserDefaults? = SBAUser.shared.bridgeInfo?.userDefaults) {
+        self.key = key
+        self.defaults = defaults != nil ? defaults! : UserDefaults.standard
+        self.title = title
+        self.detail = detail
+        self.isEditable = isEditable
+        super.init()
+    }
+    
+    open var value: Any? {
+        get {
+            return defaults.object(forKey: key)
+        }
+        
+        set {
+            if newValue == nil {
+                defaults.removeObject(forKey: key)
+            } else {
+                guard let plistVal = newValue as? PlistValue else {
+                    print("Error setting \(key) in user defaults: \(newValue) does not conform to PlistValue")
+                    return
+                }
+                defaults.set(plistVal, forKey: key)
+            }
+        }
+    }
+}
