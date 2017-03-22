@@ -1,5 +1,5 @@
 //
-//  SBAProfileItem.swift
+//  SBAProfileDataSource.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -34,20 +34,40 @@
 import Foundation
 
 @objc
-public protocol SBAProfileItem: NSObjectProtocol {
-    var title: String { get }
-    var detail: String? { get }
-    var isEditable: Bool { get }
-    var value: Any { get set }
-}
-
-class SBAKeychainProfileItem: NSObject, SBAProfileItem {
-    private var key: String
-    private var keychain: SBAKeychainWrapper
+public protocol SBAProfileDataSource: class {
+    /**
+     Number of sections in the data source.
+     @return    Number of sections.
+     */
+    func numberOfSections() -> Int
     
-    public init(key: String, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
-        self.key = key
-        self.keychain = keychain
-    }
+    /**
+     Number of rows in the data source.
+     @param     section    The section of the collection.
+     @return               The number of rows in the given section.
+     */
+    @objc(numberOfRowsInSection:)
+    func numberOfRows(for section: Int) -> Int
     
+    /**
+     The profile item at the given index.
+     @param indexPath   The index path for the profile item.
+     */
+    @objc(profileItemAtIndexPath:)
+    func profileItem(at indexPath: IndexPath) -> SBAProfileItem?
+    
+    /**
+     Called when a row is selected.
+     @param indexPath   The index path for the profile item.
+     */
+    @objc(didSelectRowAtIndexPath:)
+    optional func didSelectRow(at indexPath: IndexPath)
+    
+    /**
+     Title for the given section (if applicable)
+     @param     section    The section of the collection.
+     @return               The title for this section or `nil` if no title.
+     */
+    @objc(titleForSection:)
+    optional func title(for section: Int) -> String?   
 }

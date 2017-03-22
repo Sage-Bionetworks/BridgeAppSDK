@@ -1,5 +1,5 @@
 //
-//  SBAProfileItem.swift
+//  SBAProfileManager.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -33,21 +33,50 @@
 
 import Foundation
 
-@objc
-public protocol SBAProfileItem: NSObjectProtocol {
-    var title: String { get }
-    var detail: String? { get }
-    var isEditable: Bool { get }
-    var value: Any { get set }
-}
+public let SBAProfileJSONFilename = "Profile"
 
-class SBAKeychainProfileItem: NSObject, SBAProfileItem {
-    private var key: String
-    private var keychain: SBAKeychainWrapper
+open class SBAProfileManager: NSObject, SBAProfileDataSource {
+    var sections: [SBAProfileSection] = []
     
-    public init(key: String, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
-        self.key = key
-        self.keychain = keychain
+    // MARK: initializers
+    
+    public override convenience init() {
+        self.init(jsonName: SBAProfileJSONFilename)
     }
     
+    public init(jsonName: String) {
+        super.init()
+        commonInit(jsonName: jsonName)
+    }
+    
+    func commonInit(jsonName: String) {
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
+              let jsonSections = json["sections"] as? [SBAProfileSection]
+            else { return }
+        sections = jsonSections
+    }
+    
+    public func numberOfSections() -> Int {
+        return sections.count
+    }
+    
+    public func numberOfRows(for section: Int) -> Int {
+        if section >= sections.count { return 0 } // out of range
+        return sections[section].items.count
+    }
+    
+    public func profileItem(at indexPath: IndexPath) -> SBAProfileItem? {
+        let section = indexPath.section
+        let row = indexPath.row
+        
+        if section >= sections.count { return nil }
+        if row >= sections[section].items.count { return nil }
+        
+        return sections[section].items[row]
+    }
+        
+    public func title(for section: Int) -> String? {
+        if section >= sections.count { return nil }
+        return sections[section].title
+    }
 }

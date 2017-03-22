@@ -7,13 +7,13 @@
                       "storageType": "keychain",
                       "key": "keychainItem1",
                       "editType": "String"
-                 ],
-            "items": [
+                      ],
+                     [
                       "title": "keychain date profile item",
                       "storageType": "keychain",
                       "key": "keychainItem2",
                       "editType": "Date"
-                 ]
+                      ]
         },
         {
             "title": "Items from UserDefaults",
@@ -23,7 +23,7 @@
                            "key": "defaultsItem1",
                            "editType": "String"
                            ],
-                 "items": [
+                          [
                            "title": "UserDefaults date profile item",
                            "storageType": "UserDefaults",
                            "key": "defaultsItem2",
@@ -38,7 +38,7 @@
                            "key": "name",
                            "editType": "String"
                            ],
-                 "items": [
+                          [
                            "title": "SBAUserWrapper read-only profile item: Data Groups",
                            "storageType": "SBAUserWrapper",
                            "key": "dataGroups"

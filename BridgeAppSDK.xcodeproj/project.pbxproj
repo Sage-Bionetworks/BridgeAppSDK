@@ -18,6 +18,8 @@
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
+		808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */; };
+		808514F71E81E33E00F1DCC5 /* SBAProfileDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */; };
 		80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */; };
 		80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF390D1CE26DE40090452F /* SBAActivityResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
@@ -416,6 +418,8 @@
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
+		808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileManager.swift; sourceTree = "<group>"; };
+		808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileDataSource.swift; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
 		80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = BridgeAppSDKSample.entitlements; sourceTree = "<group>"; };
 		80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKSample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -818,6 +822,8 @@
 			children = (
 				80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */,
 				80FDDC951E661BF70010DFA7 /* SBAProfileItem.swift */,
+				808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */,
+				808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1659,10 +1665,12 @@
 				80F554D81CD3F25800C38053 /* SBANotificationsManager.swift in Sources */,
 				FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */,
 				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
+				808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
+				808514F71E81E33E00F1DCC5 /* SBAProfileDataSource.swift in Sources */,
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
 				FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */,
 				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,
