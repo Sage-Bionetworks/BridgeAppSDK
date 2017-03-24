@@ -304,13 +304,22 @@ class SBAActivityArchive: XCTestCase {
     }
     
     func timezoneString(for date: Date) -> String {
-        let hoursUnit = 60 * 60
+        
         let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        guard calendar.timeZone.secondsFromGMT() != 0 else {
+            return "Z"  // At GMT, use a 'Z' rather than time zone offset
+        }
+        
+        // Figure out what the timezone would be for different locations
+        // so that the unit test can use baked in times (that do not rely upon the formatter)
+        let minuteUnit = 60
+        let hoursUnit = 60 * minuteUnit
         let isDST = calendar.timeZone.isDaylightSavingTime(for: date)
         let isNowDST = calendar.timeZone.isDaylightSavingTime()
         let timezoneNowHours: Int = calendar.timeZone.secondsFromGMT() / hoursUnit
+        let timezoneNowMinutes: Int = abs(calendar.timeZone.secondsFromGMT() / minuteUnit - timezoneNowHours * 60)
         let timezoneHours: Int = timezoneNowHours + (isDST && !isNowDST ? 1 : 0) + (!isDST && isNowDST ? -1 : 0)
-        let timezone = String(format: "%+.2d:00", timezoneHours)
+        let timezone = String(format: "%+.2d:%.2d", timezoneHours, timezoneNowMinutes)
         return timezone
     }
 
