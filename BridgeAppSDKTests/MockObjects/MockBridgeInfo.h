@@ -57,5 +57,7 @@
 @property (nonatomic, readwrite, copy) NSString * _Nullable keychainAccessGroup;
 @property (nonatomic, readwrite, copy) NSString * _Nullable appGroupIdentifier;
 @property (nonatomic, readwrite, copy) NSString * _Nullable privacyPolicyLinkURLString;
+@property (nonatomic, readwrite) BOOL usesStandardUserDefaults;
+@property (nonatomic, readwrite, copy) NSString * _Nullable userDefaultsSuiteName;
 
 @end

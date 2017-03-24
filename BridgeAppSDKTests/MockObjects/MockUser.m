@@ -47,6 +47,7 @@
 @synthesize isLoginVerified;
 @synthesize isConsentVerified;
 @synthesize isDataSharingEnabled;
+@synthesize isTestUser;
 @synthesize dataSharingScope;
 @synthesize onboardingStepIdentifier;
 @synthesize gender;
