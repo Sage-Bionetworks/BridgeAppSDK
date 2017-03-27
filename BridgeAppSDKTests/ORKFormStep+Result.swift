@@ -74,12 +74,13 @@ extension ORKPageStep {
             previousStepIdentifier = step.identifier
             let stepResult = step.instantiateDefaultStepResult(answerMap)
             taskResult.addResult(stepResult)
+            results.append(ORKResult(identifier: "step.\(step.identifier)"))
             if let stepResults = stepResult.results {
-                results += stepResults.map({ (result) -> ORKResult in
+                results.append(contentsOf: stepResults.map({ (result) -> ORKResult in
                     let copy = result.copy() as! ORKResult
                     copy.identifier = "\(step.identifier).\(result.identifier)"
                     return copy
-                })
+                }))
             }
         }
         

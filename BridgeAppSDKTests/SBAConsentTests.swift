@@ -265,7 +265,14 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         let signatureResult = ORKSignatureResult(identifier: "signature.signature")
         signatureResult.signatureImage = UIImage()
         
-        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult, nameResult, birthResult, signatureResult])
+        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [
+            ORKResult(identifier: "step.review"),
+            reviewResult,
+            ORKResult(identifier: "step.name"),
+            nameResult,
+            birthResult,
+            ORKResult(identifier: "step.signature"),
+            signatureResult])
         let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         
@@ -300,7 +307,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.consented = true
         reviewResult.signature = reviewStep!.signature
         
-        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult])
+        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [ORKResult(identifier: "step.review"), reviewResult])
         let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         
@@ -330,7 +337,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.consented = false
         reviewResult.signature = reviewStep!.signature
         
-        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [reviewResult])
+        let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [ORKResult(identifier: "step.review"), reviewResult])
         let viewController = step?.instantiateStepViewController(with: inputResult)
         let outputResult = viewController?.result
         

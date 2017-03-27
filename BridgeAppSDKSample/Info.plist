@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app would like to access your photo library.</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>This app would like to access your media library.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>This app would like to write to your health data in order to update your demographic information.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>This app would like to read your heath data in order to get demographic information and activity collected by your other apps.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -29,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,10 +37,24 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app would like to access your media library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app would like to access your camera.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>This app would like to read your heath data in order to get demographic information and activity collected by your other apps.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>This app would like to write to your health data in order to update your demographic information.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app would like to access your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app would like to access your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Access to microphone is required for your Voice Recording Activity.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Using the motion co-processor allows the app to determine your activity, helping the study better understand how activity level may influence disease.</string>
+	<string>Using the motion co-processor allows the app to determine your activity, helping the researchers better understand how activity level may influence disease.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app would like to access your photo library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

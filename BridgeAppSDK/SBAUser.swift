@@ -40,7 +40,7 @@ import ResearchKit
  the currently logged in user in the user defaults and keychain.
  */
 public final class SBAUser: NSObject, SBAUserWrapper {
-    
+
     static let shared = SBAUser()
     
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue")
@@ -54,6 +54,10 @@ public final class SBAUser: NSObject, SBAUserWrapper {
     
     open var bridgeInfo: SBABridgeInfo? {
        return appDelegate?.bridgeInfo ?? SBAInfoManager.shared
+    }
+    
+    public var isTestUser: Bool {
+        return self.dataGroups?.contains(SBATestDataGroup) ?? false
     }
     
     // --------------------------------------------------
