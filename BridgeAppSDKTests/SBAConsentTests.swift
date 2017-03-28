@@ -143,7 +143,8 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(reviewStep!.reasonForConsent)
         XCTAssertNotNil(nameStep!.formItems)
         
-        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
+        let expected: [String: String] = [ "given"        : "ORKTextAnswerFormat",
+                                           "family"        : "ORKTextAnswerFormat"]
         for (identifier, expectedClassName) in expected {
             let formItem = nameStep!.formItem(for: identifier)
             XCTAssertNotNil(formItem)
@@ -211,7 +212,8 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(reviewStep!.reasonForConsent)
         XCTAssertNotNil(nameStep!.formItems)
         
-        let expected: [String: String] = [ "name"        : "ORKTextAnswerFormat"]
+        let expected: [String: String] = [ "given"        : "ORKTextAnswerFormat",
+                                           "family"        : "ORKTextAnswerFormat"]
         for (identifier, expectedClassName) in expected {
             let formItem = nameStep!.formItem(for: identifier)
             XCTAssertNotNil(formItem)

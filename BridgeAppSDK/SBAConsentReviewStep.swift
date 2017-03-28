@@ -122,7 +122,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
     }
     
     open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
-        return [.name]   // by default
+        return [.givenName, .familyName]   // by default
     }
     
     open override func validateParameters() {
@@ -136,7 +136,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
         }
         
         // If the options is not nil, then should contain the name
-        guard options.contains(.name) else {
+        guard options.contains(.fullName) || (options.contains(.givenName) && options.contains(.familyName)) else {
             throw SBAProfileInfoOptionsError.missingName
         }
     }
@@ -212,6 +212,8 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
         return self.step as? SBAConsentReviewStep
     }
     
+    
+    
     open override var result: ORKStepResult? {
         guard let stepResult = super.result else { return nil }
         guard let stepResults = stepResult.results else { return stepResult }
@@ -226,33 +228,12 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
         
         // Look for all required steps to be filled
         var found = false
-        let namePrefix = SBAConsentReviewStep.nameStepIdentifier + "."
         for result in stepResults {
             if let reviewResult = result as? ORKConsentSignatureResult {
                 // Not found yet if signature required and the user has consented (consent review displayed first)
                 found = !requiresSignature || !reviewResult.consented
                 consentResult.isConsented = reviewResult.consented
                 orkSignature = reviewResult.signature
-            }
-            else if result.identifier.hasPrefix(namePrefix),
-                let option = SBAProfileInfoOption(rawValue: result.identifier.substring(from: namePrefix.endIndex)) {
-                switch option {
-                    
-                case .name:
-                    if let textResult = result as? ORKTextQuestionResult {
-                        signature.signatureName = textResult.textAnswer
-                        orkSignature?.familyName = signature.signatureName
-                        orkSignature?.givenName = ""
-                    }
-                    
-                case .birthdate:
-                    if let dateResult = result as? ORKDateQuestionResult {
-                        signature.signatureBirthdate = dateResult.dateAnswer
-                    }
-                    
-                default:
-                    break; // ignored
-                }
             }
             else if let signatureResult = result as? ORKSignatureResult {
                 found = true
@@ -261,7 +242,7 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
                 orkSignature?.signatureImage = signatureResult.signatureImage
             }
         }
-        
+
         // If everything is finished then add the consent result and signature
         if (found) {
             consentResult.consentSignature = signature
@@ -289,14 +270,10 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
             return
         }
         
-        // set the consent to the shared user
+        // set the consent to the shared user and update values from name/birthdate
         sharedUser.consentSignature = consentSignature
-        if let name = consentSignature.signatureName {
-            sharedUser.name = name
-        }
-        if let birthdate = consentSignature.signatureBirthdate {
-            sharedUser.birthdate = birthdate
-        }
+        updateUserProfileInfo()
+        updateConsentSignature()
         
         if sharedUser.isLoginVerified {
             // If the user has already verified login, then need to send reconsent info

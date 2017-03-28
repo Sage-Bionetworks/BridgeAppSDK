@@ -252,10 +252,26 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         // If this is a registration step with a name field and a currently available 
         // name stored for that field then return that result as a default.
         if let registrationStep = step as? SBARegistrationStep,
-            let name = sharedUser.name,
-            let formItem = registrationStep.formItemForProfileInfoOption(.name) {
+            let fullName = sharedNameDataSource?.fullName,
+            let formItem = registrationStep.formItemForProfileInfoOption(.fullName)  {
             let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
-            nameResult.textAnswer = name
+            nameResult.textAnswer = fullName
+            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
+        }
+        
+        if let registrationStep = step as? SBARegistrationStep,
+            let givenName = sharedNameDataSource?.givenName,
+            let formItem = registrationStep.formItemForProfileInfoOption(.givenName) {
+            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
+            nameResult.textAnswer = givenName
+            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
+        }
+        
+        if let registrationStep = step as? SBARegistrationStep,
+            let familyName = sharedUser.familyName,
+            let formItem = registrationStep.formItemForProfileInfoOption(.familyName) {
+            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
+            nameResult.textAnswer = familyName
             return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
         }
         

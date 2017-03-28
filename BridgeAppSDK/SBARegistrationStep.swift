@@ -45,7 +45,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     }
     
     public func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
-        return [.name, .email, .password]
+        return [.fullName, .email, .password]
     }
     
     public override required init(identifier: String) {
@@ -116,16 +116,8 @@ extension SBARegistrationStepController {
         showLoadingView()
         
         // Set the other values from this form.
-        if let name = self.name {
-            self.sharedUser.name = name
-        }
-        if let gender = self.gender {
-            self.sharedUser.gender = gender
-        }
-        if let birthdate = self.birthdate {
-            self.sharedUser.birthdate = birthdate
-        }
-        
+        updateUserProfileInfo()
+        updateConsentSignature()
         sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
