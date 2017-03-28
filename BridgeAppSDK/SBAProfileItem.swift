@@ -99,7 +99,6 @@ extension String: PlistValue {}
 extension Bool: PlistValue {}
 extension Double: PlistValue {}
 extension Float: PlistValue {}
-extension Float80: PlistValue {}
 extension Int: PlistValue {}
 extension Int8: PlistValue {}
 extension Int16: PlistValue {}
