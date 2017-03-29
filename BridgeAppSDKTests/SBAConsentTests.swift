@@ -276,6 +276,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
             ORKResult(identifier: "step.signature"),
             signatureResult])
         let viewController = step?.instantiateStepViewController(with: inputResult)
+        viewController?.goForward()
         let outputResult = viewController?.result
         
         XCTAssertNotNil(outputResult)
@@ -287,9 +288,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertTrue(consentResult.isConsented)
         XCTAssertNotNil(consentResult.consentSignature)
         XCTAssertNotNil(consentResult.consentSignature?.signatureImage)
-        XCTAssertNotNil(consentResult.consentSignature?.signatureName)
         XCTAssertNotNil(consentResult.consentSignature?.signatureDate)
-        XCTAssertNotNil(consentResult.consentSignature?.signatureBirthdate)
     }
     
     func testConsentResult_RequiresNoSignature() {
