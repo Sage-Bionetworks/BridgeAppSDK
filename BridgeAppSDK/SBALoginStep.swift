@@ -101,7 +101,7 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm, SBALearnMoreActionStep
  Allow developers to create their own step view controllers that do not inherit from
  `ORKFormStepViewController`.
  */
-public protocol SBALoginStepStepController: SBAUserProfileController {
+public protocol SBALoginStepStepController: SBAAccountController, SBAUserProfileController {
     func goNext()
 }
 
@@ -129,11 +129,15 @@ extension SBALoginStepStepController {
 }
 
 open class SBALoginStepViewController: ORKFormStepViewController, SBALoginStepStepController {
-    
+
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-        
+    
+    public var profileKeys: [String]? {
+        return nil
+    }
+    
     // Override the default method for goForward and attempt user login. Do not allow subclasses
     // to override this method
     final public override func goForward() {

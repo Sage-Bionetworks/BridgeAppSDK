@@ -258,21 +258,17 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             nameResult.textAnswer = fullName
             return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
         }
-        
-        if let registrationStep = step as? SBARegistrationStep,
+        else if let registrationStep = step as? SBARegistrationStep,
             let givenName = sharedNameDataSource?.givenName,
-            let formItem = registrationStep.formItemForProfileInfoOption(.givenName) {
-            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
-            nameResult.textAnswer = givenName
-            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
-        }
-        
-        if let registrationStep = step as? SBARegistrationStep,
+            let givenFormItem = registrationStep.formItemForProfileInfoOption(.givenName),
             let familyName = sharedUser.familyName,
-            let formItem = registrationStep.formItemForProfileInfoOption(.familyName) {
-            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
-            nameResult.textAnswer = familyName
-            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
+            let familyFormItem = registrationStep.formItemForProfileInfoOption(.familyName) {
+    
+            let givenNameResult = ORKTextQuestionResult(identifier: givenFormItem.identifier)
+            givenNameResult.textAnswer = givenName
+            let familyNameResult = ORKTextQuestionResult(identifier: familyFormItem.identifier)
+            familyNameResult.textAnswer = familyName
+            return ORKStepResult(stepIdentifier: stepIdentifier, results: [givenNameResult, familyNameResult])
         }
         
         return nil

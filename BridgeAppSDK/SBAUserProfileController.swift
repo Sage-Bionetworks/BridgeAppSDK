@@ -37,41 +37,37 @@ import Foundation
  Protocols for sharing functionality between different classes that do not share inheritance.
  This set of protocols are used to handle account access.
  */
-public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter, SBANameDataSource {
+public protocol SBAUserProfileController: class, SBASharedInfoController, SBAResearchKitResultConverter {
+    
+    /**
+     List of keys to update to the user's profile before going forward.
+     */
+    var profileKeys:[String]? { get }
 }
 
 extension SBAUserProfileController {
     
     func updateUserProfileInfo() {
-
-        // "Name" can refer to either .givenName or .fullName and depends upon the application
-        // To stay compatible with older apps, this field *could* apply to either case.
-        if let name = self.name {
-            self.sharedUser.name = name
-        }
-        if let familyName = self.familyName {
-            self.sharedUser.familyName = familyName
-        }
-        if let gender = self.gender {
-            self.sharedUser.gender = gender
-        }
-        if let birthdate = self.birthdate {
-            self.sharedUser.birthdate = birthdate
-        }
-        else if (self.birthdate == nil), let currentAge = self.currentAge {
-            self.sharedUser.birthdate = Date(currentAge: currentAge)
-        }
+        update(participantInfo: sharedUser, with: profileKeys)
     }
     
-    func updateConsentSignature() {
-        guard let signature = sharedUser.consentSignature else { return }
+    /**
+     During consent and registration, update the consent signature with new values
+     before finishing.
+     */
+    func updateUserConsentSignature(_ consentSignature: SBAConsentSignature? = nil) {
+        guard let signature = consentSignature ?? sharedUser.consentSignature else { return }
         
+        // Look for full name and birthdate to use in populating the consent
         if let fullName = self.fullName ?? self.sharedNameDataSource?.fullName {
             signature.signatureName = fullName
         }
         if let birthdate = self.birthdate ?? sharedUser.birthdate {
             signature.signatureBirthdate = birthdate
         }
+        
+        // Update the signature back to the shared user
+        sharedUser.consentSignature = signature
     }
 }
 

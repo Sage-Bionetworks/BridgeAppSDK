@@ -97,8 +97,17 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
  Allow developers to create their own step view controllers that do not inherit from 
  `ORKFormStepViewController`.
  */
-public protocol SBARegistrationStepController: SBAUserProfileController {
+public protocol SBARegistrationStepController: SBAAccountController, SBAUserProfileController {
+    
+    /**
+     If there are data groups that were set in a previous step or via a custom onboarding manager,
+     set them on the view controller using this property.
+     */
     var dataGroups: [String]? { get }
+    
+    /**
+     In general, this method should call through to super.goForward(). See `SBARegistrationStepViewController`
+     */
     func goNext()
 }
 
@@ -117,7 +126,11 @@ extension SBARegistrationStepController {
         
         // Set the other values from this form.
         updateUserProfileInfo()
-        updateConsentSignature()
+        updateUserConsentSignature()
+        
+        let externalID = self.externalID ?? sharedUser.externalId
+        let dataGroups = self.dataGroups ?? sharedUser.dataGroups
+        
         sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
@@ -131,18 +144,17 @@ extension SBARegistrationStepController {
 
 open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepController {
     
-    /**
-     If there are data groups that were set in a previous step or via a custom onboarding manager,
-     set them on the view controller using this property.
-     */
     open var dataGroups: [String]?
+    
+    public var profileKeys: [String]? {
+        return (self.step as? ORKFormStep)?.formItems?.map({ $0.identifier })
+    }
     
     // MARK: SBASharedInfoController
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-    
     
     // MARK: Navigation overrides - cannot go back and override go forward to register
     
