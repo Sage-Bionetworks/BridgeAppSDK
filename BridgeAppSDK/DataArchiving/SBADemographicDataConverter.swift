@@ -176,9 +176,4 @@ extension HKBiologicalSex {
     }
 }
 
-extension Date {
-    public func currentAge() -> Int {
-        let calendar = Calendar(identifier: .gregorian)
-        return calendar.dateComponents([.year], from: self, to: Date()).year ?? 0
-    }
-}
+

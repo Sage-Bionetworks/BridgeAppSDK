@@ -42,11 +42,13 @@ public protocol SBASharedInfoController {
         }()
     */
     var sharedAppDelegate: SBAAppInfoDelegate { get }
-
-
 }
 
 extension SBASharedInfoController {
+    
+    public var sharedNameDataSource: SBANameDataSource? {
+        return sharedUser as? SBANameDataSource
+    }
     
     public var sharedUser: SBAUserWrapper {
         return self.sharedAppDelegate.currentUser

@@ -39,7 +39,7 @@ import ResearchKit
  The `SBAUser` model object is intended as a singleton object for storing information about
  the currently logged in user in the user defaults and keychain.
  */
-public final class SBAUser: NSObject, SBAUserWrapper {
+public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
 
     static let shared = SBAUser()
     

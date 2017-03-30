@@ -37,7 +37,42 @@ import Foundation
  Protocols for sharing functionality between different classes that do not share inheritance.
  This set of protocols are used to handle account access.
  */
-public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter {
+public protocol SBAUserProfileController: class, SBAAccountController, SBAResearchKitResultConverter, SBANameDataSource {
+}
+
+extension SBAUserProfileController {
+    
+    func updateUserProfileInfo() {
+
+        // "Name" can refer to either .givenName or .fullName and depends upon the application
+        // To stay compatible with older apps, this field *could* apply to either case.
+        if let name = self.name {
+            self.sharedUser.name = name
+        }
+        if let familyName = self.familyName {
+            self.sharedUser.familyName = familyName
+        }
+        if let gender = self.gender {
+            self.sharedUser.gender = gender
+        }
+        if let birthdate = self.birthdate {
+            self.sharedUser.birthdate = birthdate
+        }
+        else if (self.birthdate == nil), let currentAge = self.currentAge {
+            self.sharedUser.birthdate = Date(currentAge: currentAge)
+        }
+    }
+    
+    func updateConsentSignature() {
+        guard let signature = sharedUser.consentSignature else { return }
+        
+        if let fullName = self.fullName ?? self.sharedNameDataSource?.fullName {
+            signature.signatureName = fullName
+        }
+        if let birthdate = self.birthdate ?? sharedUser.birthdate {
+            signature.signatureBirthdate = birthdate
+        }
+    }
 }
 
 /**
