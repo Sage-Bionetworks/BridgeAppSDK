@@ -44,6 +44,8 @@ extension SBAUserProfileController {
     
     func updateUserProfileInfo() {
 
+        // "Name" can refer to either .givenName or .fullName and depends upon the application
+        // To stay compatible with older apps, this field *could* apply to either case.
         if let name = self.name {
             self.sharedUser.name = name
         }
