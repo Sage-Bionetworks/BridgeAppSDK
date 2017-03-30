@@ -56,6 +56,22 @@ open class SBAProfileManager: NSObject, SBAProfileDataSource {
         sections = jsonSections
     }
     
+    // MARK: View controller
+    
+    /**
+     Set up and return a view controller for displaying a Profile view.
+     By default, it will instantiate an SBAProfileViewController with this instance set as its
+     SBAProfileDataSource. Override this method to provide your own view controller
+     for the Profile view.
+     
+     @return A view controller for displaying the Profile view.
+     */
+    open func initializeViewController() -> UIViewController {
+        
+    }
+    
+    // MARK: SBAProfileDataSource
+    
     public func numberOfSections() -> Int {
         return sections.count
     }
