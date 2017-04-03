@@ -66,8 +66,8 @@ open class SBAProfileManager: NSObject, SBAProfileDataSource {
      
      @return A view controller for displaying the Profile view.
      */
-    open func initializeViewController() -> UIViewController {
-        
+    open func initializeViewController() -> UIViewController? {
+        return nil
     }
     
     // MARK: SBAProfileDataSource
