@@ -179,7 +179,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         XCTAssertNotNil(nameItem)
         if let _ = nameItem?.answerFormat as? ORKTextAnswerFormat {
         } else {
-            XCTAssert(false, "\(nameItem?.answerFormat) not of expected type")
+            XCTAssert(false, "\(String(describing: nameItem?.answerFormat)) not of expected type")
         }
         
         let birthdateItem = nameStep!.formItem(for: "birthdate")
@@ -187,7 +187,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         if let birthdateFormat = birthdateItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat {
             XCTAssertEqual(birthdateFormat.characteristicType.identifier, HKCharacteristicTypeIdentifier.dateOfBirth.rawValue)
         } else {
-            XCTAssert(false, "\(birthdateItem?.answerFormat) not of expected type")
+            XCTAssert(false, "\(String(describing: birthdateItem?.answerFormat)) not of expected type")
         }
     }
     
@@ -281,7 +281,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         XCTAssertNotNil(outputResult)
         guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(outputResult) missing consent review result")
+            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
             return
         }
         
@@ -314,7 +314,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         XCTAssertNotNil(outputResult)
         guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(outputResult) missing consent review result")
+            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
             return
         }
         
@@ -344,7 +344,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         XCTAssertNotNil(outputResult)
         guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(outputResult) missing consent review result")
+            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
             return
         }
         
@@ -402,7 +402,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
     func consentReviewSteps(_ step: ORKStep?) -> (pageStep:SBAConsentReviewStep?, reviewStep: ORKConsentReviewStep?, nameStep: ORKFormStep?, signatureStep: ORKSignatureStep?) {
         
         guard let pageStep = step as? SBAConsentReviewStep else {
-            XCTAssert(false, "\(step) not of expected type")
+            XCTAssert(false, "\(String(describing: step)) not of expected type")
             return (nil, nil, nil, nil)
         }
 

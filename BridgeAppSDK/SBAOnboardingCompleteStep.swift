@@ -54,7 +54,7 @@ open class SBAOnboardingCompleteStep: ORKTableStep {
     
     open var detailText: String? {
         get { return self.items?.first as? String }
-        set(newValue) { self.items = (newValue == nil) ? nil : [newValue as! NSCopying & NSSecureCoding & NSObjectProtocol] }
+        set(newValue) { self.items = (newValue == nil) ? nil : [newValue! as NSString] }
     }
     
     override open func reuseIdentifierForRow(at indexPath: IndexPath) -> String {

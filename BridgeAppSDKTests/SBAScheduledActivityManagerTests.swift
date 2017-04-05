@@ -94,7 +94,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         XCTAssertNotNil(taskRef)
         
         guard let orderedTask = task as? ORKOrderedTask else {
-            XCTAssert(false, "\(task) not of expected type")
+            XCTAssert(false, "\(String(describing: task)) not of expected type")
             return
         }
         XCTAssert(type(of: orderedTask) === ORKOrderedTask.self)

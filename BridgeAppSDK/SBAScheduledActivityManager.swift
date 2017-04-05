@@ -465,8 +465,8 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         guard let outputDirectory = taskViewController.outputDirectory else { return }
         do {
             try FileManager.default.removeItem(at: outputDirectory)
-        } catch let error as NSError {
-            print("Error removing ResearchKit output directory: \(error.localizedFailureReason)")
+        } catch let error {
+            print("Error removing ResearchKit output directory: \(error.localizedDescription)")
             debugPrint("\tat: \(outputDirectory)")
         }
     }
@@ -495,7 +495,7 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
             debugPrint("\(mutableFileInfo.count) files left in our sandbox:")
             for fileURL in mutableFileInfo.keys {
                 let fileSize = mutableFileInfo[fileURL]
-                debugPrint("\(fileURL.path) size:\(fileSize)")
+                debugPrint("\(fileURL.path) size:\(String(describing: fileSize))")
             };
         }
         #endif

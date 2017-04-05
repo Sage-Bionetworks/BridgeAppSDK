@@ -62,13 +62,13 @@ class SBAActivityArchive: XCTestCase {
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "SingleChoice")
         guard let choiceAnswers = json["choiceAnswers"] as? [String] else {
-            XCTAssert(false, "\(json["choiceAnswers"]) not of expected type")
+            XCTAssert(false, "\(String(describing: json["choiceAnswers"])) not of expected type")
             return
         }
         XCTAssertEqual(choiceAnswers, ["answer"])
         
         guard let answer = json["answer"] as? String else {
-            XCTAssert(false, "\(json["answer"]) not of expected type")
+            XCTAssert(false, "\(String(describing: json["answer"])) not of expected type")
             return
         }
         XCTAssertEqual(answer, "answer")
@@ -89,7 +89,7 @@ class SBAActivityArchive: XCTestCase {
         XCTAssertEqual(json["item"] as? String, "test")
         XCTAssertEqual(json["questionTypeName"] as? String, "MultipleChoice")
         guard let choiceAnswers = json["choiceAnswers"] as? [String] else {
-            XCTAssert(false, "\(json["choiceAnswers"]) not of expected type")
+            XCTAssert(false, "\(String(describing: json["choiceAnswers"])) not of expected type")
             return
         }
         XCTAssertEqual(choiceAnswers, ["A", "B"])

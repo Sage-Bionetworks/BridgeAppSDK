@@ -132,7 +132,7 @@ extension SBAConsentSharingStepController {
     public func updateSharingScope() {
         
         guard let sharingStep = self.step as? SBAConsentSharingStep else {
-            assertionFailure("Step \(self.step) is not of the expected class (SBAConsentSharingStep).")
+            assertionFailure("Step \(String(describing: self.step)) is not of the expected class (SBAConsentSharingStep).")
             return
         }
         

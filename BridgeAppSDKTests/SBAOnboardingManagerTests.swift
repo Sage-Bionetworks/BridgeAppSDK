@@ -203,7 +203,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? ORKPasscodeStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
@@ -218,7 +218,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBALoginStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
@@ -230,14 +230,14 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 2)
         
         guard let step1 = steps.first as? SBAPermissionsStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
         XCTAssertEqual(step1.identifier, "healthKitPermissions")
         
         guard let step2 = steps.last as? SBARegistrationStep else {
-            XCTAssert(false, "\(steps.last) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.last)) not of expected type")
             return
         }
         
@@ -249,7 +249,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBAEmailVerificationStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
@@ -270,7 +270,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBAPermissionsStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
@@ -282,7 +282,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBAOnboardingCompleteStep else {
-            XCTAssert(false, "\(steps.first) not of expected type")
+            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
         
