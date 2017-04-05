@@ -240,80 +240,80 @@ class SBAAccountTests: XCTestCase {
         let emailItem = step.formItem(for:"email")
         let email = emailItem?.answerFormat as? ORKEmailAnswerFormat
         XCTAssertNotNil(emailItem)
-        XCTAssertNotNil(email, "\(emailItem?.answerFormat)")
+        XCTAssertNotNil(email, "\(String(describing: emailItem?.answerFormat))")
         
         let passwordItem = step.formItem(for:"password")
         let password = passwordItem?.answerFormat as? ORKTextAnswerFormat
         XCTAssertNotNil(passwordItem)
-        XCTAssertNotNil(password, "\(passwordItem?.answerFormat)")
+        XCTAssertNotNil(password, "\(String(describing: passwordItem?.answerFormat))")
         
         let confirmationItem = step.formItem(for:SBAProfileInfoOptions.confirmationIdentifier)
         let confirmation = confirmationItem?.answerFormat as? ORKTextAnswerFormat
         XCTAssertNotNil(confirmationItem)
-        XCTAssertNotNil(confirmation, "\(confirmationItem?.answerFormat)")
+        XCTAssertNotNil(confirmation, "\(String(describing: confirmationItem?.answerFormat))")
 
         let externalIDItem = step.formItem(for:"externalID")
         let externalID = externalIDItem?.answerFormat as? ORKTextAnswerFormat
         XCTAssertNotNil(externalIDItem)
-        XCTAssertNotNil(externalID, "\(externalIDItem?.answerFormat)")
+        XCTAssertNotNil(externalID, "\(String(describing: externalIDItem?.answerFormat))")
         
         let nameItem = step.formItem(for:"name")
         let name = nameItem?.answerFormat as? ORKTextAnswerFormat
         XCTAssertNotNil(nameItem)
-        XCTAssertNotNil(name, "\(nameItem?.answerFormat)")
+        XCTAssertNotNil(name, "\(String(describing: nameItem?.answerFormat))")
         
         let birthdateItem = step.formItem(for:"birthdate")
         let birthdate = birthdateItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(birthdateItem)
-        XCTAssertNotNil(birthdate, "\(birthdateItem?.answerFormat)")
+        XCTAssertNotNil(birthdate, "\(String(describing: birthdateItem?.answerFormat))")
         XCTAssertEqual(birthdate!.characteristicType.identifier, HKCharacteristicTypeIdentifier.dateOfBirth.rawValue)
         
         let genderItem = step.formItem(for:"gender")
         let gender = genderItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(genderItem)
-        XCTAssertNotNil(gender, "\(genderItem?.answerFormat)")
+        XCTAssertNotNil(gender, "\(String(describing: genderItem?.answerFormat))")
         XCTAssertEqual(gender!.characteristicType.identifier, HKCharacteristicTypeIdentifier.biologicalSex.rawValue)
         
         let bloodTypeItem = step.formItem(for:"bloodType")
         let bloodType = bloodTypeItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(bloodTypeItem)
-        XCTAssertNotNil(bloodType, "\(bloodTypeItem?.answerFormat)")
+        XCTAssertNotNil(bloodType, "\(String(describing: bloodTypeItem?.answerFormat))")
         XCTAssertEqual(bloodType!.characteristicType.identifier, HKCharacteristicTypeIdentifier.bloodType.rawValue)
 
         let fitzpatrickSkinTypeItem = step.formItem(for:"fitzpatrickSkinType")
         let fitzpatrickSkinType = fitzpatrickSkinTypeItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
         XCTAssertNotNil(fitzpatrickSkinTypeItem)
-        XCTAssertNotNil(fitzpatrickSkinType, "\(fitzpatrickSkinTypeItem?.answerFormat)")
+        XCTAssertNotNil(fitzpatrickSkinType, "\(String(describing: fitzpatrickSkinTypeItem?.answerFormat))")
         XCTAssertEqual(fitzpatrickSkinType!.characteristicType.identifier, HKCharacteristicTypeIdentifier.fitzpatrickSkinType.rawValue)
 
         let wheelchairUseItem = step.formItem(for:"wheelchairUse")
         XCTAssertNotNil(wheelchairUseItem)
         if #available(iOS 10.0, *) {
             let wheelchairUse = wheelchairUseItem?.answerFormat as? ORKHealthKitCharacteristicTypeAnswerFormat
-            XCTAssertNotNil(wheelchairUse, "\(wheelchairUseItem?.answerFormat)")
+            XCTAssertNotNil(wheelchairUse, "\(String(describing: wheelchairUseItem?.answerFormat))")
             XCTAssertEqual(wheelchairUse!.characteristicType.identifier, HKCharacteristicTypeIdentifier.wheelchairUse.rawValue)
         }
         else {
             let wheelchairUse = wheelchairUseItem?.answerFormat as? ORKBooleanAnswerFormat
-            XCTAssertNotNil(wheelchairUse, "\(wheelchairUseItem?.answerFormat)")
+            XCTAssertNotNil(wheelchairUse, "\(String(describing: wheelchairUseItem?.answerFormat))")
         }
         
         let heightItem = step.formItem(for:"height")
         let height = heightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
         XCTAssertNotNil(heightItem)
-        XCTAssertNotNil(height, "\(heightItem?.answerFormat)")
+        XCTAssertNotNil(height, "\(String(describing: heightItem?.answerFormat))")
         XCTAssertEqual(height!.quantityType.identifier, HKQuantityTypeIdentifier.height.rawValue)
 
         let weightItem = step.formItem(for:"weight")
         let weight = weightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
         XCTAssertNotNil(weightItem)
-        XCTAssertNotNil(weight, "\(weightItem?.answerFormat)")
+        XCTAssertNotNil(weight, "\(String(describing: weightItem?.answerFormat))")
         XCTAssertEqual(weight!.quantityType.identifier, HKQuantityTypeIdentifier.bodyMass.rawValue)
 
         let wakeTimeItem = step.formItem(for:"wakeTime")
         let wakeTime = wakeTimeItem?.answerFormat as? ORKTimeOfDayAnswerFormat
         XCTAssertNotNil(wakeTimeItem)
-        XCTAssertNotNil(wakeTime, "\(wakeTimeItem?.answerFormat)")
+        XCTAssertNotNil(wakeTime, "\(String(describing: wakeTimeItem?.answerFormat))")
         let wakeHour = wakeTime?.defaultComponents?.hour
         XCTAssertNotNil(wakeHour)
         XCTAssertEqual(wakeHour!, 7)
@@ -321,7 +321,7 @@ class SBAAccountTests: XCTestCase {
         let sleepTimeItem = step.formItem(for:"sleepTime")
         let sleepTime = sleepTimeItem?.answerFormat as? ORKTimeOfDayAnswerFormat
         XCTAssertNotNil(sleepTimeItem)
-        XCTAssertNotNil(sleepTime, "\(sleepTimeItem?.answerFormat)")
+        XCTAssertNotNil(sleepTime, "\(String(describing: sleepTimeItem?.answerFormat))")
         let sleepHour = sleepTime?.defaultComponents?.hour
         XCTAssertNotNil(sleepHour)
         XCTAssertEqual(sleepHour!, 10)
@@ -345,19 +345,19 @@ class SBAAccountTests: XCTestCase {
         let heightItem = step.formItem(for:"height")
         let height = heightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
         XCTAssertNotNil(heightItem)
-        XCTAssertNotNil(height, "\(heightItem?.answerFormat)")
+        XCTAssertNotNil(height, "\(String(describing: heightItem?.answerFormat))")
         XCTAssertEqual(height!.quantityType.identifier, HKQuantityTypeIdentifier.height.rawValue)
         
         let weightItem = step.formItem(for:"weight")
         let weight = weightItem?.answerFormat as? ORKHealthKitQuantityTypeAnswerFormat
         XCTAssertNotNil(weightItem)
-        XCTAssertNotNil(weight, "\(weightItem?.answerFormat)")
+        XCTAssertNotNil(weight, "\(String(describing: weightItem?.answerFormat))")
         XCTAssertEqual(weight!.quantityType.identifier, HKQuantityTypeIdentifier.bodyMass.rawValue)
         
         let chocolateItem = step.formItem(for:"chocolate")
         let chocolate = chocolateItem?.answerFormat as? ORKBooleanAnswerFormat
         XCTAssertNotNil(chocolateItem)
-        XCTAssertNotNil(chocolate, "\(chocolateItem?.answerFormat)")
+        XCTAssertNotNil(chocolate, "\(String(describing: chocolateItem?.answerFormat))")
         XCTAssertEqual(chocolateItem?.text, "Do you like chocolate?")
     }
 

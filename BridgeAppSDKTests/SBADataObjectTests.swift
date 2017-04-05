@@ -52,7 +52,7 @@ class SBADataObjectTests: ResourceTestCase {
         let result: AnyClass? = SBAClassTypeMap.shared.class(forClassType: "SBAMedication")
         XCTAssertNotNil(result)
         guard let classType = result as? SBATrackedDataObject.Type else {
-            XCTAssert(false, "\(result) not of expected class type")
+            XCTAssert(false, "\(String(describing: result)) not of expected class type")
             return
         }
         
@@ -76,7 +76,7 @@ class SBADataObjectTests: ResourceTestCase {
         let result: AnyClass? = SBAClassTypeMap.shared.class(forClassType: "Medication")
         XCTAssertNotNil(result)
         guard let _ = result as? SBAMedication.Type else {
-            XCTAssert(false, "\(result) not of expected class type")
+            XCTAssert(false, "\(String(describing: result)) not of expected class type")
             return
         }
         
