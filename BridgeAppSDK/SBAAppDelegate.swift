@@ -461,8 +461,7 @@ public let SBAMainStoryboardName = "Main"
      The error message to display for a catastrophic error.
     */
     open var catastrophicErrorMessage: String {
-        return (catastrophicStartupError as? NSError)?.localizedFailureReason ??
-            catastrophicStartupError?.localizedDescription ??
+        return catastrophicStartupError?.localizedDescription ??
             Localization.localizedString("SBA_CATASTROPHIC_FAILURE_MESSAGE")
     }
     

@@ -272,7 +272,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
                 let sampleQuery = HKSampleQuery(sampleType: sampleType, predicate: nil, limit: 1, sortDescriptors: [sortDescriptor], resultsHandler: { (_, results, error) in
                     let result = results?.first as? HKQuantitySample
                     if (result == nil) && (error != nil) {
-                        print("Error accessing health data \(identifier): \(error)")
+                        print("Error accessing health data \(identifier): \(String(describing: error))")
                         fetchFallback()
                     }
                     else {
@@ -298,7 +298,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
                 healthStore.save(quantitySample, withCompletion: { (success, error) in
                     if !success {
                         saveFallback()
-                        print("Failed to save to health kit \(quantitySample): \(error)")
+                        print("Failed to save to health kit \(quantitySample): \(String(describing: error))")
                     }
                 })
             }
@@ -449,14 +449,14 @@ extension SBAUser : SBBAuthManagerDelegateProtocol {
     public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
         let token = self.sessionToken
         #if DEBUG
-            print("getting Session Token: \(token)")
+            print("getting Session Token: \(String(describing: token))")
         #endif
         return token
     }
     
     public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?, forEmail email: String?, andPassword password: String?) {
         #if DEBUG
-            print("setting Session Token: \(sessionToken)")
+            print("setting Session Token: \(String(describing: sessionToken))")
         #endif
         self.sessionToken = sessionToken
         self.email = email
