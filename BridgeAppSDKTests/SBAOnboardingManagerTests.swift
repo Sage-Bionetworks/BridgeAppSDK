@@ -52,7 +52,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertNotNil(manager?.sections)
         guard let sections = manager?.sections else { return }
         
-        XCTAssertEqual(sections.count, 9)
+        XCTAssertEqual(sections.count, 8)
     }
     
     func testShouldInclude() {
@@ -61,14 +61,14 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         
         let expectedNonNil: [SBAOnboardingSectionBaseType : [SBAOnboardingTaskType]] = [
             .login: [.login],
-            .eligibility: [.registration],
-            .consent: [.login, .registration, .reconsent],
-            .registration: [.registration],
-            .passcode: [.login, .registration, .reconsent],
-            .emailVerification: [.registration],
-            .permissions: [.login, .registration],
-            .profile: [.registration],
-            .completion: [.login, .registration]]
+            .eligibility: [.signup],
+            .consent: [.login, .signup, .reconsent],
+            .registration: [.signup],
+            .passcode: [.login, .signup, .reconsent],
+            .emailVerification: [.signup],
+            .permissions: [.login, .signup],
+            .profile: [.signup],
+            .completion: [.login, .signup]]
 
         for sectionType in SBAOnboardingSectionBaseType.all {
             let include = expectedNonNil[sectionType]
@@ -109,7 +109,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         manager.mockAppDelegate.mockCurrentUser.isRegistered = true
         manager._hasPasscode = true
     
-        let taskTypes: [SBAOnboardingTaskType] = [.registration, .reconsent]
+        let taskTypes: [SBAOnboardingTaskType] = [.signup, .reconsent]
         let expectedNonNil: [SBAOnboardingSectionBaseType : [SBAOnboardingTaskType]] = [
             .login: [.login],
             // eligibility should *not* be included in registration if the user is at the email verification step
@@ -121,10 +121,10 @@ class SBAOnboardingManagerTests: ResourceTestCase {
             // passcode should *not* be included in registration if the user is at the email verification step
             // and has already set the passcode
             .passcode: [],
-            .emailVerification: [.registration],
-            .permissions: [.login, .registration],
-            .profile: [.registration],
-            .completion: [.login, .registration]]
+            .emailVerification: [.signup],
+            .permissions: [.login, .signup],
+            .profile: [.signup],
+            .completion: [.login, .signup]]
         
         for sectionType in SBAOnboardingSectionBaseType.all {
             let include = expectedNonNil[sectionType]
@@ -180,7 +180,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     
     func testEligibilitySection() {
 
-        guard let steps = checkOnboardingSteps( .base(.eligibility), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.eligibility), .signup) else { return }
         
         let expectedSteps: [ORKStep] = [SBAToggleFormStep(identifier: "inclusionCriteria"),
                                         SBAInstructionStep(identifier: "ineligibleInstruction"),
@@ -198,7 +198,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     
     func testPasscodeSection() {
 
-        guard let steps = checkOnboardingSteps( .base(.passcode), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.passcode), .signup) else { return }
         
         XCTAssertEqual(steps.count, 1)
         
@@ -208,9 +208,9 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         }
         
         XCTAssertEqual(step.identifier, "passcode")
-        XCTAssertEqual(step.passcodeType, ORKPasscodeType.type6Digit)
+        XCTAssertEqual(step.passcodeType, ORKPasscodeType.type4Digit)
         XCTAssertEqual(step.title, "Identification")
-        XCTAssertEqual(step.text, "Select a 6-digit passcode. Setting up a passcode will help provide quick and secure access to this application.")
+        XCTAssertEqual(step.text, "Select a 4-digit passcode. Setting up a passcode will help provide quick and secure access to this application.")
     }
     
     func testLoginSection() {
@@ -226,7 +226,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     }
     
     func testRegistrationSection() {
-        guard let steps = checkOnboardingSteps( .base(.registration), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.registration), .signup) else { return }
         XCTAssertEqual(steps.count, 2)
         
         guard let step1 = steps.first as? SBAPermissionsStep else {
@@ -245,7 +245,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     }
     
     func testEmailVerificationSection() {
-        guard let steps = checkOnboardingSteps( .base(.emailVerification), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.emailVerification), .signup) else { return }
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBAEmailVerificationStep else {
@@ -257,7 +257,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     }
     
     func testProfileSection() {
-        guard let steps = checkOnboardingSteps( .base(.profile), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.profile), .signup) else { return }
         XCTAssertEqual(steps.count, 3)
         
         for step in steps {
@@ -266,7 +266,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
     }
     
     func testPermissionsSection() {
-        guard let steps = checkOnboardingSteps( .base(.permissions), .registration) else { return }
+        guard let steps = checkOnboardingSteps( .base(.permissions), .signup) else { return }
         XCTAssertEqual(steps.count, 1)
         
         guard let step = steps.first as? SBAPermissionsStep else {
@@ -275,20 +275,6 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         }
         
         XCTAssertEqual(step.identifier, "permissions")
-    }
-    
-    func testCompletionSection() {
-        guard let steps = checkOnboardingSteps( .base(.completion), .registration) else { return }
-        XCTAssertEqual(steps.count, 1)
-        
-        guard let step = steps.first as? SBAOnboardingCompleteStep else {
-            XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
-            return
-        }
-        
-        XCTAssertEqual(step.identifier, "onboardingCompletion")
-        XCTAssertEqual(step.title, "Thank You!")
-        XCTAssertEqual(step.detailText, "You are all set.")
     }
     
     func checkOnboardingSteps(_ sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {

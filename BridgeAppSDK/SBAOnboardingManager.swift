@@ -42,25 +42,25 @@ public enum SBAOnboardingTaskType: String {
     /**
      New participant who needs to be registered and (if applicable) consented.
     */
-    case registration   = "registration"
+    case signup
     
     /**
      Existing participant who is signing in with an existing account that needs
      to login on a new device.
     */
-    case login          = "login"
+    case login
     
     /**
      An existing participant who is signed in but has not consented to a new 
      consent that is required (due to changes in the IRB).
     */
-    case reconsent      = "reconsent"
+    case reconsent
     
     /**
      List of all the types.
     */
     public static var all: [SBAOnboardingTaskType] {
-        return [.registration, .login, .reconsent]
+        return [.signup, .login, .reconsent]
     }
 }
 
@@ -71,6 +71,8 @@ public enum SBAOnboardingTaskType: String {
 open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
     open var sections: [SBAOnboardingSection]?
+    open var tableRows: [SBAOnboardingTableRow]?
+    open var tableHeader: SBAOnboardingTableHeader?
 
     public override init() {
         super.init()
@@ -83,9 +85,9 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     public convenience init(dictionary: NSDictionary) {
         self.init()
-        self.sections = (dictionary["sections"] as? [AnyObject])?.map({ (obj) -> SBAOnboardingSection in
-            return obj as! SBAOnboardingSection
-        }).sorted(by: { sortOrder($0, $1) })
+        self.sections = (dictionary["sections"] as? [NSDictionary])?.sorted(by: { sortOrder($0, $1) })
+        self.tableRows = dictionary["tableRows"] as? [NSDictionary]
+        self.tableHeader = dictionary["tableHeader"] as? NSDictionary
     }
     
     /**
@@ -150,7 +152,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         // are immutable but can be skipped using navigation rules.
         if let baseType = section.onboardingSectionType?.baseType(), baseType == .consent {
             switch (onboardingTaskType) {
-            case .registration:
+            case .signup:
                 return [factory.registrationConsentStep()]
             case .login:
                 return [factory.loginConsentStep()]
@@ -193,22 +195,22 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
             // By default, ONLY Registration and verification should include any custom section
-            return onboardingTaskType == .registration
+            return onboardingTaskType == .signup
         }
         
         switch (baseType) {
             
         case .login:
             // Only Login includes login
-            return  onboardingTaskType == .login
+            return (onboardingTaskType == .login)
             
         case .consent:
             // All types *except* email verification include consent
-            return (onboardingTaskType != .registration) || !sharedUser.isRegistered
+            return (onboardingTaskType != .signup) || !sharedUser.isRegistered
             
         case .eligibility, .registration:
             // Intro, eligibility and registration are only included in registration
-            return (onboardingTaskType == .registration) && !sharedUser.isRegistered
+            return (onboardingTaskType == .signup) && !sharedUser.isRegistered
         
         case .passcode:
             // Passcode is included if it has not already been set
@@ -216,26 +218,41 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         case .emailVerification:
             // Only registration where the login has not been verified includes verification
-            return (onboardingTaskType == .registration) && !sharedUser.isLoginVerified
+            return (onboardingTaskType == .signup) && !sharedUser.isLoginVerified
         
         case .profile:
             // Additional profile information is included if this is a registration type
-            return (onboardingTaskType == .registration)
+            return (onboardingTaskType == .signup)
         
         case .permissions, .completion:
             // Permissions and completion are included for login and registration
-            return onboardingTaskType == .registration || onboardingTaskType == .login
+            return onboardingTaskType == .signup || onboardingTaskType == .login
 
         }
     }
     
+    // MARK: Display data source
     
+    open func numberOfSteps(for sectionTypes:[SBAOnboardingSectionType]) -> Int {
+        // TODO: syoung 04/12/2017 Implement
+        return 0
+    }
+    
+    open func signupState(for sectionTypes:[SBAOnboardingSectionType]) -> SBASignUpState {
+        // TODO: syoung 04/12/2017 Implement
+        return .locked
+    }
+    
+    open func isSignupCompleted() -> Bool {
+        // TODO: syoung 04/17/2017 Implement
+        return false
+    }
+
     // MARK: SBASharedInfoController
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-
     
     // MARK: Passcode handling
     

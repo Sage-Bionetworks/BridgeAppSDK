@@ -334,6 +334,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     let kRegisteredKey = "SignedUp"
     let kLoginVerifiedKey = "SignedIn"
     let kConsentVerifiedKey = "isConsentVerified"
+    let kEligibilityVerifiedKey = "isEligibilityVerified"
     let kSavedDataGroupsKey = "SavedDataGroups"
     let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
@@ -365,7 +366,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
             syncSetBool(newValue, forKey: kConsentVerifiedKey)
         }
     }
-    
+
     public var isDataSharingEnabled: Bool {
         get {
             return syncBoolForKey(kDataSharingEnabledKey)

@@ -97,7 +97,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
  Allow developers to create their own step view controllers that do not inherit from 
  `ORKFormStepViewController`.
  */
-public protocol SBARegistrationStepController: SBAAccountController, SBAUserProfileController {
+public protocol SBARegistrationStepController: SBAOnboardingStepController {
     
     /**
      If there are data groups that were set in a previous step or via a custom onboarding manager,
@@ -145,10 +145,6 @@ extension SBARegistrationStepController {
 open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepController {
     
     open var dataGroups: [String]?
-    
-    public var profileKeys: [String]? {
-        return (self.step as? ORKFormStep)?.formItems?.map({ $0.identifier })
-    }
     
     // MARK: SBASharedInfoController
     

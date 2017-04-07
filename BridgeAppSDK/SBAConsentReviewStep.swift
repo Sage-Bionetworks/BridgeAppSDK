@@ -174,7 +174,7 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
  Allow developers to create their own step view controllers that do not inherit from
  `ORKPageStepViewController`.
  */
-public protocol SBAConsentReviewStepController: SBAAccountController, SBAUserProfileController {
+public protocol SBAConsentReviewStepController: SBAOnboardingStepController {
     
     var requiresSignature: Bool { get }
     var consentAccepted: Bool? { get }
@@ -240,10 +240,6 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBACon
 
     public var consentStep: SBAConsentReviewStep? {
         return self.step as? SBAConsentReviewStep
-    }
-    
-    open var profileKeys: [String]? {
-        return self.consentStep?.formItems?.map({ $0.identifier })
     }
     
     public var requiresSignature: Bool {

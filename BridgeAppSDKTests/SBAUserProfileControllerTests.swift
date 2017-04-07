@@ -114,7 +114,7 @@ class SBAUserProfileControllerTests: ResourceTestCase {
         let result = step.instantiateDefaultStepResult(["email" : "doe@foo.com"])
         let stepVC = step.instantiateStepViewController(with: result)
         
-        guard let profileController = stepVC as? SBAUserProfileController else {
+        guard let profileController = stepVC as? SBAOnboardingStepController else {
             XCTAssert(false, "Step view controller does not match expected casting")
             return
         }

@@ -148,7 +148,7 @@ class SBAUserTests: XCTestCase {
             "languages" : ["en"],
             "roles" : [],
             "status" : "enabled",
-            "createdOn" : NSDate(iso8601String: "2016-08-09T04:47:52.169Z"),
+            "createdOn" : NSDate(iso8601String: "2016-08-09T04:47:52.169Z")!,
             "signedMostRecentConsent" : true,
             "sessionToken" : "217ee580-8950-4f37-98bb-2f770d9a331c",
             "id" : "3LglxfsJ3Moo9NymdS6qem",

@@ -45,7 +45,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
     // MARK: actions
 
     @IBAction func signUpTapped(_ sender: AnyObject) {
-        SBAAppDelegate.shared?.presentOnboarding(for: .registration)
+        SBAAppDelegate.shared?.showSignUpViewController(animated: true)
     }
     
     @IBAction func loginTapped(_ sender: AnyObject) {

@@ -55,6 +55,7 @@
 @property (nonatomic, copy) NSArray<NSString *> * _Nullable dataGroups;
 @property (nonatomic) BOOL isRegistered;
 @property (nonatomic) BOOL isLoginVerified;
+@property (nonatomic) BOOL isEligibilityVerified;
 @property (nonatomic) BOOL isConsentVerified;
 @property (nonatomic) BOOL isDataSharingEnabled;
 @property (nonatomic) BOOL isTestUser;
@@ -63,5 +64,6 @@
 
 @property (nonatomic, readonly) NSUInteger logout_called_count;
 @property (nonatomic, readonly) NSUInteger sessionToken_called_count;
+@property (nonatomic, readonly) NSMutableDictionary * _Nonnull storedAnswers;
 
 @end

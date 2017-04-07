@@ -59,7 +59,6 @@
 "SBA_ACTIVITY_SCHEDULE_EXPIRED_%@" = "Expired: %@"; // Detail for a scheduled activity where %@ is the timestamp when expired
 
 /* Registration */
-
 "SBA_REGISTRATION_INVALID_CODE" = "Please enter a valid Participant ID."; // Message for invalid registration code
 "SBA_REGISTRATION_MATCH_FAILED" = "The Participant ID you entered does not match."; // Message for registration codes that do not match
 "SBA_REGISTRATION_FAILED_TITLE" = "Registration Failed"; // Title for error when registration fails
@@ -78,6 +77,10 @@
 "REGISTRATION_PASSWORD_RESET_SENT" = "We have sent password reset instructions to your email address"; // Message for entering email address when missing
 "REGISTRATION_FORGOT_PASSWORD" = "Forgot password?"; // Button text for the forgot password link
 
+/* Greeting */
+"GREETING_WITH_NAME_%@" = "Hello %@";
+"GREETING_WITHOUT_NAME" = "Hello";
+
 /* Failure messages */
 "SBA_NETWORK_FAILURE_TITLE" = "Could Not Complete"; // Title for a step or alert indicating a network failure
 "SBA_NETWORK_FAILURE_MESSAGE" = "Please try again later."; // Message for a step or alert indicating a network failure
@@ -87,6 +90,7 @@
 /* Survey */
 "SBA_SURVEY_LOADING_TEXT" = "Please wait while the survey is downloaded."; // Message for a loading a survey.
 "SBA_COPYRIGHT" = "Copyright"; // Text on the copyright button.
+"SBA_SHORT_NUMBER_OF_STEPS_%@" = "%@ Steps"; // short text for the number of steps
 
 /* Withdrawal */
 "WITHDRAW_TITLE" = "Withdraw";  // Title for the button and message for confirming intention to withdraw from the study

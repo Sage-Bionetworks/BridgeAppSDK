@@ -60,7 +60,7 @@ open class SBAChangeEmailStep: ORKFormStep {
  Allow developers to create their own step view controllers that do not inherit from
  `ORKFormStepViewController`.
  */
-public protocol SBAChangeEmailStepController: SBAAccountController, SBAUserProfileController {
+public protocol SBAChangeEmailStepController: SBAOnboardingStepController {
     func goNext()
 }
 
@@ -94,10 +94,6 @@ open class SBAChangeEmailStepViewController: ORKFormStepViewController, SBAChang
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-    
-    public var profileKeys: [String]? {
-        return nil
-    }
     
     // Override the default method for goForward and attempt changing email.
     // Do not allow subclasses to override this method
