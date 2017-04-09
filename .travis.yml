@@ -1,10 +1,13 @@
 language: objective-c
 osx_image: xcode8.3
+xcode_project: BridgeAppSDK.xcodeproj
+xcode_scheme: BridgeAppSDKSample
+cache:
+- bundler
 before_install:
-  - brew update
+- brew update
+- echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
 install:
-  - ./travis/install-fastlane.sh
-  - export PATH="$HOME/.fastlane/bin:$PATH"
+- gem install fastlane -v 2.25.0
 script:
-  - ./travis/run-tests.sh
-
+- ./travis/build.sh

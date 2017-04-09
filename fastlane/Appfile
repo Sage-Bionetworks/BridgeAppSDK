@@ -1,4 +1,5 @@
-app_identifier "org.sagebase.BridgeAppSDK" # The bundle identifier of your app
+# The bundle identifier of your app
+app_identifier ["org.sagebase.BridgeAppSDK", "org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"]
 apple_id "apple.developer@sagebase.org" # Your Apple email address
 
 team_id "4B822CZK9N"  # Developer Portal Team ID
