@@ -8,4 +8,15 @@ before_install:
 - bundle update
 - echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
 script:
-- ./travis/build.sh
+- "./travis/build.sh"
+deploy:
+  skip_cleanup: true
+  provider: s3
+  access_key_id: AKIAICA2M6XGX62Q4NTQ
+  secret_access_key:
+    secure: Y1QewDqLz2MD2rIocNT9ayTJvA2W9XwMI/NExWgvNXTHbCXknRKSPj0f4w4AUOGKf3TFu3E7YXk7WV4ZxDITVbFcxw4jIVPN84qVnGPMUuGwNRAGO2qP1bL2Yu8H63TFTsC0XzU7R8dB8wYrjk0Vhy5SMe7BpUyTAvyDpud1djJ6ou3oNByMIVJE7TRurg3k0eQYZ4TNCSpz2rJKJd/s+hs8fsAkDH/rrp1Ax8hHlFaEI3EMuYKBteTtpi0jI64czCwfH6yE5hjYO5UD/R7RRuU8Vhw0/NNxfyDaGpufJLLJ/vhyDC72gJByxUw/toYim0RZJdgcMcSKrS/Ds6hcHMAgJca+l1DtJCFzlDUL6FoR6/MRvvNxIm7AK3mfves17XXJ6cue65IHT86i6wUwyEPefoMf9GtddaQ/MS4fLvrw9lww6ORhJ9YIR5ExdzKwZ1tn25QJoTjeaVbpwQYvGBc5yX2rDToDOA3lRXEUesKWN1rYQh7g8T5ZboCqjwXepTdTZvYxNmUV84mg243xaprlcz67lZFKiibblWf/JsVuXp1ln1GmMlkhhpluJgceFVr5PDUDzHS98qowosq4Ll4Cc2iwAvBa8g59qz6Z4KorcHPikBt8DTFnBvWEhJWkyglqNEdTiwguZTDxnkxBC/yZnFH0uI4qbNruPT/go2Y=
+  bucket: ios-apps.sagebridge.org
+  local-dir: build
+  upload-dir: ci/$TRAVIS_XCODE_SCHEME/$TRAVIS_BRANCH
+  on:
+    branch: master
