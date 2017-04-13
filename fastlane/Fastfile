@@ -18,8 +18,66 @@ default_platform :ios
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    ENV["MATCH_KEYCHAIN_NAME"] = "ios-build.keychain"
     # ensure_git_status_clean 
     
+  end
+
+  desc "Create keychains to store certificates"
+  lane :keychains do
+    create_keychain(
+      name: ENV["MATCH_KEYCHAIN_NAME"],
+      password: ENV["MATCH_PASSWORD"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      add_to_search_list: true
+    )
+  end
+
+  desc "Fetches provisioning profile and certificates from github repo"
+  desc "Usage fastlane certificates export_method:\"enterprise\""
+  lane :certificates do |options|
+    export_method = options[:export_method]
+    match(
+      type: "development",
+      app_identifier: ["org.sagebase.BridgeAppSDK", "org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"],
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_PASSWORD"],
+      readonly: true
+    )
+    match(
+      type: "appstore",
+      app_identifier: ["org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"],
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
+      keychain_password: ENV["MATCH_PASSWORD"],
+      readonly: true
+    )
+  end
+
+  desc "Archive and export app"
+  desc "Usage fastlane archive scheme:\"BridgeAppSDKSample\" export_method:\"enterprise\""
+  lane :archive do |options|
+    scheme = options[:scheme]
+    export_method = options[:export_method]
+    gym(
+      scheme: "#{scheme}",
+      clean: true,
+      include_bitcode: true,
+      output_directory: "./build",
+      output_name: "#{scheme}.ipa",
+      export_method: "#{export_method}",
+      destination: "generic/platform=iOS",
+    )
+  end
+
+  desc "This lane is for CI bots to archive and export"
+  lane :ci_archive do |options|
+    scheme = options[:scheme]
+    export_method = options[:export_method]
+    keychains
+    certificates
+    archive(scheme: "#{scheme}",export_method: "#{export_method}")
   end
 
   desc "Runs all the tests"
