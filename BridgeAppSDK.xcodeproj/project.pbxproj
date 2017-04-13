@@ -174,6 +174,9 @@
 		FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE031D088FA600434001 /* SBALoginStep.swift */; };
 		FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */; };
 		FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */; };
+		FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */; };
+		FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */; };
+		FFF0124D1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -558,6 +561,9 @@
 		FFDECE031D088FA600434001 /* SBALoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoginStep.swift; sourceTree = "<group>"; };
 		FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEmailVerificationStep.swift; sourceTree = "<group>"; };
 		FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAConsentReviewStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityIntroductionStepViewController.swift; sourceTree = "<group>"; };
+		FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATaskReference.swift; sourceTree = "<group>"; };
+		FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBATaskReference+Dictionary.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -676,6 +682,8 @@
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
 				FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */,
 				FF3E30541D5A806C00347165 /* SBASurveyTask.swift */,
+				FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */,
+				FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */,
 			);
 			name = TasksAndSteps;
 			sourceTree = "<group>";
@@ -699,6 +707,7 @@
 				FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */,
 				FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */,
 				FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */,
+				FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -1582,9 +1591,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */,
 				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
+				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
 				FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
@@ -1625,6 +1636,7 @@
 				FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */,
 				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
+				FFF0124D1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift in Sources */,
 				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
 				FF97080B1DA78806006E8252 /* SBARootViewController.swift in Sources */,

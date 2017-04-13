@@ -1,8 +1,8 @@
 //
-//  SBABridgeTask+SBBSurveyReference.swift
+//  SBABridgeTask.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,37 +31,18 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+import Foundation
 
-import BridgeSDK
-import ResearchKit
-
-extension SBBSurveyReference : SBATaskReference {
-    
-    public func transformToTask(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
-        guard let bridgeFactory = factory as? SBASurveyFactory else {
-            assertionFailure("\(factory) must be a subclass of SBASurveyFactory.")
-            return nil
-        }
-        return SBASurveyTask(surveyReference: self, factory: bridgeFactory)
-    }
-    
-    public var cancelDisabled: Bool {
-        return false
-    }
-    
-    public var allowMultipleRun: Bool {
-        return true
-    }
-    
-    public var scheduleNotification: Bool {
-        return false
-    }
-    
-    public var activityIcon: UIImage? {
-        return nil
-    }
-    
-    public var activityMinutes: Int {
-        return 0
-    }
+public protocol SBATaskReference: SBATaskTransformable {
+    var cancelDisabled: Bool { get }
+    var allowMultipleRun: Bool { get }
+    var scheduleNotification: Bool { get }
+    var activityIcon: UIImage? { get }
+    var activityMinutes: Int { get }
 }
+
+public protocol SBASchemaReference: class {
+    var schemaIdentifier: String! { get }
+    var schemaRevision: NSNumber! { get }
+}
+

@@ -1,8 +1,8 @@
 //
-//  SBABridgeTask+SBBSurveyReference.swift
+//  SBATaskReference+Dictionary.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,37 +31,35 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+import Foundation
 
-import BridgeSDK
-import ResearchKit
-
-extension SBBSurveyReference : SBATaskReference {
+extension NSDictionary: SBASchemaReference {
     
-    public func transformToTask(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
-        guard let bridgeFactory = factory as? SBASurveyFactory else {
-            assertionFailure("\(factory) must be a subclass of SBASurveyFactory.")
-            return nil
-        }
-        return SBASurveyTask(surveyReference: self, factory: bridgeFactory)
+    public var schemaRevision: NSNumber! {
+        return self["schemaRevision"] as? NSNumber ?? 1
     }
+}
+
+extension NSDictionary: SBATaskReference {
     
     public var cancelDisabled: Bool {
-        return false
+        return self["cancelDisabled"] as? Bool ?? false
     }
     
     public var allowMultipleRun: Bool {
-        return true
+        return self["allowMultipleRun"] as? Bool ?? true
     }
     
     public var scheduleNotification: Bool {
-        return false
+        return self["scheduleNotification"] as? Bool ?? false
     }
     
     public var activityIcon: UIImage? {
-        return nil
+        guard let iconName = self["activityIcon"] as? String else { return nil }
+        return SBAResourceFinder.shared.image(forResource: iconName)
     }
     
     public var activityMinutes: Int {
-        return 0
+        return self["activityMinutes"] as? Int ?? 0
     }
 }
