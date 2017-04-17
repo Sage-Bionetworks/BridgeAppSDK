@@ -433,6 +433,20 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         }
     }
     
+    open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
+        
+        // If this is the first step in an activity then look to see if there is a custom intro view controller
+        if step is ORKInstructionStep,
+            let task = taskViewController.task as? ORKOrderedTask, task.index(of: step) == 0,
+            let schedule = self.scheduledActivity(for: taskViewController),
+            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) {
+            return instantiateActivityIntroductionStepViewController(for: schedule, step: step, taskRef: taskRef)
+        }
+        
+        // By default, return nil
+        return nil
+    }
+    
     
     // MARK: Convenience methods
     
@@ -553,6 +567,18 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     */
     open func instantiateTaskViewController(for schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
         return SBATaskViewController(task: task, taskRun: nil)
+    }
+    
+    open func instantiateActivityIntroductionStepViewController(for schedule: SBBScheduledActivity, step: ORKStep, taskRef: SBATaskReference) -> SBAActivityIntroductionStepViewController? {
+        let storyboard = UIStoryboard(name: SBAMainStoryboardName, bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: SBAActivityIntroductionStepViewController.className) as? SBAActivityIntroductionStepViewController
+        else {
+            return nil
+        }
+        vc.step = step
+        vc.schedule = schedule
+        vc.taskReference = taskRef
+        return vc
     }
     
     /**

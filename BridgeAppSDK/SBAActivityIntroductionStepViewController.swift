@@ -1,8 +1,8 @@
 //
-//  SBABridgeTask+SBBSurveyReference.swift
+//  SBAActivityIntroductionStepViewController.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,37 +31,45 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+import UIKit
 
-import BridgeSDK
-import ResearchKit
-
-extension SBBSurveyReference : SBATaskReference {
+open class SBAActivityIntroductionStepViewController: ORKStepViewController {
     
-    public func transformToTask(with factory: SBABaseSurveyFactory, isLastStep: Bool) -> (ORKTask & NSCopying & NSSecureCoding)? {
-        guard let bridgeFactory = factory as? SBASurveyFactory else {
-            assertionFailure("\(factory) must be a subclass of SBASurveyFactory.")
-            return nil
+    static let className = String(describing: SBAActivityIntroductionStepViewController.self)
+    
+    @IBOutlet public var titleLabel: UILabel!
+    @IBOutlet public var subtitleLabel: UILabel!
+    @IBOutlet public var descriptionLabel: UILabel!
+    @IBOutlet public var iconImageView: UIImageView!
+    
+    public var schedule: SBBScheduledActivity!
+    public var taskReference: SBATaskReference!
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Schedule and step should both be set before showing the view controller
+        titleLabel.text = schedule.activity.label
+        subtitleLabel.text = schedule.activity.labelDetail
+        descriptionLabel.text = step?.text
+        iconImageView.image = taskReference.activityIcon
+    }
+
+    @IBAction public func startTapped() {
+        self.goForward()
+    }
+    
+    @IBAction public func cancelTapped() {
+        guard let taskViewController = self.taskViewController, let taskDelegate = taskViewController.delegate else {
+            dismiss(animated: true, completion: nil)
+            return
         }
-        return SBASurveyTask(surveyReference: self, factory: bridgeFactory)
-    }
-    
-    public var cancelDisabled: Bool {
-        return false
-    }
-    
-    public var allowMultipleRun: Bool {
-        return true
-    }
-    
-    public var scheduleNotification: Bool {
-        return false
-    }
-    
-    public var activityIcon: UIImage? {
-        return nil
-    }
-    
-    public var activityMinutes: Int {
-        return 0
+        taskDelegate.taskViewController(taskViewController, didFinishWith: .discarded, error: nil)
     }
 }
