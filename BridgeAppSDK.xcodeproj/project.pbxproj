@@ -55,6 +55,7 @@
 		FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30541D5A806C00347165 /* SBASurveyTask.swift */; };
 		FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */; };
 		FF3E30C41D62CF7100347165 /* CombinedTask.json in Resources */ = {isa = PBXBuildFile; fileRef = FF3E30C31D62CF7100347165 /* CombinedTask.json */; };
+		FF42C5C21EA6A18000C13C70 /* SBAOnboardingAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FF42C5C01EA6A18000C13C70 /* SBAOnboardingAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */; };
 		FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */; };
@@ -446,6 +447,7 @@
 		FF3E30541D5A806C00347165 /* SBASurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASurveyTask.swift; sourceTree = "<group>"; };
 		FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchiveTests.swift; sourceTree = "<group>"; };
 		FF3E30C31D62CF7100347165 /* CombinedTask.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CombinedTask.json; sourceTree = "<group>"; };
+		FF42C5C01EA6A18000C13C70 /* SBAOnboardingAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAOnboardingAppDelegate.h; sourceTree = "<group>"; };
 		FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBABridgeManager.h; sourceTree = "<group>"; };
 		FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBABridgeManager.m; sourceTree = "<group>"; };
 		FF45F84D1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAUserWrapper+Bridge.swift"; sourceTree = "<group>"; };
@@ -706,6 +708,7 @@
 				FF5051B41D664E130065E677 /* All Set */,
 				FBF1B6A31CAAED02007C1082 /* Consent */,
 				FBF1B6AD1CAAED0F007C1082 /* Account */,
+				FF42C5C01EA6A18000C13C70 /* SBAOnboardingAppDelegate.h */,
 				FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */,
 				FFDECDF71D0758C700434001 /* SBAOnboardingSection.swift */,
 				FF14A0C81E984D72007BB710 /* SBAOnboardingTableHeader.swift */,
@@ -1216,6 +1219,7 @@
 				FF722C131D775BB8004B2F8B /* SBANewsFeedParser.h in Headers */,
 				603242491E4001A100C184AD /* SBADataArchive.h in Headers */,
 				FF5CDF231DDE395900117218 /* SBADemographicDataObjectType.h in Headers */,
+				FF42C5C21EA6A18000C13C70 /* SBAOnboardingAppDelegate.h in Headers */,
 				801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */,
 				80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */,
 			);

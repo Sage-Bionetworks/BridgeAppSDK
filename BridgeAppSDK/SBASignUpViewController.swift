@@ -37,11 +37,6 @@ public enum SBASignUpState {
     case current, completed, locked
 }
 
-@objc
-public protocol SBASignUpViewControllerDelegate: class {
-    func showAppropriateViewController(animated: Bool)
-}
-
 /**
  The `SBASignUpViewController` can be used to display a table view or collection view with an
  overview of the user's onboarding progress.
@@ -53,14 +48,26 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     @IBOutlet weak var cancelButtonView: UIView?
     @IBOutlet weak var startButtonView: UIView?
     
-    open weak var delegate: SBASignUpViewControllerDelegate?
-    open var onboardingManager: SBAOnboardingManager!
+    /**
+     The onboarding manager to use with this signup view controller. By default, this will retain 
+     an onboarding manager instantiated by the `SBAOnboardingAppDelegate`.
+     */
+    open var onboardingManager: SBAOnboardingManager {
+        if (_onboardingManager == nil) {
+            _onboardingManager = self.onboardingAppDelegate.onboardingManager(for: .signup)
+        }
+        return _onboardingManager
+    }
+    fileprivate var _onboardingManager: SBAOnboardingManager!
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateState()
     }
     
+    /**
+     Update the state of the view controller.
+     */
     open func updateState() {
         
         // Setup the greeting label
@@ -77,14 +84,30 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         self.instructionLabel?.text = signupCompleted ? onboardingManager.tableHeader?.completedText : onboardingManager.tableHeader?.initialText
     }
     
+    /**
+     Number of rows in the data source.
+     */
     public var numberOfRows: Int {
         return self.onboardingManager.tableRows?.count ?? 0
     }
     
+    /**
+     Returns the table row item at the given row.
+     
+     @param row     The row of the item
+     @return        Item at the given row
+     */
     public func item(at row:Int) -> SBAOnboardingTableRow? {
         return self.onboardingManager.tableRows?[row]
     }
     
+    /**
+     Set up the cell for the given row. This is used to assign values to either a subclass of a 
+     `UITableViewCell` or `UICollectionViewCell`.
+     
+     @param cell    The cell to set up
+     @param row     The row of the cell
+     */
     public func setupCell(_ cell: SBASignUpCell, at row:Int) {
         guard let item = self.item(at: row) else { return }
         
@@ -118,11 +141,22 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         }()
     }
     
+    /**
+     Can the given row be selected?
+     
+     @param row  The row for the cell
+     @return     Whether or not the row can be selected
+     */
     open func canSelectRow(_ row : Int) -> Bool {
         guard let item = self.item(at: row) else { return false }
         return self.onboardingManager.signupState(for: item.onboardingSectionTypes) == .current
     }
     
+    /**
+     Call when the user did select the given row.
+     
+     @param row  The row for the cell
+     */
     open func didSelectRow(_ row : Int) {
         guard let taskViewController = onboardingManager.initializeTaskViewController(for: .signup)
         else {
@@ -135,15 +169,22 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         self.present(taskViewController, animated: true, completion: nil)
     }
     
+    /**
+     Connect to the cancel action.
+     */
     @IBAction open func cancelTapped() {
         self.sharedUser.resetStoredUserData()
-        self.delegate?.showAppropriateViewController(animated: true)
+        self.onboardingAppDelegate.showAppropriateViewController(animated: true)
     }
     
+    /**
+     Connect to the action to start the study.
+     */
     @IBAction open func startStudyTapped() {
         self.sharedUser.onboardingStepIdentifier = nil
-        self.delegate?.showAppropriateViewController(animated: true)
+        self.onboardingAppDelegate.showAppropriateViewController(animated: true)
     }
+    
     
     // MARK: ORKTaskViewControllerDelegate
     
@@ -156,11 +197,16 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         taskViewController.dismiss(animated: true, completion: nil)
     }
     
+    
     // MARK: SBASharedInfoController
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
+    
+    open var onboardingAppDelegate: SBAOnboardingAppDelegate {
+        return self.sharedAppDelegate as! SBAOnboardingAppDelegate
+    }
 }
 
 public protocol SBASignUpCell : class {

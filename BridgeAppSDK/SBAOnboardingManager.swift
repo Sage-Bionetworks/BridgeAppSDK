@@ -2,7 +2,7 @@
 //  SBAOnboardingManager.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2016-2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,32 +35,26 @@ import Foundation
 import ResearchKit
 
 /**
- The reason why the user is being onboarded.
+ Extend the onboarding task type to include a method for defining all the onboarding flows.
  */
-public enum SBAOnboardingTaskType: String {
-    
-    /**
-     New participant who needs to be registered and (if applicable) consented.
-    */
-    case signup
-    
-    /**
-     Existing participant who is signing in with an existing account that needs
-     to login on a new device.
-    */
-    case login
-    
-    /**
-     An existing participant who is signed in but has not consented to a new 
-     consent that is required (due to changes in the IRB).
-    */
-    case reconsent
+extension SBAOnboardingTaskType {
     
     /**
      List of all the types.
-    */
+     */
     public static var all: [SBAOnboardingTaskType] {
         return [.signup, .login, .reconsent]
+    }
+    
+    public var identifier: String {
+        switch self {
+        case .signup:
+            return "signup"
+        case .login:
+            return "login"
+        case .reconsent:
+            return "reconsent"
+        }
     }
 }
 
@@ -106,7 +100,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         }).flatMap({$0})
         
         // Create the task view controller
-        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.rawValue, steps: steps)
+        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.identifier, steps: steps)
         let taskViewController = SBATaskViewController(task: task, taskRun: nil)
         
         // by default, attach self to the task view controller as a strong reference
@@ -132,6 +126,18 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     }
     
     /**
+     Allows for subclass of the onboarding manager to vend a different survey factory. By default, this will return the default
+     factory as defined by the onboarding section.
+     
+     @param     section                 The onboarding section
+     @param     onboardingTaskType      The task type
+     @return                            Survey Factory
+     */
+    open func factory(for section: SBAOnboardingSection, with onboardingTaskType: SBAOnboardingTaskType) -> SBASurveyFactory {
+        return section.defaultOnboardingSurveyFactory()
+    }
+    
+    /**
      Get the steps that should be included for a given `SBAOnboardingSection` and `SBAOnboardingTaskType`.
      By default, this will return the steps created using the default onboarding survey factory for that section
      or nil if the steps for that section should not be included for the given task.
@@ -146,7 +152,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
         
         // Get the default factory
-        let factory = section.defaultOnboardingSurveyFactory()
+        let factory = self.factory(for: section, with: onboardingTaskType)
         
         // For consent, need to filter out steps that should not be included and group the steps into a substep. 
         // This is to facilitate skipping reconsent for a user who is logging in where it is unknown whether

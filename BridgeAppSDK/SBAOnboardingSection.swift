@@ -148,8 +148,6 @@ public enum SBAOnboardingSectionType {
         return nil
     }
     
-    
-    
     public var identifier: String {
         switch (self) {
         case .base(let baseType):
