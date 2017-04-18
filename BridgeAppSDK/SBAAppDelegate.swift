@@ -264,7 +264,10 @@ public let SBAMainStoryboardName = "Main"
         if (self.currentUser.isLoginVerified && !self.currentUser.isConsentVerified) {
             presentOnboarding(for: .reconsent)
         }
-        else if (!self.currentUser.isLoginVerified && self.currentUser.isRegistered) {
+        else if (!self.currentUser.isLoginVerified &&
+            self.currentUser.isRegistered) &&
+            (self.rootViewController?.state != .signup) {
+            // If this app uses the signup view, then let that view control the flow
             presentOnboarding(for: .signup)
         }
     }
@@ -393,7 +396,6 @@ public let SBAMainStoryboardName = "Main"
     // ------------------------------------------------
     
     private weak var onboardingViewController: UIViewController?
-    private var onboardingManager: SBAOnboardingManager?
     
     /**
      Should the onboarding be displayed (or ignored)? By default, if there isn't a catasrophic error,
@@ -412,7 +414,7 @@ public let SBAMainStoryboardName = "Main"
      
      @param onboardingTaskType  `SBAOnboardingTaskType` for which to get the manager. (Ingored by default)
     */
-    open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType = .signup) -> SBAOnboardingManager? {
+    open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType) -> SBAOnboardingManager? {
         // By default, the onboarding manager returns an onboarding manager for
         return SBAOnboardingManager(jsonNamed: SBAOnboardingJSONFilename)
     }
@@ -423,9 +425,9 @@ public let SBAMainStoryboardName = "Main"
      
      @param onboardingTaskType  `SBAOnboardingTaskType` to present
     */
-    open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType = .signup, with manager:SBAOnboardingManager? = nil) {
+    open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
         guard shouldShowOnboarding() else { return }
-        guard let onboardingManager = manager ?? onboardingManager(for: onboardingTaskType),
+        guard let onboardingManager = onboardingManager(for: onboardingTaskType),
             let taskViewController = onboardingManager.initializeTaskViewController(for: onboardingTaskType)
         else {
             assertionFailure("Failed to create an onboarding manager.")
@@ -434,25 +436,18 @@ public let SBAMainStoryboardName = "Main"
         
         // present the onboarding
         taskViewController.delegate = self
-        self.onboardingManager = onboardingManager
         self.onboardingViewController = taskViewController
         self.presentViewController(taskViewController, animated: true, completion: nil)
     }
     
-    // MARK: SBAOnboardingViewControllerDelegate
-    
-    @objc
-    open func presentRegistrationViewController(with onboardingManager:SBAOnboardingManager) {
-        presentOnboarding(for: .signup, with: onboardingManager)
-    }
-    
     // MARK: ORKTaskViewControllerDelegate
     
-    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
-        self.currentUser.onboardingStepIdentifier = stepViewController.step?.identifier
-    }
-    
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        // Discard the registration information that has been gathered so far if not completed
+        if (reason != .completed) {
+            self.currentUser.resetStoredUserData()
+        }
         
         // Show the appropriate view controller
         showAppropriateViewController(animated: false)
@@ -460,7 +455,6 @@ public let SBAMainStoryboardName = "Main"
         // Hide the taskViewController
         taskViewController.dismiss(animated: true, completion: nil)
         self.onboardingViewController = nil
-        self.onboardingManager = nil
     }
     
     

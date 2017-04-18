@@ -70,6 +70,8 @@ public enum SBAOnboardingTaskType: String {
  */
 open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
+    static let completedIdentifier = "SBAOnboardingCompleted"
+    
     open var sections: [SBAOnboardingSection]?
     open var tableRows: [SBAOnboardingTableRow]?
     open var tableHeader: SBAOnboardingTableHeader?

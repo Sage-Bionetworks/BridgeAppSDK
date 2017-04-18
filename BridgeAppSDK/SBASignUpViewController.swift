@@ -39,7 +39,6 @@ public enum SBASignUpState {
 
 @objc
 public protocol SBASignUpViewControllerDelegate: class {
-    func presentRegistrationViewController(with onboardingManager:SBAOnboardingManager)
     func showAppropriateViewController(animated: Bool)
 }
 
@@ -47,7 +46,7 @@ public protocol SBASignUpViewControllerDelegate: class {
  The `SBASignUpViewController` can be used to display a table view or collection view with an
  overview of the user's onboarding progress.
  */
-open class SBASignUpViewController : UIViewController, SBASharedInfoController {
+open class SBASignUpViewController : UIViewController, SBASharedInfoController, ORKTaskViewControllerDelegate {
     
     @IBOutlet weak var greetingLabel: UILabel?
     @IBOutlet weak var instructionLabel: UILabel?
@@ -125,17 +124,36 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController {
     }
     
     open func didSelectRow(_ row : Int) {
-        self.delegate?.presentRegistrationViewController(with: onboardingManager)
+        guard let taskViewController = onboardingManager.initializeTaskViewController(for: .signup)
+        else {
+            assertionFailure("Failed to create an onboarding manager.")
+            return
+        }
+        
+        // present the onboarding
+        taskViewController.delegate = self
+        self.present(taskViewController, animated: true, completion: nil)
     }
     
     @IBAction open func cancelTapped() {
-        self.sharedUser.onboardingStepIdentifier = nil
+        self.sharedUser.resetStoredUserData()
         self.delegate?.showAppropriateViewController(animated: true)
     }
     
     @IBAction open func startStudyTapped() {
         self.sharedUser.onboardingStepIdentifier = nil
         self.delegate?.showAppropriateViewController(animated: true)
+    }
+    
+    // MARK: ORKTaskViewControllerDelegate
+    
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        self.sharedUser.onboardingStepIdentifier = stepViewController.step?.identifier
+    }
+    
+    open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+        taskViewController.dismiss(animated: true, completion: nil)
     }
     
     // MARK: SBASharedInfoController
