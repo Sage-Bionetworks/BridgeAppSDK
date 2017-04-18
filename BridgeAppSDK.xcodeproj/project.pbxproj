@@ -177,6 +177,9 @@
 		FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE031D088FA600434001 /* SBALoginStep.swift */; };
 		FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */; };
 		FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */; };
+		FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */; };
+		FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */; };
+		FFF0124D1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */; };
 		FFF0128A1EA182AE00D9D9DD /* SBAAccountStepController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF012891EA182AE00D9D9DD /* SBAAccountStepController.swift */; };
 		FFF0128C1EA55FCE00D9D9DD /* SignUp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFF0128B1EA55FCE00D9D9DD /* SignUp.storyboard */; };
 		FFF0128E1EA5638F00D9D9DD /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFF0128D1EA5638F00D9D9DD /* images.xcassets */; };
@@ -567,6 +570,9 @@
 		FFDECE031D088FA600434001 /* SBALoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBALoginStep.swift; sourceTree = "<group>"; };
 		FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEmailVerificationStep.swift; sourceTree = "<group>"; };
 		FFDECE071D08D0BC00434001 /* SBAConsentReviewStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBAConsentReviewStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityIntroductionStepViewController.swift; sourceTree = "<group>"; };
+		FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBATaskReference.swift; sourceTree = "<group>"; };
+		FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBATaskReference+Dictionary.swift"; sourceTree = "<group>"; };
 		FFF012891EA182AE00D9D9DD /* SBAAccountStepController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAccountStepController.swift; sourceTree = "<group>"; };
 		FFF0128B1EA55FCE00D9D9DD /* SignUp.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SignUp.storyboard; sourceTree = "<group>"; };
 		FFF0128D1EA5638F00D9D9DD /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
@@ -688,6 +694,8 @@
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
 				FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */,
 				FF3E30541D5A806C00347165 /* SBASurveyTask.swift */,
+				FFF0124A1EA0199700D9D9DD /* SBATaskReference.swift */,
+				FFF0124C1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift */,
 			);
 			name = TasksAndSteps;
 			sourceTree = "<group>";
@@ -714,6 +722,7 @@
 				FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */,
 				FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */,
 				FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */,
+				FFF012381EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -1329,6 +1338,7 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 4B822CZK9N;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1357,12 +1367,12 @@
 					FF86303E1E709C9D0077AC57 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					FF86304A1E709C9E0077AC57 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1602,9 +1612,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */,
 				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
+				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
 				FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
@@ -1648,6 +1660,7 @@
 				FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */,
 				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
+				FFF0124D1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift in Sources */,
 				FF14A0F91E9C1BA2007BB710 /* SBASignUpViewController.swift in Sources */,
 				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
@@ -2170,7 +2183,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -2191,7 +2205,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -2258,6 +2273,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -2276,6 +2292,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
@@ -2297,6 +2314,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -2321,6 +2340,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -2340,6 +2361,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -2360,6 +2383,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
