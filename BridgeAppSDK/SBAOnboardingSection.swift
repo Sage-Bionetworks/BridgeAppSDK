@@ -172,6 +172,17 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
     }
 }
 
+extension SBAOnboardingSectionType: Hashable {
+    public var hashValue: Int {
+        switch (self) {
+        case (.base(let value)):
+            return value.hashValue;
+        case (.custom(let value)):
+            return value.hashValue;
+        }
+    }
+}
+
 /**
  Protocol for defining an onboarding section.
  */

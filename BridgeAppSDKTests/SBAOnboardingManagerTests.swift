@@ -277,6 +277,213 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(step.identifier, "permissions")
     }
     
+    func testCreateTask_SignUp_Row0() {
+        guard let manager = MockOnboardingManager(jsonNamed: "Onboarding") else { return }
+        
+        guard let task = manager.createTask(for: .signup, tableRow: 0) else {
+            XCTAssert(false, "Created task is nil")
+            return
+        }
+        print(task)
+        
+        let expectedCount = 7
+        XCTAssertEqual(task.steps.count, expectedCount)
+        guard task.steps.count == expectedCount else {
+            XCTAssert(false, "Exit early b/c step count doesn't match expected")
+            return
+        }
+        
+        var ii = 0
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "eligibility")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "consent")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "registration")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is ORKPasscodeStep)
+        XCTAssertEqual(task.steps[ii].identifier, "passcode")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBAEmailVerificationStep)
+        XCTAssertEqual(task.steps[ii].identifier, "emailVerification")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBAPermissionsStep)
+        XCTAssertEqual(task.steps[ii].identifier, "permissions")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "profile")
+    }
+    
+    func testCreateTask_SignUp_Row2() {
+        guard let manager = MockOnboardingManager(jsonNamed: "Onboarding") else { return }
+        
+        guard let task = manager.createTask(for: .signup, tableRow: 2) else {
+            XCTAssert(false, "Created task is nil")
+            return
+        }
+        print(task)
+        
+        let expectedCount = 5
+        XCTAssertEqual(task.steps.count, expectedCount)
+        guard task.steps.count == expectedCount else {
+            XCTAssert(false, "Exit early b/c step count doesn't match expected")
+            return
+        }
+        
+        var ii = 0
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "registration")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is ORKPasscodeStep)
+        XCTAssertEqual(task.steps[ii].identifier, "passcode")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBAEmailVerificationStep)
+        XCTAssertEqual(task.steps[ii].identifier, "emailVerification")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBAPermissionsStep)
+        XCTAssertEqual(task.steps[ii].identifier, "permissions")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "profile")
+    }
+    
+    func testSignupState() {
+        guard let manager = MockOnboardingManager(jsonNamed: "Onboarding") else { return }
+        
+        let eligibilityState1 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState1, .current)
+        
+        let consentState1 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState1, .locked)
+        
+        let registrationState1 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState1, .locked)
+        
+        let profileState1 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState1, .locked)
+        
+        // For any step in the consent flow except the last, then the consent is the current section
+        manager.sharedUser.onboardingStepIdentifier = "eligibility.eligibleInstruction"
+        
+        let eligibilityState2 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState2, .completed)
+        
+        let consentState2 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState2, .current)
+        
+        let registrationState2 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState2, .locked)
+        
+        let profileState2 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState2, .locked)
+
+        // Once we enter the consent flow then that becomes the current section
+        manager.sharedUser.onboardingStepIdentifier = "consent.consentVisual"
+        
+        let eligibilityState3 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState3, .completed)
+        
+        let consentState3 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState3, .current)
+        
+        let registrationState3 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState3, .locked)
+        
+        let profileState3 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState3, .locked)
+        
+        // For any step in the consent flow except the last, then the consent is the current section
+        manager.sharedUser.onboardingStepIdentifier = "consent.consentCompletion"
+        
+        let eligibilityState4 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState4, .completed)
+        
+        let consentState4 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState4, .completed)
+        
+        let registrationState4 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState4, .current)
+        
+        let profileState4 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState4, .locked)
+ 
+        // Set the steps to the registration section
+        manager.sharedUser.onboardingStepIdentifier = "registration.registration"
+        
+        let eligibilityState5 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState5, .completed)
+        
+        let consentState5 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState5, .completed)
+        
+        let registrationState5 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState5, .current)
+        
+        let profileState5 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState5, .locked)
+        
+        // For registration, there isn't a completion step and the final step is email verification
+        // so the current section remains the email verification *until* login is verified
+        manager.sharedUser.isRegistered = true
+        manager.sharedUser.isLoginVerified = false
+        manager.sharedUser.isConsentVerified = false
+        manager.sharedUser.onboardingStepIdentifier = "emailVerification"
+        
+        let eligibilityState6 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState6, .completed)
+        
+        let consentState6 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState6, .completed)
+        
+        let registrationState6 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState6, .current)
+        
+        let profileState6 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState6, .locked)
+        
+        // Once login and consent are verified, then ready for the profile section
+        manager.sharedUser.isLoginVerified = true
+        manager.sharedUser.isConsentVerified = true
+        
+        let eligibilityState7 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState7, .completed)
+        
+        let consentState7 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState7, .completed)
+        
+        let registrationState7 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState7, .completed)
+        
+        let profileState7 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState7, .current)
+
+        manager.sharedUser.onboardingStepIdentifier = "SBAOnboardingCompleted"
+        
+        let eligibilityState8 = manager.signupState(for: 0)
+        XCTAssertEqual(eligibilityState8, .completed)
+        
+        let consentState8 = manager.signupState(for: 1)
+        XCTAssertEqual(consentState8, .completed)
+        
+        let registrationState8 = manager.signupState(for: 2)
+        XCTAssertEqual(registrationState8, .completed)
+        
+        let profileState8 = manager.signupState(for: 3)
+        XCTAssertEqual(profileState8, .completed)
+    }
+
     func checkOnboardingSteps(_ sectionType: SBAOnboardingSectionType, _ taskType: SBAOnboardingTaskType) -> [ORKStep]? {
         
         let manager = MockOnboardingManager(jsonNamed: "Onboarding")

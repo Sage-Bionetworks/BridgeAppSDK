@@ -91,16 +91,10 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
      @param  onboardingTaskType     The task type for this view controller
      @return                        A new task view controller
     */
-    open func initializeTaskViewController(for onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
-        guard let sections = self.sections else { return nil }
-        
-        // Get the steps from the sections
-        let steps: [ORKStep] = sections.mapAndFilter({
-            self.steps(for: $0, with: onboardingTaskType)
-        }).flatMap({$0})
+    open func initializeTaskViewController(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int = 0) -> SBATaskViewController? {
+        guard let task = self.createTask(for: onboardingTaskType, tableRow: tableRow) else { return nil }
         
         // Create the task view controller
-        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.identifier, steps: steps)
         let taskViewController = SBATaskViewController(task: task, taskRun: nil)
         
         // by default, attach self to the task view controller as a strong reference
@@ -123,6 +117,66 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     */
     open func section(for sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
         return self.sections?.find({ $0.onboardingSectionType == sectionType })
+    }
+    
+    /**
+     Create the task for the given onboarding type. By default, this method will flatten the steps
+     (for reverse-compatibility to older applications) if and only if there are no table rows. If
+     there are table rows, then it is assumed that the onboarding is implemented using a 
+     `SBASignUpViewController` which requires a different implementation.
+     
+     @param onboardingTaskType  The onboarding type (signup, login, or reconsent)
+     @param tableRow            The current state of onboarding signup
+     @return                    The navigable task (or nil if failed to create)
+     */
+    open func createTask(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int = 0) -> SBANavigableOrderedTask? {
+        guard let sections = self.sections else { return nil }
+        
+        let steps: [ORKStep] = {
+            if self.tableRows != nil {
+                // Get the steps as subtask steps for each section
+                return self.steps(for: onboardingTaskType, tableRow: tableRow)
+            }
+            else {
+                // Get the steps from the sections
+                return sections.mapAndFilter({
+                    self.steps(for: $0, with: onboardingTaskType)
+                }).flatMap({$0})
+            }
+        }()
+        
+        // Create the task view controller
+        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.identifier, steps: steps)
+        return task
+    }
+    
+    fileprivate func steps(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int) -> [ORKStep] {
+        guard let tableRows = self.tableRows else { return [] }
+        let mapping = sectionStepMapping(for: onboardingTaskType)
+        return tableRows.enumerated().mapAndFilter({ (offset: Int, row: SBAOnboardingTableRow) -> [ORKStep]? in
+            guard offset >= tableRow else { return nil }
+            return row.onboardingSectionTypes.mapAndFilter({ mapping[$0] })
+        }).flatMap({$0})
+    }
+    
+    fileprivate func sectionStepMapping(for onboardingTaskType: SBAOnboardingTaskType) -> [SBAOnboardingSectionType : ORKStep] {
+        guard let sections = self.sections else { return [:] }
+        var mapping: [SBAOnboardingSectionType : ORKStep] = [:]
+        for section in sections {
+            if let sectionType = section.onboardingSectionType,
+                let substeps = self.steps(for: section, with: onboardingTaskType), substeps.count > 0 {
+                mapping[sectionType] = {
+                    if substeps.count > 1 {
+                        let subtask = SBANavigableOrderedTask(identifier: sectionType.identifier, steps: substeps)
+                        return SBASubtaskStep(subtask: subtask)
+                    }
+                    else {
+                        return substeps.first!
+                    }
+                }()
+            }
+        }
+        return mapping
     }
     
     /**
@@ -241,19 +295,60 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     // MARK: Display data source
     
-    open func numberOfSteps(for sectionTypes:[SBAOnboardingSectionType]) -> Int {
+    fileprivate var signupStepMapping: [[ORKStep]] = []
+    
+    open func numberOfSteps(for tableRow: Int) -> Int {
         // TODO: syoung 04/12/2017 Implement
         return 0
     }
     
-    open func signupState(for sectionTypes:[SBAOnboardingSectionType]) -> SBASignUpState {
-        // TODO: syoung 04/12/2017 Implement
-        return .locked
-    }
-    
-    open func isSignupCompleted() -> Bool {
-        // TODO: syoung 04/17/2017 Implement
-        return false
+    open func signupState(for tableRow: Int) -> SBASignUpState {
+        guard let currentStepIdentifier = self.sharedUser.onboardingStepIdentifier, let tableRows = self.tableRows else {
+            return (tableRow == 0) ? .current : .locked
+        }
+        
+        // setup the step mapping if the number of elements doesn't match
+        if signupStepMapping.count != tableRows.count {
+            self.signupStepMapping = {
+                let mapping = self.sectionStepMapping(for: .signup)
+                return tableRows.map { $0.onboardingSectionTypes.mapAndFilter { mapping[$0] } }
+            }()
+        }
+        
+        // look for the current row
+        let currentRow: Int = {
+            for (row, _) in tableRows.enumerated() {
+                for step in signupStepMapping[row] {
+                    if currentStepIdentifier.hasPrefix(step.identifier) {
+                        // Found the section that the current step is in
+                        if step == signupStepMapping[row].last {
+                            // If this is the last step then look to see if this is a step that requires special-casing.
+                            let currentStep: ORKStep? = {
+                                if let subtaskStep = step as? SBASubtaskStep {
+                                    return subtaskStep.isLast(with: currentStepIdentifier)
+                                }
+                                else {
+                                    return step
+                                }
+                            }()
+                            if currentStep is SBAEmailVerificationStep {
+                                return self.sharedUser.isLoginVerified ? row + 1 : row
+                            }
+                            else if currentStep is ORKInstructionStep {
+                                return row + 1
+                            }
+                        }
+                        return row
+                    }
+                }
+            }
+            return tableRows.count
+        }()
+        
+        
+        
+        
+        return (currentRow < tableRow) ? .locked : (currentRow == tableRow) ? .current : .completed
     }
 
     // MARK: SBASharedInfoController
@@ -342,4 +437,14 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         return steps(for: section, with: onboardingTaskType)
     }
 
+}
+
+extension SBASubtaskStep {
+    func isLast(with stepIdentifier: String) -> ORKStep? {
+        guard let step = self.step(withIdentifier: stepIdentifier) else {
+            return nil
+        }
+        let next: ORKStep? = self.stepAfterStep(step, withResult: ORKTaskResult(identifier: self.identifier))
+        return (next == nil) ? step : nil
+    }
 }

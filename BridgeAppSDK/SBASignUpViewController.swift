@@ -78,7 +78,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
             return String.localizedStringWithFormat(Localization.localizedString("GREETING_WITH_NAME_%@"), name)
         }()
         
-        let signupCompleted = onboardingManager.isSignupCompleted()
+        let signupCompleted = (self.sharedUser.onboardingStepIdentifier == SBAOnboardingManager.completedIdentifier)
         self.cancelButtonView?.isHidden = signupCompleted
         self.startButtonView?.isHidden = !signupCompleted
         self.instructionLabel?.text = signupCompleted ? onboardingManager.tableHeader?.completedText : onboardingManager.tableHeader?.initialText
@@ -114,10 +114,10 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         cell.titleLabel.text = item.title
         cell.detailLabel.text = item.text
         
-        let signupState = self.onboardingManager.signupState(for: item.onboardingSectionTypes)
+        let signupState = self.onboardingManager.signupState(for: row)
         
         // Set up the number of steps
-        let numSteps = self.onboardingManager.numberOfSteps(for: item.onboardingSectionTypes)
+        let numSteps = self.onboardingManager.numberOfSteps(for: row)
         let formatter = NumberFormatter()
         formatter.numberStyle = .none
         if (signupState != .completed), numSteps > 0, let numStepsString = formatter.string(for: numSteps) {
@@ -148,8 +148,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
      @return     Whether or not the row can be selected
      */
     open func canSelectRow(_ row : Int) -> Bool {
-        guard let item = self.item(at: row) else { return false }
-        return self.onboardingManager.signupState(for: item.onboardingSectionTypes) == .current
+        return self.onboardingManager.signupState(for: row) == .current
     }
     
     /**
@@ -158,7 +157,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
      @param row  The row for the cell
      */
     open func didSelectRow(_ row : Int) {
-        guard let taskViewController = onboardingManager.initializeTaskViewController(for: .signup)
+        guard let taskViewController = onboardingManager.initializeTaskViewController(for: .signup, tableRow: row)
         else {
             assertionFailure("Failed to create an onboarding manager.")
             return
@@ -193,7 +192,15 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+        if reason == .completed {
+            // If the flow was completed then set the completion identifier for the onboarding step
+            self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+        }
+        else if reason == .failed, let err = error as? SBAProfileInfoOptionsError, err == .notConsented {
+            // If the user declined consent then need to reset the stored user data and the onboarding steps
+            self.sharedUser.resetStoredUserData()
+            self.sharedUser.onboardingStepIdentifier = nil
+        }
         taskViewController.dismiss(animated: true, completion: nil)
     }
     
