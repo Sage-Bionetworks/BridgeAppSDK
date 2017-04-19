@@ -42,19 +42,7 @@ import ResearchKit
  the methods defined by this protocol.
  */
 @objc
-public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeErrorUIDelegate, SBAAlertPresenter {
-    
-    // Start-up permissions
-    @available(*, deprecated, message:"Use `permissionTypeItems` on `SBABridgeInfo` instead.")
-    @objc optional
-    var requiredPermissions: SBAPermissionsType { get }
-    
-    // Resource handling
-    func resourceBundle() -> Bundle
-    func path(forResource resourceName: String, ofType resourceType: String) -> String?
-    
-    // Show the appropriate view controller
-    func showAppropriateViewController(animated: Bool)
+public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDelegate, SBBBridgeErrorUIDelegate, SBAAlertPresenter, SBAOnboardingAppDelegate {
 }
 
 /**
@@ -62,6 +50,12 @@ public protocol SBABridgeAppSDKDelegate : UIApplicationDelegate, SBAAppInfoDeleg
  (See Onboarding.json in the sample app for an example.)
  */
 public let SBAOnboardingJSONFilename = "Onboarding"
+
+/**
+ Default name for the storyboard that defines the view controllers to display to a new user
+ who has started the onboarding sign up process.
+ */
+public let SBASignUpStoryboardName = "SignUp"
 
 /**
  Default name for the storyboard that defines the view controllers to display to a new user
@@ -79,8 +73,9 @@ public let SBAStudyOverviewStoryboardName = "StudyOverview"
  */
 public let SBAMainStoryboardName = "Main"
 
+
 @UIApplicationMain
-@objc open class SBAAppDelegate: UIResponder, SBABridgeAppSDKDelegate, ORKPasscodeDelegate, ORKTaskViewControllerDelegate  {
+@objc open class SBAAppDelegate: UIResponder, SBABridgeAppSDKDelegate, ORKPasscodeDelegate, ORKTaskViewControllerDelegate {
     
     open var window: UIWindow?
     
@@ -223,11 +218,14 @@ public let SBAMainStoryboardName = "Main"
             if (self.catastrophicStartupError != nil) {
                 return .catastrophicError
             }
+            else if (self.currentUser.onboardingStepIdentifier != nil) {
+                return .signup
+            }
             else if (self.currentUser.isLoginVerified) {
                 return .main
             }
             else {
-                return .onboarding
+                return .studyOverview
             }
         }()
         
@@ -237,8 +235,10 @@ public let SBAMainStoryboardName = "Main"
                 showCatastrophicStartupErrorViewController(animated: animated)
             case .main:
                 showMainViewController(animated: animated)
-            case .onboarding:
-                showOnboardingViewController(animated: animated)
+            case .signup:
+                showSignUpViewController(animated: animated)
+            case .studyOverview:
+                showStudyOverviewViewController(animated: animated)
             default: break
             }
         }
@@ -253,21 +253,30 @@ public let SBAMainStoryboardName = "Main"
         if (self.currentUser.isLoginVerified && !self.currentUser.isConsentVerified) {
             presentOnboarding(for: .reconsent)
         }
-        else if (!self.currentUser.isLoginVerified && self.currentUser.isRegistered) {
-            presentOnboarding(for: .registration)
+        else if (!self.currentUser.isLoginVerified &&
+            self.currentUser.isRegistered) &&
+            (self.rootViewController?.state == .studyOverview) {
+            // If this app uses the signup view, then let that view control the flow
+            presentOnboarding(for: .signup)
         }
+    }
+    
+    @available(*, unavailable, message:"Use `showStudyOverviewViewController(animated:)` instead.")
+    public final func showOnboardingViewController(animated: Bool) {
+        showStudyOverviewViewController(animated: animated)
     }
     
     /**
      Method for showing the study overview (onboarding) for a user who is not signed in.
-     By default, this method looks for a storyboard named "StudyOverview" that is included 
+     By default, this method looks for a storyboard named "StudyOverview" that is included
      in the main bundle.
      
      @param animated  Should the transition be animated
-    */
-    open func showOnboardingViewController(animated: Bool) {
+     */
+    open func showStudyOverviewViewController(animated: Bool) {
         // Check that not already showing onboarding
-        guard self.rootViewController?.state != .onboarding else { return }
+        guard self.rootViewController?.state != .studyOverview else { return }
+        
         // Get the default storyboard
         guard let storyboard = openStoryboard(SBAStudyOverviewStoryboardName),
             let vc = storyboard.instantiateInitialViewController()
@@ -275,7 +284,23 @@ public let SBAMainStoryboardName = "Main"
                 assertionFailure("Failed to load onboarding storyboard. If default onboarding is used, the storyboard should be implemented at the app level.")
                 return
         }
-        transition(toRootViewController: vc, state: .onboarding, animated: animated)
+        
+        transition(toRootViewController: vc, state: .studyOverview, animated: animated)
+    }
+    
+    open func showSignUpViewController(animated: Bool) {
+        // Check that not already showing sign up
+        guard self.rootViewController?.state != .signup else { return }
+        
+        // Get the default storyboard
+        guard let storyboard = openStoryboard(SBASignUpStoryboardName),
+            let vc = storyboard.instantiateInitialViewController()
+            else {
+                showStudyOverviewViewController(animated: animated)
+                return
+        }
+        
+        transition(toRootViewController: vc, state: .signup, animated: animated)
     }
     
     /**
@@ -372,9 +397,9 @@ public let SBAMainStoryboardName = "Main"
      
      @param onboardingTaskType  `SBAOnboardingTaskType` for which to get the manager. (Ingored by default)
     */
-    open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType) -> SBAOnboardingManager? {
+    open func onboardingManager(for onboardingTaskType: SBAOnboardingTaskType) -> SBAOnboardingManager {
         // By default, the onboarding manager returns an onboarding manager for
-        return SBAOnboardingManager(jsonNamed: SBAOnboardingJSONFilename)
+        return SBAOnboardingManager(jsonNamed: SBAOnboardingJSONFilename)!
     }
     
     /**
@@ -385,8 +410,8 @@ public let SBAMainStoryboardName = "Main"
     */
     open func presentOnboarding(for onboardingTaskType: SBAOnboardingTaskType) {
         guard shouldShowOnboarding() else { return }
-        guard let onboardingManager = onboardingManager(for: onboardingTaskType),
-            let taskViewController = onboardingManager.initializeTaskViewController(for: onboardingTaskType)
+        let onboardingManager = self.onboardingManager(for: onboardingTaskType)
+        guard let taskViewController = onboardingManager.initializeTaskViewController(for: onboardingTaskType)
         else {
             assertionFailure("Failed to create an onboarding manager.")
             return
@@ -505,7 +530,8 @@ public let SBAMainStoryboardName = "Main"
      Default "main" resource bundle. This allows the application to specific a different bundle
      for a given resource by overriding this method in the app delegate.
     */
-    open func resourceBundle() -> Bundle {
+    @available(*, deprecated, message:"Use `resourceBundles` on `SBABridgeManager` instead.")
+    public final func resourceBundle() -> Bundle {
         return Bundle.main
     }
     
@@ -513,7 +539,8 @@ public let SBAMainStoryboardName = "Main"
      Default path to a resource. This allows the application to specific fine-grain control over
      where to search for a given resource. By default, this will look in the main bundle.
     */
-    open func path(forResource resourceName: String, ofType resourceType: String) -> String? {
+    @available(*, deprecated, message:"Use `resourceBundles` on `SBABridgeManager` instead.")
+    public final func path(forResource resourceName: String, ofType resourceType: String) -> String? {
         return self.resourceBundle().path(forResource: resourceName, ofType: resourceType)
     }
     
@@ -522,6 +549,13 @@ public let SBAMainStoryboardName = "Main"
     // ------------------------------------------------
 
     private weak var passcodeViewController: UIViewController?
+    
+    /**
+     Is the passcode blocking?
+     */
+    open func isShowingPasscode() -> Bool {
+        return (self.passcodeViewController != nil)
+    }
     
     /**
      Should the passcode be displayed. By default, if there isn't a catasrophic error,

@@ -45,17 +45,6 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
     var sessionToken: String? { get set }
 
     /**
-     * Name is stored in the keychain. This can either be the full name or
-     * the given name for the user. (First name in Western cultures)
-     */
-    var name: String? { get set }
-    
-    /**
-     * Family name is stored in the keychain. (Optional)
-     */
-    var familyName: String? { get set }
-
-    /**
      * Email is stored in the keychain.
      */
     var email: String? { get set }
@@ -77,11 +66,6 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
      * appropriate language to use for this field. Stored in the keychain.
      */
     var gender: HKBiologicalSex { get set }
-    
-    /**
-     * Birthdate is stored in the keychain
-     */
-    var birthdate: Date? { get set }
 
     /**
      * Subpopulation GUID is used for tracking by certain apps. Stored in the keychain.
@@ -139,6 +123,7 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
      Reset the user's keychain
      */
     func resetStoredUserData()
+    
 }
 
 extension SBAUserWrapper {

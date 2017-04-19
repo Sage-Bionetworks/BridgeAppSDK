@@ -60,6 +60,24 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
         return self.dataGroups?.contains(SBATestDataGroup) ?? false
     }
     
+    public func setStoredAnswer(_ storedAnswer: Any?, forKey key: String) {
+        if self.keychainPropertyKeys.contains(key) {
+            setKeychainObject(storedAnswer as? NSSecureCoding, key: key)
+        }
+        else {
+            syncSetObject(storedAnswer, forKey: key)
+        }
+    }
+
+    public func storedAnswer(for key: String) -> Any? {
+        if self.keychainPropertyKeys.contains(key) {
+            return getKeychainObject(key)
+        }
+        else {
+            return syncObjectForKey(key)
+        }
+    }
+    
     // --------------------------------------------------
     // MARK: Keychain storage
     // --------------------------------------------------
@@ -83,6 +101,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     let kGenderKey = "gender"
     let kBirthdateKey = "birthdate"
     let kProfileImagePropertyKey = "profileImage"
+    let keychainPropertyKeys = ["externalId", "gender", "birthdate", "profileImage"]
     
     public var sessionToken: String? {
         get {
@@ -315,6 +334,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     let kRegisteredKey = "SignedUp"
     let kLoginVerifiedKey = "SignedIn"
     let kConsentVerifiedKey = "isConsentVerified"
+    let kEligibilityVerifiedKey = "isEligibilityVerified"
     let kSavedDataGroupsKey = "SavedDataGroups"
     let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
@@ -346,7 +366,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
             syncSetBool(newValue, forKey: kConsentVerifiedKey)
         }
     }
-    
+
     public var isDataSharingEnabled: Bool {
         get {
             return syncBoolForKey(kDataSharingEnabledKey)
@@ -415,15 +435,15 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
         }
     }
     
-    fileprivate func syncObjectForKey(_ key: String) -> AnyObject? {
-        var ret: AnyObject?
+    fileprivate func syncObjectForKey(_ key: String) -> Any? {
+        var ret: Any?
         lockQueue.sync {
-            ret = self.userDefaults().object(forKey: key) as AnyObject?
+            ret = self.userDefaults().object(forKey: key)
         }
         return ret
     }
     
-    fileprivate func syncSetObject(_ value:AnyObject?, forKey key: String) {
+    fileprivate func syncSetObject(_ value:Any?, forKey key: String) {
         lockQueue.async {
             if let obj = value {
                 self.userDefaults().set(obj, forKey: key)

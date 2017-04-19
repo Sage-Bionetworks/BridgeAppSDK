@@ -148,8 +148,6 @@ public enum SBAOnboardingSectionType {
         return nil
     }
     
-    
-    
     public var identifier: String {
         switch (self) {
         case .base(let baseType):
@@ -171,6 +169,17 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
         return lhsValue == rhsValue;
     default:
         return false
+    }
+}
+
+extension SBAOnboardingSectionType: Hashable {
+    public var hashValue: Int {
+        switch (self) {
+        case (.base(let value)):
+            return value.hashValue;
+        case (.custom(let value)):
+            return value.hashValue;
+        }
     }
 }
 

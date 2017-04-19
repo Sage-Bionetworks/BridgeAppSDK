@@ -2,7 +2,7 @@
 //  SBAOnboardingManager.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2016-2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,32 +35,26 @@ import Foundation
 import ResearchKit
 
 /**
- The reason why the user is being onboarded.
+ Extend the onboarding task type to include a method for defining all the onboarding flows.
  */
-public enum SBAOnboardingTaskType: String {
-    
-    /**
-     New participant who needs to be registered and (if applicable) consented.
-    */
-    case registration   = "registration"
-    
-    /**
-     Existing participant who is signing in with an existing account that needs
-     to login on a new device.
-    */
-    case login          = "login"
-    
-    /**
-     An existing participant who is signed in but has not consented to a new 
-     consent that is required (due to changes in the IRB).
-    */
-    case reconsent      = "reconsent"
+extension SBAOnboardingTaskType {
     
     /**
      List of all the types.
-    */
+     */
     public static var all: [SBAOnboardingTaskType] {
-        return [.registration, .login, .reconsent]
+        return [.signup, .login, .reconsent]
+    }
+    
+    public var identifier: String {
+        switch self {
+        case .signup:
+            return "signup"
+        case .login:
+            return "login"
+        case .reconsent:
+            return "reconsent"
+        }
     }
 }
 
@@ -70,7 +64,11 @@ public enum SBAOnboardingTaskType: String {
  */
 open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResultSource, SBATaskViewControllerStrongReference {
     
+    static let completedIdentifier = "SBAOnboardingCompleted"
+    
     open var sections: [SBAOnboardingSection]?
+    open var tableRows: [SBAOnboardingTableRow]?
+    open var tableHeader: SBAOnboardingTableHeader?
 
     public override init() {
         super.init()
@@ -83,9 +81,9 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     
     public convenience init(dictionary: NSDictionary) {
         self.init()
-        self.sections = (dictionary["sections"] as? [AnyObject])?.map({ (obj) -> SBAOnboardingSection in
-            return obj as! SBAOnboardingSection
-        }).sorted(by: { sortOrder($0, $1) })
+        self.sections = (dictionary["sections"] as? [NSDictionary])?.sorted(by: { sortOrder($0, $1) })
+        self.tableRows = dictionary["tableRows"] as? [NSDictionary]
+        self.tableHeader = dictionary["tableHeader"] as? NSDictionary
     }
     
     /**
@@ -93,16 +91,10 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
      @param  onboardingTaskType     The task type for this view controller
      @return                        A new task view controller
     */
-    open func initializeTaskViewController(for onboardingTaskType: SBAOnboardingTaskType) -> SBATaskViewController? {
-        guard let sections = self.sections else { return nil }
-        
-        // Get the steps from the sections
-        let steps: [ORKStep] = sections.mapAndFilter({
-            self.steps(for: $0, with: onboardingTaskType)
-        }).flatMap({$0})
+    open func initializeTaskViewController(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int = 0) -> SBATaskViewController? {
+        guard let task = self.createTask(for: onboardingTaskType, tableRow: tableRow) else { return nil }
         
         // Create the task view controller
-        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.rawValue, steps: steps)
         let taskViewController = SBATaskViewController(task: task, taskRun: nil)
         
         // by default, attach self to the task view controller as a strong reference
@@ -128,6 +120,78 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     }
     
     /**
+     Create the task for the given onboarding type. By default, this method will flatten the steps
+     (for reverse-compatibility to older applications) if and only if there are no table rows. If
+     there are table rows, then it is assumed that the onboarding is implemented using a 
+     `SBASignUpViewController` which requires a different implementation.
+     
+     @param onboardingTaskType  The onboarding type (signup, login, or reconsent)
+     @param tableRow            The current state of onboarding signup
+     @return                    The navigable task (or nil if failed to create)
+     */
+    open func createTask(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int = 0) -> SBANavigableOrderedTask? {
+        guard let sections = self.sections else { return nil }
+        
+        let steps: [ORKStep] = {
+            if self.tableRows != nil {
+                // Get the steps as subtask steps for each section
+                return self.steps(for: onboardingTaskType, tableRow: tableRow)
+            }
+            else {
+                // Get the steps from the sections
+                return sections.mapAndFilter({
+                    self.steps(for: $0, with: onboardingTaskType)
+                }).flatMap({$0})
+            }
+        }()
+        
+        // Create the task view controller
+        let task = SBANavigableOrderedTask(identifier: onboardingTaskType.identifier, steps: steps)
+        return task
+    }
+    
+    fileprivate func steps(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int) -> [ORKStep] {
+        guard let tableRows = self.tableRows else { return [] }
+        let mapping = sectionStepMapping(for: onboardingTaskType)
+        return tableRows.enumerated().mapAndFilter({ (offset: Int, row: SBAOnboardingTableRow) -> [ORKStep]? in
+            guard offset >= tableRow else { return nil }
+            return row.onboardingSectionTypes.mapAndFilter({ mapping[$0] })
+        }).flatMap({$0})
+    }
+    
+    fileprivate func sectionStepMapping(for onboardingTaskType: SBAOnboardingTaskType) -> [SBAOnboardingSectionType : ORKStep] {
+        guard let sections = self.sections else { return [:] }
+        var mapping: [SBAOnboardingSectionType : ORKStep] = [:]
+        for section in sections {
+            if let sectionType = section.onboardingSectionType,
+                let substeps = self.steps(for: section, with: onboardingTaskType), substeps.count > 0 {
+                mapping[sectionType] = {
+                    if substeps.count > 1 {
+                        let subtask = SBANavigableOrderedTask(identifier: sectionType.identifier, steps: substeps)
+                        return SBASubtaskStep(subtask: subtask)
+                    }
+                    else {
+                        return substeps.first!
+                    }
+                }()
+            }
+        }
+        return mapping
+    }
+    
+    /**
+     Allows subclasses of the onboarding manager to vend a different survey factory. By default, this will return the default
+     factory as defined by the onboarding section.
+     
+     @param     section                 The onboarding section
+     @param     onboardingTaskType      The task type
+     @return                            Survey Factory
+     */
+    open func factory(for section: SBAOnboardingSection, with onboardingTaskType: SBAOnboardingTaskType) -> SBASurveyFactory {
+        return section.defaultOnboardingSurveyFactory()
+    }
+    
+    /**
      Get the steps that should be included for a given `SBAOnboardingSection` and `SBAOnboardingTaskType`.
      By default, this will return the steps created using the default onboarding survey factory for that section
      or nil if the steps for that section should not be included for the given task.
@@ -142,7 +206,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         guard shouldInclude(section: section, onboardingTaskType: onboardingTaskType) else { return nil }
         
         // Get the default factory
-        let factory = section.defaultOnboardingSurveyFactory()
+        let factory = self.factory(for: section, with: onboardingTaskType)
         
         // For consent, need to filter out steps that should not be included and group the steps into a substep. 
         // This is to facilitate skipping reconsent for a user who is logging in where it is unknown whether
@@ -150,7 +214,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         // are immutable but can be skipped using navigation rules.
         if let baseType = section.onboardingSectionType?.baseType(), baseType == .consent {
             switch (onboardingTaskType) {
-            case .registration:
+            case .signup:
                 return [factory.registrationConsentStep()]
             case .login:
                 return [factory.loginConsentStep()]
@@ -193,22 +257,22 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         guard let baseType = section.onboardingSectionType?.baseType() else {
             // By default, ONLY Registration and verification should include any custom section
-            return onboardingTaskType == .registration
+            return onboardingTaskType == .signup
         }
         
         switch (baseType) {
             
         case .login:
             // Only Login includes login
-            return  onboardingTaskType == .login
+            return (onboardingTaskType == .login)
             
         case .consent:
             // All types *except* email verification include consent
-            return (onboardingTaskType != .registration) || !sharedUser.isRegistered
+            return (onboardingTaskType != .signup) || !sharedUser.isRegistered
             
         case .eligibility, .registration:
             // Intro, eligibility and registration are only included in registration
-            return (onboardingTaskType == .registration) && !sharedUser.isRegistered
+            return (onboardingTaskType == .signup) && !sharedUser.isRegistered
         
         case .passcode:
             // Passcode is included if it has not already been set
@@ -216,26 +280,82 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         case .emailVerification:
             // Only registration where the login has not been verified includes verification
-            return (onboardingTaskType == .registration) && !sharedUser.isLoginVerified
+            return (onboardingTaskType == .signup) && !sharedUser.isLoginVerified
         
         case .profile:
             // Additional profile information is included if this is a registration type
-            return (onboardingTaskType == .registration)
+            return (onboardingTaskType == .signup)
         
         case .permissions, .completion:
             // Permissions and completion are included for login and registration
-            return onboardingTaskType == .registration || onboardingTaskType == .login
+            return onboardingTaskType == .signup || onboardingTaskType == .login
 
         }
     }
     
+    // MARK: Display data source
     
+    fileprivate var signupStepMapping: [[ORKStep]] = []
+    
+    open func numberOfSteps(for tableRow: Int) -> Int {
+        // TODO: syoung 04/12/2017 Implement
+        return 0
+    }
+    
+    open func signupState(for tableRow: Int) -> SBASignUpState {
+        guard let currentStepIdentifier = self.sharedUser.onboardingStepIdentifier, let tableRows = self.tableRows else {
+            return (tableRow == 0) ? .current : .locked
+        }
+        
+        // setup the step mapping if the number of elements doesn't match
+        if signupStepMapping.count != tableRows.count {
+            self.signupStepMapping = {
+                let mapping = self.sectionStepMapping(for: .signup)
+                return tableRows.map { $0.onboardingSectionTypes.mapAndFilter { mapping[$0] } }
+            }()
+        }
+        
+        // look for the current row
+        let currentRow: Int = {
+            for (row, _) in tableRows.enumerated() {
+                for step in signupStepMapping[row] {
+                    if currentStepIdentifier.hasPrefix(step.identifier) {
+                        // Found the section that the current step is in
+                        if step == signupStepMapping[row].last {
+                            // If this is the last step then look to see if this is a step that requires special-casing.
+                            let currentStep: ORKStep? = {
+                                if let subtaskStep = step as? SBASubtaskStep {
+                                    return subtaskStep.isLast(with: currentStepIdentifier)
+                                }
+                                else {
+                                    return step
+                                }
+                            }()
+                            if currentStep is SBAEmailVerificationStep {
+                                return self.sharedUser.isLoginVerified ? row + 1 : row
+                            }
+                            else if currentStep is ORKInstructionStep {
+                                return row + 1
+                            }
+                        }
+                        return row
+                    }
+                }
+            }
+            return tableRows.count
+        }()
+        
+        
+        
+        
+        return (currentRow < tableRow) ? .locked : (currentRow == tableRow) ? .current : .completed
+    }
+
     // MARK: SBASharedInfoController
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-
     
     // MARK: Passcode handling
     
@@ -258,21 +378,17 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             nameResult.textAnswer = fullName
             return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
         }
-        
-        if let registrationStep = step as? SBARegistrationStep,
+        else if let registrationStep = step as? SBARegistrationStep,
             let givenName = sharedNameDataSource?.givenName,
-            let formItem = registrationStep.formItemForProfileInfoOption(.givenName) {
-            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
-            nameResult.textAnswer = givenName
-            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
-        }
-        
-        if let registrationStep = step as? SBARegistrationStep,
+            let givenFormItem = registrationStep.formItemForProfileInfoOption(.givenName),
             let familyName = sharedUser.familyName,
-            let formItem = registrationStep.formItemForProfileInfoOption(.familyName) {
-            let nameResult = ORKTextQuestionResult(identifier: formItem.identifier)
-            nameResult.textAnswer = familyName
-            return ORKStepResult(stepIdentifier: stepIdentifier, results: [nameResult])
+            let familyFormItem = registrationStep.formItemForProfileInfoOption(.familyName) {
+    
+            let givenNameResult = ORKTextQuestionResult(identifier: givenFormItem.identifier)
+            givenNameResult.textAnswer = givenName
+            let familyNameResult = ORKTextQuestionResult(identifier: familyFormItem.identifier)
+            familyNameResult.textAnswer = familyName
+            return ORKStepResult(stepIdentifier: stepIdentifier, results: [givenNameResult, familyNameResult])
         }
         
         return nil
@@ -321,4 +437,14 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         return steps(for: section, with: onboardingTaskType)
     }
 
+}
+
+extension SBASubtaskStep {
+    func isLast(with stepIdentifier: String) -> ORKStep? {
+        guard let step = self.step(withIdentifier: stepIdentifier) else {
+            return nil
+        }
+        let next: ORKStep? = self.stepAfterStep(step, withResult: ORKTaskResult(identifier: self.identifier))
+        return (next == nil) ? step : nil
+    }
 }

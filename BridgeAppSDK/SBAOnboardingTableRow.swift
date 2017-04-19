@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBAOnboardingTableRow.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,20 +31,41 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+/**
+ Protocol for defining an onboarding table row.
+ */
+public protocol SBAOnboardingTableRow: NSSecureCoding {
+    
+    /**
+     The onboarding section types that are included in this table row.
+     */
+    var onboardingSectionTypes: [SBAOnboardingSectionType] { get }
+    
+    /**
+     The title for the section.
+     */
+    var title: String { get }
+    
+    /**
+     The text to show in the table cell.
+     */
+    var text: String { get }
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADefines.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAOnboardingAppDelegate.h>
+extension NSDictionary: SBAOnboardingTableRow {
+    
+    public var onboardingSectionTypes: [SBAOnboardingSectionType] {
+        guard let onboardingTypes = self["sections"] as? [String] else { return [] }
+        return onboardingTypes.mapAndFilter({ SBAOnboardingSectionType(rawValue: $0) })
+    }
+    
+    public var title: String {
+        return self["title"] as! String
+    }
+    
+    public var text: String {
+        return self["text"] as! String
+    }
+}

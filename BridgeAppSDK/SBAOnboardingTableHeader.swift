@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBAOnboardingTableHeader.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,20 +31,31 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+/**
+ Protocol for defining an onboarding table header.
+ */
+public protocol SBAOnboardingTableHeader: NSSecureCoding {
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+    /**
+     The title for the section.
+     */
+    var initialText: String? { get }
+    
+    /**
+     The text to show in the table cell.
+     */
+    var completedText: String? { get }
+}
 
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADefines.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAOnboardingAppDelegate.h>
+extension NSDictionary: SBAOnboardingTableHeader {
+    
+    public var initialText: String? {
+        return self["initialText"] as? String
+    }
+    
+    public var completedText: String? {
+        return self["completedText"] as? String
+    }
+}

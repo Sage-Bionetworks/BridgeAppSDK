@@ -43,7 +43,10 @@ public enum SBARootViewControllerState: Int {
     case main
     
     // Study overview (onboarding) for the user who is *not* signed in
-    case onboarding
+    case studyOverview
+    
+    // Participant is currently in the eligibility, consent, and registration flow
+    case signup
     
     // Unrecoverable error state. Displayed when the app must be updated or has reached end-of-life
     case catastrophicError

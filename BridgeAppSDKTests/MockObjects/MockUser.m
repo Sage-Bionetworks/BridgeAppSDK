@@ -57,6 +57,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _mockBridgeInfo = [[MockBridgeInfo alloc] init];
+        _storedAnswers = [NSMutableDictionary new];
     }
     return self;
 }
@@ -107,5 +108,27 @@
     self.gender = 0;
     self.birthdate = nil;
 }
+    
+- (void)setStoredAnswer:(id)storedAnswer forKey:(NSString *)key {
+    [self setValue:storedAnswer forKey:key];
+}
+    
+- (id)storedAnswerForKey:(NSString *)key {
+    return [self valueForKey:key];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key {
+    return _storedAnswers[key];
+}
+    
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+    if (value) {
+        _storedAnswers[key] = value;
+    }
+    else {
+        [_storedAnswers removeObjectForKey:key];
+    }
+}
+   
 
 @end

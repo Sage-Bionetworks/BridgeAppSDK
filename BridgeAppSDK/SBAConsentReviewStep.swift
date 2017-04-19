@@ -171,35 +171,61 @@ open class SBAConsentReviewStep: ORKPageStep, SBAProfileInfoForm {
 }
 
 /**
- The `SBAConsentReviewResult` is used to store information about a result
- that is sent to the Bridge server.
+ Allow developers to create their own step view controllers that do not inherit from
+ `ORKPageStepViewController`.
  */
-open class SBAConsentReviewResult: ORKResult {
+public protocol SBAConsentReviewStepController: SBAOnboardingStepController {
     
-    open var consentSignature: SBAConsentSignature? {
-        get {
-            return self.userInfo?["consentSignature"] as? SBAConsentSignature
-        }
-        set(newValue) {
-            var info = self.userInfo ?? [:]
-            info["consentSignature"] = newValue
-            self.userInfo = info
-        }
-    }
+    var requiresSignature: Bool { get }
+    var consentAccepted: Bool? { get }
+    var signatureImage: UIImage? { get }
+    var signatureIdentifier: String { get }
+    var signatureDate: Date { get }
     
-    open var isConsented: Bool {
-        get {
-            return self.userInfo?["isConsented"] as? Bool ?? false
+    func handleConsentDeclined(with error: Error)
+    func goNext()
+}
+
+extension SBAConsentReviewStepController {
+    
+    public func consentUser() {
+        
+        // Check that the user has consented or fail with an error
+        guard (consentAccepted ?? false) && (!requiresSignature || (signatureImage != nil))
+        else {
+            self.handleConsentDeclined(with: SBAProfileInfoOptionsError.notConsented)
+            return
         }
-        set(newValue) {
-            var info = self.userInfo ?? [:]
-            info["isConsented"] = newValue
-            self.userInfo = info
+        
+        // set the consent to the shared user and update values from name/birthdate
+        let consentSignature = SBAConsentSignature(identifier: self.signatureIdentifier)
+        consentSignature.signatureDate = self.signatureDate
+        consentSignature.signatureImage = self.signatureImage
+        updateUserConsentSignature(consentSignature)
+        
+        // Update the user profile info
+        updateUserProfileInfo()
+        
+        if sharedUser.isLoginVerified {
+            // If the user has already verified login, then need to send reconsent info
+            self.showLoadingView()
+            sharedUser.sendUserConsented(consentSignature) { [weak self] error in
+                if let error = error {
+                    self?.handleFailedRegistration(error)
+                }
+                else {
+                    self?.goNext()
+                }
+            }
+        }
+        else {
+            // Otherwise, the consent will be verified later (after registration and email verification)
+            self.goNext()
         }
     }
 }
 
-open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASharedInfoController, SBAUserProfileController {
+open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBAConsentReviewStepController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
@@ -212,91 +238,41 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBASha
         return self.step as? SBAConsentReviewStep
     }
     
-    
-    
-    open override var result: ORKStepResult? {
-        guard let stepResult = super.result else { return nil }
-        guard let stepResults = stepResult.results else { return stepResult }
-        
-        // Create the consent result and signature
-        let consentResult = SBAConsentReviewResult(identifier: step!.identifier)
-        consentResult.startDate = stepResult.startDate
-        consentResult.endDate = stepResult.endDate
-        let signature = SBAConsentSignature(identifier: self.step?.identifier ?? SBAConsentReviewStep.signatureStepIdentifier)
-        var orkSignature: ORKConsentSignature?
-        let requiresSignature = (consentStep?.signatureStep != nil)
-        
-        // Look for all required steps to be filled
-        var found = false
-        for result in stepResults {
-            if let reviewResult = result as? ORKConsentSignatureResult {
-                // Not found yet if signature required and the user has consented (consent review displayed first)
-                found = !requiresSignature || !reviewResult.consented
-                consentResult.isConsented = reviewResult.consented
-                orkSignature = reviewResult.signature
-            }
-            else if let signatureResult = result as? ORKSignatureResult {
-                found = true
-                signature.signatureImage = signatureResult.signatureImage
-                signature.signatureDate = signatureResult.endDate
-                orkSignature?.signatureImage = signatureResult.signatureImage
-            }
-        }
-
-        // If everything is finished then add the consent result and signature
-        if (found) {
-            consentResult.consentSignature = signature
-            stepResult.addResult(consentResult)
-        }
-        
-        return stepResult
+    public var requiresSignature: Bool {
+        return (self.consentStep?.signatureStep != nil)
     }
     
-    public var consentReviewResult: SBAConsentReviewResult? {
-        return self.result?.results?.find({ $0 is SBAConsentReviewResult}) as? SBAConsentReviewResult
+    public var consentAccepted: Bool? {
+        let consentResult = self.result?.results?.find({ $0 is ORKConsentSignatureResult }) as? ORKConsentSignatureResult
+        return consentResult?.consented
+    }
+    
+    public var signatureImage: UIImage? {
+        let signatureResult = self.result?.results?.find({ $0 is ORKSignatureResult }) as? ORKSignatureResult
+        return signatureResult?.signatureImage
+    }
+    
+    public var signatureIdentifier: String {
+        return (self.step?.identifier ?? SBAConsentReviewStep.signatureStepIdentifier)
+    }
+    
+    public var signatureDate: Date {
+        return self.result?.startDate ?? Date()
+    }
+    
+    open func handleConsentDeclined(with error: Error) {
+        self.delegate?.stepViewControllerDidFail(self, withError: error)
     }
     
     // Override the default method for goForward and either consent or set the consent signature
     // if not yet registered. Do not allow subclasses to override this method
     final public override func goForward() {
-        
-        // Check that the user has consented or fail with an error
-        guard let consentResult = self.consentReviewResult, consentResult.isConsented,
-            let consentSignature = consentResult.consentSignature else {
-            let error = NSError(domain: "SBAConsentReviewStepDomain",
-                                code: -1,
-                                userInfo: [NSLocalizedDescriptionKey : Localization.localizedString("SBA_REGISTRATION_NOT_CONSENTED")])
-            self.delegate?.stepViewControllerDidFail(self, withError: error)
-            return
-        }
-        
-        // set the consent to the shared user and update values from name/birthdate
-        sharedUser.consentSignature = consentSignature
-        updateUserProfileInfo()
-        updateConsentSignature()
-        
-        if sharedUser.isLoginVerified {
-            // If the user has already verified login, then need to send reconsent info
-            self.showLoadingView()
-            sharedUser.sendUserConsented(consentSignature) { [weak self] error in
-                if let error = error {
-                    self?.handleFailedRegistration(error)
-                }
-                else {
-                    self?.goNext()
-                }
-            }            
-        }
-        else {
-            // Otherwise, the consent will be verified later (after registration and email verification)
-            self.goNext()
-        }
+        consentUser()
     }
     
     open func goNext() {
         // Then call super to go forward
         super.goForward()
     }
-    
 }
 

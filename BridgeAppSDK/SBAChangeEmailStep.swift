@@ -60,7 +60,7 @@ open class SBAChangeEmailStep: ORKFormStep {
  Allow developers to create their own step view controllers that do not inherit from
  `ORKFormStepViewController`.
  */
-public protocol SBAChangeEmailStepController: SBAUserProfileController {
+public protocol SBAChangeEmailStepController: SBAOnboardingStepController {
     func goNext()
 }
 

@@ -262,7 +262,8 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         nameResult.textAnswer = "John Jones"
         
         let birthResult = ORKDateQuestionResult(identifier: "name.birthdate")
-        birthResult.dateAnswer = Date(timeIntervalSince1970: 0)
+        let expectedBirthdate = Date(timeIntervalSince1970: 0)
+        birthResult.dateAnswer = expectedBirthdate
         
         let signatureResult = ORKSignatureResult(identifier: "signature.signature")
         signatureResult.signatureImage = UIImage()
@@ -275,20 +276,30 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
             birthResult,
             ORKResult(identifier: "step.signature"),
             signatureResult])
-        let viewController = step?.instantiateStepViewController(with: inputResult)
-        viewController?.goForward()
-        let outputResult = viewController?.result
+        let viewController = MockConsentReviewStepViewController(step: step!, result: inputResult)
         
-        XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
+        XCTAssertTrue(viewController.requiresSignature)
+        XCTAssertTrue(viewController.consentAccepted ?? false)
+        XCTAssertNotNil(viewController.signatureImage)
+        XCTAssertEqual(viewController.fullName, "John Jones")
+        XCTAssertEqual(viewController.birthdate, expectedBirthdate)
+        
+        // For the case where the user has consented, the user signature should be saved
+        viewController.goForward()
+        XCTAssertTrue(viewController.goNext_called)
+        XCTAssertNil(viewController.handleConsentDeclined_error)
+        
+        XCTAssertEqual(viewController.sharedUser.name, "John Jones")
+        XCTAssertEqual(viewController.sharedUser.birthdate, expectedBirthdate)
+        
+        guard let signature = viewController.sharedUser.consentSignature as? SBAConsentSignature else {
+            XCTAssert(false, "Consent signature is nil")
             return
         }
         
-        XCTAssertTrue(consentResult.isConsented)
-        XCTAssertNotNil(consentResult.consentSignature)
-        XCTAssertNotNil(consentResult.consentSignature?.signatureImage)
-        XCTAssertNotNil(consentResult.consentSignature?.signatureDate)
+        XCTAssertNotNil(signature.signatureImage)
+        XCTAssertEqual(signature.signatureName, "John Jones")
+        XCTAssertEqual(signature.signatureBirthdate, expectedBirthdate)
     }
     
     func testConsentResult_RequiresNoSignature() {
@@ -309,16 +320,19 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.signature = reviewStep!.signature
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [ORKResult(identifier: "step.review"), reviewResult])
-        let viewController = step?.instantiateStepViewController(with: inputResult)
-        let outputResult = viewController?.result
+        let viewController = MockConsentReviewStepViewController(step: step!, result: inputResult)
         
-        XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
-            return
-        }
+        XCTAssertFalse(viewController.requiresSignature)
+        XCTAssertTrue(viewController.consentAccepted ?? false)
+        XCTAssertNil(viewController.signatureImage)
+        XCTAssertNil(viewController.fullName)
+        XCTAssertNil(viewController.birthdate)
         
-        XCTAssertTrue(consentResult.isConsented)
+        // For the case where the user has consented, the user signature should be saved
+        viewController.goForward()
+        XCTAssertTrue(viewController.goNext_called)
+        XCTAssertNil(viewController.handleConsentDeclined_error)
+        XCTAssertNotNil(viewController.sharedUser.consentSignature)
     }
     
     func testConsentResult_RequiresNotConsented() {
@@ -339,16 +353,15 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         reviewResult.signature = reviewStep!.signature
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [ORKResult(identifier: "step.review"), reviewResult])
-        let viewController = step?.instantiateStepViewController(with: inputResult)
-        let outputResult = viewController?.result
+        let viewController = MockConsentReviewStepViewController(step: step!, result: inputResult)
         
-        XCTAssertNotNil(outputResult)
-        guard let consentResult = outputResult?.result(forIdentifier: step!.identifier) as? SBAConsentReviewResult else {
-            XCTAssert(false, "\(String(describing: outputResult)) missing consent review result")
-            return
-        }
+        XCTAssertFalse(viewController.consentAccepted ?? true)
         
-        XCTAssertFalse(consentResult.isConsented)
+        // When the "goForward" method is called, this should call through to the error handler and *not* go to next step
+        
+        viewController.goForward()
+        XCTAssertFalse(viewController.goNext_called)
+        XCTAssertNotNil(viewController.handleConsentDeclined_error)
     }
     
     func testConsentReviewStepAfterStep_NotConsented() {
@@ -386,7 +399,6 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         let nextStep = pageStep?.stepAfterStep(withIdentifier: reviewStep?.identifier, with: taskResult)
         XCTAssertNotNil(nextStep)
     }
-    
     
     // MARK: helper methods
     
@@ -428,4 +440,34 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         return SBASurveyFactory(dictionary: input)
     }
 
+}
+
+class MockConsentReviewStepViewController: SBAConsentReviewStepViewController {
+    
+    override init(step: ORKStep?) {
+        super.init(step: step)
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    override init(step: ORKStep, result: ORKResult) {
+        super.init(step: step, result: result)
+        self.sharedAppDelegate = MockAppInfoDelegate()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func handleConsentDeclined(with error: Error) {
+        handleConsentDeclined_error = error
+    }
+    var handleConsentDeclined_error: Error?
+    
+    override func goNext() {
+        goNext_called = true
+    }
+    var goNext_called = false
 }
