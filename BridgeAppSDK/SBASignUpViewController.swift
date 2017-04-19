@@ -191,6 +191,12 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         self.sharedUser.onboardingStepIdentifier = stepViewController.step?.identifier
     }
     
+    open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+        if direction == .forward {
+            // TODO: syoung 04/19/2017 Update the profile if this is a step that carries profile information.
+        }
+    }
+    
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         if reason == .completed {
             // If the flow was completed then set the completion identifier for the onboarding step
