@@ -1,5 +1,5 @@
 //
-//  SBAOnboardingTableRowItem.swift
+//  SBAOnboardingTableRow.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -34,7 +34,7 @@
 import Foundation
 
 /**
- Protocol for defining an onboarding table rows.
+ Protocol for defining an onboarding table row.
  */
 public protocol SBAOnboardingTableRow: NSSecureCoding {
     

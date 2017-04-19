@@ -70,7 +70,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
      */
     open func updateState() {
         
-        // Setup the greeting label
+        // Set up the greeting label
         greetingLabel?.text = {
             guard let name = self.sharedNameDataSource?.givenName else {
                 return Localization.localizedString("GREETING_WITHOUT_NAME")
@@ -243,8 +243,7 @@ open class SBASignUpTableViewController : SBASignUpViewController, UITableViewDa
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Make sure that the data source and the delegate are setup to point to self
-        // and then reload the table
+        // Make sure that the data source and the delegate are set up to point to self
         if (self.tableView.dataSource == nil) {
             self.tableView.dataSource = self
         }

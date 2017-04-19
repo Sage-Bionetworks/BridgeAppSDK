@@ -50,9 +50,9 @@ typedef NS_ENUM(NSUInteger, SBAOnboardingTaskType) {
 /**
  The onboarding manager to use with this application. By default, this is built using a
  json file named "Onboarding" that is included in the main bundle and uses the same onboarding
- manager for login, sign up and re-consent.
+ manager for login, sign up, and re-consent.
  
- @param     onboardingTaskType  The onboarding type (login, signup or reconsent)
+ @param     onboardingTaskType  The onboarding type
  */
 - (SBAOnboardingManager *)onboardingManagerForOnboardingTaskType:(SBAOnboardingTaskType)onboardingTaskType NS_SWIFT_NAME(onboardingManager(for:));
 

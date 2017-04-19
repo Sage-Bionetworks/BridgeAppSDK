@@ -34,8 +34,10 @@
 import Foundation
 
 /**
- Protocols for sharing functionality between different classes that do not share inheritance.
- This set of protocols are used to handle account access.
+ The `SBAOnboardingStepController` protocol is used during onboarding to update the different model objects 
+ stored on with the participant info to determine the user's onboarding state. Some values (such as name 
+ and age) are saved as a part of that process. This is intended for subclasses of `ORKStepViewController`
+ where the specific subclasses may not share a superclass inheritance.
  */
 public protocol SBAOnboardingStepController: SBAAccountStepController, SBAResearchKitResultConverter {
 }
@@ -43,7 +45,7 @@ public protocol SBAOnboardingStepController: SBAAccountStepController, SBAResear
 extension SBAOnboardingStepController {
     
     /**
-     Look for profile keys and set them if found
+     Look for profile keys and set them if found.
      */
     func updateUserProfileInfo() {
         guard let profileKeys = (self.step as? SBAProfileInfoForm)?.formItems?.map({ $0.identifier }) else { return }

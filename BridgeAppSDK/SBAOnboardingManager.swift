@@ -180,7 +180,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     }
     
     /**
-     Allows for subclass of the onboarding manager to vend a different survey factory. By default, this will return the default
+     Allows subclasses of the onboarding manager to vend a different survey factory. By default, this will return the default
      factory as defined by the onboarding section.
      
      @param     section                 The onboarding section

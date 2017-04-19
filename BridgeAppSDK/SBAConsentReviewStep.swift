@@ -193,15 +193,7 @@ extension SBAConsentReviewStepController {
         // Check that the user has consented or fail with an error
         guard (consentAccepted ?? false) && (!requiresSignature || (signatureImage != nil))
         else {
-            let error = SBAProfileInfoOptionsError.notConsented
-                
-                
-                
-//                NSError(domain: "SBAConsentReviewStepDomain",
-//                                code: -1,
-//                                userInfo: [NSLocalizedDescriptionKey :
-//                                    Localization.localizedString("SBA_REGISTRATION_NOT_CONSENTED")])
-            self.handleConsentDeclined(with: error)
+            self.handleConsentDeclined(with: SBAProfileInfoOptionsError.notConsented)
             return
         }
         

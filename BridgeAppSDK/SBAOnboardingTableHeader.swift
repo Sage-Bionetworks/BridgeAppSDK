@@ -34,7 +34,7 @@
 import Foundation
 
 /**
- Protocol for defining an onboarding table rows.
+ Protocol for defining an onboarding table header.
  */
 public protocol SBAOnboardingTableHeader: NSSecureCoding {
 
