@@ -1,14 +1,14 @@
 {
     "tableHeader" : {
         "initialText" : "Please finish the 4 sections below to get started. It should take about 20 minutes. You can cancel anytime.",
-        "completedText" : "Congrats, you are now enrolled in the study. You can start the elevateMS study or tap on a section to edit.",
+        "completedText" : "Congrats, you are now enrolled in the study. You can start the SAMPLE study or tap on a section to edit.",
     },
     "tableRows" : [
                    {
                    "sections" : ["eligibility"],
                    "headerText" : "Please finish the 4 sections below to get started. It should take about 20 minutes. You can cancel anytime.",
                    "title" : "Eligibility",
-                   "text"  : "Are you eligibile? You do not need to have MS to participate."
+                   "text"  : "Are you eligibile? You do not need to have SAMPLE to participate."
                    },
                    {
                    "sections" : ["consent"],

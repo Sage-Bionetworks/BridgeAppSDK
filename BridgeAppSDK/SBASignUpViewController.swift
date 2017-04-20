@@ -48,6 +48,11 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     @IBOutlet weak var cancelButtonView: UIView?
     @IBOutlet weak var startButtonView: UIView?
     
+    public var taskViewController: ORKTaskViewController? {
+        return _taskViewController
+    }
+    fileprivate var _taskViewController: ORKTaskViewController?
+    
     /**
      The onboarding manager to use with this signup view controller. By default, this will retain 
      an onboarding manager instantiated by the `SBAOnboardingAppDelegate`.
@@ -164,6 +169,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         }
         
         // present the onboarding
+        _taskViewController = taskViewController
         taskViewController.delegate = self
         self.present(taskViewController, animated: true, completion: nil)
     }
@@ -189,6 +195,10 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         self.sharedUser.onboardingStepIdentifier = stepViewController.step?.identifier
+        stepViewController.cancelButtonItem = UIBarButtonItem(title: Localization.localizedString("BUTTON_CLOSE"),
+                                                              style: .done,
+                                                              target: self,
+                                                              action: #selector(closeTaskAction))
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
@@ -210,6 +220,12 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         taskViewController.dismiss(animated: true, completion: nil)
     }
     
+    // MARK: ORKTaskViewController customization
+    
+    func closeTaskAction() {
+        guard let taskViewController = self.taskViewController else { return }
+        self.taskViewController(taskViewController, didFinishWith: .discarded, error: nil)
+    }
     
     // MARK: SBASharedInfoController
     

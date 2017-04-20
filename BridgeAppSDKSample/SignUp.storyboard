@@ -58,6 +58,9 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocw-IJ-SGL">
                                             <rect key="frame" x="142" y="30" width="90" height="30"/>
                                             <state key="normal" title="Cancel study"/>
+                                            <connections>
+                                                <action selector="cancelTapped" destination="NbL-Nh-EN3" eventType="touchUpInside" id="ttS-fZ-2zr"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -131,6 +134,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBK-iT-ciH">
                                         <rect key="frame" x="148" y="20" width="78" height="30"/>
                                         <state key="normal" title="Start Study"/>
+                                        <connections>
+                                            <action selector="startStudyTapped" destination="NbL-Nh-EN3" eventType="touchUpInside" id="AC7-yA-RpF"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
