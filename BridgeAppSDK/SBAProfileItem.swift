@@ -38,18 +38,33 @@ public protocol SBAProfileItem: NSObjectProtocol {
     var title: String { get }
     var detail: String? { get }
     var isEditable: Bool { get }
+    
+    /**
+     key is used to access a specific profile item, and so must be unique across all SBAProfileItems
+     within an app.
+     */
+    var key: String { get }
+    
+    /**
+     sourceKey is the profile item's key within its internal data storage. By default it will be the
+     same as key, but can be different if needed (e.g. two different profile items happen to map to
+     the same key in different storage types).
+     */
+    var sourceKey: String { get }
     var value: Any? { get set }
 }
 
 class SBAKeychainProfileItem: NSObject, SBAProfileItem {
-    private var key: String
+    open var key: String
+    open var sourceKey: String
     private var keychain: SBAKeychainWrapper
     open var title: String
     open var detail: String?
     open var isEditable: Bool
     
-    public init(title: String, detail: String?, isEditable: Bool = true, key: String, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
+    public init(title: String, detail: String?, isEditable: Bool = true, key: String, sourceKey: String = key, keychain: SBAKeychainWrapper = SBAUser.shared.keychain) {
         self.key = key
+        self.sourceKey = sourceKey
         self.keychain = keychain
         self.title = title
         self.detail = detail
@@ -115,14 +130,16 @@ extension Dictionary: PlistValue {}
 
 
 class SBAUserDefaultsProfileItem: NSObject, SBAProfileItem {
-    private var key: String
+    open var key: String
+    private var sourceKey: String
     private var defaults: UserDefaults
     open var title: String
     open var detail: String?
     open var isEditable: Bool
     
-    public init(title: String, detail: String?, isEditable: Bool = true, key: String, defaults: UserDefaults? = SBAUser.shared.bridgeInfo?.userDefaults) {
+    public init(title: String, detail: String?, isEditable: Bool = true, key: String, sourceKey: String = key, defaults: UserDefaults? = SBAUser.shared.bridgeInfo?.userDefaults) {
         self.key = key
+        self.sourceKey = sourceKey
         self.defaults = defaults != nil ? defaults! : UserDefaults.standard
         self.title = title
         self.detail = detail

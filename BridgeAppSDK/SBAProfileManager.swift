@@ -35,8 +35,32 @@ import Foundation
 
 public let SBAProfileJSONFilename = "Profile"
 
+/**
+ Profile manager error types
+ */
+public enum SBAProfileManagerErrorType {
+    case unknownProfileKey
+}
+
+/**
+ Profile manager error object
+ */
+public class SBAProfileManagerError: NSObject, Error {
+    var errorType: SBAProfileManagerErrorType
+    var key: String
+    
+    public init(errorType: SBAProfileManagerErrorType, key: String) {
+        super.init()
+        self.errorType = errorType
+        self.key = key
+    }
+}
+
+
 open class SBAProfileManager: NSObject, SBAProfileDataSource {
     var sections: [SBAProfileSection] = []
+    
+    private var items: [String:SBAProfileItem] = [:]
     
     // MARK: initializers
     
@@ -54,6 +78,56 @@ open class SBAProfileManager: NSObject, SBAProfileDataSource {
               let jsonSections = json["sections"] as? [SBAProfileSection]
             else { return }
         sections = jsonSections
+        
+        // map them by key for easy access
+        for var section in sections {
+            for var item in section.items {
+                self.items[item.key] = item
+            }
+        }
+    }
+    
+    /**
+     Get a list of the profile keys defined for this app.
+     
+     @return A String array of profile item keys.
+     */
+    func profileKeys() -> [String] {
+        return items.allKeys
+    }
+    
+    /**
+     Get the profile items defined for this app.
+     
+     @return A Dictionary of SBAProfileItem objects by key.
+     */
+    func profileItems() -> [String:SBAProfileItem] {
+        return items
+    }
+    
+    /**
+     Get the value of a profile item by its key.
+     
+     @return The value (optional) of the specified item.
+     */
+    func value(forProfileKey: String) -> Any? {
+        guard let item = self.items[key] else { return nil }
+        
+        return item.value
+    }
+    
+    /**
+     Set the value of the profile item by its key.
+ 
+     @throws Throws an error if there is no profile item with the specified key.
+     @param value The new value to set for the profile item.
+     */
+    func setValue(_ value: Any?, forProfileKey key: String) throws {
+        guard let item = self.items[key] else {
+            throw SBAProfileManagerError.init(errorType: .unknownProfileKey, key: key)
+        }
+        
+        item.value = value
     }
     
     // MARK: View controller
