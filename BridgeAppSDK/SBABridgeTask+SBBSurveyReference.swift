@@ -34,6 +34,7 @@
 
 import BridgeSDK
 import ResearchKit
+import ResearchUXFactory
 
 extension SBBSurveyReference : SBATaskReference {
     
@@ -46,22 +47,26 @@ extension SBBSurveyReference : SBATaskReference {
     }
     
     public var cancelDisabled: Bool {
-        return false
+        return bridgeInfoReference?.cancelDisabled ?? false
     }
     
     public var allowMultipleRun: Bool {
-        return true
+        return bridgeInfoReference?.allowMultipleRun ?? true
     }
     
     public var scheduleNotification: Bool {
-        return false
+        return bridgeInfoReference?.scheduleNotification ?? false
     }
     
     public var activityIcon: UIImage? {
-        return nil
+        return bridgeInfoReference?.activityIcon
     }
     
     public var activityMinutes: Int {
-        return 0
+        return bridgeInfoReference?.activityMinutes ?? 0
+    }
+    
+    var bridgeInfoReference: SBATaskReference? {
+        return SBAInfoManager.shared.taskReferenceWithIdentifier(self.identifier)
     }
 }
