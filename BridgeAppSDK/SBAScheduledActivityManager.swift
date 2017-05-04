@@ -62,8 +62,8 @@ public protocol SBAScheduledActivityManagerDelegate: SBAAlertPresenter {
  Default data source handler for scheduled activities. This manager is intended to get `SBBScheduledActivity`
  objects from the Bridge server and can present the associated tasks.
  */
-open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate, SBAScheduledActivityDataSource {
-    
+open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate {
+
     /**
      The delegate is required for presenting tasks and refreshing the UI.
     */
@@ -106,14 +106,9 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         self.daysAhead = self.bridgeInfo.cacheDaysAhead
         self.daysBehind = self.bridgeInfo.cacheDaysBehind
     }
-
+    
     // MARK: Data source management
-    
-    /**
-     Sections to display - this sets up the predicates for filtering activities
-    */
-    open var sections: [SBAScheduledActivitySection] = [.today, .keepGoing]
-    
+
     /**
      By default, this is an array of the activities fetched by the call to the server in `reloadData`.
     */
@@ -128,10 +123,19 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
      Number of days behind to fetch
     */
     open var daysBehind: Int!
+    
+    /**
+     A predicate that can be used to evaluate whether or not a schedule should be included.
+     This can include block predicates and is evaluated on a `SBBScheduledActivity` object.
+     Default == `true`
+     */
+    open var scheduleFilterPredicate: NSPredicate = NSPredicate(value: true)
 
     // MARK: SBAScheduledActivityDataSource
     
-    fileprivate var reloading: Bool = false
+    /**
+     Reload the data by calling the `SBABridgeManager` and fetching changes to the scheduled activities.
+     */
     open func reloadData() {
         
         // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from
@@ -152,78 +156,8 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
             })
         }
     }
-    
-    open func numberOfSections() -> Int {
-        return sections.count
-    }
-    
-    open func numberOfRows(for section: Int) -> Int {
-        return scheduledActivities(for: section).count
-    }
-    
-    open func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity? {
-        let schedules = scheduledActivities(for: (indexPath as NSIndexPath).section)
-        guard (indexPath as NSIndexPath).row < schedules.count else {
-            assertionFailure("Requested row greater than number of rows in section")
-            return nil
-        }
-        return schedules[(indexPath as NSIndexPath).row]
-    }
-    
-    open func shouldShowTask(for indexPath: IndexPath) -> Bool {
-        guard let schedule = scheduledActivity(at: indexPath), shouldShowTask(for: schedule)
-            else {
-                return false
-        }
-        return true
-    }
-    
-    open func didSelectRow(at indexPath: IndexPath) {
-        
-        // Only if the task was created should something be done.
-        guard let schedule = scheduledActivity(at: indexPath) else { return }
-        guard isAvailable(schedule: schedule) else {
-            // Block performing a task that is scheduled for the future
-            let message = messageForUnavailableSchedule(schedule)
-            self.delegate?.showAlertWithOk(title: nil, message: message, actionHandler: nil)
-            return
-        }
-        
-        // If this is a valid schedule then create the task view controller
-        guard let taskViewController = createTaskViewController(for: schedule)
-            else {
-                assertionFailure("Failed to create task view controller for \(schedule)")
-                return
-        }
-        
-        self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
-    }
-    
-    open func title(for section: Int) -> String? {
-        
-        // Always return nil for the first section and if there are no rows in the section
-        guard scheduledActivities(for: section).count > 0, let scheduledActivitySection = scheduledActivitySection(for: section)
-            else {
-                return nil
-        }
-        
-        // Return default localized string for each section
-        switch scheduledActivitySection {
-        case .expiredYesterday:
-            return Localization.localizedString("SBA_ACTIVITY_YESTERDAY")
-        case .today:
-            return Localization.localizedString("SBA_ACTIVITY_TODAY")
-        case .keepGoing:
-            return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
-        case .tomorrow:
-            return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
-        case .comingUp:
-            return Localization.localizedString("SBA_ACTIVITY_COMING_UP")
-        case .none:
-            return nil
-        }
-    }
-    
+    fileprivate var reloading: Bool = false
+
     
     // MARK: Data handling
     
@@ -237,15 +171,12 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         // schedule notifications
         setupNotifications(for: scheduledActivities)
         
-        // Filter out any sections that aren't shown
-        let filters = sections.mapAndFilter({ filterPredicate(for: $0) })
-        let includedSections = NSCompoundPredicate(orPredicateWithSubpredicates: filters)
-        
         // Filter the scheduled activities to only include those that *this* version of the app is designed
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
         self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return bridgeInfo.taskReferenceForSchedule(schedule) != nil && includedSections.evaluate(with: schedule)
+            return bridgeInfo.taskReferenceForSchedule(schedule) != nil &&
+                self.scheduleFilterPredicate.evaluate(with: schedule)
         })
         
         // reload table
@@ -260,6 +191,8 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
         }
     }
     
+    
+    
     /**
      Called on load to setup notifications for the returned scheduled activities.
      
@@ -269,66 +202,6 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
     open func setupNotifications(for scheduledActivities: [SBBScheduledActivity]) {
         // schedule notifications
         SBANotificationsManager.shared.setupNotifications(for: scheduledActivities)
-    }
-    
-    /**
-     Array of `SBBScheduledActivity` objects for a given table section
-     
-     @param     tableSection    The section index into the table (maps to IndexPath)
-     @return                    The list of `SBBScheduledActivity` objects for this table section.
-     */
-    @objc(scheduledActivitiesForTableSection:)
-    open func scheduledActivities(for tableSection: Int) -> [SBBScheduledActivity] {
-        guard let predicate = filterPredicate(for: tableSection) else { return [] }
-        return activities.filter({ predicate.evaluate(with: $0) })
-    }
-    
-    private func scheduledActivitySection(for tableSection: Int) -> SBAScheduledActivitySection? {
-        guard tableSection < sections.count else { return nil }
-        return sections[tableSection]
-    }
-
-    /**
-     Predicate to use to filter the activities for a given table section
-     
-     @param     tableSection    The section index into the table (maps to IndexPath)
-     @return                    The predicate to use to filter the table section
-     */
-    @objc(filterPredicateForTableSection:)
-    open func filterPredicate(for tableSection: Int) -> NSPredicate? {
-        guard let section = scheduledActivitySection(for: tableSection) else { return nil }
-        return filterPredicate(for: section)
-    }
-    
-    private func filterPredicate(for section: SBAScheduledActivitySection) -> NSPredicate? {
-        switch section {
-
-        case .expiredYesterday:
-            // expired yesterday section only showns those expired tasks that are also unfinished
-            return SBBScheduledActivity.expiredYesterdayPredicate()
-            
-        case .today:
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [
-                NSCompoundPredicate(notPredicateWithSubpredicate: SBBScheduledActivity.optionalPredicate()),
-                SBBScheduledActivity.availableTodayPredicate()])
-            
-        case .keepGoing:
-            // Keep going section includes optional tasks that are either unfinished or were finished today
-            return NSCompoundPredicate(andPredicateWithSubpredicates: [
-                SBBScheduledActivity.optionalPredicate(),
-                SBBScheduledActivity.unfinishedPredicate(),
-                SBBScheduledActivity.availableTodayPredicate()])
-        
-        case .tomorrow:
-            // scheduled for tomorrow only
-            return SBBScheduledActivity.scheduledTomorrowPredicate()
-        
-        case .comingUp:
-            return SBBScheduledActivity.scheduledComingUpPredicate(numberOfDays: self.daysAhead)
-            
-        case .none:
-            return nil
-        }
     }
     
     /**
@@ -501,8 +374,8 @@ open class SBAScheduledActivityManager: NSObject, ORKTaskViewControllerDelegate,
                         let fileSizeOrNot = urlResourceValues.fileSize ?? -1
                         mutableFileInfo[fileURL] = fileSizeOrNot
                     }
-                } catch let error as NSError {
-                    debugPrint("Error: \(error.localizedDescription)")
+                } catch let error {
+                    debugPrint("Error: \(error)")
                 }
             }
             
@@ -946,7 +819,162 @@ extension ORKTask {
     }
 }
 
-
+/**
+ syoung 05/03/2017
+ UI/UX table data source for the presentation used in older apps. We tried to generalize how the schedule
+ is displayed to the user (using a subclass of `SBAActivityTableViewController`) but doing so forces the model
+ to work around this design for apps that handle scheduling using a different model.
+ */
+open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBAScheduledActivityDataSource {
+    
+    /**
+     Sections to display - this sets up the predicates for filtering activities.
+     */
+    open var sections: [SBAScheduledActivitySection]! {
+        didSet {
+            // Filter out any sections that aren't shown
+            let filters = sections.mapAndFilter({ filterPredicate(for: $0) })
+            self.scheduleFilterPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: filters)
+        }
+    }
+    
+    override func commonInit() {
+        super.commonInit()
+        // Set the default sections
+        self.sections = [.today, .keepGoing]
+    }
+    
+    open func numberOfSections() -> Int {
+        return sections.count
+    }
+    
+    open func numberOfRows(for section: Int) -> Int {
+        return scheduledActivities(for: section).count
+    }
+    
+    open func scheduledActivity(at indexPath: IndexPath) -> SBBScheduledActivity? {
+        let schedules = scheduledActivities(for: indexPath.section)
+        guard indexPath.row < schedules.count else {
+            assertionFailure("Requested row greater than number of rows in section")
+            return nil
+        }
+        return schedules[indexPath.row]
+    }
+    
+    open func shouldShowTask(for indexPath: IndexPath) -> Bool {
+        guard let schedule = scheduledActivity(at: indexPath), shouldShowTask(for: schedule)
+            else {
+                return false
+        }
+        return true
+    }
+    
+    open func didSelectRow(at indexPath: IndexPath) {
+        
+        // Only if the task was created should something be done.
+        guard let schedule = scheduledActivity(at: indexPath) else { return }
+        guard isAvailable(schedule: schedule) else {
+            // Block performing a task that is scheduled for the future
+            let message = messageForUnavailableSchedule(schedule)
+            self.delegate?.showAlertWithOk(title: nil, message: message, actionHandler: nil)
+            return
+        }
+        
+        // If this is a valid schedule then create the task view controller
+        guard let taskViewController = createTaskViewController(for: schedule)
+            else {
+                assertionFailure("Failed to create task view controller for \(schedule)")
+                return
+        }
+        
+        self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
+    }
+    
+    open func title(for section: Int) -> String? {
+        
+        // Always return nil for the first section and if there are no rows in the section
+        guard scheduledActivities(for: section).count > 0, let scheduledActivitySection = scheduledActivitySection(for: section)
+            else {
+                return nil
+        }
+        
+        // Return default localized string for each section
+        switch scheduledActivitySection {
+        case .expiredYesterday:
+            return Localization.localizedString("SBA_ACTIVITY_YESTERDAY")
+        case .today:
+            return Localization.localizedString("SBA_ACTIVITY_TODAY")
+        case .keepGoing:
+            return Localization.localizedString("SBA_ACTIVITY_KEEP_GOING")
+        case .tomorrow:
+            return Localization.localizedString("SBA_ACTIVITY_TOMORROW")
+        case .comingUp:
+            return Localization.localizedString("SBA_ACTIVITY_COMING_UP")
+        case .none:
+            return nil
+        }
+    }
+    
+    /**
+     Predicate to use to filter the activities for a given table section.
+     
+     @param     tableSection    The section index into the table (maps to IndexPath).
+     @return                    The predicate to use to filter the table section.
+     */
+    @objc(filterPredicateForTableSection:)
+    open func filterPredicate(for tableSection: Int) -> NSPredicate? {
+        guard let section = scheduledActivitySection(for: tableSection) else { return nil }
+        return filterPredicate(for: section)
+    }
+    
+    private func filterPredicate(for section: SBAScheduledActivitySection) -> NSPredicate? {
+        switch section {
+            
+        case .expiredYesterday:
+            // expired yesterday section only showns those expired tasks that are also unfinished
+            return SBBScheduledActivity.expiredYesterdayPredicate()
+            
+        case .today:
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [
+                NSCompoundPredicate(notPredicateWithSubpredicate: SBBScheduledActivity.optionalPredicate()),
+                SBBScheduledActivity.availableTodayPredicate()])
+            
+        case .keepGoing:
+            // Keep going section includes optional tasks that are either unfinished or were finished today
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [
+                SBBScheduledActivity.optionalPredicate(),
+                SBBScheduledActivity.unfinishedPredicate(),
+                SBBScheduledActivity.availableTodayPredicate()])
+            
+        case .tomorrow:
+            // scheduled for tomorrow only
+            return SBBScheduledActivity.scheduledTomorrowPredicate()
+            
+        case .comingUp:
+            return SBBScheduledActivity.scheduledComingUpPredicate(numberOfDays: self.daysAhead)
+            
+        case .none:
+            return nil
+        }
+    }
+    
+    /**
+     Array of `SBBScheduledActivity` objects for a given table section.
+     
+     @param     tableSection    The section index into the table (maps to IndexPath).
+     @return                    The list of `SBBScheduledActivity` objects for this table section.
+     */
+    @objc(scheduledActivitiesForTableSection:)
+    open func scheduledActivities(for tableSection: Int) -> [SBBScheduledActivity] {
+        guard let predicate = filterPredicate(for: tableSection) else { return [] }
+        return activities.filter({ predicate.evaluate(with: $0) })
+    }
+    
+    private func scheduledActivitySection(for tableSection: Int) -> SBAScheduledActivitySection? {
+        guard tableSection < sections.count else { return nil }
+        return sections[tableSection]
+    }
+}
 
 
 
