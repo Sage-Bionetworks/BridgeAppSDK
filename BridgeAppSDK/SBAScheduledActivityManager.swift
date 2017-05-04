@@ -823,12 +823,12 @@ extension ORKTask {
  syoung 05/03/2017
  UI/UX table data source for the presentation used in older apps. We tried to generalize how the schedule
  is displayed to the user (using a subclass of `SBAActivityTableViewController`) but doing so forces the model
- to work-around this design for apps that handle scheduling using a different model
+ to work around this design for apps that handle scheduling using a different model.
  */
 open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBAScheduledActivityDataSource {
     
     /**
-     Sections to display - this sets up the predicates for filtering activities
+     Sections to display - this sets up the predicates for filtering activities.
      */
     open var sections: [SBAScheduledActivitySection]! {
         didSet {
@@ -916,10 +916,10 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
     }
     
     /**
-     Predicate to use to filter the activities for a given table section
+     Predicate to use to filter the activities for a given table section.
      
-     @param     tableSection    The section index into the table (maps to IndexPath)
-     @return                    The predicate to use to filter the table section
+     @param     tableSection    The section index into the table (maps to IndexPath).
+     @return                    The predicate to use to filter the table section.
      */
     @objc(filterPredicateForTableSection:)
     open func filterPredicate(for tableSection: Int) -> NSPredicate? {
@@ -959,9 +959,9 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
     }
     
     /**
-     Array of `SBBScheduledActivity` objects for a given table section
+     Array of `SBBScheduledActivity` objects for a given table section.
      
-     @param     tableSection    The section index into the table (maps to IndexPath)
+     @param     tableSection    The section index into the table (maps to IndexPath).
      @return                    The list of `SBBScheduledActivity` objects for this table section.
      */
     @objc(scheduledActivitiesForTableSection:)
