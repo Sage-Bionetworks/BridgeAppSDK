@@ -4,27 +4,22 @@
                         "key": "fullName",
                         "classType": "KeychainProfileItem",
                         "sourceKey": "name",
-                        "editType": "String"
+                        "itemType": "String"
                     },
                     {
                         "key": "gender",
                         "classType": "KeychainProfileItem",
-                        "editType": "ListPicker",
-                        "listChoices": [
-                            "Female",
-                            "Male",
-                            "Prefer not to say"
-                        ]
+                        "itemType": "HKBiologicalSex",
                     },
                     {
                         "key": "birthDate",
                         "classType": "KeychainProfileItem",
-                        "editType": "DatePicker"
+                        "itemType": "Date"
                     },
                     {
                         "key": "favoriteColor",
                         "classType": "UserDefaultsProfileItem",
-                        "editType": "ListPicker",
+                        "editType": "StringFromList",
                         "listChoices": {
                             "Red",
                             "Orange",
@@ -40,7 +35,7 @@
                     {
                         "key": "numberOfSiblings",
                         "classType": "UserDefaultsProfileItem",
-                        "editType": "Number"
+                        "itemType": "Number"
                     }
                 ]
 }

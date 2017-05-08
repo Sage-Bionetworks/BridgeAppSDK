@@ -103,8 +103,12 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
 
 open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfileDataSource {
 
+    /**
+     The shared instance of the profile manager. Loads from SBAProfileItemsJSONFilename, which
+     defaults to "ProfileItems".
+     */
     static let shared = {
-        guard let json = SBAResourceFinder.shared.json(forResource: jsonName) as? [[String: Any]],
+        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename) as? [[String: Any]],
                 let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
             else { return nil }
         return sharedProfileManager
@@ -137,20 +141,37 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     
     // MARK: SBAProfileManagerProtocol
     
+    /**
+     @return A list of all the profile keys known to the profile manager.
+     */
     public func profileKeys() -> [String] {
         return itemsKeys
     }
     
+    /**
+     @return A map of all the profile items by key.
+     */
     public func profileItems() -> [String: SBAProfileItem] {
         return itemsMap
     }
     
-    public func value(forProfileKey: String) -> Any? {
+    /**
+     Get the value of a profile item by its key.
+     
+     @param key The key for the profile item to be retrieved.
+     @return The value of the profile item, as stored in whatever underlying storage it uses.
+     */
+    public func value(forProfileKey key: String) -> Any? {
         guard let item = self.itemsMap[key] else { return nil }
         
         return item.value
     }
     
+    /**
+     Set (or clear) a new value on a profile item by key.
+     @param value The new value to set.
+     @param key The key of the profile item on which to set the new value.
+     */
     public func setValue(_ value: Any?, forProfileKey key: String) throws {
         guard let item = self.itemsMap[key] else {
             throw SBAProfileManagerError.init(errorType: .unknownProfileKey, key: key)
@@ -161,18 +182,23 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     
     // MARK: View controller
     
+    /**
+     Get a view controller for displaying the profile. Instantiates and returns a default controller
+     described in the JSON file specified by SBAProfileJSONFilename, which defaults to "Profile".
+     */
     public func profileViewController() -> UIViewController? {
         return self.initializeViewController()
     }
     
     // Instantiate an SBAProfileViewController with this instance set as its SBAProfileDataSource. 
     func initializeViewController(fromJson jsonFile: String = SBAProfileJSONFilename) -> UIViewController? {
-        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
-            let jsonSections = json["sections"] as? [SBAProfileSection]
-            else { return }
-        sections = jsonSections,
-        
-        let viewController = SBAProfileViewController()
+        // TODO: emm2017-05-08 implement this
+//        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
+//            let jsonSections = json["sections"] as? [SBAProfileSection]
+//            else { return }
+//        sections = jsonSections,
+//        
+//        let viewController = SBAProfileViewController()
         
         return nil
     }

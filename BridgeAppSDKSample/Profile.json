@@ -6,14 +6,17 @@
             "items": [
                           {
                               "title": "Full name",
+                              "classType": "ProfileItemTableRow",
                               "profileItemKey": "fullName"
                           },
                           {
                               "title": "Gender",
+                              "classType": "ProfileItemTableRow",
                               "profileItemKey": "gender"
                           },
                           {
                               "title": "Date of birth",
+                              "classType": "ProfileItemTableRow",
                               "profileItemKey": "birthDate"
                           }
                       ]
@@ -24,10 +27,12 @@
             "items": [
                           {
                               "title": "Favorite color",
+                              "classType": "ProfileItemTableRow",
                               "profileItemKey": "favoriteColor"
                           },
                           {
                               "title": "Number of siblings",
+                              "classType": "ProfileItemTableRow",
                               "profileItemKey": "numberOfSiblings"
                           }
                       ]
@@ -52,6 +57,7 @@
             "icon": "learnItemsIcon",
             "items": [
                          "title": "About",
+                         "classType": "HTMLTableRow",
                          "html": "About"
                      ]
         }
