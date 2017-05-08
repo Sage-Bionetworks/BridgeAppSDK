@@ -35,7 +35,7 @@ import Foundation
 import ResearchUXFactory
 
 @objc
-public protocol SBAProfileItem: SBAJSONDictionaryRepresentableObject {    
+public protocol SBAProfileItem: NSObjectProtocol {
     /**
      key is used to access a specific profile item, and so must be unique across all SBAProfileItems
      within an app.
@@ -69,38 +69,31 @@ public protocol SBAProfileItem: SBAJSONDictionaryRepresentableObject {
     /**
      jsonValue is used to get and set the profile item's value directly from appropriate JSON.
      */
-    var jsonValue: JSONValue? { get set }
+    var jsonValue: SBBJSONValue? { get set }
     
     /**
      demographicJsonValue is used when formatting the item as demographic data for upload to Bridge.
      By default it will fall through to the getter for the jsonValue property, but can be different
      if needed.
      */
-    var demographicJsonValue: JSONValue? { get }
+    var demographicJsonValue: SBBJSONValue? { get }
 }
 
 extension SBAProfileItem {
-    func commonInit(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        self.key = dictionary[NSStringFromSelector(#selector(key))]!
-        self.sourceKey = dictionary[NSStringFromSelector(#selector(sourceKey))] ?? self.key
-        self.demographicKey = dictionary[NSStringFromSelector(#selector(demographicKey))] ?? self.key
-        self.itemType = dictionary[NSStringFromSelector(#selector(itemType))]!
-    }
-    
-    func commonJsonValueGetter() -> JSONValue? {
+    func commonJsonValueGetter() -> SBBJSONValue? {
         guard let val = self.value else { return NSNull() }
         switch self.itemType {
         case "String":
-            return val as? String
+            return val as? NSString
             
         case "Number":
             return val as? NSNumber
             
         case "Bool":
-            return val as? Bool
+            return val as? NSNumber
             
         case "Date":
-            return (val as? NSDate)?.iso8601String()
+            return (val as? NSDate)?.iso8601String() as NSString?
             
         case "HKBiologicalSex":
             return val as? NSNumber
@@ -114,7 +107,7 @@ extension SBAProfileItem {
     }
     
     func commonJsonValueSetter(value: Any?) {
-        guard let val = value else {
+        guard value != nil else {
             self.value = nil
             return
         }
@@ -133,7 +126,7 @@ extension SBAProfileItem {
             self.value = val
             
         case "Date":
-            var dateVal = value as? Date
+            var dateVal = value as? NSDate
             if dateVal == nil {
                 guard let stringVal = value as? String,
                         let dateFromString = NSDate(iso8601String: stringVal)
@@ -155,7 +148,7 @@ extension SBAProfileItem {
         }
     }
     
-    func commonDemographicJsonValue() -> JSONValue? {
+    func commonDemographicJsonValue() -> SBBJSONValue? {
         guard let jsonVal = self.commonJsonValueGetter() else { return nil }
         if self.itemType == "HKBiologicalSex" {
             return (self.value as? HKBiologicalSex)?.demographicDataValue
@@ -165,55 +158,104 @@ extension SBAProfileItem {
     }
     
     func commonCheckTypeCompatible(newValue: Any?) -> Bool {
-        guard let newVal = newValue as? Any else { return true }
+        guard newValue != nil else { return true }
         
         switch self.itemType {
         case "String":
-            return newVal as? String != nil
+            return newValue as? String != nil
             
         case "Number":
-            return newVal as? NSNumber != nil
+            return newValue as? NSNumber != nil
             
         case "Bool":
-            return newVal as? Bool != nil
+            return newValue as? NSNumber != nil
             
         case "Date":
-            return newVal as? Date  != nil
+            return newValue as? NSDate  != nil
             
         case "HKBiologicalSex":
-            return newVal as? NSNumber != nil
+            return newValue as? NSNumber != nil
             
         case "HKQuantity":
-            return newVal as? NSNumber != nil
+            return newValue as? NSNumber != nil
             
         default:
-            return nil
+            return false
         }
     }
 }
 
-class SBAKeychainProfileItem: NSObject, SBAProfileItem {
-    open var key: String
-    open var sourceKey: String
-    open var demographicKey: String
-    open var itemType: String
+class SBAProfileItemBase: NSObject, SBAProfileItem {
+    /**
+     The value property is used to get and set the profile item's value in whatever internal data
+     storage is used by the implementing class.
+     */
+    open var value: Any?
 
+    fileprivate let sourceDict: [AnyHashable: Any]
+    
+    open var key: String {
+        get {
+            return sourceDict["key"]! as! String
+        }
+    }
+    
+    open var sourceKey: String {
+        get {
+            return sourceDict["sourceKey"] as! String? ?? self.key
+        }
+    }
+    
+    open var demographicKey: String {
+        get {
+            return sourceDict["demographicKey"] as! String? ?? self.key
+        }
+    }
+    
+    open var itemType: String {
+        get {
+            return sourceDict["itemType"]! as! String
+        }
+    }
+    
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
+        sourceDict = dictionary
+        super.init()
+    }
+    
+    open var jsonValue: SBBJSONValue? {
+        get {
+            return self.commonJsonValueGetter()
+        }
+        
+        set {
+            commonJsonValueSetter(value: newValue)
+        }
+    }
+    
+    open var demographicJsonValue: SBBJSONValue? {
+        get {
+            return self.commonDemographicJsonValue()
+        }
+    }
+}
+
+class SBAKeychainProfileItem: SBAProfileItemBase {
     private var keychain: SBAKeychainWrapper
     
-    public init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        super.init()
-        self.commonInit(dictionaryRepresentation: dictionary)
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
         keychain = SBAUser.shared.keychain
         
-        let keychainService = dictionary[NSStringFromSelector(#selector(service))]
-        let keychainAccessGroup = dictionary[NSStringFromSelector(#selector(accessGroup))]
+        let keychainService = dictionary["keychainService"] as! String?
+        let keychainAccessGroup = dictionary["keychainAccessGroup"] as! String?
         
         if (keychainService != nil || keychainAccessGroup != nil) {
             keychain = SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
         }
+        super.init(dictionaryRepresentation: dictionary)
     }
     
-    open var value: Any? {
+    override open var value: Any? {
         get {
             var err: NSError?
             let obj = keychain.object(forKey: key, error: &err)
@@ -228,12 +270,12 @@ class SBAKeychainProfileItem: NSObject, SBAProfileItem {
                 if newValue == nil {
                     try keychain.removeObject(forKey: key)
                 } else {
-                    guard let compatible = self.commonCheckTypeCompatible(newValue: newValue) else {
-                        print("Error setting \(key): \(newValue) not compatible with specified type\(itemType)")
+                    if !self.commonCheckTypeCompatible(newValue: newValue) {
+                        print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type\(itemType)")
                         return
                     }
                     guard let secureVal = newValue as? NSSecureCoding else {
-                        print("Error setting \(key) in keychain: \(newValue) does not conform to NSSecureCoding")
+                        print("Error setting \(key) in keychain: \(String(describing: newValue)) does not conform to NSSecureCoding")
                         return
                     }
                     try keychain.setObject(secureVal, forKey: key)
@@ -242,22 +284,6 @@ class SBAKeychainProfileItem: NSObject, SBAProfileItem {
             catch let error as NSError {
                 print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
             }
-        }
-    }
-    
-    open var jsonValue: JSONValue? {
-        get {
-            return self.commonJsonValueGetter()
-        }
-        
-        set {
-            commonJsonValueSetter(value: newValue)
-        }
-    }
-    
-    open var demographicJsonValue: JSONValue? {
-        get {
-            return self.commonDemographicJsonValue()
         }
     }
 }
@@ -293,27 +319,22 @@ extension Data: PlistValue {}
 extension Date: PlistValue {}
 
 
-class SBAUserDefaultsProfileItem: NSObject, SBAProfileItem {
-    open var key: String
-    open var sourceKey: String
-    open var demographicKey: String
-    open var itemType: String
-    
+class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     private var defaults: UserDefaults
     
-    public init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        super.init()
-        self.commonInit(dictionaryRepresentation: dictionary)
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
         defaults = SBAUser.shared.bridgeInfo?.userDefaults ?? UserDefaults.standard
         
-        let userDefaultsSuiteName = dictionary[NSStringFromSelector(#selector(suiteName))]
+        let userDefaultsSuiteName = dictionary["userDefaultsSuiteName"] as! String?
         
         if (userDefaultsSuiteName != nil) {
-            defaults = UserDefaults(suiteName: userDefaultsSuiteName) ?? defaults
+            let wasDefaults = defaults
+            defaults = UserDefaults(suiteName: userDefaultsSuiteName) ?? wasDefaults
         }
+        super.init(dictionaryRepresentation: dictionary)
     }
     
-    open var value: Any? {
+    override open var value: Any? {
         get {
             return defaults.object(forKey: key)
         }
@@ -322,32 +343,16 @@ class SBAUserDefaultsProfileItem: NSObject, SBAProfileItem {
             if newValue == nil {
                 defaults.removeObject(forKey: key)
             } else {
-                guard let compatible = self.commonCheckTypeCompatible(newValue: newValue) else {
-                    print("Error setting \(key): \(newValue) not compatible with specified type\(itemType)")
+                if !self.commonCheckTypeCompatible(newValue: newValue) {
+                    print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type\(itemType)")
                     return
                 }
                 guard let plistVal = newValue as? PlistValue else {
-                    print("Error setting \(key) in user defaults: \(newValue) does not conform to PlistValue")
+                    print("Error setting \(key) in user defaults: \(String(describing: newValue)) does not conform to PlistValue")
                     return
                 }
                 defaults.set(plistVal, forKey: key)
             }
-        }
-    }
-    
-    open var jsonValue: JSONValue? {
-        get {
-            return self.commonJsonValueGetter()
-        }
-        
-        set {
-            commonJsonValueSetter(value: newValue)
-        }
-    }
-    
-    open var demographicJsonValue: JSONValue? {
-        get {
-            return self.commonDemographicJsonValue()
         }
     }
 }

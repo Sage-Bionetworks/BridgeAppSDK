@@ -19,18 +19,7 @@
                     {
                         "key": "favoriteColor",
                         "classType": "UserDefaultsProfileItem",
-                        "editType": "StringFromList",
-                        "listChoices": {
-                            "Red",
-                            "Orange",
-                            "Yellow",
-                            "Green",
-                            "Blue",
-                            "Indigo",
-                            "Violet",
-                            "Octarine",
-                            "Other"
-                        }
+                        "itemType": "String"
                     },
                     {
                         "key": "numberOfSiblings",

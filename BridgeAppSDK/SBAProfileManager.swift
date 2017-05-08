@@ -67,21 +67,21 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
      
      @return A String array of profile item keys.
      */
-    public func profileKeys() -> [String]
+    func profileKeys() -> [String]
     
     /**
      Get the profile items defined for this app.
      
      @return A Dictionary of SBAProfileItem objects by key.
      */
-    public func profileItems() -> [String: SBAProfileItem]
+    func profileItems() -> [String: SBAProfileItem]
     
     /**
      Get the value of a profile item by its key.
      
      @return The value (optional) of the specified item.
      */
-    public func value(forProfileKey: String) -> Any?
+    func value(forProfileKey: String) -> Any?
     
     /**
      Set the value of the profile item by its key.
@@ -89,14 +89,14 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
      @throws Throws an error if there is no profile item with the specified key.
      @param value The new value to set for the profile item.
      */
-    public func setValue(_ value: Any?, forProfileKey key: String) throws
+    func setValue(_ value: Any?, forProfileKey key: String) throws
     
     /**
      Set up and return a view controller for displaying a Profile view.
      
      @return A view controller for displaying the Profile view.
      */
-    public func profileViewController() -> UIViewController?
+    func profileViewController() -> UIViewController?
 
 }
 
@@ -107,8 +107,8 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
      The shared instance of the profile manager. Loads from SBAProfileItemsJSONFilename, which
      defaults to "ProfileItems".
      */
-    static let shared = {
-        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename) as? [[String: Any]],
+    static let shared: SBAProfileManagerProtocol? = {
+        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
                 let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
             else { return nil }
         return sharedProfileManager
@@ -116,7 +116,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
 
     private dynamic var items: [SBAProfileItem] = []
     private var itemsKeys: [String] = {
-        var allKeys = []
+        var allKeys: [String] = []
         for item in items {
             allKeys.append(item.key)
         }
@@ -124,7 +124,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     }()
     
     private var itemsMap: [String: SBAProfileItem] = {
-        var allItems = [:]
+        var allItems: [String: SBAProfileItem] = [:]
         for item in items {
             allItems[item.key] = item
         }
