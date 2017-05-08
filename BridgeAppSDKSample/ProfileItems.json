@@ -1,0 +1,46 @@
+{
+    "items":    [
+                    {
+                        "key": "fullName",
+                        "classType": "KeychainProfileItem",
+                        "sourceKey": "name",
+                        "editType": "String"
+                    },
+                    {
+                        "key": "gender",
+                        "classType": "KeychainProfileItem",
+                        "editType": "ListPicker",
+                        "listChoices": [
+                            "Female",
+                            "Male",
+                            "Prefer not to say"
+                        ]
+                    },
+                    {
+                        "key": "birthDate",
+                        "classType": "KeychainProfileItem",
+                        "editType": "DatePicker"
+                    },
+                    {
+                        "key": "favoriteColor",
+                        "classType": "UserDefaultsProfileItem",
+                        "editType": "ListPicker",
+                        "listChoices": {
+                            "Red",
+                            "Orange",
+                            "Yellow",
+                            "Green",
+                            "Blue",
+                            "Indigo",
+                            "Violet",
+                            "Octarine",
+                            "Other"
+                        }
+                    },
+                    {
+                        "key": "numberOfSiblings",
+                        "classType": "UserDefaultsProfileItem",
+                        "editType": "Number"
+                    }
+                ]
+}

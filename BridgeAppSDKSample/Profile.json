@@ -2,47 +2,40 @@
     "sections": [
         {
             "title": "Items from keychain",
+            "icon": "keychainItemsIcon",
             "items": [
-                      "title": "keychain string profile item",
-                      "storageType": "keychain",
-                      "key": "keychainItem1",
-                      "editType": "String"
-                      ],
-                     [
-                      "title": "keychain date profile item",
-                      "storageType": "keychain",
-                      "key": "keychainItem2",
-                      "editType": "Date"
+                          {
+                              "title": "Full name",
+                              "profileItemKey": "fullName"
+                          },
+                          {
+                              "title": "Gender",
+                              "profileItemKey": "gender"
+                          },
+                          {
+                              "title": "Date of birth",
+                              "profileItemKey": "birthDate"
+                          }
                       ]
         },
         {
             "title": "Items from UserDefaults",
-                 "items": [
-                           "title": "UserDefaults string profile item",
-                           "storageType": "UserDefaults",
-                           "key": "defaultsItem1",
-                           "editType": "String"
-                           ],
-                          [
-                           "title": "UserDefaults date profile item",
-                           "storageType": "UserDefaults",
-                           "key": "defaultsItem2",
-                           "editType": "Date"
-                           ]
+            "icon": "userDefaultsItemsIcon",
+            "items": [
+                          {
+                              "title": "Favorite color",
+                              "profileItemKey": "favoriteColor"
+                          },
+                          {
+                              "title": "Number of siblings",
+                              "profileItemKey": "numberOfSiblings"
+                          }
+                      ]
         },
         {
             "title": "Items from SBAUserWrapper",
-                 "items": [
-                           "title": "SBAUserWrapper string profile item: Name",
-                           "storageType": "SBAUserWrapper",
-                           "key": "name",
-                           "editType": "String"
-                           ],
-                          [
-                           "title": "SBAUserWrapper read-only profile item: Data Groups",
-                           "storageType": "SBAUserWrapper",
-                           "key": "dataGroups"
-                           ]
+            "items": [
+                 ]
         },
         {
             "title": "Items from HealthKit",
@@ -53,6 +46,14 @@
             "title": "Items from SBBStudyParticipant",
             "items": [
                  ]
+        },
+        {
+            "title": "Learn items",
+            "icon": "learnItemsIcon",
+            "items": [
+                         "title": "About",
+                         "html": "About"
+                     ]
         }
     ]
 }

@@ -32,8 +32,12 @@
 //
 
 import Foundation
+import BridgeAppSDK
+import ResearchUXFactory
 
-public let SBAProfileJSONFilename = "Profile"
+public var SBAProfileJSONFilename = "Profile"
+public var SBAProfileItemsJSONFilename = "ProfileItems"
+public var SBAProfileManagerClassType = "ProfileManager"
 
 /**
  Profile manager error types
@@ -56,74 +60,99 @@ public class SBAProfileManagerError: NSObject, Error {
     }
 }
 
+public protocol SBAProfileManagerProtocol: NSObjectProtocol {
 
-open class SBAProfileManager: NSObject, SBAProfileDataSource {
-    var sections: [SBAProfileSection] = []
-    
-    private var items: [String:SBAProfileItem] = [:]
-    
-    // MARK: initializers
-    
-    public override convenience init() {
-        self.init(jsonName: SBAProfileJSONFilename)
-    }
-    
-    public init(jsonName: String) {
-        super.init()
-        commonInit(jsonName: jsonName)
-    }
-    
-    func commonInit(jsonName: String) {
-        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
-              let jsonSections = json["sections"] as? [SBAProfileSection]
-            else { return }
-        sections = jsonSections
-        
-        // map them by key for easy access
-        for var section in sections {
-            for var item in section.items {
-                self.items[item.key] = item
-            }
-        }
-    }
-    
     /**
      Get a list of the profile keys defined for this app.
      
      @return A String array of profile item keys.
      */
-    func profileKeys() -> [String] {
-        return items.allKeys
-    }
+    public func profileKeys() -> [String]
     
     /**
      Get the profile items defined for this app.
      
      @return A Dictionary of SBAProfileItem objects by key.
      */
-    func profileItems() -> [String:SBAProfileItem] {
-        return items
-    }
+    public func profileItems() -> [String: SBAProfileItem]
     
     /**
      Get the value of a profile item by its key.
      
      @return The value (optional) of the specified item.
      */
-    func value(forProfileKey: String) -> Any? {
-        guard let item = self.items[key] else { return nil }
+    public func value(forProfileKey: String) -> Any?
+    
+    /**
+     Set the value of the profile item by its key.
+     
+     @throws Throws an error if there is no profile item with the specified key.
+     @param value The new value to set for the profile item.
+     */
+    public func setValue(_ value: Any?, forProfileKey key: String) throws
+    
+    /**
+     Set up and return a view controller for displaying a Profile view.
+     
+     @return A view controller for displaying the Profile view.
+     */
+    public func profileViewController() -> UIViewController?
+
+}
+
+
+open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfileDataSource {
+
+    static let shared = {
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonName) as? [[String: Any]],
+                let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
+            else { return nil }
+        return sharedProfileManager
+    }()
+
+    private dynamic var items: [SBAProfileItem] = []
+    private var itemsKeys: [String] = {
+        var allKeys = []
+        for item in items {
+            allKeys.append(item.key)
+        }
+        return allKeys
+    }()
+    
+    private var itemsMap: [String: SBAProfileItem] = {
+        var allItems = [:]
+        for item in items {
+            allItems[item.key] = item
+        }
+        return allItems
+    }()
+    
+    private var sections: [SBAProfileSection] = []
+   
+    // MARK: SBADataObject overrides
+    
+    override open func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(#keyPath(items))
+    }
+    
+    // MARK: SBAProfileManagerProtocol
+    
+    public func profileKeys() -> [String] {
+        return itemsKeys
+    }
+    
+    public func profileItems() -> [String: SBAProfileItem] {
+        return itemsMap
+    }
+    
+    public func value(forProfileKey: String) -> Any? {
+        guard let item = self.itemsMap[key] else { return nil }
         
         return item.value
     }
     
-    /**
-     Set the value of the profile item by its key.
- 
-     @throws Throws an error if there is no profile item with the specified key.
-     @param value The new value to set for the profile item.
-     */
-    func setValue(_ value: Any?, forProfileKey key: String) throws {
-        guard let item = self.items[key] else {
+    public func setValue(_ value: Any?, forProfileKey key: String) throws {
+        guard let item = self.itemsMap[key] else {
             throw SBAProfileManagerError.init(errorType: .unknownProfileKey, key: key)
         }
         
@@ -132,15 +161,19 @@ open class SBAProfileManager: NSObject, SBAProfileDataSource {
     
     // MARK: View controller
     
-    /**
-     Set up and return a view controller for displaying a Profile view.
-     By default, it will instantiate an SBAProfileViewController with this instance set as its
-     SBAProfileDataSource. Override this method to provide your own view controller
-     for the Profile view.
-     
-     @return A view controller for displaying the Profile view.
-     */
-    open func initializeViewController() -> UIViewController? {
+    public func profileViewController() -> UIViewController? {
+        return self.initializeViewController()
+    }
+    
+    // Instantiate an SBAProfileViewController with this instance set as its SBAProfileDataSource. 
+    func initializeViewController(fromJson jsonFile: String = SBAProfileJSONFilename) -> UIViewController? {
+        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
+            let jsonSections = json["sections"] as? [SBAProfileSection]
+            else { return }
+        sections = jsonSections,
+        
+        let viewController = SBAProfileViewController()
+        
         return nil
     }
     

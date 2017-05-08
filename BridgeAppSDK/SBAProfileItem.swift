@@ -32,13 +32,10 @@
 //
 
 import Foundation
+import ResearchUXFactory
 
 @objc
-public protocol SBAProfileItem: NSObjectProtocol {
-    var title: String { get }
-    var detail: String? { get }
-    var isEditable: Bool { get }
-    
+public protocol SBAProfileItem: SBAJSONDictionaryRepresentableObject {    
     /**
      key is used to access a specific profile item, and so must be unique across all SBAProfileItems
      within an app.

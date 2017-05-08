@@ -32,13 +32,27 @@
 //
 
 import Foundation
+import ResearchUXFactory
 
-protocol SBAProfileSection: NSObjectProtocol {
+public protocol SBAProfileSection: NSObjectProtocol {
     var title: String? { get }
     var items: [SBAProfileItem] { get }
+}
+
+public protocol SBAProfileTableItem: NSObjectProtocol {
+    var profileItemKey: String? { get }
+    var title: String { get }
+    var isEditable: Bool { get }
+    var onSelectedViewController: UIViewController? { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
     open dynamic var title: String?
     open dynamic var items: [SBAProfileItem] = []
+    
+    override open func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(items)])
+    }
 }
+
+
