@@ -279,7 +279,7 @@
                 }];
             }
             
-            dispatch_group_async(historyGroup, dispatch_get_main_queue(), ^{
+            dispatch_group_notify(historyGroup, dispatch_get_main_queue(), ^{
                 completionBlock(allSchedules, error);
             });
         }
