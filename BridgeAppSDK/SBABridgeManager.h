@@ -240,6 +240,17 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
                                daysBehind:(NSInteger)daysBehind
                                completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
+/**
+ Gets all scheduled activities for a user. This returns a consolidated list that includes activities that are
+ future and past. The activities are returned for a given date range.
+ 
+ @param scheduledFrom   The earlier end of the desired date range for activities to be retrieved.
+ @param scheduledTo     The later end of the desired date range for activities to be retrieved.
+ @param completion  A SBABridgeManagerCompletionBlock to be called upon completion.
+ */
++ (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
+                          completion:(SBABridgeManagerCompletionBlock)completionBlock;
+
 /*!
  Update multiple scheduled activities' statuses with the API at one time.
  

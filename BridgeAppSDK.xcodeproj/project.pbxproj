@@ -165,6 +165,7 @@
 		FFC15FDC1CFE4F0D00C29AF7 /* ColorInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */; };
 		FFC15FDF1CFE513200C29AF7 /* sample-study.pem in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FDE1CFE513200C29AF7 /* sample-study.pem */; };
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
+		FFCE310D1EC1273C0086DCAA /* SBABridgeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
@@ -558,6 +559,7 @@
 		FFC15FD91CFE4E8700C29AF7 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		FFC15FDB1CFE4F0D00C29AF7 /* ColorInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ColorInfo.plist; sourceTree = "<group>"; };
 		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
+		FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
@@ -748,6 +750,7 @@
 				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
 				FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */,
+				FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */,
 			);
 			path = BridgeAppSDKTests;
 			sourceTree = "<group>";
@@ -1691,6 +1694,7 @@
 				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
+				FFCE310D1EC1273C0086DCAA /* SBABridgeManagerTests.swift in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,
 				FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */,

@@ -228,6 +228,67 @@
     }];
 }
 
++ (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
+                          completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    
+    // TODO: syoung 05/08/2017 This is a work around for the limitations of the services so that we can return
+    // accurate-ish data.
+    
+    // Make sure that the start is the older of the two dates
+    NSDate *start = [scheduledFrom earlierDate:scheduledTo];
+    NSDate *end = [scheduledFrom laterDate:scheduledTo];
+    NSDate *now = [NSDate date];
+    
+    // Look to see if we need to get history for past activities
+    NSDate *historyStart = [now earlierDate:start];
+    NSDate *historyEnd = [now earlierDate:end];
+    BOOL getHistory = ![now isEqualToDate:historyStart];
+    
+    // Convert start and end into days ahead and behind
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    // Always get for 1 days/schedules ahead (max allowed by existing services) so that we can pull the GUIDs from that.
+    NSInteger daysAhead = [[calendar components:NSCalendarUnitDay fromDate:now toDate:end options:0] day];
+    BOOL includeCurrent = (daysAhead >= 0);
+    daysAhead = MAX(1, daysAhead);
+    NSInteger daysBehind = MAX(0,[[calendar components:NSCalendarUnitDay fromDate:start toDate:now options:0] day]);
+    
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
+        
+        NSArray *uniqueGuids = [activitiesList valueForKeyPath:@"@distinctUnionOfObjects.activity.guid"];
+        if (getHistory && (uniqueGuids.count > 0)) {
+        
+            __block NSMutableArray *allSchedules = includeCurrent && (activitiesList != nil) ? [activitiesList mutableCopy] : [NSMutableArray new];
+            
+            dispatch_group_t historyGroup = dispatch_group_create();
+            
+            for (NSString *guid in uniqueGuids) {
+                dispatch_group_enter(historyGroup);
+                [SBBComponent(SBBActivityManager) getScheduledActivitiesForGuid:guid scheduledFrom:historyStart to:historyEnd cachingPolicy:SBBCachingPolicyCheckCacheFirst withCompletion:^(NSArray * _Nullable bList, NSError * _Nullable error) {
+                    
+                    // Remove any schedules from the list that were returned by the second call
+                    if (includeCurrent) {
+                        NSArray *guids = [bList valueForKeyPath:@"@distinctUnionOfObjects.guid"];
+                        [allSchedules filterUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (guid IN %@)", guids]];
+                    }
+                    
+                    // Add from this call
+                    [allSchedules addObjectsFromArray:bList];
+                    
+                    // leave the group
+                    dispatch_group_leave(historyGroup);
+                }];
+            }
+            
+            dispatch_group_async(historyGroup, dispatch_get_main_queue(), ^{
+                completionBlock(allSchedules, error);
+            });
+        }
+        else {
+            completionBlock(activitiesList, error);
+        }
+    }];
+}
+
 + (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:^(id responseObject, NSError *error) {
         if (completionBlock) {

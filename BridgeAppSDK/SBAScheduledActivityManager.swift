@@ -143,7 +143,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         if (reloading) { return }
         reloading = true
         
-        SBABridgeManager.fetchChanges(toScheduledActivities: activities, daysAhead: daysAhead, daysBehind: daysBehind) {
+        // Fetch all schedules (including completed)
+        let now = Date()
+        let fromDate = now.addingNumberOfDays(-1 * daysBehind)
+        let toDate = now.addingNumberOfDays(daysAhead)
+        
+        SBABridgeManager.fetchScheduledActivities(from: fromDate, to: toDate) {
             [weak self] (obj, error) in
             
             // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
