@@ -183,6 +183,8 @@ class SBABridgeManagerTests: XCTestCase {
 
 class TestActivityManager : NSObject, SBBActivityManagerProtocol {
     
+    fileprivate let taskQueue = DispatchQueue(label: UUID().uuidString)
+    
     // MARK: getScheduledActivities
     
     var getScheduledActivities_Result: [SBBScheduledActivity]?
@@ -201,7 +203,7 @@ class TestActivityManager : NSObject, SBBActivityManagerProtocol {
         getScheduledActivities_daysBehind = daysBehind
         getScheduledActivities_cachingPolicy = policy
         
-        DispatchQueue.main.async {
+        taskQueue.async {
             completion(self.getScheduledActivities_Result, self.getScheduledActivities_Error)
         }
         
@@ -257,7 +259,7 @@ class TestActivityManager : NSObject, SBBActivityManagerProtocol {
         getScheduledActivitiesForGuid_scheduledTo = scheduledTo
         getScheduledActivitiesForGuid_cachingPolicy = policy
         
-        DispatchQueue.main.async {
+        taskQueue.async {
             completion(self.getScheduledActivitiesForGuid_Result[activityGuid], self.getScheduledActivitiesForGuid_Error[activityGuid])
         }
         
