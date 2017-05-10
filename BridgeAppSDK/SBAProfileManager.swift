@@ -106,6 +106,13 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     /**
      The shared instance of the profile manager. Loads from SBAProfileItemsJSONFilename, which
      defaults to "ProfileItems".
+     
+     If you subclass SBAProfileManager, or just want this method to return a different class that
+     implements the SBAProfileManagerProtocol, you will need to override the mapping for the default
+     value of SBAProfileManagerClassType ("ProfileManager") in your ClassTypeMap.plist to map to your
+     class instead of this one. Alternatively you could change the value of SBAProfileManagerClassType
+     before accessing this, and map *that* in your ClassTypeMap.plist; or just set SBAProfileManagerClassType
+     to the fully qualified class name without setting up any mappings.
      */
     static let shared: SBAProfileManagerProtocol? = {
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
@@ -116,11 +123,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
 
     private dynamic var items: [SBAProfileItem] = []
     lazy private var itemsKeys: [String] = {
-        var allKeys: [String] = []
-        for item in self.items {
-            allKeys.append(item.profileKey)
-        }
-        return allKeys
+        return self.items.map({ $0.profileKey })
     }()
     
     lazy private var itemsMap: [String: SBAProfileItem] = {
@@ -141,7 +144,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     
     override open func defaultValue(forKey key: String) -> Any? {
         if key == "items" {
-            return [] as [String]
+            return [SBAProfileItem]()
         } else {
             return super.defaultValue(forKey: key)
         }

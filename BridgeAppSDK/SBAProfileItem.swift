@@ -56,7 +56,7 @@ public protocol SBAProfileItem: NSObjectProtocol {
     var demographicKey: String { get }
     
     /**
-     itemType specifies what type to store the profileItem as.
+     itemType specifies what type to store the profileItem as. Defaults to String if not otherwise specified.
      */
     var itemType: SBAProfileTypeIdentifier { get }
     
@@ -181,7 +181,7 @@ extension SBAProfileItem {
     }
 }
 
-class SBAProfileItemBase: NSObject, SBAProfileItem {
+open class SBAProfileItemBase: NSObject, SBAProfileItem {
     /**
      The value property is used to get and set the profile item's value in whatever internal data
      storage is used by the implementing class.
@@ -198,19 +198,20 @@ class SBAProfileItemBase: NSObject, SBAProfileItem {
     
     open var sourceKey: String {
         get {
-            return sourceDict["sourceKey"] as! String? ?? self.profileKey
+            return sourceDict["sourceKey"] as? String ?? self.profileKey
         }
     }
     
     open var demographicKey: String {
         get {
-            return sourceDict["demographicKey"] as! String? ?? self.profileKey
+            return sourceDict["demographicKey"] as? String ?? self.profileKey
         }
     }
     
     open var itemType: SBAProfileTypeIdentifier {
         get {
-            return sourceDict["itemType"]! as! SBAProfileTypeIdentifier
+            guard let rawValue = sourceDict["itemType"] as? String else { return .string }
+            return SBAProfileTypeIdentifier(rawValue: rawValue)
         }
     }
     
@@ -236,18 +237,21 @@ class SBAProfileItemBase: NSObject, SBAProfileItem {
     }
 }
 
-class SBAKeychainProfileItem: SBAProfileItemBase {
-    private var keychain: SBAKeychainWrapper
+open class SBAKeychainProfileItem: SBAProfileItemBase {
+    private let keychain: SBAKeychainWrapper
     
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        keychain = SBAUser.shared.keychain
+        var keychainToUse = SBAUser.shared.keychain
         
         let keychainService = dictionary["keychainService"] as! String?
         let keychainAccessGroup = dictionary["keychainAccessGroup"] as! String?
         
         if (keychainService != nil || keychainAccessGroup != nil) {
-            keychain = SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
+            keychainToUse = SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
         }
+        
+        keychain = keychainToUse
+        
         super.init(dictionaryRepresentation: dictionary)
     }
     
@@ -267,18 +271,18 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
                     try keychain.removeObject(forKey: profileKey)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
+                        assert(false, "Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
                         return
                     }
                     guard let secureVal = secureCodingValue(of: newValue) else {
-                        print("Error setting \(profileKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
+                        assert(false, "Error setting \(profileKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
                         return
                     }
                     try keychain.setObject(secureVal, forKey: profileKey)
                 }
             }
-            catch let error as NSError {
-                print("Failed to set \(profileKey): \(error.code) \(error.localizedDescription)")
+            catch let error {
+                assert(false, "Failed to set \(profileKey): \(String(describing: error))")
             }
         }
     }
@@ -341,18 +345,20 @@ extension NSDate: PlistValue {}
 extension Data: PlistValue {}
 extension Date: PlistValue {}
 
-class SBAUserDefaultsProfileItem: SBAProfileItemBase {
-    private var defaults: UserDefaults
+open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
+    private let defaults: UserDefaults
     
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        defaults = SBAUser.shared.bridgeInfo?.userDefaults ?? UserDefaults.standard
+        var defaultsToUse = SBAUser.shared.bridgeInfo?.userDefaults ?? UserDefaults.standard
         
         let userDefaultsSuiteName = dictionary["userDefaultsSuiteName"] as! String?
         
         if (userDefaultsSuiteName != nil) {
-            let wasDefaults = defaults
-            defaults = UserDefaults(suiteName: userDefaultsSuiteName) ?? wasDefaults
+            defaultsToUse = UserDefaults(suiteName: userDefaultsSuiteName) ?? defaultsToUse
         }
+        
+        defaults = defaultsToUse
+        
         super.init(dictionaryRepresentation: dictionary)
     }
     
@@ -366,11 +372,11 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
                 defaults.removeObject(forKey: profileKey)
             } else {
                 if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
+                    assert(false, "Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
                     return
                 }
                 guard let plistVal = pListValue(of: newValue) else {
-                    print("Error setting \(profileKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
+                    assert(false, "Error setting \(profileKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
                     return
                 }
                 defaults.set(plistVal, forKey: profileKey)
