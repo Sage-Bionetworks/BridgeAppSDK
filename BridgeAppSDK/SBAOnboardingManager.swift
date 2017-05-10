@@ -345,9 +345,6 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             return tableRows.count
         }()
         
-        
-        
-        
         return (currentRow < tableRow) ? .locked : (currentRow == tableRow) ? .current : .completed
     }
 
