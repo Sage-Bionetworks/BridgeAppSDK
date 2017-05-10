@@ -44,35 +44,35 @@ class SBAProfileManagerTests: ResourceTestCase {
         let birthDateItem = items["birthDate"]
         let favoriteColorItem = items["favoriteColor"]
         let numberOfSiblingsItem = items["numberOfSiblings"]
-        XCTAssert(fullNameItem != nil, "no item for key fullName")
-        XCTAssert(genderItem != nil, "no item for key gender")
-        XCTAssert(birthDateItem != nil, "no item for key birthDate")
-        XCTAssert(favoriteColorItem != nil, "no item for key favoriteColor")
-        XCTAssert(numberOfSiblingsItem != nil, "no item for key numberOfSiblings")
+        XCTAssert(fullNameItem != nil, "no item for profileKey fullName")
+        XCTAssert(genderItem != nil, "no item for profileKey gender")
+        XCTAssert(birthDateItem != nil, "no item for profileKey birthDate")
+        XCTAssert(favoriteColorItem != nil, "no item for profileKey favoriteColor")
+        XCTAssert(numberOfSiblingsItem != nil, "no item for profileKey numberOfSiblings")
         if fullNameItem != nil {
             XCTAssert(fullNameItem!.sourceKey == "name", "expected fullNameItem.sourceKey to be name, but it's \(fullNameItem!.sourceKey)")
-            XCTAssert(fullNameItem!.demographicKey == fullNameItem!.key, "expected fullNameItem.demographicKey to be \(fullNameItem!.key), but it's \(fullNameItem!.demographicKey)")
+            XCTAssert(fullNameItem!.demographicKey == fullNameItem!.profileKey, "expected fullNameItem.demographicKey to be \(fullNameItem!.profileKey), but it's \(fullNameItem!.demographicKey)")
             XCTAssert(fullNameItem!.itemType == "String", "expected fullNameItem.itemType to be String, but it's \(fullNameItem!.itemType)")
             let typedItem = fullNameItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "fullNameItem is not an SBAKeychainProfileItem: \(String(describing: fullNameItem))")
         }
         if genderItem != nil {
             XCTAssert(genderItem!.sourceKey == "gender", "expected genderItem.sourceKey to be gender, but it's \(genderItem!.sourceKey)")
-            XCTAssert(genderItem!.demographicKey == genderItem!.key, "expected genderItem.demographicKey to be \(genderItem!.key), but it's \(genderItem!.demographicKey)")
+            XCTAssert(genderItem!.demographicKey == genderItem!.profileKey, "expected genderItem.demographicKey to be \(genderItem!.profileKey), but it's \(genderItem!.demographicKey)")
             XCTAssert(genderItem!.itemType == "HKBiologicalSex", "expected genderItem.itemType to be HKBiologicalSex, but it's \(genderItem!.itemType)")
             let typedItem = genderItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "genderItem is not an SBAKeychainProfileItem: \(String(describing: genderItem))")
         }
         if birthDateItem != nil {
             XCTAssert(birthDateItem!.sourceKey == "birthDate", "expected birthDateItem.sourceKey to be name, but it's \(birthDateItem!.sourceKey)")
-            XCTAssert(birthDateItem!.demographicKey == birthDateItem!.key, "expected birthDateItem.demographicKey to be \(birthDateItem!.key), but it's \(birthDateItem!.demographicKey)")
+            XCTAssert(birthDateItem!.demographicKey == birthDateItem!.profileKey, "expected birthDateItem.demographicKey to be \(birthDateItem!.profileKey), but it's \(birthDateItem!.demographicKey)")
             XCTAssert(birthDateItem!.itemType == "Date", "expected birthDateItem.itemType to be Date, but it's \(birthDateItem!.itemType)")
             let typedItem = birthDateItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "birthDateItem is not an SBAKeychainProfileItem: \(String(describing: birthDateItem))")
         }
         if favoriteColorItem != nil {
             XCTAssert(favoriteColorItem!.sourceKey == "favoriteColor", "expected favoriteColorItem.sourceKey to be favoriteColor, but it's \(favoriteColorItem!.sourceKey)")
-            XCTAssert(favoriteColorItem!.demographicKey == favoriteColorItem!.key, "expected favoriteColorItem.demographicKey to be \(favoriteColorItem!.key), but it's \(favoriteColorItem!.demographicKey)")
+            XCTAssert(favoriteColorItem!.demographicKey == favoriteColorItem!.profileKey, "expected favoriteColorItem.demographicKey to be \(favoriteColorItem!.profileKey), but it's \(favoriteColorItem!.demographicKey)")
             XCTAssert(favoriteColorItem!.itemType == "String", "expected favoriteColorItem.itemType to be String, but it's \(favoriteColorItem!.itemType)")
             let typedItem = favoriteColorItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
             XCTAssertNotNil(typedItem, "favoriteColorItem is not an SBAUserDefaultsProfileItem: \(String(describing: favoriteColorItem))")
@@ -96,21 +96,21 @@ class SBAProfileManagerTests: ResourceTestCase {
         let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBAKeychainProfileItem
         let favoriteColorItem = items["favoriteColor"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
         let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
-        XCTAssert(fullNameItem != nil, "no SBAKeychainProfileItem for key fullName")
-        XCTAssert(genderItem != nil, "no SBAKeychainProfileItem for key gender")
-        XCTAssert(birthDateItem != nil, "no SBAKeychainProfileItem for key birthDate")
-        XCTAssert(favoriteColorItem != nil, "no SBAUserDefaultsProfileItem for key favoriteColor")
-        XCTAssert(numberOfSiblingsItem != nil, "no SBAUserDefaultsProfileItem for key numberOfSiblings")
+        XCTAssert(fullNameItem != nil, "no SBAKeychainProfileItem for profileKey fullName")
+        XCTAssert(genderItem != nil, "no SBAKeychainProfileItem for profileKey gender")
+        XCTAssert(birthDateItem != nil, "no SBAKeychainProfileItem for profileKey birthDate")
+        XCTAssert(favoriteColorItem != nil, "no SBAUserDefaultsProfileItem for profileKey favoriteColor")
+        XCTAssert(numberOfSiblingsItem != nil, "no SBAUserDefaultsProfileItem for profileKey numberOfSiblings")
         if fullNameItem != nil {
             let testName = "Full Name"
             do {
-                try ProfileManager!.setValue(testName, forProfileKey: fullNameItem!.key);
+                try ProfileManager!.setValue(testName, forProfileKey: fullNameItem!.profileKey);
             }
             catch {
-                XCTFail("Failed setting value for fullNameItem: unknown profile key \(fullNameItem!.key)")
+                XCTFail("Failed setting value for fullNameItem: unknown profile key \(fullNameItem!.profileKey)")
             }
             
-            let value = ProfileManager!.value(forProfileKey: fullNameItem!.key) as? String
+            let value = ProfileManager!.value(forProfileKey: fullNameItem!.profileKey) as? String
             if value == nil {
                 XCTFail("Failed retrieving String value for fullNameItem")
             } else {
@@ -120,13 +120,13 @@ class SBAProfileManagerTests: ResourceTestCase {
         if genderItem != nil {
             let testGender = HKBiologicalSex.female
             do {
-                try ProfileManager!.setValue(testGender, forProfileKey: genderItem!.key);
+                try ProfileManager!.setValue(testGender, forProfileKey: genderItem!.profileKey);
             }
             catch {
-                XCTFail("Failed setting value for genderItem: unknown profile key \(genderItem!.key)")
+                XCTFail("Failed setting value for genderItem: unknown profile key \(genderItem!.profileKey)")
             }
             
-            let value = ProfileManager!.value(forProfileKey: genderItem!.key) as? HKBiologicalSex
+            let value = ProfileManager!.value(forProfileKey: genderItem!.profileKey) as? HKBiologicalSex
             if value == nil {
                 XCTFail("Failed retrieving HKBiologicalSex value for genderItem")
             } else {
@@ -136,13 +136,13 @@ class SBAProfileManagerTests: ResourceTestCase {
         if birthDateItem != nil {
             let testBirthDate = Date()
             do {
-                try ProfileManager!.setValue(testBirthDate, forProfileKey: birthDateItem!.key);
+                try ProfileManager!.setValue(testBirthDate, forProfileKey: birthDateItem!.profileKey);
             }
             catch {
-                XCTFail("Failed setting value for birthDateItem: unknown profile key \(birthDateItem!.key)")
+                XCTFail("Failed setting value for birthDateItem: unknown profile key \(birthDateItem!.profileKey)")
             }
             
-            let value = ProfileManager!.value(forProfileKey: birthDateItem!.key) as? Date
+            let value = ProfileManager!.value(forProfileKey: birthDateItem!.profileKey) as? Date
             if value == nil {
                 XCTFail("Failed retrieving Date value for birthDateItem")
             } else {
@@ -152,13 +152,13 @@ class SBAProfileManagerTests: ResourceTestCase {
         if favoriteColorItem != nil {
             let testColor = "Octarine"
             do {
-                try ProfileManager!.setValue(testColor, forProfileKey: favoriteColorItem!.key);
+                try ProfileManager!.setValue(testColor, forProfileKey: favoriteColorItem!.profileKey);
             }
             catch {
-                XCTFail("Failed setting value for favoriteColorItem: unknown profile key \(favoriteColorItem!.key)")
+                XCTFail("Failed setting value for favoriteColorItem: unknown profile key \(favoriteColorItem!.profileKey)")
             }
             
-            let value = ProfileManager!.value(forProfileKey: favoriteColorItem!.key) as? String
+            let value = ProfileManager!.value(forProfileKey: favoriteColorItem!.profileKey) as? String
             if value == nil {
                 XCTFail("Failed retrieving String value for favoriteColorItem")
             } else {
@@ -168,13 +168,13 @@ class SBAProfileManagerTests: ResourceTestCase {
         if numberOfSiblingsItem != nil {
             let testNumber = 7
             do {
-                try ProfileManager!.setValue(testNumber, forProfileKey: numberOfSiblingsItem!.key);
+                try ProfileManager!.setValue(testNumber, forProfileKey: numberOfSiblingsItem!.profileKey);
             }
             catch {
-                XCTFail("Failed setting value for numberOfSiblingsItem: unknown profile key \(numberOfSiblingsItem!.key)")
+                XCTFail("Failed setting value for numberOfSiblingsItem: unknown profile key \(numberOfSiblingsItem!.profileKey)")
             }
             
-            let value = ProfileManager!.value(forProfileKey: numberOfSiblingsItem!.key) as? Int
+            let value = ProfileManager!.value(forProfileKey: numberOfSiblingsItem!.profileKey) as? Int
             if value == nil {
                 XCTFail("Failed retrieving Number value for numberOfSiblingsItem")
             } else {

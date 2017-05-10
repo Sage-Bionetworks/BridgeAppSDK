@@ -50,11 +50,11 @@ public enum SBAProfileManagerErrorType {
  */
 public class SBAProfileManagerError: NSObject, Error {
     var errorType: SBAProfileManagerErrorType
-    var key: String
+    var profileKey: String
     
-    public init(errorType: SBAProfileManagerErrorType, key: String) {
+    public init(errorType: SBAProfileManagerErrorType, profileKey key: String) {
         self.errorType = errorType
-        self.key = key
+        self.profileKey = key
         super.init()
     }
 }
@@ -71,22 +71,23 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
     /**
      Get the profile items defined for this app.
      
-     @return A Dictionary of SBAProfileItem objects by key.
+     @return A Dictionary of SBAProfileItem objects by profileKey.
      */
     func profileItems() -> [String: SBAProfileItem]
     
     /**
-     Get the value of a profile item by its key.
+     Get the value of a profile item by its profileKey.
      
      @return The value (optional) of the specified item.
      */
     func value(forProfileKey: String) -> Any?
     
     /**
-     Set the value of the profile item by its key.
+     Set the value of the profile item by its profileKey.
      
-     @throws Throws an error if there is no profile item with the specified key.
+     @throws Throws an error if there is no profile item with the specified profileKey.
      @param value The new value to set for the profile item.
+     @param key The profileKey of the item whose value is to be set.
      */
     func setValue(_ value: Any?, forProfileKey key: String) throws
     
@@ -117,7 +118,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     lazy private var itemsKeys: [String] = {
         var allKeys: [String] = []
         for item in self.items {
-            allKeys.append(item.key)
+            allKeys.append(item.profileKey)
         }
         return allKeys
     }()
@@ -125,7 +126,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     lazy private var itemsMap: [String: SBAProfileItem] = {
         var allItems: [String: SBAProfileItem] = [:]
         for item in self.items {
-            allItems[item.key] = item
+            allItems[item.profileKey] = item
         }
         return allItems
     }()
@@ -156,16 +157,16 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     }
     
     /**
-     @return A map of all the profile items by key.
+     @return A map of all the profile items by profileKey.
      */
     public func profileItems() -> [String: SBAProfileItem] {
         return itemsMap
     }
     
     /**
-     Get the value of a profile item by its key.
+     Get the value of a profile item by its profileKey.
      
-     @param key The key for the profile item to be retrieved.
+     @param key The profileKey for the profile item to be retrieved.
      @return The value of the profile item, as stored in whatever underlying storage it uses.
      */
     public func value(forProfileKey key: String) -> Any? {
@@ -175,13 +176,13 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     }
     
     /**
-     Set (or clear) a new value on a profile item by key.
+     Set (or clear) a new value on a profile item by profileKey.
      @param value The new value to set.
-     @param key The key of the profile item on which to set the new value.
+     @param key The profileKey of the profile item on which to set the new value.
      */
     public func setValue(_ value: Any?, forProfileKey key: String) throws {
         guard let item = self.itemsMap[key] else {
-            throw SBAProfileManagerError.init(errorType: .unknownProfileKey, key: key)
+            throw SBAProfileManagerError.init(errorType: .unknownProfileKey, profileKey: key)
         }
         
         item.value = value

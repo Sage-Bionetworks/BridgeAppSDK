@@ -37,21 +37,21 @@ import ResearchUXFactory
 @objc
 public protocol SBAProfileItem: NSObjectProtocol {
     /**
-     key is used to access a specific profile item, and so must be unique across all SBAProfileItems
+     profileKey is used to access a specific profile item, and so must be unique across all SBAProfileItems
      within an app.
      */
-    var key: String { get }
+    var profileKey: String { get }
     
     /**
      sourceKey is the profile item's key within its internal data storage. By default it will be the
-     same as key, but can be different if needed (e.g. two different profile items happen to map to
+     same as profileKey, but can be different if needed (e.g. two different profile items happen to map to
      the same key in different storage types).
      */
     var sourceKey: String { get }
     
     /**
      demographicKey is the profile item's key in the demographic data upload schema. By default it will
-     be the same as key, but can be different if needed.
+     be the same as profileKey, but can be different if needed.
      */
     var demographicKey: String { get }
     
@@ -190,21 +190,21 @@ class SBAProfileItemBase: NSObject, SBAProfileItem {
 
     fileprivate let sourceDict: [AnyHashable: Any]
     
-    open var key: String {
+    open var profileKey: String {
         get {
-            return sourceDict["key"]! as! String
+            return sourceDict["profileKey"]! as! String
         }
     }
     
     open var sourceKey: String {
         get {
-            return sourceDict["sourceKey"] as! String? ?? self.key
+            return sourceDict["sourceKey"] as! String? ?? self.profileKey
         }
     }
     
     open var demographicKey: String {
         get {
-            return sourceDict["demographicKey"] as! String? ?? self.key
+            return sourceDict["demographicKey"] as! String? ?? self.profileKey
         }
     }
     
@@ -254,9 +254,9 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
     override open var value: Any? {
         get {
             var err: NSError?
-            let obj = keychain.object(forKey: key, error: &err)
+            let obj = keychain.object(forKey: profileKey, error: &err)
             if let error = err {
-                print("Error accessing keychain \(key): \(error.code) \(error)")
+                print("Error accessing keychain \(profileKey): \(error.code) \(error)")
             }
             return self.typedValue(from: obj)
         }
@@ -264,21 +264,21 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
         set {
             do {
                 if newValue == nil {
-                    try keychain.removeObject(forKey: key)
+                    try keychain.removeObject(forKey: profileKey)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type \(itemType)")
+                        print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType)")
                         return
                     }
                     guard let secureVal = secureCodingValue(of: newValue) else {
-                        print("Error setting \(key) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
+                        print("Error setting \(profileKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
                         return
                     }
-                    try keychain.setObject(secureVal, forKey: key)
+                    try keychain.setObject(secureVal, forKey: profileKey)
                 }
             }
             catch let error as NSError {
-                print("Failed to set \(key): \(error.code) \(error.localizedDescription)")
+                print("Failed to set \(profileKey): \(error.code) \(error.localizedDescription)")
             }
         }
     }
@@ -358,22 +358,22 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     
     override open var value: Any? {
         get {
-            return typedValue(from: defaults.object(forKey: key) as? PlistValue)
+            return typedValue(from: defaults.object(forKey: profileKey) as? PlistValue)
         }
         
         set {
             if newValue == nil {
-                defaults.removeObject(forKey: key)
+                defaults.removeObject(forKey: profileKey)
             } else {
                 if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type\(itemType)")
+                    print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType)")
                     return
                 }
                 guard let plistVal = pListValue(of: newValue) else {
-                    print("Error setting \(key) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
+                    print("Error setting \(profileKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
                     return
                 }
-                defaults.set(plistVal, forKey: key)
+                defaults.set(plistVal, forKey: profileKey)
             }
         }
     }
