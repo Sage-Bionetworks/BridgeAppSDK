@@ -32,7 +32,6 @@
 //
 
 import Foundation
-import BridgeAppSDK
 import ResearchUXFactory
 
 public var SBAProfileJSONFilename = "Profile"
@@ -54,9 +53,9 @@ public class SBAProfileManagerError: NSObject, Error {
     var key: String
     
     public init(errorType: SBAProfileManagerErrorType, key: String) {
-        super.init()
         self.errorType = errorType
         self.key = key
+        super.init()
     }
 }
 
@@ -115,17 +114,17 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     }()
 
     private dynamic var items: [SBAProfileItem] = []
-    private var itemsKeys: [String] = {
+    lazy private var itemsKeys: [String] = {
         var allKeys: [String] = []
-        for item in items {
+        for item in self.items {
             allKeys.append(item.key)
         }
         return allKeys
     }()
     
-    private var itemsMap: [String: SBAProfileItem] = {
+    lazy private var itemsMap: [String: SBAProfileItem] = {
         var allItems: [String: SBAProfileItem] = [:]
-        for item in items {
+        for item in self.items {
             allItems[item.key] = item
         }
         return allItems
@@ -137,6 +136,14 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     
     override open func dictionaryRepresentationKeys() -> [String] {
         return super.dictionaryRepresentationKeys().appending(#keyPath(items))
+    }
+    
+    override open func defaultValue(forKey key: String) -> Any? {
+        if key == "items" {
+            return [] as [String]
+        } else {
+            return super.defaultValue(forKey: key)
+        }
     }
     
     // MARK: SBAProfileManagerProtocol

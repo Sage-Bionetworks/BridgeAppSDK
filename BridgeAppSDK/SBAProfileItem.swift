@@ -106,7 +106,7 @@ extension SBAProfileItem {
         }
     }
     
-    func commonJsonValueSetter(value: Any?) {
+    func commonJsonValueSetter(value: SBBJSONValue?) {
         guard value != nil else {
             self.value = nil
             return
@@ -126,17 +126,13 @@ extension SBAProfileItem {
             self.value = val
             
         case "Date":
-            var dateVal = value as? NSDate
-            if dateVal == nil {
-                guard let stringVal = value as? String,
-                        let dateFromString = NSDate(iso8601String: stringVal)
-                    else { return }
-                dateVal = dateFromString
-            }
+            guard let stringVal = value as? String,
+                    let dateVal = NSDate(iso8601String: stringVal)
+                else { return }
             self.value = dateVal
             
         case "HKBiologicalSex":
-            guard let val = value as? NSNumber else { return }
+            guard let val = value as? HKBiologicalSex else { return }
             self.value = val
             
         case "HKQuantity":
@@ -174,7 +170,7 @@ extension SBAProfileItem {
             return newValue as? NSDate  != nil
             
         case "HKBiologicalSex":
-            return newValue as? NSNumber != nil
+            return newValue as? HKBiologicalSex != nil
             
         case "HKQuantity":
             return newValue as? NSNumber != nil
@@ -262,7 +258,7 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
             if let error = err {
                 print("Error accessing keychain \(key): \(error.code) \(error)")
             }
-            return obj
+            return self.typedValue(from: obj)
         }
         
         set {
@@ -271,11 +267,11 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
                     try keychain.removeObject(forKey: key)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type\(itemType)")
+                        print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type \(itemType)")
                         return
                     }
-                    guard let secureVal = newValue as? NSSecureCoding else {
-                        print("Error setting \(key) in keychain: \(String(describing: newValue)) does not conform to NSSecureCoding")
+                    guard let secureVal = secureCodingValue(of: newValue) else {
+                        print("Error setting \(key) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
                         return
                     }
                     try keychain.setObject(secureVal, forKey: key)
@@ -286,9 +282,38 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
             }
         }
     }
+
+    open func secureCodingValue(of anyValue: Any?) -> NSSecureCoding? {
+        guard anyValue != nil else { return nil }
+        var retVal = anyValue as? NSSecureCoding
+        if self.itemType == "HKBiologicalSex" {
+            // HKBiologicalSexObject exists and is NSSecureCoding, but iOS doesn't give
+            // us any way to create one and set its value so we're stuck using NSNumber
+            guard let sex = anyValue as? HKBiologicalSex else { return retVal }
+            retVal = sex.rawValue as NSNumber
+        }
+        
+        return retVal
+    }
+    
+    open func typedValue(from secureCodingValue: NSSecureCoding?) -> Any? {
+        var retVal: Any? = secureCodingValue
+        if self.itemType == "HKBiologicalSex" {
+            guard let intVal = secureCodingValue as? Int else { return nil }
+            retVal = HKBiologicalSex(rawValue: intVal)
+        }
+        
+        return retVal
+    }
 }
 
-public protocol JSONValue {}
+public protocol PlistValue {
+    // empty, just used to mark types as suitable for use in plists (and user defaults)
+}
+
+public protocol JSONValue: PlistValue {
+    // empty, just used to mark types as acceptable for serializing to JSON
+}
 
 extension NSString: JSONValue {}
 extension NSNumber: JSONValue {}
@@ -311,13 +336,10 @@ extension UInt64: JSONValue {}
 extension Array: JSONValue {}
 extension Dictionary: JSONValue {}
 
-public protocol PlistValue: JSONValue {}
-
 extension NSData: PlistValue {}
 extension NSDate: PlistValue {}
 extension Data: PlistValue {}
 extension Date: PlistValue {}
-
 
 class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     private var defaults: UserDefaults
@@ -336,7 +358,7 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     
     override open var value: Any? {
         get {
-            return defaults.object(forKey: key)
+            return typedValue(from: defaults.object(forKey: key) as? PlistValue)
         }
         
         set {
@@ -347,12 +369,32 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
                     print("Error setting \(key): \(String(describing: newValue)) not compatible with specified type\(itemType)")
                     return
                 }
-                guard let plistVal = newValue as? PlistValue else {
-                    print("Error setting \(key) in user defaults: \(String(describing: newValue)) does not conform to PlistValue")
+                guard let plistVal = pListValue(of: newValue) else {
+                    print("Error setting \(key) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
                     return
                 }
                 defaults.set(plistVal, forKey: key)
             }
         }
+    }
+    
+    open func pListValue(of anyValue: Any?) -> PlistValue? {
+        guard anyValue != nil else { return nil }
+        var retVal = anyValue! as? PlistValue
+        if self.itemType == "HKBiologicalSex" {
+            retVal = (anyValue as? HKBiologicalSex)?.rawValue
+        }
+        
+        return retVal
+    }
+    
+    open func typedValue(from pListValue: PlistValue?) -> Any? {
+        var retVal: Any? = pListValue
+        if self.itemType == "HKBiologicalSex" {
+            guard let intVal = pListValue as? Int else { return nil }
+            retVal = HKBiologicalSex(rawValue: intVal)
+        }
+        
+        return retVal
     }
 }
