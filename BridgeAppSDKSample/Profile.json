@@ -1,0 +1,65 @@
+{
+    "sections": [
+        {
+            "title": "Items from keychain",
+            "icon": "keychainItemsIcon",
+            "items": [
+                          {
+                              "title": "Full name",
+                              "classType": "ProfileItemTableRow",
+                              "profileItemKey": "fullName"
+                          },
+                          {
+                              "title": "Gender",
+                              "classType": "ProfileItemTableRow",
+                              "profileItemKey": "gender"
+                          },
+                          {
+                              "title": "Date of birth",
+                              "classType": "ProfileItemTableRow",
+                              "profileItemKey": "birthDate"
+                          }
+                      ]
+        },
+        {
+            "title": "Items from UserDefaults",
+            "icon": "userDefaultsItemsIcon",
+            "items": [
+                          {
+                              "title": "Favorite color",
+                              "classType": "ProfileItemTableRow",
+                              "profileItemKey": "favoriteColor"
+                          },
+                          {
+                              "title": "Number of siblings",
+                              "classType": "ProfileItemTableRow",
+                              "profileItemKey": "numberOfSiblings"
+                          }
+                      ]
+        },
+        {
+            "title": "Items from SBAUserWrapper",
+            "items": [
+                 ]
+        },
+        {
+            "title": "Items from HealthKit",
+            "items": [
+                 ]
+        },
+        {
+            "title": "Items from SBBStudyParticipant",
+            "items": [
+                 ]
+        },
+        {
+            "title": "Learn items",
+            "icon": "learnItemsIcon",
+            "items": [
+                         "title": "About",
+                         "classType": "HTMLTableRow",
+                         "html": "About"
+                     ]
+        }
+    ]
+}

@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBAProfileItem.h
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,21 +31,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "SBADefines.h"
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+typedef NSString * SBAProfileTypeIdentifier NS_EXTENSIBLE_STRING_ENUM;
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADefines.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAOnboardingAppDelegate.h>
-#import <BridgeAppSDK/SBAProfileItem.h>
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierString;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierNumber;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierBool;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity;

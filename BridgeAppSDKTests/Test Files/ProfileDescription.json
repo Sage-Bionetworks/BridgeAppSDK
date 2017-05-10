@@ -1,0 +1,31 @@
+{
+    "items":    [
+                 {
+                 "profileKey": "fullName",
+                 "classType": "KeychainProfileItem",
+                 "sourceKey": "name",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "gender",
+                 "classType": "KeychainProfileItem",
+                 "itemType": "HKBiologicalSex",
+                 },
+                 {
+                 "profileKey": "birthDate",
+                 "classType": "KeychainProfileItem",
+                 "itemType": "Date"
+                 },
+                 {
+                 "profileKey": "favoriteColor",
+                 "classType": "UserDefaultsProfileItem",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "numberOfSiblings",
+                 "classType": "UserDefaultsProfileItem",
+                 "itemType": "Number",
+                 "demographicKey": "number_of_siblings"
+                 }
+                 ]
+}

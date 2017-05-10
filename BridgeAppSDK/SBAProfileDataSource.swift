@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBAProfileDataSource.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,21 +31,43 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
-
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
-
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADefines.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAOnboardingAppDelegate.h>
-#import <BridgeAppSDK/SBAProfileItem.h>
+@objc
+public protocol SBAProfileDataSource: class {
+    /**
+     Number of sections in the data source.
+     @return    Number of sections.
+     */
+    func numberOfSections() -> Int
+    
+    /**
+     Number of rows in the data source.
+     @param     section    The section of the collection.
+     @return               The number of rows in the given section.
+     */
+    @objc(numberOfRowsInSection:)
+    func numberOfRows(for section: Int) -> Int
+    
+    /**
+     The profile item at the given index.
+     @param indexPath   The index path for the profile item.
+     */
+    @objc(profileItemAtIndexPath:)
+    func profileItem(at indexPath: IndexPath) -> SBAProfileItem?
+    
+    /**
+     Called when a row is selected.
+     @param indexPath   The index path for the profile item.
+     */
+    @objc(didSelectRowAtIndexPath:)
+    optional func didSelectRow(at indexPath: IndexPath)
+    
+    /**
+     Title for the given section (if applicable)
+     @param     section    The section of the collection.
+     @return               The title for this section or `nil` if no title.
+     */
+    @objc(titleForSection:)
+    optional func title(for section: Int) -> String?   
+}

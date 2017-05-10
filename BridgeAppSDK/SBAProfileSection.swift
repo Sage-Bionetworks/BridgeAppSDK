@@ -1,8 +1,8 @@
 //
-//  BridgeAppSDK.h
+//  SBAProfileSection.swift
 //  BridgeAppSDK
 //
-//  Copyright © 2016 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,21 +31,28 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
+import Foundation
+import ResearchUXFactory
 
-//! Project version number for BridgeAppSDK.
-FOUNDATION_EXPORT double BridgeAppSDKVersionNumber;
+public protocol SBAProfileSection: NSObjectProtocol {
+    var title: String? { get }
+    var items: [SBAProfileItem] { get }
+}
 
-//! Project version string for BridgeAppSDK.
-FOUNDATION_EXPORT const unsigned char BridgeAppSDKVersionString[];
+public protocol SBAProfileTableItem: NSObjectProtocol {
+    var profileItemKey: String? { get }
+    var title: String { get }
+    var isEditable: Bool { get }
+    var onSelectedViewController: UIViewController? { get }
+}
 
-#import <BridgeAppSDK/SBAActivityResult.h>
-#import <BridgeAppSDK/SBABridgeManager.h>
-#import <BridgeAppSDK/SBADefines.h>
-#import <BridgeAppSDK/SBADemographicDataObjectType.h>
-#import <BridgeAppSDK/SBALog.h>
-#import <BridgeAppSDK/SBADataArchive.h>
-#import <BridgeAppSDK/SBANewsFeedItem.h>
-#import <BridgeAppSDK/SBANewsFeedManager.h>
-#import <BridgeAppSDK/SBAOnboardingAppDelegate.h>
-#import <BridgeAppSDK/SBAProfileItem.h>
+open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
+    open dynamic var title: String?
+    open dynamic var items: [SBAProfileItem] = []
+    
+    override open func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(items)])
+    }
+}
+
+
