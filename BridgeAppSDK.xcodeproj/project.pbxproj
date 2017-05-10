@@ -13,6 +13,8 @@
 		6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */; };
 		60F2BB461EC1296100957BE6 /* SBAProfileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F2BB451EC1296100957BE6 /* SBAProfileManagerTests.swift */; };
 		60F2BB581EC12A1A00957BE6 /* ProfileDescription.json in Resources */ = {isa = PBXBuildFile; fileRef = 60F2BB571EC12A1A00957BE6 /* ProfileDescription.json */; };
+		60F2BB781EC3B55600957BE6 /* SBAProfileItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F2BB761EC3B55600957BE6 /* SBAProfileItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		60F2BB791EC3B55600957BE6 /* SBAProfileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F2BB771EC3B55600957BE6 /* SBAProfileItem.m */; };
 		801040B51C5A843D00D26E19 /* BridgeAppSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 801040B41C5A843D00D26E19 /* BridgeAppSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		801040BC1C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
 		801040C71C5A843D00D26E19 /* BridgeAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; };
@@ -416,6 +418,8 @@
 		6099B99F1E008B6400902297 /* SBAAppInfoDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAppInfoDelegate.swift; sourceTree = "<group>"; };
 		60F2BB451EC1296100957BE6 /* SBAProfileManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileManagerTests.swift; sourceTree = "<group>"; };
 		60F2BB571EC12A1A00957BE6 /* ProfileDescription.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileDescription.json; sourceTree = "<group>"; };
+		60F2BB761EC3B55600957BE6 /* SBAProfileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAProfileItem.h; sourceTree = "<group>"; };
+		60F2BB771EC3B55600957BE6 /* SBAProfileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAProfileItem.m; sourceTree = "<group>"; };
 		801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		801040B41C5A843D00D26E19 /* BridgeAppSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeAppSDK.h; sourceTree = "<group>"; };
 		801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -831,6 +835,8 @@
 			isa = PBXGroup;
 			children = (
 				80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */,
+				60F2BB761EC3B55600957BE6 /* SBAProfileItem.h */,
+				60F2BB771EC3B55600957BE6 /* SBAProfileItem.m */,
 				80FDDC951E661BF70010DFA7 /* SBAProfileItem.swift */,
 				808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */,
 				808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */,
@@ -1253,6 +1259,7 @@
 				FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */,
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
+				60F2BB781EC3B55600957BE6 /* SBAProfileItem.h in Headers */,
 				FF63D0F81CD032B4007ADEE5 /* SBALog.h in Headers */,
 				FF722C131D775BB8004B2F8B /* SBANewsFeedParser.h in Headers */,
 				603242491E4001A100C184AD /* SBADataArchive.h in Headers */,
@@ -1691,6 +1698,7 @@
 				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
 				FFF0128A1EA182AE00D9D9DD /* SBAAccountStepController.swift in Sources */,
+				60F2BB791EC3B55600957BE6 /* SBAProfileItem.m in Sources */,
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF5242B11D81E9D0009043B3 /* SBAOnboardingStepController.swift in Sources */,
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,

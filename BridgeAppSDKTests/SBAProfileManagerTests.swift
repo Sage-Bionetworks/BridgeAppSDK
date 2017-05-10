@@ -52,35 +52,35 @@ class SBAProfileManagerTests: ResourceTestCase {
         if fullNameItem != nil {
             XCTAssert(fullNameItem!.sourceKey == "name", "expected fullNameItem.sourceKey to be name, but it's \(fullNameItem!.sourceKey)")
             XCTAssert(fullNameItem!.demographicKey == fullNameItem!.profileKey, "expected fullNameItem.demographicKey to be \(fullNameItem!.profileKey), but it's \(fullNameItem!.demographicKey)")
-            XCTAssert(fullNameItem!.itemType == "String", "expected fullNameItem.itemType to be String, but it's \(fullNameItem!.itemType)")
+            XCTAssert(fullNameItem!.itemType == .string, "expected fullNameItem.itemType to be String, but it's \(fullNameItem!.itemType.rawValue)")
             let typedItem = fullNameItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "fullNameItem is not an SBAKeychainProfileItem: \(String(describing: fullNameItem))")
         }
         if genderItem != nil {
             XCTAssert(genderItem!.sourceKey == "gender", "expected genderItem.sourceKey to be gender, but it's \(genderItem!.sourceKey)")
             XCTAssert(genderItem!.demographicKey == genderItem!.profileKey, "expected genderItem.demographicKey to be \(genderItem!.profileKey), but it's \(genderItem!.demographicKey)")
-            XCTAssert(genderItem!.itemType == "HKBiologicalSex", "expected genderItem.itemType to be HKBiologicalSex, but it's \(genderItem!.itemType)")
+            XCTAssert(genderItem!.itemType == .hkBiologicalSex, "expected genderItem.itemType to be HKBiologicalSex, but it's \(genderItem!.itemType.rawValue)")
             let typedItem = genderItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "genderItem is not an SBAKeychainProfileItem: \(String(describing: genderItem))")
         }
         if birthDateItem != nil {
             XCTAssert(birthDateItem!.sourceKey == "birthDate", "expected birthDateItem.sourceKey to be name, but it's \(birthDateItem!.sourceKey)")
             XCTAssert(birthDateItem!.demographicKey == birthDateItem!.profileKey, "expected birthDateItem.demographicKey to be \(birthDateItem!.profileKey), but it's \(birthDateItem!.demographicKey)")
-            XCTAssert(birthDateItem!.itemType == "Date", "expected birthDateItem.itemType to be Date, but it's \(birthDateItem!.itemType)")
+            XCTAssert(birthDateItem!.itemType == .date, "expected birthDateItem.itemType to be Date, but it's \(birthDateItem!.itemType.rawValue)")
             let typedItem = birthDateItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "birthDateItem is not an SBAKeychainProfileItem: \(String(describing: birthDateItem))")
         }
         if favoriteColorItem != nil {
             XCTAssert(favoriteColorItem!.sourceKey == "favoriteColor", "expected favoriteColorItem.sourceKey to be favoriteColor, but it's \(favoriteColorItem!.sourceKey)")
             XCTAssert(favoriteColorItem!.demographicKey == favoriteColorItem!.profileKey, "expected favoriteColorItem.demographicKey to be \(favoriteColorItem!.profileKey), but it's \(favoriteColorItem!.demographicKey)")
-            XCTAssert(favoriteColorItem!.itemType == "String", "expected favoriteColorItem.itemType to be String, but it's \(favoriteColorItem!.itemType)")
+            XCTAssert(favoriteColorItem!.itemType == .string, "expected favoriteColorItem.itemType to be String, but it's \(favoriteColorItem!.itemType.rawValue)")
             let typedItem = favoriteColorItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
             XCTAssertNotNil(typedItem, "favoriteColorItem is not an SBAUserDefaultsProfileItem: \(String(describing: favoriteColorItem))")
         }
         if numberOfSiblingsItem != nil {
             XCTAssert(numberOfSiblingsItem!.sourceKey == "numberOfSiblings", "expected numberOfSiblingsItem.sourceKey to be numberOfSiblings, but it's \(numberOfSiblingsItem!.sourceKey)")
             XCTAssert(numberOfSiblingsItem!.demographicKey == "number_of_siblings", "expected favoriteColorItem.demographicKey to be number_of_siblings, but it's \(favoriteColorItem!.demographicKey)")
-            XCTAssert(numberOfSiblingsItem!.itemType == "Number", "expected numberOfSiblingsItem.itemType to be Number, but it's \(numberOfSiblingsItem!.itemType)")
+            XCTAssert(numberOfSiblingsItem!.itemType == .number, "expected numberOfSiblingsItem.itemType to be Number, but it's \(numberOfSiblingsItem!.itemType.rawValue)")
             let typedItem = numberOfSiblingsItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
             XCTAssertNotNil(typedItem, "numberOfSiblingsItem is not an SBAUserDefaultsProfileItem: \(String(describing: numberOfSiblingsItem))")
         }

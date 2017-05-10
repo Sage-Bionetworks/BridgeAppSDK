@@ -58,7 +58,7 @@ public protocol SBAProfileItem: NSObjectProtocol {
     /**
      itemType specifies what type to store the profileItem as.
      */
-    var itemType: String { get }
+    var itemType: SBAProfileTypeIdentifier { get }
     
     /**
      The value property is used to get and set the profile item's value in whatever internal data
@@ -83,22 +83,22 @@ extension SBAProfileItem {
     func commonJsonValueGetter() -> SBBJSONValue? {
         guard let val = self.value else { return NSNull() }
         switch self.itemType {
-        case "String":
+        case SBAProfileTypeIdentifier.string:
             return val as? NSString
             
-        case "Number":
+        case SBAProfileTypeIdentifier.number:
             return val as? NSNumber
             
-        case "Bool":
+        case SBAProfileTypeIdentifier.bool:
             return val as? NSNumber
             
-        case "Date":
+        case SBAProfileTypeIdentifier.date:
             return (val as? NSDate)?.iso8601String() as NSString?
             
-        case "HKBiologicalSex":
+        case SBAProfileTypeIdentifier.hkBiologicalSex:
             return val as? NSNumber
             
-        case "HKQuantity":
+        case SBAProfileTypeIdentifier.hkQuantity:
             return val as? NSNumber
             
         default:
@@ -113,29 +113,29 @@ extension SBAProfileItem {
         }
         
         switch self.itemType {
-        case "String":
+        case SBAProfileTypeIdentifier.string:
             guard let val = value as? String else { return }
             self.value = val
             
-        case "Number":
+        case SBAProfileTypeIdentifier.number:
             guard let val = value as? NSNumber else { return }
             self.value = val
             
-        case "Bool":
+        case SBAProfileTypeIdentifier.bool:
             guard let val = value as? Bool else { return }
             self.value = val
             
-        case "Date":
+        case SBAProfileTypeIdentifier.date:
             guard let stringVal = value as? String,
                     let dateVal = NSDate(iso8601String: stringVal)
                 else { return }
             self.value = dateVal
             
-        case "HKBiologicalSex":
+        case SBAProfileTypeIdentifier.hkBiologicalSex:
             guard let val = value as? HKBiologicalSex else { return }
             self.value = val
             
-        case "HKQuantity":
+        case SBAProfileTypeIdentifier.hkQuantity:
             guard let val = value as? NSNumber else { return }
             self.value = val
             
@@ -146,7 +146,7 @@ extension SBAProfileItem {
     
     func commonDemographicJsonValue() -> SBBJSONValue? {
         guard let jsonVal = self.commonJsonValueGetter() else { return nil }
-        if self.itemType == "HKBiologicalSex" {
+        if self.itemType == .hkBiologicalSex {
             return (self.value as? HKBiologicalSex)?.demographicDataValue
         }
         
@@ -157,22 +157,22 @@ extension SBAProfileItem {
         guard newValue != nil else { return true }
         
         switch self.itemType {
-        case "String":
+        case SBAProfileTypeIdentifier.string:
             return newValue as? String != nil
             
-        case "Number":
+        case SBAProfileTypeIdentifier.number:
             return newValue as? NSNumber != nil
             
-        case "Bool":
+        case SBAProfileTypeIdentifier.bool:
             return newValue as? NSNumber != nil
             
-        case "Date":
+        case SBAProfileTypeIdentifier.date:
             return newValue as? NSDate  != nil
             
-        case "HKBiologicalSex":
+        case SBAProfileTypeIdentifier.hkBiologicalSex:
             return newValue as? HKBiologicalSex != nil
             
-        case "HKQuantity":
+        case SBAProfileTypeIdentifier.hkQuantity:
             return newValue as? NSNumber != nil
             
         default:
@@ -208,9 +208,9 @@ class SBAProfileItemBase: NSObject, SBAProfileItem {
         }
     }
     
-    open var itemType: String {
+    open var itemType: SBAProfileTypeIdentifier {
         get {
-            return sourceDict["itemType"]! as! String
+            return sourceDict["itemType"]! as! SBAProfileTypeIdentifier
         }
     }
     
@@ -267,7 +267,7 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
                     try keychain.removeObject(forKey: profileKey)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType)")
+                        print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
                         return
                     }
                     guard let secureVal = secureCodingValue(of: newValue) else {
@@ -286,7 +286,7 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
     open func secureCodingValue(of anyValue: Any?) -> NSSecureCoding? {
         guard anyValue != nil else { return nil }
         var retVal = anyValue as? NSSecureCoding
-        if self.itemType == "HKBiologicalSex" {
+        if self.itemType == .hkBiologicalSex {
             // HKBiologicalSexObject exists and is NSSecureCoding, but iOS doesn't give
             // us any way to create one and set its value so we're stuck using NSNumber
             guard let sex = anyValue as? HKBiologicalSex else { return retVal }
@@ -298,7 +298,7 @@ class SBAKeychainProfileItem: SBAProfileItemBase {
     
     open func typedValue(from secureCodingValue: NSSecureCoding?) -> Any? {
         var retVal: Any? = secureCodingValue
-        if self.itemType == "HKBiologicalSex" {
+        if self.itemType == .hkBiologicalSex {
             guard let intVal = secureCodingValue as? Int else { return nil }
             retVal = HKBiologicalSex(rawValue: intVal)
         }
@@ -366,7 +366,7 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
                 defaults.removeObject(forKey: profileKey)
             } else {
                 if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType)")
+                    print("Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
                     return
                 }
                 guard let plistVal = pListValue(of: newValue) else {
@@ -381,7 +381,7 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     open func pListValue(of anyValue: Any?) -> PlistValue? {
         guard anyValue != nil else { return nil }
         var retVal = anyValue! as? PlistValue
-        if self.itemType == "HKBiologicalSex" {
+        if self.itemType == .hkBiologicalSex {
             retVal = (anyValue as? HKBiologicalSex)?.rawValue
         }
         
@@ -390,7 +390,7 @@ class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     
     open func typedValue(from pListValue: PlistValue?) -> Any? {
         var retVal: Any? = pListValue
-        if self.itemType == "HKBiologicalSex" {
+        if self.itemType == .hkBiologicalSex {
             guard let intVal = pListValue as? Int else { return nil }
             retVal = HKBiologicalSex(rawValue: intVal)
         }
