@@ -208,15 +208,29 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        var shouldReset = false
         if reason == .completed {
-            // If the flow was completed then set the completion identifier for the onboarding step
-            self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+            if sharedUser.isLoginVerified {
+                // If the flow was completed then set the completion identifier for the onboarding step
+                self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+            }
+            else {
+                // If the flow exits with "complete" status but login isn't verified,
+                // then the user is not eligibile.
+                shouldReset = true
+            }
         }
         else if reason == .failed, let err = error as? SBAProfileInfoOptionsError, err == .notConsented {
             // If the user declined consent then need to reset the stored user data and the onboarding steps
+            shouldReset = true
+        }
+        
+        if shouldReset {
             self.sharedUser.resetStoredUserData()
             self.sharedUser.onboardingStepIdentifier = nil
         }
+        
         taskViewController.dismiss(animated: true, completion: nil)
     }
     

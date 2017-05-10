@@ -285,6 +285,10 @@ extension SBBSurveyRule: SBASurveyRuleItem {
 
 extension SBBSurveyQuestionOption: SBATextChoice {
     
+    public var choiceDataGroups: [String] {
+        return [String(describing: self.value)]
+    }
+
     public var choiceText: String {
         return self.label
     }
