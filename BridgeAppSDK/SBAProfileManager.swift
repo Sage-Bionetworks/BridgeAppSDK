@@ -90,13 +90,6 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
      @param key The profileKey of the item whose value is to be set.
      */
     func setValue(_ value: Any?, forProfileKey key: String) throws
-    
-    /**
-     Set up and return a view controller for displaying a Profile view.
-     
-     @return A view controller for displaying the Profile view.
-     */
-    func profileViewController() -> UIViewController?
 
 }
 
@@ -189,29 +182,6 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
         }
         
         item.value = value
-    }
-    
-    // MARK: View controller
-    
-    /**
-     Get a view controller for displaying the profile. Instantiates and returns a default controller
-     described in the JSON file specified by SBAProfileJSONFilename, which defaults to "Profile".
-     */
-    public func profileViewController() -> UIViewController? {
-        return self.initializeViewController()
-    }
-    
-    // Instantiate an SBAProfileViewController with this instance set as its SBAProfileDataSource. 
-    func initializeViewController(fromJson jsonFile: String = SBAProfileJSONFilename) -> UIViewController? {
-        // TODO: emm2017-05-08 implement this
-//        guard let json = SBAResourceFinder.shared.json(forResource: jsonName),
-//            let jsonSections = json["sections"] as? [SBAProfileSection]
-//            else { return }
-//        sections = jsonSections,
-//        
-//        let viewController = SBAProfileViewController()
-        
-        return nil
     }
     
     // MARK: SBAProfileDataSource
