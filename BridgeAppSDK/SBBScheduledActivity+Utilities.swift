@@ -72,13 +72,29 @@ public extension SBBScheduledActivity {
         return DateFormatter.localizedString(from: expiresOn, dateStyle: .none, timeStyle: .short)
     }
     
+    /**
+     Returns the `SBBTaskReference` identifier.
+     */
     public dynamic var taskIdentifier: String? {
         return (self.activity.task != nil) ? self.activity.task.identifier : nil
     }
     
+    /**
+     Returns the `SBBSurveyReference` identifier.
+     */
     public dynamic var surveyIdentifier: String? {
         guard self.activity.survey != nil else { return nil }
         return self.activity.survey.identifier
+    }
+    
+    /**
+     Returns either the `SBBTaskReference` or `SBBSurveyReference` identifier.
+     The model currently supports an either/or case where the schedule includes a one-to-one
+     mapping to either a `SBBTaskReference` or `SBBSurveyReference`. This identifier maps to 
+     whichever of those is the appropriate identifier.
+     */
+    public dynamic var activityIdentifier: String? {
+        return self.taskIdentifier ?? self.surveyIdentifier
     }
     
     public dynamic var scheduleIdentifier: String {
