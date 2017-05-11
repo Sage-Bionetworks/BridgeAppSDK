@@ -42,7 +42,11 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
     lazy var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
     }()
-
+    
+    lazy var profileDataSource: SBAProfileDataSourceObject = {
+        return SBAProfileDataSourceObject.shared as! SBAProfileDataSourceObject
+    }()
+    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var leaveStudyButton: UIButton!
@@ -71,32 +75,36 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return profileDataSource.numberOfSections()
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return profileDataSource.title(for: section)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return profileDataSource.numberOfRows(for: section)
+    }
+    
+    func itemForRow(at indexPath: IndexPath) -> SBAProfileTableItem? {
+        return profileDataSource.profileTableItem(at: indexPath)
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BasicCell", for: indexPath)
 
         // Configure the cell...
+        let tableItem = itemForRow(at: indexPath)
+        cell.textLabel?.text = tableItem?.title
 
         return cell
     }
-    */
 
-    /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        guard let tableItem = itemForRow(at: indexPath) else { return false }
+        return tableItem.isEditable
     }
-    */
 
     /*
     // Override to support editing the table view.
@@ -134,5 +142,4 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
         // Pass the selected object to the new view controller.
     }
     */
-
 }

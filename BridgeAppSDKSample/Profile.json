@@ -3,20 +3,21 @@
         {
             "title": "Items from keychain",
             "icon": "keychainItemsIcon",
+            "classType": "ProfileSection",
             "items": [
                           {
                               "title": "Full name",
-                              "classType": "ProfileItemTableRow",
+                              "classType": "ProfileItemProfileTableItem",
                               "profileItemKey": "fullName"
                           },
                           {
                               "title": "Gender",
-                              "classType": "ProfileItemTableRow",
+                              "classType": "ProfileItemProfileTableItem",
                               "profileItemKey": "gender"
                           },
                           {
                               "title": "Date of birth",
-                              "classType": "ProfileItemTableRow",
+                              "classType": "ProfileItemProfileTableItem",
                               "profileItemKey": "birthDate"
                           }
                       ]
@@ -24,41 +25,48 @@
         {
             "title": "Items from UserDefaults",
             "icon": "userDefaultsItemsIcon",
+            "classType": "ProfileSection",
             "items": [
                           {
                               "title": "Favorite color",
-                              "classType": "ProfileItemTableRow",
+                              "classType": "ProfileItemProfileTableItem",
                               "profileItemKey": "favoriteColor"
                           },
                           {
                               "title": "Number of siblings",
-                              "classType": "ProfileItemTableRow",
+                              "classType": "ProfileItemProfileTableItem",
                               "profileItemKey": "numberOfSiblings"
                           }
                       ]
         },
         {
             "title": "Items from SBAUserWrapper",
+            "classType": "ProfileSection",
             "items": [
                  ]
         },
         {
             "title": "Items from HealthKit",
+            "classType": "ProfileSection",
             "items": [
                  ]
         },
         {
             "title": "Items from SBBStudyParticipant",
+            "classType": "ProfileSection",
             "items": [
                  ]
         },
         {
             "title": "Learn items",
             "icon": "learnItemsIcon",
+            "classType": "ProfileSection",
             "items": [
-                         "title": "About",
-                         "classType": "HTMLTableRow",
-                         "html": "About"
+                         {
+                            "title": "About",
+                            "classType": "HTMLProfileTableItem",
+                            "htmlResource": "About"
+                         }
                      ]
         }
     ]

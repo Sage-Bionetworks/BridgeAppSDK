@@ -33,6 +33,9 @@
 
 import Foundation
 
+public var SBAProfileJSONFilename = "Profile"
+public var SBAProfileDataSourceClassType = "ProfileDataSource"
+
 @objc
 public protocol SBAProfileDataSource: class {
     /**
@@ -50,11 +53,11 @@ public protocol SBAProfileDataSource: class {
     func numberOfRows(for section: Int) -> Int
     
     /**
-     The profile item at the given index.
-     @param indexPath   The index path for the profile item.
+     The profile table item at the given index.
+     @param indexPath   The index path for the profile table item.
      */
-    @objc(profileItemAtIndexPath:)
-    func profileItem(at indexPath: IndexPath) -> SBAProfileItem?
+    @objc(profileTableItemAtIndexPath:)
+    func profileTableItem(at indexPath: IndexPath) -> SBAProfileTableItem?
     
     /**
      Called when a row is selected.
@@ -70,4 +73,67 @@ public protocol SBAProfileDataSource: class {
      */
     @objc(titleForSection:)
     optional func title(for section: Int) -> String?   
+}
+
+open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
+    
+    /**
+     The shared instance of the profile data source. Loads from SBAProfileJSONFilename, which
+     defaults to "Profile".
+     
+     If you subclass SBAProfileDataSourceObject, or just want this method to return a different class that
+     implements the SBAProfileDataSource protocol, you will need to override the mapping for the default
+     value of SBAProfileDataSourceClassType ("ProfileDataSource") in your ClassTypeMap.plist to map to your
+     class instead of this one. Alternatively you could change the value of SBAProfileSectionClassType
+     before accessing this, and map *that* in your ClassTypeMap.plist; or just set SBAProfileSectionClassType
+     to the fully qualified class name without setting up any mappings.
+     */
+    public static let shared: SBAProfileDataSource? = {
+        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileJSONFilename),
+            let sharedProfileDataSource = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileDataSourceClassType) as? SBAProfileDataSource
+            else { return nil }
+        return sharedProfileDataSource
+    }()
+    
+    private dynamic var sections: [SBAProfileSection] = []
+
+    // MARK: SBADataObject overrides
+    
+    override open func dictionaryRepresentationKeys() -> [String] {
+        return super.dictionaryRepresentationKeys().appending(#keyPath(sections))
+    }
+    
+    override open func defaultValue(forKey key: String) -> Any? {
+        if (key == #keyPath(sections)) {
+            return [SBAProfileSection]()
+        } else {
+            return super.defaultValue(forKey: key)
+        }
+    }
+
+    // MARK: SBAProfileDataSource
+    
+    open func numberOfSections() -> Int {
+        return sections.count
+    }
+    
+    open func numberOfRows(for section: Int) -> Int {
+        if section >= sections.count { return 0 } // out of range
+        return sections[section].items.count
+    }
+    
+    open func profileTableItem(at indexPath: IndexPath) -> SBAProfileTableItem? {
+        let section = indexPath.section
+        let row = indexPath.row
+        
+        if section >= sections.count { return nil }
+        if row >= sections[section].items.count { return nil }
+        
+        return sections[section].items[row]
+    }
+    
+    open func title(for section: Int) -> String? {
+        if section >= sections.count { return nil }
+        return sections[section].title
+    }
 }
