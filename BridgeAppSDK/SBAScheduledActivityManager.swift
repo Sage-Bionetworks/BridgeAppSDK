@@ -125,6 +125,14 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open var daysBehind: Int!
     
     /**
+     Range of dates that have been loaded into the manager
+     */
+    public var loadedDateRange: (start: Date, end: Date)? {
+        return _loadedDateRange
+    }
+    private var _loadedDateRange: (start: Date, end: Date)?
+    
+    /**
      A predicate that can be used to evaluate whether or not a schedule should be included.
      This can include block predicates and is evaluated on a `SBBScheduledActivity` object.
      Default == `true`
@@ -138,15 +146,23 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      */
     open func reloadData() {
         
-        // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from
-        // this tab to another tab.
-        if (reloading) { return }
-        reloading = true
-        
         // Fetch all schedules (including completed)
         let now = Date()
         let fromDate = now.addingNumberOfDays(-1 * daysBehind)
         let toDate = now.addingNumberOfDays(daysAhead)
+        
+        loadScheduledActivities(from: fromDate, to: toDate)
+    }
+    
+    /**
+     Load a given range of schedules
+     */
+    open func loadScheduledActivities(from fromDate: Date, to toDate: Date) {
+    
+        // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from
+        // this tab to another tab.
+        if (reloading) { return }
+        reloading = true
         
         SBABridgeManager.fetchScheduledActivities(from: fromDate, to: toDate) {
             [weak self] (obj, error) in
@@ -155,7 +171,20 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             // if not, obj will be nil if error is not nil, so we don't need to check error
             guard let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
             
+            let sortedActivies = scheduledActivities.sorted(by: { (scheduleA, scheduleB) -> Bool in
+                guard (scheduleA.scheduledOn != nil) && (scheduleB.scheduledOn != nil) else { return false }
+                return scheduleA.scheduledOn.compare(scheduleB.scheduledOn) == .orderedAscending
+            })
+            
+            let start: Date = {
+                guard let oldestDate = sortedActivies.first?.scheduledOn, oldestDate < fromDate else {
+                    return fromDate
+                }
+                return oldestDate
+            }()
+            
             DispatchQueue.main.async(execute: {
+                self?._loadedDateRange = (start, toDate)
                 self?.load(scheduledActivities: scheduledActivities)
                 self?.reloading = false
             })
@@ -179,10 +208,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         // Filter the scheduled activities to only include those that *this* version of the app is designed
         // to be able to handle. Currently, that means only taskReference activities with an identifier that
         // maps to a known task.
-        self.activities = scheduledActivities.filter({ (schedule) -> Bool in
-            return bridgeInfo.taskReferenceForSchedule(schedule) != nil &&
-                self.scheduleFilterPredicate.evaluate(with: schedule)
-        })
+        self.activities = filteredSchedules(scheduledActivities: scheduledActivities)
         
         // reload table
         self.delegate?.reloadFinished(self)
@@ -196,6 +222,20 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         }
     }
     
+    /**
+     Filter the scheduled activities to only include those that *this* version of the app is designed
+     to be able to handle. Currently, that means only taskReference activities with an identifier that
+     maps to a known task.
+     
+     @param     scheduledActivities     The list of activities returned by the service.
+     @return                            The filtered list of activities
+     */
+    open func filteredSchedules(scheduledActivities: [SBBScheduledActivity]) -> [SBBScheduledActivity] {
+        return scheduledActivities.filter({ (schedule) -> Bool in
+            return bridgeInfo.taskReferenceForSchedule(schedule) != nil &&
+                self.scheduleFilterPredicate.evaluate(with: schedule)
+        })
+    }
     
     
     /**
