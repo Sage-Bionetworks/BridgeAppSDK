@@ -114,7 +114,6 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
 }
 
 open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
-    @objc
     open var profileItemKey: String {
         get {
             let key = #keyPath(profileItemKey)
@@ -130,6 +129,22 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     override open var detail: String {
         get {
             return "\(profileItem.value ?? "")"
+        }
+    }
+}
+
+open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
+    open var resource: String {
+        get {
+            let key = #keyPath(resource)
+            return sourceDict[key]! as! String
+        }
+    }
+    
+    // Resource profile table items are not editable
+    override open var isEditable: Bool {
+        get {
+            return false
         }
     }
 }
