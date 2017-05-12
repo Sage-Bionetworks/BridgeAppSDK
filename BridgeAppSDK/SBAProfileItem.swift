@@ -192,25 +192,29 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
     
     open var profileKey: String {
         get {
-            return sourceDict["profileKey"]! as! String
+            let key = #keyPath(profileKey)
+            return sourceDict[key]! as! String
         }
     }
     
     open var sourceKey: String {
         get {
-            return sourceDict["sourceKey"] as? String ?? self.profileKey
+            let key = #keyPath(sourceKey)
+            return sourceDict[key] as? String ?? self.profileKey
         }
     }
     
     open var demographicKey: String {
         get {
-            return sourceDict["demographicKey"] as? String ?? self.profileKey
+            let key = #keyPath(demographicKey)
+            return sourceDict[key] as? String ?? self.profileKey
         }
     }
     
     open var itemType: SBAProfileTypeIdentifier {
         get {
-            guard let rawValue = sourceDict["itemType"] as? String else { return .string }
+            let key = #keyPath(itemType)
+            guard let rawValue = sourceDict[key] as? String else { return .string }
             return SBAProfileTypeIdentifier(rawValue: rawValue)
         }
     }
