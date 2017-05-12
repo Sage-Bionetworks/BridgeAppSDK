@@ -34,25 +34,117 @@
 import Foundation
 import ResearchUXFactory
 
+@objc
 public protocol SBAProfileSection: NSObjectProtocol {
     var title: String? { get }
-    var items: [SBAProfileItem] { get }
+    var items: [SBAProfileTableItem] { get }
 }
 
+@objc
 public protocol SBAProfileTableItem: NSObjectProtocol {
-    var profileItemKey: String? { get }
     var title: String { get }
+    var detail: String { get }
     var isEditable: Bool { get }
-    var onSelectedViewController: UIViewController? { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
     open dynamic var title: String?
-    open dynamic var items: [SBAProfileItem] = []
+    open dynamic var items: [SBAProfileTableItem] = []
+    
+    // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
         return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(items)])
     }
+
+    override open func defaultValue(forKey key: String) -> Any? {
+        if key == #keyPath(items) {
+            return [SBAProfileTableItem]()
+        } else {
+            return super.defaultValue(forKey: key)
+        }
+    }
 }
 
+@objc
+open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
+    let sourceDict: [AnyHashable: Any]
 
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
+        sourceDict = dictionary
+        super.init()
+    }
+
+    open var title: String {
+        get {
+            let key = #keyPath(title)
+            return sourceDict[key] as? String ?? ""
+        }
+    }
+    
+    open var detail: String {
+        get {
+            let key = #keyPath(detail)
+            return sourceDict[key] as? String ?? ""
+        }
+    }
+    
+    open var isEditable: Bool {
+        get {
+            let key = #keyPath(isEditable)
+            return sourceDict[key] as? Bool ?? false
+        }
+    }
+}
+
+open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
+    open var htmlResource: String {
+        get {
+            let key = #keyPath(htmlResource)
+            return sourceDict[key]! as! String
+        }
+    }
+    
+    // HTML profile table items are not editable
+    override open var isEditable: Bool {
+        get {
+            return false
+        }
+    }
+}
+
+open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
+    open var profileItemKey: String {
+        get {
+            let key = #keyPath(profileItemKey)
+            return sourceDict[key]! as! String
+        }
+    }
+    
+    lazy open var profileItem: SBAProfileItem = {
+        let profileItems = SBAProfileManager.shared!.profileItems()
+        return profileItems[self.profileItemKey]!
+    }()
+
+    override open var detail: String {
+        get {
+            return "\(profileItem.value ?? "")"
+        }
+    }
+}
+
+open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
+    open var resource: String {
+        get {
+            let key = #keyPath(resource)
+            return sourceDict[key]! as! String
+        }
+    }
+    
+    // Resource profile table items are not editable
+    override open var isEditable: Bool {
+        get {
+            return false
+        }
+    }
+}

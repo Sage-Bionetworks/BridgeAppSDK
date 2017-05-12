@@ -34,7 +34,6 @@
 import Foundation
 import ResearchUXFactory
 
-public var SBAProfileJSONFilename = "Profile"
 public var SBAProfileItemsJSONFilename = "ProfileItems"
 public var SBAProfileManagerClassType = "ProfileManager"
 
@@ -94,7 +93,7 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
 }
 
 
-open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfileDataSource {
+open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
 
     /**
      The shared instance of the profile manager. Loads from SBAProfileItemsJSONFilename, which
@@ -107,10 +106,13 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
      before accessing this, and map *that* in your ClassTypeMap.plist; or just set SBAProfileManagerClassType
      to the fully qualified class name without setting up any mappings.
      */
-    static let shared: SBAProfileManagerProtocol? = {
+    public static let shared: SBAProfileManagerProtocol? = {
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
                 let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
-            else { return nil }
+            else {
+                assertionFailure("Couldn't find the shared profile manager.")
+                return SBAProfileManager(dictionaryRepresentation: [:])
+        }
         return sharedProfileManager
     }()
 
@@ -126,8 +128,6 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
         }
         return allItems
     }()
-    
-    private var sections: [SBAProfileSection] = []
    
     // MARK: SBADataObject overrides
     
@@ -136,7 +136,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
     }
     
     override open func defaultValue(forKey key: String) -> Any? {
-        if key == "items" {
+        if key == #keyPath(items) {
             return [SBAProfileItem]()
         } else {
             return super.defaultValue(forKey: key)
@@ -182,31 +182,5 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol, SBAProfi
         }
         
         item.value = value
-    }
-    
-    // MARK: SBAProfileDataSource
-    
-    public func numberOfSections() -> Int {
-        return sections.count
-    }
-    
-    public func numberOfRows(for section: Int) -> Int {
-        if section >= sections.count { return 0 } // out of range
-        return sections[section].items.count
-    }
-    
-    public func profileItem(at indexPath: IndexPath) -> SBAProfileItem? {
-        let section = indexPath.section
-        let row = indexPath.row
-        
-        if section >= sections.count { return nil }
-        if row >= sections[section].items.count { return nil }
-        
-        return sections[section].items[row]
-    }
-        
-    public func title(for section: Int) -> String? {
-        if section >= sections.count { return nil }
-        return sections[section].title
     }
 }
