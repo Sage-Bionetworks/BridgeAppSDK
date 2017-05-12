@@ -96,6 +96,7 @@ class ProfileTableViewController: UITableViewController, SBASharedInfoController
         // Configure the cell...
         let tableItem = itemForRow(at: indexPath)
         cell.textLabel?.text = tableItem?.title
+        cell.detailTextLabel?.text = tableItem?.detail
 
         return cell
     }
