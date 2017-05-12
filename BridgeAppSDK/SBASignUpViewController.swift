@@ -43,8 +43,9 @@ public enum SBASignUpState {
  */
 open class SBASignUpViewController : UIViewController, SBASharedInfoController, ORKTaskViewControllerDelegate {
     
-    @IBOutlet weak var greetingLabel: UILabel?
-    @IBOutlet weak var instructionLabel: UILabel?
+    @IBOutlet open var greetingLabel: UILabel?
+    @IBOutlet open var instructionLabel: UILabel?
+    
     @IBOutlet weak var cancelButtonView: UIView?
     @IBOutlet weak var startButtonView: UIView?
     
@@ -113,7 +114,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
      @param cell    The cell to set up
      @param row     The row of the cell
      */
-    public func setupCell(_ cell: SBASignUpCell, at row:Int) {
+    open func setupCell(_ cell: SBASignUpCell, at row:Int) {
         guard let item = self.item(at: row) else { return }
         
         cell.titleLabel.text = item.title
