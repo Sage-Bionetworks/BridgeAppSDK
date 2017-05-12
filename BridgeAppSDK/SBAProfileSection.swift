@@ -65,6 +65,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
         }
     }
 }
+
 @objc
 open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
     let sourceDict: [AnyHashable: Any]
@@ -91,8 +92,7 @@ open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
     open var isEditable: Bool {
         get {
             let key = #keyPath(isEditable)
-            guard let editable = sourceDict[key] as? Bool else { return false }
-            return editable
+            return sourceDict[key] as? Bool ?? false
         }
     }
 }

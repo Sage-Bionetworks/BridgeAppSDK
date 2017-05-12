@@ -88,10 +88,13 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
      before accessing this, and map *that* in your ClassTypeMap.plist; or just set SBAProfileSectionClassType
      to the fully qualified class name without setting up any mappings.
      */
-    public static let shared: SBAProfileDataSource? = {
+    public static let shared: SBAProfileDataSource = {
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileJSONFilename),
             let sharedProfileDataSource = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileDataSourceClassType) as? SBAProfileDataSource
-            else { return nil }
+            else {
+                assertionFailure("Couldn't find the shared profile data source.")
+                return SBAProfileDataSourceObject(dictionaryRepresentation: [:])
+        }
         return sharedProfileDataSource
     }()
     
@@ -118,7 +121,7 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
     }
     
     open func numberOfRows(for section: Int) -> Int {
-        if section >= sections.count { return 0 } // out of range
+        guard section < sections.count else { return 0 } // out of range
         return sections[section].items.count
     }
     
@@ -126,14 +129,13 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
         let section = indexPath.section
         let row = indexPath.row
         
-        if section >= sections.count { return nil }
-        if row >= sections[section].items.count { return nil }
+        guard (section < sections.count) && (row < sections[section].items.count) else { return nil }
         
         return sections[section].items[row]
     }
     
     open func title(for section: Int) -> String? {
-        if section >= sections.count { return nil }
+        guard section < sections.count else { return nil }
         return sections[section].title
     }
 }

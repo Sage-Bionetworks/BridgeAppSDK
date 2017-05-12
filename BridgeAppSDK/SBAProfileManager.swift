@@ -109,7 +109,10 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
     public static let shared: SBAProfileManagerProtocol? = {
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
                 let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
-            else { return nil }
+            else {
+                assertionFailure("Couldn't find the shared profile manager.")
+                return SBAProfileManager(dictionaryRepresentation: [:])
+        }
         return sharedProfileManager
     }()
 
