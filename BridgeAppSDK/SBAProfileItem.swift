@@ -408,3 +408,28 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
         return retVal
     }
 }
+
+open class SBAUserProfileItem: SBAProfileItemBase {
+    open static var user: SBAUser = {
+        return SBAUser.shared
+    }()
+    
+    override open var value: Any? {
+        get {
+            // need to special-case accessing properties that are defined in protocol extensions
+            // because they're not available via KVC
+            switch sourceKey {
+            case "givenName":
+                return SBAUserProfileItem.user.givenName
+            case "fullName":
+                return SBAUserProfileItem.user.fullName
+            default:
+                return SBAUserProfileItem.user.value(forKey: sourceKey)
+            }
+        }
+        
+        set {
+            SBAUserProfileItem.user.setValue(newValue, forKey: sourceKey)
+        }
+    }
+}
