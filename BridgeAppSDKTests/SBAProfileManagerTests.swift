@@ -30,7 +30,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        XCTAssert(keys.count == 5, "expected 5 keys, got \(keys.count)")
+        XCTAssert(keys.count == 6, "expected 6 keys, got \(keys.count)")
     }
     
     func testProfileItems() {
@@ -38,23 +38,32 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        XCTAssert(items.count == 5, "expected 5 items, got \(items.count)")
+        XCTAssert(items.count == 6, "expected 6 items, got \(items.count)")
         let fullNameItem = items["fullName"]
+        let externalIdItem = items["externalId"]
         let genderItem = items["gender"]
         let birthDateItem = items["birthDate"]
         let favoriteColorItem = items["favoriteColor"]
         let numberOfSiblingsItem = items["numberOfSiblings"]
         XCTAssert(fullNameItem != nil, "no item for profileKey fullName")
+        XCTAssert(externalIdItem != nil, "no item for profileKey externalId")
         XCTAssert(genderItem != nil, "no item for profileKey gender")
         XCTAssert(birthDateItem != nil, "no item for profileKey birthDate")
         XCTAssert(favoriteColorItem != nil, "no item for profileKey favoriteColor")
         XCTAssert(numberOfSiblingsItem != nil, "no item for profileKey numberOfSiblings")
         if fullNameItem != nil {
-            XCTAssert(fullNameItem!.sourceKey == "name", "expected fullNameItem.sourceKey to be name, but it's \(fullNameItem!.sourceKey)")
+            XCTAssert(fullNameItem!.sourceKey == "fullName", "expected fullNameItem.sourceKey to be fullName, but it's \(fullNameItem!.sourceKey)")
             XCTAssert(fullNameItem!.demographicKey == fullNameItem!.profileKey, "expected fullNameItem.demographicKey to be \(fullNameItem!.profileKey), but it's \(fullNameItem!.demographicKey)")
             XCTAssert(fullNameItem!.itemType == .string, "expected fullNameItem.itemType to be String, but it's \(fullNameItem!.itemType.rawValue)")
-            let typedItem = fullNameItem as? BridgeAppSDK.SBAKeychainProfileItem
-            XCTAssertNotNil(typedItem, "fullNameItem is not an SBAKeychainProfileItem: \(String(describing: fullNameItem))")
+            let typedItem = fullNameItem as? BridgeAppSDK.SBAUserProfileItem
+            XCTAssertNotNil(typedItem, "fullNameItem is not an SBAUserProfileItem: \(String(describing: fullNameItem))")
+        }
+        if externalIdItem != nil {
+            XCTAssert(externalIdItem!.sourceKey == "externalId", "expected externalIdItem.sourceKey to be externalId, but it's \(externalIdItem!.sourceKey)")
+            XCTAssert(externalIdItem!.demographicKey == externalIdItem!.profileKey, "expected externalIdItem.demographicKey to be \(externalIdItem!.profileKey), but it's \(externalIdItem!.demographicKey)")
+            XCTAssert(externalIdItem!.itemType == .string, "expected externalIdItem.itemType to be String, but it's \(externalIdItem!.itemType.rawValue)")
+            let typedItem = externalIdItem as? BridgeAppSDK.SBAUserProfileItem
+            XCTAssertNotNil(typedItem, "externalIdItem is not an SBAUserProfileItem: \(String(describing: externalIdItem))")
         }
         if genderItem != nil {
             XCTAssert(genderItem!.sourceKey == "gender", "expected genderItem.sourceKey to be gender, but it's \(genderItem!.sourceKey)")
@@ -71,7 +80,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssertNotNil(typedItem, "birthDateItem is not an SBAKeychainProfileItem: \(String(describing: birthDateItem))")
         }
         if favoriteColorItem != nil {
-            XCTAssert(favoriteColorItem!.sourceKey == "favoriteColor", "expected favoriteColorItem.sourceKey to be favoriteColor, but it's \(favoriteColorItem!.sourceKey)")
+            XCTAssert(favoriteColorItem!.sourceKey == "favouriteColour", "expected favoriteColorItem.sourceKey to be favouriteColour, but it's \(favoriteColorItem!.sourceKey)")
             XCTAssert(favoriteColorItem!.demographicKey == favoriteColorItem!.profileKey, "expected favoriteColorItem.demographicKey to be \(favoriteColorItem!.profileKey), but it's \(favoriteColorItem!.demographicKey)")
             XCTAssert(favoriteColorItem!.itemType == .string, "expected favoriteColorItem.itemType to be String, but it's \(favoriteColorItem!.itemType.rawValue)")
             let typedItem = favoriteColorItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
@@ -91,30 +100,47 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        let fullNameItem = items["fullName"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let fullNameItem = items["fullName"] as? BridgeAppSDK.SBAUserProfileItem
+        let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAUserProfileItem
         let genderItem = items["gender"] as? BridgeAppSDK.SBAKeychainProfileItem
         let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBAKeychainProfileItem
         let favoriteColorItem = items["favoriteColor"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
         let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
-        XCTAssert(fullNameItem != nil, "no SBAKeychainProfileItem for profileKey fullName")
+        XCTAssert(fullNameItem != nil, "no SBAUserProfileItem for profileKey fullName")
+        XCTAssert(externalIdItem != nil, "no SBAUserProfileItem for profileKey externalId")
         XCTAssert(genderItem != nil, "no SBAKeychainProfileItem for profileKey gender")
         XCTAssert(birthDateItem != nil, "no SBAKeychainProfileItem for profileKey birthDate")
         XCTAssert(favoriteColorItem != nil, "no SBAUserDefaultsProfileItem for profileKey favoriteColor")
         XCTAssert(numberOfSiblingsItem != nil, "no SBAUserDefaultsProfileItem for profileKey numberOfSiblings")
         if fullNameItem != nil {
             let testName = "Full Name"
-            do {
-                try ProfileManager!.setValue(testName, forProfileKey: fullNameItem!.profileKey);
-            }
-            catch {
-                XCTFail("Failed setting value for fullNameItem: unknown profile key \(fullNameItem!.profileKey)")
-            }
+            
+            // fullName is not a writeable property on SBAUser--it's a computed read-only property
+            // defined in a protocol extension
+            SBAUser.shared.name = "Full"
+            SBAUser.shared.familyName = "Name"
             
             let value = ProfileManager!.value(forProfileKey: fullNameItem!.profileKey) as? String
             if value == nil {
                 XCTFail("Failed retrieving String value for fullNameItem")
             } else {
                 XCTAssertEqual(testName, value!, "Expected value to be \(testName), but instead it's \(value!)")
+            }
+        }
+        if externalIdItem != nil {
+            let testId = "Test External ID"
+            do {
+                try ProfileManager!.setValue(testId, forProfileKey: externalIdItem!.profileKey);
+            }
+            catch {
+                XCTFail("Failed setting value for externalIdItem: unknown profile key \(externalIdItem!.profileKey)")
+            }
+            
+            let value = ProfileManager!.value(forProfileKey: externalIdItem!.profileKey) as? String
+            if value == nil {
+                XCTFail("Failed retrieving String value for externalIdItem")
+            } else {
+                XCTAssertEqual(testId, value!, "Expected value to be \(testId), but instead it's \(value!)")
             }
         }
         if genderItem != nil {

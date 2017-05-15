@@ -2,8 +2,12 @@
     "items":    [
                  {
                  "profileKey": "fullName",
-                 "classType": "KeychainProfileItem",
-                 "sourceKey": "name",
+                 "classType": "UserProfileItem",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "externalId",
+                 "classType": "UserProfileItem",
                  "itemType": "String"
                  },
                  {
@@ -19,6 +23,7 @@
                  {
                  "profileKey": "favoriteColor",
                  "classType": "UserDefaultsProfileItem",
+                 "sourceKey": "favouriteColour",
                  "itemType": "String"
                  },
                  {
