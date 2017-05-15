@@ -39,3 +39,6 @@ SBAProfileTypeIdentifier const SBAProfileTypeIdentifierBool = @"Bool";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate = @"Date";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex = @"HKBiologicalSex";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity = @"HKQuantity";
+
+SBAUserProtocolExtension const SBAUserProtocolExtensionGivenName = @"givenName";
+SBAUserProtocolExtension const SBAUserProtocolExtensionFullName = @"fullName";
