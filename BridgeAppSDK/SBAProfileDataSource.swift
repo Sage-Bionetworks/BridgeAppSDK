@@ -72,7 +72,15 @@ public protocol SBAProfileDataSource: class {
      @return               The title for this section or `nil` if no title.
      */
     @objc(titleForSection:)
-    optional func title(for section: Int) -> String?   
+    optional func title(for section: Int) -> String?
+    
+    /**
+     Image (icon) for the given section (if applicable)
+     @param     section    The section of the collection.
+     @return               The image for this section or `nil` if no image.
+     */
+    @objc(imageForSection:)
+    optional func image(for section: Int) -> UIImage?
 }
 
 open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
@@ -137,5 +145,11 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
     open func title(for section: Int) -> String? {
         guard section < sections.count else { return nil }
         return sections[section].title
+    }
+    
+    open func image(for section: Int) -> UIImage? {
+        guard section < sections.count else { return nil }
+        guard let imageName = sections[section].icon else { return nil }
+        return UIImage(named: imageName)
     }
 }

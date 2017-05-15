@@ -37,24 +37,26 @@ import ResearchUXFactory
 @objc
 public protocol SBAProfileSection: NSObjectProtocol {
     var title: String? { get }
+    var icon: String? { get }
     var items: [SBAProfileTableItem] { get }
 }
 
 @objc
 public protocol SBAProfileTableItem: NSObjectProtocol {
     var title: String { get }
-    var detail: String { get }
+    var detail: String? { get }
     var isEditable: Bool { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
     open dynamic var title: String?
+    open dynamic var icon: String?
     open dynamic var items: [SBAProfileTableItem] = []
     
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(items)])
+        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(icon), #keyPath(items)])
     }
 
     override open func defaultValue(forKey key: String) -> Any? {
@@ -82,10 +84,10 @@ open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
         }
     }
     
-    open var detail: String {
+    open var detail: String? {
         get {
             let key = #keyPath(detail)
-            return sourceDict[key] as? String ?? ""
+            return sourceDict[key] as? String
         }
     }
     
@@ -126,7 +128,7 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         return profileItems[self.profileItemKey]!
     }()
 
-    override open var detail: String {
+    override open var detail: String? {
         get {
             return "\(profileItem.value ?? "")"
         }
