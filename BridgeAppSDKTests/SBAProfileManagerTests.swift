@@ -33,7 +33,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        XCTAssert(keys.count == 9, "expected 6 keys, got \(keys.count)")
+        XCTAssertEqual(keys.count, 9)
     }
     
     func testProfileItems() {
@@ -41,7 +41,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        XCTAssert(items.count == 9, "expected 6 items, got \(items.count)")
+        XCTAssertEqual(items.count, 9)
         
         let fullNameItem = items["fullName"]
         let externalIdItem = items["externalId"]

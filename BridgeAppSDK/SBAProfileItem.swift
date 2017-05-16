@@ -286,18 +286,18 @@ open class SBAKeychainProfileItem: SBAProfileItemBase {
                     try keychain.removeObject(forKey: sourceKey)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        assert(false, "Error setting \(sourceKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
+                        assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
                         return
                     }
                     guard let secureVal = secureCodingValue(of: newValue) else {
-                        assert(false, "Error setting \(sourceKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
+                        assertionFailure("Error setting \(sourceKey) (\(profileKey)) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
                         return
                     }
                     try keychain.setObject(secureVal, forKey: sourceKey)
                 }
             }
             catch let error {
-                assert(false, "Failed to set \(sourceKey): \(String(describing: error))")
+                assert(false, "Failed to set \(sourceKey) (\(profileKey)): \(String(describing: error))")
             }
         }
     }
@@ -395,11 +395,11 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
                 defaults.removeObject(forKey: sourceKey)
             } else {
                 if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    assert(false, "Error setting \(sourceKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
                     return
                 }
                 guard let plistVal = pListValue(of: newValue) else {
-                    assert(false, "Error setting \(sourceKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
                     return
                 }
                 defaults.set(plistVal, forKey: sourceKey)
@@ -436,7 +436,7 @@ open class SBAUserProfileItem: SBAKeychainProfileItem, SBANameDataSource {
             switch SBAProfileSourceKey(sourceKey) {
             case SBAProfileSourceKey.preferredName:
                 // For the preferred name, if not a separate value stored, then return the given name
-                return super.value ?? self.storedValue(forKey: SBAProfileSourceKey.givenName.rawValue)
+                return super.value ?? self.givenName
                 
             case SBAProfileSourceKey.fullName:
                 // For the full name, if this class is used the it is assumed that the full name is 
