@@ -56,6 +56,12 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  */
 @interface SBABridgeManager : NSObject
 
+/**
+ Ensure that the resource bundle for BridgeAppSDK is added to the resources *before* calling into the 
+ class map or resource finder.
+ */
++ (void)addResourceBundleIfNeeded;
+
 /*!
   Set up the Bridge SDK for the given study and pointing at the production environment.
  Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.

@@ -77,6 +77,11 @@ public protocol SBAProfileItem: NSObjectProtocol {
      if needed.
      */
     var demographicJsonValue: SBBJSONValue? { get }
+    
+    /**
+     Is the value read-only?
+     */
+    var readonly: Bool { get }
 }
 
 extension SBAProfileItem {
@@ -239,54 +244,60 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
             return self.commonDemographicJsonValue()
         }
     }
+    
+    open var readonly: Bool {
+        return false
+    }
+}
+
+extension SBAKeychainWrapper: SBAKeychainWrapperProtocol {
 }
 
 open class SBAKeychainProfileItem: SBAProfileItemBase {
-    private let keychain: SBAKeychainWrapper
+    
+    var keychain: SBAKeychainWrapperProtocol
     
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        var keychainToUse = SBAUser.shared.keychain
         
-        let keychainService = dictionary["keychainService"] as! String?
-        let keychainAccessGroup = dictionary["keychainAccessGroup"] as! String?
+        // Look to see if this item uses a different keychain service or access group
+        // than the default and instantiate if it does.
+        let keychainService = dictionary["keychainService"] as? String
+        let keychainAccessGroup = dictionary["keychainAccessGroup"] as? String
         
         if (keychainService != nil || keychainAccessGroup != nil) {
-            keychainToUse = SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
+            keychain = SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
         }
-        
-        keychain = keychainToUse
+        else {
+            // Otherwise, use the default
+            keychain = SBAProfileManager.keychain
+        }
         
         super.init(dictionaryRepresentation: dictionary)
     }
     
     override open var value: Any? {
         get {
-            var err: NSError?
-            let obj = keychain.object(forKey: profileKey, error: &err)
-            if let error = err {
-                print("Error accessing keychain \(profileKey): \(error.code) \(error)")
-            }
-            return self.typedValue(from: obj)
+            return storedValue(forKey: sourceKey)
         }
         
         set {
             do {
                 if newValue == nil {
-                    try keychain.removeObject(forKey: profileKey)
+                    try keychain.removeObject(forKey: sourceKey)
                 } else {
                     if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        assert(false, "Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
+                        assert(false, "Error setting \(sourceKey): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
                         return
                     }
                     guard let secureVal = secureCodingValue(of: newValue) else {
-                        assert(false, "Error setting \(profileKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
+                        assert(false, "Error setting \(sourceKey) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
                         return
                     }
-                    try keychain.setObject(secureVal, forKey: profileKey)
+                    try keychain.setObject(secureVal, forKey: sourceKey)
                 }
             }
             catch let error {
-                assert(false, "Failed to set \(profileKey): \(String(describing: error))")
+                assert(false, "Failed to set \(sourceKey): \(String(describing: error))")
             }
         }
     }
@@ -312,6 +323,15 @@ open class SBAKeychainProfileItem: SBAProfileItemBase {
         }
         
         return retVal
+    }
+    
+    fileprivate func storedValue(forKey key: String) -> Any? {
+        var err: NSError?
+        let obj = keychain.object(forKey: key, error: &err)
+        if let error = err {
+            print("Error accessing keychain \(key): \(error.code) \(error)")
+        }
+        return self.typedValue(from: obj)
     }
 }
 
@@ -350,40 +370,39 @@ extension Data: PlistValue {}
 extension Date: PlistValue {}
 
 open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
-    private let defaults: UserDefaults
+    var defaults: UserDefaults
     
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
-        var defaultsToUse = SBAUser.shared.bridgeInfo?.userDefaults ?? UserDefaults.standard
-        
-        let userDefaultsSuiteName = dictionary["userDefaultsSuiteName"] as! String?
-        
-        if (userDefaultsSuiteName != nil) {
-            defaultsToUse = UserDefaults(suiteName: userDefaultsSuiteName) ?? defaultsToUse
+
+        if let userDefaultsSuiteName = dictionary["userDefaultsSuiteName"] as? String,
+            let customDefaults = UserDefaults(suiteName: userDefaultsSuiteName) {
+            defaults = customDefaults
         }
-        
-        defaults = defaultsToUse
+        else {
+            defaults = SBAProfileManager.userDefaults
+        }
         
         super.init(dictionaryRepresentation: dictionary)
     }
     
     override open var value: Any? {
         get {
-            return typedValue(from: defaults.object(forKey: profileKey) as? PlistValue)
+            return typedValue(from: defaults.object(forKey: sourceKey) as? PlistValue)
         }
         
         set {
             if newValue == nil {
-                defaults.removeObject(forKey: profileKey)
+                defaults.removeObject(forKey: sourceKey)
             } else {
                 if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    assert(false, "Error setting \(profileKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
+                    assert(false, "Error setting \(sourceKey): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
                     return
                 }
                 guard let plistVal = pListValue(of: newValue) else {
-                    assert(false, "Error setting \(profileKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
+                    assert(false, "Error setting \(sourceKey) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
                     return
                 }
-                defaults.set(plistVal, forKey: profileKey)
+                defaults.set(plistVal, forKey: sourceKey)
             }
         }
     }
@@ -409,27 +428,43 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
     }
 }
 
-open class SBAUserProfileItem: SBAProfileItemBase {
-    lazy open var user: SBAUser = {
-        return SBAUser.shared
-    }()
+open class SBAUserProfileItem: SBAKeychainProfileItem, SBANameDataSource {
     
     override open var value: Any? {
+        
         get {
-            // need to special-case accessing properties that are defined in protocol extensions
-            // because they're not available via KVC
-            switch SBAUserProtocolExtension(sourceKey) {
-            case SBAUserProtocolExtension.givenName:
-                return user.givenName
-            case SBAUserProtocolExtension.fullName:
-                return user.fullName
+            switch SBAProfileSourceKey(sourceKey) {
+            case SBAProfileSourceKey.preferredName:
+                // For the preferred name, if not a separate value stored, then return the given name
+                return super.value ?? self.storedValue(forKey: SBAProfileSourceKey.givenName.rawValue)
+                
+            case SBAProfileSourceKey.fullName:
+                // For the full name, if this class is used the it is assumed that the full name is 
+                // not editable and that the given/family name are set using one-to-one fields
+                return self.fullName
+                
             default:
-                return user.value(forKey: sourceKey)
+                return super.value
             }
         }
         
         set {
-            user.setValue(newValue, forKey: sourceKey)
+            if !readonly {
+                super.value = newValue
+            }
         }
     }
+    
+    override open var readonly: Bool {
+        return self.sourceKey == SBAProfileSourceKey.fullName.rawValue
+    }
+    
+    open var name: String? {
+        return self.storedValue(forKey: SBAProfileSourceKey.givenName.rawValue) as? String
+    }
+    
+    open var familyName: String? {
+        return self.storedValue(forKey: SBAProfileSourceKey.familyName.rawValue) as? String
+    }
+    
 }

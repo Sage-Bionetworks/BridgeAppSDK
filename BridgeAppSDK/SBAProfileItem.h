@@ -34,6 +34,8 @@
 #import <Foundation/Foundation.h>
 #import "SBADefines.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NSString * SBAProfileTypeIdentifier NS_EXTENSIBLE_STRING_ENUM;
 
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierString;
@@ -43,7 +45,27 @@ ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity;
 
-typedef NSString *SBAUserProtocolExtension NS_EXTENSIBLE_STRING_ENUM;
+typedef NSString *SBAProfileSourceKey NS_EXTENSIBLE_STRING_ENUM;
 
-ENUM_EXTERN SBAUserProtocolExtension const SBAUserProtocolExtensionGivenName;
-ENUM_EXTERN SBAUserProtocolExtension const SBAUserProtocolExtensionFullName;
+ENUM_EXTERN SBAProfileSourceKey const SBAProfileSourceKeyGivenName;
+ENUM_EXTERN SBAProfileSourceKey const SBAProfileSourceKeyFamilyName;
+ENUM_EXTERN SBAProfileSourceKey const SBAProfileSourceKeyFullName;
+ENUM_EXTERN SBAProfileSourceKey const SBAProfileSourceKeyPreferredName;
+
+
+/**
+ Implementation should manage adding and removing objects from the keychain.
+ */
+@protocol SBAKeychainWrapperProtocol <NSObject>
+
+- (BOOL)setObject:(id<NSSecureCoding>)object forKey:(NSString *)key error:(NSError * _Nullable *)error;
+
+- (id<NSSecureCoding>)objectForKey:(NSString *)key error:(NSError * _Nullable *)error;
+
+- (BOOL)removeObjectForKey:(NSString *)key error:(NSError * _Nullable *)error;
+
+- (BOOL)resetKeychainWithError:(NSError * _Nullable *)error;
+
+@end
+
+NS_ASSUME_NONNULL_END

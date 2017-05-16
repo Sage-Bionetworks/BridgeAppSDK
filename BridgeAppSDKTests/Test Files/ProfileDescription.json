@@ -6,6 +6,23 @@
                  "itemType": "String"
                  },
                  {
+                 "profileKey": "given",
+                 "sourceKey": "givenName",
+                 "classType": "UserProfileItem",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "family",
+                 "sourceKey": "familyName",
+                 "classType": "UserProfileItem",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "preferredName",
+                 "classType": "UserProfileItem",
+                 "itemType": "String"
+                 },
+                 {
                  "profileKey": "externalId",
                  "classType": "UserProfileItem",
                  "itemType": "String"

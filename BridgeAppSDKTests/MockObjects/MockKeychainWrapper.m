@@ -1,5 +1,5 @@
 //
-//  SBAProfileItem.m
+//  MockKeychainWrapper.m
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,58 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBAProfileItem.h"
+#import "MockKeychainWrapper.h"
 
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierString = @"String";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierNumber = @"Number";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierBool = @"Bool";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate = @"Date";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex = @"HKBiologicalSex";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity = @"HKQuantity";
+@implementation MockKeychainWrapper
 
-SBAProfileSourceKey const SBAProfileSourceKeyGivenName = @"givenName";
-SBAProfileSourceKey const SBAProfileSourceKeyFamilyName = @"familyName";
-SBAProfileSourceKey const SBAProfileSourceKeyFullName = @"fullName";
-SBAProfileSourceKey const SBAProfileSourceKeyPreferredName = @"preferredName";
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _keychain = [NSMutableDictionary new];
+        _errorMap = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (BOOL)setObject:(id<NSSecureCoding>)object forKey:(NSString *)key error:(NSError * _Nullable *)error {
+    NSError *err = _errorMap[key];
+    if (err) {
+        *error = err;
+        return false;
+    }
+    else {
+        _keychain[key] = object;
+        return true;
+    }
+}
+
+- (id<NSSecureCoding>)objectForKey:(NSString *)key error:(NSError * _Nullable *)error {
+    NSError *err = _errorMap[key];
+    if (err) {
+        *error = err;
+        return nil;
+    }
+    else {
+        return _keychain[key];
+    }
+}
+
+- (BOOL)removeObjectForKey:(NSString *)key error:(NSError * _Nullable *)error {
+    NSError *err = _errorMap[key];
+    if (err) {
+        *error = err;
+        return false;
+    }
+    else {
+        [_keychain removeObjectForKey:key];
+        return true;
+    }
+}
+
+- (BOOL)resetKeychainWithError:(NSError * _Nullable *)error {
+    self.reset_called = YES;
+    [_keychain removeAllObjects];
+    return true;
+}
+
+@end
