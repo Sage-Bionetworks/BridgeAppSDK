@@ -93,6 +93,13 @@ public protocol SBABridgeInfo: SBASharedAppInfo, SBBBridgeInfoProtocol {
     var disableTestUserCheck: Bool { get }
 }
 
+extension SBABridgeInfo {
+    
+    public func createKeychainWrapper() -> SBAKeychainWrapper {
+        return SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
+    }
+}
+
 /**
  This is an implementation of the SBABridgeInfo protocol that uses a dictionary to 
  define the values required by the BridgeInfo protocol.

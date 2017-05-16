@@ -58,14 +58,6 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
      * Password is stored in the keychain
      */
     var password: String? { get set }
-    
-    /**
-     * "Gender" can mean either biological sex or gender identity. Since older ResearchKit apps
-     * that used AppCore use this term to describe both properties, this is the term that 
-     * BridgeAppSDK will continue to use. It is up to a given app to determine what is the 
-     * appropriate language to use for this field. Stored in the keychain.
-     */
-    var gender: HKBiologicalSex { get set }
 
     /**
      * Subpopulation GUID is used for tracking by certain apps. Stored in the keychain.
@@ -76,11 +68,6 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
      * Consent signature should be stored in keychain.
      */
     var consentSignature: SBAConsentSignatureWrapper? { get set }
-
-    /**
-     * Profile Image is stored in the keychain
-     */
-    var profileImage: UIImage? { get set }
     
     /**
      * Data groups associated with this user.

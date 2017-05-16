@@ -124,6 +124,7 @@
 		FF78CF6B1D00C1B7002C456D /* consent_full.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF6A1D00C1B7002C456D /* consent_full.html */; };
 		FF78CF891D00F3DB002C456D /* EligibilityRequirements.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */; };
 		FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */; };
+		FF7C29E01ECBA268009FDA44 /* MockKeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */; };
 		FF812A251DDCEC6700A61655 /* SBAChangeEmailStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
 		FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF8630411E709C9E0077AC57 /* Interface.storyboard */; };
@@ -529,6 +530,8 @@
 		FF78CF6A1D00C1B7002C456D /* consent_full.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = consent_full.html; sourceTree = "<group>"; };
 		FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EligibilityRequirements.json; sourceTree = "<group>"; };
 		FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SBARegistrationStep.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		FF7C29DE1ECBA268009FDA44 /* MockKeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockKeychainWrapper.h; sourceTree = "<group>"; };
+		FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockKeychainWrapper.m; sourceTree = "<group>"; };
 		FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAChangeEmailStep.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sage Cardio Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -906,6 +909,8 @@
 				FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */,
 				FF8997771D0B585600B26051 /* MockBridgeInfo.h */,
 				FF8997781D0B585600B26051 /* MockBridgeInfo.m */,
+				FF7C29DE1ECBA268009FDA44 /* MockKeychainWrapper.h */,
+				FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */,
 				FF8997911D0B589500B26051 /* MockUser.h */,
 				FF8997921D0B589500B26051 /* MockUser.m */,
 			);
@@ -1749,6 +1754,7 @@
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
 				FFCE310D1EC1273C0086DCAA /* SBABridgeManagerTests.swift in Sources */,
+				FF7C29E01ECBA268009FDA44 /* MockKeychainWrapper.m in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,
 				FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */,

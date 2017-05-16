@@ -1,5 +1,5 @@
 //
-//  SBAProfileItem.m
+//  MockKeychainWrapper.h
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -31,16 +31,13 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBAProfileItem.h"
+@import Foundation;
+@import BridgeAppSDK;
 
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierString = @"String";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierNumber = @"Number";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierBool = @"Bool";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate = @"Date";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex = @"HKBiologicalSex";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity = @"HKQuantity";
+@interface MockKeychainWrapper : NSObject <SBAKeychainWrapperProtocol>
 
-SBAProfileSourceKey const SBAProfileSourceKeyGivenName = @"givenName";
-SBAProfileSourceKey const SBAProfileSourceKeyFamilyName = @"familyName";
-SBAProfileSourceKey const SBAProfileSourceKeyFullName = @"fullName";
-SBAProfileSourceKey const SBAProfileSourceKeyPreferredName = @"preferredName";
+@property (nonatomic) NSMutableDictionary<NSString *, id> *keychain;
+@property (nonatomic) NSMutableDictionary<NSString *, NSError *> *errorMap;
+@property (nonatomic) BOOL reset_called;
+
+@end

@@ -39,9 +39,13 @@ import ResearchKit
  The `SBAUser` model object is intended as a singleton object for storing information about
  the currently logged in user in the user defaults and keychain.
  */
-public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
+public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuthManagerDelegateProtocol {
 
     static let shared = SBAUser()
+    
+    lazy var profileManager: SBAProfileManagerProtocol? = {
+        return SBAProfileManager.shared
+    }()
     
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue")
 
@@ -52,7 +56,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
         }
     }
     
-    open var bridgeInfo: SBABridgeInfo? {
+    public var bridgeInfo: SBABridgeInfo? {
        return appDelegate?.bridgeInfo ?? SBAInfoManager.shared
     }
     
@@ -61,16 +65,25 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     }
     
     public func setStoredAnswer(_ storedAnswer: Any?, forKey key: String) {
-        if self.keychainPropertyKeys.contains(key) {
-            setKeychainObject(storedAnswer as? NSSecureCoding, key: key)
+        
+        do {
+            try profileManager?.setValue(storedAnswer, forProfileKey: key);
         }
-        else {
-            syncSetObject(storedAnswer, forKey: key)
+        catch {
+            if self.keychainPropertyKeys.contains(key) {
+                setKeychainObject(storedAnswer as? NSSecureCoding, key: key)
+            }
+            else {
+                syncSetObject(storedAnswer, forKey: key)
+            }
         }
     }
 
     public func storedAnswer(for key: String) -> Any? {
-        if self.keychainPropertyKeys.contains(key) {
+        if let storedAnswer = profileManager?.value(forProfileKey: key) {
+            return storedAnswer
+        }
+        else if self.keychainPropertyKeys.contains(key) {
             return getKeychainObject(key)
         }
         else {
@@ -82,13 +95,9 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     // MARK: Keychain storage
     // --------------------------------------------------
     
-    open var keychain: SBAKeychainWrapper {
-        if _keychain == nil {
-            _keychain = SBAKeychainWrapper(service: bridgeInfo?.keychainService, accessGroup: bridgeInfo?.keychainAccessGroup)
-        }
-        return _keychain!
+    fileprivate var keychain: SBAKeychainWrapper {
+        return SBAProfileManager.keychain
     }
-    var _keychain: SBAKeychainWrapper?
     
     let kSessionTokenKey = "sessionToken"
     let kNamePropertyKey = "name"
@@ -114,64 +123,65 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     
     public var name: String? {
         get {
-            return getKeychainObject(kNamePropertyKey) as? String
+            return getProfileObject(profileKey: SBAProfileInfoOption.givenName.rawValue, appCoreKey: kNamePropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kNamePropertyKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.givenName.rawValue, appCoreKey: kNamePropertyKey)
         }
     }
     
     public var familyName: String? {
         get {
-            return getKeychainObject(kFamilyNamePropertyKey) as? String
+            return getProfileObject(profileKey: SBAProfileInfoOption.familyName.rawValue, appCoreKey: kFamilyNamePropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kFamilyNamePropertyKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.familyName.rawValue, appCoreKey: kFamilyNamePropertyKey)
         }
     }
 
     public var email: String? {
         get {
-            return getKeychainObject(kEmailPropertyKey) as? String
+            return getProfileObject(profileKey: SBAProfileInfoOption.email.rawValue, appCoreKey: kEmailPropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kEmailPropertyKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.email.rawValue, appCoreKey: kEmailPropertyKey)
         }
     }
     
     public var externalId: String? {
         get {
-            return getKeychainObject(kExternalIdKey) as? String
+            return getProfileObject(profileKey: SBAProfileInfoOption.externalID.rawValue, appCoreKey: kExternalIdKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kExternalIdKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.externalID.rawValue, appCoreKey: kExternalIdKey)
         }
     }
     
     public var password: String? {
         get {
-            return getKeychainObject(kPasswordPropertyKey) as? String
+            return getProfileObject(profileKey: SBAProfileInfoOption.password.rawValue, appCoreKey: kPasswordPropertyKey) as? String
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kPasswordPropertyKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.password.rawValue, appCoreKey: kPasswordPropertyKey)
         }
     }
 
     public var gender: HKBiologicalSex {
         get {
-            return HKBiologicalSex(rawValue: (getKeychainObject(kGenderKey) as? NSNumber)?.intValue ?? 0) ?? .notSet
+            let rawValue = getProfileObject(profileKey: SBAProfileInfoOption.gender.rawValue, appCoreKey: kGenderKey)
+            return HKBiologicalSex(rawValue: (rawValue as? NSNumber)?.intValue ?? 0) ?? .notSet
         }
         set (newValue) {
-            setKeychainObject(NSNumber(value: newValue.rawValue), key: kGenderKey)
+            setProfileObject(NSNumber(value: newValue.rawValue), profileKey: SBAProfileInfoOption.gender.rawValue, appCoreKey: kGenderKey)
         }
     }
     
     public var birthdate: Date?  {
         get {
-            return getKeychainObject(kBirthdateKey) as? Date
+            return getProfileObject(profileKey: SBAProfileInfoOption.birthdate.rawValue, appCoreKey:kBirthdateKey) as? Date
         }
         set (newValue) {
-            setKeychainObject(newValue as NSSecureCoding?, key: kBirthdateKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.birthdate.rawValue, appCoreKey:kBirthdateKey)
         }
     }
     
@@ -216,6 +226,28 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
             } else {  // remove the item from the keychain
                 setKeychainObject(nil, key: kProfileImagePropertyKey)
             }
+        }
+    }
+    
+    /**
+     @param profileKey          Maps to a key defined using the profile manager as the profile key
+     @param appCoreKey          Maps to the AppCore user key (deprecated)
+     */
+    private func getProfileObject(profileKey: String, appCoreKey: String) -> Any? {
+        if let storedAnswer = profileManager?.value(forProfileKey: profileKey) {
+            return storedAnswer
+        }
+        else {
+            return getKeychainObject(appCoreKey)
+        }
+    }
+    
+    private func setProfileObject(_ object: NSSecureCoding?, profileKey: String, appCoreKey: String) {
+        do {
+            try profileManager?.setValue(object, forProfileKey: profileKey);
+        }
+        catch {
+            setKeychainObject(storedAnswer as? NSSecureCoding, key: appCoreKey)
         }
     }
     
@@ -461,11 +493,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
         }
         store.synchronize()
     }
-    
-}
-
-extension SBAUser : SBBAuthManagerDelegateProtocol {
-    
+        
     public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
         let token = self.sessionToken
         #if DEBUG

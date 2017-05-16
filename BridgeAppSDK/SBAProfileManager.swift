@@ -94,6 +94,10 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
 
 
 open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
+    
+    // The default keychain and user defaults are created by the info manager
+    public static let keychain = SBAInfoManager.shared.createKeychainWrapper()
+    public static let userDefaults = SBAInfoManager.shared.userDefaults
 
     /**
      The shared instance of the profile manager. Loads from SBAProfileItemsJSONFilename, which
@@ -107,10 +111,12 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
      to the fully qualified class name without setting up any mappings.
      */
     public static let shared: SBAProfileManagerProtocol? = {
+        SBABridgeManager.addResourceBundleIfNeeded()
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
                 let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
             else {
-                assertionFailure("Couldn't find the shared profile manager.")
+                // The SBAUser will default to the profile manager if available, but if not will fall-back
+                // to older methods for storing information.
                 return SBAProfileManager(dictionaryRepresentation: [:])
         }
         return sharedProfileManager
