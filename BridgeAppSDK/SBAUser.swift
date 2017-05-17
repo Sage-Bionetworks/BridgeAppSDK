@@ -102,7 +102,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     let kSessionTokenKey = "sessionToken"
     let kNamePropertyKey = "name"
     let kFamilyNamePropertyKey = "familyName"
-    let kEmailPropertyKey = "email"
+    let kUsernamePropertyKey = "username"
     let kPasswordPropertyKey = "password"
     let kSubpopulationGuidKey = "SavedSubpopulationGuid"
     let kConsentSignatureKey = "ConsentSignature"
@@ -111,6 +111,8 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     let kBirthdateKey = "birthdate"
     let kProfileImagePropertyKey = "profileImage"
     let keychainPropertyKeys = ["externalId", "gender", "birthdate", "profileImage"]
+    
+    let kDeprecatedUsernamePropertyKey = "email"
     
     public var sessionToken: String? {
         get {
@@ -141,12 +143,34 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
 
     public var email: String? {
         get {
-            return getProfileObject(profileKey: SBAProfileInfoOption.email.rawValue, appCoreKey: kEmailPropertyKey) as? String
+            // For reverse-compatibility, look at both the username key and the deprecated username key
+            // If found in the deprecated, write to the username value so that it will become readonly
+            // for use in logging in to the server. Because this will be very noisey in the debug log 
+            // and will lock the keychain, store the username in local memory and use that if available.
+            if _username != nil {
+                return _username
+            }
+            guard let username = getKeychainObject(kUsernamePropertyKey) as? String
+            else {
+                let email = getKeychainObject(kDeprecatedUsernamePropertyKey) as? String
+                if email != nil {
+                    setKeychainObject(email as NSSecureCoding?, key: kUsernamePropertyKey)
+                }
+                _username = email
+                return email
+            }
+            _username = username
+            return username
         }
         set (newValue) {
-            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.email.rawValue, appCoreKey: kEmailPropertyKey)
+            // Special-case email to both set the profile and keychain. The profile may include a read/write version of 
+            // the email for contact that is *not* the same email used as the username during registration.
+            _username = newValue
+            setKeychainObject(newValue as NSSecureCoding?, key: kUsernamePropertyKey)
+            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.email.rawValue, appCoreKey: nil)
         }
     }
+    private var _username: String?
     
     public var externalId: String? {
         get {
@@ -159,13 +183,14 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     
     public var password: String? {
         get {
-            return getProfileObject(profileKey: SBAProfileInfoOption.password.rawValue, appCoreKey: kPasswordPropertyKey) as? String
+            return getKeychainObject(kPasswordPropertyKey) as? String
         }
         set (newValue) {
-            setProfileObject(newValue as NSSecureCoding?, profileKey: SBAProfileInfoOption.password.rawValue, appCoreKey: kPasswordPropertyKey)
+            setKeychainObject(newValue as NSSecureCoding?, key: kPasswordPropertyKey)
         }
     }
 
+    @available(*, deprecated)
     public var gender: HKBiologicalSex {
         get {
             let rawValue = getProfileObject(profileKey: SBAProfileInfoOption.gender.rawValue, appCoreKey: kGenderKey)
@@ -211,6 +236,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         }
     }
     
+    @available(*, deprecated)
     public var profileImage: UIImage? {
         get {
             if let profileImageData = getKeychainObject(kProfileImagePropertyKey) as? Data {
@@ -243,13 +269,15 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         }
     }
     
-    private func setProfileObject(_ object: NSSecureCoding?, profileKey: String, appCoreKey: String) {
+    private func setProfileObject(_ object: NSSecureCoding?, profileKey: String, appCoreKey: String?) {
         do {
             try profileManager?.setValue(object, forProfileKey: profileKey);
         }
         catch {
-            debugPrint("Could not set item on profile manager for \(profileKey). Falling back to \(appCoreKey) keychain value.")
-            setKeychainObject(object, key: appCoreKey)
+            if appCoreKey != nil {
+                debugPrint("Could not set item on profile manager for \(profileKey). Falling back to \(appCoreKey!) keychain value.")
+                setKeychainObject(object, key: appCoreKey!)
+            }
         }
     }
     
