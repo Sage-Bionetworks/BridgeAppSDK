@@ -226,7 +226,7 @@ public extension SBAUserWrapper {
         // If this is not a test user (or shouldn't check) then complete the registration and return
         guard signup.email.contains(SBAHiddenTestEmailString) &&
             appDelegate != nil &&
-            (bridgeInfo?.disableTestUserCheck ?? false) else {
+            !(bridgeInfo?.disableTestUserCheck ?? false) else {
             completeRegistration(false)
             return
         }
@@ -245,7 +245,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     public func verifyRegistration(_ completion: ((Error?) -> Void)?) {
-        guard let username = self.email(forAuthManager: nil), let password = self.password(forAuthManager: nil) else {
+        guard let username = self.email, let password = self.password else {
             assertionFailure("Attempting to login without a stored username and password")
             return
         }

@@ -66,6 +66,17 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     }
     fileprivate var _onboardingManager: SBAOnboardingManager!
     
+    /**
+     List of the profile keys that are updated during onboarding
+     */
+    lazy open var profileKeys: [String] = {
+        guard let profileKeys = SBAProfileManager.shared?.profileKeys() else { return [] }
+        // By default, do not include keys that are handled during registration and consent
+        let excludeKeys: [SBAProfileInfoOption] = [.fullName, .familyName, .givenName, .email, .password]
+        let filteredKeys = Set(profileKeys).subtracting(excludeKeys.map{ $0.rawValue })
+        return Array(filteredKeys)
+    }()
+    
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateState()
@@ -203,8 +214,9 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
-        if direction == .forward {
-            // TODO: syoung 04/19/2017 Update the profile if this is a step that carries profile information.
+        if direction == .forward, profileKeys.count > 0 {
+            // If going forward, then update the profile with the matching keys
+            stepViewController.update(participantInfo: self.sharedUser, with: profileKeys)
         }
     }
     

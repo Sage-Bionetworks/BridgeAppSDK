@@ -238,6 +238,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             return storedAnswer
         }
         else {
+            debugPrint("Could not get item from profile manager for \(profileKey). Falling back to \(appCoreKey) keychain value.")
             return getKeychainObject(appCoreKey)
         }
     }
@@ -247,7 +248,8 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             try profileManager?.setValue(object, forProfileKey: profileKey);
         }
         catch {
-            setKeychainObject(storedAnswer as? NSSecureCoding, key: appCoreKey)
+            debugPrint("Could not set item on profile manager for \(profileKey). Falling back to \(appCoreKey) keychain value.")
+            setKeychainObject(object, key: appCoreKey)
         }
     }
     
