@@ -184,7 +184,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
      */
     public func setValue(_ value: Any?, forProfileKey key: String) throws {
         guard let item = self.itemsMap[key] else {
-            throw SBAProfileManagerError.init(errorType: .unknownProfileKey, profileKey: key)
+            throw SBAProfileManagerError(errorType: .unknownProfileKey, profileKey: key)
         }
         
         item.value = value

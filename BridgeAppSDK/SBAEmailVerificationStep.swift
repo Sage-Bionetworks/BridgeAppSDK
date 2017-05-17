@@ -121,23 +121,49 @@ open class SBAEmailVerificationStepViewController: SBAInstructionStepViewControl
         
         // set the back and cancel buttons to empty items
         self.backButtonItem = UIBarButtonItem()
+        
+        // attempt verification on view will appear
+        verifyRegistration(isForced: false)
+        
+        // Setup a listener for going to background
+        NotificationCenter.default.addObserver(self, selector: #selector(verifyRegistration), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Remove listeners
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+    }
+    
+    open func appDidBecomeActive() {
+        verifyRegistration(isForced: false)
     }
     
     // Override the default method for goForward and attempt user registration. Do not allow subclasses
     // to override this method
     final public override func goForward() {
+        verifyRegistration(isForced: true)
+    }
     
-        showLoadingView()
+    open func verifyRegistration(isForced: Bool) {
+        guard !_isVerifying else { return }
+        _isVerifying = true
+        if isForced {
+            showLoadingView()
+        }
         sharedUser.verifyRegistration { [weak self] error in
 
-            if let error = error {
-                self?.handleFailedRegistration(error)
-            }
-            else {
+            if error == nil {
                 self?.goNext()
             }
+            else if isForced {
+                self?.handleFailedRegistration(error!)
+            }
+            self?._isVerifying = false
         }
     }
+    fileprivate var _isVerifying: Bool = false
     
     func goNext() {
         // Then call super to go forward

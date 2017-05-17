@@ -68,7 +68,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
             throw SBAProfileInfoOptionsError.missingRequiredOptions
         }
         
-        guard options.contains(.email) && options.contains(.password) else {
+        guard options.contains(.email) else {
             throw SBAProfileInfoOptionsError.missingEmail
         }
     }
@@ -130,15 +130,65 @@ extension SBARegistrationStepController {
         
         let externalID = self.externalID ?? sharedUser.externalId
         let dataGroups = self.dataGroups ?? sharedUser.dataGroups
+        let password = self.password ?? sharedUser.password ?? generatePassword()
         
-        sharedUser.registerUser(email: email!, password: password!, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
+        sharedUser.registerUser(email: email!, password: password, externalId: externalID, dataGroups: dataGroups) { [weak self] error in
             if let error = error {
                 self?.handleFailedRegistration(error)
+            }
+            else if self?.sharedUser.email == nil || self?.sharedUser.password == nil {
+                assertionFailure("Failed to store the emal or password")
             }
             else {
                 self?.goNext()
             }
         }
+    }
+    
+    func generatePassword() -> String {
+        
+        let lowercase = "abcdefghijklmnopqrstuvwxyz"
+        let uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        let numeric = "0123456789"
+        let symbol = "!@#$%^&*()"
+        
+        let length = 8 + arc4random_uniform(4)
+        let all = [lowercase, uppercase, numeric, symbol]
+        
+        var indexSet = IndexSet(0..<all.count)
+        var randomString = ""
+        
+        func appendRandom(from groupIndex: Int) {
+            
+            // Pick a group to add a letter from
+            let letters = all[groupIndex]
+            
+            // Pick a letter from that group
+            let rand = Int(arc4random_uniform(UInt32(letters.characters.count)))
+            let position = letters.index(letters.startIndex, offsetBy: rand)
+            let nextChar = letters[position]
+            
+            // Add it to the string
+            randomString.append(nextChar)
+        }
+        
+        // count up to the length (8 - 12 characters)
+        for _ in 0 ..< length {
+            let index = Int(arc4random_uniform(UInt32(all.count)))
+            appendRandom(from: index)
+            if indexSet.contains(index) {
+                indexSet.remove(index)
+            }
+        }
+        
+        // Add from any group that wasn't already selected at least once
+        if indexSet.count > 0 {
+            for index in indexSet {
+                appendRandom(from: index)
+            }
+        }
+        
+        return randomString
     }
 }
 
