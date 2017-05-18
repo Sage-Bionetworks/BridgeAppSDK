@@ -217,6 +217,14 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         if direction == .forward, profileKeys.count > 0 {
             // If going forward, then update the profile with the matching keys
             stepViewController.update(participantInfo: self.sharedUser, with: profileKeys)
+            
+            // If this is a data groups step *and* the user is not registered, then update the data groups that 
+            // are stored locally on the user. These data groups will be submitted with the registration.
+            if !sharedUser.isLoginVerified,
+                let dataGroupsStep = stepViewController.step as? SBADataGroupsStepProtocol,
+                let stepResult = stepViewController.result {
+                 sharedUser.dataGroups = Array(dataGroupsStep.union(previousGroups: sharedUser.dataGroups, stepResult: stepResult))
+            }
         }
     }
     
@@ -227,6 +235,9 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
             if sharedUser.isLoginVerified {
                 // If the flow was completed then set the completion identifier for the onboarding step
                 self.sharedUser.onboardingStepIdentifier = SBAOnboardingManager.completedIdentifier
+                
+                // Commit any tracked data changes (data store and data groups)
+                taskViewController.task?.commitTrackedDataChanges(user: sharedUser, taskResult: taskViewController.result, completion:nil)
             }
             else {
                 // If the flow exits with "complete" status but login isn't verified,

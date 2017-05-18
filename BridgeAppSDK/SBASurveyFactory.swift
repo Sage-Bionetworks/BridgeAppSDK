@@ -147,12 +147,25 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         switch (subtype) {
         case .registration:
             return SBARegistrationStep(inputItem: inputItem, factory: self)
+            
         case .login:
-            return SBALoginStep(inputItem: inputItem, factory: self)
+            // For the login case, return a different implementation depending upon whether or not
+            // this is login via username or externalID. For some studies, PII (email) is not collected
+            // and instead the participant is assigned an external identifier that is used to log them in.
+            let profileOptions = SBAProfileInfoOptions(inputItem: inputItem)
+            if profileOptions.includes.contains(.externalID) {
+                return SBAExternalIDLoginStep(inputItem: inputItem)
+            }
+            else {
+                return SBALoginStep(inputItem: inputItem, factory: self)
+            }
+            
         case .emailVerification:
             return SBAEmailVerificationStep(inputItem: inputItem)
+                
         case .externalID:
-            return SBAExternalIDStep(inputItem: inputItem)
+            return SBAExternalIDAssignStep(inputItem: inputItem, factory: self)
+                
         default:
             return super.createAccountStep(inputItem:inputItem, subtype: subtype)
         }

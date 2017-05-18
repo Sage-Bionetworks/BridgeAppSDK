@@ -391,6 +391,14 @@ extension sbb_NumberRange {
 
 extension SBBStringConstraints: SBATextFieldRange {
     
+    public var autocapitalizationType: UITextAutocapitalizationType {
+        return .none
+    }
+
+    public var keyboardType: UIKeyboardType {
+        return .default
+    }
+    
     public var validationRegex: String? {
         if self.pattern != nil {
             return self.pattern

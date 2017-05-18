@@ -1,5 +1,5 @@
 //
-//  SBAExternalIDStep.swift
+//  SBAExternalIDLoginStep.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2016 Sage Bionetworks. All rights reserved.
@@ -33,14 +33,22 @@
 
 import ResearchKit
 
+@available(*, unavailable, message: "Use `SBAExternalIDLoginStep` instead.")
+open class SBAExternalIDStep: SBAExternalIDLoginStep {
+}
+
+@available(*, unavailable, message: "Use `SBAExternalIDLoginStepViewController` instead.")
+open class SBAExternalIDStepViewController: SBAExternalIDLoginStepViewController {
+}
+
 /**
- The `SBAExternalIDStep` is used to handle registering a user where the user must be linked 
+ The `SBAExternalIDLoginStep` is used to handle registering a user where the user must be linked
  to the app via an external ID. This is used primarily by research clinics that require registering
  users anonymously without using an email account. This step requires entering the external ID twice
  to validate the ID. Then the view controller will attempt to login the user by using the external
  ID to match to a server-side list.
  */
-open class SBAExternalIDStep: ORKPageStep {
+open class SBAExternalIDLoginStep: ORKPageStep {
     
     static let initialStepIdentifier = SBAProfileInfoOption.externalID.rawValue
     static let confirmStepIdentifier = "confirm"
@@ -67,7 +75,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
     
     public init(inputItem: SBASurveyItem) {
-        let steps = SBAExternalIDStep.steps(SBAExternalIDOptions(options: inputItem.options))
+        let steps = SBAExternalIDLoginStep.steps(SBAExternalIDOptions(dictionaryRepresentation: inputItem.options ?? [:]))
         super.init(identifier: inputItem.identifier, steps: steps)
         if let title = inputItem.stepTitle {
             self.title = title
@@ -80,13 +88,13 @@ open class SBAExternalIDStep: ORKPageStep {
     }
 
     public init(identifier: String) {
-        let steps = SBAExternalIDStep.steps()
+        let steps = SBAExternalIDLoginStep.steps()
         super.init(identifier: identifier, steps: steps)
     }
     
     fileprivate class func steps(_ options: SBAExternalIDOptions = SBAExternalIDOptions()) -> [ORKStep] {
         // Create the steps that are used by this method
-        let stepIdentifiers = [SBAExternalIDStep.initialStepIdentifier, SBAExternalIDStep.confirmStepIdentifier]
+        let stepIdentifiers = [SBAExternalIDLoginStep.initialStepIdentifier, SBAExternalIDLoginStep.confirmStepIdentifier]
         let steps = stepIdentifiers.map { (stepIdentifier) -> ORKStep in
             let options = SBAProfileInfoOptions(include: .externalID, surveyItemType: .custom("externalID"), extendedOption: options)
             let step = ORKFormStep(identifier: stepIdentifier)
@@ -102,7 +110,7 @@ open class SBAExternalIDStep: ORKPageStep {
     }
     
     override open func stepViewControllerClass() -> AnyClass {
-        return SBAExternalIDStepViewController.classForCoder()
+        return SBAExternalIDLoginStepViewController.classForCoder()
     }
     
     // MARK: NSCoding
@@ -115,7 +123,7 @@ open class SBAExternalIDStep: ORKPageStep {
 /**
  Default class used to handle registration or login via External ID
  */
-open class SBAExternalIDStepViewController: ORKPageStepViewController, SBAAccountStepController {
+open class SBAExternalIDLoginStepViewController: ORKPageStepViewController, SBAAccountStepController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate

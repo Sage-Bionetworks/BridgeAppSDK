@@ -131,6 +131,27 @@ public extension SBAUserWrapper {
     }
     
     /**
+     Set the user's external ID.
+     
+     @note This method is only used for the participant who is already registered.
+     
+     @param externalIdentifier      The external identifier
+     @param completion              Completion handler
+    */
+    public func setExternalID(_ externalIdentifier: String, completion: ((Error?) -> Void)?) {
+        SBABridgeManager.setExternalIdentifier(externalIdentifier) { [weak self] (_, error) in
+            guard (self != nil) else { return }
+
+            // Only set the external ID if the error is nil
+            if error == nil {
+                self!.externalId = externalIdentifier
+            }
+            self!.callCompletionOnMain(error, completion: completion)
+        }
+    }
+    
+    
+    /**
      Register a user with a changed email address
      
      @param email       The email address to use for the new user

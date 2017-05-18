@@ -46,10 +46,153 @@ class SBAAccountTests: XCTestCase {
         super.tearDown()
     }
     
+    // MARK: factory tests
+    
+    func testFactory_Registration() {
+        let inputItem: NSDictionary = [
+            "identifier"    : "stepA",
+            "type"          : "registration",
+            "title"         : "A title",
+            "text"          : "Some text"
+        ]
+        
+        let output = SBASurveyFactory().createSurveyStep(inputItem)
+        XCTAssertNotNil(output)
+        
+        guard let step = output as? SBARegistrationStep else {
+            XCTAssert(false, "Failed to create expected class: \(String(describing:output))")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "stepA")
+        XCTAssertEqual(step.title, "A title")
+        XCTAssertEqual(step.text, "Some text")
+        
+        let expectedCount = 3
+        XCTAssertEqual(step.formItems?.count ?? 0, expectedCount)
+        guard let formItems = step.formItems, formItems.count == expectedCount else {
+            XCTAssert(false, "Form items are nil or do not match expected count.")
+            return
+        }
+        
+        let emailFormat = formItems.find(withIdentifier: "email")?.answerFormat
+        XCTAssertNotNil(emailFormat)
+        
+        let passwordFormat = formItems.find(withIdentifier: "password")?.answerFormat
+        XCTAssertNotNil(passwordFormat)
+    }
+    
+    func testFactory_Login() {
+        let inputItem: NSDictionary = [
+            "identifier"    : "stepA",
+            "type"          : "login",
+            "title"         : "A title",
+            "text"          : "Some text"
+        ]
+        
+        let output = SBASurveyFactory().createSurveyStep(inputItem)
+        XCTAssertNotNil(output)
+        
+        guard let step = output as? SBALoginStep else {
+            XCTAssert(false, "Failed to create expected class: \(String(describing:output))")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "stepA")
+        XCTAssertEqual(step.title, "A title")
+        XCTAssertEqual(step.text, "Some text")
+        
+        let expectedCount = 2
+        XCTAssertEqual(step.formItems?.count ?? 0, expectedCount)
+        guard let formItems = step.formItems, formItems.count == expectedCount else {
+            XCTAssert(false, "Form items are nil or do not match expected count.")
+            return
+        }
+        
+        let emailFormat = formItems.find(withIdentifier: "email")?.answerFormat
+        XCTAssertNotNil(emailFormat)
+        
+        let passwordFormat = formItems.find(withIdentifier: "password")?.answerFormat
+        XCTAssertNotNil(passwordFormat)
+    }
+    
+    func testFactory_ExternalIDLogin() {
+        let inputItem: NSDictionary = [
+            "identifier"    : "stepA",
+            "type"          : "login",
+            "title"         : "A title",
+            "text"          : "Some text",
+            "items"         : ["externalID"]
+        ]
+        
+        let output = SBASurveyFactory().createSurveyStep(inputItem)
+        XCTAssertNotNil(output)
+        
+        guard let step = output as? SBAExternalIDLoginStep else {
+            XCTAssert(false, "Failed to create expected class: \(String(describing:output))")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "stepA")
+        XCTAssertEqual(step.title, "A title")
+        XCTAssertEqual(step.text, "Some text")
+    }
+    
+    func testFactory_EmailVerification() {
+        let inputItem: NSDictionary = [
+            "identifier"    : "stepA",
+            "type"          : "emailVerification",
+            "title"         : "A title",
+        ]
+        
+        let output = SBASurveyFactory().createSurveyStep(inputItem)
+        XCTAssertNotNil(output)
+        
+        guard let step = output as? SBAEmailVerificationStep else {
+            XCTAssert(false, "Failed to create expected class: \(String(describing:output))")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "stepA")
+        XCTAssertEqual(step.title, "A title")
+    }
+    
+    func testFactory_ExternalID() {
+        let inputItem: NSDictionary = [
+            "identifier"    : "stepA",
+            "type"          : "externalID",
+            "title"         : "A title",
+            "text"          : "Some text",
+            ]
+        
+        let output = SBASurveyFactory().createSurveyStep(inputItem)
+        XCTAssertNotNil(output)
+        
+        guard let step = output as? SBAExternalIDAssignStep else {
+            XCTAssert(false, "Failed to create expected class: \(String(describing:output))")
+            return
+        }
+        
+        XCTAssertEqual(step.identifier, "stepA")
+        XCTAssertEqual(step.title, "A title")
+        XCTAssertEqual(step.text, "Some text")
+        
+        let expectedCount = 1
+        XCTAssertEqual(step.formItems?.count ?? 0, expectedCount)
+        guard let formItems = step.formItems, formItems.count == expectedCount else {
+            XCTAssert(false, "Form items are nil or do not match expected count.")
+            return
+        }
+        
+        let externalIDFormat = formItems.find(withIdentifier: "externalID")?.answerFormat
+        XCTAssertNotNil(externalIDFormat)
+    }
+
+    
     // MARK: External ID
     
     func testExternalIdRegistrationStep_Navigation() {
-        let registrationStep = SBAExternalIDStep(identifier: "registration")
+        let registrationStep = SBAExternalIDLoginStep(identifier: "registration")
         
         let taskResult = ORKTaskResult(identifier: "registration")
         
@@ -73,7 +216,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Valid() {
         
-        let registrationStep = SBAExternalIDStep(identifier: "registration")
+        let registrationStep = SBAExternalIDLoginStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123"
@@ -90,7 +233,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Invalid() {
         
-        let registrationStep = SBAExternalIDStep(identifier: "registration")
+        let registrationStep = SBAExternalIDLoginStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123*"
@@ -111,7 +254,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Empty() {
         
-        let registrationStep = SBAExternalIDStep(identifier: "registration")
+        let registrationStep = SBAExternalIDLoginStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = ""
@@ -132,7 +275,7 @@ class SBAAccountTests: XCTestCase {
     
     func testExternalIDRegistrationStepViewController_ExternalId_Mismatch() {
         
-        let registrationStep = SBAExternalIDStep(identifier: "registration")
+        let registrationStep = SBAExternalIDLoginStep(identifier: "registration")
         
         let vc = MockExternalIDRegistrationStepViewController(step: registrationStep)
         vc.firstAnswer = "ABC123"
@@ -363,7 +506,7 @@ class SBAAccountTests: XCTestCase {
 
 }
 
-class MockExternalIDRegistrationStepViewController : SBAExternalIDStepViewController {
+class MockExternalIDRegistrationStepViewController : SBAExternalIDLoginStepViewController {
     
     var firstAnswer: String?
     var secondAnswer: String?
