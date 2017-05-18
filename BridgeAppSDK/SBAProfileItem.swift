@@ -88,6 +88,11 @@ public protocol SBAProfileItem: NSObjectProtocol {
      build the model object into an `HKQuantity`.
      */
     var unit: HKUnit? { get }
+    
+    /**
+     Class type for the value item (or items if array) for this profile item.
+     */
+    var valueClassType: String? { get }
 }
 
 extension SBAProfileItem {
@@ -112,6 +117,9 @@ extension SBAProfileItem {
         case SBAProfileTypeIdentifier.hkQuantity:
             guard let quantity = val as? HKQuantity else { return nil }
             return NSNumber(value: quantity.doubleValue(for: self.unit ?? commonDefaultUnit()))
+            
+        case SBAProfileTypeIdentifier.dictionary, SBAProfileTypeIdentifier.array:
+            return (val as? SBAJSONObject)?.jsonObject() as? SBBJSONValue
             
         default:
             return nil
@@ -150,8 +158,32 @@ extension SBAProfileItem {
             guard let val = value as? NSNumber else { return }
             self.value = HKQuantity(unit: self.unit ?? commonDefaultUnit(), doubleValue: val.doubleValue)
             
+        case SBAProfileTypeIdentifier.dictionary:
+            guard let dictionary = value as? [AnyHashable : Any] else { return }
+            self.value = commonMapObject(with: dictionary)
+            
+        case SBAProfileTypeIdentifier.array:
+            guard let array = value as? [Any] else { return }
+            self.value = array.map({ (obj) -> Any? in
+                if let dictionary = value as? [AnyHashable : Any] {
+                    return commonMapObject(with: dictionary)
+                }
+                else {
+                    return obj
+                }
+            })
+            
         default:
             break
+        }
+    }
+    
+    func commonMapObject(with dictionary: [AnyHashable : Any]) -> Any? {
+        if let cType = self.valueClassType {
+            return SBAClassTypeMap.shared.object(with: dictionary, classType: cType)
+        }
+        else {
+            return SBAClassTypeMap.shared.object(with: dictionary) ?? dictionary
         }
     }
     
@@ -192,6 +224,12 @@ extension SBAProfileItem {
         case SBAProfileTypeIdentifier.hkQuantity:
             guard let quantity = newValue as? HKQuantity else { return false }
             return quantity.is(compatibleWith: self.unit ?? commonDefaultUnit())
+            
+        case SBAProfileTypeIdentifier.dictionary:
+            return newValue as? SBAJSONObject != nil
+        
+        case SBAProfileTypeIdentifier.array:
+            return newValue as? NSArray != nil
             
         default:
             return true   // Any extended type isn't included in the common validation
@@ -296,6 +334,11 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
         let key = #keyPath(unit)
         guard let unitString = sourceDict[key] as? String else { return nil }
         return HKUnit(from: unitString)
+    }
+    
+    open var valueClassType: String? {
+        let key = #keyPath(valueClassType)
+        return sourceDict[key] as? String
     }
     
     open func storedValue(forKey key: String) -> Any? {

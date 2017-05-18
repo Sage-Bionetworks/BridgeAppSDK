@@ -62,8 +62,9 @@ extension SBASurveyItemType {
  */
 open class SBASurveyFactory : SBABaseSurveyFactory {
     
-    open static var profileQuestionFactory: SBASurveyFactory? = {
-        return SBASurveyFactory(jsonNamed: SBAProfileQuestionsJSONFilename)
+    open static var profileQuestionSurveyItems: [SBASurveyItem]? = {
+        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileQuestionsJSONFilename) else { return nil }
+        return json["steps"] as? [NSDictionary]
     }()
     
     /**
@@ -136,7 +137,10 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
     }
     
     open func profileItemStep(for profileKey: String) -> ORKStep? {
-        return SBASurveyFactory.profileQuestionFactory?.steps?.find(withIdentifier: profileKey)
+        guard let inputItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileKey) else {
+            return nil
+        }
+        return self.createSurveyStep(inputItem)
     }
     
     open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
