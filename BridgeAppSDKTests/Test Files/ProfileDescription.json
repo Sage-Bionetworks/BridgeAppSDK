@@ -2,29 +2,30 @@
     "items":    [
                  {
                  "profileKey": "fullName",
-                 "classType": "UserProfileItem",
+                 "classType": "FullNameProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "given",
                  "sourceKey": "givenName",
-                 "classType": "UserProfileItem",
+                 "classType": "KeychainProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "family",
                  "sourceKey": "familyName",
-                 "classType": "UserProfileItem",
+                 "classType": "KeychainProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "preferredName",
-                 "classType": "UserProfileItem",
+                 "fallbackKey": "givenName",
+                 "classType": "KeychainProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "externalId",
-                 "classType": "UserProfileItem",
+                 "classType": "KeychainProfileItem",
                  "itemType": "String"
                  },
                  {
@@ -34,7 +35,7 @@
                  },
                  {
                  "profileKey": "birthDate",
-                 "classType": "KeychainProfileItem",
+                 "classType": "BirthDateProfileItem",
                  "itemType": "Date"
                  },
                  {
@@ -48,6 +49,6 @@
                  "classType": "UserDefaultsProfileItem",
                  "itemType": "Number",
                  "demographicKey": "number_of_siblings"
-                 }
+                 },
                  ]
 }

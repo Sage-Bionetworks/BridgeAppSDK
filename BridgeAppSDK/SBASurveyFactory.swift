@@ -40,6 +40,7 @@ import ResearchUXFactory
  */
 public enum BridgeSurveyItemSubtype: String {
     case onboardingCompletion   = "onboardingCompletion"    // SBAOnboardingCompletionStep
+    case profileItem            = "profileItem"             // Mapped to the profile questions list
 }
 
 /**
@@ -60,6 +61,10 @@ extension SBASurveyItemType {
  defined in the base class.
  */
 open class SBASurveyFactory : SBABaseSurveyFactory {
+    
+    open static var profileQuestionFactory: SBASurveyFactory? = {
+        return SBASurveyFactory(jsonNamed: SBAProfileQuestionsJSONFilename)
+    }()
     
     /**
      Factory method for creating an ORKTask from an SBBSurvey
@@ -124,7 +129,14 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         switch (bridgeSubtype) {
         case .onboardingCompletion:
             return SBAOnboardingCompleteStep(inputItem: inputItem)
+            
+        case .profileItem:
+            return profileItemStep(for: inputItem.identifier)?.copy() as? ORKStep
         }
+    }
+    
+    open func profileItemStep(for profileKey: String) -> ORKStep? {
+        return SBASurveyFactory.profileQuestionFactory?.steps?.find(withIdentifier: profileKey)
     }
     
     open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
