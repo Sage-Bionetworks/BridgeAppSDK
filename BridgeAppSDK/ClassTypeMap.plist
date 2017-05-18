@@ -18,7 +18,9 @@
 	<string>SBAKeychainProfileItem</string>
 	<key>UserDefaultsProfileItem</key>
 	<string>SBAUserDefaultsProfileItem</string>
-	<key>UserProfileItem</key>
-	<string>SBAUserProfileItem</string>
+	<key>FullNameProfileItem</key>
+	<string>SBAFullNameProfileItem</string>
+	<key>BirthDateProfileItem</key>
+	<string>SBABirthDateProfileItem</string>
 </dict>
 </plist>

@@ -35,6 +35,7 @@ import Foundation
 import ResearchUXFactory
 
 public var SBAProfileItemsJSONFilename = "ProfileItems"
+public var SBAProfileQuestionsJSONFilename = "ProfileQuestions"
 public var SBAProfileManagerClassType = "ProfileManager"
 
 /**

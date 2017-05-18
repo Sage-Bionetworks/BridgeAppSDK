@@ -82,6 +82,12 @@ public protocol SBAProfileItem: NSObjectProtocol {
      Is the value read-only?
      */
     var readonly: Bool { get }
+    
+    /**
+     Some of the stored value types have a unit associated with them that is used to 
+     build the model object into an `HKQuantity`.
+     */
+    var unit: HKUnit? { get }
 }
 
 extension SBAProfileItem {
@@ -104,7 +110,8 @@ extension SBAProfileItem {
             return val as? NSNumber
             
         case SBAProfileTypeIdentifier.hkQuantity:
-            return val as? NSNumber
+            guard let quantity = val as? HKQuantity else { return nil }
+            return NSNumber(value: quantity.doubleValue(for: self.unit ?? commonDefaultUnit()))
             
         default:
             return nil
@@ -119,8 +126,7 @@ extension SBAProfileItem {
         
         switch self.itemType {
         case SBAProfileTypeIdentifier.string:
-            guard let val = value as? String else { return }
-            self.value = val
+            self.value = String(describing: value)
             
         case SBAProfileTypeIdentifier.number:
             guard let val = value as? NSNumber else { return }
@@ -142,7 +148,7 @@ extension SBAProfileItem {
             
         case SBAProfileTypeIdentifier.hkQuantity:
             guard let val = value as? NSNumber else { return }
-            self.value = val
+            self.value = HKQuantity(unit: self.unit ?? commonDefaultUnit(), doubleValue: val.doubleValue)
             
         default:
             break
@@ -163,65 +169,103 @@ extension SBAProfileItem {
         
         switch self.itemType {
         case SBAProfileTypeIdentifier.string:
-            return newValue as? String != nil
+            return true // anything can be cast to a string
             
         case SBAProfileTypeIdentifier.number:
-            return newValue as? NSNumber != nil
+            if (newValue as? NSNumber != nil) {
+                return true
+            }
+            else if let quantity = newValue as? HKQuantity {
+                return quantity.is(compatibleWith: self.unit ?? commonDefaultUnit())
+            }
+            return false
             
         case SBAProfileTypeIdentifier.bool:
             return newValue as? NSNumber != nil
             
         case SBAProfileTypeIdentifier.date:
-            return newValue as? NSDate  != nil
+            return newValue as? NSDate != nil
             
         case SBAProfileTypeIdentifier.hkBiologicalSex:
             return newValue as? HKBiologicalSex != nil
             
         case SBAProfileTypeIdentifier.hkQuantity:
-            return newValue as? NSNumber != nil
+            guard let quantity = newValue as? HKQuantity else { return false }
+            return quantity.is(compatibleWith: self.unit ?? commonDefaultUnit())
             
         default:
-            return false
+            return true   // Any extended type isn't included in the common validation
+        }
+    }
+    
+    func commonDefaultUnit() -> HKUnit {
+        guard let option = SBAProfileInfoOption(rawValue: self.profileKey)
+        else {
+            return HKUnit.count()
+        }
+        switch option {
+        case .height:
+            return HKUnit(from: .centimeter)
+            
+        case .weight:
+            return HKUnit(from: .kilogram)
+            
+        default:
+            return HKUnit.count()
         }
     }
 }
 
 open class SBAProfileItemBase: NSObject, SBAProfileItem {
+    
     /**
      The value property is used to get and set the profile item's value in whatever internal data
      storage is used by the implementing class.
      */
-    open var value: Any?
+    open var value: Any? {
+        get {
+            // Look at the sourceKey, if not found then fall back to the fallback key and check that
+            let value = storedValue(forKey: sourceKey)
+            if value == nil, let fallback = fallbackKey {
+                return storedValue(forKey: fallback)
+            }
+            else {
+                return value
+            }
+        }
+        
+        set {
+            guard !readonly else { return }
+            setStoredValue(newValue)
+        }
+    }
 
     fileprivate let sourceDict: [AnyHashable: Any]
     
     open var profileKey: String {
-        get {
-            let key = #keyPath(profileKey)
-            return sourceDict[key]! as! String
-        }
+        let key = #keyPath(profileKey)
+        return sourceDict[key]! as! String
     }
     
     open var sourceKey: String {
-        get {
-            let key = #keyPath(sourceKey)
-            return sourceDict[key] as? String ?? self.profileKey
-        }
+        let key = #keyPath(sourceKey)
+        return sourceDict[key] as? String ?? self.profileKey
     }
     
     open var demographicKey: String {
-        get {
-            let key = #keyPath(demographicKey)
-            return sourceDict[key] as? String ?? self.profileKey
-        }
+        let key = #keyPath(demographicKey)
+        return sourceDict[key] as? String ?? self.profileKey
+    }
+    
+    open var fallbackKey: String? {
+        let key = #keyPath(fallbackKey)
+        return sourceDict[key] as? String
     }
     
     open var itemType: SBAProfileTypeIdentifier {
-        get {
-            let key = #keyPath(itemType)
-            guard let rawValue = sourceDict[key] as? String else { return .string }
-            return SBAProfileTypeIdentifier(rawValue: rawValue)
-        }
+        let key = #keyPath(itemType)
+        guard let rawValue = sourceDict[key] as? String else { return .string }
+        return SBAProfileTypeIdentifier(rawValue: rawValue)
     }
     
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
@@ -240,14 +284,29 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
     }
     
     open var demographicJsonValue: SBBJSONValue? {
-        get {
-            return self.commonDemographicJsonValue()
-        }
+        return self.commonDemographicJsonValue()
     }
     
     open var readonly: Bool {
-        return false
+        let key = #keyPath(readonly)
+        return sourceDict[key] as? Bool ?? false
     }
+    
+    open var unit: HKUnit? {
+        let key = #keyPath(unit)
+        guard let unitString = sourceDict[key] as? String else { return nil }
+        return HKUnit(from: unitString)
+    }
+    
+    open func storedValue(forKey key: String) -> Any? {
+        return _value
+    }
+    
+    open func setStoredValue(_ newValue: Any?) {
+        _value = newValue
+    }
+    
+    fileprivate var _value: Any?
 }
 
 extension SBAKeychainWrapper: SBAKeychainWrapperProtocol {
@@ -274,34 +333,37 @@ open class SBAKeychainProfileItem: SBAProfileItemBase {
         
         super.init(dictionaryRepresentation: dictionary)
     }
-    
-    override open var value: Any? {
-        get {
-            return storedValue(forKey: sourceKey)
+
+    override open func storedValue(forKey key: String) -> Any? {
+        var err: NSError?
+        let obj = keychain.object(forKey: key, error: &err)
+        if let error = err {
+            print("Error accessing keychain \(key): \(error.code) \(error)")
         }
-        
-        set {
-            do {
-                if newValue == nil {
-                    try keychain.removeObject(forKey: sourceKey)
-                } else {
-                    if !self.commonCheckTypeCompatible(newValue: newValue) {
-                        assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
-                        return
-                    }
-                    guard let secureVal = secureCodingValue(of: newValue) else {
-                        assertionFailure("Error setting \(sourceKey) (\(profileKey)) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
-                        return
-                    }
-                    try keychain.setObject(secureVal, forKey: sourceKey)
+        return self.typedValue(from: obj)
+    }
+    
+    override open func setStoredValue(_ newValue: Any?) {
+        do {
+            if newValue == nil {
+                try keychain.removeObject(forKey: sourceKey)
+            } else {
+                if !self.commonCheckTypeCompatible(newValue: newValue) {
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type \(itemType.rawValue)")
+                    return
                 }
+                guard let secureVal = secureCodingValue(of: newValue) else {
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)) in keychain: don't know how to convert \(String(describing: newValue))) to NSSecureCoding")
+                    return
+                }
+                try keychain.setObject(secureVal, forKey: sourceKey)
             }
-            catch let error {
-                assert(false, "Failed to set \(sourceKey) (\(profileKey)): \(String(describing: error))")
-            }
+        }
+        catch let error {
+            assert(false, "Failed to set \(sourceKey) (\(profileKey)): \(String(describing: error))")
         }
     }
-
+    
     open func secureCodingValue(of anyValue: Any?) -> NSSecureCoding? {
         guard anyValue != nil else { return nil }
         var retVal = anyValue as? NSSecureCoding
@@ -323,15 +385,6 @@ open class SBAKeychainProfileItem: SBAProfileItemBase {
         }
         
         return retVal
-    }
-    
-    fileprivate func storedValue(forKey key: String) -> Any? {
-        var err: NSError?
-        let obj = keychain.object(forKey: key, error: &err)
-        if let error = err {
-            print("Error accessing keychain \(key): \(error.code) \(error)")
-        }
-        return self.typedValue(from: obj)
     }
 }
 
@@ -385,25 +438,23 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
         super.init(dictionaryRepresentation: dictionary)
     }
     
-    override open var value: Any? {
-        get {
-            return typedValue(from: defaults.object(forKey: sourceKey) as? PlistValue)
-        }
-        
-        set {
-            if newValue == nil {
-                defaults.removeObject(forKey: sourceKey)
-            } else {
-                if !self.commonCheckTypeCompatible(newValue: newValue) {
-                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
-                    return
-                }
-                guard let plistVal = pListValue(of: newValue) else {
-                    assertionFailure("Error setting \(sourceKey) (\(profileKey)) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
-                    return
-                }
-                defaults.set(plistVal, forKey: sourceKey)
+    override open func storedValue(forKey key: String) -> Any? {
+        return typedValue(from: defaults.object(forKey: key) as? PlistValue)
+    }
+    
+    override open func setStoredValue(_ newValue: Any?) {
+        if newValue == nil {
+            defaults.removeObject(forKey: sourceKey)
+        } else {
+            if !self.commonCheckTypeCompatible(newValue: newValue) {
+                assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: newValue)) not compatible with specified type\(itemType.rawValue)")
+                return
             }
+            guard let plistVal = pListValue(of: newValue) else {
+                assertionFailure("Error setting \(sourceKey) (\(profileKey)) in user defaults: don't know how to convert \(String(describing: newValue)) to PlistValue")
+                return
+            }
+            defaults.set(plistVal, forKey: sourceKey)
         }
     }
     
@@ -426,45 +477,50 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
         
         return retVal
     }
+
 }
 
-open class SBAUserProfileItem: SBAKeychainProfileItem, SBANameDataSource {
+open class SBAFullNameProfileItem: SBAKeychainProfileItem, SBANameDataSource {
     
     override open var value: Any? {
         
         get {
-            switch SBAProfileSourceKey(sourceKey) {
-            case SBAProfileSourceKey.preferredName:
-                // For the preferred name, if not a separate value stored, then return the given name
-                return super.value ?? self.givenName
-                
-            case SBAProfileSourceKey.fullName:
-                // For the full name, if this class is used the it is assumed that the full name is 
-                // not editable and that the given/family name are set using one-to-one fields
-                return self.fullName
-                
-            default:
-                return super.value
-            }
+            return self.fullName
         }
         
         set {
-            if !readonly {
-                super.value = newValue
-            }
+            // readonly
         }
     }
     
     override open var readonly: Bool {
-        return self.sourceKey == SBAProfileSourceKey.fullName.rawValue
+        return true
+    }
+    
+    fileprivate dynamic var givenNameKey: String {
+        let key = #keyPath(givenNameKey)
+        return sourceDict[key] as? String ?? SBAProfileSourceKey.givenName.rawValue
+    }
+    
+    fileprivate dynamic var familyNameKey: String {
+        let key = #keyPath(familyNameKey)
+        return sourceDict[key] as? String ?? SBAProfileSourceKey.familyName.rawValue
     }
     
     open var name: String? {
-        return self.storedValue(forKey: SBAProfileSourceKey.givenName.rawValue) as? String
+        return self.storedValue(forKey: givenNameKey) as? String 
     }
     
     open var familyName: String? {
-        return self.storedValue(forKey: SBAProfileSourceKey.familyName.rawValue) as? String
+        return self.storedValue(forKey: familyNameKey) as? String
     }
     
+}
+
+open class SBABirthDateProfileItem: SBAKeychainProfileItem {
+    
+    override open var demographicJsonValue: SBBJSONValue? {
+        guard let age = (self.value as? Date)?.currentAge() else { return nil }
+        return NSNumber(value: age)
+    }
 }

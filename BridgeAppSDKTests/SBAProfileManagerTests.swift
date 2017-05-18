@@ -60,14 +60,14 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssert(fullNameItem!.sourceKey == "fullName", "expected fullNameItem.sourceKey to be fullName, but it's \(fullNameItem!.sourceKey)")
             XCTAssert(fullNameItem!.demographicKey == fullNameItem!.profileKey, "expected fullNameItem.demographicKey to be \(fullNameItem!.profileKey), but it's \(fullNameItem!.demographicKey)")
             XCTAssert(fullNameItem!.itemType == .string, "expected fullNameItem.itemType to be String, but it's \(fullNameItem!.itemType.rawValue)")
-            let typedItem = fullNameItem as? BridgeAppSDK.SBAUserProfileItem
+            let typedItem = fullNameItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "fullNameItem is not an SBAUserProfileItem: \(String(describing: fullNameItem))")
         }
         if externalIdItem != nil {
             XCTAssert(externalIdItem!.sourceKey == "externalId", "expected externalIdItem.sourceKey to be externalId, but it's \(externalIdItem!.sourceKey)")
             XCTAssert(externalIdItem!.demographicKey == externalIdItem!.profileKey, "expected externalIdItem.demographicKey to be \(externalIdItem!.profileKey), but it's \(externalIdItem!.demographicKey)")
             XCTAssert(externalIdItem!.itemType == .string, "expected externalIdItem.itemType to be String, but it's \(externalIdItem!.itemType.rawValue)")
-            let typedItem = externalIdItem as? BridgeAppSDK.SBAUserProfileItem
+            let typedItem = externalIdItem as? BridgeAppSDK.SBAKeychainProfileItem
             XCTAssertNotNil(typedItem, "externalIdItem is not an SBAUserProfileItem: \(String(describing: externalIdItem))")
         }
         if genderItem != nil {
@@ -105,13 +105,13 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("No ProfileManager instance")
             return
         }
-        let fullNameItem = items["fullName"] as? BridgeAppSDK.SBAUserProfileItem
-        let givenNameItem = items["given"] as? BridgeAppSDK.SBAUserProfileItem
-        let familyNameItem = items["family"] as? BridgeAppSDK.SBAUserProfileItem
-        let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAUserProfileItem
-        let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAUserProfileItem
+        let fullNameItem = items["fullName"] as? BridgeAppSDK.SBAFullNameProfileItem
+        let givenNameItem = items["given"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let familyNameItem = items["family"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAKeychainProfileItem
         let genderItem = items["gender"] as? BridgeAppSDK.SBAKeychainProfileItem
-        let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBABirthDateProfileItem
         let favoriteColorItem = items["favoriteColor"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
         let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
         XCTAssert(fullNameItem != nil, "no SBAUserProfileItem for profileKey fullName")
