@@ -117,10 +117,8 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
 
 open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     open var profileItemKey: String {
-        get {
-            let key = #keyPath(profileItemKey)
-            return sourceDict[key]! as! String
-        }
+        let key = #keyPath(profileItemKey)
+        return sourceDict[key]! as! String
     }
     
     lazy open var profileItem: SBAProfileItem = {
@@ -129,9 +127,16 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     }()
 
     override open var detail: String? {
-        get {
-            return "\(profileItem.value ?? "")"
+        guard let value = profileItem.value else { return "" }
+        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
+            let choices = surveyItem.items as? [SBAChoice] {
+            let selected = (value as? [Any]) ?? [value]
+            let textList = selected.map({ (obj) -> String in
+                return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+            })
+            return Localization.localizedJoin(textList: textList)
         }
+        return String(describing: value)
     }
 }
 
