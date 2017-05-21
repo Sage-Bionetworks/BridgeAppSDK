@@ -405,7 +405,10 @@ public extension SBAUserWrapper {
         let taskVC = SBATaskViewController(task: task, taskRun: nil)
         taskVC.continueButtonText = Localization.localizedString("WITHDRAW_TITLE")
         taskVC.finishTaskHandler = { (taskViewController, reason, _) -> Void in
-            guard reason == .completed else { return }
+            guard reason == .completed else {
+                taskViewController.dismiss(animated: true, completion: nil)
+                return
+            }
             let withdrawReason: String? = {
                 let stepResult = taskViewController.result.results?.last as? ORKStepResult
                 let result = stepResult?.results?.last
