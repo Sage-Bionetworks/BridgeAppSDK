@@ -68,7 +68,7 @@ extension SBASurveyFactory {
     }
     
     private func isRegistrationStep(_ step: ORKStep) -> Bool {
-        return (step is SBARegistrationStep) || (step is ORKRegistrationStep) || (step is SBAExternalIDStep)
+        return (step is SBARegistrationStep) || (step is ORKRegistrationStep) || (step is SBAExternalIDLoginStep)
     }
     
     /**

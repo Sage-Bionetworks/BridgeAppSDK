@@ -39,6 +39,7 @@
 		FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84391F1C7315030086E961 /* SBASurveyFactoryTests.swift */; };
 		FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC45E6C1C7531E3007AA424 /* SBAConsentDocumentFactory.swift */; };
 		FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE5515C1C6D267100C9E1AA /* MockORKTask.m */; };
+		FF052EBA1ECF7567000835DB /* SBAExternalIDAssignStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF052EB91ECF7567000835DB /* SBAExternalIDAssignStep.swift */; };
 		FF14A0C71E984D3E007BB710 /* SBAOnboardingTableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0C61E984D3E007BB710 /* SBAOnboardingTableRow.swift */; };
 		FF14A0C91E984D72007BB710 /* SBAOnboardingTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0C81E984D72007BB710 /* SBAOnboardingTableHeader.swift */; };
 		FF14A0F91E9C1BA2007BB710 /* SBASignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0F81E9C1BA2007BB710 /* SBASignUpViewController.swift */; };
@@ -55,7 +56,7 @@
 		FF24FF2B1E28C55F0016C4DF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */; };
-		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */; };
+		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */; };
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
 		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
 		FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */; };
@@ -450,6 +451,7 @@
 		FBE5515B1C6D267100C9E1AA /* MockORKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockORKTask.h; sourceTree = "<group>"; };
 		FBE5515C1C6D267100C9E1AA /* MockORKTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockORKTask.m; sourceTree = "<group>"; };
 		FF0395DC1CFE283600245DE3 /* BridgeSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BridgeSDK.xcodeproj; path = BridgeSDK/BridgeSDK.xcodeproj; sourceTree = "<group>"; };
+		FF052EB91ECF7567000835DB /* SBAExternalIDAssignStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDAssignStep.swift; sourceTree = "<group>"; };
 		FF14A0C61E984D3E007BB710 /* SBAOnboardingTableRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingTableRow.swift; sourceTree = "<group>"; };
 		FF14A0C81E984D72007BB710 /* SBAOnboardingTableHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingTableHeader.swift; sourceTree = "<group>"; };
 		FF14A0F81E9C1BA2007BB710 /* SBASignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASignUpViewController.swift; sourceTree = "<group>"; };
@@ -461,7 +463,7 @@
 		FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchUXFactory.xcodeproj; path = ResearchUXFactory/ResearchUXFactory.xcodeproj; sourceTree = "<group>"; };
 		FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchUXFactory/ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserProfileControllerTests.swift; sourceTree = "<group>"; };
-		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDStep.swift; sourceTree = "<group>"; };
+		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDLoginStep.swift; sourceTree = "<group>"; };
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
 		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -935,7 +937,8 @@
 				FF9707F51DA6D5DB006E8252 /* SBAConsentSharingStep.swift */,
 				FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */,
 				FFDECE051D08901300434001 /* SBAEmailVerificationStep.swift */,
-				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDStep.swift */,
+				FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */,
+				FF052EB91ECF7567000835DB /* SBAExternalIDAssignStep.swift */,
 				FFDECE031D088FA600434001 /* SBALoginStep.swift */,
 				FF5242B01D81E9D0009043B3 /* SBAOnboardingStepController.swift */,
 				FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */,
@@ -1722,6 +1725,7 @@
 				FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */,
 				FF92A6421DBFDDD900614D1F /* SBALearnItem.swift in Sources */,
 				FF3B169C1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift in Sources */,
+				FF052EBA1ECF7567000835DB /* SBAExternalIDAssignStep.swift in Sources */,
 				FFDECDF81D0758C700434001 /* SBAOnboardingSection.swift in Sources */,
 				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
@@ -1735,7 +1739,7 @@
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */,
-				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDStep.swift in Sources */,
+				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */,
 				FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

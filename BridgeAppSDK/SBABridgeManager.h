@@ -199,8 +199,8 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  @param birthDate           The user's birthday in the format "YYYY-MM-DD".
  @param consentImage        Image file of the user's signature. Should be less than 10kb. Optional, can be nil.
  @param sharingScope        The scope of data sharing to which the user has consented.
- @param subpopulationGuid   The GUID of the subpopulation for which the consent is being signed.
- @param completion          A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
+ @param subpopGuid          The GUID of the subpopulation for which the consent is being signed.
+ @param completionBlock     A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
  */
 + (void)sendUserConsented:(NSString *)name
                 birthDate:(NSDate *)birthDate
@@ -215,7 +215,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  This should only be done in response to an explicit choice on the part of the user to change the sharing scope.
  
  @param scope       The scope of data sharing to set for this user.
- @param completion  A SBABridgeManagerCompletionBlock to be called upon completion.
+ @param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
  */
 + (void)updateDataSharingScope:(SBBParticipantDataSharingScope)scope
                     completion:(SBABridgeManagerCompletionBlock)completionBlock;
@@ -225,7 +225,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  
  @param subpopGuid The GUID of the subpopulation for which the consent signature is being withdrawn.
  @param reason     A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
- @param completion A SBABridgeManagerCompletionBlock to be called upon completion.
+ @param completionBlock A SBABridgeManagerCompletionBlock to be called upon completion.
 */
 + (void)withdrawConsentForSubpopulation:(NSString *)subpopGuid
                                  reason:(NSString * _Nullable)reason
@@ -239,7 +239,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 
 @param daysAhead   A number of days in the future for which to retrieve available/started/scheduled activities.
 @param daysBehind  A number of days in the past for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).
-@param completion  A SBABridgeManagerCompletionBlock to be called upon completion.
+@param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
 */
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
                                 daysAhead:(NSInteger)daysAhead
@@ -252,7 +252,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  
  @param scheduledFrom   The earlier end of the desired date range for activities to be retrieved.
  @param scheduledTo     The later end of the desired date range for activities to be retrieved.
- @param completion  A SBABridgeManagerCompletionBlock to be called upon completion.
+ @param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
  */
 + (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
                           completion:(SBABridgeManagerCompletionBlock)completionBlock;
@@ -263,7 +263,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  Only the startedOn and finishedOn fields of ScheduledActivity are user-writable, so only changes to those fields will have any effect on the server state.
  
  @param scheduledActivities     The list of ScheduledActivity objects whose statuses are to be updated to the API.
- @param completion              A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
+ @param completionBlock              A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
  */
 + (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
                        completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
@@ -272,12 +272,21 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  Fetch a survey from the Bridge API via an activityRef (href).
  
  @param surveyReference     The href identifying the desired survey, obtained e.g. from the Schedules or Activities API.
- @param completion          A SBABridgeManagerCompletionBlock to be called upon completion.
+ @param completionBlock          A SBABridgeManagerCompletionBlock to be called upon completion.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
 + (NSURLSessionTask *)loadSurvey:(SBBSurveyReference *)surveyReference completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
+
+/*!
+ Add an external identifier for a participant.
+ 
+ @param externalID  An external identifier to allow this participant to be tracked outside of the Bridge-specific study.
+ @param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
+ 
+ */
++ (void)setExternalIdentifier:(NSString *)externalID completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 
 #pragma mark - deprecated

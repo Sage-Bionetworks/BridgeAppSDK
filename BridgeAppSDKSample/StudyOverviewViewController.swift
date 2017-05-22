@@ -60,7 +60,7 @@ class StudyOverviewViewController: UIViewController, ORKTaskViewControllerDelega
         appDelegate.currentUser.consentSignature = SBAConsentSignature(identifier: "signature")
         
         // Create a task with an external ID and permissions steps and display the view controller
-        let externalIDStep = SBAExternalIDStep(identifier: "externalID")
+        let externalIDStep = SBAExternalIDLoginStep(identifier: "externalID")
         let permissonsStep = SBAPermissionsStep(identifier: "permissions")
         let task = ORKOrderedTask(identifier: "registration", steps: [externalIDStep, permissonsStep])
         let vc = SBATaskViewController(task: task, taskRun: nil)

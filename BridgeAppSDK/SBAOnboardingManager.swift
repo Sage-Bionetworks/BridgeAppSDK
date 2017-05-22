@@ -133,7 +133,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         guard let sections = self.sections else { return nil }
         
         let steps: [ORKStep] = {
-            if self.tableRows != nil {
+            if self.tableRows != nil, onboardingTaskType == .signup {
                 // Get the steps as subtask steps for each section
                 return self.steps(for: onboardingTaskType, tableRow: tableRow)
             }

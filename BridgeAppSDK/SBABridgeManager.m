@@ -215,6 +215,19 @@
      }];
 }
 
++ (void)setExternalIdentifier:(NSString *)externalID completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
+    [SBBComponent(SBBParticipantManager) setExternalIdentifier:externalID completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+#if DEBUG
+        if (error != nil) {
+            NSLog(@"Error with setting the external identifier: %@", error);
+        }
+#endif
+        if (completionBlock) {
+            completionBlock(responseObject, error);
+        }
+    }];
+}
+
 + (void)fetchChangesToScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities
                                 daysAhead:(NSInteger)daysAhead
                                daysBehind:(NSInteger)daysBehind

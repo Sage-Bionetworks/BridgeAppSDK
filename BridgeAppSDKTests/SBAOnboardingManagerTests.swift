@@ -277,6 +277,38 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         XCTAssertEqual(step.identifier, "permissions")
     }
     
+    func testCreateTask_Login() {
+        guard let manager = MockOnboardingManager(jsonNamed: "Onboarding") else { return }
+        
+        guard let task = manager.createTask(for: .login) else {
+            XCTAssert(false, "Created task is nil")
+            return
+        }
+        
+        let expectedCount = 4
+        XCTAssertEqual(task.steps.count, expectedCount)
+        guard task.steps.count == expectedCount else {
+            XCTAssert(false, "Exit early b/c step count doesn't match expected")
+            return
+        }
+        
+        var ii = 0
+        XCTAssertTrue(task.steps[ii] is SBALoginStep)
+        XCTAssertEqual(task.steps[ii].identifier, "login")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBASubtaskStep)
+        XCTAssertEqual(task.steps[ii].identifier, "consent")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is ORKPasscodeStep)
+        XCTAssertEqual(task.steps[ii].identifier, "passcode")
+        
+        ii = ii + 1
+        XCTAssertTrue(task.steps[ii] is SBAPermissionsStep)
+        XCTAssertEqual(task.steps[ii].identifier, "permissions")
+    }
+    
     func testCreateTask_SignUp_Row0() {
         guard let manager = MockOnboardingManager(jsonNamed: "Onboarding") else { return }
         
@@ -284,7 +316,6 @@ class SBAOnboardingManagerTests: ResourceTestCase {
             XCTAssert(false, "Created task is nil")
             return
         }
-        print(task)
         
         let expectedCount = 7
         XCTAssertEqual(task.steps.count, expectedCount)
@@ -329,7 +360,6 @@ class SBAOnboardingManagerTests: ResourceTestCase {
             XCTAssert(false, "Created task is nil")
             return
         }
-        print(task)
         
         let expectedCount = 5
         XCTAssertEqual(task.steps.count, expectedCount)
