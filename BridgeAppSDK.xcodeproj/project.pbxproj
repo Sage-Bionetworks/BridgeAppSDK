@@ -55,6 +55,8 @@
 		FF24FF2A1E28C4180016C4DF /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; };
 		FF24FF2B1E28C55F0016C4DF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF2FE77C1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */; };
+		FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */; };
 		FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */; };
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
@@ -462,6 +464,8 @@
 		FF2498131CB6C1F0002DD05F /* MockTrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockTrackedDataStore.m; sourceTree = "<group>"; };
 		FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchUXFactory.xcodeproj; path = ResearchUXFactory/ResearchUXFactory.xcodeproj; sourceTree = "<group>"; };
 		FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchUXFactory/ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
+		FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABrainBaselineStepViewController.swift; sourceTree = "<group>"; };
+		FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBABrainBaselineStepViewController.xib; sourceTree = "<group>"; };
 		FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserProfileControllerTests.swift; sourceTree = "<group>"; };
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDLoginStep.swift; sourceTree = "<group>"; };
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
@@ -697,6 +701,7 @@
 				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,
 				16BF5B671BE29676007C79C6 /* Activities */,
+				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				FF92A6291DBFDD7600614D1F /* Learn */,
 				FF722BF51D7759EB004B2F8B /* News Feed */,
@@ -965,6 +970,15 @@
 				FF24FEF91E28AF5B0016C4DF /* ResearchKitTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FF2FE7651ED4CA6C008224D0 /* BrainBaseline */ = {
+			isa = PBXGroup;
+			children = (
+				FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */,
+				FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */,
+			);
+			name = BrainBaseline;
 			sourceTree = "<group>";
 		};
 		FF5051B41D664E130065E677 /* All Set */ = {
@@ -1623,6 +1637,7 @@
 				FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */,
 				FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */,
 				FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */,
+				FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1713,6 +1728,7 @@
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
 				FF5242B11D81E9D0009043B3 /* SBAOnboardingStepController.swift in Sources */,
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
+				FF2FE77C1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift in Sources */,
 				80FDDC961E661BF70010DFA7 /* SBAProfileItem.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
 				6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */,
