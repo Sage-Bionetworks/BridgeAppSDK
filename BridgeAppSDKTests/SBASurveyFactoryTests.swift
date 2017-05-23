@@ -510,7 +510,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertFalse(answerFormat.multipleLines)
-        XCTAssertEqual(answerFormat.validationRegex, "^[0-9A-F]+$")
+        XCTAssertEqual(answerFormat.validationRegularExpression?.pattern, "^[0-9A-F]+$")
         XCTAssertEqual(answerFormat.invalidMessage, "Should be hexidecimal")
         XCTAssertEqual(answerFormat.maximumLength, 0)
     }
@@ -546,7 +546,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertFalse(answerFormat.multipleLines)
-        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.validationRegularExpression?.pattern, "^.{4,}$")
         XCTAssertEqual(answerFormat.maximumLength, 8)
     }
     
@@ -580,7 +580,7 @@ class SBASurveyFactoryTests: XCTestCase {
         }
         
         XCTAssertFalse(answerFormat.multipleLines)
-        XCTAssertEqual(answerFormat.validationRegex, "^.{4,}$")
+        XCTAssertEqual(answerFormat.validationRegularExpression?.pattern, "^.{4,}$")
         XCTAssertEqual(answerFormat.maximumLength, 0)
     }
     
