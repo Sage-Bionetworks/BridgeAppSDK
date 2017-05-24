@@ -83,13 +83,31 @@ open class SBABrainBaselineStep: ORKStep {
 
 open class SBABrainBaselineStepViewController: ORKStepViewController {
     
-    public static let defaultNibName = String(describing: SBABrainBaselineStepViewController.self)
-    public static let defaultBundle = Bundle(for: SBABrainBaselineStepViewController.classForCoder())
-
+    open class var nibName: String {
+        return String(describing: SBABrainBaselineStepViewController.self)
+    }
+    
+    open class var bundle: Bundle {
+        return Bundle(for: SBABrainBaselineStepViewController.classForCoder())
+    }
+    
     @IBOutlet open weak var backgroundImageView: UIImageView!
     @IBOutlet open weak var deviceImageView: UIView!
     @IBOutlet open weak var instructionLabel: UILabel!
     
+    override public init(step: ORKStep?) {
+        super.init(nibName: type(of: self).nibName, bundle: type(of: self).bundle)
+        self.step = step
+    }
+    
+    override public convenience init(step: ORKStep, result: ORKResult) {
+        self.init(step: step)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     public var startDate: Date?
     
     open var testName: String? {
@@ -110,8 +128,6 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // If the start date is nil, then this is being cancelled by the user in which case we need
-        // to remove the observers and *not* wait for a result
         removeRotationObserver()
     }
     
@@ -144,6 +160,7 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     }
     
     private func deviceDidRotate() {
+        self.startDate = Date()
         instructionLabel.text = ""
         deviceImageView.isHidden = true
         guard let viewController = createTestViewController()
@@ -151,7 +168,6 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
             testDidFinish(result: nil)
             return
         }
-        self.startDate = Date()
         self.show(viewController, sender: self)
     }
     
@@ -207,23 +223,6 @@ extension SBAUserWrapper {
         
         // If the md5 was created then return that
         return md5
-    }
-    
-    /**
-     Mapping of key/value pairs for
-     */
-    public func brainBaselineProperties() -> [String: Any] {
-
-        // if user has consented we will have their birthdate (at least the year).
-        let year = Calendar.current.component(.year, from: self.birthdate!)
-        
-        let gender = SBAProfileManager.shared?.value(forProfileKey: SBAProfileInfoOption.gender.rawValue)
-        let genderString: String? = (gender as? String) ?? ((gender as? HKBiologicalSex)?.demographicDataValue as String?)
-        
-        // TODO: emm2017-04-30 Set other demographic values we want to compare against, e.g. education
-        
-        return ["birth_year" : year,
-                "gender" : (genderString ?? "Unknown")]
     }
 }
 
