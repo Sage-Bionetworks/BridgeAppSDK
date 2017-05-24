@@ -701,7 +701,6 @@
 				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,
 				16BF5B671BE29676007C79C6 /* Activities */,
-				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				FF92A6291DBFDD7600614D1F /* Learn */,
 				FF722BF51D7759EB004B2F8B /* News Feed */,
@@ -730,6 +729,7 @@
 		168F25701BE05281001D2D65 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
+				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */,
 				FB8439181C727BEB0086E961 /* SBASurveyFactory.swift */,
 				FF9634C61C9A0A6600D07595 /* SBASurveyItem+Bridge.swift */,
