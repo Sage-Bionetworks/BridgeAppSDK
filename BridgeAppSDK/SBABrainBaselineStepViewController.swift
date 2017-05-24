@@ -79,6 +79,7 @@ open class SBABrainBaselineStep: ORKStep {
     override open var hash: Int {
         return super.hash ^ SBAObjectHash(self.testName)
     }
+    
 }
 
 open class SBABrainBaselineStepViewController: ORKStepViewController {
@@ -118,6 +119,9 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Do not allow going back
+        self.backButtonItem = UIBarButtonItem()
         
         if startDate == nil {
             instructionLabel.text = self.step?.text ?? Localization.localizedString("BRAIN_BASELINE_INSTRUCTION_TEXT")
