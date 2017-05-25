@@ -62,6 +62,9 @@
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
 		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
 		FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */; };
+		FF37BE2E1ED7927100C264CB /* SBARoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */; };
+		FF37BE301ED7928000C264CB /* SBAUnderlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */; };
+		FF37BE321ED7928F00C264CB /* SBAShadowGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3B16111E0CD44B0037D1D0 /* SBADefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF3B169C1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */; };
@@ -471,6 +474,9 @@
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
 		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
+		FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBARoundedButton.swift; sourceTree = "<group>"; };
+		FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUnderlinedButton.swift; sourceTree = "<group>"; };
+		FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAShadowGradient.swift; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3B16111E0CD44B0037D1D0 /* SBADefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBADefines.h; sourceTree = "<group>"; };
 		FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityDataSource.swift; sourceTree = "<group>"; };
@@ -709,6 +715,7 @@
 				80FDDC821E6605020010DFA7 /* Profile */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
+				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBC45E711C758DBA007AA424 /* Library */,
 				FBC45E721C758DC9007AA424 /* Localization */,
 				FB14FFE51C7686CC00E0D5AF /* Resources */,
@@ -879,7 +886,6 @@
 			isa = PBXGroup;
 			children = (
 				FF90559E1CE286EA0049D12A /* BridgeExtensions */,
-				FFA8E4AD1CBD7CB700ED5399 /* UI */,
 				FBAE3CE61C86157E003CEC4A /* Utilities */,
 			);
 			name = Library;
@@ -979,6 +985,16 @@
 				FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */,
 			);
 			name = BrainBaseline;
+			sourceTree = "<group>";
+		};
+		FF37BE2C1ED7925300C264CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */,
+				FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */,
+				FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		FF5051B41D664E130065E677 /* All Set */ = {
@@ -1163,6 +1179,7 @@
 		FFA8E4AD1CBD7CB700ED5399 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				FF37BE2C1ED7925300C264CB /* Views */,
 				FFAAF63A1CC0A85900500929 /* Protocols */,
 				FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */,
 			);
@@ -1694,6 +1711,7 @@
 				FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */,
 				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
+				FF37BE321ED7928F00C264CB /* SBAShadowGradient.swift in Sources */,
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
 				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
@@ -1714,6 +1732,7 @@
 				FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */,
 				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
 				808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */,
+				FF37BE301ED7928000C264CB /* SBAUnderlinedButton.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
@@ -1753,6 +1772,7 @@
 				FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
+				FF37BE2E1ED7927100C264CB /* SBARoundedButton.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */,
