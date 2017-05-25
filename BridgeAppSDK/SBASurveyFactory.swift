@@ -41,6 +41,7 @@ import ResearchUXFactory
 public enum BridgeSurveyItemSubtype: String {
     case onboardingCompletion   = "onboardingCompletion"    // SBAOnboardingCompletionStep
     case profileItem            = "profileItem"             // Mapped to the profile questions list
+    case brainBaseline          = "brainBaseline"           // SBABrainBaselineStep
 }
 
 /**
@@ -133,6 +134,9 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             
         case .profileItem:
             return profileItemStep(for: inputItem.identifier)?.copy() as? ORKStep
+            
+        case .brainBaseline:
+            return SBABrainBaselineStep(inputItem: inputItem)
         }
     }
     
