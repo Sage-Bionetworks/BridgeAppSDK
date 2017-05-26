@@ -132,6 +132,9 @@
 		FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF78CF9E1D0144BF002C456D /* SBARegistrationStep.swift */; };
 		FF7C29E01ECBA268009FDA44 /* MockKeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */; };
 		FF812A251DDCEC6700A61655 /* SBAChangeEmailStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */; };
+		FF826EC51ED7FE7700731DD4 /* SBASinglePermissionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF826EC31ED7FE7700731DD4 /* SBASinglePermissionStepViewController.swift */; };
+		FF826EC61ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */; };
+		FF826EC81ED8025000731DD4 /* SBASinglePermissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
 		FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF8630411E709C9E0077AC57 /* Interface.storyboard */; };
 		FF8630451E709C9E0077AC57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8630441E709C9E0077AC57 /* Assets.xcassets */; };
@@ -188,6 +191,8 @@
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
+		FFD6AB561EDE13500075ABEF /* UIColor+BridgeKeyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */; };
+		FFD6AB601EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */; };
 		FFDDD7F01D2DA02B00446806 /* SBAConsentReviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDDD7EF1D2DA02B00446806 /* SBAConsentReviewOptions.swift */; };
 		FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */; };
 		FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */; };
@@ -545,6 +550,9 @@
 		FF7C29DE1ECBA268009FDA44 /* MockKeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockKeychainWrapper.h; sourceTree = "<group>"; };
 		FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockKeychainWrapper.m; sourceTree = "<group>"; };
 		FF812A241DDCEC6700A61655 /* SBAChangeEmailStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAChangeEmailStep.swift; sourceTree = "<group>"; };
+		FF826EC31ED7FE7700731DD4 /* SBASinglePermissionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASinglePermissionStepViewController.swift; sourceTree = "<group>"; };
+		FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBASinglePermissionStepViewController.xib; sourceTree = "<group>"; };
+		FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASinglePermissionStep.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sage Cardio Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF8630421E709C9E0077AC57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -603,6 +611,8 @@
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
 		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
+		FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+BridgeKeyNames.swift"; sourceTree = "<group>"; };
+		FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAPermissionsStep+PageSource.swift"; sourceTree = "<group>"; };
 		FFDDD7EF1D2DA02B00446806 /* SBAConsentReviewOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentReviewOptions.swift; sourceTree = "<group>"; };
 		FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingManager.swift; sourceTree = "<group>"; };
 		FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewController.swift; sourceTree = "<group>"; };
@@ -707,11 +717,13 @@
 				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,
 				16BF5B671BE29676007C79C6 /* Activities */,
+				FFD6AB0A1EDE06880075ABEF /* Color Management */,
 				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				FF92A6291DBFDD7600614D1F /* Learn */,
 				FF722BF51D7759EB004B2F8B /* News Feed */,
 				80F554CB1CD3F21D00C38053 /* Notifications */,
 				16BF5B611BE29643007C79C6 /* Onboarding */,
+				FF826EB21ED7F9C600731DD4 /* Permissions */,
 				80FDDC821E6605020010DFA7 /* Profile */,
 				168F25701BE05281001D2D65 /* TasksAndSteps */,
 				FF9D4C8E1CA324F9001C293C /* User */,
@@ -1065,6 +1077,17 @@
 			name = "News Feed";
 			sourceTree = "<group>";
 		};
+		FF826EB21ED7F9C600731DD4 /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */,
+				FF826EC31ED7FE7700731DD4 /* SBASinglePermissionStepViewController.swift */,
+				FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */,
+				FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */,
+			);
+			name = Permissions;
+			sourceTree = "<group>";
+		};
 		FF8630401E709C9D0077AC57 /* Sage Cardio Challenge */ = {
 			isa = PBXGroup;
 			children = (
@@ -1279,6 +1302,14 @@
 			);
 			name = Result;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		FFD6AB0A1EDE06880075ABEF /* Color Management */ = {
+			isa = PBXGroup;
+			children = (
+				FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */,
+			);
+			name = "Color Management";
 			sourceTree = "<group>";
 		};
 		FFF65A901E2F37050043FB40 /* Support Files */ = {
@@ -1648,6 +1679,7 @@
 			files = (
 				FF92A6C71DC026AC00614D1F /* Withdraw.json in Resources */,
 				FFF0128E1EA5638F00D9D9DD /* images.xcassets in Resources */,
+				FF826EC61ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib in Resources */,
 				80815D951EC271BB0095D1C0 /* ClassTypeMap.plist in Resources */,
 				FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */,
 				FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */,
@@ -1709,6 +1741,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFF012391EA0063F00D9D9DD /* SBAActivityIntroductionStepViewController.swift in Sources */,
+				FFD6AB561EDE13500075ABEF /* UIColor+BridgeKeyNames.swift in Sources */,
 				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
 				FF37BE321ED7928F00C264CB /* SBAShadowGradient.swift in Sources */,
@@ -1738,7 +1771,9 @@
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
 				FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */,
 				808514F71E81E33E00F1DCC5 /* SBAProfileDataSource.swift in Sources */,
+				FF826EC51ED7FE7700731DD4 /* SBASinglePermissionStepViewController.swift in Sources */,
 				FF9634C71C9A0A6600D07595 /* SBASurveyItem+Bridge.swift in Sources */,
+				FFD6AB601EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift in Sources */,
 				FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */,
 				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
@@ -1765,6 +1800,7 @@
 				FFDECE061D08901300434001 /* SBAEmailVerificationStep.swift in Sources */,
 				80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */,
 				FFF0124D1EA01EFD00D9D9DD /* SBATaskReference+Dictionary.swift in Sources */,
+				FF826EC81ED8025000731DD4 /* SBASinglePermissionStep.swift in Sources */,
 				FF14A0F91E9C1BA2007BB710 /* SBASignUpViewController.swift in Sources */,
 				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,

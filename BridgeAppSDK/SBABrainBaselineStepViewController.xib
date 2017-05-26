@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -13,6 +13,7 @@
                 <outlet property="backgroundImageView" destination="Ikt-A0-sRz" id="fKl-RB-qNU"/>
                 <outlet property="deviceImageView" destination="81O-Fh-nwU" id="gsD-ko-Ey9"/>
                 <outlet property="instructionLabel" destination="aBv-i7-T2V" id="vhw-AI-yMq"/>
+                <outlet property="shadowGradient" destination="022-nj-buL" id="KG2-qP-Oil"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -24,11 +25,15 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ikt-A0-sRz">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                 </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="022-nj-buL" customClass="SBAShadowGradient" customModule="BridgeAppSDK" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="81O-Fh-nwU" userLabel="DeviceImage">
-                    <rect key="frame" x="64.666666666666686" y="279" width="285" height="285"/>
+                    <rect key="frame" x="65" y="279.33333333333337" width="285" height="285.00000000000011"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone_portrait" translatesAutoresizingMaskIntoConstraints="NO" id="0nc-n3-DwW">
-                            <rect key="frame" x="29.333333333333329" y="-21" width="119.99999999999999" height="224"/>
+                            <rect key="frame" x="30" y="-21" width="120" height="224"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="224" id="3v6-fs-CVT"/>
                                 <constraint firstAttribute="width" constant="120" id="N5y-SM-Oib"/>
@@ -68,10 +73,14 @@
                 <constraint firstItem="Ikt-A0-sRz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="8w7-G9-GbD"/>
                 <constraint firstAttribute="bottom" secondItem="aBv-i7-T2V" secondAttribute="bottom" priority="900" constant="100" id="Qyf-p6-UV6"/>
                 <constraint firstItem="81O-Fh-nwU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="SPQ-0h-mPt"/>
+                <constraint firstItem="022-nj-buL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="XpF-Y6-iLi"/>
+                <constraint firstItem="022-nj-buL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="YEC-Q3-V4m"/>
                 <constraint firstItem="aBv-i7-T2V" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ZxB-Sz-kFg"/>
+                <constraint firstAttribute="trailing" secondItem="022-nj-buL" secondAttribute="trailing" id="bwZ-7y-RN5"/>
                 <constraint firstItem="81O-Fh-nwU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="gSy-U5-afY"/>
                 <constraint firstAttribute="trailing" secondItem="Ikt-A0-sRz" secondAttribute="trailing" id="oE6-R1-vvL"/>
                 <constraint firstAttribute="bottom" secondItem="Ikt-A0-sRz" secondAttribute="bottom" id="p5U-aK-cDB"/>
+                <constraint firstAttribute="bottom" secondItem="022-nj-buL" secondAttribute="bottom" id="qns-ts-xSP"/>
             </constraints>
             <point key="canvasLocation" x="127" y="53"/>
         </view>

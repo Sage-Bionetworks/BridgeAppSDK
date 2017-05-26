@@ -1,8 +1,6 @@
 //
-//  SBAShadowGradient.swift
+//  SBAPermissionsStep+PageSource.swift
 //  BridgeAppSDK
-//
-//  Created by Michael L DePhillips on 4/8/17.
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
@@ -33,65 +31,42 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import ResearchUXFactory
 
-@IBDesignable open class SBAShadowGradient : UIView {
+extension SBAPermissionsStep: ORKPageStepSource {
     
-    /**
-     * The color of the shadow that is drawn as the background of this
-     */
-    @IBInspectable var shadowColor : UIColor = UIColor.black {
-        didSet {
-            commonInit()
-        }
-    }
-    
-    /**
-     * The alpha value (0.0 to 1.0) that the bototm part of the gradient will be at
-     */
-    @IBInspectable var bottomAlpha : CGFloat = CGFloat(0.25) {
-        didSet {
-            commonInit()
-        }
-    }
-    
-    /**
-     * The alpha value (0.0 to 1.0) that the top part of the gradient will be at
-     */
-    @IBInspectable var topAlpha : CGFloat = CGFloat(0.0) {
-        didSet {
-            commonInit()
-        }
-    }
-    
-    let gradientLayer = CAGradientLayer()
-    
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-    
-    override open func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        commonInit()
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
-    func commonInit() {
-        backgroundColor = UIColor.clear
-        gradientLayer.frame = self.bounds
+    public func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         
-        let bottomColor = shadowColor.withAlphaComponent(bottomAlpha).cgColor
-        let topColor = shadowColor.withAlphaComponent(topAlpha).cgColor
-        gradientLayer.colors = [topColor, bottomColor]
-        gradientLayer.locations = [0.0, 1.0]
-        
-        if layer.sublayers?.count ?? 0 == 0 {
-            layer.addSublayer(gradientLayer)
+        // exit early if nil
+        if identifier == nil {
+            return SBASinglePermissionStep(permissionsStep: self, index: 0)
         }
+        
+        // otherwise, look for the index of the current identifier and advance
+        guard let index = self.findPermissionIndex(withIdentifier: identifier!),
+            index < self.permissionTypes.count - 1
+        else {
+            return nil
+        }
+
+        return SBASinglePermissionStep(permissionsStep: self, index: index + 1)
+    }
+    
+    public func stepBeforeStep(withIdentifier identifier: String, with result: ORKTaskResult) -> ORKStep? {
+        guard let index = self.findPermissionIndex(withIdentifier: identifier),
+            index > 0
+        else {
+            return nil
+        }
+        return SBASinglePermissionStep(permissionsStep: self, index: index - 1)
+    }
+    
+    public func step(withIdentifier identifier: String) -> ORKStep? {
+        guard let index = self.findPermissionIndex(withIdentifier: identifier) else { return nil }
+        return SBASinglePermissionStep(permissionsStep: self, index: index)
+    }
+    
+    public func findPermissionIndex(withIdentifier identifier: String) -> Int? {
+        return self.permissionTypes.index(where: { $0.identifier == identifier })
     }
 }

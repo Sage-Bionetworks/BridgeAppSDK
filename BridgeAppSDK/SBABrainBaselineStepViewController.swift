@@ -92,7 +92,8 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
         return Bundle(for: SBABrainBaselineStepViewController.classForCoder())
     }
     
-    @IBOutlet open weak var backgroundImageView: UIImageView!
+    @IBOutlet open weak var backgroundImageView: UIImageView?
+    @IBOutlet open weak var shadowGradient: SBAShadowGradient?
     @IBOutlet open weak var deviceImageView: UIView!
     @IBOutlet open weak var instructionLabel: UILabel!
     
@@ -122,6 +123,8 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
         
         // Do not allow going back
         self.backButtonItem = UIBarButtonItem()
+        self.backgroundImageView?.backgroundColor = UIColor.appBackgroundDark
+        self.instructionLabel.textColor = UIColor.appTextLight
         
         if startDate == nil {
             instructionLabel.text = self.step?.text ?? Localization.localizedString("BRAIN_BASELINE_INSTRUCTION_TEXT")

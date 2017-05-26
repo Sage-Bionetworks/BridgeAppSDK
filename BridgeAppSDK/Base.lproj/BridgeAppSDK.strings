@@ -100,3 +100,11 @@
 /* Brain baseline */
 "BRAIN_BASELINE_INSTRUCTION_TEXT" = "Please tilt your device.";
 
+/* Permissions */
+"PERMISSION_BUTTON_FORMAT_%@" = "Enable %@";
+"PERMISSION_BUTTON_HEALTHKIT" = "Enable HealthKit";
+"PERMISSION_BUTTON_LOCATION" = "Enable GPS";
+"PERMISSION_BUTTON_MOTION" = "Enable motion sensors";
+"PERMISSION_BUTTON_MICROPHONE" = "Enable Microphone";
+"PERMISSION_BUTTON_CAMERA" = "Enable Camera";
+

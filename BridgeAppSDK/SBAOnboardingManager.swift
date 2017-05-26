@@ -307,6 +307,11 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             return (tableRow == 0) ? .current : .locked
         }
         
+        // Exit early if this is the completed identifier
+        if currentStepIdentifier == SBAOnboardingManager.completedIdentifier {
+            return .completed
+        }
+        
         // setup the step mapping if the number of elements doesn't match
         if signupStepMapping.count != tableRows.count {
             self.signupStepMapping = {
@@ -317,32 +322,38 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         
         // look for the current row
         let currentRow: Int = {
+            var completedRow: Int = tableRows.count - 1
             for (row, _) in tableRows.enumerated() {
-                for step in signupStepMapping[row] {
-                    if currentStepIdentifier.hasPrefix(step.identifier) {
-                        // Found the section that the current step is in
-                        if step == signupStepMapping[row].last {
-                            // If this is the last step then look to see if this is a step that requires special-casing.
-                            let currentStep: ORKStep? = {
-                                if let subtaskStep = step as? SBASubtaskStep {
-                                    return subtaskStep.isLast(with: currentStepIdentifier)
+                if signupStepMapping[row].count == 0 {
+                    completedRow = row
+                }
+                else {
+                    for step in signupStepMapping[row] {
+                        if currentStepIdentifier.hasPrefix(step.identifier) {
+                            // Found the section that the current step is in
+                            if step == signupStepMapping[row].last {
+                                // If this is the last step then look to see if this is a step that requires special-casing.
+                                let currentStep: ORKStep? = {
+                                    if let subtaskStep = step as? SBASubtaskStep {
+                                        return subtaskStep.isLast(with: currentStepIdentifier)
+                                    }
+                                    else {
+                                        return step
+                                    }
+                                }()
+                                if currentStep is SBAEmailVerificationStep {
+                                    return self.sharedUser.isLoginVerified ? row + 1 : row
                                 }
-                                else {
-                                    return step
+                                else if currentStep is ORKInstructionStep {
+                                    return row + 1
                                 }
-                            }()
-                            if currentStep is SBAEmailVerificationStep {
-                                return self.sharedUser.isLoginVerified ? row + 1 : row
                             }
-                            else if currentStep is ORKInstructionStep {
-                                return row + 1
-                            }
+                            return row
                         }
-                        return row
                     }
                 }
             }
-            return tableRows.count
+            return completedRow + 1
         }()
         
         return (currentRow < tableRow) ? .locked : (currentRow == tableRow) ? .current : .completed

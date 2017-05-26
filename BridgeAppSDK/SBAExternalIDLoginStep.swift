@@ -262,9 +262,10 @@ public enum SBAExternalIDError: Error {
     case notMatching
 }
 
-extension ORKPageStep {
+extension ORKPageStepSource {
     public func firstStep() -> ORKStep? {
-        return self.stepAfterStep(withIdentifier: nil, with: ORKTaskResult(identifier: self.identifier))
+        guard let step = self as? ORKStep else { return nil }
+        return self.stepAfterStep(withIdentifier: nil, with: ORKTaskResult(identifier: step.identifier))
     }
 }
 
