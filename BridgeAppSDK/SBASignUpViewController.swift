@@ -306,6 +306,25 @@ open class SBASignUpTableViewController : SBASignUpViewController, UITableViewDa
         }
     }
     
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        sizeHeaderToFit()
+    }
+    
+    func sizeHeaderToFit() {
+        let headerView = tableView.tableHeaderView!
+        
+        headerView.setNeedsLayout()
+        headerView.layoutIfNeeded()
+        
+        let height = headerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        var frame = headerView.frame
+        frame.size.height = height
+        headerView.frame = frame
+        
+        tableView.tableHeaderView = headerView
+    }
+    
     override open func updateState() {
         super.updateState()
         self.tableView.reloadData()
