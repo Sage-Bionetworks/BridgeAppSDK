@@ -38,7 +38,7 @@ import UIKit
 @IBDesignable open class SBAUnderlinedButton : UIButton {
     
     /**
-     * The color of the shadow that is drawn as the background of this
+     * The color of the link button
      */
     @IBInspectable open var textColor : UIColor = UIColor.blueTintColor {
         didSet {
@@ -47,7 +47,7 @@ import UIKit
     }
     
     /**
-     * The color of the shadow that is drawn as the background of this
+     * The font used for the text button
      */
     @IBInspectable open var textFont : UIFont = UIFont.systemFont(ofSize: 17) {
         didSet {
