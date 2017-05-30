@@ -265,9 +265,7 @@
     daysAhead = MAX(1, daysAhead);
     NSInteger daysBehind = MAX(0,[[calendar components:NSCalendarUnitDay fromDate:start toDate:now options:0] day]);
     
-    // TODO: mdephillips 05/25/17 switching to check cache first policy
-    // switch back to fallback once this bug is fixed https://sagebionetworks.jira.com/browse/IA-120
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyCheckCacheFirst withCompletion:^(NSArray *activitiesList, NSError *error) {
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray *activitiesList, NSError *error) {
         
         NSArray *uniqueGuids = [activitiesList valueForKeyPath:@"@distinctUnionOfObjects.activity.guid"];
         if (getHistory && (uniqueGuids.count > 0)) {
@@ -278,7 +276,7 @@
             
             for (NSString *guid in uniqueGuids) {
                 dispatch_group_enter(historyGroup);
-                [SBBComponent(SBBActivityManager) getScheduledActivitiesForGuid:guid scheduledFrom:historyStart to:historyEnd cachingPolicy:SBBCachingPolicyCachedOnly withCompletion:^(NSArray * _Nullable bList, NSError * _Nullable error) {
+                [SBBComponent(SBBActivityManager) getScheduledActivitiesForGuid:guid scheduledFrom:historyStart to:historyEnd cachingPolicy:SBBCachingPolicyCheckCacheFirst withCompletion:^(NSArray * _Nullable bList, NSError * _Nullable error) {
                     
                     // Remove any schedules from the list that were returned by the second call
                     if (includeCurrent) {
