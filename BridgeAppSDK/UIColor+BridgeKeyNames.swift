@@ -1,8 +1,6 @@
 //
-//  SBAShadowGradient.swift
+//  UIColor+BridgeKeyNames.swift
 //  BridgeAppSDK
-//
-//  Created by Michael L DePhillips on 4/8/17.
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
 //
@@ -35,63 +33,75 @@
 
 import UIKit
 
-@IBDesignable open class SBAShadowGradient : UIView {
+extension UIColor {
     
-    /**
-     * The color of the shadow that is drawn as the background of this
-     */
-    @IBInspectable var shadowColor : UIColor = UIColor.black {
-        didSet {
-            commonInit()
-        }
+    // MARK: App background - default colors
+    
+    open class var appBackgroundLight: UIColor {
+        return UIColor.white
     }
     
-    /**
-     * The alpha value (0.0 to 1.0) that the bototm part of the gradient will be at
-     */
-    @IBInspectable var bottomAlpha : CGFloat = CGFloat(0.25) {
-        didSet {
-            commonInit()
-        }
+    open class var appBackgroundDark: UIColor {
+        return UIColor.primaryTintColor ?? UIColor.magenta
     }
     
-    /**
-     * The alpha value (0.0 to 1.0) that the top part of the gradient will be at
-     */
-    @IBInspectable var topAlpha : CGFloat = CGFloat(0.0) {
-        didSet {
-            commonInit()
-        }
+    open class var appBackgroundGreen: UIColor {
+        return UIColor.greenTintColor
     }
     
-    let gradientLayer = CAGradientLayer()
     
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
+    // MARK: App text - default colors
+    
+    open class var appTextLight: UIColor {
+        return UIColor.white
     }
     
-    override open func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        commonInit()
+    open class var appTextDark: UIColor {
+        return UIColor(red: 65.0 / 255.0, green: 72.0 / 255.0, blue: 89.0 / 255.0, alpha: 1.0)
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
+    open class var appTextGreen: UIColor {
+        return UIColor.white
     }
     
-    func commonInit() {
-        backgroundColor = UIColor.clear
-        gradientLayer.frame = self.bounds
-        
-        let bottomColor = shadowColor.withAlphaComponent(bottomAlpha).cgColor
-        let topColor = shadowColor.withAlphaComponent(topAlpha).cgColor
-        gradientLayer.colors = [topColor, bottomColor]
-        gradientLayer.locations = [0.0, 1.0]
-        
-        if layer.sublayers?.count ?? 0 == 0 {
-            layer.addSublayer(gradientLayer)
-        }
+    
+    // MARK: Underlined button - default colors
+    
+    open class var underlinedButtonTextLight: UIColor {
+        return UIColor.white
     }
+    
+    open class var underlinedButtonTextDark: UIColor {
+        return UIColor(red: 73.0 / 255.0, green: 91.0 / 255.0, blue: 122.0 / 255.0, alpha: 1.0)
+    }
+    
+    
+    // MARK: Rounded button - default colors
+    
+    open class var roundedButtonBackgroundDark: UIColor {
+        return UIColor(red: 1.0, green: 136.0 / 255.0, blue: 117.0 / 255.0, alpha: 1.0)
+    }
+    
+    open class var roundedButtonShadowDark: UIColor {
+        return UIColor(red: 242.0 / 255.0, green: 128.0 / 255.0, blue: 111.0 / 255.0, alpha: 1.0)
+    }
+    
+    open class var roundedButtonTextLight: UIColor {
+        return UIColor.white
+    }
+    
+    open class var roundedButtonBackgroundLight: UIColor {
+        return UIColor.white
+    }
+    
+    open class var roundedButtonShadowLight: UIColor {
+        return UIColor(white: 245.0 / 255.0, alpha: 1.0)
+    }
+    
+    open class var roundedButtonTextDark: UIColor {
+        return UIColor.appBackgroundDark
+    }
+    
 }
+
+

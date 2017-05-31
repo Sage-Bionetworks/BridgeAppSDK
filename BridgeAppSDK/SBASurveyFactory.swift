@@ -169,6 +169,16 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
                 
         case .externalID:
             return SBAExternalIDAssignStep(inputItem: inputItem, factory: self)
+            
+        case .permissions:
+            // For permissions, we want to replace the default permissions step with a 
+            // single step (if possible) to capture info specific to that step
+            if let singleStep = SBASinglePermissionStep(inputItem: inputItem) {
+                return singleStep
+            }
+            else {
+                return super.createAccountStep(inputItem:inputItem, subtype: subtype)
+            }
                 
         default:
             return super.createAccountStep(inputItem:inputItem, subtype: subtype)

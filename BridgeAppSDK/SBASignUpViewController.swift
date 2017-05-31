@@ -77,6 +77,12 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         return Array(filteredKeys)
     }()
     
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.view.backgroundColor = UIColor.appBackgroundDark
+    }
+    
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateState()

@@ -1,5 +1,5 @@
 //
-//  SBAActivityIntroductionStepViewController.swift
+//  SBAPermissionsStep+PageSource.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -31,45 +31,42 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import UIKit
+import ResearchUXFactory
 
-open class SBAActivityIntroductionStepViewController: ORKStepViewController {
+extension SBAPermissionsStep: ORKPageStepSource {
     
-    static let className = String(describing: SBAActivityIntroductionStepViewController.self)
-    
-    @IBOutlet public var titleLabel: UILabel!
-    @IBOutlet public var subtitleLabel: UILabel!
-    @IBOutlet public var descriptionLabel: UILabel!
-    @IBOutlet public var iconImageView: UIImageView!
-    
-    public var schedule: SBBScheduledActivity!
-    public var taskReference: SBATaskReference!
-    
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    public func stepAfterStep(withIdentifier identifier: String?, with result: ORKTaskResult) -> ORKStep? {
         
-        // Schedule and step should both be set before showing the view controller
-        titleLabel.text = schedule.activity.label
-        subtitleLabel.text = schedule.activity.labelDetail
-        descriptionLabel.text = step?.text
-        iconImageView.image = taskReference.activityIcon
-    }
+        // exit early if nil
+        if identifier == nil {
+            return SBASinglePermissionStep(permissionsStep: self, index: 0)
+        }
+        
+        // otherwise, look for the index of the current identifier and advance
+        guard let index = self.findPermissionIndex(withIdentifier: identifier!),
+            index < self.permissionTypes.count - 1
+        else {
+            return nil
+        }
 
-    @IBAction public func startTapped() {
-        self.goForward()
+        return SBASinglePermissionStep(permissionsStep: self, index: index + 1)
     }
     
-    @IBAction public func cancelTapped() {
-        guard let taskViewController = self.taskViewController, let taskDelegate = taskViewController.delegate else {
-            dismiss(animated: true, completion: nil)
-            return
+    public func stepBeforeStep(withIdentifier identifier: String, with result: ORKTaskResult) -> ORKStep? {
+        guard let index = self.findPermissionIndex(withIdentifier: identifier),
+            index > 0
+        else {
+            return nil
         }
-        taskDelegate.taskViewController(taskViewController, didFinishWith: .discarded, error: nil)
+        return SBASinglePermissionStep(permissionsStep: self, index: index - 1)
+    }
+    
+    public func step(withIdentifier identifier: String) -> ORKStep? {
+        guard let index = self.findPermissionIndex(withIdentifier: identifier) else { return nil }
+        return SBASinglePermissionStep(permissionsStep: self, index: index)
+    }
+    
+    public func findPermissionIndex(withIdentifier identifier: String) -> Int? {
+        return self.permissionTypes.index(where: { $0.identifier == identifier })
     }
 }
