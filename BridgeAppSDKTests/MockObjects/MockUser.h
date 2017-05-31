@@ -47,6 +47,7 @@
 @property (nonatomic, copy) NSString * _Nullable email;
 @property (nonatomic, copy) NSString * _Nullable externalId;
 @property (nonatomic, copy) NSString * _Nullable password;
+@property (nonatomic, copy) NSDate * _Nonnull createdOn;
 @property (nonatomic, copy) NSString * _Nullable subpopulationGuid;
 @property (nonatomic) HKBiologicalSex gender;
 @property (nonatomic, copy) NSDate * _Nullable birthdate;

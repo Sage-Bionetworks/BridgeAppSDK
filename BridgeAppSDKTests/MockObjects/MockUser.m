@@ -58,6 +58,7 @@
     if (self = [super init]) {
         _mockBridgeInfo = [[MockBridgeInfo alloc] init];
         _storedAnswers = [NSMutableDictionary new];
+        _createdOn = [NSDate date];
     }
     return self;
 }
@@ -107,6 +108,7 @@
     self.onboardingStepIdentifier = nil;
     self.gender = 0;
     self.birthdate = nil;
+    self.createdOn = [NSDate date];
 }
     
 - (void)setStoredAnswer:(id)storedAnswer forKey:(NSString *)key {
