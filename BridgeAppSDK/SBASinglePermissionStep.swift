@@ -41,7 +41,7 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
     open dynamic var permissionType: SBAPermissionObjectType!
     
     /**
-     Text to show for the continue button
+     Text to show for the continue button.
      */
     open dynamic var buttonTitle: String?
     
