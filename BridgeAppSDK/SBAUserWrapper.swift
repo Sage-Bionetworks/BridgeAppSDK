@@ -65,6 +65,11 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
     var subpopulationGuid: String? { get set }
 
     /**
+     * Date when the user was created (initially enrolled) in the study.
+     */
+    var createdOn: Date { get set }
+    
+    /**
      * Consent signature should be stored in keychain.
      */
     var consentSignature: SBAConsentSignatureWrapper? { get set }
