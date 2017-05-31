@@ -534,6 +534,9 @@ public extension SBAUserWrapper {
         // Get the user's name
         self.name = response.firstName
         self.familyName = response.lastName
+        
+        // Store the user's start date
+        self.startDate = response.startDate
     }
     
     public func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
@@ -579,6 +582,7 @@ protocol SBAUserSessionInfoWrapper : class {
     var subpopulationGuid: String? { get }
     var firstName: String? { get }
     var lastName: String? { get }
+    var startDate: Date? { get }
 }
 
 extension NSDictionary: SBAUserSessionInfoWrapper {
@@ -616,6 +620,11 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
             }
         }
         return nil
+    }
+    
+    var startDate : Date? {
+        guard let dateString = self["createdOn"] as? String else { return Date() }
+        return NSDate(iso8601String: dateString) as Date? ?? Date()
     }
     
 }
