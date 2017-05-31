@@ -401,6 +401,16 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
+    let kEnrolledOnKey = "enrolledOn"
+    
+    public var enrolledOn: Date {
+        get {
+            return syncObjectForKey(kEnrolledOnKey) as? Date ?? Date()
+        }
+        set (newValue) {
+            syncSetObject(newValue as AnyObject?, forKey: kEnrolledOnKey)
+        }
+    }
     
     public var isRegistered: Bool {
         get {
