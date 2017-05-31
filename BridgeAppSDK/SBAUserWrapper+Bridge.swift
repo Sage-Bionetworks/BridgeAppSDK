@@ -623,17 +623,8 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
     }
     
     var startDate : Date? {
-        let dateString = self["createdOn"] as? String
-        if ((dateString) != nil) {
-            // The response comes back as an 8601 ISO String, so convert that to a date before
-            // storing it
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale!
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-            return dateFormatter.date(from: dateString!)
-        } else {
-            return nil
-        }
+        guard let dateString = self["createdOn"] as? String else { return Date() }
+        return NSDate(iso8601String: dateString) as Date? ?? Date()
     }
     
 }
