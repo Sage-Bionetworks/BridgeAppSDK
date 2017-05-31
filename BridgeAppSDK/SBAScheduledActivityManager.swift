@@ -297,7 +297,24 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             else {
                 return nil
         }
-        return activities.find({ $0.scheduleIdentifier == scheduleIdentifier })
+        
+        var finishedOn: Date?
+        if let sbaTaskViewController = taskViewController as? SBATaskViewController,
+            let taskViewControllerFinishedOn = sbaTaskViewController.finishedOn {
+            finishedOn = taskViewControllerFinishedOn
+        } else {
+            finishedOn = taskViewController.result.endDate
+        }
+        
+        // TODO: mdephillips 5/31/17 the additional check against finishedOn
+        // works for finding which task you truly finished; however,
+        // if we want users to be able to complete activities in the past,
+        // we may need to fake the finishedOn date, or pass in additional information
+        return activities.find({
+            return
+                $0.scheduleIdentifier == scheduleIdentifier &&
+                $0.scheduledOn < finishedOn! && $0.expiresOn > finishedOn!
+        })
     }
     
     /**
