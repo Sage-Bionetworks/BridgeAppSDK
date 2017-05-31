@@ -401,14 +401,14 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
-    let kEnrolledOnKey = "enrolledOn"
+    let kCreatedOnKey = "createdOn"
     
-    public var enrolledOn: Date {
+    public var createdOn: Date {
         get {
-            return syncObjectForKey(kEnrolledOnKey) as? Date ?? Date()
+            return syncObjectForKey(kCreatedOnKey) as? Date ?? Date()
         }
         set (newValue) {
-            syncSetObject(newValue as AnyObject?, forKey: kEnrolledOnKey)
+            syncSetObject(newValue as AnyObject?, forKey: kCreatedOnKey)
         }
     }
     

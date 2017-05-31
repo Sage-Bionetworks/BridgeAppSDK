@@ -534,7 +534,7 @@ public extension SBAUserWrapper {
         // Get the user's name
         self.name = response.firstName
         self.familyName = response.lastName
-        self.enrolledOn = response.createdOn
+        self.createdOn = response.createdOn
     }
     
     public func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
