@@ -229,7 +229,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
         guard let steps = checkOnboardingSteps( .base(.registration), .signup) else { return }
         XCTAssertEqual(steps.count, 2)
         
-        guard let step1 = steps.first as? SBAPermissionsStep else {
+        guard let step1 = steps.first as? SBASinglePermissionStep else {
             XCTAssert(false, "\(String(describing: steps.first)) not of expected type")
             return
         }
