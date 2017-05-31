@@ -107,6 +107,11 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
     var onboardingStepIdentifier: String? { get set }
     
     /**
+     * The date the user joined the study
+     */
+    var startDate: Date? { get set }
+    
+    /**
      Reset the user's keychain
      */
     func resetStoredUserData()

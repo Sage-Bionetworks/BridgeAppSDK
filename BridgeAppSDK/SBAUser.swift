@@ -401,6 +401,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
     let kDataSharingEnabledKey = "isDataSharingEnabled"
     let kDataSharingScopeKey = "dataSharingScope"
     let kOnboardingStepIdentifier = "onboardingStepIdentifier"
+    let kStartDateIdentifier = "startDateIdentifier"
     
     public var isRegistered: Bool {
         get {
@@ -462,6 +463,15 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         }
         set (newValue) {
             syncSetObject(newValue as AnyObject?, forKey: kOnboardingStepIdentifier)
+        }
+    }
+    
+    public var startDate: Date? {
+        get {
+            return syncObjectForKey(kStartDateIdentifier) as? Date
+        }
+        set (newValue) {
+            syncSetObject(newValue as AnyObject?, forKey: kStartDateIdentifier)
         }
     }
     
