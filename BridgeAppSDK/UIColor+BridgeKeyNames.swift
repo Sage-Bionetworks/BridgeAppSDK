@@ -35,7 +35,7 @@ import UIKit
 
 extension UIColor {
     
-    // App background - default colors
+    // MARK: App background - default colors
     
     open class var appBackgroundLight: UIColor {
         return UIColor.white
@@ -50,18 +50,29 @@ extension UIColor {
     }
     
     
-    // App text - default colors
+    // MARK: App text - default colors
     
     open class var appTextLight: UIColor {
-        return UIColor.appBackgroundLight
+        return UIColor.white
     }
     
     open class var appTextDark: UIColor {
-        return UIColor.appBackgroundDark
+        return UIColor(red: 65.0 / 255.0, green: 72.0 / 255.0, blue: 89.0 / 255.0, alpha: 1.0)
     }
     
     open class var appTextGreen: UIColor {
         return UIColor.white
+    }
+    
+    
+    // MARK: Underlined button - default colors
+    
+    open class var underlinedButtonTextLight: UIColor {
+        return UIColor.white
+    }
+    
+    open class var underlinedButtonTextDark: UIColor {
+        return UIColor(red: 73.0 / 255.0, green: 91.0 / 255.0, blue: 122.0 / 255.0, alpha: 1.0)
     }
     
     
@@ -76,7 +87,7 @@ extension UIColor {
     }
     
     open class var roundedButtonTextLight: UIColor {
-        return UIColor(white: 1.0, alpha: 1.0)
+        return UIColor.white
     }
     
     open class var roundedButtonBackgroundLight: UIColor {

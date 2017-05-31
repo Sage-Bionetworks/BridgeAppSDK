@@ -494,13 +494,8 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         return SBATaskViewController(task: task, taskRun: nil)
     }
     
-    open func instantiateActivityIntroductionStepViewController(for schedule: SBBScheduledActivity, step: ORKStep, taskRef: SBATaskReference) -> SBAActivityIntroductionStepViewController? {
-        let storyboard = UIStoryboard(name: SBAMainStoryboardName, bundle: nil)
-        guard let vc = storyboard.instantiateViewController(withIdentifier: SBAActivityIntroductionStepViewController.className) as? SBAActivityIntroductionStepViewController
-        else {
-            return nil
-        }
-        vc.step = step
+    open func instantiateActivityIntroductionStepViewController(for schedule: SBBScheduledActivity, step: ORKStep, taskRef: SBATaskReference) -> SBAActivityInstructionStepViewController? {
+        let vc = SBAActivityInstructionStepViewController(step: step)
         vc.schedule = schedule
         vc.taskReference = taskRef
         return vc
