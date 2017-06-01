@@ -652,9 +652,23 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             }
         }
         
+        // For all the schdules being updated, ensure that the startedOn and finishedOn dates 
+        // are in the time range for when the schedule is available
+        for activity in scheduledActivities {
+            if activity.expiresOn != nil {
+                if activity.expiresOn < activity.startedOn {
+                    activity.startedOn = activity.expiresOn.addingTimeInterval(-60)
+                }
+                if activity.expiresOn < activity.finishedOn {
+                    activity.finishedOn = activity.startedOn
+                }
+            }
+        }
+        
         // Send message to server
         sendUpdated(scheduledActivities: scheduledActivities)
     }
+    
     
     /**
      Send message to Bridge server to update the given schedules. This includes both the task
