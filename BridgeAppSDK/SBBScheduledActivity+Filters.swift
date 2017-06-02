@@ -47,6 +47,10 @@ extension SBBScheduledActivity {
         return NSPredicate(day: date, dateKey: #keyPath(finishedOn))
     }
     
+    public static func completedPredicate() -> NSPredicate {
+        return NSPredicate(format: "%K != nil", #keyPath(finishedOn))
+    }
+    
     public static func scheduledTodayPredicate() -> NSPredicate {
         return NSPredicate(day: Date(), dateKey: #keyPath(scheduledOn))
     }
