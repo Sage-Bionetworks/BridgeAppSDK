@@ -46,6 +46,7 @@ public protocol SBAProfileTableItem: NSObjectProtocol {
     var title: String { get }
     var detail: String? { get }
     var isEditable: Bool { get }
+    var onSelected: String? { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
@@ -95,6 +96,13 @@ open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
         get {
             let key = #keyPath(isEditable)
             return sourceDict[key] as? Bool ?? false
+        }
+    }
+    
+    open var onSelected: String? {
+        get {
+            let key = #keyPath(onSelected)
+            return sourceDict[key] as? String
         }
     }
 }
