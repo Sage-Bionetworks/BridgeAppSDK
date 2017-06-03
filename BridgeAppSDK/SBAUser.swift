@@ -551,6 +551,11 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         self.password = password
     }
     
+    public func authManager(_ authManager: SBBAuthManagerProtocol?, didReceiveUserSessionInfo sessionInfo: Any?) {
+        guard let info = sessionInfo as? SBBUserSessionInfo else { return }
+        self.updateFromUserSessionInfo(info)
+    }
+    
     public func email(forAuthManager authManager: SBBAuthManagerProtocol?) -> String? {
         return self.email
     }
