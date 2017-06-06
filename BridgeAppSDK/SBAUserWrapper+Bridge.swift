@@ -518,9 +518,9 @@ public extension SBAUserWrapper {
     }
     
     /**
-     Call this any time the user session info gets updated.
+     Call this any time the user session info gets updated elsewhere.
      */
-    public func updateFromUserSessionInfo(_ info: SBBUserSessionInfo) {
+    func updateFromUserSessionInfo(_ info: SBBUserSessionInfo) {
         self.updateFromUserSession(info)
     }
     
