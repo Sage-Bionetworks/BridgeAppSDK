@@ -517,6 +517,13 @@ public extension SBAUserWrapper {
         }
     }
     
+    /**
+     Call this any time the user session info gets updated elsewhere.
+     */
+    func updateFromUserSessionInfo(_ info: SBBUserSessionInfo) {
+        self.updateFromUserSession(info)
+    }
+    
     fileprivate func updateFromUserSession(_ response: SBAUserSessionInfoWrapper) {
         
         // Get the data groups from the response object
@@ -624,6 +631,49 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
         }
         return nil
     }
+    
+}
+
+extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
+    var createdOn: Date {
+        return self.studyParticipant.createdOn
+    }
+
+    var lastName: String? {
+        return self.studyParticipant.lastName
+    }
+
+    var firstName: String? {
+        return self.studyParticipant.firstName
+    }
+
+    var subpopulationGuid: String? {
+        // TODO: emm 2017-06-01 Handle multiple consent groups with separate sub populations
+        if let consentStatuses = self.consentStatuses as? [String : SBBConsentStatus] {
+            for (_, subpop) in consentStatuses {
+                if let required = subpop.required as? Bool , required {
+                    return subpop.subpopulationGuid
+                }
+            }
+        }
+        return nil
+    }
+
+    var dataSharingScope: SBBParticipantDataSharingScope {
+        guard let sharingKey = self.studyParticipant.sharingScope, self.isDataSharingEnabled else {
+            return .none
+        }
+        return SBBParticipantDataSharingScope(key: sharingKey)
+    }
+
+    var isDataSharingEnabled: Bool {
+        return self.dataSharing as? Bool ?? false
+    }
+
+    var dataGroups: [String]? {
+        return Array(self.studyParticipant.dataGroups)
+    }
+
     
 }
 
