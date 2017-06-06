@@ -37,7 +37,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="518"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PSV-Tc-IBA" userLabel="Content">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="518"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="520.5"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUg-xm-HmE" userLabel="Header">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
@@ -67,7 +67,7 @@
                                     </constraints>
                                 </view>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1uy-sE-CMs">
-                                    <rect key="frame" x="133" y="40" width="110" height="110"/>
+                                    <rect key="frame" x="138" y="40" width="100" height="100"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="1uy-sE-CMs" secondAttribute="height" multiplier="1:1" id="Tac-Yc-sjF"/>
                                         <constraint firstAttribute="height" priority="950" constant="196" id="cfN-tf-1mq"/>
@@ -88,7 +88,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hoR-d4-KNZ" customClass="SBAUnderlinedButton" customModule="BridgeAppSDK" customModuleProvider="target">
-                                    <rect key="frame" x="148" y="464" width="78" height="30"/>
+                                    <rect key="frame" x="143.5" y="464" width="87" height="32.5"/>
                                     <state key="normal" title="Learn More"/>
                                     <connections>
                                         <action selector="learnMoreTapped:" destination="-1" eventType="touchUpInside" id="bFn-EL-llQ"/>
@@ -99,7 +99,7 @@
                             <constraints>
                                 <constraint firstItem="3kp-LW-yTe" firstAttribute="top" secondItem="NUg-xm-HmE" secondAttribute="bottom" priority="950" constant="6" id="0zU-Tm-Ifc"/>
                                 <constraint firstAttribute="trailing" secondItem="NUg-xm-HmE" secondAttribute="trailing" id="4wV-M9-Gze"/>
-                                <constraint firstItem="3kp-LW-yTe" firstAttribute="top" secondItem="1uy-sE-CMs" secondAttribute="bottom" constant="6" id="5SU-hT-99s"/>
+                                <constraint firstItem="3kp-LW-yTe" firstAttribute="top" secondItem="1uy-sE-CMs" secondAttribute="bottom" constant="16" id="5SU-hT-99s"/>
                                 <constraint firstItem="NUg-xm-HmE" firstAttribute="top" secondItem="PSV-Tc-IBA" secondAttribute="top" id="8Ng-zI-SP9"/>
                                 <constraint firstAttribute="bottom" secondItem="hoR-d4-KNZ" secondAttribute="bottom" constant="24" id="9Ht-0O-yUB"/>
                                 <constraint firstAttribute="trailing" secondItem="xcv-sQ-Qhg" secondAttribute="trailing" constant="24" id="B9X-NP-lko"/>

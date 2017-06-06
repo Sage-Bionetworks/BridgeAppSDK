@@ -35,7 +35,7 @@
 
 import UIKit
 
-@IBDesignable open class SBARoundedButton : ORKTextButton {
+@IBDesignable open class SBARoundedButton : UIButton, ORKButton {
     
     @IBInspectable open var corners: CGFloat = CGFloat(5) {
         didSet {
@@ -59,8 +59,23 @@ import UIKit
         }
     }
     
-    public override init() {
-        super.init()
+    public var isInTransition: Bool = false
+    
+    open var titleFont: UIFont? {
+        didSet {
+            guard let font = titleFont else { return }
+            titleLabel?.font = font
+        }
+    }
+    
+    open var titleColor: UIColor? {
+        didSet {
+            setTitleColor(titleColor, for: .normal)
+        }
+    }
+    
+    public required init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 250, height: 51))
         
         // setup colors
         self.backgroundColor = UIColor.roundedButtonBackgroundDark
@@ -69,7 +84,10 @@ import UIKit
         
         // setup text
         self.titleColor = UIColor.roundedButtonTextLight
+        setTitleColor(titleColor, for: .normal)
+        
         self.titleFont = UIFont.systemFont(ofSize: 19)
+        titleLabel?.font = titleFont
         
         // add default constraint for height
         let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 51)
