@@ -33,7 +33,119 @@
 
 import UIKit
 
-open class SBAInstructionStepViewController: ORKStepViewController, UIScrollViewDelegate {
+open class SBABaseInstructionStepViewController: ORKStepViewController {
+    
+    @IBOutlet public weak var imageView: UIImageView!
+    @IBOutlet public weak var titleLabel: UILabel!
+    @IBOutlet public weak var textLabel: UILabel!
+    @IBOutlet public weak var learnMoreButton: UIButton!
+    
+    @IBOutlet public weak var backButton: SBARoundedButton?
+    @IBOutlet public weak var nextButton: SBARoundedButton?
+    
+    var sbaIntructionStep: SBAInstructionStep? {
+        return self.step as? SBAInstructionStep
+    }
+    
+    public var instructionStep: ORKInstructionStep? {
+        return self.step as? ORKInstructionStep
+    }
+    
+    open var image: UIImage? {
+        return (self.instructionStep?.image ?? self.instructionStep?.iconImage)
+    }
+    
+    override open var learnMoreButtonTitle: String? {
+        get {
+            return sbaIntructionStep?.learnMoreAction?.learnMoreButtonText ?? super.learnMoreButtonTitle
+        }
+        set {
+            super.learnMoreButtonTitle = newValue
+        }
+    }
+    
+    open var fullText: String {
+        // Text (detail is same size and color according to current design)
+        var text = self.step?.text ?? ""
+        if let detail = self.instructionStep?.detailText {
+            text.append("\n\n\(detail)")
+        }
+        return text
+    }
+    
+    open var nextTitle: String {
+        return self.continueButtonTitle ?? (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone())
+    }
+    
+    // MARK: Navigation
+    
+    open func hasLearnMore() -> Bool {
+        if (self.sbaIntructionStep?.learnMoreAction != nil) {
+            return true
+        }
+        guard let taskViewController = self.taskViewController, let step = self.step else { return false }
+        return taskViewController.delegate?.taskViewController?(taskViewController, hasLearnMoreFor: step) ?? false
+    }
+    
+    @IBAction open func learnMoreTapped(_ sender: Any) {
+        guard let taskViewController = self.taskViewController else { return }
+        taskViewController.delegate?.taskViewController?(taskViewController, learnMoreForStep: self)
+    }
+    
+    @IBAction func backTapped(_ sender: Any) {
+        self.goBackward()
+    }
+    
+    @IBAction func nextTapped(_ sender: Any) {
+        self.goForward()
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setupNavigation()
+        
+        // Image
+        if let image = self.image {
+            self.imageView.image = image
+        }
+        else {
+            self.imageView.removeFromSuperview()
+        }
+        
+        // Title
+        if let title = self.step?.title {
+            self.titleLabel.text = title
+        }
+        else {
+            self.titleLabel.isHidden = true
+        }
+        
+        // Text (detail is same size and color according to current design)
+        self.textLabel.text = fullText
+        
+        // Learn More
+        self.learnMoreButton.isHidden = !self.hasLearnMore()
+        let learnMoreTitle = self.learnMoreButtonTitle ?? Localization.localizedString("BUTTON_LEARN_MORE")
+        self.learnMoreButton.setTitle(learnMoreTitle, for: .normal)
+    }
+    
+    open func setupNavigation() {
+        
+        if self.backButton != nil {
+            // TODO: Add the back button once there is a consistent UI for displaying the step views
+            // that does not include most views inheriting from ResearchKit.  syoung 06/06/2017
+            self.backButtonItem = UIBarButtonItem()
+            self.backButton?.isHidden = !self.hasPreviousStep()
+            self.backButton?.setTitle(Localization.localizedString("BUTTON_BACK"), for: .normal)
+        }
+        
+        // Set the title for the next button
+        self.nextButton?.setTitle(nextTitle, for: .normal)
+    }
+}
+
+open class SBAInstructionStepViewController: SBABaseInstructionStepViewController, UIScrollViewDelegate {
     
     open class var nibName: String {
         return String(describing: SBAInstructionStepViewController.self)
@@ -49,31 +161,8 @@ open class SBAInstructionStepViewController: ORKStepViewController, UIScrollView
     @IBOutlet public weak var progressBar: SBAProgressView?
     @IBOutlet public weak var progressLabel: UILabel?
     
-    @IBOutlet public weak var imageView: UIImageView!
-    @IBOutlet public weak var titleLabel: UILabel!
-    @IBOutlet public weak var textLabel: UILabel!
-    @IBOutlet public weak var learnMoreButton: SBAUnderlinedButton!
-    
     @IBOutlet public weak var footerView: UIView?
-    @IBOutlet public weak var backButton: SBARoundedButton?
-    @IBOutlet public weak var nextButton: SBARoundedButton?
-    
-    var sbaIntructionStep: SBAInstructionStep? {
-        return self.step as? SBAInstructionStep
-    }
-    
-    public var instructionStep: ORKInstructionStep? {
-        return self.step as? ORKInstructionStep
-    }
-    
-    override open var learnMoreButtonTitle: String? {
-        get {
-            return sbaIntructionStep?.learnMoreAction?.learnMoreButtonText ?? super.learnMoreButtonTitle
-        }
-        set {
-            super.learnMoreButtonTitle = newValue
-        }
-    }
+
     
     open var stepNumber: UInt = 1 {
         didSet {
@@ -111,6 +200,7 @@ open class SBAInstructionStepViewController: ORKStepViewController, UIScrollView
         super.viewDidLoad()
 
         self.view.backgroundColor = UIColor.appBackgroundLight
+        self.scrollView.backgroundColor = UIColor.appBackgroundLight
         self.progressHeader?.backgroundColor = UIColor.clear
         self.footerView?.backgroundColor = UIColor.appBackgroundLight
         
@@ -118,14 +208,16 @@ open class SBAInstructionStepViewController: ORKStepViewController, UIScrollView
         titleLabel.textColor = UIColor.appTextDark
         textLabel.textColor = UIColor.appTextDark
         
-        learnMoreButton.textColor = UIColor.underlinedButtonTextDark
+        if let underlineButton = learnMoreButton as? SBAUnderlinedButton {
+            underlineButton.textColor = UIColor.underlinedButtonTextDark
+        }
         
-        backButton?.shadowColor = UIColor.roundedButtonBackgroundDark
+        backButton?.backgroundColor = UIColor.roundedButtonBackgroundDark
         backButton?.shadowColor = UIColor.roundedButtonShadowDark
         backButton?.titleColor = UIColor.roundedButtonTextLight
         backButton?.corners = 26.0
         
-        nextButton?.shadowColor = UIColor.roundedButtonBackgroundDark
+        nextButton?.backgroundColor = UIColor.roundedButtonBackgroundDark
         nextButton?.shadowColor = UIColor.roundedButtonShadowDark
         nextButton?.titleColor = UIColor.roundedButtonTextLight
         nextButton?.corners = 26.0
@@ -133,87 +225,18 @@ open class SBAInstructionStepViewController: ORKStepViewController, UIScrollView
         // Set the step number and total now that the view is loaded
         didSetStepNumber()
         didSetStepTotal()
+        
+        // Set up the image tint
+        if let tintedImageView = self.imageView as? ORKTintedImageView {
+            tintedImageView.shouldApplyTint = true
+        }
     }
     
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.updateShadows()
     }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.setupNavigation()
-        
-        // Image
-        if let image = (self.instructionStep?.image ?? self.instructionStep?.iconImage) {
-            self.imageView.image = image
-        }
-        else {
-            self.imageView.removeFromSuperview()
-        }
-        
-        // Title
-        if let title = self.step?.title {
-            self.titleLabel.text = title
-        }
-        else {
-            self.titleLabel.isHidden = true
-        }
-        
-        // Text (detail is same size and color according to current design)
-        var text = self.step?.text ?? ""
-        if let detail = self.instructionStep?.detailText {
-            text.append("\n\n\(detail)")
-        }
-        self.textLabel.text = text
-        
-        // Learn More
-        self.learnMoreButton.isHidden = !self.hasLearnMore()
-        let learnMoreTitle = self.learnMoreButtonTitle ?? Localization.localizedString("BUTTON_LEARN_MORE")
-        self.learnMoreButton.setTitle(learnMoreTitle, for: .normal)
-    }
-    
-    open func setupNavigation() {
-    
-        if self.backButton != nil {
-            // TODO: Add the back button once there is a consistent UI for displaying the step views
-            // that does not include most views inheriting from ResearchKit.  syoung 06/06/2017
-            self.backButtonItem = UIBarButtonItem()
-            self.backButton?.isHidden = !self.hasPreviousStep()
-            self.backButton?.setTitle(Localization.localizedString("BUTTON_BACK"), for: .normal)
-        }
-        
-        // Set the title for the next button
-        let nextTitle = self.continueButtonTitle ?? (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone())
-        self.nextButton?.setTitle(nextTitle, for: .normal)
-    }
-    
-    
-    // MARK: Navigation
-    
-    open func hasLearnMore() -> Bool {
-        if (self.sbaIntructionStep?.learnMoreAction != nil) {
-            return true
-        }
-        guard let taskViewController = self.taskViewController, let step = self.step else { return false }
-        return taskViewController.delegate?.taskViewController?(taskViewController, hasLearnMoreFor: step) ?? false
-    }
-    
-    @IBAction open func learnMoreTapped(_ sender: Any) {
-        guard let taskViewController = self.taskViewController else { return }
-        taskViewController.delegate?.taskViewController?(taskViewController, learnMoreForStep: self)
-    }
-    
-    @IBAction func backTapped(_ sender: Any) {
-        self.goBackward()
-    }
-    
-    @IBAction func nextTapped(_ sender: Any) {
-        self.goForward()
-    }
-    
-    
+
     // MARK: Add shadows to scroll content "under" the footer
     
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
