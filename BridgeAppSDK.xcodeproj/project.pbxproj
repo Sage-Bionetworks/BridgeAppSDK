@@ -24,6 +24,8 @@
 		8057E1D41EB94F520061C2F6 /* ProfileItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 8057E1D31EB94F520061C2F6 /* ProfileItems.json */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
 		80815D951EC271BB0095D1C0 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */; };
+		8084069D1EE72AFF00C23498 /* SBAProfileSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8084069C1EE72AFF00C23498 /* SBAProfileSection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		808406AF1EE72B1B00C23498 /* SBAProfileSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 808406AE1EE72B1B00C23498 /* SBAProfileSection.m */; };
 		808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */; };
 		808514F71E81E33E00F1DCC5 /* SBAProfileDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */; };
 		80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */; };
@@ -444,6 +446,8 @@
 		8057E1D31EB94F520061C2F6 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
 		80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
+		8084069C1EE72AFF00C23498 /* SBAProfileSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAProfileSection.h; sourceTree = "<group>"; };
+		808406AE1EE72B1B00C23498 /* SBAProfileSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAProfileSection.m; sourceTree = "<group>"; };
 		808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileManager.swift; sourceTree = "<group>"; };
 		808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileDataSource.swift; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
@@ -868,6 +872,8 @@
 		80FDDC821E6605020010DFA7 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				8084069C1EE72AFF00C23498 /* SBAProfileSection.h */,
+				808406AE1EE72B1B00C23498 /* SBAProfileSection.m */,
 				80FDDC931E661B690010DFA7 /* SBAProfileSection.swift */,
 				60F2BB761EC3B55600957BE6 /* SBAProfileItem.h */,
 				60F2BB771EC3B55600957BE6 /* SBAProfileItem.m */,
@@ -1341,6 +1347,7 @@
 			files = (
 				FF722C151D775BB8004B2F8B /* SBANewsFeedManager.h in Headers */,
 				FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */,
+				8084069D1EE72AFF00C23498 /* SBAProfileSection.h in Headers */,
 				FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */,
 				FF45F84B1CA5D61900EE0562 /* SBABridgeManager.h in Headers */,
 				60F2BB781EC3B55600957BE6 /* SBAProfileItem.h in Headers */,
@@ -1760,6 +1767,7 @@
 				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
 				FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */,
+				808406AF1EE72B1B00C23498 /* SBAProfileSection.m in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
 				FB1BBBA61D8B5844009F765E /* SBBScheduledActivity+Filters.swift in Sources */,
 				FF9055A11CE287BB0049D12A /* SBBScheduledActivity+Utilities.swift in Sources */,

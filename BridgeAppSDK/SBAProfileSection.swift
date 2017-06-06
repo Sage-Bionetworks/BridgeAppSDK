@@ -46,7 +46,7 @@ public protocol SBAProfileTableItem: NSObjectProtocol {
     var title: String { get }
     var detail: String? { get }
     var isEditable: Bool { get }
-    var onSelected: String? { get }
+    var onSelected: SBAProfileOnSelectedAction { get }
 }
 
 open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
@@ -72,6 +72,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
 @objc
 open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
     let sourceDict: [AnyHashable: Any]
+    open var defaultOnSelectedAction = SBAProfileOnSelectedAction.noAction
 
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
         sourceDict = dictionary
@@ -99,15 +100,21 @@ open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
         }
     }
     
-    open var onSelected: String? {
+    open var onSelected: SBAProfileOnSelectedAction {
         get {
             let key = #keyPath(onSelected)
-            return sourceDict[key] as? String
+            guard let rawValue = sourceDict[key] as? String else { return defaultOnSelectedAction }
+            return SBAProfileOnSelectedAction(rawValue: rawValue) 
         }
     }
 }
 
 open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
+        super.init(dictionaryRepresentation: dictionary)
+        defaultOnSelectedAction = .showHTML
+    }
+    
     open var htmlResource: String {
         get {
             let key = #keyPath(htmlResource)
@@ -124,6 +131,11 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
 }
 
 open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
+        super.init(dictionaryRepresentation: dictionary)
+        defaultOnSelectedAction = .editProfileItem
+    }
+    
     open var profileItemKey: String {
         let key = #keyPath(profileItemKey)
         return sourceDict[key]! as! String
@@ -149,6 +161,11 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
 }
 
 open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
+    public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
+        super.init(dictionaryRepresentation: dictionary)
+        defaultOnSelectedAction = .showResource
+    }
+    
     open var resource: String {
         get {
             let key = #keyPath(resource)
