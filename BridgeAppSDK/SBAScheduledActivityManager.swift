@@ -361,6 +361,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             return instantiateActivityIntroductionStepViewController(for: schedule, step: step, taskRef: taskRef)
         }
         
+        // If the default view controller for this step is an `ORKInstructionStep` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
+            return instantiateInstructionStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+        
         // If this is a permissions step then return a page step view controller instead.
         // This will display a paged view controller. Including at this level b/c we are trying to keep 
         // ResearchUXFactory agnostic to the UI that Sage uses for our apps.  syoung 05/30/2017
@@ -498,6 +504,15 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         let vc = SBAActivityInstructionStepViewController(step: step)
         vc.schedule = schedule
         vc.taskReference = taskRef
+        return vc
+    }
+    
+    open func instantiateInstructionStepViewController(for step: ORKStep, task: ORKTask, result: ORKTaskResult) -> SBAInstructionStepViewController {
+        let vc = SBAInstructionStepViewController(step: step)
+        if let progress = task.progress?(ofCurrentStep: step, with: result) {
+            vc.stepNumber = progress.current + 1
+            vc.stepTotal = progress.total
+        }
         return vc
     }
     

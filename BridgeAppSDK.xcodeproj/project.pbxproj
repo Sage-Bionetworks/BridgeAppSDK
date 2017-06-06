@@ -181,6 +181,9 @@
 		FFA8E4931CBD56F200ED5399 /* SBAUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */; };
 		FFAAF5FB1CC00CF100500929 /* SBAActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */; };
 		FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */; };
+		FFADF3101EE5DD00005F7E1D /* SBAInstructionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFADF30E1EE5DD00005F7E1D /* SBAInstructionStepViewController.swift */; };
+		FFADF3111EE5DD00005F7E1D /* SBAInstructionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFADF30F1EE5DD00005F7E1D /* SBAInstructionStepViewController.xib */; };
+		FFADF32B1EE61961005F7E1D /* SBAProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFADF32A1EE61961005F7E1D /* SBAProgressView.swift */; };
 		FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */; };
 		FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */; };
 		FFC15FD11CFE439500C29AF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC15FD31CFE439500C29AF7 /* Main.storyboard */; };
@@ -604,6 +607,9 @@
 		FFA8E4921CBD56F200ED5399 /* SBAUserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserTests.swift; sourceTree = "<group>"; };
 		FFAAF5FA1CC00CF100500929 /* SBAActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewController.swift; sourceTree = "<group>"; };
 		FFAAF5FC1CC00D7300500929 /* SBAActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityTableViewCell.swift; sourceTree = "<group>"; };
+		FFADF30E1EE5DD00005F7E1D /* SBAInstructionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAInstructionStepViewController.swift; sourceTree = "<group>"; };
+		FFADF30F1EE5DD00005F7E1D /* SBAInstructionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAInstructionStepViewController.xib; sourceTree = "<group>"; };
+		FFADF32A1EE61961005F7E1D /* SBAProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProgressView.swift; sourceTree = "<group>"; };
 		FFB30D611D40891400D175D2 /* ORKFormStep+Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKFormStep+Result.swift"; sourceTree = "<group>"; };
 		FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAAccountTests.swift; sourceTree = "<group>"; };
 		FFC15FD21CFE439500C29AF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -754,6 +760,7 @@
 		168F25701BE05281001D2D65 /* TasksAndSteps */ = {
 			isa = PBXGroup;
 			children = (
+				FFADF30D1EE5DCA7005F7E1D /* Instruction Step */,
 				FFD6AB801EDE836F0075ABEF /* Activity Introduction Step */,
 				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FF3E30371D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift */,
@@ -1013,6 +1020,7 @@
 				FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */,
 				FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */,
 				FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */,
+				FFADF32A1EE61961005F7E1D /* SBAProgressView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1223,6 +1231,15 @@
 				FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */,
 			);
 			name = Protocols;
+			sourceTree = "<group>";
+		};
+		FFADF30D1EE5DCA7005F7E1D /* Instruction Step */ = {
+			isa = PBXGroup;
+			children = (
+				FFADF30E1EE5DD00005F7E1D /* SBAInstructionStepViewController.swift */,
+				FFADF30F1EE5DD00005F7E1D /* SBAInstructionStepViewController.xib */,
+			);
+			name = "Instruction Step";
 			sourceTree = "<group>";
 		};
 		FFB30D631D40891900D175D2 /* Utilities */ = {
@@ -1703,6 +1720,7 @@
 				FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */,
 				FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */,
 				FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */,
+				FFADF3111EE5DD00005F7E1D /* SBAInstructionStepViewController.xib in Resources */,
 				FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */,
 				FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */,
 				FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */,
@@ -1796,6 +1814,7 @@
 				FF9708041DA7104F006E8252 /* SBAConsentSubtaskStep.swift in Sources */,
 				FF722C141D775BB8004B2F8B /* SBANewsFeedParser.m in Sources */,
 				FF45F84C1CA5D61900EE0562 /* SBABridgeManager.m in Sources */,
+				FFADF32B1EE61961005F7E1D /* SBAProgressView.swift in Sources */,
 				FFF0128A1EA182AE00D9D9DD /* SBAAccountStepController.swift in Sources */,
 				60F2BB791EC3B55600957BE6 /* SBAProfileItem.m in Sources */,
 				FF78CF9F1D0144BF002C456D /* SBARegistrationStep.swift in Sources */,
@@ -1830,6 +1849,7 @@
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
 				FF37BE2E1ED7927100C264CB /* SBARoundedButton.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
+				FFADF3101EE5DD00005F7E1D /* SBAInstructionStepViewController.swift in Sources */,
 				80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */,
 				FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */,
 				FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */,

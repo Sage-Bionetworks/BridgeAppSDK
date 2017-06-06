@@ -102,6 +102,8 @@ public let SBAMainStoryboardName = "Main"
             UINavigationBar.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor = tintColor
         }
         
+        ORKStepViewController.setCustomContinueButtonClass(SBARoundedButton.self)
+        
         // Replace the launch root view controller with an SBARootViewController
         // This allows transitioning between root view controllers while a lock screen
         // or onboarding view controller is being presented modally.

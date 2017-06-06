@@ -35,6 +35,7 @@
 /* Logout */
 "SBA_LOGOUT" = "Log out"; // Log out button text
 "BUTTON_CLOSE" = "Close"; // Text for the bar item to close a task
+"BUTTON_BACK" = "Back"; // Text for the button to go back
 
 /* Tester */
 "SBA_TESTER_ALERT_TITLE" = "Are you a tester?"; // Question if the user is a quality assurance tester
