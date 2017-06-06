@@ -524,7 +524,7 @@ public extension SBAUserWrapper {
         self.updateFromUserSession(info)
     }
     
-    private func updateFromUserSession(_ response: SBAUserSessionInfoWrapper) {
+    fileprivate func updateFromUserSession(_ response: SBAUserSessionInfoWrapper) {
         
         // Get the data groups from the response object
         self.dataGroups = response.dataGroups
