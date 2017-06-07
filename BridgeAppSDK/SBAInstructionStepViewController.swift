@@ -109,7 +109,7 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
         if let image = self.image {
             self.imageView.image = image
         }
-        else {
+        else if self.imageView != nil {
             self.imageView.removeFromSuperview()
         }
         
