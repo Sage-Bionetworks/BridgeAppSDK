@@ -39,7 +39,6 @@ import ResearchKit
 let medicationTrackingTaskId = "Medication Task"
 let comboTaskId = "Combo Task"
 let tappingTaskId = "Tapping Task"
-let memoryTaskId = "Memory Task"
 let voiceTaskId = "Voice Task"
 
 class SBAScheduledActivityManagerTests: XCTestCase {
@@ -88,7 +87,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
     func testCreateTask_SingleTask() {
         let manager = TestScheduledActivityManager()
-        let schedule = createScheduledActivity(memoryTaskId)
+        let schedule = createScheduledActivity(voiceTaskId)
         let (task, taskRef) = manager.createTask(for: schedule)
         XCTAssertNotNil(task)
         XCTAssertNotNil(taskRef)
@@ -97,7 +96,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             XCTAssert(false, "\(String(describing: task)) not of expected type")
             return
         }
-        XCTAssert(type(of: orderedTask) === ORKOrderedTask.self)
+        XCTAssert(type(of: orderedTask) === ORKNavigableOrderedTask.self)
     }
 
     // MARK: updateScheduledActivity
@@ -241,7 +240,6 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             ("Medication Tracker", 1),
             ("Tapping Activity", 5),
             ("Voice Activity", 1),
-            ("Memory Activity", 3),
             ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
@@ -279,7 +277,6 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             ("Medication Tracker", 1),
             ("Tapping Activity", 5),
             ("Voice Activity", 1),
-            ("Memory Activity", 3),
             ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
@@ -322,7 +319,6 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         checkSchema(splitResults, expectedSchema:[
             ("Tapping Activity", 5),
             ("Voice Activity", 1),
-            ("Memory Activity", 3),
             ("Walking Activity", 7)])
         
         // check that the data store results were added to the other tasks
@@ -484,7 +480,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     func testActivityResultsForSchedule_SingleTask() {
         
         let manager = TestScheduledActivityManager()
-        manager.activities = createScheduledActivities([memoryTaskId])
+        manager.activities = createScheduledActivities([voiceTaskId])
         
         let schedule = manager.activities[0]
         guard let taskVC = manager.createTaskViewController(for: schedule) as? TestTaskViewController,
@@ -500,8 +496,8 @@ class SBAScheduledActivityManagerTests: XCTestCase {
     
         guard let result = splitResults.first else { return }
         
-        XCTAssertEqual(result.schemaIdentifier, "Memory Activity")
-        XCTAssertEqual(result.schemaRevision, 3)
+        XCTAssertEqual(result.schemaIdentifier, "Voice Activity")
+        XCTAssertEqual(result.schemaRevision, 1)
         
         // Check that the subtask step identifier is stripped
         checkResultIdentifiers(splitResults)
@@ -968,10 +964,10 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
     var passwordFormatForLoginViaExternalId: String?
     var testUserDataGroup: String?
     var schemaMap: [NSDictionary]? {
-        return [memorySchemaRef as NSDictionary, walkingSchemaRef as NSDictionary, tappingSchemaRef as NSDictionary, voiceSchemaRef as NSDictionary]
+        return [walkingSchemaRef as NSDictionary, tappingSchemaRef as NSDictionary, voiceSchemaRef as NSDictionary]
     }
     var taskMap: [NSDictionary]? {
-        return [medTaskRef as NSDictionary, comboTaskRef as NSDictionary, tappingTaskRef as NSDictionary, memoryTaskRef as NSDictionary, voiceTaskRef as NSDictionary]
+        return [medTaskRef as NSDictionary, comboTaskRef as NSDictionary, tappingTaskRef as NSDictionary, voiceTaskRef as NSDictionary]
     }
     var filenameMap: NSDictionary?
     var certificateName: String?
@@ -1000,10 +996,6 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
         "taskIdentifier"    : tappingTaskId,
         "resourceName"      : "TappingTask",
         "resourceBundle"    : Bundle(for: SBAScheduledActivityManagerTests.classForCoder()).bundleIdentifier ?? ""]
-    let memoryTaskRef = [
-        "taskIdentifier"    : memoryTaskId,
-        "schemaIdentifier"  : "Memory Activity",
-        "taskType"          : "memory"]
     let voiceTaskRef = [
         "taskIdentifier"    : voiceTaskId,
         "schemaIdentifier"  : "Voice Activity",
@@ -1013,10 +1005,6 @@ class TestScheduledActivityManager: SBAScheduledActivityManager, SBABridgeInfo {
         "schemaIdentifier"  : "Walking Activity",
         "schemaRevision"    : 7,
     ] as [String : Any]
-    let memorySchemaRef = [
-        "schemaIdentifier"  : "Memory Activity",
-        "schemaRevision"    : 3,
-        ] as [String : Any]
     let tappingSchemaRef = [
         "schemaIdentifier"  : "Tapping Activity",
         "schemaRevision"    : 5,

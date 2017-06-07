@@ -127,12 +127,6 @@
 		</dict>
 		<dict>
 			<key>taskIdentifier</key>
-			<string>Memory Activity</string>
-			<key>resourceName</key>
-			<string>Memory</string>
-		</dict>
-		<dict>
-			<key>taskIdentifier</key>
 			<string>Mood Survey</string>
 			<key>taskType</key>
 			<string>moodSurvey</string>

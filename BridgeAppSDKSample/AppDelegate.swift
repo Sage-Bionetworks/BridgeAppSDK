@@ -37,6 +37,13 @@ import BridgeAppSDK
 @UIApplicationMain
 class AppDelegate: SBAAppDelegate {
     
+    override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    
+        ORKStepViewController.setCustomContinueButtonClass(SBARoundedButton.self)
+        
+        return super.application(application, willFinishLaunchingWithOptions: launchOptions)
+    }
+    
     override func applicationDidBecomeActive(_ application: UIApplication) {
         super.applicationDidBecomeActive(application)
         

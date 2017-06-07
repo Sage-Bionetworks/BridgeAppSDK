@@ -35,7 +35,7 @@
 
 import UIKit
 
-@IBDesignable open class SBARoundedButton : UIButton {
+@IBDesignable open class SBARoundedButton : UIButton, ORKButton {
     
     @IBInspectable open var corners: CGFloat = CGFloat(5) {
         didSet {
@@ -53,14 +53,18 @@ import UIKit
     
     override open var isEnabled: Bool {
         didSet {
-            // simple way to show disabled state
+            // show as disabled by lowering opacity unless alpha is used to set hidden
+            guard alpha > 0.1 else { return }
             self.alpha = isEnabled ? CGFloat(1) : CGFloat(0.3)
         }
     }
     
+    public var isInTransition: Bool = false
+    
     open var titleFont: UIFont? {
         didSet {
-            titleLabel?.font = titleFont
+            guard let font = titleFont else { return }
+            titleLabel?.font = font
         }
     }
     
@@ -68,6 +72,34 @@ import UIKit
         didSet {
             setTitleColor(titleColor, for: .normal)
         }
+    }
+    
+    public required init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 250, height: 51))
+        
+        // setup colors
+        self.backgroundColor = UIColor.roundedButtonBackgroundDark
+        self.shadowColor = UIColor.roundedButtonShadowDark
+        self.corners = 26.0
+        
+        // setup text
+        self.titleColor = UIColor.roundedButtonTextLight
+        setTitleColor(titleColor, for: .normal)
+        
+        self.titleFont = UIFont.systemFont(ofSize: 19)
+        titleLabel?.font = titleFont
+        
+        // add default constraint for height
+        let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 51)
+        
+        // Add minimum constraint for width
+        let minWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1.0, constant: 144)
+        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 250)
+        widthConstraint.priority = 950
+
+        self.addConstraints([heightConstraint, minWidthConstraint, widthConstraint])
+        
+        commonInit()
     }
     
     override public init(frame: CGRect) {
@@ -85,6 +117,11 @@ import UIKit
     }
     
     func refreshView() {
+        guard self.alpha > 0.9 else {
+            layer.shadowOpacity = 0
+            return
+        }
+        
         layer.cornerRadius = corners
         
         // Draw bottom button shadow
