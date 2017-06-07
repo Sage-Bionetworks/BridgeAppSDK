@@ -125,7 +125,6 @@
 		FF78CF491D00B698002C456D /* consent_irb.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF4B1D00B698002C456D /* consent_irb.html */; };
 		FF78CF4C1D00B6C9002C456D /* Consent.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF4E1D00B6C9002C456D /* Consent.json */; };
 		FF78CF511D00BDAE002C456D /* MedicalSurvey.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF531D00BDAE002C456D /* MedicalSurvey.json */; };
-		FF78CF5E1D00C125002C456D /* Memory.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF601D00C125002C456D /* Memory.json */; };
 		FF78CF611D00C12A002C456D /* Tapping.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF631D00C12A002C456D /* Tapping.json */; };
 		FF78CF641D00C130002C456D /* Voice.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF661D00C130002C456D /* Voice.json */; };
 		FF78CF671D00C135002C456D /* Walking.json in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF691D00C135002C456D /* Walking.json */; };
@@ -550,7 +549,6 @@
 		FF78CF4A1D00B698002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_irb.html; sourceTree = "<group>"; };
 		FF78CF4D1D00B6C9002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Consent.json; sourceTree = "<group>"; };
 		FF78CF521D00BDAE002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/MedicalSurvey.json; sourceTree = "<group>"; };
-		FF78CF5F1D00C125002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Memory.json; sourceTree = "<group>"; };
 		FF78CF621D00C12A002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tapping.json; sourceTree = "<group>"; };
 		FF78CF651D00C130002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Voice.json; sourceTree = "<group>"; };
 		FF78CF681D00C135002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Walking.json; sourceTree = "<group>"; };
@@ -1291,7 +1289,6 @@
 				FF78CF881D00F3DB002C456D /* EligibilityRequirements.json */,
 				FF3E30C31D62CF7100347165 /* CombinedTask.json */,
 				FF78CF4E1D00B6C9002C456D /* Consent.json */,
-				FF78CF601D00C125002C456D /* Memory.json */,
 				FFDECDF91D0774EE00434001 /* Onboarding.json */,
 				80FDDC971E665B3C0010DFA7 /* Profile.json */,
 				8057E1D31EB94F520061C2F6 /* ProfileItems.json */,
@@ -1690,7 +1687,6 @@
 				80FDDC981E665B3C0010DFA7 /* Profile.json in Resources */,
 				FF92A6631DBFF10A00614D1F /* pantspocket.png in Resources */,
 				FF78CF2E1D00B663002C456D /* consent_12medical_care.html in Resources */,
-				FF78CF5E1D00C125002C456D /* Memory.json in Resources */,
 				FF78CF641D00C130002C456D /* Voice.json in Resources */,
 				FF78CF3A1D00B67B002C456D /* consent_16future.html in Resources */,
 				FF92A67F1DBFF14000614D1F /* Withdrawal.html in Resources */,
@@ -2170,14 +2166,6 @@
 				FF78CF521D00BDAE002C456D /* Base */,
 			);
 			name = MedicalSurvey.json;
-			sourceTree = "<group>";
-		};
-		FF78CF601D00C125002C456D /* Memory.json */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FF78CF5F1D00C125002C456D /* Base */,
-			);
-			name = Memory.json;
 			sourceTree = "<group>";
 		};
 		FF78CF631D00C12A002C456D /* Tapping.json */ = {
