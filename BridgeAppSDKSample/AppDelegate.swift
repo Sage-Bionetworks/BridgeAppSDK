@@ -41,7 +41,7 @@ class AppDelegate: SBAAppDelegate {
     
         ORKStepViewController.setCustomContinueButtonClass(SBARoundedButton.self)
         
-        super.application(application, willFinishLaunchingWithOptions: launchOptions)
+        return super.application(application, willFinishLaunchingWithOptions: launchOptions)
     }
     
     override func applicationDidBecomeActive(_ application: UIApplication) {
