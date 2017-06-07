@@ -56,7 +56,7 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
         self.permissionType = permission
         
         self.title = permissionsStep.title
-        self.text = permissionsStep.text
+        self.text = permission.title
         self.detailText = permission.detail
         
         commonInit()
@@ -75,9 +75,10 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
         self.title = inputItem.stepTitle?.trim()
         self.text = inputItem.stepText?.trim()
         self.footnote = inputItem.stepFootnote?.trim()
+        self.isOptional = survey.optional
         
         if let surveyItem = inputItem as? SBAInstructionStepSurveyItem {
-            self.detailText = surveyItem.stepDetail?.trim()
+            self.detailText = surveyItem.stepDetail?.trim() ?? permission.detail
             self.image = surveyItem.stepImage
             self.iconImage = surveyItem.iconImage
         }
