@@ -35,7 +35,7 @@ import UIKit
 
 open class SBABaseInstructionStepViewController: ORKStepViewController {
     
-    @IBOutlet public weak var imageView: UIImageView!
+    @IBOutlet public weak var imageView: UIImageView?
     @IBOutlet public weak var titleLabel: UILabel!
     @IBOutlet public weak var textLabel: UILabel!
     @IBOutlet public weak var learnMoreButton: UIButton!
@@ -107,10 +107,10 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
         
         // Image
         if let image = self.image {
-            self.imageView.image = image
+            self.imageView?.image = image
         }
         else {
-            self.imageView.removeFromSuperview()
+            self.imageView?.removeFromSuperview()
         }
         
         // Title
