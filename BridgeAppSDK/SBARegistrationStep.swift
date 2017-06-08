@@ -44,7 +44,7 @@ open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
         return true
     }
     
-    public func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
+    open func defaultOptions(_ inputItem: SBASurveyItem?) -> [SBAProfileInfoOption] {
         return [.email, .password]
     }
     
