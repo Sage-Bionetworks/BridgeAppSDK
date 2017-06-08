@@ -72,7 +72,7 @@
 "REGISTRATION_VERIFICATION_FOOTNOTE" = "A full copy of the consent will be sent to you for your records."; // Email verification footnote text.
 "REGISTRATION_EMAIL_ACTIONS_BUTTON_TEXT" = "Problems?"; // Text to show in the button for email issues (wrong email or resend)
 "REGISTRATION_WRONG_EMAIL" = "Wrong email address?"; // Text to show in the action sheet for a wrong email address
-"REGISTRATION_RESEND_EMAIL" = "Resent verification email"; // Text to show in the action sheet for resending the verification email
+"REGISTRATION_RESEND_EMAIL" = "Resend verification email"; // Text to show in the action sheet for resending the verification email
 "REGISTRATION_CHANGE_EMAIL_TITLE" = "Change Email"; // Title for view controller for changing email
 "REGISTRATION_MISSING_EMAIL" = "Please enter your email address."; // Message for entering email address when missing
 "REGISTRATION_PASSWORD_RESET_SENT" = "We have sent password reset instructions to your email address"; // Message for entering email address when missing
