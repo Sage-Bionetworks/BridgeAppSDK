@@ -1,6 +1,7 @@
 UserInterfaceState.xcuserstate
 BridgeAppSDK.xcodeproj/xcuserdata/*.xcuserdatad
 .DS_Store
+build/
 
 # fastlane specific
 fastlane/report.xml
