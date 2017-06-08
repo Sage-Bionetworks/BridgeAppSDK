@@ -35,10 +35,12 @@ import UIKit
 
 open class SBABaseInstructionStepViewController: ORKStepViewController {
     
-    @IBOutlet public weak var imageView: UIImageView!
-    @IBOutlet public weak var titleLabel: UILabel!
-    @IBOutlet public weak var textLabel: UILabel!
-    @IBOutlet public weak var learnMoreButton: UIButton!
+    @IBOutlet public weak var imageView: UIImageView?
+    @IBOutlet public weak var belowImageView: UIImageView?
+    
+    @IBOutlet public weak var titleLabel: UILabel?
+    @IBOutlet public weak var textLabel: UILabel?
+    @IBOutlet public weak var learnMoreButton: UIButton?
     
     @IBOutlet public weak var backButton: SBARoundedButton?
     @IBOutlet public weak var nextButton: SBARoundedButton?
@@ -105,29 +107,51 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
         
         self.setupNavigation()
         
-        // Image
-        if let image = self.image {
-            self.imageView.image = image
-        }
-        else {
-            self.imageView.removeFromSuperview()
-        }
-        
-        // Title
-        if let title = self.step?.title {
-            self.titleLabel.text = title
-        }
-        else {
-            self.titleLabel.isHidden = true
-        }
-        
+        self.setupImageView()
+        self.setupTitle()
+        self.setupLearnMore()
+
         // Text (detail is same size and color according to current design)
-        self.textLabel.text = fullText
-        
+        self.textLabel?.text = fullText
+    }
+    
+    open func setupTitle() {
+        if let title = self.step?.title {
+            self.titleLabel?.text = title
+        }
+        else {
+            self.titleLabel?.isHidden = true
+        }
+    }
+    
+    open func shouldShowImageBelow() -> Bool {
+        // TODO: syoung 06/08/2017 Make the model/UX handling more consistent and not reliant upon
+        // special-casing by checking for class inheritance.
+        return (self.belowImageView != nil) && ((self.step is SBAInstructionBelowImageStep) || (self.imageView == nil))
+    }
+    
+    open func setupImageView() {
+        if let image = self.image {
+            if shouldShowImageBelow() {
+                self.belowImageView?.image = image
+                self.imageView?.removeFromSuperview()
+            }
+            else {
+                self.imageView?.image = image
+                self.belowImageView?.removeFromSuperview()
+            }
+        }
+        else {
+            self.imageView?.removeFromSuperview()
+            self.belowImageView?.removeFromSuperview()
+        }
+    }
+    
+    open func setupLearnMore() {
         // Learn More
-        self.learnMoreButton.isHidden = !self.hasLearnMore()
+        self.learnMoreButton?.isHidden = !self.hasLearnMore()
         let learnMoreTitle = self.learnMoreButtonTitle ?? Localization.localizedString("BUTTON_LEARN_MORE")
-        self.learnMoreButton.setTitle(learnMoreTitle, for: .normal)
+        self.learnMoreButton?.setTitle(learnMoreTitle, for: .normal)
     }
     
     open func setupNavigation() {
@@ -136,8 +160,12 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
             // TODO: Add the back button once there is a consistent UI for displaying the step views
             // that does not include most views inheriting from ResearchKit.  syoung 06/06/2017
             self.backButtonItem = UIBarButtonItem()
-            self.backButton?.isHidden = !self.hasPreviousStep()
-            self.backButton?.setTitle(Localization.localizedString("BUTTON_BACK"), for: .normal)
+            if self.hasPreviousStep() {
+                self.backButton!.setTitle(Localization.localizedString("BUTTON_BACK"), for: .normal)
+            }
+            else if self.backButton?.superview != nil {
+                self.backButton!.removeFromSuperview()
+            }
         }
         
         // Set the title for the next button
@@ -163,7 +191,6 @@ open class SBAInstructionStepViewController: SBABaseInstructionStepViewControlle
     
     @IBOutlet public weak var footerView: UIView?
 
-    
     open var stepNumber: UInt = 1 {
         didSet {
             didSetStepNumber()
@@ -205,8 +232,8 @@ open class SBAInstructionStepViewController: SBABaseInstructionStepViewControlle
         self.footerView?.backgroundColor = UIColor.appBackgroundLight
         
         progressLabel?.textColor = UIColor.appTextDark
-        titleLabel.textColor = UIColor.appTextDark
-        textLabel.textColor = UIColor.appTextDark
+        titleLabel?.textColor = UIColor.appTextDark
+        textLabel?.textColor = UIColor.appTextDark
         
         if let underlineButton = learnMoreButton as? SBAUnderlinedButton {
             underlineButton.textColor = UIColor.underlinedButtonTextDark
@@ -253,9 +280,23 @@ open class SBAInstructionStepViewController: SBABaseInstructionStepViewControlle
         updateShadows()
     }
     
+    open func calculateContainerBottom() -> CGFloat {
+        let learnMoreHidden = (self.learnMoreButton?.superview == nil) || (self.learnMoreButton?.isHidden ?? true)
+        let belowImageHidden = (self.belowImageView?.superview == nil) || (self.belowImageView?.isHidden ?? true)
+        if !belowImageHidden {
+            return self.belowImageView!.frame.maxY
+        }
+        else if !learnMoreHidden {
+            return self.learnMoreButton!.frame.maxY
+        }
+        else {
+            return self.textLabel?.frame.maxY ?? 0
+        }
+    }
+    
     open func updateShadows() {
         let yBottom = scrollView.contentSize.height - scrollView.bounds.size.height - scrollView.contentOffset.y
-        let containerBottom = self.learnMoreButton.isHidden ? self.titleLabel.frame.maxY : self.learnMoreButton.frame.maxY
+        let containerBottom = calculateContainerBottom()
         let hasShadow = (yBottom >= (scrollView.contentSize.height - containerBottom))
         guard hasShadow != shouldShowFooterShadow else { return }
         shouldShowFooterShadow = hasShadow

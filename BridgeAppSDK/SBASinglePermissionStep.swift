@@ -133,6 +133,10 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
         }
     }
     
+    open override func isInstructionStep() -> Bool {
+        return true
+    }
+    
     open override func stepViewControllerClass() -> AnyClass {
         return SBASinglePermissionStepViewController.classForCoder()
     }

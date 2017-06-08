@@ -124,6 +124,13 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         return step
     }
     
+    open override func createTaskWithActiveTask(_ activeTask: SBAActiveTask, taskOptions: ORKPredefinedTaskOption) -> (NSCopying & NSSecureCoding & ORKTask)? {
+        if activeTask.taskType == .activeTask(.cardio) {
+            return activeTask.createBridgeCardioChallenge(options: taskOptions, factory: self)
+        }
+        return super.createTaskWithActiveTask(activeTask, taskOptions: taskOptions)
+    }
+    
     open override func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
         guard let bridgeSubtype = inputItem.surveyItemType.bridgeSubtype() else {
             return super.createSurveyStepWithCustomType(inputItem)
@@ -145,6 +152,15 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             return nil
         }
         return self.createSurveyStep(inputItem)
+    }
+    
+    open override func createFormStep(_ inputItem:SBAFormStepSurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
+        
+        if inputItem.surveyItemType.formSubtype() == .mood {
+            return SBAMoodScaleStep(inputItem: inputItem)
+        }
+        
+        return super.createFormStep(inputItem, isSubtaskStep: isSubtaskStep)
     }
     
     open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
