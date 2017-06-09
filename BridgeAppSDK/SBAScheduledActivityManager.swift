@@ -635,8 +635,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         let archives = results.mapAndFilter({ archive(for: $0) })
         SBBDataArchive.encryptAndUploadArchives(archives)
         
-        // Update the schedule on the server
-        update(schedule: schedule, taskViewController: taskViewController)
+        // Update the schedule on the server but only if the survey was not ended early
+        if !didEndSurveyEarly(schedule: schedule, taskViewController: taskViewController) {
+            update(schedule: schedule, taskViewController: taskViewController)
+        }
     }
     
     /**
@@ -648,9 +650,6 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      @param     taskViewController  The task view controller that was displayed.
     */
     open func update(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
-        
-        // Exit early if the survey was ended without completing it (but still archive and upload result to capture reason for end survey)
-        guard !didEndSurveyEarly(schedule: schedule, taskViewController: taskViewController) else { return }
         
         // Set finish and start timestamps
         schedule.finishedOn = {
