@@ -1,0 +1,9 @@
+{
+    "taskIdentifier"            : "Cardio Challenge",
+    "schemaIdentifier"          : "Cardio Challenge",
+    "taskType"                  : "cardio",
+    "insertSteps"               : [{
+                                    "resourceName"            : "MedicalSurvey",
+                                    "classType"               : "TrackedDataObjectCollection",
+                                    }]
+}

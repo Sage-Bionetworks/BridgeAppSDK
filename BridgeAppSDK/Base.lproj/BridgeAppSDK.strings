@@ -109,3 +109,11 @@
 "PERMISSION_BUTTON_MICROPHONE" = "Enable Microphone";
 "PERMISSION_BUTTON_CAMERA" = "Enable Camera";
 
+/* Mood Scale Choices - Note: keep these values short */
+"MOOD_SCALE_CHOICE_1" = "Amazing";
+"MOOD_SCALE_CHOICE_2" = "Okay";
+"MOOD_SCALE_CHOICE_3" = "So-So";
+"MOOD_SCALE_CHOICE_4" = "Not Great";
+"MOOD_SCALE_CHOICE_5" = "Horrible";
+
+
