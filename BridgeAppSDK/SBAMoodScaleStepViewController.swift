@@ -68,16 +68,14 @@ open class SBAMoodScaleStep: ORKQuestionStep {
         }()
         
         self.answerFormat = ORKMoodScaleAnswerFormat(imageChoices: choices)
-        self.title = step.title
-        self.text = step.text
+        setPrompt(with: step.title, and: step.text)
         self.isOptional = step.isOptional
     }
     
     open func commonInit(inputItem: SBASurveyItem?) {
         
         // Set title and text
-        self.title = inputItem?.stepTitle?.trim()
-        self.text = inputItem?.stepText?.trim()
+        setPrompt(with: inputItem?.stepTitle?.trim(), and: inputItem?.stepText?.trim())
         
         // Set the answer format as a mapping from the default if there isn't an item defined
         let defaultChoices = defaultImageChoices()
@@ -90,6 +88,13 @@ open class SBAMoodScaleStep: ORKQuestionStep {
         
         // Update optional value
         self.isOptional = surveyItem.optional
+    }
+    
+    open func setPrompt(with prompt:String?, and detail:String?) {
+        self.title = prompt ?? detail
+        if (prompt != nil) {
+            self.text = detail
+        }
     }
     
     open func defaultImageChoices() -> [ORKImageChoice] {
