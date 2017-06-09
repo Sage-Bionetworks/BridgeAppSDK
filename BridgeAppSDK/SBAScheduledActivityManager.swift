@@ -649,6 +649,9 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     */
     open func update(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
         
+        // Exit early if the survey was ended without completing it (but still archive and upload result to capture reason for end survey)
+        guard !didEndSurveyEarly(schedule: schedule, taskViewController: taskViewController) else { return }
+        
         // Set finish and start timestamps
         schedule.finishedOn = {
             if let sbaTaskViewController = taskViewController as? SBATaskViewController,
@@ -680,6 +683,15 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         
         // Send message to server
         sendUpdated(scheduledActivities: scheduledActivities)
+    }
+    
+    open func didEndSurveyEarly(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+        if let firstStepResult = taskViewController.result.results?.first as? ORKStepResult,
+            let endResult = firstStepResult.results?.find({ $0 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
+            endResult.didEndSurvey {
+            return true
+        }
+        return false
     }
     
     /**

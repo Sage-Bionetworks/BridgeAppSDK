@@ -207,6 +207,7 @@
 		FFD6AB601EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */; };
 		FFD6AB931EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB911EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift */; };
 		FFD6AB941EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFD6AB921EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib */; };
+		FFDB0EA91EEB195C0074FBAC /* SBAActivityInstructionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDB0EA81EEB195C0074FBAC /* SBAActivityInstructionStep.swift */; };
 		FFDDD7F01D2DA02B00446806 /* SBAConsentReviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDDD7EF1D2DA02B00446806 /* SBAConsentReviewOptions.swift */; };
 		FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */; };
 		FFDECDC81D07434C00434001 /* StudyOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */; };
@@ -640,6 +641,7 @@
 		FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAPermissionsStep+PageSource.swift"; sourceTree = "<group>"; };
 		FFD6AB911EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityInstructionStepViewController.swift; sourceTree = "<group>"; };
 		FFD6AB921EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAActivityInstructionStepViewController.xib; sourceTree = "<group>"; };
+		FFDB0EA81EEB195C0074FBAC /* SBAActivityInstructionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityInstructionStep.swift; sourceTree = "<group>"; };
 		FFDDD7EF1D2DA02B00446806 /* SBAConsentReviewOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentReviewOptions.swift; sourceTree = "<group>"; };
 		FFDECDB61D07317B00434001 /* SBAOnboardingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingManager.swift; sourceTree = "<group>"; };
 		FFDECDC71D07434C00434001 /* StudyOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewController.swift; sourceTree = "<group>"; };
@@ -1124,13 +1126,6 @@
 			name = "Custom Tasks";
 			sourceTree = "<group>";
 		};
-		FF7602401EE9350900438F08 /* Instruction Below Image */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Instruction Below Image";
-			sourceTree = "<group>";
-		};
 		FF826EB21ED7F9C600731DD4 /* Permissions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1373,7 +1368,6 @@
 				FFD6AB801EDE836F0075ABEF /* Activity Introduction Step */,
 				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FFCC3ABC1EE7277500A2A2C8 /* Completion Step */,
-				FF7602401EE9350900438F08 /* Instruction Below Image */,
 				FFADF30D1EE5DCA7005F7E1D /* Instruction Step */,
 				FF1B89791EE7682800A96DAE /* Mood Step */,
 			);
@@ -1401,6 +1395,7 @@
 		FFD6AB801EDE836F0075ABEF /* Activity Introduction Step */ = {
 			isa = PBXGroup;
 			children = (
+				FFDB0EA81EEB195C0074FBAC /* SBAActivityInstructionStep.swift */,
 				FFD6AB911EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift */,
 				FFD6AB921EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib */,
 			);
@@ -1848,6 +1843,7 @@
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
 				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
+				FFDB0EA91EEB195C0074FBAC /* SBAActivityInstructionStep.swift in Sources */,
 				FFA391B11D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift in Sources */,
 				808406AF1EE72B1B00C23498 /* SBAProfileSection.m in Sources */,
 				FF45F84E1CA5DBEF00EE0562 /* SBAUserWrapper+Bridge.swift in Sources */,
