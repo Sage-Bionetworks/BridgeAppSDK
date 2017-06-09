@@ -91,6 +91,32 @@ public protocol SBABridgeInfo: SBASharedAppInfo, SBBBridgeInfoProtocol {
      do not check for a text user.
     */
     var disableTestUserCheck: Bool { get }
+    
+    /**
+     Show a back button in the navigation bar of ORKTaskViewController.
+     */
+    var showBackButtonInNavBar: Bool { get }
+
+    /**
+     Show a back button in the navigation view of ORKStepViewController.
+     */
+    var showBackButtonInNavView: Bool { get }
+
+    /**
+     Place the navigationView in ORKStepViewController at bottom of screen, versus
+     embedded as the tableView's footerView.
+     */
+    var useStickyNavigationView: Bool { get }
+    
+    /**
+     Show a drop shadow above the navigationView in an ORKStepViewController
+     */
+    var showNavigationViewShadow: Bool { get }
+    
+    /**
+     Show a progresView at the top of the headerView in an ORKStepViewController
+     */
+    var showProgressView: Bool { get }
 }
 
 extension SBABridgeInfo {
@@ -105,7 +131,7 @@ extension SBABridgeInfo {
  define the values required by the BridgeInfo protocol.
  */
 extension SBAInfoManager: SBABridgeInfo {
-        
+    
     public var studyIdentifier: String {
         return self.plist["studyIdentifier"] as! String
     }
@@ -142,6 +168,13 @@ extension SBAInfoManager: SBABridgeInfo {
             return (SBBDefaultCacheDaysAhead, SBBDefaultCacheDaysBehind)
         }
         return (0,0)
+    }
+    
+    fileprivate func interfaceConfig() -> Dictionary<AnyHashable, Any>? {
+        if let configDict = self.plist["interfaceConfig"] as? Dictionary<AnyHashable, Any> {
+            return configDict
+        }
+        return nil
     }
     
     public var appStoreLinkURLString: String? {
@@ -188,6 +221,40 @@ extension SBAInfoManager: SBABridgeInfo {
         return self.plist["disableTestUserCheck"] as? Bool ?? false
     }
 
+    public var showBackButtonInNavBar: Bool {
+        if let interfaceConfig = interfaceConfig() {
+            return interfaceConfig["showBackButtonInNavBar"] as? Bool ?? false
+        }
+        return false
+    }
+
+    public var showBackButtonInNavView: Bool {
+        if let interfaceConfig = interfaceConfig() {
+            return interfaceConfig["showBackButtonInNavView"] as? Bool ?? false
+        }
+        return false
+    }
+
+    public var useStickyNavigationView: Bool {
+        if let interfaceConfig = interfaceConfig() {
+            return interfaceConfig["useStickyNavigationView"] as? Bool ?? false
+        }
+        return false
+    }
+
+    public var showNavigationViewShadow: Bool {
+        if let interfaceConfig = interfaceConfig() {
+            return interfaceConfig["showNavigationViewShadow"] as? Bool ?? false
+        }
+        return false
+    }
+    
+    public var showProgressView: Bool {
+        if let interfaceConfig = interfaceConfig() {
+            return interfaceConfig["showProgressView"] as? Bool ?? false
+        }
+        return false
+    }
 }
 
 extension SBABridgeInfo {
