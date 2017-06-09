@@ -60,8 +60,8 @@ open class SBACompletionStepViewController: SBABaseInstructionStepViewController
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor.appBackgroundGreen
-        titleLabel.textColor = UIColor.appTextGreen
-        textLabel.textColor = UIColor.appTextGreen
+        titleLabel?.textColor = UIColor.appTextGreen
+        textLabel?.textColor = UIColor.appTextGreen
         
         if let underlineButton = learnMoreButton as? SBAUnderlinedButton {
             underlineButton.textColor = UIColor.underlinedButtonTextLight
