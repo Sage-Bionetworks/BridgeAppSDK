@@ -635,8 +635,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         let archives = results.mapAndFilter({ archive(for: $0) })
         SBBDataArchive.encryptAndUploadArchives(archives)
         
-        // Update the schedule on the server
-        update(schedule: schedule, taskViewController: taskViewController)
+        // Update the schedule on the server but only if the survey was not ended early
+        if !didEndSurveyEarly(schedule: schedule, taskViewController: taskViewController) {
+            update(schedule: schedule, taskViewController: taskViewController)
+        }
     }
     
     /**
@@ -680,6 +682,15 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         
         // Send message to server
         sendUpdated(scheduledActivities: scheduledActivities)
+    }
+    
+    open func didEndSurveyEarly(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
+        if let firstStepResult = taskViewController.result.results?.first as? ORKStepResult,
+            let endResult = firstStepResult.results?.find({ $0 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
+            endResult.didEndSurvey {
+            return true
+        }
+        return false
     }
     
     /**

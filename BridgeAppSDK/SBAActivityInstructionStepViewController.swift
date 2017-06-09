@@ -33,6 +33,42 @@
 
 import UIKit
 
+public protocol SBAInstructionTextProvider: class {
+    var instructionText: String? { get }
+}
+
+extension ORKInstructionStep: SBAInstructionTextProvider {
+    
+    open var instructionText: String? {
+        var text = self.text ?? ""
+        if let detail = self.detailText {
+            if text.characters.count > 0 {
+                text.append("\n\n")
+            }
+            text.append(detail)
+        }
+        return text
+    }
+}
+
+open class SBAActivityInstructionResult: ORKChoiceQuestionResult {
+    static let endSurveyChoice = "end"
+    
+    override public init(identifier: String) {
+        super.init(identifier: identifier)
+        self.choiceAnswers = [SBAActivityInstructionResult.endSurveyChoice]
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public var didEndSurvey: Bool {
+        guard let choice = self.choiceAnswers?.first as? String else { return false }
+        return choice == SBAActivityInstructionResult.endSurveyChoice
+    }
+}
+
 open class SBAActivityInstructionStepViewController: ORKStepViewController, UITextViewDelegate {
     
     open class var nibName: String {
@@ -59,8 +95,9 @@ open class SBAActivityInstructionStepViewController: ORKStepViewController, UITe
     public var schedule: SBBScheduledActivity!
     public var taskReference: SBATaskReference!
     
-    open var instructionStep: ORKInstructionStep? {
-        return self.step as? ORKInstructionStep
+    open var instructionText: String? {
+        guard let provider = self.step as? SBAInstructionTextProvider else { return nil }
+        return provider.instructionText ?? self.step?.text
     }
     
     override public init(step: ORKStep?) {
@@ -106,13 +143,17 @@ open class SBAActivityInstructionStepViewController: ORKStepViewController, UITe
         iconImageView?.image = taskReference.activityIcon
         
         // Set up the step text
-        var text = self.step?.text ?? ""
-        if let detail = self.instructionStep?.detailText {
-            text.append("\n\n")
-            text.append(detail)
-        }
-        self.textView?.text = text
+        self.textView?.text = self.instructionText
     }
+    
+    override open var result: ORKStepResult? {
+        guard let stepResult = super.result else { return nil }
+        if _endSurveyResult != nil {
+            stepResult.addResult(_endSurveyResult!)
+        }
+        return stepResult
+    }
+    private var _endSurveyResult:ORKChoiceQuestionResult?
     
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -124,6 +165,15 @@ open class SBAActivityInstructionStepViewController: ORKStepViewController, UITe
     }
     
     @IBAction public func cancelTapped() {
+        
+        // Exit early if the step has a navigation rule for continuing
+        if let navStep = self.step as? SBASurveyNavigationStep, (navStep.rules?.count ?? 0) > 0 {
+            _endSurveyResult = SBAActivityInstructionResult(identifier: self.step!.identifier)
+            self.goForward()
+            return
+        }
+        
+        // Otherwise, the default behavior is to discard the results
         guard let taskViewController = self.taskViewController, let taskDelegate = taskViewController.delegate else {
             dismiss(animated: true, completion: nil)
             return
