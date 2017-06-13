@@ -122,6 +122,10 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
         }
     }
     
+    open var html: String? {
+        return SBAResourceFinder.shared.html(forResource: htmlResource)
+    }
+    
     // HTML profile table items are not editable
     override open var isEditable: Bool {
         get {
