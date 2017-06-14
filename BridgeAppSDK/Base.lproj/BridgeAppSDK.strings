@@ -68,7 +68,7 @@
 "SBA_CONFIRM_EXTERNALID_TEXT" = "Confirm Participant Study ID"; // Placeholder for the confirmation for registering via external ID
 "SBA_REGISTRATION_NOT_CONSENTED" = "The participant did not consent"; // Error message for unconsented user
 "SBA_REGISTRATION_UNKNOWN_FAILED" = "We're sorry. Registration has failed. Please contact the study coordinator for support"; // Unhandled registration failure
-"REGISTRATION_VERIFICATION_TEXT_%@_%@" = "%1$@ has sent you a verification email at %2$@"; // Email verification instructions where %1$@ is the app name and %2$@ is the email.
+"REGISTRATION_VERIFICATION_TEXT_%@_%@" = "In order to finalize your registration, you must verify your email address. Please go to your email account and click on the link in an email that was sent to you from %1$@ with the subject \'Verify your account\'. The email address we sent this to is: %2$@\n\nIf you do not see an email in your inbox please check your spam folder or we can resend your verification by tapping the link below."; // Email verification instructions where %1$@ is the app name and %2$@ is the email.
 "REGISTRATION_VERIFICATION_DETAIL_%@" = "Once verified, tap %@"; // Email verification detail text where %@ is the title of the continue button
 "REGISTRATION_VERIFICATION_FOOTNOTE" = "A full copy of the consent will be sent to you for your records."; // Email verification footnote text.
 "REGISTRATION_EMAIL_ACTIONS_BUTTON_TEXT" = "Problems?"; // Text to show in the button for email issues (wrong email or resend)
