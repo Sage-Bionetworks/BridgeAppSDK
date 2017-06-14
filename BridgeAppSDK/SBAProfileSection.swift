@@ -122,6 +122,19 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
         }
     }
     
+    open var html: String? {
+        return SBAResourceFinder.shared.html(forResource: htmlResource)
+    }
+    
+    open var url: URL? {
+        if htmlResource.hasPrefix("http") || htmlResource.hasPrefix("file") {
+            return URL(string: htmlResource)
+        }
+        else {
+            return SBAResourceFinder.shared.url(forResource: htmlResource, withExtension:"html")
+        }
+    }
+    
     // HTML profile table items are not editable
     override open var isEditable: Bool {
         get {
