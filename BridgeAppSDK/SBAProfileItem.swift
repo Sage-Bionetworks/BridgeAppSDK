@@ -523,6 +523,85 @@ open class SBAUserDefaultsProfileItem: SBAProfileItemBase {
 
 }
 
+enum SBAProfileParticipantSourceKey: String {
+    case firstName
+    case lastName
+    case email
+    case externalId
+    case notifyByEmail
+    case sharingScope
+    case dataGroups
+}
+
+open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
+    internal static var studyParticipant: SBBStudyParticipant?
+    
+    override open func storedValue(forKey key: String) -> Any? {
+        guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant
+            else {
+                assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipant")
+                return nil
+        }
+        guard let enumKey = SBAProfileParticipantSourceKey(rawValue: key)
+            else {
+                assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a valid SBBStudyParticipant key")
+                return nil
+        }
+        
+        var storedVal = studyParticipant.value(forKey: key)
+        switch enumKey {
+        case .dataGroups:
+            guard let dataGroups = storedVal as? Set<String> else { break }
+            storedVal = Array(dataGroups)
+        case .sharingScope:
+            guard let scopeString = storedVal as? String else { break }
+            storedVal = SBBParticipantDataSharingScope(key: scopeString)
+        default:
+            break
+        }
+        
+        return storedVal
+    }
+    
+    override open func setStoredValue(_ newValue: Any?) {
+        guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant
+            else {
+                assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipant")
+                return
+        }
+        guard let key = SBAProfileParticipantSourceKey(rawValue: sourceKey)
+            else {
+                assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(sourceKey) is not a valid SBBStudyParticipant key")
+                return
+        }
+        
+        var setValue = newValue
+        switch key {
+        case .dataGroups:
+            guard let dataGroupsArray = newValue as? [String]
+                else {
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): value \(String(describing: newValue)) cannot be converted to Set")
+                    return
+            }
+            setValue = Set(dataGroupsArray)
+        case .sharingScope:
+            guard let scope = newValue as? SBBParticipantDataSharingScope
+                else {
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): value \(String(describing: newValue)) cannot be converted to SBBParticipantDataSharingScope")
+                    return
+            }
+            setValue = SBBParticipantManager.dataSharingScopeStrings()[scope.rawValue]
+        default:
+            break
+        }
+        
+        studyParticipant.setValue(setValue, forKeyPath: sourceKey)
+        
+        // save the change to Bridge
+        SBABridgeManager.updateParticipantRecord(studyParticipant) { (_, _) in }
+    }
+}
+
 open class SBAFullNameProfileItem: SBAKeychainProfileItem, SBANameDataSource {
     
     override open var value: Any? {

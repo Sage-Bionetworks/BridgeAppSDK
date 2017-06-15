@@ -21,6 +21,7 @@
 		801040C81C5A843D00D26E19 /* BridgeAppSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
+		8045EE981EF308C4009B80E0 /* ProfileItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 8045EE971EF308C4009B80E0 /* ProfileItems.json */; };
 		8057E1D41EB94F520061C2F6 /* ProfileItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 8057E1D31EB94F520061C2F6 /* ProfileItems.json */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
 		80815D951EC271BB0095D1C0 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */; };
@@ -454,6 +455,7 @@
 		801040E61C5AD18100D26E19 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8045EE971EF308C4009B80E0 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
 		8057E1D31EB94F520061C2F6 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
 		80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
@@ -910,6 +912,7 @@
 		FB14FFE51C7686CC00E0D5AF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8045EE971EF308C4009B80E0 /* ProfileItems.json */,
 				FF92A6AD1DC0224000614D1F /* Tasks */,
 				FF63D0FE1CD03EEF007ADEE5 /* Licenses */,
 				FFF0128D1EA5638F00D9D9DD /* images.xcassets */,
@@ -1779,6 +1782,7 @@
 				FFADF3111EE5DD00005F7E1D /* SBAInstructionStepViewController.xib in Resources */,
 				FF7601C61EE7DB6300438F08 /* cardio.json in Resources */,
 				FF63D1011CD03F89007ADEE5 /* License_BridgeSDK.txt in Resources */,
+				8045EE981EF308C4009B80E0 /* ProfileItems.json in Resources */,
 				FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */,
 				FFCC3ADE1EE7400000A2A2C8 /* SBACompletionStepViewController.xib in Resources */,
 				FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */,
