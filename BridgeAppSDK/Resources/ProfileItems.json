@@ -40,7 +40,7 @@
                  "profileKey": "participantDataGroups",
                  "classType": "StudyParticipantProfileItem",
                  "sourceKey": "dataGroups",
-                 "itemType": "Array"
+                 "itemType": "Set"
                  }
                  ]
 }

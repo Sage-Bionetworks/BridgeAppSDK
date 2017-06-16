@@ -45,6 +45,7 @@ ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierArray;
+ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierSet;
 ENUM_EXTERN SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDictionary;
 
 typedef NSString *SBAProfileSourceKey NS_EXTENSIBLE_STRING_ENUM;

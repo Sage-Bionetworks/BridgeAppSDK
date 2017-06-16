@@ -121,6 +121,10 @@ extension SBAProfileItem {
         case SBAProfileTypeIdentifier.dictionary, SBAProfileTypeIdentifier.array:
             return (val as? SBAJSONObject)?.jsonObject() as? SBBJSONValue
             
+        case SBAProfileTypeIdentifier.set:
+            guard let set = val as? Set<AnyHashable> else { return nil }
+            return (Array(set) as SBAJSONObject).jsonObject() as? SBBJSONValue
+            
         default:
             return nil
         }
@@ -165,6 +169,17 @@ extension SBAProfileItem {
         case SBAProfileTypeIdentifier.array:
             guard let array = value as? [Any] else { return }
             self.value = array.map({ (obj) -> Any? in
+                if let dictionary = value as? [AnyHashable : Any] {
+                    return commonMapObject(with: dictionary)
+                }
+                else {
+                    return obj
+                }
+            })
+            
+        case SBAProfileTypeIdentifier.set:
+            guard let set = value as? Set<AnyHashable> else { return }
+            self.value = set.map({ (obj) -> Any? in
                 if let dictionary = value as? [AnyHashable : Any] {
                     return commonMapObject(with: dictionary)
                 }
@@ -230,6 +245,9 @@ extension SBAProfileItem {
         
         case SBAProfileTypeIdentifier.array:
             return newValue as? NSArray != nil
+            
+        case SBAProfileTypeIdentifier.set:
+            return newValue as? NSSet != nil
             
         default:
             return true   // Any extended type isn't included in the common validation
@@ -550,9 +568,6 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
         
         var storedVal = studyParticipant.value(forKey: key)
         switch enumKey {
-        case .dataGroups:
-            guard let dataGroups = storedVal as? Set<String> else { break }
-            storedVal = Array(dataGroups)
         case .sharingScope:
             guard let scopeString = storedVal as? String else { break }
             storedVal = SBBParticipantDataSharingScope(key: scopeString)
@@ -578,12 +593,11 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
         var setValue = newValue
         switch key {
         case .dataGroups:
-            guard let dataGroupsArray = newValue as? [String]
+            guard let _ = newValue as? Set<String>
                 else {
                     assertionFailure("Error setting \(sourceKey) (\(profileKey)): value \(String(describing: newValue)) cannot be converted to Set")
                     return
             }
-            setValue = Set(dataGroupsArray)
         case .sharingScope:
             guard let scope = newValue as? SBBParticipantDataSharingScope
                 else {
@@ -591,7 +605,14 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
                     return
             }
             setValue = SBBParticipantManager.dataSharingScopeStrings()[scope.rawValue]
+        case .notifyByEmail:
+            guard let _ = newValue as? Bool
+                else {
+                    assertionFailure("Error setting \(sourceKey) (\(profileKey)): value \(String(describing: newValue)) cannot be converted to Bool")
+                    return
+            }
         default:
+            // the rest are String, and anything can be converted to String
             break
         }
         
@@ -602,7 +623,7 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
     }
 }
 
-open class SBAFullNameProfileItem: SBAKeychainProfileItem, SBANameDataSource {
+open class SBAFullNameProfileItem: SBAStudyParticipantProfileItem, SBANameDataSource {
     
     override open var value: Any? {
         

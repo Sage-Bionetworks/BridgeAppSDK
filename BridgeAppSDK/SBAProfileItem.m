@@ -40,9 +40,10 @@ SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate = @"Date";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex = @"HKBiologicalSex";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity = @"HKQuantity";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierArray = @"Array";
+SBAProfileTypeIdentifier const SBAProfileTypeIdentifierSet = @"Set";
 SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDictionary = @"Dictionary";
 
-SBAProfileSourceKey const SBAProfileSourceKeyGivenName = @"givenName";
-SBAProfileSourceKey const SBAProfileSourceKeyFamilyName = @"familyName";
+SBAProfileSourceKey const SBAProfileSourceKeyGivenName = @"firstName";
+SBAProfileSourceKey const SBAProfileSourceKeyFamilyName = @"lastName";
 SBAProfileSourceKey const SBAProfileSourceKeyFullName = @"fullName";
 SBAProfileSourceKey const SBAProfileSourceKeyPreferredName = @"preferredName";
