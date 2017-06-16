@@ -552,7 +552,7 @@ enum SBAProfileParticipantSourceKey: String {
 }
 
 open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
-    internal static var studyParticipant: SBBStudyParticipant?
+    public static var studyParticipant: SBBStudyParticipant?
     
     override open func storedValue(forKey key: String) -> Any? {
         guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant
