@@ -97,7 +97,11 @@ public protocol SBAProfileItem: NSObjectProtocol {
 
 extension SBAProfileItem {
     func commonJsonValueGetter() -> SBBJSONValue? {
-        guard let val = self.value else { return NSNull() }
+        return commonItemTypeToJson(val: self.value)
+    }
+    
+    public func commonItemTypeToJson(val: Any?) -> SBBJSONValue? {
+        guard val != nil else { return NSNull() }
         switch self.itemType {
         case SBAProfileTypeIdentifier.string:
             return val as? NSString
@@ -136,39 +140,49 @@ extension SBAProfileItem {
             return
         }
         
+        guard let itemValue = commonJsonToItemType(value: value) else { return }
+        self.value = itemValue
+    }
+    
+    public func commonJsonToItemType(value: SBBJSONValue?) -> Any? {
+        guard value != nil else {
+            return nil
+        }
+        
+        var itemValue: Any? = nil
         switch self.itemType {
         case SBAProfileTypeIdentifier.string:
-            self.value = String(describing: value)
+            itemValue = String(describing: value)
             
         case SBAProfileTypeIdentifier.number:
-            guard let val = value as? NSNumber else { return }
-            self.value = val
+            guard let val = value as? NSNumber else { return nil }
+            itemValue = val
             
         case SBAProfileTypeIdentifier.bool:
-            guard let val = value as? Bool else { return }
-            self.value = val
+            guard let val = value as? Bool else { return nil }
+            itemValue = val
             
         case SBAProfileTypeIdentifier.date:
             guard let stringVal = value as? String,
                     let dateVal = NSDate(iso8601String: stringVal)
-                else { return }
-            self.value = dateVal
+                else { return nil }
+            itemValue = dateVal
             
         case SBAProfileTypeIdentifier.hkBiologicalSex:
-            guard let val = value as? HKBiologicalSex else { return }
-            self.value = val
+            guard let val = value as? HKBiologicalSex else { return nil }
+            itemValue = val
             
         case SBAProfileTypeIdentifier.hkQuantity:
-            guard let val = value as? NSNumber else { return }
-            self.value = HKQuantity(unit: self.unit ?? commonDefaultUnit(), doubleValue: val.doubleValue)
+            guard let val = value as? NSNumber else { return nil }
+            itemValue = HKQuantity(unit: self.unit ?? commonDefaultUnit(), doubleValue: val.doubleValue)
             
         case SBAProfileTypeIdentifier.dictionary:
-            guard let dictionary = value as? [AnyHashable : Any] else { return }
-            self.value = commonMapObject(with: dictionary)
+            guard let dictionary = value as? [AnyHashable : Any] else { return nil }
+            itemValue = commonMapObject(with: dictionary)
             
         case SBAProfileTypeIdentifier.array:
-            guard let array = value as? [Any] else { return }
-            self.value = array.map({ (obj) -> Any? in
+            guard let array = value as? [Any] else { return nil }
+            itemValue = array.map({ (obj) -> Any? in
                 if let dictionary = value as? [AnyHashable : Any] {
                     return commonMapObject(with: dictionary)
                 }
@@ -178,8 +192,8 @@ extension SBAProfileItem {
             })
             
         case SBAProfileTypeIdentifier.set:
-            guard let set = value as? Set<AnyHashable> else { return }
-            self.value = set.map({ (obj) -> Any? in
+            guard let set = value as? Set<AnyHashable> else { return nil }
+            itemValue = set.map({ (obj) -> Any? in
                 if let dictionary = value as? [AnyHashable : Any] {
                     return commonMapObject(with: dictionary)
                 }
@@ -191,6 +205,8 @@ extension SBAProfileItem {
         default:
             break
         }
+        
+        return itemValue
     }
     
     func commonMapObject(with dictionary: [AnyHashable : Any]) -> Any? {
@@ -623,6 +639,56 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
     }
 }
 
+
+open class SBAStudyParticipantCustomAttributesProfileItem: SBAProfileItemBase {
+    override open func storedValue(forKey key: String) -> Any? {
+        guard let attributes = SBAStudyParticipantProfileItem.studyParticipant?.attributes
+            else {
+                assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipantCustomAttributes")
+                return nil
+        }
+        guard attributes.responds(to: NSSelectorFromString(key))
+            else {
+                assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a defined SBBStudyParticipantCustomAttributes key")
+                return nil
+        }
+        guard let rawValue = attributes.value(forKey: key) as? SBBJSONValue else { return nil }
+        guard let value = commonJsonToItemType(value: rawValue)
+            else {
+                assertionFailure("Error reading \(key) (\(profileKey)): \(String(describing: rawValue)) is not convertible to item type \(itemType)")
+                return nil
+        }
+        
+        return value
+    }
+    
+    override open func setStoredValue(_ newValue: Any?) {
+        guard let attributes = SBAStudyParticipantProfileItem.studyParticipant?.attributes
+            else {
+                assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipantCustomAttributes")
+                return
+        }
+        guard attributes.responds(to: NSSelectorFromString(sourceKey))
+            else {
+                assertionFailure("Error reading \(sourceKey) (\(profileKey)): \(sourceKey) is not a defined SBBStudyParticipantCustomAttributes key")
+                return
+        }
+        guard newValue != nil
+            else {
+                attributes.setValue(nil, forKey: sourceKey)
+                return
+        }
+        guard let jsonValue = commonItemTypeToJson(val: newValue)
+            else {
+                assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: value)) is not convertible to JSON")
+                return
+        }
+        
+        attributes.setValue(jsonValue, forKey: sourceKey)
+    }
+}
+
+
 open class SBAFullNameProfileItem: SBAStudyParticipantProfileItem, SBANameDataSource {
     
     override open var value: Any? {
@@ -660,7 +726,7 @@ open class SBAFullNameProfileItem: SBAStudyParticipantProfileItem, SBANameDataSo
     
 }
 
-open class SBABirthDateProfileItem: SBAKeychainProfileItem {
+open class SBABirthDateProfileItem: SBAStudyParticipantCustomAttributesProfileItem {
     
     override open var demographicJsonValue: SBBJSONValue? {
         guard let age = (self.value as? Date)?.currentAge() else { return nil }

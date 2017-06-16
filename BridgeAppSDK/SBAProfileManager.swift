@@ -119,7 +119,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         let sharedProfileManager = SBAProfileManager()
         
         for bundle in bundles {
-            guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
+            guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
                 let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
                 else {
                     continue
