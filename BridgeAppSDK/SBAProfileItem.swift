@@ -663,7 +663,8 @@ open class SBAStudyParticipantCustomAttributesProfileItem: SBAProfileItemBase {
     }
     
     override open func setStoredValue(_ newValue: Any?) {
-        guard let attributes = SBAStudyParticipantProfileItem.studyParticipant?.attributes
+        guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant,
+                let attributes = studyParticipant.attributes
             else {
                 assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipantCustomAttributes")
                 return
@@ -685,6 +686,9 @@ open class SBAStudyParticipantCustomAttributesProfileItem: SBAProfileItemBase {
         }
         
         attributes.setValue(jsonValue, forKey: sourceKey)
+        
+        // save the change to Bridge
+        SBABridgeManager.updateParticipantRecord(studyParticipant) { (_, _) in }
     }
 }
 
