@@ -539,8 +539,6 @@ public extension SBAUserWrapper {
         self.subpopulationGuid = response.subpopulationGuid
         
         // Get the user's name
-        self.name = response.firstName
-        self.familyName = response.lastName
         self.createdOn = response.createdOn
     }
     
