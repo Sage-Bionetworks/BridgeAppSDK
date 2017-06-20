@@ -106,9 +106,9 @@ class SBAProfileManagerTests: ResourceTestCase {
             return
         }
         let fullNameItem = items["fullName"] as? BridgeAppSDK.SBAFullNameProfileItem
-        let givenNameItem = items["given"] as? BridgeAppSDK.SBAKeychainProfileItem
-        let familyNameItem = items["family"] as? BridgeAppSDK.SBAKeychainProfileItem
-        let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let givenNameItem = items["given"] as? BridgeAppSDK.SBAStudyParticipantProfileItem
+        let familyNameItem = items["family"] as? BridgeAppSDK.SBAStudyParticipantProfileItem
+        let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAStudyParticipantCustomAttributesProfileItem
         let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAKeychainProfileItem
         let genderItem = items["gender"] as? BridgeAppSDK.SBAKeychainProfileItem
         let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBABirthDateProfileItem
@@ -123,10 +123,6 @@ class SBAProfileManagerTests: ResourceTestCase {
         
         // Use a mock for the keychain
         let mockKeychain = MockKeychainWrapper()
-        fullNameItem?.keychain = mockKeychain
-        givenNameItem?.keychain = mockKeychain
-        familyNameItem?.keychain = mockKeychain
-        preferredNameItem?.keychain = mockKeychain
         externalIdItem?.keychain = mockKeychain
         genderItem?.keychain = mockKeychain
         
@@ -134,6 +130,9 @@ class SBAProfileManagerTests: ResourceTestCase {
         let mockUserDefaults = UserDefaults(suiteName: UUID().uuidString)!
         favoriteColorItem?.defaults = mockUserDefaults
         numberOfSiblingsItem?.defaults = mockUserDefaults
+        
+        // set up a dummy instance for the study participant
+        SBAStudyParticipantProfileItem.studyParticipant = DummyStudyParticipant()
         
         if givenNameItem != nil {
             let testGiven = "Full"
@@ -238,7 +237,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             if value == nil {
                 XCTFail("Failed retrieving Date value for birthDateItem")
             } else {
-                XCTAssertEqual(testBirthDate, value!, "Expected value to be \(testBirthDate), but instead it's \(value!)")
+                XCTAssertEqualWithAccuracy(testBirthDate.timeIntervalSince1970, value!.timeIntervalSince1970, accuracy: 0.00099999, "Expected value to be \(testBirthDate), but instead it's \(value!)")
             }
         }
         
@@ -277,4 +276,20 @@ class SBAProfileManagerTests: ResourceTestCase {
         }
     }
     
+}
+
+class DummyCustomAttributes: SBBStudyParticipantCustomAttributes {
+    dynamic var birthDate: NSString?
+    dynamic var preferredName: NSString?
+}
+
+class DummyStudyParticipant: SBBStudyParticipant {
+    override init() {
+        super.init()
+        self.attributes = DummyCustomAttributes()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

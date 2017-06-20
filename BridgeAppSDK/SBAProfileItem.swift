@@ -567,7 +567,7 @@ enum SBAProfileParticipantSourceKey: String {
     case dataGroups
 }
 
-open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
+open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesProfileItem {
     public static var studyParticipant: SBBStudyParticipant?
     
     override open func storedValue(forKey key: String) -> Any? {
@@ -575,6 +575,17 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
             else {
                 assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipant")
                 return nil
+        }
+        guard !(key.hasPrefix("attributes.")) else {
+            let pathComponents = key.components(separatedBy: ".")
+            let attributeComponents = pathComponents[1...pathComponents.count - 1]
+            guard attributeComponents.count > 0 else {
+                assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a valid SBBStudyParticipant keypath")
+                return nil
+            }
+            let attributeKey = attributeComponents.joined(separator:".")
+            
+            return super.storedValue(forKey: attributeKey)
         }
         guard let enumKey = SBAProfileParticipantSourceKey(rawValue: key)
             else {
@@ -599,6 +610,18 @@ open class SBAStudyParticipantProfileItem: SBAProfileItemBase {
             else {
                 assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipant")
                 return
+        }
+        guard !(sourceKey.hasPrefix("attributes.")) else {
+            let pathComponents = sourceKey.components(separatedBy: ".")
+            let attributeComponents = pathComponents[1...pathComponents.count - 1]
+            guard attributeComponents.count > 0 else {
+                assertionFailure("Error reading \(sourceKey) (\(profileKey)): \(sourceKey) is not a valid SBBStudyParticipant keypath")
+                return
+            }
+            let attributeKey = attributeComponents.joined(separator:".")
+            
+            super.setStoredValue(newValue, forKey: attributeKey)
+            return
         }
         guard let key = SBAProfileParticipantSourceKey(rawValue: sourceKey)
             else {
@@ -663,29 +686,33 @@ open class SBAStudyParticipantCustomAttributesProfileItem: SBAProfileItemBase {
     }
     
     override open func setStoredValue(_ newValue: Any?) {
+        self.setStoredValue(newValue, forKey: sourceKey)
+    }
+    
+    open func setStoredValue(_ newValue: Any?, forKey key: String) {
         guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant,
                 let attributes = studyParticipant.attributes
             else {
-                assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipantCustomAttributes")
+                assertionFailure("Attempting to set \(key) (\(profileKey)) on nil SBBStudyParticipantCustomAttributes")
                 return
         }
-        guard attributes.responds(to: NSSelectorFromString(sourceKey))
+        guard attributes.responds(to: NSSelectorFromString(key))
             else {
-                assertionFailure("Error reading \(sourceKey) (\(profileKey)): \(sourceKey) is not a defined SBBStudyParticipantCustomAttributes key")
+                assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a defined SBBStudyParticipantCustomAttributes key")
                 return
         }
         guard newValue != nil
             else {
-                attributes.setValue(nil, forKey: sourceKey)
+                attributes.setValue(nil, forKey: key)
                 return
         }
         guard let jsonValue = commonItemTypeToJson(val: newValue)
             else {
-                assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(String(describing: value)) is not convertible to JSON")
+                assertionFailure("Error setting \(key) (\(profileKey)): \(String(describing: value)) is not convertible to JSON")
                 return
         }
         
-        attributes.setValue(jsonValue, forKey: sourceKey)
+        attributes.setValue(jsonValue, forKey: key)
         
         // save the change to Bridge
         SBABridgeManager.updateParticipantRecord(studyParticipant) { (_, _) in }

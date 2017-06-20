@@ -148,7 +148,7 @@ class SBAUserTests: XCTestCase {
             "languages" : ["en"],
             "roles" : [],
             "status" : "enabled",
-            "createdOn" : NSDate(iso8601String: "2016-08-09T04:47:52.169Z")!,
+            "createdOn" : "2016-08-09T04:47:52.169Z",
             "signedMostRecentConsent" : true,
             "sessionToken" : "217ee580-8950-4f37-98bb-2f770d9a331c",
             "id" : "3LglxfsJ3Moo9NymdS6qem",
@@ -191,6 +191,8 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
     var loginEmail: String?
     var loginPassword: String?
     
+    var userSessionInfo: SBBUserSessionInfo?
+    
     weak var authDelegate: SBBAuthManagerDelegateProtocol?
 
     public func signUpStudyParticipant(_ signUp: SBBSignUp, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask {
@@ -206,6 +208,14 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
         signIn_called = true
         self.loginEmail = email
         self.loginPassword = password
+        
+        let response = responseObject as? [AnyHashable: Any]!
+        if response != nil &&
+            authDelegate != nil &&
+            authDelegate!.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
+            self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response)
+            authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
+        }
         completion?(session, responseObject, responseError)
         return session
     }
@@ -213,6 +223,15 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
     func resendEmailVerification(_ email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
         assertionFailure("Not implemented")
         return URLSessionDataTask()
+    }
+    
+    func resetUserSessionInfo() {
+        userSessionInfo = SBBUserSessionInfo()
+        userSessionInfo?.studyParticipant = SBBStudyParticipant()
+        if authDelegate != nil &&
+            authDelegate!.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
+            authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
+        }
     }
     
     func signOut(completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
@@ -235,7 +254,8 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
     }
 
     func addAuthHeader(toHeaders headers: NSMutableDictionary) {
-        assertionFailure("Not implemented")
+        // doesn't need to do anything for the mock
+        return
     }
     
     // MARK: deprecated methods
