@@ -76,11 +76,11 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
     open func createTaskWithSurvey(_ survey: SBBSurvey) -> SBANavigableOrderedTask {
         
         // Build the steps
-        let lastStepIndex = survey.elements.count - 1
+        let count = survey.elements.count
         var usesTitleAndText: Bool = false
         let steps: [ORKStep] = survey.elements.enumerated().mapAndFilter({ (offset: Int, element: Any) -> ORKStep? in
             guard let surveyItem = element as? SBBSurveyElement else { return nil }
-            let step = self.createSurveyStepWithSurveyElement(surveyItem, isLastStep: (offset == lastStepIndex))
+            let step = self.createSurveyStepWithSurveyElement(surveyItem, index: offset, count: count)
             if let qStep = step as? ORKQuestionStep, qStep.title != nil {
                 usesTitleAndText = true
             }
@@ -106,22 +106,21 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
      @param inputItem       A `SBBSurveyElement` bridge model object
      @return                An `ORKStep`
      */
+    @available(*, unavailable, message: "Use `createSurveyStepWithSurveyElement(_:index:count:) instead.")
     open func createSurveyStepWithSurveyElement(_ inputItem: SBBSurveyElement, isLastStep:Bool = false) -> ORKStep? {
+        return nil
+    }
+    
+    /**
+     Factory method for creating a survey step with an SBBSurveyElement
+     @param inputItem       A `SBBSurveyElement` bridge model object
+     @param index           The index into the task
+     @param count           The total number of steps
+     @return                An `ORKStep`
+     */
+    open func createSurveyStepWithSurveyElement(_ inputItem: SBBSurveyElement, index: Int, count: Int) -> ORKStep? {
         guard let surveyItem = inputItem as? SBASurveyItem else { return nil }
-        let step = self.createSurveyStep(surveyItem)
-        if isLastStep, let instructionStep = step as? SBAInstructionStep {
-            instructionStep.isCompletionStep = true
-            // For the last step of a survey, put the detail text in a popup and assume that it
-            // is copyright information
-            if let detailText = instructionStep.detailText {
-                let popAction = SBAPopUpLearnMoreAction(identifier: "learnMore")
-                popAction.learnMoreText = detailText
-                popAction.learnMoreButtonText = Localization.localizedString("SBA_COPYRIGHT")
-                instructionStep.detailText = nil
-                instructionStep.learnMoreAction = popAction
-            }
-        }
-        return step
+        return self.createSurveyStep(surveyItem)
     }
     
     open override func createTaskWithActiveTask(_ activeTask: SBAActiveTask, taskOptions: ORKPredefinedTaskOption) -> (NSCopying & NSSecureCoding & ORKTask)? {
