@@ -80,6 +80,11 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
                authDelegate:(id <SBBAuthManagerDelegateProtocol> _Nullable)authDelegate NS_SWIFT_NAME(setup(bridgeInfo:participant:authDelegate:));
 
 /*!
+ Reset the Bridge SDK temporary session info and study participant object after a failed or incomplete onboarding.
+ */
++ (void)resetUserSessionInfo;
+
+/*!
  This method should be called from your app delegate's
  application:handleEventsForBackgroundURLSession:completionHandler: method when the identifier passed in there matches
  kBackgroundSessionIdentifier.

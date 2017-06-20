@@ -54,6 +54,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             self.resetUserDefaults()
             self.resetKeychain()
         }
+        SBABridgeManager.resetUserSessionInfo()
     }
     
     public var bridgeInfo: SBABridgeInfo? {
