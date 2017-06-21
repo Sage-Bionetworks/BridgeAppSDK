@@ -220,5 +220,9 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
             self?.goForward()
         }
     }
+    
+    override func shouldAnimateNavigation() -> Bool {
+        return false
+    }
 }
 
