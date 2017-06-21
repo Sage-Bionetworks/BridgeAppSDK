@@ -578,7 +578,7 @@ open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesPr
         }
         guard !(key.hasPrefix("attributes.")) else {
             let pathComponents = key.components(separatedBy: ".")
-            let attributeComponents = pathComponents[1...pathComponents.count - 1]
+            let attributeComponents = pathComponents[1..<pathComponents.count]
             guard attributeComponents.count > 0 else {
                 assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a valid SBBStudyParticipant keypath")
                 return nil
