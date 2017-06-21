@@ -59,7 +59,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.prompt = "Text"
         inputStep.promptDetail = "Detail"
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? ORKInstructionStep else {
@@ -100,7 +100,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.constraints.addRulesObject(ruleNotEqual)
         inputStep.constraints.addRulesObject(ruleSkip)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -157,7 +157,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.constraints.addRulesObject(ruleTrue)
         inputStep.constraints.addRulesObject(ruleFalse)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -196,7 +196,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         inputStep.constraints.addRulesObject(ruleTrue)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -226,7 +226,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.prompt = "Do you live alone?"
         inputStep.constraints = SBBBooleanConstraints();
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -265,7 +265,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.promptDetail = "Do you live alone?"
         inputStep.constraints = SBBBooleanConstraints();
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -301,7 +301,7 @@ class SBASurveyFactoryTests: XCTestCase {
                                                     "type" : "SurveyRule"
                                                     ]))
 
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -333,7 +333,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -367,7 +367,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -388,7 +388,7 @@ class SBASurveyFactoryTests: XCTestCase {
     func testFactory_MultiValueConstraints_AllowMultiple() {
         
         let inputStep:SBBSurveyQuestion = createMultipleChoiceQuestion(allowMultiple: true)
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -407,7 +407,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         constraints.allowOtherValue = true
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -435,7 +435,7 @@ class SBASurveyFactoryTests: XCTestCase {
             }
         }
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -462,7 +462,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.prompt = "How do you feel?"
         inputStep.constraints = SBBStringConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -493,7 +493,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.patternErrorMessage = "Should be hexidecimal"
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -529,7 +529,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.maxLength = NSNumber(value: 8)
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -563,7 +563,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.minLength = NSNumber(value: 4)
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -595,7 +595,7 @@ class SBASurveyFactoryTests: XCTestCase {
         // pattern, maxLength and minLength are currently unsupported
         inputStep.constraints = SBBStringConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -629,7 +629,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.allowFutureValue = false
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -670,7 +670,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.allowFutureValue = false
         inputStep.constraints = constraints
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -707,7 +707,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "datetimepicker"
         inputStep.constraints = SBBTimeConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -733,7 +733,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.uiHint = "datetimepicker"
         inputStep.constraints = SBBDurationConstraints()
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -762,7 +762,7 @@ class SBASurveyFactoryTests: XCTestCase {
         inputStep.constraints = constraints
         constraints.unit = "weeks"
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -801,7 +801,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
     
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -846,7 +846,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -877,7 +877,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -908,7 +908,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -939,7 +939,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -970,7 +970,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
                 XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -1001,7 +1001,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
             XCTAssert(false, "\(String(describing: step)) does not match expected")
@@ -1050,7 +1050,7 @@ class SBASurveyFactoryTests: XCTestCase {
                 "type" : "SurveyRule"
                 ]))
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -1099,7 +1099,7 @@ class SBASurveyFactoryTests: XCTestCase {
         constraints.maxValue = NSNumber(value: 100.2 as Double)
         constraints.step = NSNumber(value: 0.1 as Double)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep else {
@@ -1126,7 +1126,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(1, min:0, max:10)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -1144,7 +1144,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(100)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -1160,7 +1160,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(5)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         // ResearchKit requires that number of steps between min and max value are >= 1 and <= 13
@@ -1180,7 +1180,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(25)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         guard let surveyStep = step as? SBANavigationQuestionStep,
@@ -1198,7 +1198,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(nil)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         // If the step size is not defined, but the slider uiHint is set,
@@ -1219,7 +1219,7 @@ class SBASurveyFactoryTests: XCTestCase {
         
         let inputStep:SBBSurveyQuestion = createSliderQuestion(37)
         
-        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep)
+        let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
         
         // a step size of 37 is not divisible by 100 so is invalid as an integer
