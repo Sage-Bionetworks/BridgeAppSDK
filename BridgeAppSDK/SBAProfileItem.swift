@@ -152,38 +152,38 @@ extension SBAProfileItem {
         var itemValue: Any? = nil
         switch self.itemType {
         case SBAProfileTypeIdentifier.string:
-            itemValue = String(describing: value)
+            itemValue = String(describing: value!)
             
         case SBAProfileTypeIdentifier.number:
-            guard let val = value as? NSNumber else { return nil }
+            guard let val = value! as? NSNumber else { return nil }
             itemValue = val
             
         case SBAProfileTypeIdentifier.bool:
-            guard let val = value as? Bool else { return nil }
+            guard let val = value! as? Bool else { return nil }
             itemValue = val
             
         case SBAProfileTypeIdentifier.date:
-            guard let stringVal = value as? String,
+            guard let stringVal = value! as? String,
                     let dateVal = NSDate(iso8601String: stringVal)
                 else { return nil }
             itemValue = dateVal
             
         case SBAProfileTypeIdentifier.hkBiologicalSex:
-            guard let val = value as? HKBiologicalSex else { return nil }
+            guard let val = value! as? HKBiologicalSex else { return nil }
             itemValue = val
             
         case SBAProfileTypeIdentifier.hkQuantity:
-            guard let val = value as? NSNumber else { return nil }
+            guard let val = value! as? NSNumber else { return nil }
             itemValue = HKQuantity(unit: self.unit ?? commonDefaultUnit(), doubleValue: val.doubleValue)
             
         case SBAProfileTypeIdentifier.dictionary:
-            guard let dictionary = value as? [AnyHashable : Any] else { return nil }
+            guard let dictionary = value! as? [AnyHashable : Any] else { return nil }
             itemValue = commonMapObject(with: dictionary)
             
         case SBAProfileTypeIdentifier.array:
-            guard let array = value as? [Any] else { return nil }
+            guard let array = value! as? [Any] else { return nil }
             itemValue = array.map({ (obj) -> Any? in
-                if let dictionary = value as? [AnyHashable : Any] {
+                if let dictionary = value! as? [AnyHashable : Any] {
                     return commonMapObject(with: dictionary)
                 }
                 else {
@@ -192,9 +192,9 @@ extension SBAProfileItem {
             })
             
         case SBAProfileTypeIdentifier.set:
-            guard let set = value as? Set<AnyHashable> else { return nil }
+            guard let set = value! as? Set<AnyHashable> else { return nil }
             itemValue = set.map({ (obj) -> Any? in
-                if let dictionary = value as? [AnyHashable : Any] {
+                if let dictionary = value! as? [AnyHashable : Any] {
                     return commonMapObject(with: dictionary)
                 }
                 else {
