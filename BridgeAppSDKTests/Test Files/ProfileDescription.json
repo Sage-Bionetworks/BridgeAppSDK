@@ -7,20 +7,21 @@
                  },
                  {
                  "profileKey": "given",
-                 "sourceKey": "givenName",
-                 "classType": "KeychainProfileItem",
+                 "sourceKey": "firstName",
+                 "classType": "StudyParticipantProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "family",
-                 "sourceKey": "familyName",
-                 "classType": "KeychainProfileItem",
+                 "sourceKey": "lastName",
+                 "classType": "StudyParticipantProfileItem",
                  "itemType": "String"
                  },
                  {
                  "profileKey": "preferredName",
-                 "fallbackKey": "givenName",
-                 "classType": "KeychainProfileItem",
+                 "sourceKey": "attributes.preferredName",
+                 "fallbackKey": "firstName",
+                 "classType": "StudyParticipantProfileItem",
                  "itemType": "String"
                  },
                  {

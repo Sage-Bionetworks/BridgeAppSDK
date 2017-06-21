@@ -1,0 +1,46 @@
+{
+    "items":    [
+                 {
+                 "profileKey": "participantFirstName",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "firstName",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "participantLastName",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "lastName",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "participantEmail",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "email",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "participantExternalId",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "externalId",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "participantNotifyByEmail",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "notifyByEmail",
+                 "itemType": "Bool"
+                 },
+                 {
+                 "profileKey": "participantSharingScope",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "sharingScope",
+                 "itemType": "String"
+                 },
+                 {
+                 "profileKey": "participantDataGroups",
+                 "classType": "StudyParticipantProfileItem",
+                 "sourceKey": "dataGroups",
+                 "itemType": "Set"
+                 }
+                 ]
+}

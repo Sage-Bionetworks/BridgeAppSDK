@@ -89,6 +89,11 @@
     [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
 
++ (void)resetUserSessionInfo
+{
+    [SBBComponent(SBBAuthManager) resetUserSessionInfo];
+}
+
 + (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
 {
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];

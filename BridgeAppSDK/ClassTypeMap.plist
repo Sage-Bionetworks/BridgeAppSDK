@@ -22,5 +22,9 @@
 	<string>SBAFullNameProfileItem</string>
 	<key>BirthDateProfileItem</key>
 	<string>SBABirthDateProfileItem</string>
+	<key>StudyParticipantProfileItem</key>
+	<string>SBAStudyParticipantProfileItem</string>
+	<key>StudyParticipantCustomAttributesProfileItem</key>
+	<string>SBAStudyParticipantCustomAttributesProfileItem</string>
 </dict>
 </plist>
