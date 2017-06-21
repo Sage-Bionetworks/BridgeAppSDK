@@ -39,6 +39,8 @@ class SBAUserTests: XCTestCase {
     
     var authMock: MockAuthManager!
     var consentMock: MockConsentManager!
+    var cacheTest: NSObject!
+    var objectTest: SBBObjectManager!
     
     override func setUp() {
         super.setUp()
@@ -48,6 +50,14 @@ class SBAUserTests: XCTestCase {
         consentMock = MockConsentManager()
         SBBComponentManager.registerComponent(authMock, for: SBBAuthManager().classForCoder)
         SBBComponentManager.registerComponent(consentMock, for: SBBConsentManager().classForCoder)
+        
+        // register a test cache manager with our mock auth manager
+        cacheTest = BridgeSDKTestable.registerTestBridgeCacheManager(authMock)
+        
+        // ...and register a fresh object manager with our cache manager
+        objectTest = SBBObjectManager()
+        objectTest.setValue(cacheTest, forKey: "cacheManager")
+        SBBComponentManager.registerComponent(objectTest, for: objectTest.classForCoder)
     }
     
     override func tearDown() {
@@ -70,6 +80,7 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
+        authMock.authDelegate = user
         user.loginUser(email: email, password: password, completion: nil)
         
         // Verify the login
@@ -96,6 +107,7 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
+        authMock.authDelegate = user
         user.loginUser(email: email, password: password, completion: nil)
         
         // Verify the login
@@ -122,6 +134,7 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
+        authMock.authDelegate = user
         user.loginUser(externalId: "1002", completion: nil)
         
         // Verify the login
@@ -168,7 +181,7 @@ class SBAUserTests: XCTestCase {
             "dataSharing" : dataSharing,
             "consented" : true,
             "username" : email,
-            "attributes" : [],
+            "attributes" : [:],
             "environment" : "production",
             "email" : email,
             "sharingScope" : sharingScope,
@@ -202,18 +215,31 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
         completion?(session, responseObject, responseError)
         return session
     }
+    
+    func savedPassword() -> String? {
+        return self.loginPassword
+    }
+    
+    func isAuthenticated() -> Bool {
+        return self.signIn_called
+    }
 
     func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
         let session = URLSessionDataTask()
-        signIn_called = true
         self.loginEmail = email
         self.loginPassword = password
+        signIn_called = true
         
         let response = responseObject as? [AnyHashable: Any]!
         if response != nil &&
             authDelegate != nil &&
             authDelegate!.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
-            self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response)
+            if let participantManager = SBBComponentManager.component(SBBParticipantManager.self) as? SBBParticipantManager {
+                // this is a BridgeSDK-internal method
+                let clearSelector = NSSelectorFromString("clearUserInfoFromCache")
+                participantManager.perform(clearSelector)
+            }
+            self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response!)
             authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
         }
         completion?(session, responseObject, responseError)

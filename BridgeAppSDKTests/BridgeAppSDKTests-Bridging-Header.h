@@ -6,3 +6,4 @@
 #import "MockTrackedDataStore.h"
 #import "MockAppInfoDelegate.h"
 #import "MockKeychainWrapper.h"
+#import "BridgeSDKTestable.h"

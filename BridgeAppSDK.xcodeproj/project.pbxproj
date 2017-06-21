@@ -22,6 +22,7 @@
 		801040F01C5AD29300D26E19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 801040EC1C5AD29300D26E19 /* LaunchScreen.storyboard */; };
 		801040F31C5AD2D700D26E19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801040F21C5AD2D700D26E19 /* Assets.xcassets */; };
 		8045EE981EF308C4009B80E0 /* ProfileItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 8045EE971EF308C4009B80E0 /* ProfileItems.json */; };
+		8045EF041EF9F3C8009B80E0 /* BridgeSDKTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = 8045EF031EF9F3C8009B80E0 /* BridgeSDKTestable.m */; };
 		8057E1D41EB94F520061C2F6 /* ProfileItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 8057E1D31EB94F520061C2F6 /* ProfileItems.json */; };
 		805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */; };
 		80815D951EC271BB0095D1C0 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */; };
@@ -456,6 +457,8 @@
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8045EE971EF308C4009B80E0 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
+		8045EF021EF9F3C8009B80E0 /* BridgeSDKTestable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeSDKTestable.h; sourceTree = "<group>"; };
+		8045EF031EF9F3C8009B80E0 /* BridgeSDKTestable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgeSDKTestable.m; sourceTree = "<group>"; };
 		8057E1D31EB94F520061C2F6 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
 		805FBBEC1CECF694009E1348 /* SBAActivityArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityArchive.swift; sourceTree = "<group>"; };
 		80815D941EC271BB0095D1C0 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
@@ -972,6 +975,8 @@
 				FF7C29DF1ECBA268009FDA44 /* MockKeychainWrapper.m */,
 				FF8997911D0B589500B26051 /* MockUser.h */,
 				FF8997921D0B589500B26051 /* MockUser.m */,
+				8045EF021EF9F3C8009B80E0 /* BridgeSDKTestable.h */,
+				8045EF031EF9F3C8009B80E0 /* BridgeSDKTestable.m */,
 			);
 			path = MockObjects;
 			sourceTree = "<group>";
@@ -1943,6 +1948,7 @@
 				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,
 				FF3E30831D5CE85D00347165 /* SBAActivityArchiveTests.swift in Sources */,
 				FF6484151CB5E9BF0055B9E7 /* ResourceTestCase.swift in Sources */,
+				8045EF041EF9F3C8009B80E0 /* BridgeSDKTestable.m in Sources */,
 				FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */,
 				FBE5515D1C6D267100C9E1AA /* MockORKTask.m in Sources */,
 				FF2498141CB6C1F0002DD05F /* MockTrackedDataStore.m in Sources */,
