@@ -576,17 +576,11 @@ open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesPr
                 assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipant")
                 return nil
         }
-        guard !(key.hasPrefix("attributes.")) else {
-            let pathComponents = key.components(separatedBy: ".")
-            let attributeComponents = pathComponents[1..<pathComponents.count]
-            guard attributeComponents.count > 0 else {
-                assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a valid SBBStudyParticipant keypath")
-                return nil
-            }
-            let attributeKey = attributeComponents.joined(separator:".")
-            
+        // special-case handling for an attribute to call through to the superclass implementation
+        if let attributeKey = key.parseSuffix(prefix: "attributes", separator:".") {
             return super.storedValue(forKey: attributeKey)
         }
+        
         guard let enumKey = SBAProfileParticipantSourceKey(rawValue: key)
             else {
                 assertionFailure("Error reading \(key) (\(profileKey)): \(key) is not a valid SBBStudyParticipant key")
@@ -611,18 +605,13 @@ open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesPr
                 assertionFailure("Attempting to set \(sourceKey) (\(profileKey)) on nil SBBStudyParticipant")
                 return
         }
-        guard !(sourceKey.hasPrefix("attributes.")) else {
-            let pathComponents = sourceKey.components(separatedBy: ".")
-            let attributeComponents = pathComponents[1...pathComponents.count - 1]
-            guard attributeComponents.count > 0 else {
-                assertionFailure("Error reading \(sourceKey) (\(profileKey)): \(sourceKey) is not a valid SBBStudyParticipant keypath")
-                return
-            }
-            let attributeKey = attributeComponents.joined(separator:".")
-            
+        
+        // special-case handling for an attribute to call through to the superclass implementation
+        if let attributeKey = sourceKey.parseSuffix(prefix: "attributes", separator:".") {
             super.setStoredValue(newValue, forKey: attributeKey)
             return
         }
+        
         guard let key = SBAProfileParticipantSourceKey(rawValue: sourceKey)
             else {
                 assertionFailure("Error setting \(sourceKey) (\(profileKey)): \(sourceKey) is not a valid SBBStudyParticipant key")
