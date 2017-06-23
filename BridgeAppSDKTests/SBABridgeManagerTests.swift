@@ -51,9 +51,8 @@ class SBABridgeManagerTests: XCTestCase {
     func testFetchScheduledActivitiesWithStartDate_6Ahead_10Behind() {
         
         let activityManager = TestActivityManager()
-        let (schedules, completed, guids) = buildSchedule(daysAhead: 6, daysBehind: 10)
-        activityManager.getScheduledActivities_Result = schedules
-        activityManager.getScheduledActivitiesForGuid_Result = completed
+        let schedules = buildSchedule(daysAhead: 6, daysBehind: 10)
+        activityManager.getScheduledActivitiesForRange_Result = schedules
         SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
         
         let now = Date()
@@ -75,12 +74,9 @@ class SBABridgeManagerTests: XCTestCase {
         }
         
         XCTAssertNotNil(result)
-        XCTAssertTrue(activityManager.getScheduledActivities_called)
-        XCTAssertEqual(activityManager.getScheduledActivities_daysAhead, 6)
-        XCTAssertEqual(activityManager.getScheduledActivities_daysBehind, 10)
-
-        let calledGuids = Set(activityManager.getScheduledActivitiesForGuid_called)
-        XCTAssertEqual(calledGuids, guids)
+        XCTAssertTrue(activityManager.getScheduledActivitiesForRange_called)
+        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledFrom, startDate)
+        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledTo, endDate)
         
         // Check that the duplicates are removed
         guard result != nil else { return }
@@ -90,9 +86,8 @@ class SBABridgeManagerTests: XCTestCase {
     func testFetchScheduledActivitiesWithStartDate_0Ahead_10Behind() {
         
         let activityManager = TestActivityManager()
-        let (schedules, completed, guids) = buildSchedule(daysAhead: 1, daysBehind: 10)
-        activityManager.getScheduledActivities_Result = schedules
-        activityManager.getScheduledActivitiesForGuid_Result = completed
+        let schedules = buildSchedule(daysAhead: 1, daysBehind: 10)
+        activityManager.getScheduledActivitiesForRange_Result = schedules
         SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
         
         let now = Date()
@@ -114,14 +109,10 @@ class SBABridgeManagerTests: XCTestCase {
         }
         
         XCTAssertNotNil(result)
-        XCTAssertTrue(activityManager.getScheduledActivities_called)
-        XCTAssertEqual(activityManager.getScheduledActivities_daysAhead, 1)
-        XCTAssertEqual(activityManager.getScheduledActivities_daysBehind, 10)
-        
-        let calledGuids = Set(activityManager.getScheduledActivitiesForGuid_called)
-        XCTAssertEqual(calledGuids, guids)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForGuid_scheduledTo, startDate)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForGuid_scheduledFrom, endDate)
+        XCTAssertFalse(activityManager.getScheduledActivities_called)
+        XCTAssertTrue(activityManager.getScheduledActivitiesForRange_called)
+        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledFrom, startDate)
+        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledTo, endDate)
     }
     
     // MARK: build schedules
@@ -130,40 +121,20 @@ class SBABridgeManagerTests: XCTestCase {
         return [UUID().uuidString, UUID().uuidString, UUID().uuidString, UUID().uuidString]
     }
     
-    func buildSchedule(daysAhead:Int, daysBehind:Int) -> ([SBBScheduledActivity], [String:[SBBScheduledActivity]], Set<String>) {
+    func buildSchedule(daysAhead:Int, daysBehind:Int) -> [SBBScheduledActivity] {
         
         let midnight = Date().startOfDay()
         let guids = createActivityGuids()
         var schedules:[SBBScheduledActivity] = []
-        var completedSchedules:[String:[SBBScheduledActivity]] = [:]
         
         for ii in (-1*daysBehind)...daysAhead {
             for guid in guids {
                 let schedule = createSchedule(guid: guid, scheduledOn: midnight.addingNumberOfDays(ii))
-                
-                // setup first guid as expired (not completed)
-                let addToInitialList = (guid == guids.first || ii >= 0)
-                
-                // setup last guid as completed on same day (so should be in *both* collections)
-                let addToCompleted = (guid == guids.last && ii == 0) || !addToInitialList
-                
-                if addToInitialList {
-                    schedules.append(schedule)
-                }
-                if addToCompleted {
-                    schedule.startedOn = schedule.scheduledOn.addingTimeInterval(8 * 60 * 60)
-                    schedule.finishedOn = schedule.startedOn
-                    if let subgroup = completedSchedules[guid] {
-                        completedSchedules[guid] = subgroup.appending(schedule)
-                    }
-                    else {
-                        completedSchedules[guid] = [schedule]
-                    }
-                }
+                schedules.append(schedule)
             }
         }
         
-        return (schedules, completedSchedules, Set(guids))
+        return schedules
     }
     
     func createSchedule(guid: String, scheduledOn: Date) -> SBBScheduledActivity {
@@ -244,30 +215,29 @@ class TestActivityManager : NSObject, SBBActivityManagerProtocol {
 
     // MARK: getScheduledActivitiesForGuid
     
-    var getScheduledActivitiesForGuid_Result: [String : [SBBScheduledActivity]] = [:]
-    var getScheduledActivitiesForGuid_Error: [String : Error] = [:]
+    var getScheduledActivitiesForRange_Result: [SBBScheduledActivity]?
+    var getScheduledActivitiesForRange_Error: Error?
+    var getScheduledActivitiesForRange_called: Bool = false
+    var getScheduledActivitiesForRange_scheduledFrom: Date?
+    var getScheduledActivitiesForRange_scheduledTo: Date?
+    var getScheduledActivitiesForRange_cachingPolicy: SBBCachingPolicy = SBBCachingPolicy.noCaching
     
-    var getScheduledActivitiesForGuid_called: [String] = []
-    var getScheduledActivitiesForGuid_scheduledFrom: Date?
-    var getScheduledActivitiesForGuid_scheduledTo: Date?
-    var getScheduledActivitiesForGuid_cachingPolicy: SBBCachingPolicy = SBBCachingPolicy.noCaching
-    
-    public func getScheduledActivities(forGuid activityGuid: String, scheduledFrom: Date, to scheduledTo: Date, cachingPolicy policy: SBBCachingPolicy, withCompletion completion: @escaping SBBActivityManagerGetCompletionBlock) -> URLSessionTask {
+    public func getScheduledActivities(from scheduledFrom: Date, to scheduledTo: Date, cachingPolicy policy: SBBCachingPolicy, withCompletion completion: @escaping SBBActivityManagerGetCompletionBlock) -> URLSessionTask {
         
-        getScheduledActivitiesForGuid_called.append(activityGuid)
-        getScheduledActivitiesForGuid_scheduledFrom = scheduledFrom
-        getScheduledActivitiesForGuid_scheduledTo = scheduledTo
-        getScheduledActivitiesForGuid_cachingPolicy = policy
+        getScheduledActivitiesForRange_called = true
+        getScheduledActivitiesForRange_scheduledFrom = scheduledFrom
+        getScheduledActivitiesForRange_scheduledTo = scheduledTo
+        getScheduledActivitiesForRange_cachingPolicy = policy
         
         taskQueue.async {
-            completion(self.getScheduledActivitiesForGuid_Result[activityGuid], self.getScheduledActivitiesForGuid_Error[activityGuid])
+            completion(self.getScheduledActivitiesForRange_Result, self.getScheduledActivitiesForRange_Error)
         }
         
         return URLSessionTask()
     }
 
-    public func getScheduledActivities(forGuid activityGuid: String, scheduledFrom: Date, to scheduledTo: Date, withCompletion completion: @escaping SBBActivityManagerGetCompletionBlock) -> URLSessionTask {
-        return getScheduledActivities(forGuid: activityGuid, scheduledFrom: scheduledFrom, to: scheduledTo, cachingPolicy: .fallBackToCached, withCompletion: completion)
+    public func getScheduledActivities(from scheduledFrom: Date, to scheduledTo: Date, withCompletion completion: @escaping SBBActivityManagerGetCompletionBlock) -> URLSessionTask {
+        return getScheduledActivities(from: scheduledFrom, to: scheduledTo, cachingPolicy: .fallBackToCached, withCompletion: completion)
     }
 
     
