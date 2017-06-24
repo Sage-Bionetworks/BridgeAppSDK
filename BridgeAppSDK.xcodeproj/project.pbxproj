@@ -456,6 +456,7 @@
 		801040E61C5AD18100D26E19 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		801040ED1C5AD29300D26E19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		801040F21C5AD2D700D26E19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		801B957F1EFDE71200403B8E /* SBABridgeManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SBABridgeManager+Internal.h"; sourceTree = "<group>"; };
 		8045EE971EF308C4009B80E0 /* ProfileItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProfileItems.json; sourceTree = "<group>"; };
 		8045EF021EF9F3C8009B80E0 /* BridgeSDKTestable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeSDKTestable.h; sourceTree = "<group>"; };
 		8045EF031EF9F3C8009B80E0 /* BridgeSDKTestable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgeSDKTestable.m; sourceTree = "<group>"; };
@@ -746,6 +747,7 @@
 				6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */,
 				FF9D4C5A1CA217A7001C293C /* SBABridgeInfo.swift */,
 				FF45F8491CA5D61900EE0562 /* SBABridgeManager.h */,
+				801B957F1EFDE71200403B8E /* SBABridgeManager+Internal.h */,
 				FF45F84A1CA5D61900EE0562 /* SBABridgeManager.m */,
 				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,

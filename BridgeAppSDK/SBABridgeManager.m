@@ -31,7 +31,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBABridgeManager.h"
+#import "SBABridgeManager+Internal.h"
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 @import ResearchUXFactory;
 
@@ -246,8 +246,25 @@
     }];
 }
 
+static BOOL _allowScheduleRequestsBeforeStartDate = false;
+
++ (BOOL)allowScheduleRequestsBeforeStartDate {
+    return _allowScheduleRequestsBeforeStartDate;
+}
+
++ (void)setAllowScheduleRequestsBeforeStartDate:(BOOL)allow {
+    _allowScheduleRequestsBeforeStartDate = allow;
+}
+
 + (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
                           completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    if (!self.allowScheduleRequestsBeforeStartDate) {
+        // pin the scheduledFrom date to be no earlier than when the participant joined the study
+        NSDate *participantStartDate = SBAAppDelegate.shared.currentUser.createdOn;
+        NSComparisonResult order = [scheduledFrom compare:participantStartDate];
+        scheduledFrom = (order == NSOrderedAscending) ? participantStartDate : scheduledFrom;
+    }
+    
     [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:scheduledFrom to:scheduledTo cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
         completionBlock(activitiesList, error);
     }];
