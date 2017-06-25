@@ -539,8 +539,6 @@ public extension SBAUserWrapper {
         self.subpopulationGuid = response.subpopulationGuid
         
         // Get the user's name
-        self.name = response.firstName
-        self.familyName = response.lastName
         self.createdOn = response.createdOn
     }
     
@@ -636,7 +634,8 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
 
 extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     var createdOn: Date {
-        return self.studyParticipant.createdOn
+        // If the participant hasn't signed in yet, there won't be a createdOn date in the placeholder study participant object.
+        return self.studyParticipant.createdOn ?? Date()
     }
 
     var lastName: String? {

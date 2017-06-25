@@ -113,13 +113,20 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
      */
     public static let shared: SBAProfileManagerProtocol? = {
         SBABridgeManager.addResourceBundleIfNeeded()
-        guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename),
-                let sharedProfileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
-            else {
-                // The SBAUser will default to the profile manager if available, but if not will fall-back
-                // to older methods for storing information.
-                return SBAProfileManager(dictionaryRepresentation: [:])
+        let bundles = SBAInfoManager.shared.resourceBundles.reversed()
+        // The SBAUser will default to the profile manager if available, but if not will fall-back
+        // to older methods for storing information.
+        let sharedProfileManager = SBAProfileManager()
+        
+        for bundle in bundles {
+            guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
+                let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
+                else {
+                    continue
+            }
+            sharedProfileManager.add(items: profileManager.items)
         }
+        
         return sharedProfileManager
     }()
 
@@ -135,6 +142,19 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         }
         return allItems
     }()
+    
+    // Merge new items into existing list, overwriting old ones with new ones when the profileKey is the same.
+    // Mustn't be called once either itemsKeys or itemsMap has been accessed, and mustn't access either.
+    fileprivate func add(items newItems: [SBAProfileItem]) {
+        var itemsByKey: [String: SBAProfileItem] = [:]
+        for item in items {
+            itemsByKey[item.profileKey] = item
+        }
+        for newItem in newItems {
+            itemsByKey[newItem.profileKey] = newItem
+        }
+        items = Array(itemsByKey.values)
+    }
    
     // MARK: SBADataObject overrides
     

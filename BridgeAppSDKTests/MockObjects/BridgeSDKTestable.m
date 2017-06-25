@@ -1,5 +1,5 @@
 //
-//  SBAProfileItem.m
+//  BridgeSDKTestable.m
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -31,19 +31,19 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBAProfileItem.h"
+#import "BridgeSDKTestable.h"
 
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierString = @"String";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierNumber = @"Number";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierBool = @"Bool";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDate = @"Date";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKBiologicalSex = @"HKBiologicalSex";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierHKQuantity = @"HKQuantity";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierArray = @"Array";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierSet = @"Set";
-SBAProfileTypeIdentifier const SBAProfileTypeIdentifierDictionary = @"Dictionary";
+@implementation BridgeSDKTestable
 
-SBAProfileSourceKey const SBAProfileSourceKeyGivenName = @"firstName";
-SBAProfileSourceKey const SBAProfileSourceKeyFamilyName = @"lastName";
-SBAProfileSourceKey const SBAProfileSourceKeyFullName = @"fullName";
-SBAProfileSourceKey const SBAProfileSourceKeyPreferredName = @"preferredName";
++ (NSObject *)registerTestBridgeCacheManager:(id)authManager
+{
+    Class cacheClass = NSClassFromString(@"SBBCacheManager");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    id cacheMan = [cacheClass performSelector:@selector(inMemoryCacheManagerWithAuthManager:) withObject:authManager];
+#pragma clang diagnostic pop
+    [SBBComponentManager registerComponent:cacheMan forClass:cacheClass];
+    return cacheMan;
+}
+
+@end

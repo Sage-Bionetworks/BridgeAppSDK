@@ -82,6 +82,19 @@
     self.sessionToken = aSessionToken;
 }
 
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didReceiveUserSessionInfo:(nullable id)sessionInfo {
+    SBBUserSessionInfo *info = (SBBUserSessionInfo *)sessionInfo;
+    if (![info isKindOfClass:[SBBUserSessionInfo class]]) {
+        return;
+    }
+    //self.updateFromUserSessionInfo(info) <-- TODO emm 2017-06-20
+    [SBAStudyParticipantProfileItem setStudyParticipant:info.studyParticipant];
+    
+    // the real SBAUser gets these from the StudyParticipant directly, it doesn't copy them to itself
+    self.name = info.studyParticipant.firstName;
+    self.familyName = info.studyParticipant.lastName;
+}
+
 - (NSString *)emailForAuthManager:(id<SBBAuthManagerProtocol>)authManager {
     return self.email;
 }
