@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SBAPerformanceProgressLinePlotTableViewCell" rowHeight="180" id="Maz-QR-ktm" userLabel="Progress Line Plot Cell" customClass="SBAPerformanceProgressLinePlotTableViewCell" customModule="BridgeAppSDK" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Maz-QR-ktm" id="Euo-oB-8Bl">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5J9-mn-3Sv">
+                        <rect key="frame" x="170.5" y="32" width="33.5" height="55.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OtH-NM-3Jx">
+                        <rect key="frame" x="8" y="95.5" width="359" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CTa-m9-G7M" userLabel="Progress Line Plot" customClass="SBAProgressLinePlotView" customModule="BridgeAppSDK" customModuleProvider="target">
+                        <rect key="frame" x="22" y="124" width="331" height="12"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="flf-Nn-9bs"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
+                                <color key="value" red="0.90649300909999997" green="0.9160984848" blue="0.92127130680000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                                <integer key="value" value="4"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="progressMax">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="progressColor">
+                                <color key="value" red="1" green="0.79567945080000002" blue="0.3690716912" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="lineGap">
+                                <real key="value" value="4"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Left" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6pr-8t-FyQ" userLabel="Left Legend Title">
+                        <rect key="frame" x="22" y="144" width="30" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mid" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mAq-0E-NDT" userLabel="Mid Legend Title">
+                        <rect key="frame" x="187" y="144" width="28.5" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Right" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="peC-j7-wpx" userLabel="Right Legend Title">
+                        <rect key="frame" x="313" y="144" width="40" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fcr-iw-vVY" userLabel="Center View">
+                        <rect key="frame" x="187" y="144" width="1" height="1"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="1" id="FSO-yY-DYC"/>
+                            <constraint firstAttribute="height" constant="1" id="kFY-0V-i5j"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="CTa-m9-G7M" secondAttribute="trailing" constant="14" id="5mv-0C-H0m"/>
+                    <constraint firstItem="5J9-mn-3Sv" firstAttribute="centerX" secondItem="Euo-oB-8Bl" secondAttribute="centerX" id="96C-fb-DhS"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="OtH-NM-3Jx" secondAttribute="leading" id="K8W-Uj-mvh"/>
+                    <constraint firstItem="Fcr-iw-vVY" firstAttribute="top" secondItem="CTa-m9-G7M" secondAttribute="bottom" constant="8" id="KHu-6e-Lyf"/>
+                    <constraint firstItem="peC-j7-wpx" firstAttribute="trailing" secondItem="CTa-m9-G7M" secondAttribute="trailing" id="Sce-59-3cE"/>
+                    <constraint firstItem="peC-j7-wpx" firstAttribute="centerY" secondItem="mAq-0E-NDT" secondAttribute="centerY" id="UhJ-df-hBB"/>
+                    <constraint firstItem="5J9-mn-3Sv" firstAttribute="top" secondItem="Euo-oB-8Bl" secondAttribute="top" constant="32" id="VSK-C6-n28"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="OtH-NM-3Jx" secondAttribute="trailing" id="bTX-73-fe5"/>
+                    <constraint firstItem="CTa-m9-G7M" firstAttribute="leading" secondItem="Euo-oB-8Bl" secondAttribute="leadingMargin" constant="14" id="ckO-AF-GAV"/>
+                    <constraint firstItem="mAq-0E-NDT" firstAttribute="top" secondItem="CTa-m9-G7M" secondAttribute="bottom" constant="8" id="dcY-kI-uFJ"/>
+                    <constraint firstItem="OtH-NM-3Jx" firstAttribute="top" secondItem="5J9-mn-3Sv" secondAttribute="bottom" constant="8" id="f8o-J6-kcP"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="mAq-0E-NDT" secondAttribute="bottom" constant="6.5" id="fk7-Us-9An"/>
+                    <constraint firstItem="6pr-8t-FyQ" firstAttribute="leading" secondItem="CTa-m9-G7M" secondAttribute="leading" id="lWp-Qe-t49"/>
+                    <constraint firstItem="mAq-0E-NDT" firstAttribute="leading" secondItem="Fcr-iw-vVY" secondAttribute="leading" id="p1o-fs-mb7"/>
+                    <constraint firstItem="Fcr-iw-vVY" firstAttribute="centerX" secondItem="Euo-oB-8Bl" secondAttribute="centerX" id="uBy-w3-oAc"/>
+                    <constraint firstItem="CTa-m9-G7M" firstAttribute="top" secondItem="OtH-NM-3Jx" secondAttribute="bottom" constant="8" id="ucY-Sq-CKm"/>
+                    <constraint firstItem="6pr-8t-FyQ" firstAttribute="centerY" secondItem="mAq-0E-NDT" secondAttribute="centerY" id="wch-yR-X72"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="detailsLabel" destination="OtH-NM-3Jx" id="ATu-fP-Cvr"/>
+                <outlet property="leftLegendLabel" destination="6pr-8t-FyQ" id="dWQ-iZ-GCl"/>
+                <outlet property="linePlotView" destination="CTa-m9-G7M" id="Vuy-IC-4lI"/>
+                <outlet property="midLegendLabel" destination="mAq-0E-NDT" id="rIL-Mr-3Nv"/>
+                <outlet property="rightLegendLabel" destination="peC-j7-wpx" id="L7F-Jx-bcq"/>
+                <outlet property="titleLabel" destination="5J9-mn-3Sv" id="cF0-B6-Qfo"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

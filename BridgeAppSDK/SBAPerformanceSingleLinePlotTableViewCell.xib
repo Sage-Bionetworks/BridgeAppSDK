@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SBAPerformanceSingleLinePlotTableViewCell" rowHeight="180" id="QMM-KI-UKT" userLabel="Single Line Plot Cell" customClass="SBAPerformanceSingleLinePlotTableViewCell" customModule="BridgeAppSDK" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QMM-KI-UKT" id="tpS-LM-jye">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ax3-Ru-WuK">
+                        <rect key="frame" x="170.5" y="32" width="33.5" height="55.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gmu-iL-1Fu">
+                        <rect key="frame" x="8" y="95.5" width="359" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DbN-lP-IMZ" userLabel="Single Line Plot" customClass="SBASingleLinePlotView" customModule="BridgeAppSDK" customModuleProvider="target">
+                        <rect key="frame" x="22" y="124" width="331" height="12"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="SfO-K4-Zrw"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
+                                <color key="value" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Left" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soV-XZ-Egl" userLabel="Left Legend Title">
+                        <rect key="frame" x="22" y="144" width="30" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Right" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Wi-Ji-NJ1" userLabel="Right Legend Title">
+                        <rect key="frame" x="313" y="144" width="40" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="soV-XZ-Egl" secondAttribute="bottom" constant="6" id="2hJ-76-Upb"/>
+                    <constraint firstItem="DbN-lP-IMZ" firstAttribute="top" secondItem="Gmu-iL-1Fu" secondAttribute="bottom" constant="8" id="3B6-az-V5S"/>
+                    <constraint firstItem="6Wi-Ji-NJ1" firstAttribute="centerY" secondItem="soV-XZ-Egl" secondAttribute="centerY" id="Ge2-cN-uZE"/>
+                    <constraint firstItem="DbN-lP-IMZ" firstAttribute="leading" secondItem="tpS-LM-jye" secondAttribute="leadingMargin" constant="14" id="IAf-la-8MJ"/>
+                    <constraint firstItem="Gmu-iL-1Fu" firstAttribute="top" secondItem="ax3-Ru-WuK" secondAttribute="bottom" constant="8" id="Iwq-HK-PPB"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="DbN-lP-IMZ" secondAttribute="trailing" constant="14" id="RUG-io-VLS"/>
+                    <constraint firstItem="ax3-Ru-WuK" firstAttribute="centerX" secondItem="tpS-LM-jye" secondAttribute="centerX" id="TeJ-2N-ULd"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Gmu-iL-1Fu" secondAttribute="trailing" id="VcZ-7y-rOT"/>
+                    <constraint firstItem="ax3-Ru-WuK" firstAttribute="top" secondItem="tpS-LM-jye" secondAttribute="top" constant="32" id="Yh0-O1-lvf"/>
+                    <constraint firstItem="6Wi-Ji-NJ1" firstAttribute="trailing" secondItem="DbN-lP-IMZ" secondAttribute="trailing" id="esw-Sr-wwR"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="Gmu-iL-1Fu" secondAttribute="leading" id="gIj-XA-JUj"/>
+                    <constraint firstItem="soV-XZ-Egl" firstAttribute="top" secondItem="DbN-lP-IMZ" secondAttribute="bottom" constant="8" id="rJD-Ve-LT1"/>
+                    <constraint firstItem="soV-XZ-Egl" firstAttribute="leading" secondItem="DbN-lP-IMZ" secondAttribute="leading" id="tv6-yd-HOm"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="detailsLabel" destination="Gmu-iL-1Fu" id="DFD-of-fcL"/>
+                <outlet property="leftLegendLabel" destination="soV-XZ-Egl" id="qtL-ed-M56"/>
+                <outlet property="linePlotView" destination="DbN-lP-IMZ" id="XVf-DV-DVp"/>
+                <outlet property="rightLegendLabel" destination="6Wi-Ji-NJ1" id="oNA-lq-bE1"/>
+                <outlet property="titleLabel" destination="ax3-Ru-WuK" id="pJW-hJ-fcC"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

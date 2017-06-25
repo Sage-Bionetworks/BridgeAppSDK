@@ -83,6 +83,11 @@ public let SBAMainStoryboardName = "Main"
         return UIApplication.shared.delegate as? SBAAppDelegate
     }
     
+    open var studyDuration: TimeInterval {
+        let oneYear = TimeInterval(60 * 60 * 24 * 365)
+        return oneYear
+    }
+    
     // MARK: UIApplicationDelegate
     
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -634,4 +639,14 @@ public let SBAMainStoryboardName = "Main"
         viewController.present(alert, animated: true, completion: nil)
     }
 
+    /**
+     * This function pulls the start date from the createdOn date in SBAUser and then adds the
+     * study duration to determine the end date.
+     * @return A function that will be called containing start and end dates of the study as a tuple
+     */
+    open func studyDates() -> (startDate: Date, endDate: Date) {
+        let start = currentUser.createdOn
+        let end = currentUser.createdOn.addingTimeInterval(studyDuration)
+        return (startDate: start, endDate: end)
+    }
 }
