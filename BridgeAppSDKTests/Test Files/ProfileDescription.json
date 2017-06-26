@@ -31,7 +31,8 @@
                  },
                  {
                  "profileKey": "gender",
-                 "classType": "KeychainProfileItem",
+                 "classType": "ClientDataProfileItem",
+                 "activityGuid": "fake-demographic-activity-guid",
                  "itemType": "HKBiologicalSex",
                  },
                  {
@@ -47,7 +48,8 @@
                  },
                  {
                  "profileKey": "numberOfSiblings",
-                 "classType": "UserDefaultsProfileItem",
+                 "classType": "ClientDataProfileItem",
+                 "activityGuid": "fake-demographic-activity-guid",
                  "itemType": "Number",
                  "demographicKey": "number_of_siblings"
                  },

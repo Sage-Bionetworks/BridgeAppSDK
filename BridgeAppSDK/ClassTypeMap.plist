@@ -26,5 +26,7 @@
 	<string>SBAStudyParticipantProfileItem</string>
 	<key>StudyParticipantCustomAttributesProfileItem</key>
 	<string>SBAStudyParticipantCustomAttributesProfileItem</string>
+	<key>ClientDataProfileItem</key>
+	<string>SBAClientDataProfileItem</string>
 </dict>
 </plist>

@@ -128,6 +128,9 @@ public let SBAMainStoryboardName = "Main"
             // Hide content so it doesn't appear in the app switcher.
             rootViewController?.contentHidden = true
         }
+        
+        // Save any outstanding clientData profile item updates to Bridge.
+        SBAClientDataProfileItem.updateChangesToBridge()
     }
     
     open func applicationDidBecomeActive(_ application: UIApplication) {

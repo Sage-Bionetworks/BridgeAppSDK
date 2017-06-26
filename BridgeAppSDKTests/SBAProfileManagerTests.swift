@@ -74,8 +74,8 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssert(genderItem!.sourceKey == "gender", "expected genderItem.sourceKey to be gender, but it's \(genderItem!.sourceKey)")
             XCTAssert(genderItem!.demographicKey == genderItem!.profileKey, "expected genderItem.demographicKey to be \(genderItem!.profileKey), but it's \(genderItem!.demographicKey)")
             XCTAssert(genderItem!.itemType == .hkBiologicalSex, "expected genderItem.itemType to be HKBiologicalSex, but it's \(genderItem!.itemType.rawValue)")
-            let typedItem = genderItem as? BridgeAppSDK.SBAKeychainProfileItem
-            XCTAssertNotNil(typedItem, "genderItem is not an SBAKeychainProfileItem: \(String(describing: genderItem))")
+            let typedItem = genderItem as? BridgeAppSDK.SBAClientDataProfileItem
+            XCTAssertNotNil(typedItem, "genderItem is not an SBAClientDataProfileItem: \(String(describing: genderItem))")
         }
         if birthDateItem != nil {
             XCTAssert(birthDateItem!.sourceKey == "birthDate", "expected birthDateItem.sourceKey to be name, but it's \(birthDateItem!.sourceKey)")
@@ -95,8 +95,8 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssert(numberOfSiblingsItem!.sourceKey == "numberOfSiblings", "expected numberOfSiblingsItem.sourceKey to be numberOfSiblings, but it's \(numberOfSiblingsItem!.sourceKey)")
             XCTAssert(numberOfSiblingsItem!.demographicKey == "number_of_siblings", "expected favoriteColorItem.demographicKey to be number_of_siblings, but it's \(favoriteColorItem!.demographicKey)")
             XCTAssert(numberOfSiblingsItem!.itemType == .number, "expected numberOfSiblingsItem.itemType to be Number, but it's \(numberOfSiblingsItem!.itemType.rawValue)")
-            let typedItem = numberOfSiblingsItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
-            XCTAssertNotNil(typedItem, "numberOfSiblingsItem is not an SBAUserDefaultsProfileItem: \(String(describing: numberOfSiblingsItem))")
+            let typedItem = numberOfSiblingsItem as? BridgeAppSDK.SBAClientDataProfileItem
+            XCTAssertNotNil(typedItem, "numberOfSiblingsItem is not an SBAClientDataProfileItem: \(String(describing: numberOfSiblingsItem))")
         }
     }
     
@@ -110,26 +110,28 @@ class SBAProfileManagerTests: ResourceTestCase {
         let familyNameItem = items["family"] as? BridgeAppSDK.SBAStudyParticipantProfileItem
         let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAStudyParticipantCustomAttributesProfileItem
         let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAKeychainProfileItem
-        let genderItem = items["gender"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let genderItem = items["gender"] as? BridgeAppSDK.SBAClientDataProfileItem
         let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBABirthDateProfileItem
         let favoriteColorItem = items["favoriteColor"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
-        let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
+        let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAClientDataProfileItem
         XCTAssert(fullNameItem != nil, "no SBAUserProfileItem for profileKey fullName")
         XCTAssert(externalIdItem != nil, "no SBAUserProfileItem for profileKey externalId")
-        XCTAssert(genderItem != nil, "no SBAKeychainProfileItem for profileKey gender")
+        XCTAssert(genderItem != nil, "no SBAClientDataProfileItem for profileKey gender")
         XCTAssert(birthDateItem != nil, "no SBAKeychainProfileItem for profileKey birthDate")
         XCTAssert(favoriteColorItem != nil, "no SBAUserDefaultsProfileItem for profileKey favoriteColor")
-        XCTAssert(numberOfSiblingsItem != nil, "no SBAUserDefaultsProfileItem for profileKey numberOfSiblings")
+        XCTAssert(numberOfSiblingsItem != nil, "no SBAClientDataProfileItem for profileKey numberOfSiblings")
         
         // Use a mock for the keychain
         let mockKeychain = MockKeychainWrapper()
         externalIdItem?.keychain = mockKeychain
-        genderItem?.keychain = mockKeychain
+        
+        // Use the same mock keychain for the client item cache
+        SBAClientDataProfileItem.keychain = mockKeychain
+        try? mockKeychain.setObject([String: [String: SBBJSONValue]]() as NSSecureCoding, forKey: SBAClientDataProfileItem.cachedItemsKey)
         
         // Use a uuid instance for the user defaults
         let mockUserDefaults = UserDefaults(suiteName: UUID().uuidString)!
         favoriteColorItem?.defaults = mockUserDefaults
-        numberOfSiblingsItem?.defaults = mockUserDefaults
         
         // set up a dummy instance for the study participant
         SBAStudyParticipantProfileItem.studyParticipant = DummyStudyParticipant()
