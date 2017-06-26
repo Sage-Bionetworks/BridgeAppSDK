@@ -201,7 +201,7 @@
 		FFC160A31CFE67AA00C29AF7 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FFCC3ADD1EE7400000A2A2C8 /* SBACompletionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCC3ADB1EE7400000A2A2C8 /* SBACompletionStepViewController.swift */; };
 		FFCC3ADE1EE7400000A2A2C8 /* SBACompletionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFCC3ADC1EE7400000A2A2C8 /* SBACompletionStepViewController.xib */; };
-		FFCE310D1EC1273C0086DCAA /* SBABridgeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */; };
+		FFCE310D1EC1273C0086DCAA /* MockActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCE310C1EC1273C0086DCAA /* MockActivityManager.swift */; };
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
@@ -637,7 +637,7 @@
 		FFC15FDE1CFE513200C29AF7 /* sample-study.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "sample-study.pem"; sourceTree = "<group>"; };
 		FFCC3ADB1EE7400000A2A2C8 /* SBACompletionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACompletionStepViewController.swift; sourceTree = "<group>"; };
 		FFCC3ADC1EE7400000A2A2C8 /* SBACompletionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBACompletionStepViewController.xib; sourceTree = "<group>"; };
-		FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABridgeManagerTests.swift; sourceTree = "<group>"; };
+		FFCE310C1EC1273C0086DCAA /* MockActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockActivityManager.swift; sourceTree = "<group>"; };
 		FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManagerTests.swift; sourceTree = "<group>"; };
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
@@ -830,7 +830,6 @@
 				FF6484141CB5E9BF0055B9E7 /* ResourceTestCase.swift */,
 				FFB30E5C1D49537400D175D2 /* SBAAccountTests.swift */,
 				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
-				FFCE310C1EC1273C0086DCAA /* SBABridgeManagerTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
 				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
@@ -977,6 +976,7 @@
 				FF8997921D0B589500B26051 /* MockUser.m */,
 				8045EF021EF9F3C8009B80E0 /* BridgeSDKTestable.h */,
 				8045EF031EF9F3C8009B80E0 /* BridgeSDKTestable.m */,
+				FFCE310C1EC1273C0086DCAA /* MockActivityManager.swift */,
 			);
 			path = MockObjects;
 			sourceTree = "<group>";
@@ -1942,7 +1942,7 @@
 				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
-				FFCE310D1EC1273C0086DCAA /* SBABridgeManagerTests.swift in Sources */,
+				FFCE310D1EC1273C0086DCAA /* MockActivityManager.swift in Sources */,
 				FF7C29E01ECBA268009FDA44 /* MockKeychainWrapper.m in Sources */,
 				FB8439201C7315030086E961 /* SBASurveyFactoryTests.swift in Sources */,
 				FFDECDFD1D077C2000434001 /* SBAConsentTests.swift in Sources */,

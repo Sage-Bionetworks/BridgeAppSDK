@@ -248,7 +248,22 @@
 
 + (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
                           completion:(SBABridgeManagerCompletionBlock)completionBlock {
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:scheduledFrom to:scheduledTo cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+    // make sure the dates are in ascending order
+    NSDate *startTime = scheduledFrom;
+    NSDate *endTime = scheduledTo;
+    NSComparisonResult order = [scheduledFrom compare:scheduledTo];
+    if (order == NSOrderedDescending) {
+        startTime = scheduledTo;
+        endTime = scheduledFrom;
+    }
+    
+    // pin the startTime and endTime to be no earlier than the start of the day the participant joined the study
+    NSDate *participantStartDate = SBAAppDelegate.shared.currentUser.createdOn;
+    NSDate *earliestDate = [[NSCalendar currentCalendar] startOfDayForDate:participantStartDate];
+    startTime = ([startTime compare:earliestDate] == NSOrderedAscending) ? earliestDate : startTime;
+    endTime = ([endTime compare:earliestDate] == NSOrderedAscending) ? earliestDate : endTime;
+    
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:startTime to:endTime cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
         completionBlock(activitiesList, error);
     }];
 }

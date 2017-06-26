@@ -1,5 +1,5 @@
 //
-//  SBABridgeManagerTests.swift
+//  MockActivityManager.swift
 //  BridgeAppSDK
 //
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -31,128 +31,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import XCTest
 @testable import BridgeAppSDK
 
-class SBABridgeManagerTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    // fetchScheduledActivitiesWithStartDate
-    
-    func testFetchScheduledActivitiesWithStartDate_6Ahead_10Behind() {
-        
-        let activityManager = TestActivityManager()
-        let schedules = buildSchedule(daysAhead: 6, daysBehind: 10)
-        activityManager.getScheduledActivitiesForRange_Result = schedules
-        SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
-        
-        let now = Date()
-        let startDate = now.addingNumberOfDays(7)
-        let endDate = now.addingNumberOfDays(-10)
-        
-        let exp = expectation(description: "Schedule returned")
-        var result: [SBBScheduledActivity]?
-        SBABridgeManager.fetchScheduledActivities(from: startDate, to: endDate) { (output, _) in
-            result = output as? [SBBScheduledActivity]
-            exp.fulfill()
-        }
-        
-        // Wait for the expectation to be fulfilled
-        waitForExpectations(timeout: 1) { error in
-            if let error = error {
-                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
-            }
-        }
-        
-        XCTAssertNotNil(result)
-        XCTAssertTrue(activityManager.getScheduledActivitiesForRange_called)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledFrom, startDate)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledTo, endDate)
-        
-        // Check that the duplicates are removed
-        guard result != nil else { return }
-        XCTAssertEqual(result!.count, 68)
-    }
-    
-    func testFetchScheduledActivitiesWithStartDate_0Ahead_10Behind() {
-        
-        let activityManager = TestActivityManager()
-        let schedules = buildSchedule(daysAhead: 1, daysBehind: 10)
-        activityManager.getScheduledActivitiesForRange_Result = schedules
-        SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
-        
-        let now = Date()
-        let startDate = now.addingNumberOfDays(-3)
-        let endDate = now.addingNumberOfDays(-10)
-        
-        let exp = expectation(description: "Schedule returned")
-        var result: [SBBScheduledActivity]?
-        SBABridgeManager.fetchScheduledActivities(from: startDate, to: endDate) { (output, _) in
-            result = output as? [SBBScheduledActivity]
-            exp.fulfill()
-        }
-        
-        // Wait for the expectation to be fulfilled
-        waitForExpectations(timeout: 1) { error in
-            if let error = error {
-                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
-            }
-        }
-        
-        XCTAssertNotNil(result)
-        XCTAssertFalse(activityManager.getScheduledActivities_called)
-        XCTAssertTrue(activityManager.getScheduledActivitiesForRange_called)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledFrom, startDate)
-        XCTAssertEqual(activityManager.getScheduledActivitiesForRange_scheduledTo, endDate)
-    }
-    
-    // MARK: build schedules
-    
-    func createActivityGuids() -> [String] {
-        return [UUID().uuidString, UUID().uuidString, UUID().uuidString, UUID().uuidString]
-    }
-    
-    func buildSchedule(daysAhead:Int, daysBehind:Int) -> [SBBScheduledActivity] {
-        
-        let midnight = Date().startOfDay()
-        let guids = createActivityGuids()
-        var schedules:[SBBScheduledActivity] = []
-        
-        for ii in (-1*daysBehind)...daysAhead {
-            for guid in guids {
-                let schedule = createSchedule(guid: guid, scheduledOn: midnight.addingNumberOfDays(ii))
-                schedules.append(schedule)
-            }
-        }
-        
-        return schedules
-    }
-    
-    func createSchedule(guid: String, scheduledOn: Date) -> SBBScheduledActivity {
-        
-        let schedule = SBBScheduledActivity()
-        schedule.guid = UUID().uuidString
-        schedule.scheduledOn = scheduledOn
-        schedule.expiresOn = scheduledOn.addingNumberOfDays(1)
-        
-        let activity = SBBActivity()
-        activity.guid = guid
-        schedule.activity = activity
-        
-        return schedule
-    }
-}
 
-class TestActivityManager : NSObject, SBBActivityManagerProtocol {
+class MockActivityManager : NSObject, SBBActivityManagerProtocol {
     
     fileprivate let taskQueue = DispatchQueue(label: UUID().uuidString)
     
@@ -240,7 +122,6 @@ class TestActivityManager : NSObject, SBBActivityManagerProtocol {
         return getScheduledActivities(from: scheduledFrom, to: scheduledTo, cachingPolicy: .fallBackToCached, withCompletion: completion)
     }
 
-    
 }
 
 
