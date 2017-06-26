@@ -127,7 +127,7 @@ open class SBAPerformanceViewController: UITableViewController, SBAScheduledActi
                 
             default: //.completedActivities
                 let cell = tableView.dequeueReusableCell(withIdentifier: SBAPerformanceTitleDetailsTableViewCell.staticCellName, for: indexPath) as! SBAPerformanceTitleDetailsTableViewCell
-                cell.titleLabel.text = Localization.localizedString("MS_STUDY_PROGRESS_COMPLETED_ACTIVITIES_TITLE")
+                cell.titleLabel.text = Localization.localizedString("SBA_STUDY_PROGRESS_COMPLETED_ACTIVITIES_TITLE")
                 cell.detailsLabel.attributedText = self.completedActivitiesStr()
                 cell.divider.isHidden = true
                 self.configureTitleDetailsCell(cell: cell, for: indexPath)
