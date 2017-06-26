@@ -31,7 +31,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBABridgeManager+Internal.h"
+#import "SBABridgeManager.h"
 #import <BridgeAppSDK/BridgeAppSDK-Swift.h>
 @import ResearchUXFactory;
 
@@ -246,26 +246,24 @@
     }];
 }
 
-static BOOL _allowScheduleRequestsBeforeStartDate = false;
-
-+ (BOOL)allowScheduleRequestsBeforeStartDate {
-    return _allowScheduleRequestsBeforeStartDate;
-}
-
-+ (void)setAllowScheduleRequestsBeforeStartDate:(BOOL)allow {
-    _allowScheduleRequestsBeforeStartDate = allow;
-}
-
 + (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
                           completion:(SBABridgeManagerCompletionBlock)completionBlock {
-    if (!self.allowScheduleRequestsBeforeStartDate) {
-        // pin the scheduledFrom date to be no earlier than when the participant joined the study
-        NSDate *participantStartDate = SBAAppDelegate.shared.currentUser.createdOn;
-        NSComparisonResult order = [scheduledFrom compare:participantStartDate];
-        scheduledFrom = (order == NSOrderedAscending) ? participantStartDate : scheduledFrom;
+    // make sure the dates are in ascending order
+    NSDate *startTime = scheduledFrom;
+    NSDate *endTime = scheduledTo;
+    NSComparisonResult order = [scheduledFrom compare:scheduledTo];
+    if (order == NSOrderedDescending) {
+        startTime = scheduledTo;
+        endTime = scheduledFrom;
     }
     
-    [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:scheduledFrom to:scheduledTo cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+    // pin the startTime and endTime to be no earlier than the start of the day the participant joined the study
+    NSDate *participantStartDate = SBAAppDelegate.shared.currentUser.createdOn;
+    NSDate *earliestDate = [[NSCalendar currentCalendar] startOfDayForDate:participantStartDate];
+    startTime = ([startTime compare:earliestDate] == NSOrderedAscending) ? earliestDate : startTime;
+    endTime = ([endTime compare:earliestDate] == NSOrderedAscending) ? earliestDate : endTime;
+    
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:startTime to:endTime cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
         completionBlock(activitiesList, error);
     }];
 }

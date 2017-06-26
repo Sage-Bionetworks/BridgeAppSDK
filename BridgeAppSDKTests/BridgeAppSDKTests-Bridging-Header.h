@@ -7,4 +7,3 @@
 #import "MockAppInfoDelegate.h"
 #import "MockKeychainWrapper.h"
 #import "BridgeSDKTestable.h"
-#import "SBABridgeManager+Internal.h"
