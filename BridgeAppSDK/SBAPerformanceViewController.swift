@@ -71,6 +71,7 @@ open class SBAPerformanceViewController: UITableViewController, SBAScheduledActi
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.registerCells()
         
+        self.tableView.allowsSelection = false
         self.activityManager.reloadData()
     }
     
