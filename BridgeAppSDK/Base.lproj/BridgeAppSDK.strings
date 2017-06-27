@@ -116,4 +116,18 @@
 "MOOD_SCALE_CHOICE_4" = "Not Great";
 "MOOD_SCALE_CHOICE_5" = "Horrible";
 
+/* Performance Screen */
+"SBA_MY_PERFORMANCE_TITLE" = "My Performance";                       // Dashboard title
+"SBA_STUDY_PROGRES_TITLE" = "Study Progress";                        // Study progress header title
+"SBA_STUDY_PROGRESS_TIME_LEFT_TITLE" = "Time Left in Study";         // Study progress header title
+"SBA_STUDY_PROGRESS_COMPLETED_ACTIVITIES_TITLE" = "Completed Activities"; // Study progress header title
+"SBA_HEALTH_SUMMARY_TITLE" = "Health Summary";                       // Health summary header title
+"SBA_ACTIVITIES_TITLE" = "Activities";                               // Activities title
+"SBA_ACTIVITIES_SINGULAR_TITLE" = "Activity";                        // Activity title
+"SBA_ACTIVITIES_INCOMPLETE_%d_MSG" = "Complete %d more activity\nuntil this is unlocked.";                                                     // Need more activities message
+"SBA_ACTIVITIES_INCOMPLETE_%d_PLURAL_MSG" = "Complete %d more activities\nuntil this is unlocked.";                                                     // Need more activities message
+"SBA_MY_TRENDS_BALANCE_TITLE" = "My Trends";                         // My Trends title
+"SBA_MY_TRENDS_BUTTON_TITLE" = "What do you want to trend?";         // My Trends button stitle
+
+
 

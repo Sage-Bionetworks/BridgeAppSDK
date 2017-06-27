@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SBAPerformanceTitleDetailsTableViewCell" rowHeight="136" id="Gew-Jy-k0g" userLabel="Title Details Cell" customClass="SBAPerformanceTitleDetailsTableViewCell" customModule="BridgeAppSDK" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="136"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Gew-Jy-k0g" id="eQS-u3-YJS">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="135.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tVU-7I-B6h">
+                        <rect key="frame" x="170" y="22" width="34" height="32"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCS-d3-NSX">
+                        <rect key="frame" x="8" y="62" width="359" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dK7-Qm-ulp" userLabel="Divider">
+                        <rect key="frame" x="31" y="113" width="314" height="2"/>
+                        <color key="backgroundColor" red="0.1960784314" green="0.1960784314" blue="0.1960784314" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="2" id="OH1-WS-hcU"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="XCS-d3-NSX" firstAttribute="top" secondItem="tVU-7I-B6h" secondAttribute="bottom" constant="8" id="39e-Ms-zHf"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="dK7-Qm-ulp" secondAttribute="bottom" constant="12" id="AR4-hI-f0Z"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="XCS-d3-NSX" secondAttribute="trailing" id="Mog-kY-1ss"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="dK7-Qm-ulp" secondAttribute="trailing" constant="22" id="N6q-dg-ZcE"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="XCS-d3-NSX" secondAttribute="leading" id="bTf-lC-eaA"/>
+                    <constraint firstItem="tVU-7I-B6h" firstAttribute="top" secondItem="eQS-u3-YJS" secondAttribute="top" constant="22" id="jdQ-oy-AfA"/>
+                    <constraint firstItem="tVU-7I-B6h" firstAttribute="centerX" secondItem="eQS-u3-YJS" secondAttribute="centerX" id="mqB-e3-9fW"/>
+                    <constraint firstItem="dK7-Qm-ulp" firstAttribute="top" secondItem="XCS-d3-NSX" secondAttribute="bottom" constant="30" id="ocz-oU-jbk"/>
+                    <constraint firstItem="dK7-Qm-ulp" firstAttribute="leading" secondItem="eQS-u3-YJS" secondAttribute="leadingMargin" constant="23" id="zee-nl-sdk"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="detailsLabel" destination="XCS-d3-NSX" id="wZC-3K-iNh"/>
+                <outlet property="divider" destination="dK7-Qm-ulp" id="jvo-CZ-M0y"/>
+                <outlet property="titleLabel" destination="tVU-7I-B6h" id="P6S-cB-FsN"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

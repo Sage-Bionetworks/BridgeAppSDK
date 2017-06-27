@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SBAPerformanceTrendsGraphTableViewCell" rowHeight="502" id="Rrz-z0-QzX" userLabel="Trends Graph Cell" customClass="SBAPerformanceTrendsGraphTableViewCell" customModule="BridgeAppSDK" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="502"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rrz-z0-QzX" id="30H-j5-dub">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="501.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nNk-fu-KhI" customClass="RoundedButton" customModule="BridgeAppSDK" customModuleProvider="target">
+                        <rect key="frame" x="29" y="422.5" width="325" height="60"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="60" id="wTb-d0-AKs"/>
+                        </constraints>
+                        <state key="normal" title="Button Bottom"/>
+                    </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pct-sx-kUA" userLabel="Graph View">
+                        <rect key="frame" x="0.0" y="16" width="375" height="398.5"/>
+                        <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="398.5" id="llL-hk-pcP"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="pct-sx-kUA" secondAttribute="trailing" constant="-8" id="0yf-TC-FxZ"/>
+                    <constraint firstItem="nNk-fu-KhI" firstAttribute="top" secondItem="pct-sx-kUA" secondAttribute="bottom" constant="8" id="GyT-nR-61m"/>
+                    <constraint firstItem="pct-sx-kUA" firstAttribute="leading" secondItem="30H-j5-dub" secondAttribute="leadingMargin" constant="-8" id="H6G-Xg-Y68"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="nNk-fu-KhI" secondAttribute="trailing" constant="13" id="N2M-Gh-uyT"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="nNk-fu-KhI" secondAttribute="bottom" constant="11" id="OxJ-sX-B1f"/>
+                    <constraint firstItem="nNk-fu-KhI" firstAttribute="leading" secondItem="30H-j5-dub" secondAttribute="leadingMargin" constant="21" id="a2i-96-029"/>
+                    <constraint firstItem="pct-sx-kUA" firstAttribute="top" secondItem="30H-j5-dub" secondAttribute="topMargin" constant="8" id="lqm-tb-QBx"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="buttonBottom" destination="nNk-fu-KhI" id="wad-lO-a5U"/>
+                <outlet property="graphView" destination="pct-sx-kUA" id="ENC-EF-qG9"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>
