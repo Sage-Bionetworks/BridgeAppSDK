@@ -66,7 +66,12 @@ import UIKit
     
     let gradientLayer = CAGradientLayer()
     
-    override public init(frame: CGRect) {
+    public init() {
+        super.init(frame: CGRect.zero)
+        commonInit()
+    }
+    
+    override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
@@ -81,6 +86,11 @@ import UIKit
         commonInit()
     }
     
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = self.bounds
+    }
+    
     func commonInit() {
         backgroundColor = UIColor.clear
         gradientLayer.frame = self.bounds
@@ -93,5 +103,10 @@ import UIKit
         if layer.sublayers?.count ?? 0 == 0 {
             layer.addSublayer(gradientLayer)
         }
+    }
+    
+    override open func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+        gradientLayer.frame = self.bounds
     }
 }
