@@ -685,8 +685,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     open func didEndSurveyEarly(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        if let firstStepResult = taskViewController.result.results?.first as? ORKStepResult,
-            let endResult = firstStepResult.results?.find({ $0 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
+        if let endResult = taskViewController.result.firstResult( where: { $1 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
             endResult.didEndSurvey {
             return true
         }
@@ -1060,6 +1059,20 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
     }
 }
 
-
-
+extension ORKTaskResult {
+    
+    public func firstResult(where evaluate: (_ stepResult: ORKStepResult, _ result: ORKResult) -> Bool) -> ORKResult? {
+        guard let results = self.results as? [ORKStepResult] else { return nil }
+        for stepResult in results {
+            guard let stepResults = stepResult.results else { continue }
+            for result in stepResults {
+                if evaluate(stepResult, result) {
+                    return result
+                }
+            }
+        }
+        return nil
+    }
+    
+}
 
