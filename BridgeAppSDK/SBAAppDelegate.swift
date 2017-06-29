@@ -87,6 +87,15 @@ public let SBAMainStoryboardName = "Main"
     
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
+        
+        // If a previous install on this device was deleted, its keychain will still be around, but its
+        // userDefaults will have been wiped. In that case we want to make sure the old keychain is wiped
+        // so BridgeSDK doesn't see the old credentials and try to read/write from the old account during
+        // the onboarding/consent/signUp process.
+        if currentUser.onboardingStepIdentifier == nil &&
+            !currentUser.isLoginVerified {
+            currentUser.resetStoredUserData()
+        }
 
         self.initializeBridgeServerConnection()
         BridgeSDK.setErrorUIDelegate(self)
