@@ -49,7 +49,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         // the onboarding/consent/signUp process.
         if user.onboardingStepIdentifier == nil &&
             !user.isLoginVerified {
-            user.resetStoredUserData()
+            user.resetKeychain()
         }
         return user
     }()
