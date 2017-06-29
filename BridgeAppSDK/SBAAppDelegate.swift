@@ -88,15 +88,7 @@ public let SBAMainStoryboardName = "Main"
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
         
-        // If a previous install on this device was deleted, its keychain will still be around, but its
-        // userDefaults will have been wiped. In that case we want to make sure the old keychain is wiped
-        // so BridgeSDK doesn't see the old credentials and try to read/write from the old account during
-        // the onboarding/consent/signUp process.
-        if currentUser.onboardingStepIdentifier == nil &&
-            !currentUser.isLoginVerified {
-            currentUser.resetStoredUserData()
-        }
-
+        self.resetUserDataIfLoggedOut()
         self.initializeBridgeServerConnection()
         BridgeSDK.setErrorUIDelegate(self)
         
@@ -200,6 +192,23 @@ public let SBAMainStoryboardName = "Main"
         return _currentUser
     }
     private let _currentUser = SBAUser.shared
+    
+    /**
+     Called on launch. This will reset the keychain if the user's stored information
+     indicates that they are logged out. This is necessary b/c deleting the app and reinstalling
+     does not remove values stored in the keychain.
+     */
+    open func resetUserDataIfLoggedOut() {
+        
+        // If the user defaults keys all indicate logged out state
+        // and *not* in the middle of onboarding, then reset the user.
+        if !currentUser.isLoginVerified &&
+            (currentUser.onboardingStepIdentifier == nil) &&
+            !currentUser.isConsentVerified &&
+            !currentUser.isRegistered {
+            currentUser.resetStoredUserData()
+        }
+    }
     
     // ------------------------------------------------
     // MARK: RootViewController management
