@@ -308,7 +308,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      */
     @objc(scheduledActivityForTaskIdentifier:)
     open func scheduledActivity(for taskIdentifier: String) -> SBBScheduledActivity? {
-        return activities.find({ $0.taskIdentifier == taskIdentifier })
+        return activities.find({ $0.activityIdentifier == taskIdentifier })
     }
 
     
@@ -675,7 +675,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
                     // If schedule is found then set its start/stop time and add to list to update
                     subschedule.startedOn = schedule.startedOn
                     subschedule.finishedOn = schedule.finishedOn
-                    scheduledActivities += [subschedule]
+                    scheduledActivities.append(subschedule)
                 }
             }
         }
