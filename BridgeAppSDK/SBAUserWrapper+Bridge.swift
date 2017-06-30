@@ -634,19 +634,16 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
 
 extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     var createdOn: Date {
-        guard self.studyParticipant != nil && self.studyParticipant.createdOn != nil else { return Date() }
         // If the participant hasn't signed in yet, there won't be a createdOn date in the placeholder study participant object.
-        return self.studyParticipant.createdOn ?? Date()
+        return self.studyParticipant?.createdOn ?? Date()
     }
 
     var lastName: String? {
-        guard self.studyParticipant != nil else { return nil }
-        return self.studyParticipant.lastName
+        return self.studyParticipant?.lastName
     }
 
     var firstName: String? {
-        guard self.studyParticipant != nil else { return nil }
-        return self.studyParticipant.firstName
+        return self.studyParticipant?.firstName
     }
 
     var subpopulationGuid: String? {

@@ -129,8 +129,8 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
     }
     
     open func shouldEndTask(step: ORKStep?, with result: ORKTaskResult) -> Bool {
-        guard let contionalExit = self.survey as? SBAConditionalExit else { return false }
-        return contionalExit.shouldEndTask(step: step, with: result)
+        guard let conditionalExit = self.survey as? SBAConditionalExit else { return false }
+        return conditionalExit.shouldEndTask(step: step, with: result)
     }
     
     // MARK: NSCopying
