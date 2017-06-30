@@ -77,5 +77,10 @@ class AppDelegate: SBAAppDelegate {
         let unreadCount = newsfeedManager.unreadPostsCount()
         tabItem.badgeValue = (unreadCount == 0) ? nil : "\(unreadCount)"
     }
-        
+    
+    // for unit tests
+    override open var currentUser: SBAUserWrapper {
+        return mockUser ?? super.currentUser
+    }
+    public var mockUser: SBAUserWrapper?
 }

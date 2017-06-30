@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import BridgeAppSDK
+@testable import BridgeAppSDKSample
 
 class SBAProfileManagerTests: ResourceTestCase {
     
@@ -100,6 +101,42 @@ class SBAProfileManagerTests: ResourceTestCase {
         }
     }
     
+    // MARK: build schedules
+    
+    static let demographicGuid: String = "demographic-survey-activity-guid"
+    static let someOtherGuid: String = "some-other-activity-guid"
+    let activityGuids: [String] = [demographicGuid, someOtherGuid]
+    
+    func buildSchedule(startTime: Date, endTime: Date) -> [SBBScheduledActivity] {
+        
+        var schedules:[SBBScheduledActivity] = []
+        
+        var scheduledOn = startTime.startOfDay()
+        while scheduledOn < endTime {
+            for guid in activityGuids {
+                let schedule = createSchedule(guid: guid, scheduledOn: scheduledOn)
+                schedules.append(schedule)
+            }
+            scheduledOn = scheduledOn.addingNumberOfDays(1)
+        }
+        
+        return schedules
+    }
+    
+    func createSchedule(guid: String, scheduledOn: Date) -> SBBScheduledActivity {
+        
+        let activity = SBBActivity()
+        activity.guid = guid
+
+        let schedule = SBBScheduledActivity()
+        schedule.activity = activity
+        schedule.guid = "\(activity.guid!):\(scheduledOn)"
+        schedule.scheduledOn = scheduledOn
+        schedule.expiresOn = scheduledOn.addingNumberOfDays(1)
+        
+        return schedule
+    }
+    
     func testSetAndGetValueForProfileKey() {
         guard let items = profileManager?.profileItems() else {
             XCTFail("No ProfileManager instance")
@@ -128,6 +165,21 @@ class SBAProfileManagerTests: ResourceTestCase {
         // Use the same mock keychain for the client item cache
         SBAClientDataProfileItem.keychain = mockKeychain
         try? mockKeychain.setObject([String: [String: SBBJSONValue]]() as NSSecureCoding, forKey: SBAClientDataProfileItem.cachedItemsKey)
+        
+        // Use a mock activity manager
+        let activityManager = MockActivityManager()
+        let historyDays = 10
+        let futureDays = 10
+        let startTime = Date().addingNumberOfDays(-historyDays)
+        let endTime = startTime.addingNumberOfDays(futureDays)
+        let schedules = buildSchedule(startTime: startTime, endTime: endTime)
+        activityManager.getScheduledActivitiesForRange_Result = schedules
+        SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
+        
+        // Use a mock user as the app delegate's currentUser
+        let mockUser = MockUser()
+        mockUser.createdOn = Date().addingNumberOfDays(-historyDays)
+        (SBAAppDelegate.shared as? AppDelegate)?.mockUser = mockUser
         
         // Use a uuid instance for the user defaults
         let mockUserDefaults = UserDefaults(suiteName: UUID().uuidString)!
@@ -276,6 +328,16 @@ class SBAProfileManagerTests: ResourceTestCase {
                 XCTAssertEqual(testNumber, value!, "Expected value to be \(testNumber), but instead it's \(value!)")
             }
         }
+        
+        // now update the changes to Bridge, and check that they made it there
+        SBAClientDataProfileItem.scheduledActivities = schedules
+        
+        let sibsBridgeValues = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(sibsBridgeValues?.count == 1, "Expected to find 1 value for numberOfSiblings in Bridge history, but instead there are \(String(describing: sibsBridgeValues?.count))")
+        
+        let genderBridgeValues = genderItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(genderBridgeValues?.count == 1, "Expected to find 1 value for gender in Bridge history, but instead there are \(String(describing: genderBridgeValues?.count))")
+
     }
     
 }
