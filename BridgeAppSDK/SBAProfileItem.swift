@@ -713,8 +713,8 @@ open class SBAWhatAndWhen: NSObject, Comparable {
     static var valueKey: String { return #keyPath(value) }
     static var dateKey: String { return #keyPath(date) }
     static var isNewKey: String { return #keyPath(isNew) }
-    var value: SBBJSONValue
-    var date: NSDate
+    open var value: SBBJSONValue
+    open var date: NSDate
     var isNew: Bool
     
     public init(dictionaryRepresentation dictionary: [String: SBBJSONValue]) {

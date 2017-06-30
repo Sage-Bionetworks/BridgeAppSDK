@@ -261,8 +261,8 @@ class SBAProfileManagerTests: ResourceTestCase {
             }
         }
         
+        let testGender = HKBiologicalSex.female
         if genderItem != nil {
-            let testGender = HKBiologicalSex.female
             do {
                 try profileManager!.setValue(testGender, forProfileKey: genderItem!.profileKey);
             }
@@ -312,10 +312,10 @@ class SBAProfileManagerTests: ResourceTestCase {
             }
         }
         
+        let testNumberSibs = 7
         if numberOfSiblingsItem != nil {
-            let testNumber = 7
             do {
-                try profileManager!.setValue(testNumber, forProfileKey: numberOfSiblingsItem!.profileKey);
+                try profileManager!.setValue(testNumberSibs, forProfileKey: numberOfSiblingsItem!.profileKey);
             }
             catch {
                 XCTFail("Failed setting value for numberOfSiblingsItem: unknown profile key \(numberOfSiblingsItem!.profileKey)")
@@ -325,7 +325,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             if value == nil {
                 XCTFail("Failed retrieving Number value for numberOfSiblingsItem")
             } else {
-                XCTAssertEqual(testNumber, value!, "Expected value to be \(testNumber), but instead it's \(value!)")
+                XCTAssertEqual(testNumberSibs, value!, "Expected value to be \(testNumberSibs), but instead it's \(value!)")
             }
         }
         
@@ -334,10 +334,26 @@ class SBAProfileManagerTests: ResourceTestCase {
         
         let sibsBridgeValues = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
         XCTAssert(sibsBridgeValues?.count == 1, "Expected to find 1 value for numberOfSiblings in Bridge history, but instead there are \(String(describing: sibsBridgeValues?.count))")
+        XCTAssertEqual(testNumberSibs, sibsBridgeValues?[0].value as? Int, "Expected numberOfSiblings to be \(testNumberSibs) but got \(String(describing: sibsBridgeValues?[0].value)) instead")
         
         let genderBridgeValues = genderItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
         XCTAssert(genderBridgeValues?.count == 1, "Expected to find 1 value for gender in Bridge history, but instead there are \(String(describing: genderBridgeValues?.count))")
-
+        XCTAssertEqual(testGender.rawValue, genderBridgeValues?[0].value as? Int, "Expected value to be \(testGender), but instead it's \(String(describing: genderBridgeValues?[0].value))")
+        
+        // now explicitly update numberOfSiblings twice more, once 10 seconds in the future and once 1 day in the past
+        let testNumberSibs2 = 3
+        numberOfSiblingsItem?.setStoredValue(testNumberSibs2, asOf: Date().addingTimeInterval(10.0))
+        let testNumberSibs3 = 99
+        numberOfSiblingsItem?.setStoredValue(testNumberSibs3, asOf: Date().addingNumberOfDays(-11))
+        
+        // now update the changes to Bridge, and check that they made it there
+        SBAClientDataProfileItem.scheduledActivities = schedules
+        
+        let sibsBridgeValues2 = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(sibsBridgeValues2?.count == 3, "Expected to find 3 values for numberOfSiblings in Bridge history, but instead there are \(String(describing: sibsBridgeValues2?.count))")
+        XCTAssertEqual(testNumberSibs3, sibsBridgeValues2?[0].value as? Int, "Expected first numberOfSiblings to be \(testNumberSibs3) but got \(String(describing: sibsBridgeValues2?[0].value)) instead")
+        XCTAssertEqual(testNumberSibs, sibsBridgeValues2?[1].value as? Int, "Expected second numberOfSiblings to be \(testNumberSibs) but got \(String(describing: sibsBridgeValues2?[1].value)) instead")
+        XCTAssertEqual(testNumberSibs2, sibsBridgeValues2?[2].value as? Int, "Expected second numberOfSiblings to be \(testNumberSibs2) but got \(String(describing: sibsBridgeValues2?[2].value)) instead")
     }
     
 }
