@@ -354,7 +354,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
         
         // If this is the first step in an activity then look to see if there is a custom intro view controller
-        if step is ORKInstructionStep,
+        if step.stepViewControllerClass() == ORKInstructionStepViewController.self,
             let task = taskViewController.task as? ORKOrderedTask, task.index(of: step) == 0,
             let schedule = self.scheduledActivity(for: taskViewController),
             let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) {
