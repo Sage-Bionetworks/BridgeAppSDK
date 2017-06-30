@@ -54,6 +54,10 @@ extension ORKInstructionStep: SBAInstructionTextProvider {
 open class SBAActivityInstructionResult: ORKChoiceQuestionResult {
     static let endSurveyChoice = "end"
     
+    override public init() {
+        super.init()
+    }
+    
     override public init(identifier: String) {
         super.init(identifier: identifier)
         self.choiceAnswers = [SBAActivityInstructionResult.endSurveyChoice]

@@ -35,7 +35,7 @@
 import BridgeSDK
 import ResearchKit
 
-open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
+open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBAConditionalExit {
     
     let factory: SBASurveyFactory
     let surveyReference: SBBSurveyReference
@@ -81,12 +81,17 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
     
     static let loadingStepIdentifier = "SBALoadingStepIdentifier"
     func createLoadingStep() -> ORKStep? {
-        let loadingStep = SBASurveyLoadingStep(identifier: SBASurveyTask.loadingStepIdentifier)
-        loadingStep.title = self.title
-        loadingStep.text = Localization.localizedString("SBA_SURVEY_LOADING_TEXT")
-        loadingStep.task = self
-        return loadingStep
+        if _loadingStep == nil {
+            let loadingStep = SBASurveyLoadingStep(identifier: SBASurveyTask.loadingStepIdentifier)
+            loadingStep.title = self.title
+            loadingStep.text = Localization.localizedString("SBA_SURVEY_LOADING_TEXT")
+            loadingStep.task = self
+            loadingStep.surveyTask = self
+            _loadingStep = loadingStep
+        }
+        return _loadingStep
     }
+    private var _loadingStep: ORKStep?
     
     open var identifier: String {
         return surveyReference.identifier
@@ -121,6 +126,11 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
     
     open func progress(ofCurrentStep step: ORKStep, with result: ORKTaskResult) -> ORKTaskProgress {
         return self.survey?.progress(ofCurrentStep: step, with: result) ?? ORKTaskProgress()
+    }
+    
+    open func shouldEndTask(step: ORKStep?, with result: ORKTaskResult) -> Bool {
+        guard let conditionalExit = self.survey as? SBAConditionalExit else { return false }
+        return conditionalExit.shouldEndTask(step: step, with: result)
     }
     
     // MARK: NSCopying
@@ -175,8 +185,17 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding {
 }
 
 class SBASurveyLoadingStep: ORKWaitStep {
+    
+    var surveyTask: SBASurveyTask!
+    
     override func stepViewControllerClass() -> AnyClass {
         return SBASurveyLoadingStepViewController.classForCoder()
+    }
+    
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBASurveyLoadingStep
+        copy.surveyTask = self.surveyTask
+        return copy
     }
 }
 
@@ -195,7 +214,8 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
     }
     
     var surveyTask: SBASurveyTask? {
-        guard let surveyTask = self.step?.task as? SBASurveyTask else {
+        guard let surveyTask = (self.step?.task as? SBASurveyTask) ?? (self.step as? SBASurveyLoadingStep)?.surveyTask
+        else {
             assertionFailure("The task is not of expected type")
             return nil
         }

@@ -635,15 +635,15 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
 extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     var createdOn: Date {
         // If the participant hasn't signed in yet, there won't be a createdOn date in the placeholder study participant object.
-        return self.studyParticipant.createdOn ?? Date()
+        return self.studyParticipant?.createdOn ?? Date()
     }
 
     var lastName: String? {
-        return self.studyParticipant.lastName
+        return self.studyParticipant?.lastName
     }
 
     var firstName: String? {
-        return self.studyParticipant.firstName
+        return self.studyParticipant?.firstName
     }
 
     var subpopulationGuid: String? {
@@ -659,7 +659,9 @@ extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     }
 
     var dataSharingScope: SBBParticipantDataSharingScope {
-        guard let sharingKey = self.studyParticipant.sharingScope, self.isDataSharingEnabled else {
+        guard self.studyParticipant != nil,
+            let sharingKey = self.studyParticipant.sharingScope,
+            self.isDataSharingEnabled else {
             return .none
         }
         return SBBParticipantDataSharingScope(key: sharingKey)
@@ -670,10 +672,9 @@ extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     }
 
     var dataGroups: [String]? {
+        guard self.studyParticipant != nil && self.studyParticipant.dataGroups != nil else { return nil }
         return Array(self.studyParticipant.dataGroups)
     }
-
-    
 }
 
 

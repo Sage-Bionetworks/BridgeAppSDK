@@ -49,6 +49,13 @@ open class SBAActivityInstructionStep: SBANavigationQuestionStep {
         activityVC.taskReference = self.taskReference
         return vc
     }
+    
+    open override func copy(with zone: NSZone?) -> Any {
+        let copy = super.copy(with: zone) as! SBAActivityInstructionStep
+        copy.schedule = self.schedule
+        copy.taskReference = self.taskReference
+        return copy
+    }
 }
 
 extension SBAActivityInstructionStep: SBAInstructionTextProvider {
