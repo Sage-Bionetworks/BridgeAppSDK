@@ -726,7 +726,7 @@ open class SBAWhatAndWhen: NSObject, Comparable {
         super.init()
     }
     
-    public init(_ value: SBBJSONValue, asOf date: NSDate, isNew:Bool) {
+    public init(_ value: SBBJSONValue, asOf date: NSDate, isNew:Bool = false) {
         self.value = value
         self.date = date
         self.isNew = isNew
@@ -757,12 +757,12 @@ public func == (lhs: SBAWhatAndWhen, rhs: SBAWhatAndWhen) -> Bool {
 
 
 /**
- The activity to which an SBAClientDataProfileItem is attached must be scheduled as persistent so there is always
- an appropriate SBBScheduledActivity object on which to save it. Its clientData must also be a JSON dictionary, and
- the values set here will be stored at the top level by sourceKey as a list of dictionaries containing "date" and
- "value" entries. Ideally there will end up being one item in the list for each finished instance of the ScheduledActivity
- on Bridge, but if the client is unable to mark the item finished and receive the new scheduled instance before a
- new value is set, there could be more than one (hence the "date" timestamps).
+ The activity to which an SBAClientDataProfileItem is attached should be scheduled such that there is always an appropriate
+ SBBScheduledActivity object on which to save it (i.e. doesn't expire before being rescheduled). Its clientData must also be
+ a JSON dictionary, and the values set here will be stored at the top level by sourceKey as a list of dictionaries containing
+ "date" and "value" entries. If the value of the item is changed more quickly than it is rescheduled, the "date" timestamp
+ allows there to be more than one entry per SBBScheduledActivity instance, so this type of profile item can be used to record
+ and/or retrieve a time series of values.
  */
 open class SBAClientDataProfileItem: SBAProfileItemBase {
     // ClientData profile items are attached to and read from the most date-appropriate instance
@@ -969,21 +969,26 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
             bestActivity.startedOn = when
         }
         
-        let clientData = bestActivity.clientData as? NSMutableDictionary ?? NSMutableDictionary()
+        setTo(bestActivity, jsonWhatAndWhen: jsonWhatAndWhen)
+    }
+    
+    func setTo(_ scheduledActivity: SBBScheduledActivity, jsonWhatAndWhen: [String: SBBJSONValue]) {
+        let when = SBAWhatAndWhen(dictionaryRepresentation: jsonWhatAndWhen).date as Date
+        let clientData = scheduledActivity.clientData as? NSMutableDictionary ?? NSMutableDictionary()
         var jsonWhatsAndWhens = clientData[sourceKey] as? [[String: SBBJSONValue]] ?? [[String: SBBJSONValue]]()
         jsonWhatsAndWhens.append(jsonWhatAndWhen)
         
         // make sure the jsonWhatsAndWhens are in ascending order by date
         jsonWhatsAndWhens = SBAClientDataProfileItem.jsonWhatsAndWhensSortedByWhen(jsonWhatsAndWhens)
         clientData[sourceKey] = jsonWhatsAndWhens
-        bestActivity.clientData = clientData
+        scheduledActivity.clientData = clientData
         
-        if  bestActivity.finishedOn == nil || when > bestActivity.finishedOn! {
-            bestActivity.finishedOn = when
+        if  scheduledActivity.finishedOn == nil || when > scheduledActivity.finishedOn! {
+            scheduledActivity.finishedOn = when
         }
 
         // add the found SBBScheduledActivity to the set of those that need to be updated to Bridge
-        SBAClientDataProfileItem.toBeUpdatedToBridge.insert(bestActivity)
+        SBAClientDataProfileItem.toBeUpdatedToBridge.insert(scheduledActivity)
     }
     
     open func setStoredValue(_ newValue: Any?, asOf when: Date) {
@@ -993,6 +998,15 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         
         // store it in local cache so it will get updated to Bridge next time
         SBAClientDataProfileItem.addToCurrentValues(whatAndWhen.cachedDictionaryRepresentation(), forProfileKey: profileKey)
+    }
+    
+    open func setValue(_ newValue: Any?, asOf when: Date, to scheduledActivity: SBBScheduledActivity) {
+        guard let jsonValue = commonItemTypeToJson(val: newValue) else { return }
+        
+        let whatAndWhen = SBAWhatAndWhen(jsonValue, asOf: when as NSDate)
+        
+        // store it to the specified scheduled activity's clientData
+        setTo(scheduledActivity, jsonWhatAndWhen: whatAndWhen.dictionaryRepresentation())
     }
     
     open func valuesAndDates() -> [SBAWhatAndWhen] {
