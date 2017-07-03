@@ -172,6 +172,11 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         }
         return String(describing: value)
     }
+    
+    open var answerMapKeys: [String: String] {
+        let key = #keyPath(answerMapKeys)
+        return sourceDict[key] as? [String: String] ?? [self.profileItemKey: self.profileItemKey]
+    }
 }
 
 open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
