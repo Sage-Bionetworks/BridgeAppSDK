@@ -71,7 +71,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
 
 @objc
 open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
-    let sourceDict: [AnyHashable: Any]
+    public let sourceDict: [AnyHashable: Any]
     open var defaultOnSelectedAction = SBAProfileOnSelectedAction.noAction
 
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
@@ -161,13 +161,14 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
 
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
-        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
-            let choices = surveyItem.items as? [SBAChoice] {
-            let selected = (value as? [Any]) ?? [value]
-            let textList = selected.map({ (obj) -> String in
-                return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
-            })
-            return Localization.localizedJoin(textList: textList)
+        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem {
+            if let choices = surveyItem.items as? [SBAChoice] {
+                let selected = (value as? [Any]) ?? [value]
+                let textList = selected.map({ (obj) -> String in
+                    return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+                })
+                return Localization.localizedJoin(textList: textList)
+            }
         }
         return String(describing: value)
     }
