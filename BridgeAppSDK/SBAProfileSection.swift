@@ -158,17 +158,93 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         let profileItems = SBAProfileManager.shared!.profileItems()
         return profileItems[self.profileItemKey]!
     }()
-
+    
+    func itemDetailFor(_ date: Date, format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.calendar = Calendar.current
+        return formatter.string(from: date)
+    }
+    
+    open func dateAsItemDetail(_ date: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "Mdy", options: 0, locale: Locale.current)
+            else { return String(describing: date) }
+        return self.itemDetailFor(date, format: format)
+    }
+    
+    open func dateTimeAsItemDetail(_ dateTime: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "yEMdhma", options: 0, locale: Locale.current)
+            else { return String(describing: dateTime) }
+        return self.itemDetailFor(dateTime, format: format)
+    }
+    
+    open func timeOfDayAsItemDetail(_ timeOfDay: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "hma", options: 0, locale: Locale.current)
+            else { return String(describing: timeOfDay) }
+        return self.itemDetailFor(timeOfDay, format: format)
+    }
+    
+    public func centimetersToFeetAndInches(_ centimeters: Double) -> (feet: Double, inches: Double) {
+        let inches = centimeters / 2.54
+        return ((inches / 12.0).rounded(), inches.truncatingRemainder(dividingBy: 12.0))
+    }
+    
+    @objc(hkQuantityheightAsItemDetail:)
+    open func heightAsItemDetail(_ height: HKQuantity) -> String {
+        let heightInCm = height.doubleValue(for: HKUnit(from: .centimeter)) as NSNumber
+        return self.heightAsItemDetail(heightInCm)
+    }
+    
+    open func heightAsItemDetail(_ height: NSNumber) -> String {
+        var answerString: String = String(describing: height)
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        if (Locale.current.usesMetricSystem) {
+            answerString = "\(formatter.string(from: height)!) \(Localization.localizedString("MEASURING_UNIT_CM"))"
+        } else {
+            let (feet, inches) = centimetersToFeetAndInches(height.doubleValue)
+            let feetString = formatter.string(from: feet as NSNumber)!
+            let inchesString = formatter.string(from: inches as NSNumber)!
+            answerString = "\(feetString) \(Localization.localizedString("MEASURING_UNIT_FT")), \(inchesString) \(Localization.localizedString("MEASURING_UNIT_IN"))"
+        }
+        return answerString
+    }
+    
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
-        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem {
-            if let choices = surveyItem.items as? [SBAChoice] {
-                let selected = (value as? [Any]) ?? [value]
-                let textList = selected.map({ (obj) -> String in
+        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
+            let choices = surveyItem.items as? [SBAChoice] {
+            let selected = (value as? [Any]) ?? [value]
+            let textList = selected.map({ (obj) -> String in
+                switch surveyItem.surveyItemType {
+                case .form(.singleChoice), .form(.multipleChoice),
+                     .dataGroups(.singleChoice), .dataGroups(.multipleChoice):
                     return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
-                })
-                return Localization.localizedJoin(textList: textList)
-            }
+                case .account(.profile):
+                    guard let options = surveyItem.items as? [String],
+                            options.count == 1
+                        else { return String(describing: obj) }
+                    switch options[0] {
+                    case "birthdate":
+                        guard let date = obj as? Date else { return String(describing: obj) }
+                        return self.dateAsItemDetail(date)
+                    case "height":
+                        // could reasonably be stored either as an HKQuantity, or as an NSNumber of cm
+                        let hkHeight = obj as? HKQuantity
+                        if hkHeight != nil {
+                            return self.heightAsItemDetail(hkHeight!)
+                        }
+                        guard let nsHeight = obj as? NSNumber else { return String(describing: obj) }
+                        return self.heightAsItemDetail(nsHeight)
+                    default:
+                        return String(describing: obj)
+                    }
+                default:
+                    return String(describing: obj)
+                }
+            })
+            return Localization.localizedJoin(textList: textList)
         }
         return String(describing: value)
     }
