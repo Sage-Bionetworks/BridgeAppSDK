@@ -103,9 +103,9 @@ class SBAProfileManagerTests: ResourceTestCase {
     
     // MARK: build schedules
     
-    static let demographicGuid: String = "demographic-survey-activity-guid"
-    static let someOtherGuid: String = "some-other-activity-guid"
-    let activityGuids: [String] = [demographicGuid, someOtherGuid]
+    static let demographicIdentifier: String = "Demographic Survey"
+    static let someOtherIdentifier: String = "Something Else"
+    let activityIdentifiers: [String] = [demographicIdentifier, someOtherIdentifier]
     
     func buildSchedule(startTime: Date, endTime: Date) -> [SBBScheduledActivity] {
         
@@ -113,8 +113,8 @@ class SBAProfileManagerTests: ResourceTestCase {
         
         var scheduledOn = startTime.startOfDay()
         while scheduledOn < endTime {
-            for guid in activityGuids {
-                let schedule = createSchedule(guid: guid, scheduledOn: scheduledOn)
+            for identifier in activityIdentifiers {
+                let schedule = createSchedule(identifier: identifier, scheduledOn: scheduledOn)
                 schedules.append(schedule)
             }
             scheduledOn = scheduledOn.addingNumberOfDays(1)
@@ -123,14 +123,16 @@ class SBAProfileManagerTests: ResourceTestCase {
         return schedules
     }
     
-    func createSchedule(guid: String, scheduledOn: Date) -> SBBScheduledActivity {
+    func createSchedule(identifier: String, scheduledOn: Date) -> SBBScheduledActivity {
         
         let activity = SBBActivity()
-        activity.guid = guid
+        let taskRef = SBBTaskReference()
+        taskRef.identifier = identifier
+        activity.task = taskRef
 
         let schedule = SBBScheduledActivity()
         schedule.activity = activity
-        schedule.guid = "\(activity.guid!):\(scheduledOn)"
+        schedule.guid = UUID().uuidString
         schedule.scheduledOn = scheduledOn
         schedule.expiresOn = scheduledOn.addingNumberOfDays(1)
         

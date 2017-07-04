@@ -32,7 +32,7 @@
                  {
                  "profileKey": "gender",
                  "classType": "ClientDataProfileItem",
-                 "activityGuid": "demographic-survey-activity-guid",
+                 "activityIdentifier": "Demographic Survey",
                  "itemType": "HKBiologicalSex",
                  },
                  {
@@ -49,7 +49,7 @@
                  {
                  "profileKey": "numberOfSiblings",
                  "classType": "ClientDataProfileItem",
-                 "activityGuid": "demographic-survey-activity-guid",
+                 "activityIdentifier": "Demographic Survey",
                  "itemType": "Number",
                  "demographicKey": "number_of_siblings"
                  },

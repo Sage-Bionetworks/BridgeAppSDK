@@ -766,7 +766,7 @@ public func == (lhs: SBAWhatAndWhen, rhs: SBAWhatAndWhen) -> Bool {
  */
 open class SBAClientDataProfileItem: SBAProfileItemBase {
     // ClientData profile items are attached to and read from the most date-appropriate instance
-    // of a SBBScheduledActivity for a given activityGuid. Since those are not always available
+    // of a SBBScheduledActivity for a given activityIdentifier. Since those are not always available
     // when the app needs to read and write Profile item values, we also keep track of the latest
     // (most current) value in a local keychain cache, and store any newly-set values there until
     // they can be written to an SBBScheduledActivity.
@@ -880,14 +880,8 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         }
     }
     
-    open var activityGuid: String {
-        let key = #keyPath(activityGuid)
-        // TODO: emm 2017-06-25 implement plist or json mapping activity->activityGuid and fall back to returning that
-        return sourceDict[key]! as! String
-    }
-
-    open var activity: String {
-        let key = #keyPath(activity)
+    open var activityIdentifier: String {
+        let key = #keyPath(activityIdentifier)
         return sourceDict[key]! as! String
     }
     
@@ -898,9 +892,9 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     }
     
     func jsonWhatsAndWhensFromBridge() -> [[String: SBBJSONValue]] {
-        // pull out all the non-empty lists of date/value instances for this activityGuid and key into one non-empty list
+        // pull out all the non-empty lists of date/value instances for this activityIdentifier and key into one non-empty list
         guard let valueArrays = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> [[String: SBBJSONValue]]? in
-                    guard scheduledActivity.activity.guid == activityGuid,
+                    guard scheduledActivity.activityIdentifier == activityIdentifier,
                             let clientData = scheduledActivity.clientData as? NSDictionary,
                             let valueArray = clientData[sourceKey] as? [[String : SBBJSONValue]],
                             valueArray.count > 0
@@ -944,10 +938,10 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     }
     
     func setToAppropriateScheduledActivity(_ jsonWhatAndWhen: [String: SBBJSONValue]) {
-        // potential SBBScheduledActivity instances to update will have the right activityGuid and will expire after, if at all
+        // potential SBBScheduledActivity instances to update will have the right activityIdentifier and will expire after, if at all
         let when = SBAWhatAndWhen(dictionaryRepresentation: jsonWhatAndWhen).date as Date
         guard let activities = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> SBBScheduledActivity? in
-                    if scheduledActivity.activity.guid == activityGuid {
+                    if scheduledActivity.activityIdentifier == activityIdentifier {
                         return scheduledActivity
                     }
                     return nil
