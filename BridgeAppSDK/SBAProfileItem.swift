@@ -748,11 +748,18 @@ open class SBAWhatAndWhen: NSObject, Comparable {
 }
 
 public func < (lhs: SBAWhatAndWhen, rhs: SBAWhatAndWhen) -> Bool {
-    return (lhs.date as Date) < (rhs.date as Date)
+    // arbitrary JSON isn't comparable, so we'll just compare dates and, secondarily, isNew
+    let comparison = lhs.date.compare(rhs.date as Date)
+    guard comparison == .orderedSame else { return comparison == .orderedAscending }
+    
+    // we'll call false < true as far as isNew is concerned
+    return lhs.isNew == false && rhs.isNew == true
 }
 
 public func == (lhs: SBAWhatAndWhen, rhs: SBAWhatAndWhen) -> Bool {
-    return (lhs.date as Date) == (rhs.date as Date)
+    return (lhs.date as Date) == (rhs.date as Date) &&
+            lhs.value.isEqual(rhs.value) &&
+            lhs.isNew == rhs.isNew
 }
 
 
