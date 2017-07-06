@@ -202,6 +202,18 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         return formatter.string(fromMeters: meters)
     }
     
+    @objc(hkQuantityWeightAsItemDetail:)
+    open func weightAsItemDetail(_ weight: HKQuantity) -> String {
+        let weightInKg = weight.doubleValue(for: HKUnit(from: .kilogram)) as NSNumber
+        return self.weightAsItemDetail(weightInKg)
+    }
+    
+    open func weightAsItemDetail(_ weight: NSNumber) -> String {
+        let formatter = MassFormatter()
+        formatter.isForPersonMassUse = true
+        return formatter.string(fromKilograms: weight.doubleValue)
+    }
+    
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
         if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
@@ -229,6 +241,14 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
                         }
                         guard let nsHeight = obj as? NSNumber else { return String(describing: obj) }
                         return self.heightAsItemDetail(nsHeight)
+                    case .weight:
+                        // could reasonably be stored either as an HKQuantity, or as an NSNumber of kg
+                        let hkWeight = obj as? HKQuantity
+                        if hkWeight != nil {
+                            return self.weightAsItemDetail(hkWeight!)
+                        }
+                        guard let nsWeight = obj as? NSNumber else { return String(describing: obj) }
+                        return self.weightAsItemDetail(nsWeight)
                     default:
                         return String(describing: obj)
                     }

@@ -1040,7 +1040,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
      Calling it at app launch is also appropriate, and has the handy side effect of prepopulating scheduledActivities
      with all SBBScheduledActivity objects currently in BridgeSDK's cache.
      */
-    class func updateChangesToBridge() {
+    public class func updateChangesToBridge() {
         // figure out the date range for new values in the local cache
         let calendar = Calendar.current
         var startDate: Date = calendar.startOfDay(for: Date())
