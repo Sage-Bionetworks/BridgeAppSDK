@@ -880,9 +880,25 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         }
     }
     
+    open var taskIdentifier: String? {
+        let key = #keyPath(taskIdentifier)
+        return sourceDict[key] as? String
+    }
+    
+    open var surveyIdentifier: String? {
+        let key = #keyPath(surveyIdentifier)
+        return sourceDict[key] as? String
+    }
+    
     open var activityIdentifier: String {
         let key = #keyPath(activityIdentifier)
-        return sourceDict[key]! as! String
+        let explicitActivityIdentifer = sourceDict[key] as? String
+        guard let identifier = explicitActivityIdentifer ?? taskIdentifier ?? surveyIdentifier
+            else {
+                assertionFailure("One of activityIdentifier, taskIdentifier, or surveyIdentifier must be set for a ClientDataProfileItem")
+                return ""
+        }
+        return identifier
     }
     
     static func jsonWhatsAndWhensSortedByWhen(_ jsonWhatsAndWhens: [[String: SBBJSONValue]]) -> [[String: SBBJSONValue]] {
