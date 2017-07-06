@@ -196,19 +196,10 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     }
     
     open func heightAsItemDetail(_ height: NSNumber) -> String {
-        var answerString: String = String(describing: height)
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        if (Locale.current.usesMetricSystem) {
-            answerString = "\(formatter.string(from: height)!) \(Localization.localizedString("MEASURING_UNIT_CM"))"
-        } else {
-            let (feet, inches) = centimetersToFeetAndInches(height.doubleValue)
-            let feetString = formatter.string(from: feet as NSNumber)!
-            let inchesString = formatter.string(from: inches as NSNumber)!
-            answerString = "\(feetString) \(Localization.localizedString("MEASURING_UNIT_FT")), \(inchesString) \(Localization.localizedString("MEASURING_UNIT_IN"))"
-        }
-        return answerString
+        let formatter = LengthFormatter()
+        formatter.isForPersonHeightUse = true
+        let meters = height.doubleValue / 100.0 // cm -> m
+        return formatter.string(fromMeters: meters)
     }
     
     override open var detail: String? {
@@ -223,13 +214,14 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
                     return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
                 case .account(.profile):
                     guard let options = surveyItem.items as? [String],
-                            options.count == 1
+                            options.count == 1,
+                            let option = SBAProfileInfoOption(rawValue: options[0])
                         else { return String(describing: obj) }
-                    switch options[0] {
-                    case "birthdate":
+                    switch option {
+                    case .birthdate:
                         guard let date = obj as? Date else { return String(describing: obj) }
                         return self.dateAsItemDetail(date)
-                    case "height":
+                    case .height:
                         // could reasonably be stored either as an HKQuantity, or as an NSNumber of cm
                         let hkHeight = obj as? HKQuantity
                         if hkHeight != nil {
