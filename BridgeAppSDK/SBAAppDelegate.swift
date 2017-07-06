@@ -92,6 +92,10 @@ public let SBAMainStoryboardName = "Main"
         self.initializeBridgeServerConnection()
         BridgeSDK.setErrorUIDelegate(self)
         
+        // Save any outstanding clientData profile item updates to Bridge, and ensure the class has
+        // access to all the SBBScheduledActivity objects in BridgeSDK's cache.
+        SBAClientDataProfileItem.updateChangesToBridge()
+
         // Set the tint colors if applicable
         if let tintColor = UIColor.primaryTintColor {
             self.window?.tintColor = tintColor
@@ -128,6 +132,9 @@ public let SBAMainStoryboardName = "Main"
             // Hide content so it doesn't appear in the app switcher.
             rootViewController?.contentHidden = true
         }
+        
+        // Save any outstanding clientData profile item updates to Bridge.
+        SBAClientDataProfileItem.updateChangesToBridge()
     }
     
     open func applicationDidBecomeActive(_ application: UIApplication) {

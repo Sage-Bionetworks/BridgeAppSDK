@@ -262,6 +262,13 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
 + (void)fetchScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
                           completion:(SBABridgeManagerCompletionBlock)completionBlock;
 
+/**
+ Gets all scheduled activities for a user that are currently in the local cache.
+ 
+ @param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
+ */
++ (void)fetchAllCachedScheduledActivitiesWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock;
+
 /*!
  Update multiple scheduled activities' statuses with the API at one time.
  

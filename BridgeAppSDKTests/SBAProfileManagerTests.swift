@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import BridgeAppSDK
+@testable import BridgeAppSDKSample
 
 class SBAProfileManagerTests: ResourceTestCase {
     
@@ -74,8 +75,8 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssert(genderItem!.sourceKey == "gender", "expected genderItem.sourceKey to be gender, but it's \(genderItem!.sourceKey)")
             XCTAssert(genderItem!.demographicKey == genderItem!.profileKey, "expected genderItem.demographicKey to be \(genderItem!.profileKey), but it's \(genderItem!.demographicKey)")
             XCTAssert(genderItem!.itemType == .hkBiologicalSex, "expected genderItem.itemType to be HKBiologicalSex, but it's \(genderItem!.itemType.rawValue)")
-            let typedItem = genderItem as? BridgeAppSDK.SBAKeychainProfileItem
-            XCTAssertNotNil(typedItem, "genderItem is not an SBAKeychainProfileItem: \(String(describing: genderItem))")
+            let typedItem = genderItem as? BridgeAppSDK.SBAClientDataProfileItem
+            XCTAssertNotNil(typedItem, "genderItem is not an SBAClientDataProfileItem: \(String(describing: genderItem))")
         }
         if birthDateItem != nil {
             XCTAssert(birthDateItem!.sourceKey == "birthDate", "expected birthDateItem.sourceKey to be name, but it's \(birthDateItem!.sourceKey)")
@@ -95,9 +96,47 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTAssert(numberOfSiblingsItem!.sourceKey == "numberOfSiblings", "expected numberOfSiblingsItem.sourceKey to be numberOfSiblings, but it's \(numberOfSiblingsItem!.sourceKey)")
             XCTAssert(numberOfSiblingsItem!.demographicKey == "number_of_siblings", "expected favoriteColorItem.demographicKey to be number_of_siblings, but it's \(favoriteColorItem!.demographicKey)")
             XCTAssert(numberOfSiblingsItem!.itemType == .number, "expected numberOfSiblingsItem.itemType to be Number, but it's \(numberOfSiblingsItem!.itemType.rawValue)")
-            let typedItem = numberOfSiblingsItem as? BridgeAppSDK.SBAUserDefaultsProfileItem
-            XCTAssertNotNil(typedItem, "numberOfSiblingsItem is not an SBAUserDefaultsProfileItem: \(String(describing: numberOfSiblingsItem))")
+            let typedItem = numberOfSiblingsItem as? BridgeAppSDK.SBAClientDataProfileItem
+            XCTAssertNotNil(typedItem, "numberOfSiblingsItem is not an SBAClientDataProfileItem: \(String(describing: numberOfSiblingsItem))")
         }
+    }
+    
+    // MARK: build schedules
+    
+    static let demographicIdentifier: String = "Demographic Survey"
+    static let someOtherIdentifier: String = "Something Else"
+    let activityIdentifiers: [String] = [demographicIdentifier, someOtherIdentifier]
+    
+    func buildSchedule(startTime: Date, endTime: Date) -> [SBBScheduledActivity] {
+        
+        var schedules:[SBBScheduledActivity] = []
+        
+        var scheduledOn = startTime.startOfDay()
+        while scheduledOn < endTime {
+            for identifier in activityIdentifiers {
+                let schedule = createSchedule(identifier: identifier, scheduledOn: scheduledOn)
+                schedules.append(schedule)
+            }
+            scheduledOn = scheduledOn.addingNumberOfDays(1)
+        }
+        
+        return schedules
+    }
+    
+    func createSchedule(identifier: String, scheduledOn: Date) -> SBBScheduledActivity {
+        
+        let activity = SBBActivity()
+        let taskRef = SBBTaskReference()
+        taskRef.identifier = identifier
+        activity.task = taskRef
+
+        let schedule = SBBScheduledActivity()
+        schedule.activity = activity
+        schedule.guid = UUID().uuidString
+        schedule.scheduledOn = scheduledOn
+        schedule.expiresOn = scheduledOn.addingNumberOfDays(1)
+        
+        return schedule
     }
     
     func testSetAndGetValueForProfileKey() {
@@ -110,26 +149,43 @@ class SBAProfileManagerTests: ResourceTestCase {
         let familyNameItem = items["family"] as? BridgeAppSDK.SBAStudyParticipantProfileItem
         let preferredNameItem = items["preferredName"] as? BridgeAppSDK.SBAStudyParticipantCustomAttributesProfileItem
         let externalIdItem = items["externalId"] as? BridgeAppSDK.SBAKeychainProfileItem
-        let genderItem = items["gender"] as? BridgeAppSDK.SBAKeychainProfileItem
+        let genderItem = items["gender"] as? BridgeAppSDK.SBAClientDataProfileItem
         let birthDateItem = items["birthDate"] as? BridgeAppSDK.SBABirthDateProfileItem
         let favoriteColorItem = items["favoriteColor"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
-        let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAUserDefaultsProfileItem
+        let numberOfSiblingsItem = items["numberOfSiblings"] as? BridgeAppSDK.SBAClientDataProfileItem
         XCTAssert(fullNameItem != nil, "no SBAUserProfileItem for profileKey fullName")
         XCTAssert(externalIdItem != nil, "no SBAUserProfileItem for profileKey externalId")
-        XCTAssert(genderItem != nil, "no SBAKeychainProfileItem for profileKey gender")
+        XCTAssert(genderItem != nil, "no SBAClientDataProfileItem for profileKey gender")
         XCTAssert(birthDateItem != nil, "no SBAKeychainProfileItem for profileKey birthDate")
         XCTAssert(favoriteColorItem != nil, "no SBAUserDefaultsProfileItem for profileKey favoriteColor")
-        XCTAssert(numberOfSiblingsItem != nil, "no SBAUserDefaultsProfileItem for profileKey numberOfSiblings")
+        XCTAssert(numberOfSiblingsItem != nil, "no SBAClientDataProfileItem for profileKey numberOfSiblings")
         
         // Use a mock for the keychain
         let mockKeychain = MockKeychainWrapper()
         externalIdItem?.keychain = mockKeychain
-        genderItem?.keychain = mockKeychain
+        
+        // Use the same mock keychain for the client item cache
+        SBAClientDataProfileItem.keychain = mockKeychain
+        try? mockKeychain.setObject([String: [String: SBBJSONValue]]() as NSSecureCoding, forKey: SBAClientDataProfileItem.cachedItemsKey)
+        
+        // Use a mock activity manager
+        let activityManager = MockActivityManager()
+        let historyDays = 10
+        let futureDays = 10
+        let startTime = Date().addingNumberOfDays(-historyDays)
+        let endTime = startTime.addingNumberOfDays(futureDays)
+        let schedules = buildSchedule(startTime: startTime, endTime: endTime)
+        activityManager.getScheduledActivitiesForRange_Result = schedules
+        SBBComponentManager.registerComponent(activityManager, for: SBBActivityManager.classForCoder())
+        
+        // Use a mock user as the app delegate's currentUser
+        let mockUser = MockUser()
+        mockUser.createdOn = Date().addingNumberOfDays(-historyDays)
+        (SBAAppDelegate.shared as? AppDelegate)?.mockUser = mockUser
         
         // Use a uuid instance for the user defaults
         let mockUserDefaults = UserDefaults(suiteName: UUID().uuidString)!
         favoriteColorItem?.defaults = mockUserDefaults
-        numberOfSiblingsItem?.defaults = mockUserDefaults
         
         // set up a dummy instance for the study participant
         SBAStudyParticipantProfileItem.studyParticipant = DummyStudyParticipant()
@@ -207,8 +263,8 @@ class SBAProfileManagerTests: ResourceTestCase {
             }
         }
         
+        let testGender = HKBiologicalSex.female
         if genderItem != nil {
-            let testGender = HKBiologicalSex.female
             do {
                 try profileManager!.setValue(testGender, forProfileKey: genderItem!.profileKey);
             }
@@ -258,10 +314,10 @@ class SBAProfileManagerTests: ResourceTestCase {
             }
         }
         
+        let testNumberSibs = 7
         if numberOfSiblingsItem != nil {
-            let testNumber = 7
             do {
-                try profileManager!.setValue(testNumber, forProfileKey: numberOfSiblingsItem!.profileKey);
+                try profileManager!.setValue(testNumberSibs, forProfileKey: numberOfSiblingsItem!.profileKey);
             }
             catch {
                 XCTFail("Failed setting value for numberOfSiblingsItem: unknown profile key \(numberOfSiblingsItem!.profileKey)")
@@ -271,9 +327,35 @@ class SBAProfileManagerTests: ResourceTestCase {
             if value == nil {
                 XCTFail("Failed retrieving Number value for numberOfSiblingsItem")
             } else {
-                XCTAssertEqual(testNumber, value!, "Expected value to be \(testNumber), but instead it's \(value!)")
+                XCTAssertEqual(testNumberSibs, value!, "Expected value to be \(testNumberSibs), but instead it's \(value!)")
             }
         }
+        
+        // now update the changes to Bridge, and check that they made it there
+        SBAClientDataProfileItem.scheduledActivities = schedules
+        
+        let sibsBridgeValues = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(sibsBridgeValues?.count == 1, "Expected to find 1 value for numberOfSiblings in Bridge history, but instead there are \(String(describing: sibsBridgeValues?.count))")
+        XCTAssertEqual(testNumberSibs, sibsBridgeValues?[0].value as? Int, "Expected numberOfSiblings to be \(testNumberSibs) but got \(String(describing: sibsBridgeValues?[0].value)) instead")
+        
+        let genderBridgeValues = genderItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(genderBridgeValues?.count == 1, "Expected to find 1 value for gender in Bridge history, but instead there are \(String(describing: genderBridgeValues?.count))")
+        XCTAssertEqual(testGender.rawValue, genderBridgeValues?[0].value as? Int, "Expected value to be \(testGender), but instead it's \(String(describing: genderBridgeValues?[0].value))")
+        
+        // now explicitly update numberOfSiblings twice more, once 10 seconds in the future and once 1 day in the past
+        let testNumberSibs2 = 3
+        numberOfSiblingsItem?.setStoredValue(testNumberSibs2, asOf: Date().addingTimeInterval(10.0))
+        let testNumberSibs3 = 99
+        numberOfSiblingsItem?.setStoredValue(testNumberSibs3, asOf: Date().addingNumberOfDays(-11))
+        
+        // now update the changes to Bridge, and check that they made it there
+        SBAClientDataProfileItem.scheduledActivities = schedules
+        
+        let sibsBridgeValues2 = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
+        XCTAssert(sibsBridgeValues2?.count == 3, "Expected to find 3 values for numberOfSiblings in Bridge history, but instead there are \(String(describing: sibsBridgeValues2?.count))")
+        XCTAssertEqual(testNumberSibs3, sibsBridgeValues2?[0].value as? Int, "Expected first numberOfSiblings to be \(testNumberSibs3) but got \(String(describing: sibsBridgeValues2?[0].value)) instead")
+        XCTAssertEqual(testNumberSibs, sibsBridgeValues2?[1].value as? Int, "Expected second numberOfSiblings to be \(testNumberSibs) but got \(String(describing: sibsBridgeValues2?[1].value)) instead")
+        XCTAssertEqual(testNumberSibs2, sibsBridgeValues2?[2].value as? Int, "Expected second numberOfSiblings to be \(testNumberSibs2) but got \(String(describing: sibsBridgeValues2?[2].value)) instead")
     }
     
 }
