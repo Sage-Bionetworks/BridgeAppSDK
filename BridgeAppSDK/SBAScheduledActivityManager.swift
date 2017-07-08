@@ -514,10 +514,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     open func instantiateInstructionStepViewController(for step: ORKStep, task: ORKTask, result: ORKTaskResult) -> ORKStepViewController? {
-        let vc = SBAInstructionStepViewController(step: step)
+        let vc = SBAGenericStepViewController(step: step, result: result)
         if let progress = task.progress?(ofCurrentStep: step, with: result) {
-            vc.stepNumber = progress.current + 1
-            vc.stepTotal = progress.total
+            vc.stepCount = Int(progress.total)
+            vc.stepIndex = Int(progress.current)
         }
         return vc
     }
