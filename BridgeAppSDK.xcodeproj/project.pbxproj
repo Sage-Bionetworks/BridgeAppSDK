@@ -69,9 +69,6 @@
 		FF35B9371D9EEC2000E0DF23 /* Tremor.json in Resources */ = {isa = PBXBuildFile; fileRef = FF35B9351D9EEC2000E0DF23 /* Tremor.json */; };
 		FF35B95A1D9F215600E0DF23 /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */; };
 		FF36DCFF1DB9726F0034C85D /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */; };
-		FF37BE2E1ED7927100C264CB /* SBARoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */; };
-		FF37BE301ED7928000C264CB /* SBAUnderlinedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */; };
-		FF37BE321ED7928F00C264CB /* SBAShadowGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */; };
 		FF3A359D1CBEB2D400F44E6E /* SBASharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */; };
 		FF3B16291E0CD47C0037D1D0 /* SBADefines.h in Headers */ = {isa = PBXBuildFile; fileRef = FF3B16111E0CD44B0037D1D0 /* SBADefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF3B169C1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */; };
@@ -205,7 +202,6 @@
 		FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37731CD41A920090452F /* SBAScheduledActivityManagerTests.swift */; };
 		FFCF37FC1CDBB7600090452F /* SBAScheduledActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */; };
 		FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCF390E1CE26DE40090452F /* SBAActivityResult.m */; };
-		FFD6AB561EDE13500075ABEF /* UIColor+BridgeKeyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */; };
 		FFD6AB601EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */; };
 		FFD6AB931EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6AB911EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift */; };
 		FFD6AB941EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFD6AB921EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib */; };
@@ -503,9 +499,6 @@
 		FF35B9361D9EEC2000E0DF23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Base; path = Base.lproj/Tremor.json; sourceTree = "<group>"; };
 		FF35B9591D9F215600E0DF23 /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		FF36DCFE1DB9726F0034C85D /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
-		FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBARoundedButton.swift; sourceTree = "<group>"; };
-		FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUnderlinedButton.swift; sourceTree = "<group>"; };
-		FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAShadowGradient.swift; sourceTree = "<group>"; };
 		FF3A359C1CBEB2D400F44E6E /* SBASharedInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASharedInfoController.swift; sourceTree = "<group>"; };
 		FF3B16111E0CD44B0037D1D0 /* SBADefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBADefines.h; sourceTree = "<group>"; };
 		FF3B169B1E147EF60037D1D0 /* SBAScheduledActivityDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityDataSource.swift; sourceTree = "<group>"; };
@@ -642,7 +635,6 @@
 		FFCF37FB1CDBB7600090452F /* SBAScheduledActivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAScheduledActivityManager.swift; sourceTree = "<group>"; };
 		FFCF390D1CE26DE40090452F /* SBAActivityResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAActivityResult.h; sourceTree = "<group>"; };
 		FFCF390E1CE26DE40090452F /* SBAActivityResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAActivityResult.m; sourceTree = "<group>"; };
-		FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+BridgeKeyNames.swift"; sourceTree = "<group>"; };
 		FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAPermissionsStep+PageSource.swift"; sourceTree = "<group>"; };
 		FFD6AB911EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAActivityInstructionStepViewController.swift; sourceTree = "<group>"; };
 		FFD6AB921EDE844B0075ABEF /* SBAActivityInstructionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAActivityInstructionStepViewController.xib; sourceTree = "<group>"; };
@@ -750,7 +742,6 @@
 				FF3B16111E0CD44B0037D1D0 /* SBADefines.h */,
 				FF97080A1DA78806006E8252 /* SBARootViewController.swift */,
 				16BF5B671BE29676007C79C6 /* Activities */,
-				FFD6AB0A1EDE06880075ABEF /* Color Management */,
 				FF63D0E81CD02F66007ADEE5 /* Data Archiving */,
 				FF92A6291DBFDD7600614D1F /* Learn */,
 				FF722BF51D7759EB004B2F8B /* News Feed */,
@@ -1050,9 +1041,6 @@
 		FF37BE2C1ED7925300C264CB /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FF37BE311ED7928F00C264CB /* SBAShadowGradient.swift */,
-				FF37BE2F1ED7928000C264CB /* SBAUnderlinedButton.swift */,
-				FF37BE2D1ED7927100C264CB /* SBARoundedButton.swift */,
 				FFADF32A1EE61961005F7E1D /* SBAProgressView.swift */,
 			);
 			name = Views;
@@ -1390,14 +1378,6 @@
 			);
 			name = Result;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		FFD6AB0A1EDE06880075ABEF /* Color Management */ = {
-			isa = PBXGroup;
-			children = (
-				FFD6AB551EDE13500075ABEF /* UIColor+BridgeKeyNames.swift */,
-			);
-			name = "Color Management";
 			sourceTree = "<group>";
 		};
 		FFD6AB801EDE836F0075ABEF /* Activity Introduction Step */ = {
@@ -1845,10 +1825,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFD6AB561EDE13500075ABEF /* UIColor+BridgeKeyNames.swift in Sources */,
 				FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */,
 				FF9D4C911CA32536001C293C /* SBAUser.swift in Sources */,
-				FF37BE321ED7928F00C264CB /* SBAShadowGradient.swift in Sources */,
 				FF5CDF241DDE395900117218 /* SBADemographicDataObjectType.m in Sources */,
 				FFF0124B1EA0199700D9D9DD /* SBATaskReference.swift in Sources */,
 				FF3E30551D5A806C00347165 /* SBASurveyTask.swift in Sources */,
@@ -1873,7 +1851,6 @@
 				FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */,
 				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
 				808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */,
-				FF37BE301ED7928000C264CB /* SBAUnderlinedButton.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
 				FFDECE041D088FA600434001 /* SBALoginStep.swift in Sources */,
@@ -1920,7 +1897,6 @@
 				FFCC3ADD1EE7400000A2A2C8 /* SBACompletionStepViewController.swift in Sources */,
 				FFD6AB931EDE844B0075ABEF /* SBAActivityInstructionStepViewController.swift in Sources */,
 				FF63D0F91CD032B4007ADEE5 /* SBALog.m in Sources */,
-				FF37BE2E1ED7927100C264CB /* SBARoundedButton.swift in Sources */,
 				FFAAF5FD1CC00D7300500929 /* SBAActivityTableViewCell.swift in Sources */,
 				FFADF3101EE5DD00005F7E1D /* SBAInstructionStepViewController.swift in Sources */,
 				80FDDC941E661B690010DFA7 /* SBAProfileSection.swift in Sources */,
