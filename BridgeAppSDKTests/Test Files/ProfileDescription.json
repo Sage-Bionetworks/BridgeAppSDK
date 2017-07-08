@@ -31,7 +31,8 @@
                  },
                  {
                  "profileKey": "gender",
-                 "classType": "KeychainProfileItem",
+                 "classType": "ClientDataProfileItem",
+                 "activityIdentifier": "Demographic Survey",
                  "itemType": "HKBiologicalSex",
                  },
                  {
@@ -47,7 +48,8 @@
                  },
                  {
                  "profileKey": "numberOfSiblings",
-                 "classType": "UserDefaultsProfileItem",
+                 "classType": "ClientDataProfileItem",
+                 "activityIdentifier": "Demographic Survey",
                  "itemType": "Number",
                  "demographicKey": "number_of_siblings"
                  },

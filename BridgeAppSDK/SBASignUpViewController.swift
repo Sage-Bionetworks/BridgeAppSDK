@@ -298,7 +298,7 @@ open class SBASignUpTableCell : UITableViewCell, SBASignUpCell {
 
 open class SBASignUpTableViewController : SBASignUpViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet public weak var tableView: UITableView!
     
     open override func viewDidLoad() {
         super.viewDidLoad()

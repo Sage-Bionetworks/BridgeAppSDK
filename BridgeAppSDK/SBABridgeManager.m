@@ -268,6 +268,12 @@
     }];
 }
 
++ (void)fetchAllCachedScheduledActivitiesWithCompletion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:NSDate.distantPast to:NSDate.distantFuture cachingPolicy:SBBCachingPolicyCachedOnly withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+        completionBlock(activitiesList, error);
+    }];
+}
+
 + (void)updateScheduledActivities:(NSArray <SBBScheduledActivity *> *)scheduledActivities completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBActivityManager) updateScheduledActivities:scheduledActivities withCompletion:^(id responseObject, NSError *error) {
         if (completionBlock) {

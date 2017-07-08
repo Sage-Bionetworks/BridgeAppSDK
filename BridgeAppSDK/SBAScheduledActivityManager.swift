@@ -308,7 +308,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      */
     @objc(scheduledActivityForTaskIdentifier:)
     open func scheduledActivity(for taskIdentifier: String) -> SBBScheduledActivity? {
-        return activities.find({ $0.taskIdentifier == taskIdentifier })
+        return activities.find({ $0.activityIdentifier == taskIdentifier })
     }
 
     
@@ -354,7 +354,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
         
         // If this is the first step in an activity then look to see if there is a custom intro view controller
-        if step is ORKInstructionStep,
+        if step.stepViewControllerClass() == ORKInstructionStepViewController.self,
             let task = taskViewController.task as? ORKOrderedTask, task.index(of: step) == 0,
             let schedule = self.scheduledActivity(for: taskViewController),
             let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) {
@@ -675,7 +675,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
                     // If schedule is found then set its start/stop time and add to list to update
                     subschedule.startedOn = schedule.startedOn
                     subschedule.finishedOn = schedule.finishedOn
-                    scheduledActivities += [subschedule]
+                    scheduledActivities.append(subschedule)
                 }
             }
         }
@@ -685,8 +685,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     open func didEndSurveyEarly(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        if let firstStepResult = taskViewController.result.results?.first as? ORKStepResult,
-            let endResult = firstStepResult.results?.find({ $0 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
+        if let endResult = taskViewController.result.firstResult( where: { $1 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
             endResult.didEndSurvey {
             return true
         }
@@ -1060,6 +1059,20 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
     }
 }
 
-
-
+extension ORKTaskResult {
+    
+    public func firstResult(where evaluate: (_ stepResult: ORKStepResult, _ result: ORKResult) -> Bool) -> ORKResult? {
+        guard let results = self.results as? [ORKStepResult] else { return nil }
+        for stepResult in results {
+            guard let stepResults = stepResult.results else { continue }
+            for result in stepResults {
+                if evaluate(stepResult, result) {
+                    return result
+                }
+            }
+        }
+        return nil
+    }
+    
+}
 

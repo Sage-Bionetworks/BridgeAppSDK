@@ -71,7 +71,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
 
 @objc
 open class SBAProfileTableItemBase: NSObject, SBAProfileTableItem {
-    let sourceDict: [AnyHashable: Any]
+    public let sourceDict: [AnyHashable: Any]
     open var defaultOnSelectedAction = SBAProfileOnSelectedAction.noAction
 
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
@@ -158,18 +158,112 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         let profileItems = SBAProfileManager.shared!.profileItems()
         return profileItems[self.profileItemKey]!
     }()
-
+    
+    func itemDetailFor(_ date: Date, format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.calendar = Calendar.current
+        return formatter.string(from: date)
+    }
+    
+    open func dateAsItemDetail(_ date: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "Mdy", options: 0, locale: Locale.current)
+            else { return String(describing: date) }
+        return self.itemDetailFor(date, format: format)
+    }
+    
+    open func dateTimeAsItemDetail(_ dateTime: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "yEMdhma", options: 0, locale: Locale.current)
+            else { return String(describing: dateTime) }
+        return self.itemDetailFor(dateTime, format: format)
+    }
+    
+    open func timeOfDayAsItemDetail(_ timeOfDay: Date) -> String {
+        guard let format = DateFormatter.dateFormat(fromTemplate: "hma", options: 0, locale: Locale.current)
+            else { return String(describing: timeOfDay) }
+        return self.itemDetailFor(timeOfDay, format: format)
+    }
+    
+    public func centimetersToFeetAndInches(_ centimeters: Double) -> (feet: Double, inches: Double) {
+        let inches = centimeters / 2.54
+        return ((inches / 12.0).rounded(), inches.truncatingRemainder(dividingBy: 12.0))
+    }
+    
+    @objc(hkQuantityheightAsItemDetail:)
+    open func heightAsItemDetail(_ height: HKQuantity) -> String {
+        let heightInCm = height.doubleValue(for: HKUnit(from: .centimeter)) as NSNumber
+        return self.heightAsItemDetail(heightInCm)
+    }
+    
+    open func heightAsItemDetail(_ height: NSNumber) -> String {
+        let formatter = LengthFormatter()
+        formatter.isForPersonHeightUse = true
+        let meters = height.doubleValue / 100.0 // cm -> m
+        return formatter.string(fromMeters: meters)
+    }
+    
+    @objc(hkQuantityWeightAsItemDetail:)
+    open func weightAsItemDetail(_ weight: HKQuantity) -> String {
+        let weightInKg = weight.doubleValue(for: HKUnit(from: .kilogram)) as NSNumber
+        return self.weightAsItemDetail(weightInKg)
+    }
+    
+    open func weightAsItemDetail(_ weight: NSNumber) -> String {
+        let formatter = MassFormatter()
+        formatter.isForPersonMassUse = true
+        return formatter.string(fromKilograms: weight.doubleValue)
+    }
+    
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
         if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
             let choices = surveyItem.items as? [SBAChoice] {
             let selected = (value as? [Any]) ?? [value]
             let textList = selected.map({ (obj) -> String in
-                return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+                switch surveyItem.surveyItemType {
+                case .form(.singleChoice), .form(.multipleChoice),
+                     .dataGroups(.singleChoice), .dataGroups(.multipleChoice):
+                    return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+                case .account(.profile):
+                    guard let options = surveyItem.items as? [String],
+                            options.count == 1,
+                            let option = SBAProfileInfoOption(rawValue: options[0])
+                        else { return String(describing: obj) }
+                    switch option {
+                    case .birthdate:
+                        guard let date = obj as? Date else { return String(describing: obj) }
+                        return self.dateAsItemDetail(date)
+                    case .height:
+                        // could reasonably be stored either as an HKQuantity, or as an NSNumber of cm
+                        let hkHeight = obj as? HKQuantity
+                        if hkHeight != nil {
+                            return self.heightAsItemDetail(hkHeight!)
+                        }
+                        guard let nsHeight = obj as? NSNumber else { return String(describing: obj) }
+                        return self.heightAsItemDetail(nsHeight)
+                    case .weight:
+                        // could reasonably be stored either as an HKQuantity, or as an NSNumber of kg
+                        let hkWeight = obj as? HKQuantity
+                        if hkWeight != nil {
+                            return self.weightAsItemDetail(hkWeight!)
+                        }
+                        guard let nsWeight = obj as? NSNumber else { return String(describing: obj) }
+                        return self.weightAsItemDetail(nsWeight)
+                    default:
+                        return String(describing: obj)
+                    }
+                default:
+                    return String(describing: obj)
+                }
             })
             return Localization.localizedJoin(textList: textList)
         }
         return String(describing: value)
+    }
+    
+    open var answerMapKeys: [String: String] {
+        let key = #keyPath(answerMapKeys)
+        return sourceDict[key] as? [String: String] ?? [self.profileItemKey: self.profileItemKey]
     }
 }
 
