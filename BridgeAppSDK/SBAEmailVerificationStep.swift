@@ -97,7 +97,7 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
  The `SBAEmailVerificationStepViewController` works with the `SBAEmailVerificationStep` to handle
  email verification, change email, and resend verification email.
  */
-open class SBAEmailVerificationStepViewController: SBAInstructionStepViewController, SBAAccountStepController {
+open class SBAEmailVerificationStepViewController: SBAGenericStepViewController, SBAAccountStepController {
     
     // MARK: SBASharedInfoController
     

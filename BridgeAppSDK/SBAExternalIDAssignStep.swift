@@ -96,8 +96,8 @@ extension SBAExternalIDAssignStepController {
     
 }
 
-open class SBAExternalIDAssignStepViewController: ORKFormStepViewController, SBAExternalIDAssignStepController {
-    
+open class SBAExternalIDAssignStepViewController: SBAGenericStepViewController, SBAExternalIDAssignStepController {
+        
     // MARK: SBASharedInfoController
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {

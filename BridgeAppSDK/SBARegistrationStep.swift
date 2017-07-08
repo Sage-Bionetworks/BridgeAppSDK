@@ -32,6 +32,7 @@
 //
 
 import ResearchKit
+import ResearchUXFactory
 
 open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     
@@ -192,7 +193,7 @@ extension SBARegistrationStepController {
     }
 }
 
-open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepController {
+open class SBARegistrationStepViewController: SBAGenericStepViewController, SBARegistrationStepController {
     
     open var dataGroups: [String]?
     
