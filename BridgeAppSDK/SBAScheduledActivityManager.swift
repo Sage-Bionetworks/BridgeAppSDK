@@ -147,9 +147,9 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open func reloadData() {
         
         // Fetch all schedules (including completed)
-        let now = Date()
+        let now = Date().startOfDay()
         let fromDate = now.addingNumberOfDays(-1 * daysBehind)
-        let toDate = now.addingNumberOfDays(daysAhead)
+        let toDate = now.addingNumberOfDays(daysAhead + 1)
         
         loadScheduledActivities(from: fromDate, to: toDate)
     }
