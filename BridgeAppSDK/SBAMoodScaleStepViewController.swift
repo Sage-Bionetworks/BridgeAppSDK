@@ -250,7 +250,8 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         super.viewDidLayoutSubviews()
         
         // Check the text for sizing
-        _isTruncated = choiceLabels.reduce(false, { $0 || $1.isTruncated() })
+        // syoung 07/10/2017 For consistency, always use the same layout on all devices
+        _isTruncated = true // choiceLabels.reduce(false, { $0 || $1.isTruncated() })
         updateSelectionState()
     }
     
