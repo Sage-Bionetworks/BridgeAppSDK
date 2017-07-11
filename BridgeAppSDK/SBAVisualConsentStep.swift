@@ -34,7 +34,7 @@
 
 import UIKit
 
-class SBAVisualConsentStep: ORKPageStep {
+open class SBAVisualConsentStep: ORKPageStep {
     
     private var consentDocument: ORKConsentDocument!
     
@@ -46,11 +46,11 @@ class SBAVisualConsentStep: ORKPageStep {
         super.init(identifier: identifier, steps: steps)
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func stepViewControllerClass() -> AnyClass {
+    override open func stepViewControllerClass() -> AnyClass {
         return SBAGenericPageStepViewController.classForCoder()
     }
     
