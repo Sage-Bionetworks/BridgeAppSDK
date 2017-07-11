@@ -317,6 +317,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
+        // syoung 07/11/2017 Kludgy work-around for locking interface orientation following showing a
+        // view controller that requires landscape orientation
+        (UIApplication.shared.delegate as? SBAAppDelegate)?.resetOrientation()
+        
         // default behavior is to only record the task results if the task completed
         if reason == ORKTaskViewControllerFinishReason.completed {
             recordTaskResults(for: taskViewController)

@@ -119,6 +119,7 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     private var rotationObserver: NSObjectProtocol?
     
     override open func viewWillAppear(_ animated: Bool) {
+        (UIApplication.shared.delegate as? SBAAppDelegate)?.orientationLock = .allButUpsideDown
         super.viewWillAppear(animated)
         
         // Do not allow going back
@@ -134,6 +135,10 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        // Note: syoung 07/11/2017 This method is called *after* the OS sets up to dismiss the view
+        // so also need to reset in the scheduled activity manager. (belt + suspenders)
+        (UIApplication.shared.delegate as? SBAAppDelegate)?.resetOrientation()
         
         removeRotationObserver()
     }
