@@ -503,7 +503,14 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      @return                A new instance of a `SBATaskReference`
     */
     open func instantiateTaskViewController(for schedule: SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference) -> SBATaskViewController {
-        return SBATaskViewController(task: task, taskRun: nil)
+        let taskViewController =  SBATaskViewController(task: task, taskRun: nil)
+        
+        // Because of a bug in ResearchKit that looks at the _defaultResultSource ivar rather than 
+        // the property, this will always return the view controller as the result source.
+        // This allows us to attach a different source. syoung 07/10/2017
+        taskViewController.defaultResultSource = createTaskResultSource(for: schedule, task: taskViewController.task!, taskRef: taskRef)
+        
+        return taskViewController
     }
     
     open func instantiateActivityIntroductionStepViewController(for schedule: SBBScheduledActivity, step: ORKStep, taskRef: SBATaskReference) -> SBAActivityInstructionStepViewController? {
@@ -548,6 +555,52 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         }
         
         return (task, taskRef)
+    }
+    
+    /**
+     Create a task result source for the given schedule and task.
+     
+     @param     schedule    The schedule associated with this task
+     @param     task        The task instantiated from this schedule
+     @param     taskRef     The task reference associated with this task
+     @return                The result source to attach to this task (if any)
+     */
+    open func createTaskResultSource(for schedule:SBBScheduledActivity, task: ORKTask, taskRef: SBATaskReference? = nil) -> ORKTaskResultSource? {
+        
+        // Look at top-level steps for a subtask that might have its own schedule
+        var sources: [SBATaskResultSource] = []
+        if let navTask = task as? SBANavigableOrderedTask {
+            for step in navTask.steps {
+                if let subtaskStep = step as? SBASubtaskStep,
+                    let taskId = subtaskStep.taskIdentifier,
+                    let subschedule = self.scheduledActivity(for: taskId),
+                    let source = self.createTaskResultSource(for: subschedule, task: subtaskStep.subtask) as? SBATaskResultSource {
+                    sources.append(source)
+                }
+            }
+        }
+        
+        // Look for client data that can be used to generate a result source
+        let answerMap: [String: Any]? = {
+            if let array = schedule.clientData as? [[String : Any]] {
+                return array.last
+            }
+            return schedule.clientData as? [String : Any]
+        }()
+        
+        if sources.count > 0 {
+            // If the sources count is greater than 0 then return a combo result source (even if this schedule
+            // does not have an answer map
+            return SBAComboTaskResultSource(task: task, answerMap: answerMap ?? [:], sources: sources)
+        }
+        else if answerMap != nil {
+            // Otherwise, if the answer map is non-nil, then return a result source for this task specifically
+            return SBASurveyTaskResultSource(task: task, answerMap: answerMap!)
+        }
+        else {
+            // Finally, there is no result source applicable to this task so return nil
+            return nil
+        }
     }
     
     /**
