@@ -93,6 +93,7 @@
 "SBA_SURVEY_LOADING_TEXT" = "Please wait while the survey is downloaded."; // Message for a loading a survey.
 "SBA_COPYRIGHT" = "Copyright"; // Text on the copyright button.
 "SBA_SHORT_NUMBER_OF_STEPS_%@" = "%@ Steps"; // short text for the number of steps
+"SBA_CURRENT_STEP_%@_OF_TOTAL_STEPS_%@" = "Step %@ of %@"; // text to show the current step of total steps
 
 /* Withdrawal */
 "WITHDRAW_TITLE" = "Withdraw";  // Title for the button and message for confirming intention to withdraw from the study
@@ -115,5 +116,4 @@
 "MOOD_SCALE_CHOICE_3" = "So-So";
 "MOOD_SCALE_CHOICE_4" = "Not Great";
 "MOOD_SCALE_CHOICE_5" = "Horrible";
-
 

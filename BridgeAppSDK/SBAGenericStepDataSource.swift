@@ -305,7 +305,7 @@ open class SBAGenericStepDataSource: NSObject {
                 let multiCellChoice = singleSelectionTypes.contains(answerFormat.questionType) && !(answerFormat is ORKValuePickerAnswerFormat)
                 let multiLineTextEntry = answerFormat.questionType == .text
                 let scale = answerFormat.questionType == .scale
-                
+
                 needExclusiveSection =  multiCellChoice || multiLineTextEntry || scale
             }
             
@@ -383,7 +383,6 @@ open class SBAGenericStepTableItemGroup: NSObject {
     var items: [SBAGenericStepTableItem]!
     var beginningRowIndex = 0
     
-    // TODO: Josh Bruhin, 6/12/17 - implement multi-selection formItems. For now, set to singleSelection
     var singleSelection: Bool = true
     
     var answerDate: Date?
@@ -427,9 +426,8 @@ open class SBAGenericStepTableItemGroup: NSObject {
         
         super.init()
         
-//        var rowIndex = beginningRowIndex
-        
         if let textChoiceAnswerFormat = formItem.answerFormat?.implied() as? ORKTextChoiceAnswerFormat {
+            singleSelection = textChoiceAnswerFormat.style == .singleChoice
             self.items = textChoiceAnswerFormat.textChoices.enumerated().map { (index, _) -> SBAGenericStepTableItem in
                 SBAGenericStepTableItem(formItem: formItem, choiceIndex: index, rowIndex: beginningRowIndex + index)
             }
@@ -455,9 +453,10 @@ open class SBAGenericStepTableItemGroup: NSObject {
         
         // if we selected an item and this is a single-selection group, then we iterate
         // our other items and de-select them
-        
-        for (ii, item) in items.enumerated() {
-            item.selected = (ii == index)
+        if singleSelection {
+            for (ii, item) in items.enumerated() {
+                item.selected = (ii == index)
+            }
         }
     }
     

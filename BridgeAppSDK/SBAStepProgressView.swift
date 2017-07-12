@@ -85,8 +85,18 @@ open class SBAStepProgressView: UIView {
      The text of the label that is displayed directly under the progress bar
      */
     open func stringForLabel() -> String? {
-        // TODO: Josh Bruhin, 6/12/17 - localize string
-        return currentStep > 0 && totalSteps > 0 ? "Step \(currentStep) of \(totalSteps)" : nil
+
+        if currentStep > 0 && totalSteps > 0 {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .none
+            let currentString = formatter.string(for: currentStep)
+            let totalString = formatter.string(for: totalSteps)
+            let format = Localization.localizedString("SBA_CURRENT_STEP_%@_OF_TOTAL_STEPS_%@")
+            return String.localizedStringWithFormat(format, currentString!, totalString!)
+        }
+        else {
+            return nil
+        }
     }
     
     // MARK: Initializers
