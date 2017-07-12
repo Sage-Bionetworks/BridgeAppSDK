@@ -133,7 +133,7 @@ open class SBAStepTextFieldCell: UITableViewCell {
     private let kSideMargin = CGFloat(25.0).proportionalToScreenWidth()
     
     public var textField: UITextField!
-    open var labelLabel: UILabel!
+    open var fieldLabel: UILabel!
     open var ruleView: UIView!
     
     /**
@@ -156,7 +156,7 @@ open class SBAStepTextFieldCell: UITableViewCell {
     open func initializeViews() {
         textField = SBAStepTextField()
         ruleView = UIView()
-        labelLabel = UILabel()
+        fieldLabel = UILabel()
     }
     
     /**
@@ -164,11 +164,11 @@ open class SBAStepTextFieldCell: UITableViewCell {
      */
     open func setupViews() {
 
-        // configure our label label
-        labelLabel.font = UIFont.textFieldCellLabel
-        labelLabel.textColor = UIColor.textFieldCellLabel
-        labelLabel.numberOfLines = 1
-        labelLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.size.width - (2 * constants().sideMargin)
+        // configure our field label
+        fieldLabel.font = UIFont.textFieldCellLabel
+        fieldLabel.textColor = UIColor.textFieldCellLabel
+        fieldLabel.numberOfLines = 1
+        fieldLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.size.width - (2 * constants().sideMargin)
         
         // we don't want auto correction since this is for email address. This should really be
         // part of the step config, like keyboardType, but it's not currently
@@ -214,14 +214,14 @@ open class SBAStepTextFieldCell: UITableViewCell {
         
         contentView.addSubview(textField)
         contentView.addSubview(ruleView)
-        contentView.addSubview(labelLabel)
+        contentView.addSubview(fieldLabel)
 
         setupViews()
         
         
         textField.translatesAutoresizingMaskIntoConstraints = false
         ruleView.translatesAutoresizingMaskIntoConstraints = false
-        labelLabel.translatesAutoresizingMaskIntoConstraints = false
+        fieldLabel.translatesAutoresizingMaskIntoConstraints = false
         
         setNeedsUpdateConstraints()
     }
@@ -255,11 +255,11 @@ open class SBAStepTextFieldCell: UITableViewCell {
         textField.removeSiblingAndAncestorConstraints()
         ruleView.removeSiblingAndAncestorConstraints()
         
-        labelLabel.alignToSuperview([.leading, .trailing], padding: constants().sideMargin)
-        labelLabel.alignToSuperview([.top], padding: constants().verticalMargin)
+        fieldLabel.alignToSuperview([.leading, .trailing], padding: constants().sideMargin)
+        fieldLabel.alignToSuperview([.top], padding: constants().verticalMargin)
         
         textField.alignToSuperview([.leading, .trailing], padding: constants().sideMargin)
-        textField.alignBelow(view: labelLabel, padding: constants().verticalPadding)
+        textField.alignBelow(view: fieldLabel, padding: constants().verticalPadding)
         
         ruleView.alignBelow(view: textField, padding: constants().verticalPadding)
         ruleView.makeHeight(.equal, 1.0)
@@ -284,8 +284,8 @@ open class SBAStepTextFieldFeaturedCell: SBAStepTextFieldCell {
         textField.textAlignment = .center
         textField.font = UIFont.textFieldFeaturedCellText
         
-        // we don't want the label label
-        labelLabel.isHidden = true
+        // we don't want the field label
+        fieldLabel.isHidden = true
     }
     
     override open func setPlaceholderText(_ text: String) {

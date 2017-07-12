@@ -45,7 +45,9 @@ open class SBAStepProgressView: UIView {
     /**
      The current step in the current flow
      */
-    public var currentStep: Int = 0 { didSet { progressChanged() } }
+    public var currentStep: Int = 0 {
+        didSet { progressChanged() }
+    }
     
     /**
      The total number of steps in the current flow

@@ -362,19 +362,24 @@ open class SBAStepHeaderView: UIView {
     }
     
     func shouldLayout(_ view: UIView?) -> Bool {
+
         guard view != nil else { return false }
-        switch view {
-        case is SBAStepProgressView:
+        
+        if let progressView = view as? SBAStepProgressView {
             return shouldShowProgress && progressView.progress > 0
-        case is UIImageView:
-            return (view as! UIImageView).image != nil
-        case is UILabel:
-            return ((view as! UILabel).text?.characters.count ?? 0) > 0
-        case is UIButton:
-            return shouldShowLearnMore
-        default:
-            return true
         }
+        else if let imageView = view as? UIImageView {
+            return imageView.image != nil
+        }
+        else if let label = view as? UILabel {
+            return (label.text?.characters.count ?? 0) > 0
+        }
+        else if let button = view as? UIButton, button == self.learnMoreButton {
+            // If this is the learn more button then only show if used.
+            return shouldShowLearnMore
+        }
+        
+        return true
     }
 
 }

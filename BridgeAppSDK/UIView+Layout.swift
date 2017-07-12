@@ -329,8 +329,8 @@ extension UIView {
                     if type(of: constraint) != NSLayoutConstraint.self {
                         continue
                     }
-                    
-                    if constraint.firstItem as! NSObject == self && constraint.firstAttribute == attribute && constraint.relation == relation {
+                                        
+                    if SBAObjectEquality(constraint.firstItem, self) && constraint.firstAttribute == attribute && constraint.relation == relation {
                         theConstraints.append(constraint)
                     }
                 }

@@ -641,7 +641,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 
                 if let text = itemGroup?.formItem.text {
                     // populate the label label
-                    textFieldCell.labelLabel.text = text
+                    textFieldCell.fieldLabel.text = text
                 }
 
                 if let placeholder = itemGroup?.formItem.placeholder {

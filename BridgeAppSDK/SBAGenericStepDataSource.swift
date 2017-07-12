@@ -1,6 +1,6 @@
 //
 //  SBAGenericStepDataSource.swift
-//  ResearchUXFactory
+//  BridgeAppSDK
 //
 //  Created by Josh Bruhin on 6/5/17.
 //  Copyright © 2017 Sage Bionetworks. All rights reserved.
@@ -87,14 +87,14 @@ open class SBAGenericStepDataSource: NSObject {
         // iterate the provided results, find the corresponding ItemGroup for each, and save the answer
         // provided in the results
         
-        if let stepResult = result as? ORKStepResult {
-            if let results = stepResult.results as? Array<ORKQuestionResult> {
-                for result in results {
-                    let answer = result.answer ?? ORKNullAnswerValue()
-                    if let group = itemGroup(with: result.identifier) {
-                        group.answer = answer as AnyObject
-                    }
-                }
+        guard let stepResult = result as? ORKStepResult,
+            let results = stepResult.results as? [ORKQuestionResult]
+            else { return }
+        
+        for result in results {
+            let answer = result.answer ?? ORKNullAnswerValue()
+            if let group = itemGroup(with: result.identifier) {
+                group.answer = answer as AnyObject
             }
         }
     }
@@ -225,126 +225,103 @@ open class SBAGenericStepDataSource: NSObject {
             
             for formItem: ORKFormItem in formItems {
                 
-                
-                // Skipped forms report a "null" value for every item -- by skipping, the user has explicitly said they don't want
-                // to report any values from this form.
-                
                 var answer = ORKNullAnswerValue()
                 var answerDate = now
                 var systemCalendar = Calendar.current
                 var systemTimeZone = NSTimeZone.system
                 
-                // TODO: Josh Bruhin, 6/12/17 - implement skipped?
-                let skipped = false
-                if !skipped {
+                if let itemGroup = itemGroup(with: formItem.identifier) {
                     
-                    if let itemGroup = itemGroup(with: formItem.identifier) {
-                        answer = itemGroup.answer
+                    answer = itemGroup.answer
+                    
+                    // check that answer is not NSNull (ORKNullAnswerValue)
+                    // Skipped forms report a "null" value for every item -- by skipping, the user has explicitly said they don't want
+                    // to report any values from this form.
+                    if !(answer is NSNull) {
                         answerDate = itemGroup.answerDate ?? now
                         systemCalendar = itemGroup.calendar
                         systemTimeZone = itemGroup.timezone
                     }
+               }
+                
+                guard let result = formItem.answerFormat?.result(withIdentifier: formItem.identifier, answer: answer) else {
+                    continue
                 }
                 
-                let result = formItem.answerFormat?.result(withIdentifier: formItem.identifier, answer: answer)
                 let impliedAnswerFormat = formItem.answerFormat?.implied()
                 
-                if let dateAnswerFormat = impliedAnswerFormat as? ORKDateAnswerFormat, let dateQuestionResult = result as? ORKDateQuestionResult {
-                    if let _ = dateQuestionResult.dateAnswer {
-                        let usedCalendar = dateAnswerFormat.calendar ?? systemCalendar
-                        dateQuestionResult.calendar = usedCalendar
-                        dateQuestionResult.timeZone = systemTimeZone
-                    }
-                } else if let numericAnswerFormat = impliedAnswerFormat as? ORKNumericAnswerFormat {
-                    if let numericQuestionFormat = result as? ORKNumericQuestionResult {
-                        numericQuestionFormat.unit = numericAnswerFormat.unit
-                    }
+                if let dateAnswerFormat = impliedAnswerFormat as? ORKDateAnswerFormat,
+                    let dateQuestionResult = result as? ORKDateQuestionResult,
+                    let _ = dateQuestionResult.dateAnswer {
+                    
+                    let usedCalendar = dateAnswerFormat.calendar ?? systemCalendar
+                    dateQuestionResult.calendar = usedCalendar
+                    dateQuestionResult.timeZone = systemTimeZone
+                    
+                }
+                else if let numericAnswerFormat = impliedAnswerFormat as? ORKNumericAnswerFormat,
+                    let numericQuestionFormat = result as? ORKNumericQuestionResult,
+                    numericQuestionFormat.unit == nil {
+                    
+                    numericQuestionFormat.unit = numericAnswerFormat.unit
                 }
                 
-                result?.startDate = answerDate
-                result?.endDate = answerDate
+                result.startDate = answerDate
+                result.endDate = answerDate
                 
-                qResults.append(result!)
+                qResults.append(result)
             }
             
-            parentResult.results = parentResult.results! + qResults
+            qResults.forEach({ parentResult.addResult($0) })
         }
         
         return parentResult
     }
     
     fileprivate func formItemsWithAnswerFormat() -> Array<ORKFormItem>? {
-        
-        if let formItems = formItems() {
-            var items: Array<ORKFormItem> = Array()
-            formItems.forEach({
-                if let _ = $0.answerFormat {
-                    items.append($0)
-                }
-            })
-            return items
-        }
-        return nil
+        return self.formItems()?.filter { $0.answerFormat != nil }
     }
     
-    fileprivate func formItems() -> Array<ORKFormItem>? {
-        switch self.step {
-        case is ORKFormStep:
-            return (self.step as! ORKFormStep).formItems
-        case is ORKQuestionStep:
-            return (self.step as! ORKQuestionStep).formItems
-        default:
-            return nil
-        }
+    fileprivate func formItems() -> [ORKFormItem]? {
+        guard let formStep = self.step as? SBAFormStepProtocol else { return nil }
+        return formStep.formItems
     }
     
     fileprivate func populate() {
         
-        if let items = formItems(), items.count > 0 {
-            
-            let singleSelectionTypes: Array<Int> = [ORKQuestionType.boolean.rawValue,
-                                                    ORKQuestionType.singleChoice.rawValue,
-                                                    ORKQuestionType.multipleChoice.rawValue,
-                                                    ORKQuestionType.location.rawValue]
-            
-            var newSection: SBAGenericStepTableSection? = nil
-            
-            for item in items {
-                
-                // In case no section available, create new one.
-                if newSection == nil {
-                    newSection = SBAGenericStepTableSection(sectionIndex: sections.count)
-                }
-                
-                if let answerFormat = item.answerFormat?.implied() {
-                    let multiCellChoices = singleSelectionTypes.contains(answerFormat.questionType.rawValue) && type(of: answerFormat) != ORKValuePickerAnswerFormat.self
-                    let multiLineTextEntry = answerFormat.questionType == .text
-                    let scale = answerFormat.questionType == .scale
-                    
-                    
-                    if multiCellChoices || multiLineTextEntry || scale {
-                        
-                        newSection!.title = item.text
-                        newSection!.add(formItem: item)
-                        sections.append(newSection!)
-                        
-                        // following item should start a new section
-                        newSection = nil
-                    }
-                    else {
-                        
-                        newSection!.add(formItem: item)
-                        sections.append(newSection!)
-                    }
-                }
-                else {
-                    
-                    newSection!.title = item.text
-                    sections.append(newSection!)
-                }
-            }
+        guard let items = formItems(), items.count > 0 else {
+            return
         }
         
+        let singleSelectionTypes: [ORKQuestionType] = [.boolean, .singleChoice, .multipleChoice, .location]
+        
+        for item in items {
+            
+            // some form items need to be in their own section
+            var needExclusiveSection = false
+            
+            if let answerFormat = item.answerFormat?.implied() {
+
+                let multiCellChoice = singleSelectionTypes.contains(answerFormat.questionType) && !(answerFormat is ORKValuePickerAnswerFormat)
+                let multiLineTextEntry = answerFormat.questionType == .text
+                let scale = answerFormat.questionType == .scale
+                
+                needExclusiveSection =  multiCellChoice || multiLineTextEntry || scale
+            }
+            
+            // if we don't need an exclusive section and we have an existing section and it's not exclusive ('singleFormItem'),
+            // then add this item to that existing section, otherwise create a new one
+            if !needExclusiveSection, let lastSection = sections.last, !lastSection.singleFormItem {
+                lastSection.add(formItem: item)
+            }
+            else {
+                let section = SBAGenericStepTableSection(sectionIndex: sections.count)
+                section.add(formItem: item)
+                section.title = item.text
+                section.singleFormItem = needExclusiveSection
+                sections.append(section)
+            }
+        }
     }
 }
 
@@ -359,10 +336,17 @@ open class SBAGenericStepTableSection: NSObject {
         set (newValue) { _title = newValue?.uppercased(with: Locale.current) }
     }
     
-    var index: Int?
+    /**
+     Indicates whether this section is exclusive to a single form item or can contain multiple form items.
+    */
+    public var singleFormItem = false
+    
+    
+    let index: Int!
     
     public init(sectionIndex: Int) {
-        index = sectionIndex
+        self.index = sectionIndex
+        super.init()
     }
     
     /**
@@ -373,6 +357,12 @@ open class SBAGenericStepTableSection: NSObject {
      @param   formItem    The ORKFormItem to add to the section
      */
     public func add(formItem: ORKFormItem) {
+        
+        guard itemGroups.find({ $0.formItem.identifier == formItem.identifier }) == nil else {
+            assertionFailure("Cannot add ORKFormItem with duplicate identifier.")
+            return
+        }
+        
         itemGroups.append(SBAGenericStepTableItemGroup(formItem: formItem, beginningRowIndex: itemCount()))
     }
     
@@ -381,9 +371,7 @@ open class SBAGenericStepTableSection: NSObject {
      @return    The total number of SBAGenericStepTableItems in this section
      */
     public func itemCount() -> Int {
-        var count = 0
-        itemGroups.forEach({ count += $0.items.count })
-        return count
+        return itemGroups.reduce(0, {$0 + $1.items.count})
     }
 }
 
@@ -392,7 +380,7 @@ open class SBAGenericStepTableItemGroup: NSObject {
     
     let formItem: ORKFormItem!
     
-    var items: Array<SBAGenericStepTableItem> = Array()
+    var items: [SBAGenericStepTableItem]!
     var beginningRowIndex = 0
     
     // TODO: Josh Bruhin, 6/12/17 - implement multi-selection formItems. For now, set to singleSelection
@@ -402,14 +390,14 @@ open class SBAGenericStepTableItemGroup: NSObject {
     var calendar = Calendar.current
     var timezone = TimeZone.current
     
-    var defaultAnswer: AnyObject = ORKNullAnswerValue() as AnyObject
-    var _answer: AnyObject?
+    var defaultAnswer: Any = ORKNullAnswerValue() as Any
+    private var _answer: Any?
     
     /**
      Save an answer for this ItemGroup (FormItem). This is used only for those questions that have single answers,
      such as text and numeric answers, as opposed to booleans or text choice answers.
      */
-    public var answer: AnyObject! {
+    public var answer: Any! {
         get { return internalAnswer() }
         set { setInternalAnswer(newValue) }
     }
@@ -420,18 +408,12 @@ open class SBAGenericStepTableItemGroup: NSObject {
      */
     public var isAnswerValid: Bool {
         
-        var valid = true
-        
-        // if answewr is NOT optional and it equals Null (ORKNullAnswerValue()), or is nil, then it's invalid
+        // if answer is NOT optional and it equals Null (ORKNullAnswerValue()), or is nil, then it's invalid
         if !formItem.isOptional, answer is NSNull || answer == nil {
-            valid = false
+            return false
         }
         
-        // also check the value
-        if !formItem.answerFormat!.implied().isAnswerValid(answer) {
-            valid = false
-        }
-        return valid
+        return formItem.answerFormat?.implied().isAnswerValid(answer) ?? false
     }
     
     /**
@@ -445,20 +427,17 @@ open class SBAGenericStepTableItemGroup: NSObject {
         
         super.init()
         
-        var rowIndex = beginningRowIndex
+//        var rowIndex = beginningRowIndex
         
         if let textChoiceAnswerFormat = formItem.answerFormat?.implied() as? ORKTextChoiceAnswerFormat {
-            
-            textChoiceAnswerFormat.textChoices.forEach({
-                let index = textChoiceAnswerFormat.textChoices.index(of: $0)!
-                let tableItem = SBAGenericStepTableItem(formItem: formItem, choiceIndex: index, rowIndex: rowIndex)
-                items.append(tableItem)
-                rowIndex += 1
-            })
+            self.items = textChoiceAnswerFormat.textChoices.enumerated().map { (index, _) -> SBAGenericStepTableItem in
+                SBAGenericStepTableItem(formItem: formItem, choiceIndex: index, rowIndex: beginningRowIndex + index)
+            }
         } else {
-            let tableItem = SBAGenericStepTableItem(formItem: formItem, choiceIndex: 0, rowIndex: rowIndex)
-            items.append(tableItem)
+            let tableItem = SBAGenericStepTableItem(formItem: formItem, choiceIndex: 0, rowIndex: beginningRowIndex)
+            self.items = [tableItem]
         }
+        
     }
     
     /**
@@ -477,77 +456,74 @@ open class SBAGenericStepTableItemGroup: NSObject {
         // if we selected an item and this is a single-selection group, then we iterate
         // our other items and de-select them
         
-        if selected && singleSelection {
-            items.forEach({
-                if $0 != items[index] { $0.selected = false }
-            })
+        for (ii, item) in items.enumerated() {
+            item.selected = (ii == index)
         }
     }
     
-    fileprivate func internalAnswer() -> AnyObject {
+    fileprivate func internalAnswer() -> Any {
         
-        if items.count > 0 {
-            
-            let answerFormat = items[0].formItem?.answerFormat
-            switch answerFormat {
-            case is ORKBooleanAnswerFormat:
-                return answerForBoolean()
-                
-            case is ORKMultipleValuePickerAnswerFormat,
-                 is ORKTextChoiceAnswerFormat:
-                return answerForTextChoice()
-                
-            default:
-                return _answer ?? defaultAnswer
-            }
+        guard let answerFormat = items.first?.formItem?.answerFormat else {
+            return _answer ?? defaultAnswer
         }
-        return _answer ?? defaultAnswer
+        
+        switch answerFormat {
+        case is ORKBooleanAnswerFormat:
+            return answerForBoolean()
+            
+        case is ORKMultipleValuePickerAnswerFormat,
+             is ORKTextChoiceAnswerFormat:
+            return answerForTextChoice()
+            
+        default:
+            return _answer ?? defaultAnswer
+        }
     }
     
-    fileprivate func setInternalAnswer(_ answer: AnyObject) {
+    fileprivate func setInternalAnswer(_ answer: Any) {
         
-        if items.count > 0 {
+        guard let answerFormat = items.first?.formItem?.answerFormat else {
+            return
+        }
+
+        switch answerFormat {
+        case is ORKBooleanAnswerFormat:
             
-            let answerFormat = items[0].formItem?.answerFormat
-            switch answerFormat {
-            case is ORKBooleanAnswerFormat:
-                
-                // iterate our items and find the item with a value equal to our answer,
-                // then select that item
-                
-                let formattedAnswer = answer as? NSNumber
-                for item in items {
-                    if (item.choice?.value as? NSNumber)?.boolValue == formattedAnswer?.boolValue {
-                        item.selected = true
-                    }
+            // iterate our items and find the item with a value equal to our answer,
+            // then select that item
+            
+            let formattedAnswer = answer as? NSNumber
+            for item in items {
+                if (item.choice?.value as? NSNumber)?.boolValue == formattedAnswer?.boolValue {
+                    item.selected = true
                 }
-                
-            case is ORKTextChoiceAnswerFormat:
-                
-                // iterate our items and find the items with a value that is contained in our
-                // answer, which should be an array, then select those items
-                
-                if let arrayAnswer = answer as? Array<AnyObject> {
-                    for item in items {
-                        for selectedValue in arrayAnswer {
-                            if let choiceString = item.choice?.value as? String, let selectedString = selectedValue as? String {
-                                item.selected = choiceString == selectedString
-                            }
-                            else if let choiceNumber = item.choice?.value as? NSNumber, let selectedNumber = selectedValue as? NSNumber {
-                                item.selected = choiceNumber.intValue == selectedNumber.intValue
-                            }
+            }
+            
+        case is ORKTextChoiceAnswerFormat:
+            
+            // iterate our items and find the items with a value that is contained in our
+            // answer, which should be an array, then select those items
+            
+            if let arrayAnswer = answer as? Array<AnyObject> {
+                for item in items {
+                    for selectedValue in arrayAnswer {
+                        if let choiceString = item.choice?.value as? String, let selectedString = selectedValue as? String {
+                            item.selected = choiceString == selectedString
+                        }
+                        else if let choiceNumber = item.choice?.value as? NSNumber, let selectedNumber = selectedValue as? NSNumber {
+                            item.selected = choiceNumber.intValue == selectedNumber.intValue
                         }
                     }
                 }
-                
-            case is ORKMultipleValuePickerAnswerFormat:
-                
-                // TODO: Josh Bruhin, 6/12/17 - implement this answer format.
-                fatalError("setInternalAnswer for ORKMultipleValuePickerAnswerFormat not implemented")
-                
-            default:
-                _answer = answer
             }
+            
+        case is ORKMultipleValuePickerAnswerFormat:
+            
+            // TODO: Josh Bruhin, 6/12/17 - implement this answer format.
+            fatalError("setInternalAnswer for ORKMultipleValuePickerAnswerFormat not implemented")
+            
+        default:
+            _answer = answer
         }
     }
     
