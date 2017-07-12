@@ -78,7 +78,7 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
     }
     
     open var nextTitle: String {
-        return self.continueButtonTitle ?? self.sbaIntructionStep?.continueButtonTitle ??
+        return self.sbaIntructionStep?.continueButtonTitle ?? self.continueButtonTitle ?? 
             (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone())
     }
     
