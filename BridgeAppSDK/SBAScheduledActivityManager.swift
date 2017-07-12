@@ -364,19 +364,28 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         // If the default view controller for this step is an `ORKInstructionStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
-            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            if SBAGenericStepViewController.doesSupport(step) {
+                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            }
+            else {
+                return instantiateInstructionStepViewController(for: step, task: task, result: taskViewController.result)
+            }
         }
 
         // If the default view controller for this step is an `ORKFormStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKFormStepViewController.self, let task = taskViewController.task {
-            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            if SBAGenericStepViewController.doesSupport(step) {
+                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            }
         }
         
         // If the default view controller for this step is an `ORKQuestionStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKQuestionStepViewController.self, let task = taskViewController.task {
-            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            if SBAGenericStepViewController.doesSupport(step) {
+                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+            }
         }
 
         // If the default view controller for this step is an `ORKCompletionStepViewController` (and not a subclass)

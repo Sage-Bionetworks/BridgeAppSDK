@@ -130,6 +130,44 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         get { return customResult() }
     }
     
+    /**
+     Static method to determine if this view controller class supports the provided step. This will vary
+     based on the 'ORKAnswerFormat' and 'ORKQuestionType' for each of the 'ORKFormItems' in the step.
+     */
+    static func doesSupport(_ step: ORKStep) -> Bool {
+        
+        let supportedAnswerFormats: [ORKAnswerFormat.Type] = [ORKTextChoiceAnswerFormat.self,
+                                                              ORKTextAnswerFormat.self,
+                                                              ORKBooleanAnswerFormat.self,
+                                                              ORKNumericAnswerFormat.self]
+        
+        let supportedQuestionTypes: [ORKQuestionType] = [.decimal,
+                                                         .integer,
+                                                         .text,
+                                                         .singleChoice,
+                                                         .multipleChoice]
+        
+        if let formStep = step as? SBAFormStepProtocol,
+            let formItems = formStep.formItems {
+            
+            for item in formItems {
+                if let answerFormat = item.answerFormat?.implied() {
+                    
+                    let formatOkay = supportedAnswerFormats.contains { (type) -> Bool in
+                        type == type(of: answerFormat)
+                    }
+                    
+                    let typeOkay = supportedQuestionTypes.contains(answerFormat.questionType)
+                    
+                    if !(formatOkay && typeOkay) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+    
     
     // MARK: Initializers
     
