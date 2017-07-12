@@ -592,14 +592,23 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             return schedule.clientData as? [String : Any]
         }()
         
+        let hasTrackedSelection: Bool = {
+            guard let collection = (task as? SBANavigableOrderedTask)?.conditionalRule as? SBATrackedDataObjectCollection
+            else {
+                return false
+            }
+            return collection.dataStore.selectedItems != nil
+        }()
+        
         if sources.count > 0 {
             // If the sources count is greater than 0 then return a combo result source (even if this schedule
             // does not have an answer map
             return SBAComboTaskResultSource(task: task, answerMap: answerMap ?? [:], sources: sources)
         }
-        else if answerMap != nil {
-            // Otherwise, if the answer map is non-nil, then return a result source for this task specifically
-            return SBASurveyTaskResultSource(task: task, answerMap: answerMap!)
+        else if answerMap != nil || hasTrackedSelection {
+            // Otherwise, if the answer map is non-nil, or there is a tracked data collection
+            // then return a result source for this task specifically
+            return SBASurveyTaskResultSource(task: task, answerMap: answerMap ?? [:])
         }
         else {
             // Finally, there is no result source applicable to this task so return nil
