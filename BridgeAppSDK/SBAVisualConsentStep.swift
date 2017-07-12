@@ -51,7 +51,7 @@ open class SBAVisualConsentStep: ORKPageStep {
     }
     
     override open func stepViewControllerClass() -> AnyClass {
-        return SBAGenericPageStepViewController.classForCoder()
+        return SBAVisualConsentStepViewController.classForCoder()
     }
     
     static func instructionSteps(for consentDocument: ORKConsentDocument) -> Array<SBAInstructionStep> {

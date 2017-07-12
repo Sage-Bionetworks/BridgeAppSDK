@@ -298,7 +298,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             // our back button becuase it is set at the page VC level. So we test our delegate to see
             // if it is a page VC and, if it is, we get a reference to it and remove the back button
             
-            if let pageViewController = self.delegate as? SBAGenericPageStepViewController {
+            if let pageViewController = self.delegate as? SBAVisualConsentStepViewController {
                 pageViewController.navigationItem.leftBarButtonItem = nil
             } else {
                 navigationItem.leftBarButtonItem = nil
@@ -505,13 +505,13 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
         
         // we need to get a reference to our ORKTaskViewController. In most cases, this will be
-        // our delegate, but it's possible our delegate will be a SBAGenericPageStepViewController.
+        // our delegate, but it's possible our delegate will be a SBAVisualConsentStepViewController.
         // This is true for the consent scenes. If this is the case, then our delegate's delegate
         // should be the ORKTaskViewController
         
         let taskVC: ORKTaskViewController?
         
-        if let pageStepController = self.delegate as? SBAGenericPageStepViewController {
+        if let pageStepController = self.delegate as? SBAVisualConsentStepViewController {
             taskVC = pageStepController.delegate as? ORKTaskViewController
         } else {
             taskVC = self.delegate as? ORKTaskViewController

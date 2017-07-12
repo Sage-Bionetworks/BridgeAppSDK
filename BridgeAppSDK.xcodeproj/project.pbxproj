@@ -18,10 +18,10 @@
 		03D5F9A21F13D44A00C40FF5 /* UIColor+BridgeKeyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9A11F13D44A00C40FF5 /* UIColor+BridgeKeyNames.swift */; };
 		03D5F9A41F13D45400C40FF5 /* UIFont+BridgeKeyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9A31F13D45400C40FF5 /* UIFont+BridgeKeyNames.swift */; };
 		03D5F9A61F13D46000C40FF5 /* SBAGenericStepDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9A51F13D46000C40FF5 /* SBAGenericStepDataSource.swift */; };
-		03D5F9A91F13D47A00C40FF5 /* SBAGenericPageStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9A71F13D47A00C40FF5 /* SBAGenericPageStepViewController.swift */; };
 		03D5F9AA1F13D47A00C40FF5 /* SBAGenericStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9A81F13D47A00C40FF5 /* SBAGenericStepViewController.swift */; };
 		03D5F9AC1F13D4D200C40FF5 /* SBAVisualConsentStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9AB1F13D4D200C40FF5 /* SBAVisualConsentStep.swift */; };
 		03D5F9B41F13D5D200C40FF5 /* NSLayoutConstraint+setMultiplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9B31F13D5D200C40FF5 /* NSLayoutConstraint+setMultiplier.swift */; };
+		03D5F9D21F16938000C40FF5 /* SBAVisualConsentStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5F9D11F16938000C40FF5 /* SBAVisualConsentStepViewController.swift */; };
 		603242491E4001A100C184AD /* SBADataArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 603242471E4001A100C184AD /* SBADataArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6032424A1E4001A100C184AD /* SBADataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 603242481E4001A100C184AD /* SBADataArchive.m */; };
 		6099B9871E00880500902297 /* SBAAppExtensionSharedInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6099B9861E00880500902297 /* SBAAppExtensionSharedInfoController.swift */; };
@@ -461,10 +461,10 @@
 		03D5F9A11F13D44A00C40FF5 /* UIColor+BridgeKeyNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+BridgeKeyNames.swift"; sourceTree = "<group>"; };
 		03D5F9A31F13D45400C40FF5 /* UIFont+BridgeKeyNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+BridgeKeyNames.swift"; sourceTree = "<group>"; };
 		03D5F9A51F13D46000C40FF5 /* SBAGenericStepDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAGenericStepDataSource.swift; sourceTree = "<group>"; };
-		03D5F9A71F13D47A00C40FF5 /* SBAGenericPageStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAGenericPageStepViewController.swift; sourceTree = "<group>"; };
 		03D5F9A81F13D47A00C40FF5 /* SBAGenericStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAGenericStepViewController.swift; sourceTree = "<group>"; };
 		03D5F9AB1F13D4D200C40FF5 /* SBAVisualConsentStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAVisualConsentStep.swift; sourceTree = "<group>"; };
 		03D5F9B31F13D5D200C40FF5 /* NSLayoutConstraint+setMultiplier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+setMultiplier.swift"; sourceTree = "<group>"; };
+		03D5F9D11F16938000C40FF5 /* SBAVisualConsentStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAVisualConsentStepViewController.swift; sourceTree = "<group>"; };
 		161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeAppSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161479CF1BD6CE8F0099A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		603242471E4001A100C184AD /* SBADataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBADataArchive.h; sourceTree = "<group>"; };
@@ -1123,7 +1123,7 @@
 		FF63D0BF1CCFF3E7007ADEE5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				03D5F9A71F13D47A00C40FF5 /* SBAGenericPageStepViewController.swift */,
+				03D5F9D11F16938000C40FF5 /* SBAVisualConsentStepViewController.swift */,
 				03D5F9A81F13D47A00C40FF5 /* SBAGenericStepViewController.swift */,
 				FFA391AA1D7F3C4E000957E1 /* CatastrophicError.storyboard */,
 				FFA391B01D7F3DA6000957E1 /* SBACatastrophicErrorViewController.swift */,
@@ -1924,6 +1924,7 @@
 				FFDECE081D08D0BC00434001 /* SBAConsentReviewStep.swift in Sources */,
 				FF722C0E1D775A29004B2F8B /* SBANewsfeedTableViewCell.swift in Sources */,
 				808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */,
+				03D5F9D21F16938000C40FF5 /* SBAVisualConsentStepViewController.swift in Sources */,
 				03D5F99D1F13D43800C40FF5 /* SBAStepNavigationView.swift in Sources */,
 				FFCF39101CE26DE40090452F /* SBAActivityResult.m in Sources */,
 				FF5CDF261DDE440F00117218 /* SBADemographicDataConverter.swift in Sources */,
@@ -1972,7 +1973,6 @@
 				FF14A0F91E9C1BA2007BB710 /* SBASignUpViewController.swift in Sources */,
 				FF9707F61DA6D5DB006E8252 /* SBAConsentSharingStep.swift in Sources */,
 				FFDECDB71D07317B00434001 /* SBAOnboardingManager.swift in Sources */,
-				03D5F9A91F13D47A00C40FF5 /* SBAGenericPageStepViewController.swift in Sources */,
 				FF97080B1DA78806006E8252 /* SBARootViewController.swift in Sources */,
 				FF3E30381D5A7A2E00347165 /* SBABridgeTask+SBBSurveyReference.swift in Sources */,
 				FBC45E6D1C7531E3007AA424 /* SBAConsentDocumentFactory.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  SBAGenericPageStepViewController.swift
+//  SBAVisualConsentStepViewController.swift
 //  ResearchUXFactory
 //
 //  Created by Josh Bruhin on 6/13/17.
@@ -35,7 +35,7 @@
 
 import UIKit
 
-class SBAGenericPageStepViewController: ORKPageStepViewController, UIPageViewControllerDelegate {
+class SBAVisualConsentStepViewController: ORKPageStepViewController, UIPageViewControllerDelegate {
     
     override func stepViewController(for step: ORKStep) -> ORKStepViewController {
         
