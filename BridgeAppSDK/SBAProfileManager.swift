@@ -143,6 +143,9 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         return allItems
     }()
     
+    private dynamic var demographicSchemaIdentifier: String?
+    private dynamic var demographicArchiveFilename: String?
+    
     // Merge new items into existing list, overwriting old ones with new ones when the profileKey is the same.
     // Mustn't be called once either itemsKeys or itemsMap has been accessed, and mustn't access either.
     fileprivate func add(items newItems: [SBAProfileItem]) {
@@ -168,6 +171,31 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         } else {
             return super.defaultValue(forKey: key)
         }
+    }
+    
+    // MARK: Internal methods
+    func uploadDemographicData() {
+        let demographicItems = self.items.filter({ return $0.isDemographicData })
+        guard demographicItems.count > 0 else { return }
+        
+        let archiveFilename = demographicArchiveFilename ?? "demographics"
+        let schemaIdentifier = demographicSchemaIdentifier ?? "Profile"
+        let archive = SBBDataArchive(reference: schemaIdentifier, jsonValidationMapping: nil)
+        
+        if let schemaRevision = SBAInfoManager.shared.schemaReferenceWithIdentifier(schemaIdentifier)?.schemaRevision {
+            archive.setArchiveInfoObject(schemaRevision, forKey: "schemaRevision")
+        }
+        
+        var demographics: [String: Any] = [:]
+        for item in demographicItems {
+            demographics[item.demographicKey] = item.demographicJsonValue ?? NSNull()
+        }
+        archive.insertDictionary(intoArchive: demographics, filename: archiveFilename, createdOn: Date())
+        do {
+            try archive.complete()
+            archive.encryptAndUploadArchive()
+        }
+        catch {}
     }
     
     // MARK: SBAProfileManagerProtocol
@@ -211,3 +239,4 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         item.value = value
     }
 }
+
