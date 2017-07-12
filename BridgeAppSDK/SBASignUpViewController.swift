@@ -211,6 +211,32 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     
     // MARK: ORKTaskViewControllerDelegate
     
+    
+    open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
+        
+        // If the default view controller for this step is an `ORKInstructionStepViewController` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+        
+        // If the default view controller for this step is an `ORKFormStepViewController` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKFormStepViewController.self, let task = taskViewController.task {
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+        
+        // If the default view controller for this step is an `ORKQuestionStepViewController` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKQuestionStepViewController.self, let task = taskViewController.task {
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+        
+        // By default, return nil
+        return nil
+    }
+
+    
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         self.sharedUser.onboardingStepIdentifier = stepViewController.step?.identifier
         stepViewController.cancelButtonItem = UIBarButtonItem(title: Localization.localizedString("BUTTON_CLOSE"),
@@ -262,6 +288,18 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
         }
         
         taskViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    // MARK: Protected subclass methods
+
+    open func instantiateGenericStepViewController(for step: ORKStep, task: ORKTask, result: ORKTaskResult) -> ORKStepViewController? {
+        let vc = SBAGenericStepViewController(step: step, result: result)
+        if let progress = task.progress?(ofCurrentStep: step, with: result) {
+            vc.stepCount = Int(progress.total)
+            vc.stepIndex = Int(progress.current)
+        }
+        return vc
     }
     
     // MARK: ORKTaskViewController customization

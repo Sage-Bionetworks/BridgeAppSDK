@@ -224,17 +224,3 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
     }
     
 }
-
-// Use our generic step view controller for any 'SBANavigationFormStep'
-extension SBANavigationFormStep {
-    override open func stepViewControllerClass() -> AnyClass {
-        return SBAGenericStepViewController.self
-    }
-}
-
-// Use our generic step view controller for any 'ORKFormStep'
-extension ORKFormStep {
-    override open func stepViewControllerClass() -> AnyClass {
-        return SBAGenericStepViewController.self
-    }
-}

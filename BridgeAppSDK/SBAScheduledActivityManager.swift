@@ -364,9 +364,21 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         // If the default view controller for this step is an `ORKInstructionStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
-            return instantiateInstructionStepViewController(for: step, task: task, result: taskViewController.result)
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+
+        // If the default view controller for this step is an `ORKFormStepViewController` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKFormStepViewController.self, let task = taskViewController.task {
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
         }
         
+        // If the default view controller for this step is an `ORKQuestionStepViewController` (and not a subclass)
+        // then replace that implementation with the one from this framework.
+        if step.stepViewControllerClass() == ORKQuestionStepViewController.self, let task = taskViewController.task {
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
+        }
+
         // If the default view controller for this step is an `ORKCompletionStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKCompletionStepViewController.self, let task = taskViewController.task {
@@ -514,6 +526,15 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     open func instantiateInstructionStepViewController(for step: ORKStep, task: ORKTask, result: ORKTaskResult) -> ORKStepViewController? {
+        let vc = SBAInstructionStepViewController(step: step, result: result)
+        if let progress = task.progress?(ofCurrentStep: step, with: result) {
+            vc.stepNumber = progress.current + 1
+            vc.stepTotal = progress.total
+        }
+        return vc
+    }
+    
+    open func instantiateGenericStepViewController(for step: ORKStep, task: ORKTask, result: ORKTaskResult) -> ORKStepViewController? {
         let vc = SBAGenericStepViewController(step: step, result: result)
         if let progress = task.progress?(ofCurrentStep: step, with: result) {
             vc.stepCount = Int(progress.total)
