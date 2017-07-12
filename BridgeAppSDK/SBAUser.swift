@@ -54,8 +54,8 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         lockQueue.async {
             self.resetUserDefaults()
             self.resetKeychain()
-            self.resetLocalNotifications()
         }
+        self.resetLocalNotifications()
         SBABridgeManager.resetUserSessionInfo()
     }
     
