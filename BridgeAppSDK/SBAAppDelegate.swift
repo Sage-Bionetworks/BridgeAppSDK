@@ -177,6 +177,22 @@ public let SBAMainStoryboardName = "Main"
         }
     }
     
+    // MARK: Lock orientation to portrait by default
+    
+    open var defaultOrientationLock: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
+    open func resetOrientation() {
+        orientationLock = nil
+    }
+    
+    var orientationLock: UIInterfaceOrientationMask?
+    
+    open func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return orientationLock ?? defaultOrientationLock
+    }
+    
     
     // ------------------------------------------------
     // MARK: Default setup

@@ -57,6 +57,15 @@ public class SBASurveyTaskResultSource: NSObject, SBATaskResultSource {
         guard let step = task.step?(withIdentifier: stepIdentifier) else {
             return nil
         }
+        
+        // If this is a tracked collection then look to the data store
+        if let trackedStep = step as? SBATrackedSelectionStep,
+            let collection = (task as? SBANavigableOrderedTask)?.conditionalRule as? SBATrackedDataObjectCollection,
+            let selectedItems = collection.dataStore.selectedItems {
+            return trackedStep.stepResult(selectedItems: selectedItems)
+        }
+        
+        // Otherwise, map the answers
         return step.stepResult(with: answerMap)
     }
 }
