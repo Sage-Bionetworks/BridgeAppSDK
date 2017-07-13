@@ -623,7 +623,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 setupNavigationView(navView)
                 
                 // update enabled state of the next button
-                navView.nextButton.isEnabled = tableData!.allAnswersValid()
+                navView.nextButton.isEnabled = shouldEnableNextButton()
                 
                 // using auto layout to constrain the navView to fill its superview after adding it to the textfield
                 // as its inputAccessoryView doesn't work for whatever reason. So we get the computed height from the
@@ -794,7 +794,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 // which is a SBAStepNavigationView
                 
                 if let navView = textField.inputAccessoryView as? SBAStepNavigationView {
-                    navView.nextButton.isEnabled = tableData!.allAnswersValid()
+                    navView.nextButton.isEnabled = shouldEnableNextButton()
                 }
                 return returnValue
             }
