@@ -247,11 +247,11 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     }
     
     public var rules: [SBASurveyRuleItem]? {
-        return self.constraints.rules as? [SBASurveyRuleItem]
+        return (self.constraints.rules as? [SBASurveyRuleItem])?.filter({ $0.ruleOperator != nil })
     }
     
     public func hasNavigationRules() -> Bool {
-        guard let rules = self.constraints.rules, rules.count > 0 else { return false }
+        guard (self.rules?.count ?? 0) > 0 else { return false }
         return true
     }
     

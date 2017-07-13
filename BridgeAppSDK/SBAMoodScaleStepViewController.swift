@@ -33,6 +33,22 @@
 
 import UIKit
 
+protocol SBAChoiceAnswerFormat: class {
+    var questionChoices: [SBAChoice] { get }
+}
+
+extension ORKImageChoiceAnswerFormat: SBAChoiceAnswerFormat {
+    var questionChoices: [SBAChoice] {
+        return self.imageChoices as [SBAChoice]
+    }
+}
+
+extension ORKTextChoiceAnswerFormat: SBAChoiceAnswerFormat {
+    var questionChoices: [SBAChoice] {
+        return self.textChoices as [SBAChoice]
+    }
+}
+
 open class SBAMoodScaleStep: ORKQuestionStep {
     
     public override required init(identifier: String) {
@@ -54,15 +70,20 @@ open class SBAMoodScaleStep: ORKQuestionStep {
         
         let defaultChoices = defaultImageChoices()
         let choices:[ORKImageChoice] = {
-            guard let qStep = step as? ORKQuestionStep,
-                let format = qStep.answerFormat as? ORKMoodScaleAnswerFormat,
-                format.imageChoices.count == defaultChoices.count else {
-                    return defaultChoices
+            guard let qStep = step as? SBAFormStepProtocol,
+                let formItem = qStep.formItems?.first,
+                let format = formItem.answerFormat as? SBAChoiceAnswerFormat,
+                format.questionChoices.count == defaultChoices.count
+            else {
+                return defaultChoices
             }
             
             let replacementImages = images ?? defaultChoices.map({ $0.normalStateImage })
-            let imageChoices = format.imageChoices.enumerated().map { (idx: Int, moodChoice: ORKImageChoice) -> ORKImageChoice in
-                return ORKImageChoice(normalImage: replacementImages[idx], selectedImage: nil, text: moodChoice.text, value: moodChoice.value)
+            let imageChoices = format.questionChoices.enumerated().map { (idx: Int, moodChoice: SBAChoice) -> ORKImageChoice in
+                return ORKImageChoice(normalImage: replacementImages[idx],
+                                      selectedImage: nil,
+                                      text: moodChoice.choiceText,
+                                      value: moodChoice.choiceValue)
             }
             return imageChoices
         }()
@@ -250,7 +271,8 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         super.viewDidLayoutSubviews()
         
         // Check the text for sizing
-        _isTruncated = choiceLabels.reduce(false, { $0 || $1.isTruncated() })
+        // syoung 07/10/2017 For consistency, always use the same layout on all devices
+        _isTruncated = true // choiceLabels.reduce(false, { $0 || $1.isTruncated() })
         updateSelectionState()
     }
     
