@@ -186,16 +186,22 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
             archive.setArchiveInfoObject(schemaRevision, forKey: "schemaRevision")
         }
         
-        var demographics: [String: Any] = [:]
-        for item in demographicItems {
-            demographics[item.demographicKey] = item.demographicJsonValue ?? NSNull()
-        }
+        let demographics = self.demographics(with: demographicItems)
         archive.insertDictionary(intoArchive: demographics, filename: archiveFilename, createdOn: Date())
         do {
             try archive.complete()
             archive.encryptAndUploadArchive()
         }
         catch {}
+    }
+    
+    // overrideable for testing
+    func demographics(with demographicItems: [SBAProfileItem]) -> [String: Any] {
+        var demographics: [String: Any] = [:]
+        for item in demographicItems {
+            demographics[item.demographicKey] = item.demographicJsonValue ?? NSNull()
+        }
+        return demographics
     }
     
     // MARK: SBAProfileManagerProtocol

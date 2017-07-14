@@ -30,6 +30,7 @@
 		808406AF1EE72B1B00C23498 /* SBAProfileSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 808406AE1EE72B1B00C23498 /* SBAProfileSection.m */; };
 		808514E51E81E17700F1DCC5 /* SBAProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */; };
 		808514F71E81E33E00F1DCC5 /* SBAProfileDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */; };
+		808AC1DE1F1861B900050782 /* ClassTypeMap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 808AC1DD1F1861B900050782 /* ClassTypeMap.plist */; };
 		80D5F1981CE532C2002A39DF /* SBAEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */; };
 		80D5F1D41CE57093002A39DF /* SBAActivityResult.h in Headers */ = {isa = PBXBuildFile; fileRef = FFCF390D1CE26DE40090452F /* SBAActivityResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E5A18D1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */; };
@@ -467,6 +468,7 @@
 		808406AE1EE72B1B00C23498 /* SBAProfileSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAProfileSection.m; sourceTree = "<group>"; };
 		808514E41E81E17700F1DCC5 /* SBAProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileManager.swift; sourceTree = "<group>"; };
 		808514F61E81E33E00F1DCC5 /* SBAProfileDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAProfileDataSource.swift; sourceTree = "<group>"; };
+		808AC1DD1F1861B900050782 /* ClassTypeMap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ClassTypeMap.plist; sourceTree = "<group>"; };
 		80D5F1971CE532C2002A39DF /* SBAEncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAEncryptionHelper.swift; sourceTree = "<group>"; };
 		80E5A18C1C5ADC7600E0DFE9 /* BridgeAppSDKSample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = BridgeAppSDKSample.entitlements; sourceTree = "<group>"; };
 		80E5A18E1C5ADF1100E0DFE9 /* BridgeAppSDKSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BridgeAppSDKSample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1417,6 +1419,7 @@
 			isa = PBXGroup;
 			children = (
 				801040C41C5A843D00D26E19 /* Info.plist */,
+				808AC1DD1F1861B900050782 /* ClassTypeMap.plist */,
 				FBE551571C6D204A00C9E1AA /* BridgeAppSDKTests-Bridging-Header.h */,
 			);
 			name = "Support Files";
@@ -1805,6 +1808,7 @@
 				FF9055D91CE3B1880049D12A /* TappingTask.json in Resources */,
 				FF9F4B581CEA735F00B5343B /* TaskResult_Combo.archive in Resources */,
 				60F2BB581EC12A1A00957BE6 /* ProfileDescription.json in Resources */,
+				808AC1DE1F1861B900050782 /* ClassTypeMap.plist in Resources */,
 				FF9055CA1CE3A8860049D12A /* CombinedTask.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
