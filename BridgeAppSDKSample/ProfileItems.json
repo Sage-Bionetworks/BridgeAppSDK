@@ -8,7 +8,8 @@
                     {
                         "profileKey": "gender",
                         "classType": "ClientDataProfileItem",
-                        "activityIdentifier": "Demographic Survey",
+                        "taskIdentifier": "Profile",
+                        "isDemographicData": true,
                         "itemType": "HKBiologicalSex",
                     },
                     {
@@ -25,7 +26,8 @@
                     {
                         "profileKey": "numberOfSiblings",
                         "classType": "ClientDataProfileItem",
-                        "activityIdentifier": "Demographic Survey",
+                        "taskIdentifier": "Profile",
+                        "isDemographicData": true,
                         "itemType": "Number",
                         "demographicKey": "number_of_siblings"
                     },

@@ -21,6 +21,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("Cannot open ProfileManager file")
             return
         }
+        BridgeSDKTestable.addResourceBundleIfNeeded()
         profileManager = SBAClassTypeMap.shared.object(with:input, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
     }
     
@@ -103,7 +104,7 @@ class SBAProfileManagerTests: ResourceTestCase {
     
     // MARK: build schedules
     
-    static let demographicIdentifier: String = "Demographic Survey"
+    static let demographicIdentifier: String = "Profile"
     static let someOtherIdentifier: String = "Something Else"
     let activityIdentifiers: [String] = [demographicIdentifier, someOtherIdentifier]
     
@@ -331,7 +332,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             }
         }
         
-        // now update the changes to Bridge, and check that they made it there
+        // now update the changes to Bridge, and check that they made it there and got uploaded
         SBAClientDataProfileItem.scheduledActivities = schedules
         
         let sibsBridgeValues = numberOfSiblingsItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
@@ -341,6 +342,24 @@ class SBAProfileManagerTests: ResourceTestCase {
         let genderBridgeValues = genderItem?.jsonWhatsAndWhensFromBridge().map({ return SBAWhatAndWhen(dictionaryRepresentation: $0) })
         XCTAssert(genderBridgeValues?.count == 1, "Expected to find 1 value for gender in Bridge history, but instead there are \(String(describing: genderBridgeValues?.count))")
         XCTAssertEqual(testGender.rawValue, genderBridgeValues?[0].value as? Int, "Expected value to be \(testGender), but instead it's \(String(describing: genderBridgeValues?[0].value))")
+        
+        guard let testProfileManager = SBAProfileManager.shared as? TestProfileManager
+            else {
+                assertionFailure("Shared ProfileManager should be a TestProfileManager but it's a \(type(of: SBAProfileManager.shared))")
+                return
+        }
+        
+        let demographics = testProfileManager.demographics
+        XCTAssertNotNil(demographics, "Demographic data not created")
+        if demographics != nil {
+            let allDemographicKeys = Set(demographics!.keys)
+            let genderKey = "gender"
+            let sibsKey = "number_of_siblings"
+            let expectedDemographicKeys = Set([genderKey, sibsKey])
+            XCTAssertEqual(allDemographicKeys, expectedDemographicKeys, "Expected \(String(describing: expectedDemographicKeys)) but got \(String(describing: allDemographicKeys))")
+            XCTAssertEqual(demographics![genderKey] as? NSString, testGender.demographicDataValue, "Expected \(genderKey) = \(String(describing: testGender.demographicDataValue)) but got \(String(describing: demographics![genderKey]))")
+            XCTAssertEqual((demographics![sibsKey] as? NSNumber)?.intValue, testNumberSibs, "Expected \(sibsKey) = \(testNumberSibs) but got \(String(describing: demographics![sibsKey]))")
+        }
         
         // now explicitly update numberOfSiblings twice more, once 10 seconds in the future and once 1 day in the past
         let testNumberSibs2 = 3
@@ -373,5 +392,14 @@ class DummyStudyParticipant: SBBStudyParticipant {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class TestProfileManager: SBAProfileManager {
+    var demographics: [String: Any]?
+    
+    override func demographics(with demographicItems: [SBAProfileItem]) -> [String: Any] {
+        demographics = super.demographics(with: demographicItems)
+        return demographics!
     }
 }

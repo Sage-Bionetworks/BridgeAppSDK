@@ -34,6 +34,7 @@
 import UIKit
 import BridgeSDK
 import ResearchKit
+import UserNotifications
 
 /**
  The `SBAUser` model object is intended as a singleton object for storing information about
@@ -54,6 +55,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             self.resetUserDefaults()
             self.resetKeychain()
         }
+        self.resetLocalNotifications()
         SBABridgeManager.resetUserSessionInfo()
     }
     
@@ -533,6 +535,15 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             store.removeObject(forKey: key)
         }
         store.synchronize()
+    }
+    
+    fileprivate func resetLocalNotifications() {
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        } else {
+            UIApplication.shared.cancelAllLocalNotifications()
+        }
     }
         
     public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {

@@ -113,21 +113,27 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
      */
     public static let shared: SBAProfileManagerProtocol? = {
         SBABridgeManager.addResourceBundleIfNeeded()
-        let bundles = SBAInfoManager.shared.resourceBundles.reversed()
         // The SBAUser will default to the profile manager if available, but if not will fall-back
         // to older methods for storing information.
-        let sharedProfileManager = SBAProfileManager()
-        
-        for bundle in bundles {
-            guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
-                let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
-                else {
-                    continue
-            }
-            sharedProfileManager.add(items: profileManager.items)
+        guard let sharedProfileManagerProtocol = SBAClassTypeMap.shared.object(with:[String : Any](), classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
+            else {
+                assertionFailure("\(SBAProfileManagerClassType) must map to a class that implements SBAProfileManagerProtocol")
+                return nil
         }
         
-        return sharedProfileManager
+        // if it's SBAProfileManager or a subclass, gather up all the ProfileItems defined in JSON in the various bundles
+        if let sharedProfileManager = sharedProfileManagerProtocol as? SBAProfileManager {
+            for bundle in SBAInfoManager.shared.resourceBundles.reversed() {
+                guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
+                    let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
+                    else {
+                        continue
+                }
+                sharedProfileManager.add(items: profileManager.items)
+            }
+        }
+        
+        return sharedProfileManagerProtocol
     }()
 
     private dynamic var items: [SBAProfileItem] = []
@@ -142,6 +148,9 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         }
         return allItems
     }()
+    
+    private dynamic var demographicSchemaIdentifier: String?
+    private dynamic var demographicArchiveFilename: String?
     
     // Merge new items into existing list, overwriting old ones with new ones when the profileKey is the same.
     // Mustn't be called once either itemsKeys or itemsMap has been accessed, and mustn't access either.
@@ -159,7 +168,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(items))
+        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(items), #keyPath(demographicSchemaIdentifier), #keyPath(demographicArchiveFilename)])
     }
     
     override open func defaultValue(forKey key: String) -> Any? {
@@ -168,6 +177,37 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         } else {
             return super.defaultValue(forKey: key)
         }
+    }
+    
+    // MARK: Internal methods
+    func uploadDemographicData() {
+        let demographicItems = self.items.filter({ return $0.isDemographicData })
+        guard demographicItems.count > 0 else { return }
+        
+        let archiveFilename = demographicArchiveFilename ?? "demographics"
+        let schemaIdentifier = demographicSchemaIdentifier ?? "Profile"
+        let archive = SBBDataArchive(reference: schemaIdentifier, jsonValidationMapping: nil)
+        
+        if let schemaRevision = SBAInfoManager.shared.schemaReferenceWithIdentifier(schemaIdentifier)?.schemaRevision {
+            archive.setArchiveInfoObject(schemaRevision, forKey: "schemaRevision")
+        }
+        
+        let demographics = self.demographics(with: demographicItems)
+        archive.insertDictionary(intoArchive: demographics, filename: archiveFilename, createdOn: Date())
+        do {
+            try archive.complete()
+            archive.encryptAndUploadArchive()
+        }
+        catch {}
+    }
+    
+    // overrideable for testing
+    func demographics(with demographicItems: [SBAProfileItem]) -> [String: Any] {
+        var demographics: [String: Any] = [:]
+        for item in demographicItems {
+            demographics[item.demographicKey] = item.demographicJsonValue ?? NSNull()
+        }
+        return demographics
     }
     
     // MARK: SBAProfileManagerProtocol
@@ -211,3 +251,4 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         item.value = value
     }
 }
+
