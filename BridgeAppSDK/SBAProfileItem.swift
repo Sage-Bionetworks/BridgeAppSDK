@@ -50,6 +50,12 @@ public protocol SBAProfileItem: NSObjectProtocol {
     var sourceKey: String { get }
     
     /**
+     isDemographicData is a flag indicating whether a profile item is part of the demographic data
+     upload schema.
+     */
+    var isDemographicData: Bool { get }
+    
+    /**
      demographicKey is the profile item's key in the demographic data upload schema. By default it will
      be the same as profileKey, but can be different if needed.
      */
@@ -322,6 +328,11 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
     open var sourceKey: String {
         let key = #keyPath(sourceKey)
         return sourceDict[key] as? String ?? self.profileKey
+    }
+    
+    open var isDemographicData: Bool {
+        let key = #keyPath(isDemographicData)
+        return sourceDict[key] as? Bool ?? false
     }
     
     open var demographicKey: String {
@@ -827,10 +838,12 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         didSet {
             // get all the SBAClientDataProfileItem instances from SBAProfileManager
             guard scheduledActivities != nil && scheduledActivities!.count > 0,
-                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ (profileItem) -> SBAClientDataProfileItem? in
-                    return profileItem as? SBAClientDataProfileItem
-                }) else { return }
+                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ return $0 as? SBAClientDataProfileItem })
+                else {
+                    return
+            }
             
+            var updatedDemographicData = false
             for item in clientDataItems {
                 // for each one, get all its current cached values and all available values from Bridge
                 let cachedItems = item.dateAndJsonValuesFromCachedItems()
@@ -851,6 +864,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
                     if cachedItem.isNew {
                         let whatAndWhenJson = cachedItem.dictionaryRepresentation()
                         item.setToAppropriateScheduledActivity(whatAndWhenJson)
+                        if item.isDemographicData { updatedDemographicData = true }
                     }
                 }
                 
@@ -882,8 +896,13 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
             toBeUpdatedToBridge.removeAll()
             SBABridgeManager.updateScheduledActivities(updatesArray)
             
-            // TODO: emm 2017-06-25 create and upload an archive for each item in the array
-            // (storing items in the archive by their demographicKey and demographicJsonValue)
+            // if there were any updates to demographic data items, upload demographic data
+            guard updatedDemographicData,
+                    let profileManager = SBAProfileManager.shared as? SBAProfileManager
+                else {
+                    return
+            }
+            profileManager.uploadDemographicData()
         }
     }
     

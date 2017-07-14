@@ -36,5 +36,6 @@
 @interface BridgeSDKTestable : NSObject
 
 + (NSObject *)registerTestBridgeCacheManager:(id<SBBAuthManagerProtocol>)authManager;
++ (void)addResourceBundleIfNeeded;
 
 @end

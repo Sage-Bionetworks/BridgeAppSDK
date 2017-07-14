@@ -32,6 +32,7 @@
 //
 
 #import "BridgeSDKTestable.h"
+@import BridgeAppSDK;
 
 @implementation BridgeSDKTestable
 
@@ -45,5 +46,20 @@
     [SBBComponentManager registerComponent:cacheMan forClass:cacheClass];
     return cacheMan;
 }
+
++ (void)addResourceBundleIfNeeded {
+    // Add this bundle to the front of the resource bundles
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SBAInfoManager *infoManager = [SBAInfoManager sharedManager];
+        NSMutableArray *bundles = [infoManager.resourceBundles mutableCopy];
+        NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
+        if (![bundles containsObject:thisBundle]) {
+            [bundles insertObject:thisBundle atIndex:0];
+            infoManager.resourceBundles = bundles;
+        }
+    });
+}
+
 
 @end
