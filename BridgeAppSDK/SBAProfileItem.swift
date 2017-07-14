@@ -838,7 +838,10 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         didSet {
             // get all the SBAClientDataProfileItem instances from SBAProfileManager
             guard scheduledActivities != nil && scheduledActivities!.count > 0,
-                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ return $0 as? SBAClientDataProfileItem }) else { return }
+                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ return $0 as? SBAClientDataProfileItem })
+                else {
+                    return
+            }
             
             var updatedDemographicData = false
             for item in clientDataItems {
