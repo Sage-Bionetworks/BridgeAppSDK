@@ -113,21 +113,27 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
      */
     public static let shared: SBAProfileManagerProtocol? = {
         SBABridgeManager.addResourceBundleIfNeeded()
-        let bundles = SBAInfoManager.shared.resourceBundles.reversed()
         // The SBAUser will default to the profile manager if available, but if not will fall-back
         // to older methods for storing information.
-        let sharedProfileManager = SBAProfileManager()
-        
-        for bundle in bundles {
-            guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
-                let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
-                else {
-                    continue
-            }
-            sharedProfileManager.add(items: profileManager.items)
+        guard let sharedProfileManagerProtocol = SBAClassTypeMap.shared.object(with:[String : Any](), classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
+            else {
+                assertionFailure("\(SBAProfileManagerClassType) must map to a class that implements SBAProfileManagerProtocol")
+                return nil
         }
         
-        return sharedProfileManager
+        // if it's SBAProfileManager or a subclass, gather up all the ProfileItems defined in JSON in the various bundles
+        if let sharedProfileManager = sharedProfileManagerProtocol as? SBAProfileManager {
+            for bundle in SBAInfoManager.shared.resourceBundles.reversed() {
+                guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileItemsJSONFilename, bundle:bundle),
+                    let profileManager = SBAClassTypeMap.shared.object(with:json, classType:SBAProfileManagerClassType) as? SBAProfileManager
+                    else {
+                        continue
+                }
+                sharedProfileManager.add(items: profileManager.items)
+            }
+        }
+        
+        return sharedProfileManagerProtocol
     }()
 
     private dynamic var items: [SBAProfileItem] = []

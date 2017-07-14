@@ -21,6 +21,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             XCTFail("Cannot open ProfileManager file")
             return
         }
+        BridgeSDKTestable.addResourceBundleIfNeeded()
         profileManager = SBAClassTypeMap.shared.object(with:input, classType:SBAProfileManagerClassType) as? SBAProfileManagerProtocol
     }
     
@@ -103,7 +104,7 @@ class SBAProfileManagerTests: ResourceTestCase {
     
     // MARK: build schedules
     
-    static let demographicIdentifier: String = "Demographic Survey"
+    static let demographicIdentifier: String = "Profile"
     static let someOtherIdentifier: String = "Something Else"
     let activityIdentifiers: [String] = [demographicIdentifier, someOtherIdentifier]
     
