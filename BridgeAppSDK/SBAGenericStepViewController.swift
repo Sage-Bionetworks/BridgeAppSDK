@@ -134,7 +134,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
      Static method to determine if this view controller class supports the provided step. This will vary
      based on the 'ORKAnswerFormat' and 'ORKQuestionType' for each of the 'ORKFormItems' in the step.
      */
-    static func doesSupport(_ step: ORKStep) -> Bool {
+    static open func doesSupport(_ step: ORKStep) -> Bool {
         
         let supportedAnswerFormats: [ORKAnswerFormat.Type] = [ORKTextChoiceAnswerFormat.self,
                                                               ORKTextAnswerFormat.self,
@@ -173,7 +173,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     override public init(step: ORKStep, result: ORKResult?) {
         super.init(step: step)
-        commonInit(with: result)
+        commonInit(with: result)        
     }
     
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
