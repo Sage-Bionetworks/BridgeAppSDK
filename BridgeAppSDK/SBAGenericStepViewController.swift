@@ -135,7 +135,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
      based on the 'ORKAnswerFormat' and 'ORKQuestionType' for each of the 'ORKFormItems' in the step.
      */
     static open func doesSupport(_ step: ORKStep) -> Bool {
-        
+                
         let supportedAnswerFormats: [ORKAnswerFormat.Type] = [ORKTextChoiceAnswerFormat.self,
                                                               ORKTextAnswerFormat.self,
                                                               ORKBooleanAnswerFormat.self,
@@ -151,7 +151,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             let formItems = formStep.formItems {
             
             for item in formItems {
-                if let answerFormat = item.answerFormat?.implied() {
+                if let answerFormat = item.answerFormat {
                     
                     let formatOkay = supportedAnswerFormats.contains { (type) -> Bool in
                         type == type(of: answerFormat)
