@@ -161,6 +161,13 @@ public let SBAMainStoryboardName = "Main"
                 }
             }
         }
+        
+        // Hacky work-around for no longer being able to determine if permission has been granted 
+        // without attempting to collect data. syoung 07/14/2017
+        let sensorPermission = SBAPermissionObjectType(permissionType: .coremotion)
+        if SBAPermissionsManager.shared.isPermissionGranted(for: sensorPermission) {
+            SBAPermissionsManager.shared.requestPermission(for: sensorPermission, completion: nil)
+        }
     }
     
     open func applicationWillEnterForeground(_ application: UIApplication) {
