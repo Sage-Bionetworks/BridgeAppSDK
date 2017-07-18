@@ -43,10 +43,7 @@ open class SBALoginStep: ORKFormStep, SBAProfileInfoForm, SBALearnMoreActionStep
         return false
     }
     
-    public var learnMoreAction: SBALearnMoreAction? {
-        return _learnMoreAction
-    }
-    let _learnMoreAction: SBALearnMoreAction = {
+    public var learnMoreAction: SBALearnMoreAction? = {
         let action = SBAForgotPasswordLearnMoreAction(identifier: "forgotPassword")
         action.learnMoreButtonText = Localization.localizedString("REGISTRATION_FORGOT_PASSWORD")
         return action
