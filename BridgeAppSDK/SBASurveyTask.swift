@@ -58,7 +58,14 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
     
     open func load(survey: SBBSurvey?, error: Error?) {
         // If there was an error or the survey is nil
-        if survey == nil {
+        if let bridgeSurvey = survey, bridgeSurvey.elements != nil, bridgeSurvey.elements.count > 0  {
+            self.survey = self.factory.createTaskWithSurvey(bridgeSurvey)
+            self.schemaRevision = bridgeSurvey.schemaRevision
+            if surveyReference.createdOn == nil {
+                surveyReference.createdOn = bridgeSurvey.createdOn
+            }
+        }
+        else {
             let errorStep = ORKInstructionStep(identifier: "error")
             errorStep.title = Localization.localizedString("SBA_NETWORK_FAILURE_TITLE")
             errorStep.text = Localization.localizedString("SBA_NETWORK_FAILURE_MESSAGE")
@@ -67,13 +74,6 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
             _error = error ?? NSError(domain: "SBASurveyTaskDomain",
                                       code: -1,
                                       userInfo: nil) as Error
-        }
-        else {
-            self.survey = self.factory.createTaskWithSurvey(survey!)
-            self.schemaRevision = survey?.schemaRevision
-            if surveyReference.createdOn == nil {
-                surveyReference.createdOn = survey?.createdOn
-            }
         }
     }
     
@@ -233,11 +233,16 @@ class SBASurveyLoadingStepViewController: ORKWaitStepViewController {
 
         // Nil out the pointer to the url session
         self.urlSessionTask = nil
+        let surveyTask = self.surveyTask!
+        let bridgeSurvey = survey
+        let bridgeError = error
         
-        // load the survey into the task and then go forward
-        DispatchQueue.main.async { [weak self] in
-            self?.surveyTask!.load(survey: survey, error: error)
-            self?.goForward()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            // load the survey into the task and then go forward
+            surveyTask.load(survey: bridgeSurvey, error: bridgeError)
+            DispatchQueue.main.async {
+                self?.goForward()
+            }
         }
     }
     
