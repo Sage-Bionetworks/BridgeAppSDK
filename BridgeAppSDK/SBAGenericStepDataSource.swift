@@ -505,14 +505,9 @@ open class SBAGenericStepTableItemGroup: NSObject {
             
             if let arrayAnswer = answer as? Array<AnyObject> {
                 for item in items {
-                    for selectedValue in arrayAnswer {
-                        if let choiceString = item.choice?.value as? String, let selectedString = selectedValue as? String {
-                            item.selected = choiceString == selectedString
-                        }
-                        else if let choiceNumber = item.choice?.value as? NSNumber, let selectedNumber = selectedValue as? NSNumber {
-                            item.selected = choiceNumber.intValue == selectedNumber.intValue
-                        }
-                    }
+                    item.selected = (item.choice?.value != nil) && arrayAnswer.contains(where: { (value) -> Bool in
+                        return item.choice!.value === value
+                    })
                 }
             }
             

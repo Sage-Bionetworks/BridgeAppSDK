@@ -42,12 +42,35 @@ open class SBAVisualConsentStep: ORKPageStep {
         super.init(identifier: identifier, steps: SBAVisualConsentStep.instructionSteps(for: consentDocument))
     }
     
-    override init(identifier: String, steps: [ORKStep]?) {
-        super.init(identifier: identifier, steps: steps)
+    // MARK: NSCopy
+    
+    public init(identifier: String) {
+        super.init(identifier: identifier, steps: nil)
     }
     
+    override open func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone)
+        guard let step = copy as? SBAVisualConsentStep else { return copy }
+        return step
+    }
+    
+    // MARK: NSCoding
+    
     required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder);
+    }
+    
+    // MARK: Equality
+    
+    override open func isEqual(_ object: Any?) -> Bool {
+        guard let object = object as? SBAVisualConsentStep else { return false }
+        return super.isEqual(object) &&
+            SBAObjectEquality(self.consentDocument, object.consentDocument)
+    }
+    
+    override open var hash: Int {
+        return super.hash ^
+            SBAObjectHash(consentDocument)
     }
     
     override open func stepViewControllerClass() -> AnyClass {

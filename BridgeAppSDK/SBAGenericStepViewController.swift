@@ -145,7 +145,8 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                                                          .integer,
                                                          .text,
                                                          .singleChoice,
-                                                         .multipleChoice]
+                                                         .multipleChoice,
+                                                         .boolean]
         
         if let formStep = step as? SBAFormStepProtocol,
             let formItems = formStep.formItems {
