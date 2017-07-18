@@ -68,10 +68,10 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         return json["steps"] as? [NSDictionary]
     }()
     
-    // This is a time-consuming operation (b/c data groups have moved to the keychain)
-    // so use a lazy load to only load when called, but then retain the result in memory.
+    // use a lazy load to only load when called, but then retain the result in memory.
     lazy open var currentDataGroups: Set<String> = {
-        return Set((UIApplication.shared.delegate as? SBAAppDelegate)?.currentUser.dataGroups ?? [])
+        return SBAProfileManager.shared?.getDataGroups() ??
+            Set((UIApplication.shared.delegate as? SBAAppDelegate)?.currentUser.dataGroups ?? [])
     }()
     
     /**

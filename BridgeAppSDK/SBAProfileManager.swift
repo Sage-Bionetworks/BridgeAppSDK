@@ -90,6 +90,11 @@ public protocol SBAProfileManagerProtocol: NSObjectProtocol {
      @param key The profileKey of the item whose value is to be set.
      */
     func setValue(_ value: Any?, forProfileKey key: String) throws
+    
+    /**
+     Special-case access of the data groups via the profile manager
+     */
+    func getDataGroups() -> Set<String>
 
 }
 
@@ -211,6 +216,10 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
     }
     
     // MARK: SBAProfileManagerProtocol
+    
+    open func getDataGroups() -> Set<String> {
+        return self.value(forProfileKey: "participantDataGroups") as? Set<String> ?? Set<String>()
+    }
     
     /**
      @return A list of all the profile keys known to the profile manager.
