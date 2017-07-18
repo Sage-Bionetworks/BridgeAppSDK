@@ -68,6 +68,12 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         return json["steps"] as? [NSDictionary]
     }()
     
+    // This is a time-consuming operation (b/c data groups have moved to the keychain)
+    // so use a lazy load to only load when called, but then retain the result in memory.
+    lazy open var currentDataGroups: Set<String> = {
+        return Set((UIApplication.shared.delegate as? SBAAppDelegate)?.currentUser.dataGroups ?? [])
+    }()
+    
     /**
      Factory method for creating an ORKTask from an SBBSurvey
      @param survey      An `SBBSurvey` bridge model object
@@ -128,6 +134,15 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             return activeTask.createBridgeCardioChallenge(options: taskOptions, factory: self)
         }
         return super.createTaskWithActiveTask(activeTask, taskOptions: taskOptions)
+    }
+    
+    open override func createSurveyStep(_ inputItem: SBASurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
+        // If this input item conforms to the data groups rule, check against the current data groups
+        // and nil out the step if it should be excluded.
+        if let rule = inputItem as? SBADataGroupsRule, rule.shouldExcludeStep(currentDataGroups: self.currentDataGroups) {
+            return nil
+        }
+        return super.createSurveyStep(inputItem, isSubtaskStep: isSubtaskStep)
     }
     
     open override func createSurveyStepWithCustomType(_ inputItem: SBASurveyItem) -> ORKStep? {
