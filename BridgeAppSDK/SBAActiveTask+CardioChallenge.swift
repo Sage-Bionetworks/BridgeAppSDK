@@ -68,8 +68,6 @@ extension SBAActiveTask {
         
         var steps: [ORKStep] = []
         var conclusionStep: ORKStep?
-        
-        print("\(orderedTask.steps)")
 
         // Include all the inner steps in the workout so that they are included in the same progress
         // Also, replace images and steps as required to match designs
@@ -109,6 +107,11 @@ extension SBAActiveTask {
                                          pageTask: workoutTask,
                                          relativeDistanceOnly: !SBAInfoManager.shared.currentParticipant.isTestUser,
                                          options: [])
+        
+        // Do not use the consolidated recordings
+        // TODO: syoung 07/19/2017 Refactor SBAArchiveResult to only archive the results that are included in the 
+        // schema for a given activity. 
+        workoutStep.recorderConfigurations = []
         
         steps.append(workoutStep)
         if conclusionStep != nil {
