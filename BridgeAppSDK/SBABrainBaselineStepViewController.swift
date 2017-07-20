@@ -136,6 +136,9 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        // hack to force it back to portrait before going forward
+        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        
         // Note: syoung 07/11/2017 This method is called *after* the OS sets up to dismiss the view
         // so also need to reset in the scheduled activity manager. (belt + suspenders)
         (UIApplication.shared.delegate as? SBAAppDelegate)?.resetOrientation()
@@ -197,6 +200,13 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     }
     
     open func testDidFinish(result: Any?) {
+        if let vc = self.childViewControllers.first {
+            vc.willMove(toParentViewController: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParentViewController()
+            vc.didMove(toParentViewController: nil)
+        }
+
         if result == nil {
             // If the user quit the brain baseline task then tell the task view controller delegate that
             // the result was discarded.
