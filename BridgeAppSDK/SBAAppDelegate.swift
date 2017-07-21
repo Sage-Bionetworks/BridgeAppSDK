@@ -620,7 +620,7 @@ public let SBAMainStoryboardName = "Main"
             self.currentUser.isRegistered &&
             (self.passcodeViewController == nil) &&
             !self.disablePasscodeLock &&
-            !UIApplication.shared.idleTimerDisabled &&
+            !UIApplication.shared.isIdleTimerDisabled &&
             ORKPasscodeViewController.isPasscodeStoredInKeychain()
     }
     
