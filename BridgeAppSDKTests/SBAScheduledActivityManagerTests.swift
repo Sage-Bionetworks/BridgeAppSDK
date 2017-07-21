@@ -115,7 +115,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        manager.update(schedule: manager.activities[1], taskViewController: taskVC)
+        manager.update(schedule: manager.activities[1], task: taskVC.task!, result: taskVC.result, finishedOn: nil)
         
         XCTAssertNotNil(manager.updatedScheduledActivities)
         XCTAssertEqual(manager.updatedScheduledActivities!.count, 2)
@@ -138,7 +138,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1)])
@@ -186,7 +186,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[("Medication Tracker", 1 )])
@@ -233,7 +233,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -270,7 +270,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -313,7 +313,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -348,7 +348,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
 
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -382,7 +382,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check that the data store results were added to the other tasks
         checkSchema(splitResults, expectedSchema:[
@@ -421,7 +421,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: ["Levodopa":3])
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         
         // check the schema
         checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
@@ -458,7 +458,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
 
         // check the schema
         checkSchema(splitResults, expectedSchema:[("Tapping Activity", 5)])
@@ -491,7 +491,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         XCTAssertEqual(splitResults.count, 1)
     
         guard let result = splitResults.first else { return }
@@ -524,7 +524,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         }
         taskVC.taskResult = buildTaskResult(task, selectedMeds: nil, outputDirectory: nil, tooLoudCount: 2)
         
-        let splitResults = manager.activityResults(for: schedule, taskViewController: taskVC)
+        let splitResults = manager.activityResults(for: schedule, task: taskVC.task!, result: taskVC.result)
         XCTAssertEqual(splitResults.count, 1)
         
         guard let result = splitResults.first else { return }
