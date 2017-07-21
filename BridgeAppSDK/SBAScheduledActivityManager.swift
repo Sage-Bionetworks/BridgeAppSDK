@@ -317,9 +317,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
+        // Re-enable the passcode lock. This can be disabled by the display of an active step.
+        SBAAppDelegate.shared?.disablePasscodeLock = false
+        
         // syoung 07/11/2017 Kludgy work-around for locking interface orientation following showing a
         // view controller that requires landscape orientation
-        (UIApplication.shared.delegate as? SBAAppDelegate)?.resetOrientation()
+        SBAAppDelegate.shared?.resetOrientation()
         
         // default behavior is to only record the task results if the task completed
         if reason == ORKTaskViewControllerFinishReason.completed {
@@ -338,6 +341,13 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        
+        // If this is an active step, then we are running an active task. Since most of these tasks are
+        // timed, do not show the passcode if the user left the app (accidentally or otherwise) in response
+        // to a banner notification.
+        if stepViewController.step is ORKActiveStep || stepViewController.step is SBABrainBaselineStep {
+            SBAAppDelegate.shared?.disablePasscodeLock = true
+        }
         
         // If cancel is disabled then hide on all but the first step
         if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {

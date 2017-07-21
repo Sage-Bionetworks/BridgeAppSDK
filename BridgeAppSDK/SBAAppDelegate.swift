@@ -184,6 +184,7 @@ public let SBAMainStoryboardName = "Main"
         }
     }
     
+    
     // MARK: Lock orientation to portrait by default
     
     open var defaultOrientationLock: UIInterfaceOrientationMask {
@@ -199,6 +200,11 @@ public let SBAMainStoryboardName = "Main"
     open func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return orientationLock ?? defaultOrientationLock
     }
+    
+    
+    // MARK: Flag for running active taskViewController
+    
+    open var disablePasscodeLock: Bool = false
     
     
     // ------------------------------------------------
@@ -613,6 +619,8 @@ public let SBAMainStoryboardName = "Main"
         return !self.hasCatastrophicError &&
             self.currentUser.isRegistered &&
             (self.passcodeViewController == nil) &&
+            !self.disablePasscodeLock &&
+            !UIApplication.shared.idleTimerDisabled &&
             ORKPasscodeViewController.isPasscodeStoredInKeychain()
     }
     
