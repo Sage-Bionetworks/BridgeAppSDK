@@ -112,11 +112,7 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         for stepResult in activityResultResults {
             if let stepResultResults = stepResult.results {
                 for result in stepResultResults {
-                    if type(of: result) === ORKResult.self, (result.userInfo?.count ?? 0) == 0 {
-                        // ORKResults are used to mark progress but do not contain any information that
-                        // is uploaded to Bridge so ignore them.
-                    }
-                    else if !insert(result: result, stepResult: stepResult, activityResult: activityResult) {
+                    if !insert(result: result, stepResult: stepResult, activityResult: activityResult) {
                         return false
                     }
                 }
