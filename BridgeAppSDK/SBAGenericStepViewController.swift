@@ -232,7 +232,9 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         setupNavBar()
         
         // set the learn more title, do this here because super does this here
-        headerView.learnMoreButton.setTitle(learnMoreButtonTitle ?? Localization.buttonLearnMore(), for: .normal)
+        if let headerView = headerView {
+            headerView.learnMoreButton.setTitle(learnMoreButtonTitle ?? Localization.buttonLearnMore(), for: .normal)
+        }
     }
     
     override open func viewDidLayoutSubviews() {
