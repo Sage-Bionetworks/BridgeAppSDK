@@ -230,6 +230,9 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         
         // setup nav bar because this is where super does it and we need to override
         setupNavBar()
+        
+        // set the learn more title, do this here because super does this here
+        headerView.learnMoreButton.setTitle(learnMoreButtonTitle ?? Localization.buttonLearnMore(), for: .normal)
     }
     
     override open func viewDidLayoutSubviews() {
@@ -473,16 +476,9 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
         
         // learn more button
-        if shouldShowLearnMore() {
-            
-            headView.shouldShowLearnMore = true
-            
-            // add our action
-            headView.learnMoreButton.addTarget(self, action: #selector(showLearnMore), for: .touchUpInside)
-            
-            // set the title
-            headView.learnMoreButton.setTitle(learnMoreButtonTitle ?? Localization.buttonLearnMore(), for: .normal)
-        }
+        headView.shouldShowLearnMore = shouldShowLearnMore()
+        // add our action
+        headView.learnMoreButton.addTarget(self, action: #selector(showLearnMore), for: .touchUpInside)
         
         if step is ORKFormStep {
             

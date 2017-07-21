@@ -265,7 +265,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         let expectedBirthdate = Date(timeIntervalSince1970: 0)
         birthResult.dateAnswer = expectedBirthdate
         
-        let signatureResult = ORKSignatureResult(identifier: "signature.signature")
+        let signatureResult = ORKSignatureResult(identifier: "signature")
         signatureResult.signatureImage = UIImage()
         
         let inputResult = ORKStepResult(stepIdentifier: step!.identifier, results: [

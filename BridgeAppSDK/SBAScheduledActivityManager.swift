@@ -317,13 +317,16 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
+        // Re-enable the passcode lock. This can be disabled by the display of an active step.
+        SBAAppDelegate.shared?.disablePasscodeLock = false
+        
         // syoung 07/11/2017 Kludgy work-around for locking interface orientation following showing a
         // view controller that requires landscape orientation
-        (UIApplication.shared.delegate as? SBAAppDelegate)?.resetOrientation()
+        SBAAppDelegate.shared?.resetOrientation()
         
         // default behavior is to only record the task results if the task completed
         if reason == ORKTaskViewControllerFinishReason.completed {
-            recordTaskResults(for: taskViewController)
+            recordTaskResults_async(for: taskViewController)
         }
         else {
             taskViewController.task?.resetTrackedDataChanges()
@@ -339,6 +342,13 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
+        // If this is an active step, then we are running an active task. Since most of these tasks are
+        // timed, do not show the passcode if the user left the app (accidentally or otherwise) in response
+        // to a banner notification.
+        if stepViewController.step is ORKActiveStep || stepViewController.step is SBABrainBaselineStep {
+            SBAAppDelegate.shared?.disablePasscodeLock = true
+        }
+        
         // If cancel is disabled then hide on all but the first step
         if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
             stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
@@ -351,7 +361,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         // recorded.
         if let step = stepViewController.step, let task = taskViewController.task,
             task.isCompletion(step: step, with: taskViewController.result) {
-            recordTaskResults(for: taskViewController)
+            recordTaskResults_async(for: taskViewController)
         }
     }
     
@@ -699,21 +709,15 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     /**
-     This method is called during task finish to handle data sync to the Bridge server.
-     It includes updating tracked data changes (such as data groups), marking the schedule
-     as finished and archiving the results.
-     
-     @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
-    */
-    @objc(recordTaskResultsForTaskViewController:)
-    open func recordTaskResults(for taskViewController: ORKTaskViewController) {
-        
+     Method to move upload to background thread.
+     */
+    func recordTaskResults_async(for taskViewController: ORKTaskViewController) {
         // Check if the results of this survey should be uploaded
         guard let schedule = scheduledActivity(for: taskViewController),
+            let inTask = taskViewController.task,
             shouldRecordResult(for: schedule, taskViewController:taskViewController)
-        else {
-            return
+            else {
+                return
         }
         
         // Mark the flag that the results are being uploaded for this task
@@ -721,20 +725,50 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             vc.hasUploadedResults = true
         }
         
+        let task = ((inTask as? NSCopying)?.copy(with: nil) as? ORKTask) ?? inTask
+        let result = taskViewController.result.copy() as! ORKTaskResult
+        let finishedOn = (taskViewController as? SBATaskViewController)?.finishedOn
+        
+        self.offMainQueue.async {
+            self.recordTaskResults(for: schedule, task: task, result: result, finishedOn: finishedOn)
+        }
+    }
+    
+    @available(*, unavailable, message:"Use `recordTaskResults(for:task:result:finishedOn:)` instead.")
+    open func recordTaskResults(for taskViewController: ORKTaskViewController) {
+    }
+    
+    /**
+     This method is called during task finish to handle data sync to the Bridge server.
+     It includes updating tracked data changes (such as data groups), marking the schedule
+     as finished and archiving the results.
+     
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @param     finishedOn  The timestamp to use for when the task was finished.
+    */
+    @objc(recordTaskResultsForSchedule:task:result:finishedOn:)
+    open func recordTaskResults(for schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult, finishedOn: Date?) {
+        
         // Update any data stores and groups associated with this task
-        taskViewController.task?.commitTrackedDataChanges(user: user,
-                                                          taskResult: taskViewController.result,
-                                                          completion:handleDataGroupsUpdate)
+        task.commitTrackedDataChanges(user: user,
+                                      taskResult: result,
+                                      completion:handleDataGroupsUpdate)
         
         // Archive the results
-        let results = activityResults(for: schedule, taskViewController: taskViewController)
+        let results = activityResults(for: schedule, task: task, result:result)
         let archives = results.mapAndFilter({ archive(for: $0) })
         SBBDataArchive.encryptAndUploadArchives(archives)
         
         // Update the schedule on the server but only if the survey was not ended early
-        if !didEndSurveyEarly(schedule: schedule, taskViewController: taskViewController) {
-            update(schedule: schedule, taskViewController: taskViewController)
+        if !didEndSurveyEarly(schedule: schedule, task: task, result: result) {
+            update(schedule: schedule, task: task, result: result, finishedOn: finishedOn)
         }
+    }
+    
+    @available(*, unavailable, message:"Use `update(schedule:task:result:finishedOn:)` instead.")
+    open func update(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
     }
     
     /**
@@ -743,28 +777,22 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      for the task view controller.
      
      @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @param     finishedOn  The timestamp to use for when the task was finished.
     */
-    open func update(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) {
+    open func update(schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult, finishedOn: Date?) {
         
         // Set finish and start timestamps
-        schedule.finishedOn = {
-            if let sbaTaskViewController = taskViewController as? SBATaskViewController,
-                let finishedOn = sbaTaskViewController.finishedOn {
-                return finishedOn as Date!
-            }
-            else {
-                return taskViewController.result.endDate
-            }
-        }()
+        schedule.finishedOn = finishedOn ?? result.endDate
         
-        schedule.startedOn = taskViewController.result.startDate
+        schedule.startedOn = result.startDate
         
         // Add any additional schedules
         var scheduledActivities = [schedule]
         
         // Look at top-level steps for a subtask that might have its own schedule
-        if let navTask = taskViewController.task as? SBANavigableOrderedTask {
+        if let navTask = task as? SBANavigableOrderedTask {
             for step in navTask.steps {
                 if let subtaskStep = step as? SBASubtaskStep, let taskId = subtaskStep.taskIdentifier,
                     let subschedule = scheduledActivity(for: taskId) , !subschedule.isCompleted {
@@ -780,8 +808,21 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         sendUpdated(scheduledActivities: scheduledActivities)
     }
     
+    @available(*, unavailable, message:"Use `didEndSurveyEarly(schedule:task:result:)` instead.")
     open func didEndSurveyEarly(schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> Bool {
-        if let endResult = taskViewController.result.firstResult( where: { $1 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
+        return false
+    }
+    
+    /**
+     Check to see if the survey was ended early.
+     
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @return                Whether or not the survey ended early and should *not* be marked as finished.
+     */
+    open func didEndSurveyEarly(schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult) -> Bool {
+        if let endResult = result.firstResult( where: { $1 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
             endResult.didEndSurvey {
             return true
         }
@@ -827,23 +868,29 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         return nil
     }
     
+    @available(*, unavailable, message:"Use `activityResults(for:task:result:)` instead.")
+    open func activityResults(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
+        return []
+    }
+    
     /**
      Expose method for building results to allow for testing and subclass override. This method is
      called during task finish to parse the `ORKTaskResult` into one or more subtask results. By default,
      this method can split a task into different schema tables for upload to the Bridge server. 
      
-     @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
-     @return                        An array of `SBAActivityResult` that can be used to build an archive.
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @return                An array of `SBAActivityResult` that can be used to build an archive.
      */
-    @objc(activityResultsForSchedule:taskViewController:)
-    open func activityResults(for schedule: SBBScheduledActivity, taskViewController: ORKTaskViewController) -> [SBAActivityResult] {
+    @objc(activityResultsForSchedule:task:result:)
+    open func activityResults(for schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult) -> [SBAActivityResult] {
         
         // If no results, return empty array
-        guard taskViewController.result.results != nil else { return [] }
+        guard result.results != nil else { return [] }
         
-        let taskResult = taskViewController.result
-        let surveyTask = taskViewController.task as? SBASurveyTask
+        let taskResult = result
+        let surveyTask = task as? SBASurveyTask
         
         // Look at the task result start/end date and assign the start/end date for the split result
         // based on whether or not the inputDate is greater/less than the comparison date. This way,
@@ -869,11 +916,11 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         }
         
         // mutable arrays for ensuring all results are collected
-        var topLevelResults:[ORKStepResult] = taskViewController.result.consolidatedResults()
+        var topLevelResults:[ORKStepResult] = result.consolidatedResults()
         var allResults:[SBAActivityResult] = []
         var dataStores:[SBATrackedDataStore] = []
         
-        if let task = taskViewController.task as? SBANavigableOrderedTask {
+        if let task = task as? SBANavigableOrderedTask {
             for step in task.steps {
                 if let subtaskStep = step as? SBASubtaskStep {
                     

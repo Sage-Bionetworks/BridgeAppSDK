@@ -310,7 +310,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     
     // MARK: ORKTaskViewController customization
     
-    func closeTaskAction() {
+    open func closeTaskAction() {
         guard let taskViewController = self.taskViewController else { return }
         self.taskViewController(taskViewController, didFinishWith: .discarded, error: nil)
     }
