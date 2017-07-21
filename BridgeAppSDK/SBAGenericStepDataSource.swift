@@ -522,12 +522,7 @@ open class SBAGenericStepTableItemGroup: NSObject {
     }
     
     private func answerForTextChoice() -> AnyObject {
-        var array: Array<AnyObject> = Array()
-        for item in items {
-            if item.selected {
-                array.append(item.choice!.value)
-            }
-        }
+        let array = self.items.mapAndFilter { $0.selected ? $0.choice?.value : nil }
         return array.count > 0 ? array as AnyObject : ORKNullAnswerValue() as AnyObject
     }
     
