@@ -713,8 +713,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      It includes updating tracked data changes (such as data groups), marking the schedule
      as finished and archiving the results.
      
-     @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @param     finishedOn  The timestamp to use for when the task was finished.
     */
     @objc(recordTaskResultsForSchedule:task:result:finishedOn:)
     open func recordTaskResults(for schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult, finishedOn: Date?) {
@@ -745,7 +747,9 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      for the task view controller.
      
      @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @param     finishedOn  The timestamp to use for when the task was finished.
     */
     open func update(schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult, finishedOn: Date?) {
         
@@ -781,6 +785,11 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     
     /**
      Check to see if the survey was ended early.
+     
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @return                Whether or not the survey ended early and should *not* be marked as finished.
      */
     open func didEndSurveyEarly(schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult) -> Bool {
         if let endResult = result.firstResult( where: { $1 is SBAActivityInstructionResult }) as? SBAActivityInstructionResult,
@@ -839,9 +848,10 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      called during task finish to parse the `ORKTaskResult` into one or more subtask results. By default,
      this method can split a task into different schema tables for upload to the Bridge server. 
      
-     @param     schedule            The schedule associated with this task
-     @param     taskViewController  The task view controller that was displayed.
-     @return                        An array of `SBAActivityResult` that can be used to build an archive.
+     @param     schedule    The schedule associated with this task
+     @param     task        The task being recorded. This is the main task and may include subtasks.
+     @param     result      The task result. This is the main task result and may include subtask results.
+     @return                An array of `SBAActivityResult` that can be used to build an archive.
      */
     @objc(activityResultsForSchedule:task:result:)
     open func activityResults(for schedule: SBBScheduledActivity, task: ORKTask, result: ORKTaskResult) -> [SBAActivityResult] {
