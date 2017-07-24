@@ -84,17 +84,18 @@ open class SBAGenericStepDataSource: NSObject {
     
     func updateAnswers(from result: ORKResult) {
         
-        // iterate the provided results, find the corresponding ItemGroup for each, and save the answer
-        // provided in the results
+        guard let taskResult = result as? ORKTaskResult else { return }
         
-        guard let stepResult = result as? ORKStepResult,
-            let results = stepResult.results as? [ORKQuestionResult]
-            else { return }
-        
-        for result in results {
-            let answer = result.answer ?? ORKNullAnswerValue()
-            if let group = itemGroup(with: result.identifier) {
-                group.answer = answer as AnyObject
+        // find the existing result for this step, if any
+        if let stepResult = taskResult.result(forIdentifier: step!.identifier) as? ORKStepResult,
+            let stepResults = stepResult.results as? [ORKQuestionResult] {
+            
+            // for each form item result, save the existing answer to our model
+            for result in stepResults {
+                let answer = result.answer ?? ORKNullAnswerValue()
+                if let group = itemGroup(with: result.identifier) {
+                    group.answer = answer as AnyObject
+                }
             }
         }
     }
@@ -215,64 +216,60 @@ open class SBAGenericStepDataSource: NSObject {
      */
     open func results(parentResult: ORKStepResult) -> ORKStepResult {
         
-        if let formItems = formItemsWithAnswerFormat() {
+        guard let formItems = formItemsWithAnswerFormat() else { return parentResult }
+        
+        // "Now" is the end time of the result, which is either actually now,
+        // or the last time we were in the responder chain.
+        
+        let now = parentResult.endDate
+        
+        for formItem: ORKFormItem in formItems {
             
-            // "Now" is the end time of the result, which is either actually now,
-            // or the last time we were in the responder chain.
+            var answer = ORKNullAnswerValue()
+            var answerDate = now
+            var systemCalendar = Calendar.current
+            var systemTimeZone = NSTimeZone.system
             
-            let now = parentResult.endDate
-            var qResults: Array<ORKResult> = Array()
-            
-            for formItem: ORKFormItem in formItems {
+            if let itemGroup = itemGroup(with: formItem.identifier) {
                 
-                var answer = ORKNullAnswerValue()
-                var answerDate = now
-                var systemCalendar = Calendar.current
-                var systemTimeZone = NSTimeZone.system
+                answer = itemGroup.answer
                 
-                if let itemGroup = itemGroup(with: formItem.identifier) {
-                    
-                    answer = itemGroup.answer
-                    
-                    // check that answer is not NSNull (ORKNullAnswerValue)
-                    // Skipped forms report a "null" value for every item -- by skipping, the user has explicitly said they don't want
-                    // to report any values from this form.
-                    if !(answer is NSNull) {
-                        answerDate = itemGroup.answerDate ?? now
-                        systemCalendar = itemGroup.calendar
-                        systemTimeZone = itemGroup.timezone
-                    }
-               }
-                
-                guard let result = formItem.answerFormat?.result(withIdentifier: formItem.identifier, answer: answer) else {
-                    continue
+                // check that answer is not NSNull (ORKNullAnswerValue)
+                // Skipped forms report a "null" value for every item -- by skipping, the user has explicitly said they don't want
+                // to report any values from this form.
+                if !(answer is NSNull) {
+                    answerDate = itemGroup.answerDate ?? now
+                    systemCalendar = itemGroup.calendar
+                    systemTimeZone = itemGroup.timezone
                 }
-                
-                let impliedAnswerFormat = formItem.answerFormat?.implied()
-                
-                if let dateAnswerFormat = impliedAnswerFormat as? ORKDateAnswerFormat,
-                    let dateQuestionResult = result as? ORKDateQuestionResult,
-                    let _ = dateQuestionResult.dateAnswer {
-                    
-                    let usedCalendar = dateAnswerFormat.calendar ?? systemCalendar
-                    dateQuestionResult.calendar = usedCalendar
-                    dateQuestionResult.timeZone = systemTimeZone
-                    
-                }
-                else if let numericAnswerFormat = impliedAnswerFormat as? ORKNumericAnswerFormat,
-                    let numericQuestionFormat = result as? ORKNumericQuestionResult,
-                    numericQuestionFormat.unit == nil {
-                    
-                    numericQuestionFormat.unit = numericAnswerFormat.unit
-                }
-                
-                result.startDate = answerDate
-                result.endDate = answerDate
-                
-                qResults.append(result)
             }
             
-            qResults.forEach({ parentResult.addResult($0) })
+            guard let result = formItem.answerFormat?.result(withIdentifier: formItem.identifier, answer: answer) else {
+                continue
+            }
+            
+            let impliedAnswerFormat = formItem.answerFormat?.implied()
+            
+            if let dateAnswerFormat = impliedAnswerFormat as? ORKDateAnswerFormat,
+                let dateQuestionResult = result as? ORKDateQuestionResult,
+                let _ = dateQuestionResult.dateAnswer {
+                
+                let usedCalendar = dateAnswerFormat.calendar ?? systemCalendar
+                dateQuestionResult.calendar = usedCalendar
+                dateQuestionResult.timeZone = systemTimeZone
+                
+            }
+            else if let numericAnswerFormat = impliedAnswerFormat as? ORKNumericAnswerFormat,
+                let numericQuestionFormat = result as? ORKNumericQuestionResult,
+                numericQuestionFormat.unit == nil {
+                
+                numericQuestionFormat.unit = numericAnswerFormat.unit
+            }
+            
+            result.startDate = answerDate
+            result.endDate = answerDate
+            
+            parentResult.addResult(result)
         }
         
         return parentResult
