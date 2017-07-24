@@ -200,7 +200,7 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         else {
             return
         }
-        _selectedIndex = moodScale.intValue - 1
+        _selectedIndex = moodScale.intValue
     }
     
     required public init?(coder aDecoder: NSCoder) {
