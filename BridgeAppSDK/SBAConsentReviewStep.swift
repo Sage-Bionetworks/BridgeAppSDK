@@ -203,6 +203,12 @@ extension SBAConsentReviewStepController {
         consentSignature.signatureImage = self.signatureImage
         updateUserConsentSignature(consentSignature)
         
+        // Check for sharing - if the onboarding flow does not include explicit consent then 
+        // this will not be set.
+        if sharedUser.dataSharingScope == .none {
+            sharedUser.dataSharingScope = .study
+        }
+        
         // Update the user profile info
         updateUserProfileInfo()
         
