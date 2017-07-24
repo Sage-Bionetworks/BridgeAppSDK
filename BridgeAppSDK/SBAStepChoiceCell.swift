@@ -230,28 +230,6 @@ open class SBAStepTextFieldCell: UITableViewCell {
         
         NSLayoutConstraint.deactivate(self.constraints)
         
-        /*
-        // if we have a defined textField width, we use that and center the text field and ruleView horizontally.
-        // Otherwise, we pin left and right edges to the superview with some side margin
-        
-        if constants().textFieldWidth > 0 {
-            
-            textField.makeWidth(.equal, constants().textFieldWidth)
-            textField.alignCenterHorizontal(padding: 0.0)
-        } else {
-
-            textField.alignToSuperview([.leading, .trailing], padding: constants().sideMargin)
-        }
-
-        textField.alignToSuperview([.top], padding: constants().verticalMargin)
-        
-        ruleView.alignBelow(view: textField, padding: constants().verticalPadding)
-        ruleView.makeHeight(.equal, 1.0)
-        
-        // align left and right edges of ruleView to the textField
-        ruleView.align([.leading, .trailing], .equal, to: textField, [.leading, .trailing], padding: 0.0)
-        */
-        
         textField.removeSiblingAndAncestorConstraints()
         ruleView.removeSiblingAndAncestorConstraints()
         

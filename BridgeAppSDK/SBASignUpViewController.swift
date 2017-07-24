@@ -214,28 +214,11 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep) -> ORKStepViewController? {
         
-        // If the default view controller for this step is an `ORKInstructionStepViewController` (and not a subclass)
-        // then replace that implementation with the one from this framework.
-        if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
-            if SBAGenericStepViewController.doesSupport(step) {
-                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
-            }
-        }
-        
-        // If the default view controller for this step is an `ORKFormStepViewController` (and not a subclass)
-        // then replace that implementation with the one from this framework.
-        if step.stepViewControllerClass() == ORKFormStepViewController.self, let task = taskViewController.task {
-            if SBAGenericStepViewController.doesSupport(step) {
-                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
-            }
-        }
-        
-        // If the default view controller for this step is an `ORKQuestionStepViewController` (and not a subclass)
-        // then replace that implementation with the one from this framework.
-        if step.stepViewControllerClass() == ORKQuestionStepViewController.self, let task = taskViewController.task {
-            if SBAGenericStepViewController.doesSupport(step) {
-                return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
-            }
+        // Use the 'SBAGenericStepViewController' class if it supports this step
+        if SBAGenericStepViewController.doesSupport(step),
+            let task = taskViewController.task {
+            
+            return instantiateGenericStepViewController(for: step, task: task, result: taskViewController.result)
         }
         
         // By default, return nil

@@ -131,11 +131,16 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     }
     
     /**
-     Static method to determine if this view controller class supports the provided step. This will vary
+     Static method to determine if this view controller class supports the provided step's form items. This will vary
      based on the 'ORKAnswerFormat' and 'ORKQuestionType' for each of the 'ORKFormItems' in the step.
      */
-    static open func doesSupport(_ step: ORKStep) -> Bool {
-                
+    static open func doesSupportFormItems(in formStep: SBAFormStepProtocol) -> Bool {
+        
+        guard let formItems = formStep.formItems else {
+            assertionFailure("Step does not have any form items")
+            return false
+        }
+        
         let supportedAnswerFormats: [ORKAnswerFormat.Type] = [ORKTextChoiceAnswerFormat.self,
                                                               ORKTextAnswerFormat.self,
                                                               ORKBooleanAnswerFormat.self,
@@ -148,27 +153,52 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                                                          .multipleChoice,
                                                          .boolean]
         
-        if let formStep = step as? SBAFormStepProtocol,
-            let formItems = formStep.formItems {
-            
-            for item in formItems {
-                if let answerFormat = item.answerFormat {
-                    
-                    let formatOkay = supportedAnswerFormats.contains { (type) -> Bool in
-                        type == type(of: answerFormat)
-                    }
-                    
-                    let typeOkay = supportedQuestionTypes.contains(answerFormat.questionType)
-                    
-                    if !(formatOkay && typeOkay) {
-                        return false
-                    }
+        for item in formItems {
+            if let answerFormat = item.answerFormat {
+                
+                let formatOkay = supportedAnswerFormats.contains { (type) -> Bool in
+                    type == type(of: answerFormat)
+                }
+                
+                let typeOkay = supportedQuestionTypes.contains(answerFormat.questionType)
+                
+                if !(formatOkay && typeOkay) {
+                    // form item is not supported
+                    return false
                 }
             }
         }
+        
+        // all form items are supported
         return true
     }
     
+    /**
+     Static method to determine if this view controller class supports the provided step.
+    */
+    static func doesSupport(_ step: ORKStep) -> Bool {
+        
+        if step.stepViewControllerClass() == ORKInstructionStepViewController.self {
+            // always support instruction steps
+            return true
+        }
+        else {
+            
+            let supportedClasses: [ORKStepViewController.Type] = [ORKFormStepViewController.self,
+                                                                  ORKQuestionStepViewController.self]
+            
+            let classSupported = supportedClasses.contains { (vcClass) -> Bool in
+                vcClass == step.stepViewControllerClass()
+            }
+            
+            // if we have a form step, verify the form items are supported
+            if classSupported, let formStep = step as? SBAFormStepProtocol {
+                return SBAGenericStepViewController.doesSupportFormItems(in: formStep)
+            }
+
+            return classSupported
+        }
+    }
     
     // MARK: Initializers
     
@@ -196,9 +226,6 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        // register for keyboard notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        
         // show or hide our navigation bar
         navigationController?.setNavigationBarHidden(!shouldShowNavigationBar(), animated: false)
         
@@ -208,7 +235,8 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(self)
+        // un-register for keyboard notifications
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         
         // Dismiss all textField's keyboard
         tableView?.endEditing(false)
@@ -217,9 +245,11 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // register for keyboard notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+
         // need to do this here because when the navView is generated, our delegate has not yet been set
         // so we don't know answers on whether or not there are previous or next steps
-        
         navigationView?.previousButton.isHidden = !hasPreviousStep()
         
         // set the button title
@@ -577,6 +607,14 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
     }
     
+    // MARK: Helpers
+    
+    func textFieldRequired(for tableItem: SBAGenericStepTableItem?) -> Bool {
+        let answerFormat = tableItem?.formItem?.answerFormat?.implied()
+        let type = answerFormat?.questionType
+        return type == .decimal || type == .integer || type == .text
+    }
+    
     
     // MARK: UITableView Datasource
     
@@ -603,14 +641,12 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
         
         let tableItem = tableData!.tableItem(at: indexPath)
-        let answerFormat = tableItem?.formItem?.answerFormat?.implied()
-        let type = answerFormat?.questionType
         
         if cell == nil {
             
             // configure cell
             
-            if type == .decimal || type == .integer || type == .text {
+            if textFieldRequired(for: tableItem) {
                 
                 // Create a textField based cell
                 let fieldCell = textFieldCell(reuseIdentifier: identifier)
@@ -634,6 +670,9 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 
                 fieldCell.textField.inputAccessoryView = navView
                 
+                let answerFormat = tableItem?.formItem?.answerFormat?.implied()
+                let type = answerFormat?.questionType
+
                 // set keyboard type
                 if let textAnswerFormat = answerFormat as? ORKTextAnswerFormat {
                     // use the keyboard type defined for this step
@@ -656,42 +695,37 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         
         // populate cell
         
-        if type == .decimal || type == .integer || type == .text {
+        if let textFieldCell = cell as? SBAStepTextFieldCell {
             
-            if let textFieldCell = cell as? SBAStepTextFieldCell {
-                
-                if let customField = textFieldCell.textField as? SBAStepTextField {
-                    customField.indexPath = indexPath
-                }
-                
-                // if we have an answer, populate the text field
-                let itemGroup = tableData!.itemGroup(at: indexPath)
-                if itemGroup!.isAnswerValid {
-                    if let answerNumber = itemGroup?.answer as? NSNumber {
-                        textFieldCell.textField.text = answerNumber.stringValue
-                    }
-                    else if let answerString = itemGroup?.answer as? String {
-                        textFieldCell.textField.text = answerString
-                    }
-                }
-                
-                
-                if let text = itemGroup?.formItem.text {
-                    // populate the label label
-                    textFieldCell.fieldLabel.text = text
-                }
-
-                if let placeholder = itemGroup?.formItem.placeholder {
-                    // populate the text field placeholder label
-                    textFieldCell.setPlaceholderText(placeholder)
-                }
-
+            if let customField = textFieldCell.textField as? SBAStepTextField {
+                customField.indexPath = indexPath
             }
-        } else {
-            if let choiceCell = cell as? SBAStepChoiceCell {
-                choiceCell.choiceValueLabel.text = tableItem?.choice?.choiceText
-                choiceCell.isSelected = tableItem!.selected
+            
+            // if we have an answer, populate the text field
+            let itemGroup = tableData!.itemGroup(at: indexPath)
+            if itemGroup!.isAnswerValid {
+                if let answerNumber = itemGroup?.answer as? NSNumber {
+                    textFieldCell.textField.text = answerNumber.stringValue
+                }
+                else if let answerString = itemGroup?.answer as? String {
+                    textFieldCell.textField.text = answerString
+                }
             }
+            
+            
+            if let text = itemGroup?.formItem.text {
+                // populate the field label
+                textFieldCell.fieldLabel.text = text
+            }
+            
+            if let placeholder = itemGroup?.formItem.placeholder {
+                // populate the text field placeholder label
+                textFieldCell.setPlaceholderText(placeholder)
+            }
+        }
+        else if let choiceCell = cell as? SBAStepChoiceCell {
+            choiceCell.choiceValueLabel.text = tableItem?.choice?.choiceText
+            choiceCell.isSelected = tableItem!.selected
         }
         
         return cell!
@@ -702,10 +736,8 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let tableItem = tableData!.tableItem(at: indexPath)
-        let answerFormat = tableItem?.formItem?.answerFormat?.implied()
-        let type = answerFormat?.questionType
         
-        if type == .decimal || type == .integer || type == .text {
+        if textFieldRequired(for: tableItem) {
             
             // need to get our cell and tell its textField to become first responder
             if let customCell = tableView.cellForRow(at: indexPath) as? SBAStepTextFieldCell {
@@ -713,7 +745,6 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             }
             
             tableView.deselectRow(at: indexPath, animated: true)
-            
         }
         else {
             
@@ -737,13 +768,10 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        if let customField = textField as? SBAStepTextField {
-            // need to scroll our tableView to the appropriate indexPath. We save our scrollOffset
-            // so we can scroll back when user is done editing
-            
-            savedVerticalScrollOffet = tableView!.contentOffset.y
-            tableView?.scrollToRow(at: customField.indexPath!, at: .bottom, animated: true)
-        }
+        guard let customField = textField as? SBAStepTextField else { return }
+        
+        savedVerticalScrollOffet = tableView!.contentOffset.y
+        tableView?.scrollToRow(at: customField.indexPath!, at: .bottom, animated: true)
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
@@ -755,51 +783,49 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
+        guard let customTextField = textField as? SBAStepTextField,
+            let itemGroup = tableData!.itemGroup(at: customTextField.indexPath!) else {
+                return true
+        }
+        
         let textFieldText: NSString = (textField.text ?? "") as NSString
         let textAfterUpdate = textFieldText.replacingCharacters(in: range, with: string)
         
-        if let customTextField = textField as? SBAStepTextField {
-            if let itemGroup = tableData!.itemGroup(at: customTextField.indexPath!) {
-                
-                var answer = ORKNullAnswerValue()
-                
-                // need to determine if we need a string or a number
-                var returnValue = true
-                if let numericAnswerFormat = itemGroup.formItem.answerFormat as? ORKNumericAnswerFormat {
-                    
-                    let sanitziedText = numericAnswerFormat.sanitizedTextFieldText(textAfterUpdate, decimalSeparator: numberFormatter.decimalSeparator)
-                    textField.text = sanitziedText
-                    
-                    if sanitziedText!.characters.count > 0 {
-                        let answerNumber = NSDecimalNumber(string: sanitziedText, locale: Locale.current)
-                        if numericAnswerFormat.isAnswerValid(answerNumber) {
-                            answer = answerNumber
-                        }
-                    }
-                    
-                    // return false since we're manually updating the text field with the sanitized text
-                    returnValue = false
+        var answer = ORKNullAnswerValue()
+        
+        // need to determine if we need a string or a number
+        var returnValue = true
+        if let numericAnswerFormat = itemGroup.formItem.answerFormat as? ORKNumericAnswerFormat {
+            
+            let sanitziedText = numericAnswerFormat.sanitizedTextFieldText(textAfterUpdate, decimalSeparator: numberFormatter.decimalSeparator)
+            textField.text = sanitziedText
+            
+            if sanitziedText!.characters.count > 0 {
+                let answerNumber = NSDecimalNumber(string: sanitziedText, locale: Locale.current)
+                if numericAnswerFormat.isAnswerValid(answerNumber) {
+                    answer = answerNumber
                 }
-                else {
-                    
-                    if itemGroup.formItem.answerFormat!.isAnswerValid(textAfterUpdate) {
-                        answer = textAfterUpdate
-                    }
-                }
-                
-                tableData!.saveAnswer(answer as AnyObject, at: customTextField.indexPath!)
-                
-                // need to update enabled state of next button in the textFields inputAccessoryView,
-                // which is a SBAStepNavigationView
-                
-                if let navView = textField.inputAccessoryView as? SBAStepNavigationView {
-                    navView.nextButton.isEnabled = shouldEnableNextButton()
-                }
-                return returnValue
+            }
+            
+            // return false since we're manually updating the text field with the sanitized text
+            returnValue = false
+        }
+        else {
+            
+            if itemGroup.formItem.answerFormat!.isAnswerValid(textAfterUpdate) {
+                answer = textAfterUpdate
             }
         }
         
-        return true
+        tableData!.saveAnswer(answer as AnyObject, at: customTextField.indexPath!)
+        
+        // need to update enabled state of next button in the textFields inputAccessoryView,
+        // which is a SBAStepNavigationView
+        
+        if let navView = textField.inputAccessoryView as? SBAStepNavigationView {
+            navView.nextButton.isEnabled = shouldEnableNextButton()
+        }
+        return returnValue
     }
     
     // MARK: UIScrollView delegate
@@ -819,34 +845,34 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     func keyboardNotification(notification: NSNotification) {
         
-        if let userInfo = notification.userInfo {
-            let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-            let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-            let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
-            let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
-            let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
-            if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
-                
-                // set the tableView bottom inset to default
-                var inset = tableView!.contentInset
-                inset.bottom = tableViewInsetBottom
-                tableView?.contentInset = inset
-                
-            } else {
-                
-                // change tableView contentInset bottom to be equal to the height of the keyboard plue
-                // our constant for the bottom margin
-                
-                var contentInset = tableView?.contentInset
-                contentInset!.bottom = endFrame!.size.height + constants().mainViewBottomMargin
-                tableView!.contentInset = contentInset!
-            }
-            UIView.animate(withDuration: duration,
-                           delay: TimeInterval(0),
-                           options: animationCurve,
-                           animations: { self.view.layoutIfNeeded() },
-                           completion: nil)
+        guard let userInfo = notification.userInfo else { return }
+        
+        let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+        if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
+            
+            // set the tableView bottom inset to default
+            var inset = tableView!.contentInset
+            inset.bottom = tableViewInsetBottom
+            tableView?.contentInset = inset
+            
+        } else {
+            
+            // change tableView contentInset bottom to be equal to the height of the keyboard plue
+            // our constant for the bottom margin
+            
+            var contentInset = tableView?.contentInset
+            contentInset!.bottom = endFrame!.size.height + constants().mainViewBottomMargin
+            tableView!.contentInset = contentInset!
         }
+        UIView.animate(withDuration: duration,
+                       delay: TimeInterval(0),
+                       options: animationCurve,
+                       animations: { self.view.layoutIfNeeded() },
+                       completion: nil)
     }
     
     // MARK: SBAGenericStepDataSource delegate
