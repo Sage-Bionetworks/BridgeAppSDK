@@ -195,12 +195,24 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
     override public convenience init(step: ORKStep, result: ORKResult) {
         self.init(step: step)
         guard let stepResult = result as? ORKStepResult,
-            let moodResult = stepResult.results?.first as? ORKMoodScaleQuestionResult,
-            let moodScale = moodResult.scaleAnswer
+            let questionStep = step as? SBAFormStepProtocol,
+            let answerFormat = questionStep.formItems?.first?.answerFormat as? SBAChoiceAnswerFormat
         else {
             return
         }
-        _selectedIndex = moodScale.intValue - 1
+        
+        // Since values from the server are sent as a string rather than a number,
+        // we need to return the result in the same format.
+        if let moodResult = stepResult.results?.first as? ORKMoodScaleQuestionResult,
+            let moodScale = moodResult.scaleAnswer,
+            let selectedIdx = answerFormat.questionChoices.index(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
+            _selectedIndex = selectedIdx
+        }
+        else if let moodResult = stepResult.results?.first as? ORKChoiceQuestionResult,
+            let moodScale = moodResult.choiceAnswers?.first,
+            let selectedIdx = answerFormat.questionChoices.index(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
+            _selectedIndex = selectedIdx
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -220,10 +232,18 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
     
     override open var result: ORKStepResult? {
         guard let stepResult = super.result else { return nil }
-        if hasSelected {
-            let moodResult = ORKMoodScaleQuestionResult(identifier: stepResult.identifier)
-            moodResult.scaleAnswer = NSNumber(value: selectedIndex)
-            stepResult.addResult(moodResult)
+        if hasSelected, selectedIndex < moodChoices.count {
+            if let selectedValue = moodChoices[selectedIndex].value as? NSNumber {
+                let moodResult = ORKMoodScaleQuestionResult(identifier: stepResult.identifier)
+                moodResult.scaleAnswer = selectedValue
+                stepResult.addResult(moodResult)
+            }
+            else {
+                let moodResult = ORKChoiceQuestionResult(identifier: stepResult.identifier)
+                moodResult.questionType = .singleChoice
+                moodResult.choiceAnswers = [moodChoices[selectedIndex].value]
+                stepResult.addResult(moodResult)
+            }
         }
         return stepResult
     }
