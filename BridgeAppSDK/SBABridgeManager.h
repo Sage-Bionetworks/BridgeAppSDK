@@ -120,6 +120,11 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
     completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 /*!
+ Sign out user on the bridge server
+ */
++ (void)signOutWithCmpletion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
+
+/*!
  Call this when app becomes active to ensure the user is logged in to their account (if any).
  
  @param completion A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
