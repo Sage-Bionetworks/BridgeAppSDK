@@ -144,7 +144,7 @@ open class SBARootViewController: UIViewController {
         // Setup new view initial alpha and frame
         viewController.view.frame = self.view.bounds
         
-        let duration = animated ? 2.0 : 0.0
+        let duration = animated ? 1.0 : 0.0
         self.transition(from: self.rootViewController, to: viewController, duration: duration, options: [.transitionCrossDissolve],
                         animations: {}) { (finished) in
                             self.rootViewController.removeFromParentViewController()
