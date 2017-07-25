@@ -160,11 +160,11 @@
     }];
 }
 
-+ (void)signOutWithCmpletion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
++ (void)signOutWithCompletion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock {
     [SBBComponent(SBBAuthManager) signOutWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
 #if DEBUG
         if (error != nil) {
-            NSLog(@"Error with signup: %@", error);
+            NSLog(@"Error with signOut: %@", error);
         }
 #endif
         if (completionBlock) {

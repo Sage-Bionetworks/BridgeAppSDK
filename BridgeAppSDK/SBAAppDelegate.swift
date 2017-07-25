@@ -657,7 +657,7 @@ public let SBAMainStoryboardName = "Main"
     private func resetPasscode() {
         
         // reset the user and sign them out of bridge        
-        SBABridgeManager.signOut(cmpletion: nil)
+        SBABridgeManager.signOut(completion: nil)
         self.currentUser.resetStoredUserData()
 
         // then dismiss the passcode view controller
