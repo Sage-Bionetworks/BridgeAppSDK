@@ -193,7 +193,7 @@ extension SBARegistrationStepController {
     }
 }
 
-open class SBARegistrationStepViewController: SBAGenericStepViewController, SBARegistrationStepController {
+open class SBARegistrationStepViewController: ORKFormStepViewController, SBARegistrationStepController {
     
     open var dataGroups: [String]?
     
