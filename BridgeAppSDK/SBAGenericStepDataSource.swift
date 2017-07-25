@@ -104,7 +104,6 @@ open class SBAGenericStepDataSource: NSObject {
     public func updateDefaults(_ defaults: NSMutableDictionary) {
         
         // TODO: Josh Bruhin, 6/12/17 - implement. this may require access to a HealthKit source.
-        // This has not yet been needed for the onboarding flow
         
         for section in sections {
             section.itemGroups.forEach({
