@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -65,11 +66,12 @@
                         <constraint firstAttribute="height" constant="85" id="uig-B3-J4V"/>
                     </constraints>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9H4-mS-RkK">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9H4-mS-RkK">
                     <rect key="frame" x="71.5" y="96" width="231" height="231"/>
                     <constraints>
                         <constraint firstAttribute="height" priority="950" constant="231" id="9Jy-Yu-HCK"/>
                         <constraint firstAttribute="width" secondItem="9H4-mS-RkK" secondAttribute="height" multiplier="1:1" id="WT3-et-xTV"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="rn1-p5-lIT"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rgh-UR-pKN">
@@ -106,7 +108,7 @@
                 <constraint firstItem="6gG-xy-3gB" firstAttribute="top" secondItem="Rgh-UR-pKN" secondAttribute="bottom" constant="8" id="K2t-q1-8r3"/>
                 <constraint firstItem="Rgh-UR-pKN" firstAttribute="top" secondItem="9H4-mS-RkK" secondAttribute="bottom" constant="18" id="Lsg-TW-PbK"/>
                 <constraint firstItem="9H4-mS-RkK" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="MKL-Ku-2N5"/>
-                <constraint firstItem="9H4-mS-RkK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="NDV-PV-hpi"/>
+                <constraint firstItem="9H4-mS-RkK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="40" id="NDV-PV-hpi"/>
                 <constraint firstItem="Bxj-EG-SdZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7l2-wp-HfT" secondAttribute="bottom" constant="6" id="NnT-cs-exv"/>
                 <constraint firstAttribute="bottom" secondItem="Bxj-EG-SdZ" secondAttribute="bottom" id="Pw4-zt-waV"/>
                 <constraint firstItem="6gG-xy-3gB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="Qzo-dD-Rdd"/>
