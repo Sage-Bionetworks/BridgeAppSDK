@@ -91,7 +91,7 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
         }
         return _loadingStep
     }
-    private var _loadingStep: ORKStep?
+    fileprivate var _loadingStep: ORKStep?
     
     open var identifier: String {
         return surveyReference.identifier
@@ -181,6 +181,17 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
     override open func isEqual(_ object: Any?) -> Bool {
         guard let castObject = object as? SBASurveyTask else { return false }
         return self.surveyReference == castObject.surveyReference
+    }
+}
+
+extension SBASurveyTask: SBAAnswerFormatFinder {
+    
+    public func find(for identifier:String) -> ORKAnswerFormat? {
+        return self.survey?.find(for: identifier)
+    }
+    
+    public func resultIdentifier(for identifier:String) -> SBAResultIdentifier? {
+        return self.survey?.resultIdentifier(for: identifier)
     }
 }
 
