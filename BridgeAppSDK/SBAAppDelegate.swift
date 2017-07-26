@@ -127,12 +127,15 @@ public let SBAMainStoryboardName = "Main"
         return true
     }
     
-    open func applicationWillResignActive(_ application: UIApplication) {
+    open func applicationDidEnterBackground(_ application: UIApplication) {
         if shouldShowPasscode() {
             // Hide content so it doesn't appear in the app switcher.
             rootViewController?.contentHidden = true
+            self.backgroundTimestamp = Date()
         }
-        
+    }
+    
+    open func applicationWillResignActive(_ application: UIApplication) {
         // Save any outstanding clientData profile item updates to Bridge.
         SBAClientDataProfileItem.updateChangesToBridge()
     }
@@ -171,7 +174,11 @@ public let SBAMainStoryboardName = "Main"
     }
     
     open func applicationWillEnterForeground(_ application: UIApplication) {
-        lockScreen()
+        if shouldShowPasscode(),
+            let backgroundDuration = self.backgroundTimestamp?.timeIntervalSinceNow,
+            abs(backgroundDuration) > backgroundTimeout {
+            lockScreen()
+        }
     }
     
     open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
@@ -422,8 +429,14 @@ public let SBAMainStoryboardName = "Main"
     open func presentViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
         guard let rootVC = self.window?.rootViewController else { return }
         var topViewController: UIViewController = rootVC
-        while (topViewController.presentedViewController != nil) {
-            topViewController = topViewController.presentedViewController!
+        while let presentedVC = topViewController.presentedViewController {
+            if presentedVC.modalPresentationStyle != .fullScreen {
+                presentedVC.dismiss(animated: false, completion: nil)
+                break
+            }
+            else {
+                topViewController = presentedVC
+            }
         }
         topViewController.present(viewController, animated: animated, completion: completion)
     }
@@ -603,6 +616,9 @@ public let SBAMainStoryboardName = "Main"
     // ------------------------------------------------
 
     private weak var passcodeViewController: UIViewController?
+    
+    private var backgroundTimestamp: Date?
+    public var backgroundTimeout: TimeInterval = 5 * 60
     
     /**
      Is the passcode blocking?
