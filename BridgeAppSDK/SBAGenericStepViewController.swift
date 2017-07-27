@@ -94,7 +94,17 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     }
     
     open var nextTitle: String {
-        return self.continueButtonTitle ?? (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone())
+        let stepContinueButtonTitle: String? = {
+            guard let instructionStep = self.step as? SBAInstructionStep else { return nil }
+            return instructionStep.continueButtonTitle
+        }()
+        
+        // Give priority to the title configured in the step, then the title assigned to this view controller.
+        // If still have no title, see if there are next steps and use either Localized 'next' title or 'done' title
+        
+        return stepContinueButtonTitle ??
+            (self.continueButtonTitle ??
+                (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone()))
     }
 
     lazy var numberFormatter: NumberFormatter = {
