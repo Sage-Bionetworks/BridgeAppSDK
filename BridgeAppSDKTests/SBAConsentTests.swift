@@ -53,7 +53,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         guard let steps = consentFactory.steps else { return }
         
         let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
-                                   ORKVisualConsentStep(identifier: "consentVisual"),
+                                   SBAVisualConsentStep(identifier: "consentVisual"),
                                    SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                    SBAInstructionStep(identifier: "consentFailedQuiz"),
                                    SBAInstructionStep(identifier: "consentPassedQuiz"),
@@ -79,7 +79,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         let steps = (consentFactory.reconsentStep().subtask as! SBANavigableOrderedTask).steps
         
         let expectedSteps: [ORKStep] = [SBAInstructionStep(identifier: "reconsentIntroduction"),
-                                        ORKVisualConsentStep(identifier: "consentVisual"),
+                                        SBAVisualConsentStep(identifier: "consentVisual"),
                                         SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),
@@ -104,7 +104,7 @@ class SBAConsentDocumentFactoryTests: ResourceTestCase {
         
         let steps = (consentFactory.registrationConsentStep().subtask as! SBANavigableOrderedTask).steps
         
-        let expectedSteps: [ORKStep] = [ORKVisualConsentStep(identifier: "consentVisual"),
+        let expectedSteps: [ORKStep] = [SBAVisualConsentStep(identifier: "consentVisual"),
                                         SBANavigationSubtaskStep(identifier: "consentQuiz"),
                                         SBAInstructionStep(identifier: "consentFailedQuiz"),
                                         SBAInstructionStep(identifier: "consentPassedQuiz"),

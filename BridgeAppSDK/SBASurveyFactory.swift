@@ -220,9 +220,7 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         switch (subtype) {
             
         case .visual:
-            // Use the superclass instance of the review step
-            return super.createConsentStep(inputItem: inputItem, subtype: subtype)
-            
+            return SBAVisualConsentStep(identifier: inputItem.identifier, consentDocument: self.consentDocument)
         case .sharingOptions:
             return SBAConsentSharingStep(inputItem: inputItem)
             

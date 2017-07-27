@@ -31,9 +31,13 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+
 
 import UIKit
+
+public let SBARoundedButtonDefaultHeight: CGFloat = 52.0
+public let SBARoundedButtonDefaultWidth: CGFloat = 144.0
+public let SBARoundedButtonDefaultCornerRadius: CGFloat = SBARoundedButtonDefaultHeight / 2
 
 @IBDesignable open class SBARoundedButton : UIButton, ORKButton {
     
@@ -44,7 +48,7 @@ import UIKit
         }
     }
 
-    @IBInspectable open var shadowColor: UIColor = UIColor.darkGray {
+    @IBInspectable open var shadowColor: UIColor = UIColor.roundedButtonShadowDark {
         didSet {
             refreshView()
             setNeedsDisplay()
@@ -80,25 +84,26 @@ import UIKit
         // setup colors
         self.backgroundColor = UIColor.roundedButtonBackgroundDark
         self.shadowColor = UIColor.roundedButtonShadowDark
-        self.corners = 26.0
+        self.corners = SBARoundedButtonDefaultCornerRadius
         
         // setup text
         self.titleColor = UIColor.roundedButtonTextLight
         setTitleColor(titleColor, for: .normal)
         
-        self.titleFont = UIFont.systemFont(ofSize: 19)
-        titleLabel?.font = titleFont
-        
+        self.titleFont = UIFont.roundedButtonTitle
+
+        // In many cases, the below constraints will be overriden by the containing view, so we set the priority here to 950
         // add default constraint for height
-        let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 51)
+        let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: SBARoundedButtonDefaultHeight)
+        heightConstraint.priority = 950
         
         // Add minimum constraint for width
         let minWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1.0, constant: 144)
-        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 250)
+        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: SBARoundedButtonDefaultWidth)
         widthConstraint.priority = 950
-
-        self.addConstraints([heightConstraint, minWidthConstraint, widthConstraint])
         
+        self.addConstraints([heightConstraint, minWidthConstraint, widthConstraint])
+
         commonInit()
     }
     

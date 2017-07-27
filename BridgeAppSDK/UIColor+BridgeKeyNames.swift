@@ -102,6 +102,64 @@ extension UIColor {
         return UIColor.appBackgroundDark
     }
     
+    // MARK: Generic step view controller - header view
+    
+    open class var headerViewHeaderLabel: UIColor {
+        return UIColor.darkGray
+    }
+    
+    open class var headerViewDetailsLabel: UIColor {
+        return UIColor.gray
+    }
+    
+    open class var headerViewPromptLabel: UIColor {
+        return UIColor.lightGray
+    }
+    
+    open class var headerViewProgressBar: UIColor {
+        return UIColor(red: 103.0 / 255.0, green: 191.0 / 255.0, blue: 95.0 / 255.0, alpha: 1.0)
+    }
+    
+    open class var headerViewProgressBackground: UIColor {
+        return UIColor.darkGray
+    }
+
+    open class var headerViewStepCountLabel: UIColor {
+        return UIColor.darkGray
+    }
+    
+    // MARK: Generic step view controller - choice cell
+    
+    open class var choiceCellBackground: UIColor {
+        return UIColor.white
+    }
+    
+    open class var choiceCellBackgroundHighlighted: UIColor {
+        return UIColor.lightGray
+    }
+
+    open class var choiceCellLabel: UIColor {
+        return UIColor.darkGray
+    }
+    
+    open class var choiceCellLabelHighlighted: UIColor {
+        return UIColor.darkGray
+    }
+    
+    // MARK: Generic step view controller - text field cell
+    
+    open class var textFieldCellText: UIColor {
+        return UIColor.darkGray
+    }
+    
+    open class var textFieldCellBorder: UIColor {
+        return UIColor.darkGray
+    }
+
+    open class var textFieldCellLabel: UIColor {
+        return UIColor.lightGray
+    }
+
 }
 
 

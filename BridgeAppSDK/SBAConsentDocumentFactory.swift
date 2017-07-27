@@ -42,9 +42,9 @@ extension SBASurveyFactory {
     /**
      Return visual consent step
      */
-    open func visualConsentStep() -> ORKVisualConsentStep {
-        return self.steps?.find({ $0 is ORKVisualConsentStep }) as? ORKVisualConsentStep ??
-            ORKVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, document: self.consentDocument)
+    open func visualConsentStep() -> SBAVisualConsentStep {
+        return self.steps?.find({ $0 is SBAVisualConsentStep }) as? SBAVisualConsentStep ??
+            SBAVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, consentDocument: self.consentDocument)
     }
     
     /**

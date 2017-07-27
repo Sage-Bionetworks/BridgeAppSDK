@@ -32,6 +32,7 @@
 //
 
 import ResearchKit
+import ResearchUXFactory
 
 open class SBARegistrationStep: ORKFormStep, SBAProfileInfoForm {
     

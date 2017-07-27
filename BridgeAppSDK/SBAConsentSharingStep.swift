@@ -150,7 +150,7 @@ extension SBAConsentSharingStepController {
     }
 }
 
-open class SBAConsentSharingStepViewController: ORKQuestionStepViewController, SBAConsentSharingStepController {
+open class SBAConsentSharingStepViewController: SBAGenericStepViewController, SBAConsentSharingStepController {
     
     lazy public var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate
