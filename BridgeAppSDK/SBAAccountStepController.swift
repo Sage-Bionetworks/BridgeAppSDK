@@ -47,7 +47,7 @@ extension SBAAccountStepController {
     /**
      Handle failed account validation by displaying a message string.
      */
-    func handleFailedValidation(_ reason: String? = nil) {
+    public func handleFailedValidation(_ reason: String? = nil) {
         let message = reason ?? failedValidationMessage
         self.hideLoadingView({ [weak self] in
             self?.showAlertWithOk(title: self?.failedRegistrationTitle, message: message, actionHandler: nil)
@@ -57,7 +57,7 @@ extension SBAAccountStepController {
     /**
      Handle a failed registration or login step by displaying the bridge error message.
      */
-    func handleFailedRegistration(_ error: Error) {
+    public func handleFailedRegistration(_ error: Error) {
         let message = (error as NSError).localizedBridgeErrorMessage
         handleFailedValidation(message)
     }

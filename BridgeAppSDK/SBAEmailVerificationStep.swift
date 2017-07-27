@@ -53,7 +53,7 @@ open class SBAEmailVerificationStep: SBAInstructionStep, SBASharedInfoController
         commonInit()
     }
     
-    func commonInit() {
+    open func commonInit() {
         if self.title == nil {
             self.title = Localization.localizedString("VERIFICATION_STEP_TITLE")
         }
