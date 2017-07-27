@@ -40,7 +40,7 @@ import UIKit
     /**
      * The color of the link button
      */
-    @IBInspectable open var textColor : UIColor = UIColor.blueTintColor {
+    @IBInspectable open var textColor : UIColor = UIColor.underlinedButtonTextDark {
         didSet {
             refreshView()
         }
