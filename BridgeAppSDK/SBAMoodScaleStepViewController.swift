@@ -153,6 +153,10 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         self.goForward()
     }
     
+    open var nextTitle: String {
+        return self.continueButtonTitle ?? (self.hasNextStep() ? Localization.buttonNext() : Localization.buttonDone())
+    }
+    
     
     // MARK: Selection
     
@@ -283,6 +287,13 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         
         titleLabel?.text = self.step?.title
         textLabel?.text = self.step?.text
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Set the title for the next button
+        self.nextButton?.setTitle(nextTitle, for: .normal)
     }
     
     private var _isTruncated = false
