@@ -47,6 +47,13 @@ public enum SBAScheduledActivitySection {
     case comingUp
 }
 
+public enum SBAScheduleLoadState {
+    case firstLoad
+    case cachedLoad
+    case fromServerWithFutureOnly
+    case fromServerForFullDateRange
+}
+
 /**
  UI Delegate for the data source.
  */
@@ -125,14 +132,6 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open var daysBehind: Int!
     
     /**
-     Range of dates that have been loaded into the manager
-     */
-    public var loadedDateRange: (start: Date, end: Date)? {
-        return _loadedDateRange
-    }
-    private var _loadedDateRange: (start: Date, end: Date)?
-    
-    /**
      A predicate that can be used to evaluate whether or not a schedule should be included.
      This can include block predicates and is evaluated on a `SBBScheduledActivity` object.
      Default == `true`
@@ -155,43 +154,130 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     
     /**
+     Flush the loading state and data stored in memory.
+     */
+    open func resetData() {
+        _loadingState = .firstLoad
+        _loadingBlocked = false
+        self.activities.removeAll()
+    }
+    
+    /**
      Load a given range of schedules
      */
     open func loadScheduledActivities(from fromDate: Date, to toDate: Date) {
     
         // Exit early if already reloading activities. This can happen if the user flips quickly back and forth from
         // this tab to another tab.
-        if (reloading) { return }
-        reloading = true
+        if (_reloading) {
+            _loadingBlocked = true
+            return
+        }
+        _loadingBlocked = false
+        _reloading = true
         
-        SBABridgeManager.fetchScheduledActivities(from: fromDate, to: toDate) {
-            [weak self] (obj, error) in
-            
-            // if we're using BridgeSDK caching, obj can contain valid schedules even in case of network error
-            // if not, obj will be nil if error is not nil, so we don't need to check error
-            guard let scheduledActivities = obj as? [SBBScheduledActivity] else { return }
-            
-            let sortedActivies = scheduledActivities.sorted(by: { (scheduleA, scheduleB) -> Bool in
-                guard (scheduleA.scheduledOn != nil) && (scheduleB.scheduledOn != nil) else { return false }
-                return scheduleA.scheduledOn.compare(scheduleB.scheduledOn) == .orderedAscending
-            })
-            
-            let start: Date = {
-                guard let oldestDate = sortedActivies.first?.scheduledOn, oldestDate < fromDate else {
-                    return fromDate
-                }
-                return oldestDate
-            }()
-            
-            DispatchQueue.main.async(execute: {
-                self?._loadedDateRange = (start, toDate)
-                self?.load(scheduledActivities: scheduledActivities)
-                self?.reloading = false
-            })
+        if _loadingState == .firstLoad {
+            // If launching, then load from cache *first* before looking to the server
+            // This will ensure that the schedule loads quickly (if not first time) and
+            // will still load from server to get anything that may have changed dues to
+            // added schedules or whatnot. Note: for this project, this is not expected
+            // to yeild any different info, but the project could change. syoung 07/17/2017
+            _loadingState = .cachedLoad
+            SBABridgeManager.fetchAllCachedScheduledActivities() { [weak self] (obj, _) in
+                self?.handleLoadedActivities(obj as? [SBBScheduledActivity], from: fromDate, to: toDate)
+            }
+        }
+        else {
+            self.loadFromServer(from: fromDate, to: toDate)
         }
     }
-    fileprivate var reloading: Bool = false
-
+    
+    fileprivate func loadFromServer(from fromDate: Date, to toDate: Date) {
+        
+        var loadStart = fromDate
+        
+        // First load the future and *then* look to the server for the past schedules.
+        // This will result in a faster loading for someone who is logging in.
+        let todayStart = Date().startOfDay()
+        if shouldLoadFutureFirst && fromDate < todayStart && _loadingState == .cachedLoad {
+            _loadingState = .fromServerWithFutureOnly
+            loadStart = todayStart
+        }
+        else {
+            _loadingState = .fromServerForFullDateRange
+        }
+        
+        fetchScheduledActivities(from: loadStart, to: toDate) { [weak self] (activities, _) in
+            self?.handleLoadedActivities(activities, from: fromDate, to: toDate)
+        }
+    }
+    
+    fileprivate func handleLoadedActivities(_ scheduledActivities: [SBBScheduledActivity]?, from fromDate: Date, to toDate: Date) {
+        
+        if _loadingState == .firstLoad {
+            // If the loading state is first load then that means the data has been reset so we should ignore the response
+            _reloading = false
+            if _loadingBlocked {
+                loadScheduledActivities(from: fromDate, to: toDate)
+            }
+            return
+        }
+        
+        DispatchQueue.main.async {
+            if let scheduledActivities = self.sortActivities(scheduledActivities) {
+                self.load(scheduledActivities: scheduledActivities)
+            }
+            if self._loadingState == .fromServerForFullDateRange {
+                // If the loading state is for the full range, then we are done.
+                self._reloading = false
+            }
+            else {
+                // Otherwise, load more range from the server
+                self.loadFromServer(from: fromDate, to: toDate)
+            }
+        }
+    }
+    
+    fileprivate func fetchScheduledActivities(from fromDate: Date, to toDate: Date, completion: @escaping ([SBBScheduledActivity]?, Error?) -> Swift.Void) {
+        SBABridgeManager.fetchScheduledActivities(from: fromDate, to: toDate) {(obj, error) in
+            completion(obj as? [SBBScheduledActivity], error)
+        }
+    }
+    
+    open func sortActivities(_ scheduledActivities: [SBBScheduledActivity]?) -> [SBBScheduledActivity]? {
+        guard (scheduledActivities?.count ?? 0) > 0 else { return nil }
+        return scheduledActivities!.sorted(by: { (scheduleA, scheduleB) -> Bool in
+            guard (scheduleA.scheduledOn != nil) && (scheduleB.scheduledOn != nil) else { return false }
+            return scheduleA.scheduledOn.compare(scheduleB.scheduledOn) == .orderedAscending
+        })
+    }
+    
+    /**
+     When loading schedules, should the manager *first* load all the future schedules.
+     If true, this will result in a staged call to the server, where first, the future 
+     is loaded and then the server request is made to load past schedules. This will 
+     result in a faster loading but may result in undesired behavior for a manager
+     that relies upon the past results to build the displayed activities.
+     */
+    public var shouldLoadFutureFirst = true
+    
+    /**
+     State management for what the current loading state is.  This is used to
+     pre-load from cache before going to the server for updates.
+     */
+    public var loadingState: SBAScheduleLoadState {
+        return _loadingState
+    }
+    fileprivate var _loadingState: SBAScheduleLoadState = .firstLoad
+    
+    /**
+     State management for whether or not the schedules are reloading.
+     */
+    public var isReloading: Bool {
+        return _reloading
+    }
+    fileprivate var _reloading: Bool = false
+    fileprivate var _loadingBlocked: Bool = false
     
     // MARK: Data handling
     
@@ -214,10 +300,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         self.delegate?.reloadFinished(self)
         
         // preload all the surveys so that they can be accessed offline
-        for schedule in scheduledActivities {
-            if schedule.activity.survey != nil {
-                SBABridgeManager.loadSurvey(schedule.activity.survey, completion:{ (_, _) in
-                })
+        if _loadingState == .fromServerForFullDateRange {
+            for schedule in scheduledActivities {
+                if schedule.activity.survey != nil {
+                    SBABridgeManager.loadSurvey(schedule.activity.survey, completion:{ (_, _) in
+                    })
+                }
             }
         }
     }
