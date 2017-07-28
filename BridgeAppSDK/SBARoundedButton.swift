@@ -36,7 +36,8 @@
 import UIKit
 
 public let SBARoundedButtonDefaultHeight: CGFloat = 52.0
-public let SBARoundedButtonDefaultWidth: CGFloat = 144.0
+public let SBARoundedButtonDefaultWidthWith2Buttons: CGFloat = 144.0
+public let SBARoundedButtonDefaultWidthWith1Button: CGFloat = 250.0
 public let SBARoundedButtonDefaultCornerRadius: CGFloat = SBARoundedButtonDefaultHeight / 2
 
 @IBDesignable open class SBARoundedButton : UIButton, ORKButton {
@@ -79,7 +80,16 @@ public let SBARoundedButtonDefaultCornerRadius: CGFloat = SBARoundedButtonDefaul
     }
     
     public required init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 250, height: 51))
+        super.init(frame: CGRect(x: 0, y: 0, width: SBARoundedButtonDefaultWidthWith1Button, height: SBARoundedButtonDefaultHeight))
+        commonConstraintSetup(1)
+    }
+    
+    public init(numberOfButtons: Int) {
+        super.init(frame: CGRect(x: 0, y: 0, width: SBARoundedButtonDefaultWidthWith2Buttons, height: SBARoundedButtonDefaultHeight))
+        commonConstraintSetup(numberOfButtons)
+    }
+    
+    func commonConstraintSetup(_ numberOfButtons: Int) {
         
         // setup colors
         self.backgroundColor = UIColor.roundedButtonBackgroundDark
@@ -98,8 +108,9 @@ public let SBARoundedButtonDefaultCornerRadius: CGFloat = SBARoundedButtonDefaul
         heightConstraint.priority = 950
         
         // Add minimum constraint for width
+        let desiredWidth = (numberOfButtons == 1) ? SBARoundedButtonDefaultWidthWith1Button : SBARoundedButtonDefaultWidthWith2Buttons;
         let minWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1.0, constant: 144)
-        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: SBARoundedButtonDefaultWidth)
+        let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: desiredWidth)
         widthConstraint.priority = 950
         
         self.addConstraints([heightConstraint, minWidthConstraint, widthConstraint])
