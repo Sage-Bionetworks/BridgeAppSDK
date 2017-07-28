@@ -476,7 +476,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         }
         
         // If this is a permissions step then return a page step view controller instead.
-        // This will display a paged view controller. Including at this level b/c we are trying to keep 
+        // This will display a paged view controller. Including at this level b/c we are trying to keep
         // ResearchUXFactory agnostic to the UI that Sage uses for our apps.  syoung 05/30/2017
         if step is SBAPermissionsStep {
             return ORKPageStepViewController(step: step)
