@@ -380,7 +380,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         if step.stepViewControllerClass() == ORKInstructionStepViewController.self, let task = taskViewController.task {
             return instantiateInstructionStepViewController(for: step, task: task, result: taskViewController.result)
         }
-        
+
         // If the default view controller for this step is an `ORKCompletionStepViewController` (and not a subclass)
         // then replace that implementation with the one from this framework.
         if step.stepViewControllerClass() == ORKCompletionStepViewController.self, let task = taskViewController.task {
