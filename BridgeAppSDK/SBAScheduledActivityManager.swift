@@ -190,7 +190,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             })
         }
     }
-    fileprivate var reloading: Bool = false
+    public var reloading: Bool = false
 
     
     // MARK: Data handling
