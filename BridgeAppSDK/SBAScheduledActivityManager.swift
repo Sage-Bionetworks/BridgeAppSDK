@@ -319,6 +319,16 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      @return                            The filtered list of activities
      */
     open func filteredSchedules(scheduledActivities: [SBBScheduledActivity]) -> [SBBScheduledActivity] {
+        if _loadingState == .fromServerWithFutureOnly {
+            // The future only will be in a state where we already have the cached data,
+            // And we will probably just be appending new data onto the cached data
+            let filteredActivities = scheduledActivities.filter({ (activity) in
+                return !self.activities.contains(where: { (existingActivity) -> Bool in
+                    return existingActivity.guid == activity.guid
+                })
+            })
+            return self.activities.appending(contentsOf: filteredActivities)
+        }
         return scheduledActivities.filter({ (schedule) -> Bool in
             return bridgeInfo.taskReferenceForSchedule(schedule) != nil &&
                 self.scheduleFilterPredicate.evaluate(with: schedule)
