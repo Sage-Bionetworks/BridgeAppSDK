@@ -86,6 +86,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     var originalResult: ORKStepResult!
     var userHasContinued = false
     
+    private var activeTextField: UITextField?
     
     var tableViewInsetBottom: CGFloat {
         get {
@@ -682,11 +683,12 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 
                 let answerFormat = tableItem?.formItem?.answerFormat?.implied()
                 let type = answerFormat?.questionType
-
+                
                 // set keyboard type
                 if let textAnswerFormat = answerFormat as? ORKTextAnswerFormat {
                     // use the keyboard type defined for this step
                     fieldCell.textField.keyboardType = textAnswerFormat.keyboardType
+                    fieldCell.textField.isSecureTextEntry = textAnswerFormat.isSecureTextEntry
                 }
                 else {
                     // use the keyboard type appropriate for the questionType
@@ -778,16 +780,30 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        guard let customField = textField as? SBAStepTextField else { return }
+        activeTextField = textField
+        scroll(to: textField)
         
-        savedVerticalScrollOffet = tableView!.contentOffset.y
-        tableView?.scrollToRow(at: customField.indexPath!, at: .bottom, animated: true)
+//        guard let customField = textField as? SBAStepTextField else { return }
+//        
+//        savedVerticalScrollOffet = tableView!.contentOffset.y
+//        tableView?.scrollToRow(at: customField.indexPath!, at: .middle, animated: true)
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
         
+        // clear the activeTextField if this is that textField
+        if textField === activeTextField {
+            activeTextField = nil
+        }
+        
         // scroll back to our saved offset
         tableView?.setContentOffset(CGPoint(x: 0.0, y: savedVerticalScrollOffet), animated: true)
+    }
+    
+    func scroll(to textField: UITextField?) {
+        guard let customField = textField as? SBAStepTextField else { return }
+        savedVerticalScrollOffet = tableView!.contentOffset.y
+        tableView?.scrollToRow(at: customField.indexPath!, at: .middle, animated: true)
     }
     
     
@@ -877,12 +893,16 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             var contentInset = tableView?.contentInset
             contentInset!.bottom = endFrame!.size.height + constants().mainViewBottomMargin
             tableView!.contentInset = contentInset!
+            
         }
-        UIView.animate(withDuration: duration,
-                       delay: TimeInterval(0),
-                       options: animationCurve,
-                       animations: { self.view.layoutIfNeeded() },
-                       completion: nil)
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: {
+            // animate our updates
+            self.view.layoutIfNeeded()
+        }) { (finished: Bool) in
+            // need to scroll the tableView to the active textField since our tableView bounds have changed
+            self.scroll(to: self.activeTextField)
+        }
     }
     
     // MARK: SBAGenericStepDataSource delegate
