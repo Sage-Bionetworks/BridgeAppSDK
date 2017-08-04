@@ -277,6 +277,29 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
     }
     
+    override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // If the first row in our tableView has a textField, we want it to become the first responder
+        // automatically. So, first see if our first row has a textField.
+        
+        guard let tableView = tableView,
+            let firstCell = tableView.visibleCells.first,
+            let textFieldCell = firstCell as? SBAStepTextFieldCell else {
+                return
+        }
+        
+        // Our first row is a textField, so tell it to become firstResponder. We must do this after a delay
+        // because of how ORKTaskViewController presents these step view controllers, which is done via a
+        // UIPageViewController. Without the delay, the textField will NOT become the firstResponder. Use a
+        // 0.3 seconds delay to give transitions and animations plenty of time to complete.
+        
+        let delay = DispatchTime.now() + .milliseconds(300)
+        DispatchQueue.main.asyncAfter(deadline: delay) {
+            textFieldCell.textField.becomeFirstResponder()
+        }
+    }
+
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
