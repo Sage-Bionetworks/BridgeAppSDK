@@ -198,8 +198,8 @@
      },
      {
          "sectionType" : "dataSharing",
-         "sectionTitle": "Sharable Data",
-         "sectionSummary": "Only coded study data are sharable. Coded study data do not include your name or email address. A random code is used instead.",
+         "sectionTitle": "Shareable Data",
+         "sectionSummary": "Only coded study data are shareable. Coded study data do not include your name or email address. A random code is used instead.",
          "sectionHtmlContent" : "consent_17data_sharing",
      },
      {
