@@ -686,9 +686,12 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 
                 // set keyboard type
                 if let textAnswerFormat = answerFormat as? ORKTextAnswerFormat {
-                    // use the keyboard type defined for this step
+                    // use the keyboard properties defined for this step
                     fieldCell.textField.keyboardType = textAnswerFormat.keyboardType
                     fieldCell.textField.isSecureTextEntry = textAnswerFormat.isSecureTextEntry
+                    fieldCell.textField.autocapitalizationType = textAnswerFormat.autocapitalizationType
+                    fieldCell.textField.autocorrectionType = textAnswerFormat.autocorrectionType
+                    fieldCell.textField.spellCheckingType = textAnswerFormat.spellCheckingType
                 }
                 else {
                     // use the keyboard type appropriate for the questionType
@@ -782,11 +785,6 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         
         activeTextField = textField
         scroll(to: textField)
-        
-//        guard let customField = textField as? SBAStepTextField else { return }
-//        
-//        savedVerticalScrollOffet = tableView!.contentOffset.y
-//        tableView?.scrollToRow(at: customField.indexPath!, at: .middle, animated: true)
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
