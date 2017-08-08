@@ -88,7 +88,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     // We use a flag to track whether viewWillDisappear has been called because we run a check on
     // viewDidAppear to see if we have any textFields in the tableView. This check is done after a delay,
     // so we need to track if viewWillDisappear was called during the delay
-    var isViewDisappearing = false
+    var isVisible = false
     
     var tableViewInsetBottom: CGFloat {
         get {
@@ -255,7 +255,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         tableView?.endEditing(false)
         
         // track that viewWillDisappear was called
-        isViewDisappearing = true
+        isVisible = false
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -283,7 +283,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
         
         // reset our flag that tracks whether viewWillDisappear was called
-        isViewDisappearing = false
+        isVisible = true
     }
     
     override open func viewDidAppear(_ animated: Bool) {
@@ -354,7 +354,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     func checkForFirstCellTextField() {
         
         // Don't do anything if viewWillDisappear was called
-        guard isViewDisappearing == false else { return }
+        guard isVisible else { return }
         
         // If the first row in our tableView has a textField, we want it to become the first responder
         // automatically. So, first see if our first row has a textField.
