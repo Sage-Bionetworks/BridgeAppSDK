@@ -289,7 +289,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         // need to save height of our nav view so it can be used to calculate the bottom inset (margin)
         navigationViewHeight = navigationView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
         
-        let totalHeight = tableView.contentSize.height + navigationViewHeight
+        let totalHeight = tableView.contentSize.height + tableView.contentInset.top + navigationViewHeight
         let contentSizeExceedsTableHeight = totalHeight > tableView.frame.size.height
         
         if !useStickyNavView && contentSizeExceedsTableHeight {
@@ -860,7 +860,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     open func updateShadows() {
         guard let navigationView = navigationView else { return }
-        let maxY = tableView!.contentSize.height + tableView!.contentInset.top - (tableView!.bounds.size.height - navigationView.bounds.size.height)
+        let maxY = tableView!.contentSize.height - (tableView!.bounds.size.height - navigationView.bounds.size.height)
         navigationView.shouldShowShadow = tableView!.contentOffset.y < maxY
     }
 
