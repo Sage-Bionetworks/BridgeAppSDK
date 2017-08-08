@@ -848,7 +848,6 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         guard let navigationView = navigationView else { return }
         let maxY = tableView!.contentSize.height - (tableView!.bounds.size.height - navigationView.bounds.size.height)
         navigationView.shouldShowShadow = tableView!.contentOffset.y < maxY
-        print("max: " + String(describing: maxY) + ", offset" + String(describing: tableView!.contentOffset.y) )
     }
 
     
