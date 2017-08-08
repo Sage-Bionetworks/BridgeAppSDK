@@ -85,6 +85,8 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     var originalResult: ORKStepResult!
     var userHasContinued = false
     
+    private var activeTextField: UITextField?
+    
     // We use a flag to track whether viewWillDisappear has been called because we run a check on
     // viewDidAppear to see if we have any textFields in the tableView. This check is done after a delay,
     // so we need to track if viewWillDisappear was called during the delay
@@ -311,7 +313,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         // need to save height of our nav view so it can be used to calculate the bottom inset (margin)
         navigationViewHeight = navigationView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
         
-        let totalHeight = tableView.contentSize.height + navigationViewHeight
+        let totalHeight = tableView.contentSize.height + tableView.contentInset.top + navigationViewHeight
         let contentSizeExceedsTableHeight = totalHeight > tableView.frame.size.height
         
         if !useStickyNavView && contentSizeExceedsTableHeight {
@@ -722,11 +724,15 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 
                 let answerFormat = tableItem?.formItem?.answerFormat?.implied()
                 let type = answerFormat?.questionType
-
+                
                 // set keyboard type
                 if let textAnswerFormat = answerFormat as? ORKTextAnswerFormat {
-                    // use the keyboard type defined for this step
+                    // use the keyboard properties defined for this step
                     fieldCell.textField.keyboardType = textAnswerFormat.keyboardType
+                    fieldCell.textField.isSecureTextEntry = textAnswerFormat.isSecureTextEntry
+                    fieldCell.textField.autocapitalizationType = textAnswerFormat.autocapitalizationType
+                    fieldCell.textField.autocorrectionType = textAnswerFormat.autocorrectionType
+                    fieldCell.textField.spellCheckingType = textAnswerFormat.spellCheckingType
                 }
                 else {
                     // use the keyboard type appropriate for the questionType
@@ -818,16 +824,25 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        guard let customField = textField as? SBAStepTextField else { return }
-        
-        savedVerticalScrollOffet = tableView!.contentOffset.y
-        tableView?.scrollToRow(at: customField.indexPath!, at: .bottom, animated: true)
+        activeTextField = textField
+        scroll(to: textField)
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
         
+        // clear the activeTextField if this is that textField
+        if textField === activeTextField {
+            activeTextField = nil
+        }
+        
         // scroll back to our saved offset
         tableView?.setContentOffset(CGPoint(x: 0.0, y: savedVerticalScrollOffet), animated: true)
+    }
+    
+    func scroll(to textField: UITextField?) {
+        guard let customField = textField as? SBAStepTextField else { return }
+        savedVerticalScrollOffet = tableView!.contentOffset.y
+        tableView?.scrollToRow(at: customField.indexPath!, at: .middle, animated: true)
     }
     
     
@@ -886,7 +901,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     open func updateShadows() {
         guard let navigationView = navigationView else { return }
-        let maxY = tableView!.contentSize.height + tableView!.contentInset.top - (tableView!.bounds.size.height - navigationView.bounds.size.height)
+        let maxY = tableView!.contentSize.height - (tableView!.bounds.size.height - navigationView.bounds.size.height)
         navigationView.shouldShowShadow = tableView!.contentOffset.y < maxY
     }
 
@@ -917,12 +932,16 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             var contentInset = tableView?.contentInset
             contentInset!.bottom = endFrame!.size.height + constants().mainViewBottomMargin
             tableView!.contentInset = contentInset!
+            
         }
-        UIView.animate(withDuration: duration,
-                       delay: TimeInterval(0),
-                       options: animationCurve,
-                       animations: { self.view.layoutIfNeeded() },
-                       completion: nil)
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: {
+            // animate our updates
+            self.view.layoutIfNeeded()
+        }) { (finished: Bool) in
+            // need to scroll the tableView to the active textField since our tableView bounds have changed
+            self.scroll(to: self.activeTextField)
+        }
     }
     
     // MARK: SBAGenericStepDataSource delegate
