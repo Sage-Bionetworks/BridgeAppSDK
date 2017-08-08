@@ -97,17 +97,31 @@ open class SBAStepHeaderView: UIView {
         }
     }
     
+    private var _customView: UIView? {
+        didSet {
+            if let customView = _customView {
+                self.addSubview(customView)
+                setNeedsUpdateConstraints()
+            }
+        }
+    }
+    
     /**
      An optional view that can be included. It is shown directly below the detailsLabel
      and above the learnMoreButton. This view can be provided by subclasses in the initializeViews()
      method or assigned later.
      */
     open var customView: UIView? {
-        didSet {
-            if customView != nil {
-                self.addSubview(customView!)
+        get {
+            return _customView
+        }
+        set {
+            if let customView = customView {
+                // if we already have a customView, we need to remove it from its superview
+                customView.removeFromSuperview()
                 setNeedsUpdateConstraints()
             }
+            _customView = newValue
         }
     }
     
