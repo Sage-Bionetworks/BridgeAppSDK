@@ -82,6 +82,61 @@ open class SBABrainBaselineStep: ORKStep {
     
 }
 
+extension UIInterfaceOrientationMask {
+    func includes(orientation: UIInterfaceOrientation) -> Bool {
+        switch self {
+        case UIInterfaceOrientationMask.portrait:
+            return orientation == .portrait
+            
+        case UIInterfaceOrientationMask.portraitUpsideDown:
+            return orientation == .portraitUpsideDown
+            
+        case UIInterfaceOrientationMask.landscape:
+            let orientations: [UIInterfaceOrientation] = [.landscapeLeft, .landscapeRight]
+            return orientations.contains(orientation)
+            
+        case UIInterfaceOrientationMask.landscapeLeft:
+            return orientation == .landscapeLeft
+            
+        case UIInterfaceOrientationMask.landscapeRight:
+            return orientation == .landscapeRight
+            
+        case UIInterfaceOrientationMask.allButUpsideDown:
+            let orientations: [UIInterfaceOrientation] = [.landscapeLeft, .landscapeRight, .portrait]
+            return orientations.contains(orientation)
+
+        default:
+            return true
+        }
+    }
+    
+    func forcedOrientation(for orientation: UIInterfaceOrientation) -> UIInterfaceOrientation? {
+        guard !self.includes(orientation: orientation) else { return nil }
+        switch self {
+        case UIInterfaceOrientationMask.portrait:
+            return .portrait
+            
+        case UIInterfaceOrientationMask.portraitUpsideDown:
+            return .portraitUpsideDown
+            
+        case UIInterfaceOrientationMask.allButUpsideDown:
+            return .landscapeLeft
+            
+        case UIInterfaceOrientationMask.landscape:
+            return orientation == .portrait ? .landscapeRight : .landscapeLeft
+            
+        case UIInterfaceOrientationMask.landscapeRight:
+            return .landscapeRight
+            
+        case UIInterfaceOrientationMask.landscapeLeft:
+            return .landscapeLeft
+            
+        default:
+            return nil
+        }
+    }
+}
+
 open class SBABrainBaselineStepViewController: ORKStepViewController {
     
     open class var nibName: String {
@@ -136,8 +191,12 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // hack to force it back to portrait before going forward
-        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        // hack to force orientation to a default allowed value before going forward
+        if let defaultMask = (UIApplication.shared.delegate as? SBAAppDelegate)?.defaultOrientationLock,
+            let forcedOrientation = defaultMask.forcedOrientation(for: UIApplication.shared.statusBarOrientation)
+            {
+                UIDevice.current.setValue(forcedOrientation.rawValue, forKey: "orientation")
+        }
         
         // Note: syoung 07/11/2017 This method is called *after* the OS sets up to dismiss the view
         // so also need to reset in the scheduled activity manager. (belt + suspenders)
@@ -150,15 +209,15 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
         
         // If the phone is not already in landscape mode, wait until it is before pushing the Brain Baseline
         // view controller. Otherwise just go for it.
-        let orientation = UIDevice.current.orientation;
-        if (!(orientation == UIDeviceOrientation.landscapeLeft || orientation == UIDeviceOrientation.landscapeRight)) {
+        let orientation = UIApplication.shared.statusBarOrientation
+        if (!(orientation == UIInterfaceOrientation.landscapeLeft || orientation == UIInterfaceOrientation.landscapeRight)) {
             instructionLabel.text = self.step?.text
             self.rotationObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIDeviceOrientationDidChange, object: nil, queue: OperationQueue.main, using: { (notification) in
                 
                 // If the new orientation is landscape mode, remove the notification observer and push the Brain
                 // Baseline view controller. Otherwise keep waiting.
-                let orientation = UIDevice.current.orientation;
-                if (orientation == UIDeviceOrientation.landscapeLeft || orientation == UIDeviceOrientation.landscapeRight) {
+                let orientation = UIApplication.shared.statusBarOrientation
+                if (orientation == UIInterfaceOrientation.landscapeLeft || orientation == UIInterfaceOrientation.landscapeRight) {
                     self.removeRotationObserver()
                     self.deviceDidRotate()
                 }
