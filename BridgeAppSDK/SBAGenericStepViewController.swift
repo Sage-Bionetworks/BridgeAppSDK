@@ -79,13 +79,16 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     open var headerView: SBAStepHeaderView?
     open var navigationView: SBAStepNavigationView?
     
-    // we keep a copy of the original result after initialization so we can return that if the user
+    // We keep a copy of the original result after initialization so we can return that if the user
     // does not continue to the next step instead of returning any answers they might have given before
     // closing or cancelling
-    
     var originalResult: ORKStepResult!
     var userHasContinued = false
     
+    // We use a flag to track whether viewWillDisappear has been called because we run a check on
+    // viewDidAppear to see if we have any textFields in the tableView. This check is done after a delay,
+    // so we need to track if viewWillDisappear was called during the delay
+    var isViewDisappearing = false
     
     var tableViewInsetBottom: CGFloat {
         get {
@@ -250,6 +253,9 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         
         // Dismiss all textField's keyboard
         tableView?.endEditing(false)
+        
+        // track that viewWillDisappear was called
+        isViewDisappearing = true
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -275,28 +281,22 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         if let headerView = headerView {
             headerView.learnMoreButton.setTitle(learnMoreButtonTitle ?? Localization.buttonLearnMore(), for: .normal)
         }
+        
+        // reset our flag that tracks whether viewWillDisappear was called
+        isViewDisappearing = false
     }
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // If the first row in our tableView has a textField, we want it to become the first responder
-        // automatically. So, first see if our first row has a textField.
-        
-        guard let tableView = tableView,
-            let firstCell = tableView.visibleCells.first,
-            let textFieldCell = firstCell as? SBAStepTextFieldCell else {
-                return
-        }
-        
-        // Our first row is a textField, so tell it to become firstResponder. We must do this after a delay
-        // because of how ORKTaskViewController presents these step view controllers, which is done via a
-        // UIPageViewController. Without the delay, the textField will NOT become the firstResponder. Use a
-        // 0.3 seconds delay to give transitions and animations plenty of time to complete.
+        // If the first row in our tableView has a textField, we want it to become the first responder automatically.
+        // We must do this after a delay because of how ORKTaskViewController presents these step view controllers, 
+        // which is done via a UIPageViewController. Without the delay, the textField will NOT become the firstResponder. 
+        // Use a 0.3 seconds delay to give transitions and animations plenty of time to complete.
         
         let delay = DispatchTime.now() + .milliseconds(300)
         DispatchQueue.main.asyncAfter(deadline: delay) {
-            textFieldCell.textField.becomeFirstResponder()
+            self.checkForFirstCellTextField()
         }
     }
 
@@ -349,6 +349,23 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         var inset = tableView.contentInset
         inset.bottom = tableViewInsetBottom
         tableView.contentInset = inset
+    }
+    
+    func checkForFirstCellTextField() {
+        
+        // Don't do anything if viewWillDisappear was called
+        guard isViewDisappearing == false else { return }
+        
+        // If the first row in our tableView has a textField, we want it to become the first responder
+        // automatically. So, first see if our first row has a textField.
+        guard let tableView = tableView,
+            let firstCell = tableView.visibleCells.first,
+            let textFieldCell = firstCell as? SBAStepTextFieldCell else {
+                return
+        }
+        
+        // Our first row is a textField, so tell it to become firstResponder.
+        textFieldCell.textField.becomeFirstResponder()
     }
     
     // MARK: Model setup
