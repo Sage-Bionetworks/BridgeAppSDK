@@ -171,6 +171,20 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
         self.schemaRevision = aDecoder.decodeObject(forKey: "schemaRevision") as? NSNumber
         super.init()
     }
+    
+    /**
+     @param step, the step you are currently on in the survey task
+     @return a rough estimate of the progress from 0.0 to 1.0 that the step is through the task
+             the progress will be slightly off due to conditional step jumping
+             but is still useful when the result of self.progress(step:result:) 
+             is returning 0, 0 for ORKTaskResultProgress
+     */
+    public func roughEstimatedProgress(for step: ORKStep) -> ORKTaskProgress? {
+        guard let surveyUnwrapped = self.survey else {
+            return nil
+        }
+        return ORKTaskProgress(current: surveyUnwrapped.index(of: step), total: UInt(surveyUnwrapped.steps.count))
+    }
 
     // MARK: Equality
     
