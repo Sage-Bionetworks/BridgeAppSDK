@@ -42,6 +42,11 @@ import UIKit
 
 open class SBAStepProgressView: UIView {
     
+    // These can be used to set the global color for the progress bar
+    // If you want a different individual color per progress view, you will need to subclass
+    open static var progressColor = UIColor.headerViewProgressBar
+    open static var progressBackgroundColor = UIColor.headerViewProgressBackground
+    
     /**
      The current step in the current flow
      */
@@ -121,8 +126,8 @@ open class SBAStepProgressView: UIView {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         stepCountLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundView.backgroundColor = UIColor.headerViewProgressBackground
-        progressView.backgroundColor = UIColor.headerViewProgressBar
+        backgroundView.backgroundColor = SBAStepProgressView.progressBackgroundColor
+        progressView.backgroundColor = SBAStepProgressView.progressColor
         
         stepCountLabel.font = UIFont.headerViewStepCountLabel
         stepCountLabel.numberOfLines = 1
