@@ -126,8 +126,8 @@ open class SBAStepProgressView: UIView {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         stepCountLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundView.backgroundColor = SBAStepProgressView.progressBackgroundColor
-        progressView.backgroundColor = SBAStepProgressView.progressColor
+        backgroundView.backgroundColor = type(of: self).progressBackgroundColor
+        progressView.backgroundColor = type(of: self).progressColor
         
         stepCountLabel.font = UIFont.headerViewStepCountLabel
         stepCountLabel.numberOfLines = 1
