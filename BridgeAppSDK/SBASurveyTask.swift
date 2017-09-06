@@ -43,7 +43,7 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
     open var title: String?
     open var schemaRevision: NSNumber?
     
-    fileprivate var survey: ORKOrderedTask?
+    public private(set) var survey: ORKOrderedTask?
     
     public var error: Error? {
         return _error
