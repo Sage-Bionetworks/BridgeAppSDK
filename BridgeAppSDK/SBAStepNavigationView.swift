@@ -109,7 +109,14 @@ open class SBAStepNavigationView: UIView {
      */
     open func initializeViews() {
         previousButton = SBARoundedButton()
-        nextButton = SBARoundedButton()
+
+        // Use the default customContinueButtonClass if it is available
+        if let buttonClass = ORKStepViewController.customContinueButtonClass() as? UIButton.Type {
+            nextButton = buttonClass.init()
+        } else {
+            nextButton = SBARoundedButton()
+        }
+        
         shadowView = SBAShadowGradient()
     }
     
