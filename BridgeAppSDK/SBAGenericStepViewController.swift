@@ -82,7 +82,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     // We keep a copy of the original result after initialization so we can return that if the user
     // does not continue to the next step instead of returning any answers they might have given before
     // closing or cancelling
-    var originalResult: ORKStepResult!
+    public private(set) var originalResult: ORKStepResult!
     var userHasContinued = false
     
     private var activeTextField: UITextField?
