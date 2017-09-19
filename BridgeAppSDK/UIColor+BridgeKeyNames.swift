@@ -49,6 +49,18 @@ extension UIColor {
         return UIColor.greenTintColor
     }
     
+    open class var appCrosshatchLight: UIColor {
+        return UIColor.appBackgroundLight.withAlphaComponent(0.3)
+    }
+    
+    open class var appCrosshatchDark: UIColor {
+        return UIColor.appBackgroundDark.withAlphaComponent(0.3)
+    }
+    
+    open class var appCrosshatchGreen: UIColor {
+        return UIColor.appBackgroundGreen.withAlphaComponent(0.3)
+    }
+    
     
     // MARK: App text - default colors
     
