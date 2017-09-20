@@ -469,8 +469,9 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         if step.stepViewControllerClass() == ORKInstructionStepViewController.self,
             let task = taskViewController.task as? ORKOrderedTask, task.index(of: step) == 0,
             let schedule = self.scheduledActivity(for: taskViewController),
-            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule) {
-            return instantiateActivityIntroductionStepViewController(for: schedule, step: step, taskRef: taskRef)
+            let taskRef = bridgeInfo.taskReferenceForSchedule(schedule),
+            let vc = instantiateActivityIntroductionStepViewController(for: schedule, step: step, taskRef: taskRef) {
+            return vc
         }
         
         // If the default view controller for this step is an `ORKInstructionStepViewController` (and not a subclass)
