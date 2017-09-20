@@ -121,7 +121,7 @@ extension SBAActiveTask {
         return SBANavigableOrderedTask(identifier: orderedTask.identifier, steps: steps)
     }
     
-    func replaceCardioStepIfNeeded(_ step:ORKStep) -> ORKStep {
+    public func replaceCardioStepIfNeeded(_ step:ORKStep) -> ORKStep {
         guard let identifier = BridgeCardioChallengeStepIdentifier(rawValue: step.identifier)
         else {
             return step
@@ -149,7 +149,7 @@ extension SBAActiveTask {
         }
     }
     
-    func replaceInstructionStep(_ step: ORKStep, imageNamed: String?) -> SBAInstructionStep {
+    public func replaceInstructionStep(_ step: ORKStep, imageNamed: String?) -> SBAInstructionStep {
         let instructionStep = SBAInstructionStep(identifier: step.identifier)
         instructionStep.title = step.title
         instructionStep.text = step.text
