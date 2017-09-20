@@ -123,6 +123,7 @@
 		FF7601C41EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */; };
 		FF7601C61EE7DB6300438F08 /* cardio.json in Resources */ = {isa = PBXBuildFile; fileRef = FF7601C51EE7DB6300438F08 /* cardio.json */; };
 		FF7602531EE9357300438F08 /* SBAInstructionBelowImageStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */; };
+		FF77525D1F71A0A8004925B8 /* SBACrosshatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF77525C1F71A0A7004925B8 /* SBACrosshatchView.swift */; };
 		FF78CEF61D00B5C4002C456D /* consent_1welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CEF81D00B5C4002C456D /* consent_1welcome.html */; };
 		FF78CF101D00B617002C456D /* consent_2quiz_headsup.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF121D00B617002C456D /* consent_2quiz_headsup.html */; };
 		FF78CF131D00B620002C456D /* consent_3activities.html in Resources */ = {isa = PBXBuildFile; fileRef = FF78CF151D00B620002C456D /* consent_3activities.html */; };
@@ -571,6 +572,7 @@
 		FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+CardioChallenge.swift"; sourceTree = "<group>"; };
 		FF7601C51EE7DB6300438F08 /* cardio.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cardio.json; sourceTree = "<group>"; };
 		FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAInstructionBelowImageStep.swift; sourceTree = "<group>"; };
+		FF77525C1F71A0A7004925B8 /* SBACrosshatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBACrosshatchView.swift; sourceTree = "<group>"; };
 		FF78CEF71D00B5C4002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_1welcome.html; sourceTree = "<group>"; };
 		FF78CF111D00B617002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_2quiz_headsup.html; sourceTree = "<group>"; };
 		FF78CF141D00B620002C456D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/consent_3activities.html; sourceTree = "<group>"; };
@@ -1114,6 +1116,7 @@
 				03D5F9971F13D43800C40FF5 /* UIView+Layout.swift */,
 				03D5F9B31F13D5D200C40FF5 /* NSLayoutConstraint+setMultiplier.swift */,
 				FFADF32A1EE61961005F7E1D /* SBAProgressView.swift */,
+				FF77525C1F71A0A7004925B8 /* SBACrosshatchView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1924,6 +1927,7 @@
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
 				FF1B89901EE768E900A96DAE /* SBAMoodScaleStepViewController.swift in Sources */,
 				FF92A6441DBFE16C00614D1F /* SBALearnInfo.swift in Sources */,
+				FF77525D1F71A0A8004925B8 /* SBACrosshatchView.swift in Sources */,
 				FF14A0C71E984D3E007BB710 /* SBAOnboardingTableRow.swift in Sources */,
 				FF14A0C91E984D72007BB710 /* SBAOnboardingTableHeader.swift in Sources */,
 				FF5051D51D6653670065E677 /* SBAOnboardingCompleteStep.swift in Sources */,
