@@ -92,6 +92,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     }
     fileprivate var _user: SBAUserWrapper!
     
+    /**
+     This closure will be non-nil when notifyWhenTaskIsAvailable is called and we
+     are waiting for a certain task to become available
+    */
+    fileprivate var notifyTaskAvailableId: String?
+    fileprivate var notifyTaskAvailableClosure: (() -> Void)?
     
     // MARK: initializers
     
@@ -225,6 +231,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         
         DispatchQueue.main.async {
             if let scheduledActivities = self.sortActivities(scheduledActivities) {
+                debugPrint("loaded activities with state \(self._loadingState)")
                 self.load(scheduledActivities: scheduledActivities)
             }
             if self._loadingState == .fromServerForFullDateRange {
@@ -234,6 +241,12 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             else {
                 // Otherwise, load more range from the server
                 self.loadFromServer(from: fromDate, to: toDate)
+            }
+            
+            // If we were waiting for a task to become available, see if it is now
+            if let notifyTaskId = self.notifyTaskAvailableId,
+                let notifyClosure = self.notifyTaskAvailableClosure {
+                self.notifyWhenTaskIsAvailable(taskId: notifyTaskId, callback: notifyClosure)
             }
         }
     }
@@ -1076,6 +1089,25 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         }
     }
     
+    /**
+     If the task is available right away, the callback will be invoked
+     Otherwise, we will save the callback to be executed later when today's task is available
+    */
+    public func notifyWhenTaskIsAvailable(taskId: String, callback: @escaping () -> Void) {
+        self.notifyTaskAvailableId = taskId
+        self.notifyTaskAvailableClosure = callback
+        
+        let taskAvailablePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [SBBScheduledActivity.includeTasksPredicate(with: [taskId]),
+             SBBScheduledActivity.availableTodayPredicate()])
+        let isTaskAvailable = self.activities.contains { (schedule) -> Bool in
+            return taskAvailablePredicate.evaluate(with: schedule)
+        }
+        if isTaskAvailable {
+            self.notifyTaskAvailableClosure!()
+            self.notifyTaskAvailableId = nil
+            self.notifyTaskAvailableClosure = nil
+        }
+    }
 }
 
 extension ORKTask {
