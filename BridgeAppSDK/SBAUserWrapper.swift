@@ -121,7 +121,10 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
 extension SBAUserWrapper {
     
     public var appDelegate: SBABridgeAppSDKDelegate? {
-        return UIApplication.shared.delegate as? SBABridgeAppSDKDelegate
+        // emm 2017-09-28 This hack is necessary because as of Xcode 9/iOS 11 SDK, attempting to
+        // access the UIApplication.shared.delegate from other than the main thread causes
+        // an assert to fail.
+        return SBAUser.mainQueueAppDelegate
     }
     
     // With Xcode 8 and iOS 10, the keychain entitlement is required and is *not* reverse-compatible

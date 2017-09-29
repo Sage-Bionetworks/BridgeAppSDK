@@ -88,6 +88,9 @@ public let SBAMainStoryboardName = "Main"
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
         
+        // emm 2017-09-28 Hack to make sure SBAUser has the app delegate available for later use off the main queue,
+        // no matter where in the app that happens. See related hack comments in SBAUser.swift and SBAUserWrapper.swift.
+        let _ = SBAUser.mainQueueAppDelegate
         self.resetUserDataIfLoggedOut()
         self.initializeBridgeServerConnection()
         BridgeSDK.setErrorUIDelegate(self)
