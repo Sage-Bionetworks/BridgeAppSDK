@@ -136,6 +136,19 @@ open class SBAActivityInstructionStepViewController: ORKStepViewController, UITe
         
         self.textView?.textColor = UIColor.appTextDark
         self.textView?.textContainerInset = UIEdgeInsets(top: 39, left: 43, bottom: 20, right: 43)
+        
+        // for iPad, increase text font sizes by 50%
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            if let titleFont = self.titleLabel?.font {
+                self.titleLabel!.font = titleFont.withSize(titleFont.pointSize * 1.5)
+            }
+            if let subtitleFont = self.subtitleLabel?.font {
+                self.subtitleLabel!.font = subtitleFont.withSize(subtitleFont.pointSize * 1.5)
+            }
+            if let textFont = self.textView?.font {
+                self.textView!.font = textFont.withSize(textFont.pointSize * 1.5)
+            }
+        }
     }
 
     open override func viewWillAppear(_ animated: Bool) {
