@@ -41,13 +41,6 @@ platform :ios do
     export_method = options[:export_method]
     match(
       type: "development",
-      app_identifier: ["org.sagebase.BridgeAppSDK", "org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"],
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_password: ENV["MATCH_PASSWORD"],
-      readonly: true
-    )
-    match(
-      type: "appstore",
       app_identifier: ["org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"],
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
       keychain_password: ENV["MATCH_PASSWORD"],
@@ -93,7 +86,7 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do
     # match(type: "appstore") # more information: https://codesigning.guide
-    gym(scheme: "BridgeAppSDK") # Build your app - more options available
+    gym(scheme: "BridgeAppSDKSample") # Build your app - more options available
     pilot
 
     # sh "your_script.sh"
@@ -104,7 +97,7 @@ platform :ios do
   lane :release do
     # match(type: "appstore")
     # snapshot
-    gym(scheme: "BridgeAppSDK") # Build your app - more options available
+    gym(scheme: "BridgeAppSDKSample") # Build your app - more options available
     deliver(force: true)
     # frameit
   end
