@@ -1,4 +1,4 @@
-scheme "BridgeAppSDK"
+scheme "BridgeAppSDKSample"
 clean false
 code_coverage false
 skip_build true
