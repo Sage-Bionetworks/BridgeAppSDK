@@ -118,6 +118,31 @@ open class SBABaseInstructionStepViewController: ORKStepViewController {
         self.textLabel?.text = fullText
     }
     
+    var player: AVAudioPlayer?
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let audio = (self.instructionStep as? SBAInstructionStep)?.startStepAudio,
+            let audioUrl = Bundle.main.url(forResource: audio, withExtension: "mp3") {
+            do {
+                player = try AVAudioPlayer(contentsOf: audioUrl)
+                player?.play()
+            }
+            catch let error {
+                debugPrint("Error trying to load or play audio at url \(audioUrl): \(error)")
+            }
+        }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        if player != nil {
+            player?.stop()
+            player = nil
+        }
+        super.viewWillDisappear(animated)
+    }
+    
     open func setupTitle() {
         if let title = self.step?.title {
             self.titleLabel?.text = title
