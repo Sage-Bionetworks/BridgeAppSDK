@@ -271,6 +271,19 @@ open class SBAInstructionStepViewController: SBABaseInstructionStepViewControlle
         if let tintedImageView = self.imageView as? ORKTintedImageView {
             tintedImageView.shouldApplyTint = true
         }
+        
+        // for iPad, increase all font sizes by 50%
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            if let progressFont = self.progressLabel?.font {
+                self.progressLabel!.font = progressFont.withSize(progressFont.pointSize * 1.5)
+            }
+            if let titleFont = self.titleLabel?.font {
+                self.titleLabel!.font = titleFont.withSize(titleFont.pointSize * 1.5)
+            }
+            if let textFont = self.textLabel?.font {
+                self.textLabel!.font = textFont.withSize(textFont.pointSize * 1.5)
+            }
+        }
     }
     
     open override func viewDidLayoutSubviews() {
