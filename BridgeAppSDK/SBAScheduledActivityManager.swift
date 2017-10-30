@@ -426,7 +426,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     
     // MARK: ORKTaskViewControllerDelegate
     
-    fileprivate let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
+    public let offMainQueue = DispatchQueue(label: "org.sagebase.BridgeAppSDK.SBAScheduledActivityManager")
     open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         
         // Re-enable the passcode lock. This can be disabled by the display of an active step.
