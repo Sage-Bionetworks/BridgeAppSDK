@@ -48,6 +48,54 @@ private let kEndDate                          = "endDate"
 private let kDataGroups                       = "dataGroups"
 private let kMetadataFilename                 = "metadata.json"
 
+public protocol SBAScheduledActivityResult {
+    
+    var identifier: String { get }
+    var schemaIdentifier: String { get }
+    var schemaRevision: NSNumber { get }
+    var taskRunUUID: UUID { get }
+    var startDate: Date { get }
+    var endDate: Date { get }
+    
+    func archivableResults() -> [(String, SBAArchivableResult)]?
+}
+
+public protocol SBAArchivableResult {
+    // returns result object, result type, and filename
+    func bridgeData(_ stepIdentifier: String) -> ArchiveableResult?
+    
+    var identifier: String { get }
+    var startDate: Date { get }
+    var endDate: Date { get }
+}
+
+extension ORKResult : SBAArchivableResult {
+}
+
+extension SBAActivityResult: SBAScheduledActivityResult {
+    
+    public func archivableResults() -> [(String, SBAArchivableResult)]? {
+        // exit early with false if nothing to archive
+        guard let activityResultResults = self.results as? [ORKStepResult],
+            activityResultResults.count > 0
+            else {
+                return nil
+        }
+        
+        var results: [(String, SBAArchivableResult)] = []
+        
+        for stepResult in activityResultResults {
+            if let stepResultResults = stepResult.results {
+                for result in stepResultResults {
+                    results.append((stepResult.identifier, result))
+                }
+            }
+        }
+        
+        return results
+    }
+}
+
 open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
@@ -56,19 +104,24 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
 
     fileprivate var metadata = [String: AnyObject]()
     
-    public init?(result: SBAActivityResult, jsonValidationMapping: [String: NSPredicate]? = nil) {
+    public convenience init?(result: SBAActivityResult, jsonValidationMapping: [String: NSPredicate]? = nil) {
+        self.init(result: result as SBAScheduledActivityResult, schedule: result.schedule, jsonValidationMapping: jsonValidationMapping)
+    }
+    
+    public init?(result: SBAScheduledActivityResult, schedule: SBBScheduledActivity, jsonValidationMapping: [String: NSPredicate]? = nil) {
+        
         super.init(reference: result.schemaIdentifier, jsonValidationMapping: jsonValidationMapping)
         
         // set up the activity metadata
         // -- always set scheduledActivityGuid, scheduleIdentifier, scheduledOn, activityLabel, and taskRunUUID
-        self.metadata[kScheduledActivityGuidKey] = result.schedule.guid as AnyObject?
-        self.metadata[kScheduleIdentifierKey] = result.schedule.scheduleIdentifier as AnyObject?
-        self.metadata[kScheduledOnKey] = (result.schedule.scheduledOn as NSDate).iso8601String() as AnyObject?
-        self.metadata[kScheduledActivityLabelKey] = result.schedule.activity.label as AnyObject?
+        self.metadata[kScheduledActivityGuidKey] = schedule.guid as AnyObject?
+        self.metadata[kScheduleIdentifierKey] = schedule.scheduleIdentifier as AnyObject?
+        self.metadata[kScheduledOnKey] = (schedule.scheduledOn as NSDate).iso8601String() as AnyObject?
+        self.metadata[kScheduledActivityLabelKey] = schedule.activity.label as AnyObject?
         self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.uuidString as AnyObject?
         
         // -- if it's a task, also set the taskIdentifier
-        if let taskReference = result.schedule.activity.task {
+        if let taskReference = schedule.activity.task {
             self.metadata[kTaskIdentifierKey] = taskReference.identifier as AnyObject?
         }
         
@@ -86,7 +139,7 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         self.setArchiveInfoObject(result.schemaRevision, forKey: kSchemaRevisionKey)
 
         // -- if it's a survey, also set the survey's guid and createdOn
-        if let surveyReference = result.schedule.activity.survey {
+        if let surveyReference = schedule.activity.survey {
             // Survey schema is better matched by created date and survey guid
             self.setArchiveInfoObject(surveyReference.guid as SBAJSONObject, forKey: kSurveyGuidKey)
             let createdOn = surveyReference.createdOn ?? Date()
@@ -99,23 +152,13 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         }
     }
 
-    func buildArchiveForResult(_ activityResult: SBAActivityResult) -> Bool {
-        
-        // exit early with false if nothing to archive
-        guard let activityResultResults = activityResult.results as? [ORKStepResult],
-            activityResultResults.count > 0
-        else {
-            return false
-        }
-        
+    func buildArchiveForResult(_ activityResult: SBAScheduledActivityResult) -> Bool {
+        guard let archivableResults = activityResult.archivableResults() else { return false }
+
         // (although there _still_ might be nothing to archive, if none of the stepResults have any results.)
-        for stepResult in activityResultResults {
-            if let stepResultResults = stepResult.results {
-                for result in stepResultResults {
-                    if !insert(result: result, stepResult: stepResult, activityResult: activityResult) {
-                        return false
-                    }
-                }
+        for (stepIdentifier, result) in archivableResults {
+            if !insert(result: result, stepIdentifier: stepIdentifier, activityIdentifier: activityResult.identifier) {
+                return false
             }
         }
         
@@ -131,10 +174,10 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
     /**
     * Method for inserting a result into an archive. Allows for override by subclasses
     */
-    open func insert(result: ORKResult, stepResult: ORKStepResult, activityResult: SBAActivityResult) -> Bool {
+    open func insert(result: SBAArchivableResult, stepIdentifier: String, activityIdentifier: String) -> Bool {
         
-        guard let archiveableResult = result.bridgeData(stepResult.identifier) else {
-            assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepResult.identifier) of activity result \(activityResult.identifier)")
+        guard let archiveableResult = result.bridgeData(stepIdentifier) else {
+            assertionFailure("Something went wrong getting result to archive from result \(result.identifier) of step \(stepIdentifier) of activity result \(activityIdentifier)")
             return false
         }
         
