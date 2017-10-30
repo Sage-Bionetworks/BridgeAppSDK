@@ -390,8 +390,22 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      */
     @objc(scheduledActivityForTaskViewController:)
     open func scheduledActivity(for taskViewController: ORKTaskViewController) -> SBBScheduledActivity? {
-        guard let vc = taskViewController as? SBATaskViewController,
-            let scheduleIdentifier = vc.scheduleIdentifier
+        guard let vc = taskViewController as? SBATaskViewController
+            else {
+                return nil
+        }
+        return scheduledActivity(with: vc.scheduleIdentifier)
+    }
+    
+    /**
+     Get the scheduled activity that is associated with this schedule identifier.
+     
+     @param     scheduleIdentifier  The schedule identifier that was used to start the task.
+     @return                        The schedule associated with this task view controller (if available)
+     */
+    @objc(scheduledActivityWithScheduleIdentifier:)
+    open func scheduledActivity(with scheduleIdentifier: String?) -> SBBScheduledActivity? {
+        guard let scheduleIdentifier = scheduleIdentifier
             else {
                 return nil
         }
