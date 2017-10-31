@@ -42,7 +42,7 @@ import UserNotifications
  */
 public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuthManagerDelegateProtocol {
 
-    static let shared = SBAUser()
+    public static let shared = SBAUser()
     
     lazy var profileManager: SBAProfileManagerProtocol? = {
         return SBAProfileManager.shared
