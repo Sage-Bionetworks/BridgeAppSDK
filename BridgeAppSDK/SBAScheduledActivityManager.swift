@@ -928,7 +928,9 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     */
     open func sendUpdated(scheduledActivities: [SBBScheduledActivity]) {
         SBABridgeManager.updateScheduledActivities(scheduledActivities) {[weak self] (_, _) in
-            self?.reloadData()
+            DispatchQueue.main.async {
+                self?.reloadData()
+            }
         }
     }
     

@@ -96,11 +96,7 @@ extension SBAActivityResult: SBAScheduledActivityResult {
     }
 }
 
-open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
-    
-    lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
-        return UIApplication.shared.delegate as! SBAAppInfoDelegate
-    }()
+open class SBAActivityArchive: SBBDataArchive {
 
     fileprivate var metadata = [String: AnyObject]()
     
@@ -130,7 +126,7 @@ open class SBAActivityArchive: SBBDataArchive, SBASharedInfoController {
         self.metadata[kEndDate] = (result.endDate as NSDate).iso8601String() as AnyObject?
         
         // -- add data groups
-        if let dataGroups = sharedUser.dataGroups {
+        if let dataGroups = SBAUser.shared.dataGroups {
             self.metadata[kDataGroups] = dataGroups.joined(separator: ",") as AnyObject?
         }
         
