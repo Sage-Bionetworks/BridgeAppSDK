@@ -306,6 +306,21 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  */
 + (void)setExternalIdentifier:(NSString *)externalID completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
+/*!
+ Get a current OAuth access token for a given vendor.
+ 
+ Your study must be set up to allow OAuth with the specified vendor (e.g. Fitbit). When you originally take the
+ participant through the authorization code grant flow, you will call this with the received authorization code, which
+ Bridge will then exchange for an access token and a refresh token. On subsequent calls, you should pass nil for
+ the authCode parameter and Bridge will give back the current valid access token, using its refresh token whenever
+ the existing access token has expired to get a fresh one.
+ 
+ @param vendor A string identifying the OAuth vendor to Bridge (e.g. "fitbit").
+ @param authCode A string obtained from the vendor vis the authorization code grant flow. Optional.
+ @param completionBlock  A SBABridgeManagerCompletionBlock to be called upon completion.
+
+ */
++ (void)getOAuthAccessTokenForVendor:(NSString *)vendor authCode:(NSString * _Nullable)authCode completion:(SBABridgeManagerCompletionBlock _Nullable)completionBlock;
 
 #pragma mark - deprecated
 

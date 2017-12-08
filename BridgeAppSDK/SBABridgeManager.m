@@ -381,4 +381,12 @@
      }];
 }
 
++ (void)getOAuthAccessTokenForVendor:(NSString *)vendor authCode:(NSString *)authCode completion:(SBABridgeManagerCompletionBlock)completionBlock {
+    [SBBComponent(SBBOAuthManager) getAccessTokenForVendor:vendor authCode:authCode completion:^(SBBOAuthAccessToken * _Nullable oauthAccessToken, NSError * _Nullable error) {
+        if (completionBlock) {
+            completionBlock(oauthAccessToken, error);
+        }
+    }];
+}
+
 @end
