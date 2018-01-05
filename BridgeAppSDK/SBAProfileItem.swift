@@ -585,7 +585,7 @@ open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesPr
     override open func storedValue(forKey key: String) -> Any? {
         guard let studyParticipant = SBAStudyParticipantProfileItem.studyParticipant
             else {
-                assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipant")
+                //assertionFailure("Attempting to read \(key) (\(profileKey)) on nil SBBStudyParticipant")
                 return nil
         }
         // special-case handling for an attribute to call through to the superclass implementation
