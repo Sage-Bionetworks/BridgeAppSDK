@@ -220,7 +220,7 @@ public extension SBAUserWrapper {
             // include test_user in the data groups if applicable
             var dataGroups: [String]? = {
                 if signup.dataGroups != nil {
-                    return Array(signup.dataGroups)
+                    return Array(signup.dataGroups!)
                 }
                 else {
                     return nil
@@ -245,7 +245,7 @@ public extension SBAUserWrapper {
         }
         
         // If this is not a test user (or shouldn't check) then complete the registration and return
-        guard signup.email.contains(SBAHiddenTestEmailString) &&
+        guard signup.email!.contains(SBAHiddenTestEmailString) &&
             appDelegate != nil &&
             !(bridgeInfo?.disableTestUserCheck ?? false) else {
             completeRegistration(false)
@@ -635,15 +635,15 @@ extension NSDictionary: SBAUserSessionInfoWrapper {
 extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     var createdOn: Date {
         // If the participant hasn't signed in yet, there won't be a createdOn date in the placeholder study participant object.
-        return self.studyParticipant?.createdOn ?? Date()
+        return self.studyParticipant.createdOn ?? Date()
     }
 
     var lastName: String? {
-        return self.studyParticipant?.lastName
+        return self.studyParticipant.lastName
     }
 
     var firstName: String? {
-        return self.studyParticipant?.firstName
+        return self.studyParticipant.firstName
     }
 
     var subpopulationGuid: String? {
@@ -659,8 +659,7 @@ extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     }
 
     var dataSharingScope: SBBParticipantDataSharingScope {
-        guard self.studyParticipant != nil,
-            let sharingKey = self.studyParticipant.sharingScope,
+        guard let sharingKey = self.studyParticipant.sharingScope,
             self.isDataSharingEnabled else {
             return .none
         }
@@ -672,8 +671,8 @@ extension SBBUserSessionInfo: SBAUserSessionInfoWrapper {
     }
 
     var dataGroups: [String]? {
-        guard self.studyParticipant != nil && self.studyParticipant.dataGroups != nil else { return nil }
-        return Array(self.studyParticipant.dataGroups)
+        guard self.studyParticipant.dataGroups != nil else { return nil }
+        return Array(self.studyParticipant.dataGroups!)
     }
 }
 

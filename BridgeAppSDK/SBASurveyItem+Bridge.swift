@@ -48,18 +48,15 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     }
     
     public var stepTitle: String? {
-        if (self.title == nil) { return nil }
         return self.title.removingNewlineCharacters()
     }
     
     public var stepText: String? {
-        if (self.prompt == nil) { return nil }
         return self.prompt.removingNewlineCharacters()
     }
     
     public var stepDetail: String? {
-        if (self.promptDetail == nil) { return nil }
-        return self.promptDetail.removingNewlineCharacters()
+        return self.promptDetail?.removingNewlineCharacters()
     }
     
     public var stepFootnote: String? {
@@ -171,7 +168,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
         else {
             return nil
         }
-        return self.promptDetail.removingNewlineCharacters()
+        return self.promptDetail!.removingNewlineCharacters()
     }
     
     var regexPlaceholder: String? {
@@ -187,8 +184,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     
     public var stepText: String? {
         if (self.stepTitle != nil) {
-            if (self.promptDetail == nil) { return nil }
-            return self.promptDetail.removingNewlineCharacters()
+            return self.promptDetail?.removingNewlineCharacters()
         }
         else {
             if (self.prompt == nil) { return nil }
@@ -213,11 +209,12 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
         // NOTE: Only supported use of items is for a multiple choice constraint. SBBBridgeObjects
         // do not (currently) have a constraint type that allows for compound steps (although the
         // use of use of the word "constraints" would suggest that. syoung 03/17/2016
-        guard let multiConstraints = self.constraints as? SBBMultiValueConstraints, let items = multiConstraints.enumeration
+        guard let multiConstraints = self.constraints as? SBBMultiValueConstraints
         else {
             return nil
         }
-
+        let items = multiConstraints.enumeration
+        
         // If this multiple choice should have an "other" option then include the string as a choice
         if (multiConstraints.allowOtherValue) {
             var other = Localization.localizedString("SBA_OTHER")
@@ -298,7 +295,7 @@ extension SBBSurveyQuestionOption: SBATextChoice {
     }
     
     public var choiceValue: NSCoding & NSCopying & NSObjectProtocol {
-        return self.value
+        return self.value!
     }
     
     public var exclusive: Bool {

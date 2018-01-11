@@ -124,23 +124,23 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
         // The only cell type that is supported in the base implementation is an SBAActivityTableViewCell
         let activity = schedule.activity
         activityCell.complete = schedule.isCompleted
-        activityCell.titleLabel.text = activity?.label
+        activityCell.titleLabel.text = activity.label
         
         activityCell.timeLabel?.text = schedule.scheduledTime
         
         // Show a detail that is most appropriate to the schedule status
         if schedule.isCompleted {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_COMPLETE_%@")
-            let dateString = DateFormatter.localizedString(from: schedule.finishedOn, dateStyle: .medium, timeStyle: .short)
+            let dateString = DateFormatter.localizedString(from: schedule.finishedOn!, dateStyle: .medium, timeStyle: .short)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         else if schedule.isExpired {
             let format = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_EXPIRED_%@")
-            let dateString = schedule.isToday ? schedule.expiresTime! : DateFormatter.localizedString(from: schedule.expiresOn, dateStyle: .medium, timeStyle: .short)
+            let dateString = schedule.isToday ? schedule.expiresTime! : DateFormatter.localizedString(from: schedule.expiresOn!, dateStyle: .medium, timeStyle: .short)
             activityCell.subtitleLabel.text = String.localizedStringWithFormat(format, dateString)
         }
         else if schedule.isToday {
-            activityCell.subtitleLabel.text = activity?.labelDetail
+            activityCell.subtitleLabel.text = activity.labelDetail
         }
         else if schedule.isTomorrow {
             activityCell.subtitleLabel.text = Localization.localizedString("SBA_ACTIVITY_SCHEDULE_AVAILABLE_TOMORROW")
