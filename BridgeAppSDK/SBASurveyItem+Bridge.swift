@@ -309,8 +309,8 @@ extension SBBSurveyQuestionOption: SBATextChoice {
 
 public protocol sbb_DateRange : SBADateRange {
     var allowFutureValue: Bool { get }
-    var earliestValue: Date! { get }
-    var latestValue: Date! { get }
+    var earliestValue: Date? { get }
+    var latestValue: Date? { get }
 }
 
 extension SBBDateConstraints : sbb_DateRange {
@@ -334,10 +334,10 @@ extension sbb_DateRange  {
 }
 
 public protocol sbb_NumberRange: SBANumberRange {
-    var maxValue: NSNumber! { get }
-    var minValue: NSNumber! { get }
-    var step: NSNumber! { get }
-    var unit: String! { get }
+    var maxValue: NSNumber? { get }
+    var minValue: NSNumber? { get }
+    var step: NSNumber? { get }
+    var unit: String? { get }
 }
 
 extension SBBIntegerConstraints: sbb_NumberRange {
@@ -350,15 +350,15 @@ extension SBBDecimalConstraints: sbb_NumberRange {
 // but the `SBBDurationConstraints` model object does not include these values. 
 extension SBBDurationConstraints: sbb_NumberRange {
     
-    public var minValue: NSNumber! {
+    public var minValue: NSNumber? {
         return NSNumber(value: 0 as Int)
     }
     
-    public var maxValue: NSNumber!  {
+    public var maxValue: NSNumber?  {
         return NSNumber(value: NSIntegerMax as Int)
     }
     
-    public var step: NSNumber! {
+    public var step: NSNumber? {
         return nil
     }
 }
@@ -377,7 +377,7 @@ extension sbb_NumberRange {
     
     public var stepInterval: Double {
         guard (self.step != nil) else { return 1 }
-        return self.step.doubleValue
+        return self.step!.doubleValue
     }
     
     public var unitLabel: String? {
