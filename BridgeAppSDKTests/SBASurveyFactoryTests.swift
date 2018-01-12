@@ -97,8 +97,8 @@ class SBASurveyFactoryTests: XCTestCase {
             "type" : "SurveyRule"
             ])
         
-        inputStep.constraints.addRulesObject(ruleNotEqual)
-        inputStep.constraints.addRulesObject(ruleSkip)
+        inputStep.constraints.addRulesObject(ruleNotEqual!)
+        inputStep.constraints.addRulesObject(ruleSkip!)
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
@@ -154,8 +154,8 @@ class SBASurveyFactoryTests: XCTestCase {
             "type" : "SurveyRule"
             ])
         
-        inputStep.constraints.addRulesObject(ruleTrue)
-        inputStep.constraints.addRulesObject(ruleFalse)
+        inputStep.constraints.addRulesObject(ruleTrue!)
+        inputStep.constraints.addRulesObject(ruleFalse!)
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)
@@ -194,7 +194,7 @@ class SBASurveyFactoryTests: XCTestCase {
             "type" : "SurveyRule"
             ])
         
-        inputStep.constraints.addRulesObject(ruleTrue)
+        inputStep.constraints.addRulesObject(ruleTrue!)
         
         let step = SBASurveyFactory().createSurveyStepWithSurveyElement(inputStep, index:0, count:1)
         XCTAssertNotNil(step)

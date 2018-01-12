@@ -116,7 +116,7 @@ MAKE_TEST_INIT(ORKQuestionResult, ^{return [self initWithIdentifier:[NSUUID UUID
 - (NSArray <Class> *)classesWithCopyingAndCoding {
     // Swift classes are not registered with obj-c runtime so instead just use a list
     return @[[SBAConsentSignature class],
-             [SBAExternalIDStep class],
+             [SBAExternalIDLoginStep class],
              ];
 }
 

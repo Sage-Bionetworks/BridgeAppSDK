@@ -853,7 +853,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         schedule.activity = SBBActivity()
         schedule.activity.guid = UUID().uuidString
         schedule.activity.task = SBBTaskReference()
-        schedule.activity.task.identifier = taskId
+        schedule.activity.task!.identifier = taskId
         schedule.scheduledOn = scheduledOn
         schedule.expiresOn = expiresOn
         schedule.finishedOn = finishedOn

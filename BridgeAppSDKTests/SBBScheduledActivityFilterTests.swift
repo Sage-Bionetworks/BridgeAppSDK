@@ -53,18 +53,18 @@ class SBBScheduledActivityFilterTests: XCTestCase {
         let schedules = [today_expired, today_finished, today_todo, yesterday_expired, yesterday_finished]
         
         let todayPredicate = SBBScheduledActivity.scheduledPredicate(on: Date())
-        let todayFiltered = schedules.filter({ todayPredicate.evaluate(with: $0) }).map({ $0.guid! })
-        let todayExpected = [today_expired, today_finished, today_todo].map({ $0.guid! })
+        let todayFiltered = schedules.filter({ todayPredicate.evaluate(with: $0) }).map({ $0.guid })
+        let todayExpected = [today_expired, today_finished, today_todo].map({ $0.guid })
         XCTAssertEqual(todayFiltered, todayExpected)
         
         let yesterdayPredicate = SBBScheduledActivity.scheduledPredicate(on: Date().addingNumberOfDays(-1))
-        let yesterdayFiltered = schedules.filter({ yesterdayPredicate.evaluate(with: $0) }).map({ $0.guid! })
-        let yesterdayExpected = [yesterday_expired, yesterday_finished].map({ $0.guid! })
+        let yesterdayFiltered = schedules.filter({ yesterdayPredicate.evaluate(with: $0) }).map({ $0.guid })
+        let yesterdayExpected = [yesterday_expired, yesterday_finished].map({ $0.guid })
         XCTAssertEqual(yesterdayFiltered, yesterdayExpected)
         
         let tomorrowPredicate = SBBScheduledActivity.scheduledPredicate(on: Date().addingNumberOfDays(1))
-        let tomorrowFiltered = schedules.filter({ tomorrowPredicate.evaluate(with: $0) }).map({ $0.guid! })
-        let tomorrowExpected = [today_todo].map({ $0.guid! })
+        let tomorrowFiltered = schedules.filter({ tomorrowPredicate.evaluate(with: $0) }).map({ $0.guid })
+        let tomorrowExpected = [today_todo].map({ $0.guid })
         XCTAssertEqual(tomorrowFiltered, tomorrowExpected)
     }
     
@@ -93,7 +93,7 @@ class SBBScheduledActivityFilterTests: XCTestCase {
         schedule.activity = SBBActivity()
         schedule.activity.guid = UUID().uuidString
         schedule.activity.task = SBBTaskReference()
-        schedule.activity.task.identifier = taskId
+        schedule.activity.task!.identifier = taskId
         schedule.scheduledOn = scheduledOn
         schedule.expiresOn = expiresOn
         schedule.finishedOn = finishedOn
@@ -113,7 +113,7 @@ class SBBScheduledActivityFilterTests: XCTestCase {
         schedule.activity = SBBActivity()
         schedule.activity.guid = UUID().uuidString
         schedule.activity.survey = SBBSurveyReference()
-        schedule.activity.survey.identifier = surveyId
+        schedule.activity.survey!.identifier = surveyId
         schedule.scheduledOn = scheduledOn
         schedule.expiresOn = expiresOn
         schedule.finishedOn = finishedOn
