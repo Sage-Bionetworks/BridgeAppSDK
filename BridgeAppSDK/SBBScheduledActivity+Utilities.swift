@@ -40,7 +40,7 @@ public extension SBBScheduledActivity {
     }
     
     public var isExpired: Bool {
-        return (self.expiresOn != nil) && ((Date() as NSDate).earlierDate(self.expiresOn) == self.expiresOn)
+        return (self.expiresOn != nil) && ((Date() as NSDate).earlierDate(self.expiresOn!) == self.expiresOn)
     }
     
     public var isNow: Bool {
@@ -69,22 +69,21 @@ public extension SBBScheduledActivity {
     
     var expiresTime: String? {
         if expiresOn == nil { return nil }
-        return DateFormatter.localizedString(from: expiresOn, dateStyle: .none, timeStyle: .short)
+        return DateFormatter.localizedString(from: expiresOn!, dateStyle: .none, timeStyle: .short)
     }
     
     /**
      Returns the `SBBTaskReference` identifier.
      */
     public dynamic var taskIdentifier: String? {
-        return (self.activity.task != nil) ? self.activity.task.identifier : nil
+        return self.activity.task?.identifier
     }
     
     /**
      Returns the `SBBSurveyReference` identifier.
      */
     public dynamic var surveyIdentifier: String? {
-        guard self.activity.survey != nil else { return nil }
-        return self.activity.survey.identifier
+        return self.activity.survey?.identifier
     }
     
     /**

@@ -247,7 +247,6 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     open func sortActivities(_ scheduledActivities: [SBBScheduledActivity]?) -> [SBBScheduledActivity]? {
         guard (scheduledActivities?.count ?? 0) > 0 else { return nil }
         return scheduledActivities!.sorted(by: { (scheduleA, scheduleB) -> Bool in
-            guard (scheduleA.scheduledOn != nil) && (scheduleB.scheduledOn != nil) else { return false }
             return scheduleA.scheduledOn.compare(scheduleB.scheduledOn) == .orderedAscending
         })
     }
@@ -303,7 +302,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         if _loadingState == .fromServerForFullDateRange {
             for schedule in scheduledActivities {
                 if schedule.activity.survey != nil {
-                    SBABridgeManager.loadSurvey(schedule.activity.survey, completion:{ (_, _) in
+                    SBABridgeManager.loadSurvey(schedule.activity.survey!, completion:{ (_, _) in
                     })
                 }
             }
