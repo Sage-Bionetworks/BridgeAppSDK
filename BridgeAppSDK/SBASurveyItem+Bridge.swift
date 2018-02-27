@@ -48,7 +48,7 @@ extension SBBSurveyInfoScreen : SBAInstructionStepSurveyItem {
     }
     
     public var stepTitle: String? {
-        return self.title.removingNewlineCharacters()
+        return self.title?.removingNewlineCharacters()
     }
     
     public var stepText: String? {
