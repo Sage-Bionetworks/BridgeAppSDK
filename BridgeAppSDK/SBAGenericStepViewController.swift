@@ -83,7 +83,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     // does not continue to the next step instead of returning any answers they might have given before
     // closing or cancelling
     public private(set) var originalResult: ORKStepResult!
-    var userHasContinued = false
+    open var userHasContinued = false
     
     private var activeTextField: UITextField?
     
