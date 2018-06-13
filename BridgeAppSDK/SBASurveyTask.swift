@@ -58,7 +58,7 @@ open class SBASurveyTask: NSObject, ORKTask, NSCopying, NSSecureCoding, SBACondi
     
     open func load(survey: SBBSurvey?, error: Error?) {
         // If there was an error or the survey is nil
-        if let bridgeSurvey = survey, bridgeSurvey.elements != nil, bridgeSurvey.elements.count > 0  {
+        if let bridgeSurvey = survey, bridgeSurvey.elements.count > 0  {
             self.survey = self.factory.createTaskWithSurvey(bridgeSurvey)
             self.schemaRevision = bridgeSurvey.schemaRevision
             if surveyReference.createdOn == nil {

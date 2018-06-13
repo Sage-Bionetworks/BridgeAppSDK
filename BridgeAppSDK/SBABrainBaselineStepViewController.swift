@@ -44,7 +44,7 @@ open class SBABrainBaselineStep: ORKStep {
         self.text = inputItem.stepText
 
         self.testName = {
-            let options: [String : AnyObject]? = inputItem.options ?? (inputItem as? [String : AnyObject])
+            let options: [String : AnyObject]? = inputItem.options ?? ((inputItem as? NSDictionary) as? [String : AnyObject])
             let key = #keyPath(testName)
             return (options?[key] as? String) ?? self.identifier
         }()

@@ -865,7 +865,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
             let sanitziedText = numericAnswerFormat.sanitizedTextFieldText(textAfterUpdate, decimalSeparator: numberFormatter.decimalSeparator)
             textField.text = sanitziedText
             
-            if sanitziedText!.characters.count > 0 {
+            if sanitziedText!.count > 0 {
                 let answerNumber = NSDecimalNumber(string: sanitziedText, locale: Locale.current)
                 if numericAnswerFormat.isAnswerValid(answerNumber) {
                     answer = answerNumber

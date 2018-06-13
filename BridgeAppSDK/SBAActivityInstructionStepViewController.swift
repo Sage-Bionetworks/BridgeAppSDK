@@ -42,7 +42,7 @@ extension ORKInstructionStep: SBAInstructionTextProvider {
     open var instructionText: String? {
         var text = self.text ?? ""
         if let detail = self.detailText {
-            if text.characters.count > 0 {
+            if text.count > 0 {
                 text.append("\n\n")
             }
             text.append(detail)

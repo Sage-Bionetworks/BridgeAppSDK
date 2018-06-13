@@ -164,7 +164,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
         guard let constraint = self.constraints as? SBBStringConstraints,
             (constraint.patternPlaceholder == nil) &&
             (self.promptDetail != nil) &&
-            (self.promptDetail!.characters.count <= 12)
+            (self.promptDetail!.count <= 12)
         else {
             return nil
         }
@@ -178,7 +178,7 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
     
     public var stepTitle: String? {
         // If either the prompt or the promptDetail is nil then the title is not used
-        guard (self.promptDetail != nil) && (self.prompt != nil) && (self.detailPlaceholder == nil) else { return nil }
+        guard (self.promptDetail != nil) && (self.detailPlaceholder == nil) else { return nil }
         return self.prompt.removingNewlineCharacters()
     }
     
@@ -187,7 +187,6 @@ extension SBBSurveyQuestion : SBAFormStepSurveyItem, SBASurveyRuleGroup {
             return self.promptDetail?.removingNewlineCharacters()
         }
         else {
-            if (self.prompt == nil) { return nil }
             return self.prompt.removingNewlineCharacters()
         }
     }

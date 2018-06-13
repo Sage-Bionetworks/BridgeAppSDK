@@ -386,7 +386,7 @@ open class SBAStepHeaderView: UIView {
             return imageView.image != nil
         }
         else if let label = view as? UILabel {
-            return (label.text?.characters.count ?? 0) > 0
+            return (label.text?.count ?? 0) > 0
         }
         else if let button = view as? UIButton, button == self.learnMoreButton {
             // If this is the learn more button then only show if used.

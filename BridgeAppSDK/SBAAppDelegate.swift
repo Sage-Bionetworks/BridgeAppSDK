@@ -429,7 +429,7 @@ public let SBAMainStoryboardName = "Main"
     /**
      Convenience method for presenting a modal view controller.
     */
-    open func presentViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
+    open func presentModalViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
         guard let rootVC = self.window?.rootViewController else { return }
         var topViewController: UIViewController = rootVC
         while let presentedVC = topViewController.presentedViewController {
@@ -490,7 +490,7 @@ public let SBAMainStoryboardName = "Main"
         // present the onboarding
         taskViewController.delegate = self
         self.onboardingViewController = taskViewController
-        self.presentViewController(taskViewController, animated: true, completion: nil)
+        self.presentModalViewController(taskViewController, animated: true, completion: nil)
     }
     
     // MARK: ORKTaskViewControllerDelegate
@@ -659,7 +659,7 @@ public let SBAMainStoryboardName = "Main"
         vc.modalTransitionStyle = .coverVertical
         
         passcodeViewController = vc
-        presentViewController(vc, animated: false, completion: nil)        
+        presentModalViewController(vc, animated: false, completion: nil)        
     }
     
     private func dismissPasscodeViewController() {

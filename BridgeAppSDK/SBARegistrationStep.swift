@@ -165,7 +165,7 @@ extension SBARegistrationStepController {
             let letters = all[groupIndex]
             
             // Pick a letter from that group
-            let rand = Int(arc4random_uniform(UInt32(letters.characters.count)))
+            let rand = Int(arc4random_uniform(UInt32(letters.count)))
             let position = letters.index(letters.startIndex, offsetBy: rand)
             let nextChar = letters[position]
             
