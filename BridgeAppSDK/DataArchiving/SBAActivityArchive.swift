@@ -91,7 +91,7 @@ extension SBAActivityResult: SBAScheduledActivityResult {
         var results: [(String, SBAArchivableResult)] = []
         
         activityResultResults.forEach { (stepResult) in
-            guard let stepResultResults = stepResult.results else { return }
+            guard let stepResultResults = stepResult.results, stepResultResults.count > 0 else { return }
             if let _ = stepResultResults as? [SBAConsolidatedArchivableResult] {
                 let archivable = ConsolidatedArchivable(collectionResult: stepResult)
                 results.append((stepResult.identifier, archivable))
