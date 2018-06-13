@@ -1206,7 +1206,7 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
                 return
         }
         
-        self.delegate?.presentViewController(taskViewController, animated: true, completion: nil)
+        self.delegate?.presentModalViewController(taskViewController, animated: true, completion: nil)
     }
     
     open func title(for section: Int) -> String? {

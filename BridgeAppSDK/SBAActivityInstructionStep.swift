@@ -70,7 +70,7 @@ extension SBAActivityInstructionStep: SBAInstructionTextProvider {
         // to the text field and the detail to be more text.
         var text = self.title ?? ""
         if let detail = self.text {
-            if text.characters.count > 0 {
+            if text.count > 0 {
                 text.append("\n\n")
             }
             text.append(detail)

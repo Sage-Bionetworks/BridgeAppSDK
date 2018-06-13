@@ -44,7 +44,7 @@ public extension SBBScheduledActivity {
     }
     
     public var isNow: Bool {
-        return !isCompleted && ((self.scheduledOn == nil) || ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired))
+        return !isCompleted && ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired)
     }
     
     var isToday: Bool {

@@ -408,7 +408,7 @@ public extension SBAUserWrapper {
                                             self?.promptForWithdraw()
         }))
         
-        appDelegate.presentViewController(controller, animated: true) { }
+        appDelegate.presentModalViewController(controller, animated: true) { }
     }
     
     fileprivate func promptForWithdraw() {
@@ -447,7 +447,7 @@ public extension SBAUserWrapper {
             })
         }
         
-        self.appDelegate?.presentViewController(taskVC, animated: true, completion: nil)
+        self.appDelegate?.presentModalViewController(taskVC, animated: true, completion: nil)
     }
     
     /**

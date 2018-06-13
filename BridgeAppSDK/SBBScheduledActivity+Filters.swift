@@ -77,13 +77,13 @@ extension SBBScheduledActivity {
         
         // Scheduled for this date or prior
         let scheduledKey = #keyPath(scheduledOn)
-        let scheduledThisDayOrBefore = NSPredicate(format: "%K == nil OR %K < %@", scheduledKey, scheduledKey, startOfNextDay as CVarArg)
+        let scheduledThisDayOrBefore = NSPredicate(format: "%K == nil OR %K < %@", scheduledKey, scheduledKey, startOfNextDay as NSDate)
         let unfinished = unfinishedPredicate()
         let finishedOnThisDay = finishedPredicate(on: date)
         
         let expiredKey = #keyPath(expiresOn)
-        let expiredOnThisDay = NSPredicate(format: "%K == nil OR (%K >= %@ AND %K < %@)", expiredKey, expiredKey, startOfDay as CVarArg, expiredKey, startOfNextDay as CVarArg)
-        let expiredOnOrAfterThisDay = NSPredicate(format: "%K == nil OR %K > %@", expiredKey, expiredKey, startOfDay as CVarArg)
+        let expiredOnThisDay = NSPredicate(format: "%K == nil OR (%K >= %@ AND %K < %@)", expiredKey, expiredKey, startOfDay as NSDate, expiredKey, startOfNextDay as NSDate)
+        let expiredOnOrAfterThisDay = NSPredicate(format: "%K == nil OR %K > %@", expiredKey, expiredKey, startOfDay as NSDate)
         
         switch(startOfDay.compare(Date().startOfDay())) {
             
