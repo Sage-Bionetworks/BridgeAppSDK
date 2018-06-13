@@ -69,6 +69,12 @@ public protocol SBAArchivableResult {
     var endDate: Date { get }
 }
 
+public protocol SBAConsolidatedArchivableResult : SBAArchivableResult {
+}
+
+extension ORKGoNoGoResult : SBAConsolidatedArchivableResult {
+}
+
 extension ORKResult : SBAArchivableResult {
 }
 
@@ -84,15 +90,41 @@ extension SBAActivityResult: SBAScheduledActivityResult {
         
         var results: [(String, SBAArchivableResult)] = []
         
-        for stepResult in activityResultResults {
-            if let stepResultResults = stepResult.results {
-                for result in stepResultResults {
+        activityResultResults.forEach { (stepResult) in
+            guard let stepResultResults = stepResult.results else { return }
+            if let _ = stepResultResults as? [SBAConsolidatedArchivableResult] {
+                let archivable = ConsolidatedArchivable(collectionResult: stepResult)
+                results.append((stepResult.identifier, archivable))
+            }
+            else {
+                stepResultResults.forEach { (result) in
                     results.append((stepResult.identifier, result))
                 }
             }
         }
         
         return results
+    }
+}
+
+struct ConsolidatedArchivable : SBAArchivableResult {
+
+    let collectionResult: ORKCollectionResult
+    
+    var identifier: String {
+        return collectionResult.identifier
+    }
+    
+    var startDate: Date {
+        return collectionResult.startDate
+    }
+    
+    var endDate: Date {
+        return collectionResult.endDate
+    }
+    
+    func bridgeData(_ stepIdentifier: String) -> ArchiveableResult? {
+        return collectionResult.consolidatedResult()
     }
 }
 
