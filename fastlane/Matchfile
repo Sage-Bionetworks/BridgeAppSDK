@@ -5,7 +5,7 @@ type "development" # The default type, can be: appstore, adhoc, enterprise or de
 
 # The bundle identifier of your app
 app_identifier ["org.sagebase.BridgeAppSDKSample", "org.sagebase.BridgeAppSDKSample.watchkitapp", "org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension"]
-username "apple.developer@sagebase.org" # Your Apple Developer Portal username
+username "appleservicer@sagebase.org" # Your Apple Developer Portal username
 
 readonly true
 # For all available options run `fastlane match --help`
