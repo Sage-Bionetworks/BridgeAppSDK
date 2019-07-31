@@ -119,7 +119,6 @@
 		FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */; };
 		FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */; };
-		FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */; };
 		FF7601C41EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */; };
 		FF7601C61EE7DB6300438F08 /* cardio.json in Resources */ = {isa = PBXBuildFile; fileRef = FF7601C51EE7DB6300438F08 /* cardio.json */; };
 		FF7602531EE9357300438F08 /* SBAInstructionBelowImageStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */; };
@@ -496,7 +495,6 @@
 		FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedManager.m; sourceTree = "<group>"; };
 		FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedItem.h; sourceTree = "<group>"; };
 		FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedItem.m; sourceTree = "<group>"; };
-		FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEqualityTests.m; sourceTree = "<group>"; };
 		FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+CardioChallenge.swift"; sourceTree = "<group>"; };
 		FF7601C51EE7DB6300438F08 /* cardio.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cardio.json; sourceTree = "<group>"; };
 		FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAInstructionBelowImageStep.swift; sourceTree = "<group>"; };
@@ -788,7 +786,6 @@
 				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
-				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
 				60F2BB451EC1296100957BE6 /* SBAProfileManagerTests.swift */,
 				FF71DEAB1EC5180C00921EB5 /* SBBScheduledActivityFilterTests.swift */,
@@ -1447,7 +1444,7 @@
 					161479BF1BD6CE8F0099A068 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 4B822CZK9N;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1466,11 +1463,11 @@
 					};
 					801040B11C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 					};
 					801040BA1C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 161479BF1BD6CE8F0099A068;
 					};
@@ -1481,6 +1478,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1814,7 +1812,6 @@
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */,
 				FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */,
-				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
 				FFCE310D1EC1273C0086DCAA /* MockActivityManager.swift in Sources */,
@@ -2293,8 +2290,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -2314,8 +2310,7 @@
 				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -2338,8 +2333,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2362,8 +2356,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2382,8 +2375,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
 			};
 			name = Debug;
@@ -2400,8 +2392,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
 			};
 			name = Release;

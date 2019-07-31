@@ -170,7 +170,7 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
     }
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        guard let tappedIndex = imageButtons.index(of: sender) else { return }
+        guard let tappedIndex = imageButtons.firstIndex(of: sender) else { return }
         if tappedIndex == _selectedIndex {
             _selectedIndex = -1
         }
@@ -209,12 +209,12 @@ open class SBAMoodScaleStepViewController: ORKStepViewController {
         // we need to return the result in the same format.
         if let moodResult = stepResult.results?.first as? ORKMoodScaleQuestionResult,
             let moodScale = moodResult.scaleAnswer,
-            let selectedIdx = answerFormat.questionChoices.index(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
+            let selectedIdx = answerFormat.questionChoices.firstIndex(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
             _selectedIndex = selectedIdx
         }
         else if let moodResult = stepResult.results?.first as? ORKChoiceQuestionResult,
             let moodScale = moodResult.choiceAnswers?.first,
-            let selectedIdx = answerFormat.questionChoices.index(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
+            let selectedIdx = answerFormat.questionChoices.firstIndex(where: { SBAObjectEquality($0.choiceValue, moodScale) } ) {
             _selectedIndex = selectedIdx
         }
     }

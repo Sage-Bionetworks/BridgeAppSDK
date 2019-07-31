@@ -294,7 +294,7 @@ class SBAProfileManagerTests: ResourceTestCase {
             if value == nil {
                 XCTFail("Failed retrieving Date value for birthDateItem")
             } else {
-                XCTAssertEqualWithAccuracy(testBirthDate.timeIntervalSince1970, value!.timeIntervalSince1970, accuracy: 0.00099999, "Expected value to be \(testBirthDate), but instead it's \(value!)")
+                XCTAssertEqual(testBirthDate.timeIntervalSince1970, value!.timeIntervalSince1970, accuracy: 0.00099999, "Expected value to be \(testBirthDate), but instead it's \(value!)")
             }
         }
         

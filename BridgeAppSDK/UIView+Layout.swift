@@ -138,7 +138,7 @@ extension UIView {
         
         attributes.forEach({
             
-            let toAttribute = toAttributes[attributes.index(of: $0)!]
+            let toAttribute = toAttributes[attributes.firstIndex(of: $0)!]
             let _padding = $0 == .trailing || $0 == .bottom ? -1 * padding : padding
             superview.addConstraint(NSLayoutConstraint(item: self,
                                                        attribute: $0,

@@ -67,6 +67,6 @@ extension SBAPermissionsStep: ORKPageStepSource {
     }
     
     public func findPermissionIndex(withIdentifier identifier: String) -> Int? {
-        return self.permissionTypes.index(where: { $0.identifier == identifier })
+        return self.permissionTypes.firstIndex(where: { $0.identifier == identifier })
     }
 }

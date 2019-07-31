@@ -351,6 +351,7 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
         return SBAProfileTypeIdentifier(rawValue: rawValue)
     }
     
+    @objc
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
         sourceDict = dictionary
         super.init()
@@ -579,7 +580,10 @@ enum SBAProfileParticipantSourceKey: String {
     case dataGroups
 }
 
+@objc
 open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesProfileItem {
+    
+    @objc
     public static var studyParticipant: SBBStudyParticipant?
     
     override open func storedValue(forKey key: String) -> Any? {

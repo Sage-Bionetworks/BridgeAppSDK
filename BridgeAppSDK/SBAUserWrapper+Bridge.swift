@@ -103,7 +103,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     func removeDataGroup(_ dataGroup: String, completion: ((Error?) -> Void)?) {
-        guard let idx = self.dataGroups?.index(of: dataGroup) else {
+        guard let idx = self.dataGroups?.firstIndex(of: dataGroup) else {
             completion?(nil)
             return
         }

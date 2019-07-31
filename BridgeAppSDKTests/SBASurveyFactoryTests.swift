@@ -653,7 +653,7 @@ class SBASurveyFactoryTests: XCTestCase {
         guard let maximumDate = answerFormat.maximumDate else {
             return
         }
-        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
+        XCTAssertEqual(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
         
     }
     
@@ -694,7 +694,7 @@ class SBASurveyFactoryTests: XCTestCase {
         guard let maximumDate = answerFormat.maximumDate else {
             return
         }
-        XCTAssertEqualWithAccuracy(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
+        XCTAssertEqual(maximumDate.timeIntervalSinceNow, TimeInterval(0), accuracy: 5)
         
     }
     

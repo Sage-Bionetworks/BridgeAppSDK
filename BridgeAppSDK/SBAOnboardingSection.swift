@@ -101,9 +101,9 @@ public enum SBAOnboardingSectionBaseType: String {
     */
     func ordinal() -> Int {
         let order:[SBAOnboardingSectionBaseType] = SBAOnboardingSectionBaseType.all
-        guard let ret = order.index(of: self) else {
+        guard let ret = order.firstIndex(of: self) else {
             assertionFailure("\(self) ordinal value is unknown")
-            return (order.index(of: .completion)! - 1)
+            return (order.firstIndex(of: .completion)! - 1)
         }
         return ret
     }

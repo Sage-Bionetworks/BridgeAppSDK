@@ -238,7 +238,7 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
                 let clearSelector = NSSelectorFromString("clearUserInfoFromCache")
                 participantManager.perform(clearSelector)
             }
-            self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response!)
+            self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response)
             authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
         }
         completion?(session, responseObject, responseError)
