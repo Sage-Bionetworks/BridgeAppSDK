@@ -173,12 +173,13 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
 }
 
 extension SBAOnboardingSectionType: Hashable {
-    public var hashValue: Int {
+    
+    public func hash(into hasher: inout Hasher) {
         switch (self) {
         case (.base(let value)):
-            return value.hashValue;
+            hasher.combine(value)
         case (.custom(let value)):
-            return value.hashValue;
+            hasher.combine(value)
         }
     }
 }

@@ -73,11 +73,6 @@ public protocol SBAUserWrapper: SBAParticipantInfo, SBBAuthManagerDelegateProtoc
      * Consent signature should be stored in keychain.
      */
     var consentSignature: SBAConsentSignatureWrapper? { get set }
-    
-    /**
-     * Data groups associated with this user.
-     */
-    var dataGroups: [String]? { get set }
 
     /**
      * The user has registered locally or the server has returned confirmation that the
