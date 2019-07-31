@@ -221,7 +221,7 @@ open class SBAExternalIDLoginStepViewController: ORKPageStepViewController, SBAA
     }
     
     fileprivate func externalIdAnswers() -> [String]? {
-        return self.result?.results?.mapAndFilter { (result) -> String? in
+        return self.result?.results?.sba_mapAndFilter { (result) -> String? in
             guard let textResult = result as? ORKTextQuestionResult,
                   let answer = textResult.textAnswer?.trim()
             else {

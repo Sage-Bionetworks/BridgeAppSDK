@@ -838,7 +838,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         didSet {
             // get all the SBAClientDataProfileItem instances from SBAProfileManager
             guard scheduledActivities != nil && scheduledActivities!.count > 0,
-                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ return $0 as? SBAClientDataProfileItem })
+                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.sba_mapAndFilter({ return $0 as? SBAClientDataProfileItem })
                 else {
                     return
             }
@@ -935,7 +935,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     
     func jsonWhatsAndWhensFromBridge() -> [[String: SBBJSONValue]] {
         // pull out all the non-empty lists of date/value instances for this activityIdentifier and key into one non-empty list
-        guard let valueArrays = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> [[String: SBBJSONValue]]? in
+        guard let valueArrays = SBAClientDataProfileItem.scheduledActivities?.sba_mapAndFilter({ (scheduledActivity) -> [[String: SBBJSONValue]]? in
                     guard scheduledActivity.activityIdentifier == activityIdentifier,
                             let clientData = scheduledActivity.clientData as? NSDictionary,
                             let valueArray = clientData[sourceKey] as? [[String : SBBJSONValue]],
@@ -982,7 +982,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     func setToAppropriateScheduledActivity(_ jsonWhatAndWhen: [String: SBBJSONValue]) {
         // potential SBBScheduledActivity instances to update will have the right activityIdentifier and will expire after, if at all
         let when = SBAWhatAndWhen(dictionaryRepresentation: jsonWhatAndWhen).date as Date
-        guard let activities = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> SBBScheduledActivity? in
+        guard let activities = SBAClientDataProfileItem.scheduledActivities?.sba_mapAndFilter({ (scheduledActivity) -> SBBScheduledActivity? in
                     if scheduledActivity.activityIdentifier == activityIdentifier {
                         return scheduledActivity
                     }

@@ -60,7 +60,7 @@ public protocol SBAConsentSignatureWrapper : class {
 @objc
 open class SBAConsentSignature: NSObject, SBAConsentSignatureWrapper, NSSecureCoding, NSCopying {
     
-    open let identifier: String
+    public let identifier: String
     open var signatureBirthdate: Date?
     open var signatureName: String?
     open var signatureImage: UIImage?

@@ -161,7 +161,7 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.permissionType = aDecoder.decodeObject(forKey: #keyPath(permissionType)) as! SBAPermissionObjectType
+        self.permissionType = aDecoder.decodeObject(forKey: #keyPath(permissionType)) as? SBAPermissionObjectType
         self.buttonTitle = aDecoder.decodeObject(forKey: #keyPath(buttonTitle)) as? String
     }
     

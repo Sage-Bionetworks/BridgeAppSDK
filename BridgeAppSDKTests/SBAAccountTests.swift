@@ -76,10 +76,10 @@ class SBAAccountTests: XCTestCase {
             return
         }
         
-        let emailFormat = formItems.find(withIdentifier: "email")?.answerFormat
+        let emailFormat = formItems.sba_find(withIdentifier: "email")?.answerFormat
         XCTAssertNotNil(emailFormat)
         
-        let passwordFormat = formItems.find(withIdentifier: "password")?.answerFormat
+        let passwordFormat = formItems.sba_find(withIdentifier: "password")?.answerFormat
         XCTAssertNotNil(passwordFormat)
     }
     
@@ -110,10 +110,10 @@ class SBAAccountTests: XCTestCase {
             return
         }
         
-        let emailFormat = formItems.find(withIdentifier: "email")?.answerFormat
+        let emailFormat = formItems.sba_find(withIdentifier: "email")?.answerFormat
         XCTAssertNotNil(emailFormat)
         
-        let passwordFormat = formItems.find(withIdentifier: "password")?.answerFormat
+        let passwordFormat = formItems.sba_find(withIdentifier: "password")?.answerFormat
         XCTAssertNotNil(passwordFormat)
     }
     
@@ -185,7 +185,7 @@ class SBAAccountTests: XCTestCase {
             return
         }
         
-        let externalIDFormat = formItems.find(withIdentifier: "externalID")?.answerFormat
+        let externalIDFormat = formItems.sba_find(withIdentifier: "externalID")?.answerFormat
         XCTAssertNotNil(externalIDFormat)
     }
 

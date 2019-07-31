@@ -111,7 +111,7 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(#keyPath(sections))
+        return super.dictionaryRepresentationKeys().sba_appending(#keyPath(sections))
     }
     
     override open func defaultValue(forKey key: String) -> Any? {

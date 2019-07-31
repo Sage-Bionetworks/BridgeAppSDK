@@ -173,7 +173,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(items), #keyPath(demographicSchemaIdentifier), #keyPath(demographicArchiveFilename)])
+        return super.dictionaryRepresentationKeys().sba_appending(contentsOf: [#keyPath(items), #keyPath(demographicSchemaIdentifier), #keyPath(demographicArchiveFilename)])
     }
     
     override open func defaultValue(forKey key: String) -> Any? {

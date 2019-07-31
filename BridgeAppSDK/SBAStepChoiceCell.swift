@@ -57,7 +57,7 @@ class SBAStepChoiceCell: UITableViewCell {
         return isSelected ? UIColor.choiceCellLabelHighlighted : UIColor.choiceCellLabel
     }
     
-    open let shadowView: UIView = {
+    let shadowView: UIView = {
         let rule = UIView()
         rule.backgroundColor = UIColor.black
         return rule

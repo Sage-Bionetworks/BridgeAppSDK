@@ -99,7 +99,7 @@ public extension SBBScheduledActivity {
     @objc public dynamic var scheduleIdentifier: String {
         // Strip out the unique part of the guid
         if let range = self.guid.range(of: ":") {
-            return self.guid.substring(to: range.lowerBound)
+            return String(self.guid[..<range.lowerBound])
         }
         else {
             return self.guid

@@ -46,7 +46,7 @@ extension ORKStep {
 
 extension ORKFormStep {
     override func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
-        let results = self.formItems?.mapAndFilter({ (formItem) -> ORKResult? in
+        let results = self.formItems?.sba_mapAndFilter({ (formItem) -> ORKResult? in
             return formItem.instantiateQuestionResult(.defaultValue, answer: answerMap?[formItem.identifier] as AnyObject?)
         })
         return ORKStepResult(stepIdentifier: self.identifier, results: results)

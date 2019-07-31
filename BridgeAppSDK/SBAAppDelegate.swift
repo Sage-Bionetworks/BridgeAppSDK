@@ -79,6 +79,7 @@ public let SBAMainStoryboardName = "Main"
     
     open var window: UIWindow?
     
+    @objc
     public final class var shared: SBAAppDelegate? {
         return UIApplication.shared.delegate as? SBAAppDelegate
     }

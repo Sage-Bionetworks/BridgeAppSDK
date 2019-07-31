@@ -354,7 +354,7 @@ open class SBAGenericStepTableSection: NSObject {
      */
     public func add(formItem: ORKFormItem) {
         
-        guard itemGroups.find({ $0.formItem.identifier == formItem.identifier }) == nil else {
+        guard itemGroups.sba_find({ $0.formItem.identifier == formItem.identifier }) == nil else {
             assertionFailure("Cannot add ORKFormItem with duplicate identifier.")
             return
         }
@@ -518,7 +518,7 @@ open class SBAGenericStepTableItemGroup: NSObject {
     }
     
     private func answerForTextChoice() -> AnyObject {
-        let array = self.items.mapAndFilter { $0.selected ? $0.choice?.value : nil }
+        let array = self.items.sba_mapAndFilter { $0.selected ? $0.choice?.value : nil }
         return array.count > 0 ? array as AnyObject : ORKNullAnswerValue() as AnyObject
     }
     

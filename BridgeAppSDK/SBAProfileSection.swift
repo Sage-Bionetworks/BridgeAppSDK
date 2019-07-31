@@ -57,7 +57,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(icon), #keyPath(items)])
+        return super.dictionaryRepresentationKeys().sba_appending(contentsOf: [#keyPath(title), #keyPath(icon), #keyPath(items)])
     }
 
     override open func defaultValue(forKey key: String) -> Any? {
@@ -216,14 +216,14 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
-        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
+        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.sba_find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
             let choices = surveyItem.items as? [SBAChoice] {
             let selected = (value as? [Any]) ?? [value]
             let textList = selected.map({ (obj) -> String in
                 switch surveyItem.surveyItemType {
                 case .form(.singleChoice), .form(.multipleChoice),
                      .dataGroups(.singleChoice), .dataGroups(.multipleChoice):
-                    return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+                    return choices.sba_find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
                 case .account(.profile):
                     guard let options = surveyItem.items as? [String],
                             options.count == 1,

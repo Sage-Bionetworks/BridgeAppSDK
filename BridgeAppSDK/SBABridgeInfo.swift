@@ -208,11 +208,11 @@ extension SBABridgeInfo {
     }
         
     public func schemaReferenceWithIdentifier(_ schemaIdentifier: String) -> SBASchemaReference? {
-        return self.schemaMap?.find({ $0.schemaIdentifier == schemaIdentifier})
+        return self.schemaMap?.sba_find({ $0.schemaIdentifier == schemaIdentifier})
     }
     
     public func taskReferenceWithIdentifier(_ taskIdentifier: String) -> SBATaskReference? {
-        return self.taskMap?.find({ $0.taskIdentifier == taskIdentifier})
+        return self.taskMap?.sba_find({ $0.taskIdentifier == taskIdentifier})
     }
     
     public func taskReferenceForSchedule(_ schedule: SBBScheduledActivity) -> SBATaskReference? {

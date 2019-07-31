@@ -216,8 +216,7 @@ open class SBAActivityArchive: SBBDataArchive {
         } else if let dataResult = archiveableResult.result as? NSData {
             self.insertData(intoArchive: dataResult as Data, filename: archiveableResult.filename, createdOn: result.startDate)
         } else {
-            let className = NSStringFromClass(archiveableResult.result.classForCoder)
-            assertionFailure("Unsupported archiveable result type: \(className)")
+            assertionFailure("Unsupported archiveable result type: \(archiveableResult.result)")
             return false
         }
         

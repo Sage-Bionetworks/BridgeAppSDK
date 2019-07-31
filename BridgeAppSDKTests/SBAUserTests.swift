@@ -230,10 +230,9 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
         self.loginPassword = password
         signIn_called = true
         
-        let response = responseObject as? [AnyHashable: Any]!
-        if response != nil &&
-            authDelegate != nil &&
-            authDelegate!.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
+        if let response = responseObject as? [String: Any],
+            let delegate = authDelegate,
+            delegate.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
             if let participantManager = SBBComponentManager.component(SBBParticipantManager.self) as? SBBParticipantManager {
                 // this is a BridgeSDK-internal method
                 let clearSelector = NSSelectorFromString("clearUserInfoFromCache")

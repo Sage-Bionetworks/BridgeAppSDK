@@ -326,7 +326,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
                     return existingActivity.guid == activity.guid
                 })
             })
-            return self.activities.appending(contentsOf: filteredActivities)
+            return self.activities.sba_appending(contentsOf: filteredActivities)
         }
         return scheduledActivities.filter({ (schedule) -> Bool in
             return bridgeInfo.taskReferenceForSchedule(schedule) != nil &&
@@ -408,7 +408,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             else {
                 return nil
         }
-        return activities.find({ $0.scheduleIdentifier == scheduleIdentifier })
+        return activities.sba_find({ $0.scheduleIdentifier == scheduleIdentifier })
     }
     
     /**
@@ -419,7 +419,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      */
     @objc(scheduledActivityForTaskIdentifier:)
     open func scheduledActivity(for taskIdentifier: String) -> SBBScheduledActivity? {
-        return activities.find({ $0.activityIdentifier == taskIdentifier })
+        return activities.sba_find({ $0.activityIdentifier == taskIdentifier })
     }
 
     
@@ -849,7 +849,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
         
         // Archive the results
         let results = activityResults(for: schedule, task: task, result:result)
-        let archives = results.mapAndFilter({ archive(for: $0) })
+        let archives = results.sba_mapAndFilter({ archive(for: $0) })
         SBBDataArchive.encryptAndUploadArchives(archives)
         
         // Update the schedule on the server but only if the survey was not ended early
@@ -1152,7 +1152,7 @@ open class SBAScheduledActivityManager: SBABaseScheduledActivityManager, SBASche
     open var sections: [SBAScheduledActivitySection]! {
         didSet {
             // Filter out any sections that aren't shown
-            let filters = sections.mapAndFilter({ filterPredicate(for: $0) })
+            let filters = sections.sba_mapAndFilter({ filterPredicate(for: $0) })
             self.scheduleFilterPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: filters)
         }
     }

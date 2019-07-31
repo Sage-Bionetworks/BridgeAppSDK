@@ -68,7 +68,7 @@ extension NSDictionary : SBALearnItem {
     }
     
     public var learnTitle : String! {
-        return self["title"] as! String
+        return self["title"] as? String ?? ""
     }
     
     public var learnURL: URL! {

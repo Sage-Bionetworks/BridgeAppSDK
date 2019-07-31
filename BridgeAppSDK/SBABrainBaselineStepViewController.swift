@@ -57,7 +57,7 @@ open class SBABrainBaselineStep: ORKStep {
     
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.testName = aDecoder.decodeObject(forKey: #keyPath(testName)) as! String
+        self.testName = (aDecoder.decodeObject(forKey: #keyPath(testName)) as? String) ?? ""
     }
     
     override open func encode(with aCoder: NSCoder) {

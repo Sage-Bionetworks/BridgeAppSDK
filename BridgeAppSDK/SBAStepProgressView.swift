@@ -44,8 +44,8 @@ open class SBAStepProgressView: UIView {
     
     // These can be used to set the global color for the progress bar
     // If you want a different individual color per progress view, you will need to subclass
-    open static var progressColor = UIColor.headerViewProgressBar
-    open static var progressBackgroundColor = UIColor.headerViewProgressBackground
+    public static var progressColor = UIColor.headerViewProgressBar
+    public static var progressBackgroundColor = UIColor.headerViewProgressBackground
     
     /**
      The current step in the current flow
