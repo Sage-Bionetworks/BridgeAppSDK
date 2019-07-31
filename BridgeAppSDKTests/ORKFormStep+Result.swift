@@ -39,7 +39,7 @@ enum SBADefaultFormItemAnswer {
 
 extension ORKStep {
     
-    func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
+    @objc func instantiateDefaultStepResult(_ answerMap: NSDictionary?) -> ORKStepResult {
         return ORKStepResult(stepIdentifier: self.identifier, results: nil)
     }
 }

@@ -68,7 +68,7 @@ open class SBARootViewController: UIViewController {
     var contentHidden = false {
         didSet {
             guard contentHidden != oldValue && isViewLoaded else { return }
-            self.childViewControllers.first?.view.isHidden = contentHidden
+            self.children.first?.view.isHidden = contentHidden
         }
     }
     
@@ -104,22 +104,22 @@ open class SBARootViewController: UIViewController {
         super.viewDidLoad()
 
         // If there is no root view controller already loaded then do so now
-        if self.childViewControllers.first == nil {
+        if self.children.first == nil {
             let isBlankVC = _unloadedRootViewController == nil
             let viewController = self.rootViewController
-            self.addChildViewController(viewController)
+            self.addChild(viewController)
             viewController.view.frame = self.view.bounds
             viewController.view.isHidden = contentHidden
             if isBlankVC {
                 viewController.view.backgroundColor = UIColor.white
             }
             self.view.addSubview(viewController.view)
-            viewController.didMove(toParentViewController: self)
+            viewController.didMove(toParent: self)
         }
     }
     
     public var rootViewController: UIViewController {
-        return self.childViewControllers.first ?? {
+        return self.children.first ?? {
             if _unloadedRootViewController == nil {
                 _unloadedRootViewController = UIViewController()
             }
@@ -137,8 +137,8 @@ open class SBARootViewController: UIViewController {
         }
         
         // Setup state for view controllers
-        self.rootViewController.willMove(toParentViewController: nil)
-        self.addChildViewController(viewController)
+        self.rootViewController.willMove(toParent: nil)
+        self.addChild(viewController)
         _state = state
         
         // Setup new view initial alpha and frame
@@ -147,8 +147,8 @@ open class SBARootViewController: UIViewController {
         let duration = animated ? 1.0 : 0.0
         self.transition(from: self.rootViewController, to: viewController, duration: duration, options: [.transitionCrossDissolve],
                         animations: {}) { (finished) in
-                            self.rootViewController.removeFromParentViewController()
-                            viewController.didMove(toParentViewController: self)
+                            self.rootViewController.removeFromParent()
+                            viewController.didMove(toParent: self)
         }
     }
 }

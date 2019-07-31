@@ -380,8 +380,8 @@ class SBAProfileManagerTests: ResourceTestCase {
 }
 
 class DummyCustomAttributes: SBBStudyParticipantCustomAttributes {
-    dynamic var birthDate: NSString?
-    dynamic var preferredName: NSString?
+    @objc dynamic var birthDate: NSString?
+    @objc dynamic var preferredName: NSString?
 }
 
 class DummyStudyParticipant: SBBStudyParticipant {

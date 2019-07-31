@@ -115,7 +115,7 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .showHTML
     }
     
-    open var htmlResource: String {
+    @objc open var htmlResource: String {
         get {
             let key = #keyPath(htmlResource)
             return sourceDict[key]! as! String
@@ -149,7 +149,7 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .editProfileItem
     }
     
-    open var profileItemKey: String {
+    @objc open var profileItemKey: String {
         let key = #keyPath(profileItemKey)
         return sourceDict[key]! as! String
     }
@@ -261,7 +261,7 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         return String(describing: value)
     }
     
-    open var answerMapKeys: [String: String] {
+    @objc open var answerMapKeys: [String: String] {
         let key = #keyPath(answerMapKeys)
         return sourceDict[key] as? [String: String] ?? [self.profileItemKey: self.profileItemKey]
     }
@@ -273,7 +273,7 @@ open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .showResource
     }
     
-    open var resource: String {
+    @objc open var resource: String {
         get {
             let key = #keyPath(resource)
             return sourceDict[key]! as! String

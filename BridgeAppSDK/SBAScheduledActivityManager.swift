@@ -143,7 +143,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     /**
      Reload the data by calling the `SBABridgeManager` and fetching changes to the scheduled activities.
      */
-    open func reloadData() {
+    @objc open func reloadData() {
         
         // Fetch all schedules (including completed)
         let now = Date().startOfDay()

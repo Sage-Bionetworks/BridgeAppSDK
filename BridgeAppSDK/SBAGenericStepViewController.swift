@@ -149,17 +149,12 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
      Static method to determine if this view controller class supports the provided step's form items. This will vary
      based on the 'ORKAnswerFormat' and 'ORKQuestionType' for each of the 'ORKFormItems' in the step.
      */
-    static open func doesSupportFormItems(in formStep: SBAFormStepProtocol) -> Bool {
+    static public func doesSupportFormItems(in formStep: SBAFormStepProtocol) -> Bool {
         
         guard let formItems = formStep.formItems else {
             assertionFailure("Step does not have any form items")
             return false
         }
-        
-        let supportedAnswerFormats: [ORKAnswerFormat.Type] = [ORKTextChoiceAnswerFormat.self,
-                                                              ORKTextAnswerFormat.self,
-                                                              ORKBooleanAnswerFormat.self,
-                                                              ORKNumericAnswerFormat.self]
         
         let supportedQuestionTypes: [ORKQuestionType] = [.decimal,
                                                          .integer,
@@ -171,9 +166,12 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         for item in formItems {
             if let answerFormat = item.answerFormat {
                 
-                let formatOkay = supportedAnswerFormats.contains { (type) -> Bool in
-                    type == type(of: answerFormat)
-                }
+                let formatOkay: Bool = {
+                    return (answerFormat is ORKTextChoiceAnswerFormat) ||
+                        (answerFormat is ORKTextAnswerFormat) ||
+                        (answerFormat is ORKBooleanAnswerFormat) ||
+                        (answerFormat is ORKNumericAnswerFormat)
+                }()
                 
                 let typeOkay = supportedQuestionTypes.contains(answerFormat.questionType)
                 
@@ -251,7 +249,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         super.viewWillDisappear(animated)
         
         // un-register for keyboard notifications
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
         // Dismiss all textField's keyboard
         tableView?.endEditing(false)
@@ -264,7 +262,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         super.viewWillAppear(animated)
         
         // register for keyboard notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 
         // need to do this here because when the navView is generated, our delegate has not yet been set
         // so we don't know answers on whether or not there are previous or next steps
@@ -311,7 +309,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         }
         
         // need to save height of our nav view so it can be used to calculate the bottom inset (margin)
-        navigationViewHeight = navigationView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        navigationViewHeight = navigationView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         
         let totalHeight = tableView.contentSize.height + tableView.contentInset.top + navigationViewHeight
         let contentSizeExceedsTableHeight = totalHeight > tableView.frame.size.height
@@ -441,13 +439,13 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
         tableView?.dataSource = self
-        tableView?.rowHeight = UITableViewAutomaticDimension
+        tableView?.rowHeight = UITableView.automaticDimension
         tableView?.sectionHeaderHeight = 0.0
         tableView?.estimatedRowHeight = constants().defaultRowHeight
         tableView?.estimatedSectionHeaderHeight = 0.0
         tableView?.separatorStyle = .none
         
-        tableView?.rowHeight = UITableViewAutomaticDimension
+        tableView?.rowHeight = UITableView.automaticDimension
         tableView?.estimatedRowHeight = kEstimatedRowHeight
 
         view.addSubview(tableView!)
@@ -461,7 +459,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
         // to get the tableView to size the headerView properly, we have to get the headerView height
         // and manually set the frame with that height
         
-        let headerHeight = headerView!.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        let headerHeight = headerView!.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         headerView?.frame = CGRect(x: 0, y: 0, width: headerView!.frame.size.width, height: headerHeight)
         tableView?.tableHeaderView = headerView
                 
@@ -598,7 +596,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     /**
      The default action for the Next Button in the SBAStepNavigationView.
      */
-    open func nextHit() {
+    @objc open func nextHit() {
         
         // need to indicate user has chosen to continue so the result will be updated
         // with their answers, otherwise the orginal result will be returned
@@ -610,14 +608,14 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     /**
      The default action for the Previous Button in the SBAStepNavigationView.
      */
-    open func previousHit() {
+    @objc open func previousHit() {
         goBackward()
     }
     
     /**
      The default action for the Learn More Button in the SBAStepHeaderView.
      */
-    open func showLearnMore() {
+    @objc open func showLearnMore() {
         
         guard let learnMoreStep = step as? SBALearnMoreActionStep, let learnMore = learnMoreStep.learnMoreAction else {
             return
@@ -716,7 +714,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
                 // as its inputAccessoryView doesn't work for whatever reason. So we get the computed height from the
                 // navView and manually set its frame before assigning it to the text field
                 
-                let navHeight = navView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+                let navHeight = navView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
                 let navWidth = UIScreen.main.bounds.size.width
                 navView.frame = CGRect(x: 0, y: 0, width: navWidth, height: navHeight)
                 
@@ -817,7 +815,7 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     // MARK: UITextField delegate
@@ -908,15 +906,15 @@ open class SBAGenericStepViewController: ORKStepViewController, UITableViewDataS
     
     // MARK: KeyboardNotification delegate
     
-    func keyboardNotification(notification: NSNotification) {
+    @objc func keyboardNotification(notification: NSNotification) {
         
         guard let userInfo = notification.userInfo else { return }
         
-        let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-        let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-        let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
-        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
-        let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
         if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
             
             // set the tableView bottom inset to default

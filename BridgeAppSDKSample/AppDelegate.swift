@@ -37,7 +37,7 @@ import BridgeAppSDK
 @UIApplicationMain
 class AppDelegate: SBAAppDelegate {
     
-    override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
         ORKStepViewController.setCustomContinueButtonClass(SBARoundedButton.self)
         
@@ -63,7 +63,7 @@ class AppDelegate: SBAAppDelegate {
         return SBANewsFeedManager()
     }()
     
-    func newsfeedUpdated(_ notification: Notification) {
+    @objc func newsfeedUpdated(_ notification: Notification) {
         updateNewsFeedBadge()
     }
     

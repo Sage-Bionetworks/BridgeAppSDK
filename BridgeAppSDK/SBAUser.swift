@@ -257,7 +257,7 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
         }
         set (newValue) {
             if let newValueUnwrapped = newValue {
-                let dataValue = UIImageJPEGRepresentation(newValueUnwrapped, 1.0)
+                let dataValue = newValueUnwrapped.jpegData(compressionQuality: 1.0)
                 setKeychainObject(dataValue as NSSecureCoding?, key: kProfileImagePropertyKey)
             } else {  // remove the item from the keychain
                 setKeychainObject(nil, key: kProfileImagePropertyKey)

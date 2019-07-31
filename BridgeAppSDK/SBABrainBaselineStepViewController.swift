@@ -35,7 +35,7 @@ import UIKit
 
 open class SBABrainBaselineStep: ORKStep {
     
-    public dynamic var testName: String!
+    @objc public dynamic var testName: String!
     
     public init(inputItem: SBASurveyItem) {
         super.init(identifier: inputItem.identifier)
@@ -212,7 +212,7 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
         let orientation = UIApplication.shared.statusBarOrientation
         if (!(orientation == UIInterfaceOrientation.landscapeLeft || orientation == UIInterfaceOrientation.landscapeRight)) {
             instructionLabel.text = self.step?.text
-            self.rotationObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIDeviceOrientationDidChange, object: nil, queue: OperationQueue.main, using: { (notification) in
+            self.rotationObserver = NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main, using: { (notification) in
                 
                 // If the new orientation is landscape mode, remove the notification observer and push the Brain
                 // Baseline view controller. Otherwise keep waiting.
@@ -252,18 +252,18 @@ open class SBABrainBaselineStepViewController: ORKStepViewController {
     }
     
     open override func show(_ vc: UIViewController, sender: Any?) {
-        addChildViewController(vc)
+        addChild(vc)
         vc.view.frame = self.view.bounds
         view.addSubview(vc.view)
-        vc.didMove(toParentViewController: self)
+        vc.didMove(toParent: self)
     }
     
     open func testDidFinish(result: Any?) {
-        if let vc = self.childViewControllers.first {
-            vc.willMove(toParentViewController: nil)
+        if let vc = self.children.first {
+            vc.willMove(toParent: nil)
             vc.view.removeFromSuperview()
-            vc.removeFromParentViewController()
-            vc.didMove(toParentViewController: nil)
+            vc.removeFromParent()
+            vc.didMove(toParent: nil)
         }
 
         if result == nil {

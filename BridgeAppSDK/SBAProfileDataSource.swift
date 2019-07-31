@@ -106,7 +106,7 @@ open class SBAProfileDataSourceObject: SBADataObject, SBAProfileDataSource {
         return sharedProfileDataSource
     }()
     
-    private dynamic var sections: [SBAProfileSection] = []
+    @objc private dynamic var sections: [SBAProfileSection] = []
 
     // MARK: SBADataObject overrides
     

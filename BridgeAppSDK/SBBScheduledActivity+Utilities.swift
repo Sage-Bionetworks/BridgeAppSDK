@@ -75,14 +75,14 @@ public extension SBBScheduledActivity {
     /**
      Returns the `SBBTaskReference` identifier.
      */
-    public dynamic var taskIdentifier: String? {
+    @objc public dynamic var taskIdentifier: String? {
         return self.activity.task?.identifier
     }
     
     /**
      Returns the `SBBSurveyReference` identifier.
      */
-    public dynamic var surveyIdentifier: String? {
+    @objc public dynamic var surveyIdentifier: String? {
         return self.activity.survey?.identifier
     }
     
@@ -92,11 +92,11 @@ public extension SBBScheduledActivity {
      mapping to either a `SBBTaskReference` or `SBBSurveyReference`. This identifier maps to 
      whichever of those is the appropriate identifier.
      */
-    public dynamic var activityIdentifier: String? {
+    @objc public dynamic var activityIdentifier: String? {
         return self.taskIdentifier ?? self.surveyIdentifier
     }
     
-    public dynamic var scheduleIdentifier: String {
+    @objc public dynamic var scheduleIdentifier: String {
         // Strip out the unique part of the guid
         if let range = self.guid.range(of: ":") {
             return self.guid.substring(to: range.lowerBound)

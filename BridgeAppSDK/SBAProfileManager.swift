@@ -141,7 +141,7 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         return sharedProfileManagerProtocol
     }()
 
-    private dynamic var items: [SBAProfileItem] = []
+    @objc private dynamic var items: [SBAProfileItem] = []
     lazy private var itemsKeys: [String] = {
         return self.items.map({ $0.profileKey })
     }()
@@ -154,8 +154,8 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         return allItems
     }()
     
-    private dynamic var demographicSchemaIdentifier: String?
-    private dynamic var demographicArchiveFilename: String?
+    @objc private dynamic var demographicSchemaIdentifier: String?
+    @objc private dynamic var demographicArchiveFilename: String?
     
     // Merge new items into existing list, overwriting old ones with new ones when the profileKey is the same.
     // Mustn't be called once either itemsKeys or itemsMap has been accessed, and mustn't access either.

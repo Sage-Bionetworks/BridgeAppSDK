@@ -159,16 +159,6 @@
 		FF826EC61ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */; };
 		FF826EC81ED8025000731DD4 /* SBASinglePermissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
-		FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF8630411E709C9E0077AC57 /* Interface.storyboard */; };
-		FF8630451E709C9E0077AC57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8630441E709C9E0077AC57 /* Assets.xcassets */; };
-		FF86304C1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FF8630551E709C9E0077AC57 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */; };
-		FF8630591E709C9E0077AC57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8630581E709C9E0077AC57 /* Assets.xcassets */; };
-		FF86305D1E709C9E0077AC57 /* Sage Cardio Challenge.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */; };
-		FF8630791E709CD80077AC57 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; };
-		FF86307A1E709CD80077AC57 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF86307E1E709CEB0077AC57 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; };
-		FF86307F1E709CEB0077AC57 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */; };
 		FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997781D0B585600B26051 /* MockBridgeInfo.m */; };
 		FF8997931D0B589500B26051 /* MockUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997921D0B589500B26051 /* MockUser.m */; };
@@ -327,39 +317,11 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
-		FF86304D1E709C9E0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 161479B81BD6CE8F0099A068 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF86304A1E709C9E0077AC57;
-			remoteInfo = "Sage Cardio Challenge Extension";
-		};
-		FF86305B1E709C9E0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 161479B81BD6CE8F0099A068 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF86303E1E709C9D0077AC57;
-			remoteInfo = "Sage Cardio Challenge";
-		};
 		FF8630701E709C9E0077AC57 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FF405E2E1E5393DB00002C19;
-			remoteInfo = "ResearchKit (watchOS)";
-		};
-		FF86307B1E709CD80077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FF405E2D1E5393DB00002C19;
-			remoteInfo = "ResearchKit (watchOS)";
-		};
-		FF8630801E709CEB0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FF405E2D1E5393DB00002C19;
 			remoteInfo = "ResearchKit (watchOS)";
 		};
 		FFC160911CFE672100C29AF7 /* PBXContainerItemProxy */ = {
@@ -407,48 +369,14 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF8630761E709C9E0077AC57 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				FF86304C1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF8630781E709C9E0077AC57 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				FF86305D1E709C9E0077AC57 /* Sage Cardio Challenge.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF86307D1E709CD90077AC57 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FF86307A1E709CD80077AC57 /* ResearchKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630831E709CEC0077AC57 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FF86307F1E709CEB0077AC57 /* ResearchKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -609,15 +537,6 @@
 		FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBASinglePermissionStepViewController.xib; sourceTree = "<group>"; };
 		FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASinglePermissionStep.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
-		FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sage Cardio Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF8630421E709C9E0077AC57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
-		FF8630441E709C9E0077AC57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FF8630461E709C9E0077AC57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Sage Cardio Challenge Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF8630511E709C9E0077AC57 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
-		FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		FF8630581E709C9E0077AC57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FF86305A1E709C9E0077AC57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF8997581D0B3B9800B26051 /* MockAppInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockAppInfoDelegate.h; sourceTree = "<group>"; };
 		FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockAppInfoDelegate.m; sourceTree = "<group>"; };
 		FF8997771D0B585600B26051 /* MockBridgeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockBridgeInfo.h; sourceTree = "<group>"; };
@@ -725,22 +644,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF8630481E709C9E0077AC57 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630791E709CD80077AC57 /* ResearchKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630821E709CEC0077AC57 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF86307E1E709CEB0077AC57 /* ResearchKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -785,8 +688,6 @@
 				161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */,
 				801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */,
 				801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */,
-				FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */,
-				FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -913,8 +814,6 @@
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
-				FF8630401E709C9D0077AC57 /* Sage Cardio Challenge */,
-				FF86304F1E709C9E0077AC57 /* Sage Cardio Challenge Extension */,
 			);
 			path = BridgeAppSDKSample;
 			sourceTree = "<group>";
@@ -1210,37 +1109,6 @@
 			name = Permissions;
 			sourceTree = "<group>";
 		};
-		FF8630401E709C9D0077AC57 /* Sage Cardio Challenge */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630411E709C9E0077AC57 /* Interface.storyboard */,
-				FF8630441E709C9E0077AC57 /* Assets.xcassets */,
-				FF8630461E709C9E0077AC57 /* Info.plist */,
-			);
-			name = "Sage Cardio Challenge";
-			path = "../Sage Cardio Challenge";
-			sourceTree = "<group>";
-		};
-		FF86304F1E709C9E0077AC57 /* Sage Cardio Challenge Extension */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */,
-				FF8630581E709C9E0077AC57 /* Assets.xcassets */,
-				FF86305A1E709C9E0077AC57 /* Info.plist */,
-				FF8630501E709C9E0077AC57 /* Supporting Files */,
-			);
-			name = "Sage Cardio Challenge Extension";
-			path = "../Sage Cardio Challenge Extension";
-			sourceTree = "<group>";
-		};
-		FF8630501E709C9E0077AC57 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630511E709C9E0077AC57 /* PushNotificationPayload.apns */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		FF90559E1CE286EA0049D12A /* BridgeExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1523,7 +1391,6 @@
 				FF24FF241E28C3DF0016C4DF /* PBXTargetDependency */,
 				FF24FF281E28C3E80016C4DF /* PBXTargetDependency */,
 				FF24FF2E1E28C55F0016C4DF /* PBXTargetDependency */,
-				FF86305C1E709C9E0077AC57 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1567,45 +1434,6 @@
 			productReference = 801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FF8630771E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge" */;
-			buildPhases = (
-				FF86303D1E709C9D0077AC57 /* Resources */,
-				FF8630761E709C9E0077AC57 /* Embed App Extensions */,
-				FF8630821E709CEC0077AC57 /* Frameworks */,
-				FF8630831E709CEC0077AC57 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FF86304E1E709C9E0077AC57 /* PBXTargetDependency */,
-				FF8630811E709CEB0077AC57 /* PBXTargetDependency */,
-			);
-			name = "Sage Cardio Challenge";
-			productName = "Sage Cardio Challenge";
-			productReference = FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FF8630751E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge Extension" */;
-			buildPhases = (
-				FF8630471E709C9E0077AC57 /* Sources */,
-				FF8630481E709C9E0077AC57 /* Frameworks */,
-				FF8630491E709C9E0077AC57 /* Resources */,
-				FF86307D1E709CD90077AC57 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FF86307C1E709CD80077AC57 /* PBXTargetDependency */,
-			);
-			name = "Sage Cardio Challenge Extension";
-			productName = "Sage Cardio Challenge Extension";
-			productReference = FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1619,7 +1447,7 @@
 					161479BF1BD6CE8F0099A068 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 4B822CZK9N;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1638,23 +1466,13 @@
 					};
 					801040B11C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 					};
 					801040BA1C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 161479BF1BD6CE8F0099A068;
-					};
-					FF86303E1E709C9D0077AC57 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Manual;
-					};
-					FF86304A1E709C9E0077AC57 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1688,8 +1506,6 @@
 				161479BF1BD6CE8F0099A068 /* BridgeAppSDKSample */,
 				801040B11C5A843D00D26E19 /* BridgeAppSDK */,
 				801040BA1C5A843D00D26E19 /* BridgeAppSDKTests */,
-				FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */,
-				FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -1868,23 +1684,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF86303D1E709C9D0077AC57 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630451E709C9E0077AC57 /* Assets.xcassets in Resources */,
-				FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630491E709C9E0077AC57 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630591E709C9E0077AC57 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2034,14 +1833,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF8630471E709C9E0077AC57 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630551E709C9E0077AC57 /* ExtensionDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2074,26 +1865,6 @@
 			isa = PBXTargetDependency;
 			name = BridgeSDK;
 			targetProxy = FF24FF2D1E28C55F0016C4DF /* PBXContainerItemProxy */;
-		};
-		FF86304E1E709C9E0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */;
-			targetProxy = FF86304D1E709C9E0077AC57 /* PBXContainerItemProxy */;
-		};
-		FF86305C1E709C9E0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */;
-			targetProxy = FF86305B1E709C9E0077AC57 /* PBXContainerItemProxy */;
-		};
-		FF86307C1E709CD80077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ResearchKit (watchOS)";
-			targetProxy = FF86307B1E709CD80077AC57 /* PBXContainerItemProxy */;
-		};
-		FF8630811E709CEB0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ResearchKit (watchOS)";
-			targetProxy = FF8630801E709CEB0077AC57 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2330,14 +2101,6 @@
 			name = Walking.json;
 			sourceTree = "<group>";
 		};
-		FF8630411E709C9E0077AC57 /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FF8630421E709C9E0077AC57 /* Base */,
-			);
-			name = Interface.storyboard;
-			sourceTree = "<group>";
-		};
 		FF92A6721DBFF12A00614D1F /* About.html */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2514,7 +2277,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -2534,7 +2298,8 @@
 				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -2557,7 +2322,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2580,7 +2346,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2599,7 +2366,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
 			};
 			name = Debug;
@@ -2616,102 +2384,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
-			};
-			name = Release;
-		};
-		FF86305E1E709C9E0077AC57 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				IBSC_MODULE = Sage_Cardio_Challenge_Extension;
-				INFOPLIST_FILE = "Sage Cardio Challenge/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Debug;
-		};
-		FF86305F1E709C9E0077AC57 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				IBSC_MODULE = Sage_Cardio_Challenge_Extension;
-				INFOPLIST_FILE = "Sage Cardio Challenge/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Release;
-		};
-		FF8630601E709C9E0077AC57 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				INFOPLIST_FILE = "Sage Cardio Challenge Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Debug;
-		};
-		FF8630611E709C9E0077AC57 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				INFOPLIST_FILE = "Sage Cardio Challenge Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
 			};
 			name = Release;
 		};
@@ -2750,24 +2425,6 @@
 			buildConfigurations = (
 				801040CD1C5A843E00D26E19 /* Debug */,
 				801040CE1C5A843E00D26E19 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FF8630751E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FF8630601E709C9E0077AC57 /* Debug */,
-				FF8630611E709C9E0077AC57 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FF8630771E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FF86305E1E709C9E0077AC57 /* Debug */,
-				FF86305F1E709C9E0077AC57 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

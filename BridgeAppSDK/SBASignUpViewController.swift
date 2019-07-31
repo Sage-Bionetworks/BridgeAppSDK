@@ -293,7 +293,7 @@ open class SBASignUpViewController : UIViewController, SBASharedInfoController, 
     
     // MARK: ORKTaskViewController customization
     
-    open func closeTaskAction() {
+    @objc open func closeTaskAction() {
         guard let taskViewController = self.taskViewController else { return }
         self.taskViewController(taskViewController, didFinishWith: .discarded, error: nil)
     }
@@ -350,7 +350,7 @@ open class SBASignUpTableViewController : SBASignUpViewController, UITableViewDa
         headerView.setNeedsLayout()
         headerView.layoutIfNeeded()
         
-        let height = headerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         var frame = headerView.frame
         frame.size.height = height
         headerView.frame = frame

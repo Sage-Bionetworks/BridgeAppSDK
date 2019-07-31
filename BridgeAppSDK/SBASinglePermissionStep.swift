@@ -38,12 +38,12 @@ open class SBASinglePermissionStep: ORKInstructionStep, SBANavigationSkipRule {
     /**
      Permission type to request for this step of the task.
      */
-    open dynamic var permissionType: SBAPermissionObjectType!
+    @objc open dynamic var permissionType: SBAPermissionObjectType!
     
     /**
      Text to show for the continue button.
      */
-    open dynamic var buttonTitle: String?
+    @objc open dynamic var buttonTitle: String?
     
     public override init(identifier: String) {
         super.init(identifier: identifier)

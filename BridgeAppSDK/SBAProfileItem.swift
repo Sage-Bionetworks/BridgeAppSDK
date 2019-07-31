@@ -340,7 +340,7 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
         return sourceDict[key] as? String ?? self.profileKey
     }
     
-    open var fallbackKey: String? {
+    @objc open var fallbackKey: String? {
         let key = #keyPath(fallbackKey)
         return sourceDict[key] as? String
     }
@@ -724,9 +724,9 @@ open class SBAWhatAndWhen: NSObject, Comparable {
     static var valueKey: String { return #keyPath(value) }
     static var dateKey: String { return #keyPath(date) }
     static var isNewKey: String { return #keyPath(isNew) }
-    open var value: SBBJSONValue
-    open var date: NSDate
-    var isNew: Bool
+    @objc open var value: SBBJSONValue
+    @objc open var date: NSDate
+    @objc var isNew: Bool
     
     public init(dictionaryRepresentation dictionary: [String: SBBJSONValue]) {
         value = dictionary[SBAWhatAndWhen.valueKey]!
@@ -906,17 +906,17 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         }
     }
     
-    open var taskIdentifier: String? {
+    @objc open var taskIdentifier: String? {
         let key = #keyPath(taskIdentifier)
         return sourceDict[key] as? String
     }
     
-    open var surveyIdentifier: String? {
+    @objc open var surveyIdentifier: String? {
         let key = #keyPath(surveyIdentifier)
         return sourceDict[key] as? String
     }
     
-    open var activityIdentifier: String {
+    @objc open var activityIdentifier: String {
         let key = #keyPath(activityIdentifier)
         let explicitActivityIdentifer = sourceDict[key] as? String
         guard let identifier = explicitActivityIdentifer ?? taskIdentifier ?? surveyIdentifier
@@ -1113,12 +1113,12 @@ open class SBAFullNameProfileItem: SBAStudyParticipantProfileItem, SBANameDataSo
         return true
     }
     
-    fileprivate dynamic var givenNameKey: String {
+    @objc fileprivate dynamic var givenNameKey: String {
         let key = #keyPath(givenNameKey)
         return sourceDict[key] as? String ?? SBAProfileSourceKey.givenName.rawValue
     }
     
-    fileprivate dynamic var familyNameKey: String {
+    @objc fileprivate dynamic var familyNameKey: String {
         let key = #keyPath(familyNameKey)
         return sourceDict[key] as? String ?? SBAProfileSourceKey.familyName.rawValue
     }
