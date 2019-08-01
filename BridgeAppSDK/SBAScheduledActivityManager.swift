@@ -453,13 +453,6 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
     
     open func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
         
-        // If this is an active step, then we are running an active task. Since most of these tasks are
-        // timed, do not show the passcode if the user left the app (accidentally or otherwise) in response
-        // to a banner notification.
-        if stepViewController.step is ORKActiveStep || stepViewController.step is SBABrainBaselineStep {
-            SBAAppDelegate.shared?.disablePasscodeLock = true
-        }
-        
         // If cancel is disabled then hide on all but the first step
         if let step = stepViewController.step, shouldHideCancel(for: step, taskViewController: taskViewController) {
             stepViewController.cancelButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)

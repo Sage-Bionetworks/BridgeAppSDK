@@ -41,7 +41,6 @@ import ResearchUXFactory
 public enum BridgeSurveyItemSubtype: String {
     case onboardingCompletion   = "onboardingCompletion"    // SBAOnboardingCompletionStep
     case profileItem            = "profileItem"             // Mapped to the profile questions list
-    case brainBaseline          = "brainBaseline"           // SBABrainBaselineStep
 }
 
 /**
@@ -155,9 +154,6 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             
         case .profileItem:
             return profileItemStep(for: inputItem.identifier)?.copy() as? ORKStep
-            
-        case .brainBaseline:
-            return SBABrainBaselineStep(inputItem: inputItem)
         }
     }
     
@@ -166,15 +162,6 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             return nil
         }
         return self.createSurveyStep(inputItem)
-    }
-    
-    open override func createFormStep(_ inputItem:SBAFormStepSurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
-        
-        if inputItem.surveyItemType.formSubtype() == .mood {
-            return SBAMoodScaleStep(inputItem: inputItem)
-        }
-        
-        return super.createFormStep(inputItem, isSubtaskStep: isSubtaskStep)
     }
     
     open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {

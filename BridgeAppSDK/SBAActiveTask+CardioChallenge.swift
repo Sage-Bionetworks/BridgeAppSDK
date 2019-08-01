@@ -137,12 +137,6 @@ extension SBAActiveTask {
             instructionStep.text = step.text
             instructionStep.image = SBAResourceFinder.shared.image(forResource: "phoneinpocketIllustration")
             return instructionStep
-            
-        case .breathingBefore, .breathingAfter:
-            return SBAMoodScaleStep(step: step, images: nil)
-            
-        case .tiredBefore, .tiredAfter:
-            return SBAMoodScaleStep(step: step, images: nil)
 
         default:
             return step
