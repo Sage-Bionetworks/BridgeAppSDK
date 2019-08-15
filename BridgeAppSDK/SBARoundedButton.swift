@@ -105,13 +105,13 @@ public let SBARoundedButtonDefaultCornerRadius: CGFloat = SBARoundedButtonDefaul
         // In many cases, the below constraints will be overriden by the containing view, so we set the priority here to 950
         // add default constraint for height
         let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: SBARoundedButtonDefaultHeight)
-        heightConstraint.priority = 950
+        heightConstraint.priority = UILayoutPriority(rawValue: 950)
         
         // Add minimum constraint for width
         let desiredWidth = (numberOfButtons == 1) ? SBARoundedButtonDefaultWidthWith1Button : SBARoundedButtonDefaultWidthWith2Buttons;
         let minWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .width, multiplier: 1.0, constant: 144)
         let widthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: desiredWidth)
-        widthConstraint.priority = 950
+        widthConstraint.priority = UILayoutPriority(rawValue: 950)
         
         self.addConstraints([heightConstraint, minWidthConstraint, widthConstraint])
 

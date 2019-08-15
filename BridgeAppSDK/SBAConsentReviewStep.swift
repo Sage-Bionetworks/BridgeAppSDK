@@ -249,12 +249,12 @@ open class SBAConsentReviewStepViewController: ORKPageStepViewController, SBACon
     }
     
     public var consentAccepted: Bool? {
-        let consentResult = self.result?.results?.find({ $0 is ORKConsentSignatureResult }) as? ORKConsentSignatureResult
+        let consentResult = self.result?.results?.sba_find({ $0 is ORKConsentSignatureResult }) as? ORKConsentSignatureResult
         return consentResult?.consented
     }
     
     public var signatureImage: UIImage? {
-        let signatureResult = self.result?.results?.find({ $0 is ORKSignatureResult }) as? ORKSignatureResult
+        let signatureResult = self.result?.results?.sba_find({ $0 is ORKSignatureResult }) as? ORKSignatureResult
         return signatureResult?.signatureImage
     }
     

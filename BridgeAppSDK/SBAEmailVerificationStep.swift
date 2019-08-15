@@ -126,14 +126,14 @@ open class SBAEmailVerificationStepViewController: SBAGenericStepViewController,
         verifyRegistration(isForced: false)
         
         // Setup a listener for going to background
-        NotificationCenter.default.addObserver(self, selector: #selector(verifyRegistration), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(verifyRegistration), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Remove listeners
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     open func appDidBecomeActive() {
@@ -146,7 +146,7 @@ open class SBAEmailVerificationStepViewController: SBAGenericStepViewController,
         verifyRegistration(isForced: true)
     }
     
-    open func verifyRegistration(isForced: Bool) {
+    @objc open func verifyRegistration(isForced: Bool) {
         guard !_isVerifying else { return }
         _isVerifying = true
         if isForced {

@@ -40,7 +40,7 @@ extension UIFont {
      * but we need to convert that name to the system font with weight for it to work
      */
     class func sfFont(_ size : CGFloat, _ weight: CGFloat) -> UIFont! {
-        return UIFont.systemFont(ofSize: size, weight: weight)
+        return UIFont.systemFont(ofSize: size, weight: UIFont.Weight(rawValue: weight))
     }
     
     class func sfFontItalic(_ size : CGFloat) -> UIFont! {
@@ -50,44 +50,44 @@ extension UIFont {
     // MARK: Rounded button
     
     open class var roundedButtonTitle: UIFont {
-        return sfFont(19.0, UIFontWeightSemibold)
+        return sfFont(19.0, UIFont.Weight.semibold.rawValue)
     }
     
     // MARK: Generic step view controller - header view labels
 
     open class var headerViewHeaderLabel: UIFont {
-        return sfFont(23.0, UIFontWeightRegular)
+        return sfFont(23.0, UIFont.Weight.regular.rawValue)
     }
     
     open class var headerViewDetailsLabel: UIFont {
-        return sfFont(17.0, UIFontWeightRegular)
+        return sfFont(17.0, UIFont.Weight.regular.rawValue)
     }
     
     open class var headerViewPromptLabel: UIFont {
-        return sfFont(15.0, UIFontWeightRegular)
+        return sfFont(15.0, UIFont.Weight.regular.rawValue)
     }
 
     open class var headerViewStepCountLabel: UIFont {
-        return sfFont(14.0, UIFontWeightRegular)
+        return sfFont(14.0, UIFont.Weight.regular.rawValue)
     }
     
     // MARK: Generic step view controller - choice cell
 
     open class var choiceCellLabel: UIFont {
-        return sfFont(19.0, UIFontWeightSemibold)
+        return sfFont(19.0, UIFont.Weight.semibold.rawValue)
     }
     
     // MARK: Generic step view controller - text field cell
 
     open class var textFieldCellLabel: UIFont {
-        return sfFont(15.0, UIFontWeightRegular)
+        return sfFont(15.0, UIFont.Weight.regular.rawValue)
     }
 
     open class var textFieldCellText: UIFont {
-        return sfFont(19.0, UIFontWeightRegular)
+        return sfFont(19.0, UIFont.Weight.regular.rawValue)
     }
 
     open class var textFieldFeaturedCellText: UIFont {
-        return sfFont(33.0, UIFontWeightRegular)
+        return sfFont(33.0, UIFont.Weight.regular.rawValue)
     }
 }

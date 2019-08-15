@@ -63,8 +63,6 @@
 		FF14A0C71E984D3E007BB710 /* SBAOnboardingTableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0C61E984D3E007BB710 /* SBAOnboardingTableRow.swift */; };
 		FF14A0C91E984D72007BB710 /* SBAOnboardingTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0C81E984D72007BB710 /* SBAOnboardingTableHeader.swift */; };
 		FF14A0F91E9C1BA2007BB710 /* SBASignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF14A0F81E9C1BA2007BB710 /* SBASignUpViewController.swift */; };
-		FF1B89901EE768E900A96DAE /* SBAMoodScaleStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1B898E1EE768E900A96DAE /* SBAMoodScaleStepViewController.swift */; };
-		FF1B89911EE768E900A96DAE /* SBAMoodScaleStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF1B898F1EE768E900A96DAE /* SBAMoodScaleStepViewController.xib */; };
 		FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */; };
 		FF1F8D401CA9D1BF0098FAC5 /* SBAConsentSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */; };
 		FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */; };
@@ -77,8 +75,6 @@
 		FF24FF2A1E28C4180016C4DF /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF24FEF71E28AF5B0016C4DF /* ResearchKit.framework */; };
 		FF24FF2B1E28C55F0016C4DF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; };
 		FF24FF2C1E28C55F0016C4DF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFC160921CFE672100C29AF7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF2FE77C1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */; };
-		FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */; };
 		FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */; };
 		FF30E5BB1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */; };
 		FF35094D1EE9F8110018022D /* UIColor+StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF35094C1EE9F8110018022D /* UIColor+StyleGuide.swift */; };
@@ -119,7 +115,6 @@
 		FF722C161D775BB8004B2F8B /* SBANewsFeedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */; };
 		FF722C191D775C55004B2F8B /* SBANewsFeedItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF722C1A1D775C55004B2F8B /* SBANewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */; };
-		FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */; };
 		FF7601C41EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */; };
 		FF7601C61EE7DB6300438F08 /* cardio.json in Resources */ = {isa = PBXBuildFile; fileRef = FF7601C51EE7DB6300438F08 /* cardio.json */; };
 		FF7602531EE9357300438F08 /* SBAInstructionBelowImageStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */; };
@@ -159,16 +154,6 @@
 		FF826EC61ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */; };
 		FF826EC81ED8025000731DD4 /* SBASinglePermissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */; };
 		FF84AB661D90A7D900ABD54C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF84AB651D90A7D900ABD54C /* HealthKit.framework */; };
-		FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF8630411E709C9E0077AC57 /* Interface.storyboard */; };
-		FF8630451E709C9E0077AC57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8630441E709C9E0077AC57 /* Assets.xcassets */; };
-		FF86304C1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FF8630551E709C9E0077AC57 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */; };
-		FF8630591E709C9E0077AC57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8630581E709C9E0077AC57 /* Assets.xcassets */; };
-		FF86305D1E709C9E0077AC57 /* Sage Cardio Challenge.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */; };
-		FF8630791E709CD80077AC57 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; };
-		FF86307A1E709CD80077AC57 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FF86307E1E709CEB0077AC57 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; };
-		FF86307F1E709CEB0077AC57 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF8630711E709C9E0077AC57 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF89975A1D0B3B9800B26051 /* MockAppInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */; };
 		FF8997791D0B585600B26051 /* MockBridgeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997781D0B585600B26051 /* MockBridgeInfo.m */; };
 		FF8997931D0B589500B26051 /* MockUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8997921D0B589500B26051 /* MockUser.m */; };
@@ -327,39 +312,11 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
-		FF86304D1E709C9E0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 161479B81BD6CE8F0099A068 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF86304A1E709C9E0077AC57;
-			remoteInfo = "Sage Cardio Challenge Extension";
-		};
-		FF86305B1E709C9E0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 161479B81BD6CE8F0099A068 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF86303E1E709C9D0077AC57;
-			remoteInfo = "Sage Cardio Challenge";
-		};
 		FF8630701E709C9E0077AC57 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FF405E2E1E5393DB00002C19;
-			remoteInfo = "ResearchKit (watchOS)";
-		};
-		FF86307B1E709CD80077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FF405E2D1E5393DB00002C19;
-			remoteInfo = "ResearchKit (watchOS)";
-		};
-		FF8630801E709CEB0077AC57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FF405E2D1E5393DB00002C19;
 			remoteInfo = "ResearchKit (watchOS)";
 		};
 		FFC160911CFE672100C29AF7 /* PBXContainerItemProxy */ = {
@@ -407,48 +364,14 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF8630761E709C9E0077AC57 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				FF86304C1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FF8630781E709C9E0077AC57 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				FF86305D1E709C9E0077AC57 /* Sage Cardio Challenge.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF86307D1E709CD90077AC57 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FF86307A1E709CD80077AC57 /* ResearchKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630831E709CEC0077AC57 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FF86307F1E709CEB0077AC57 /* ResearchKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -517,8 +440,6 @@
 		FF14A0C61E984D3E007BB710 /* SBAOnboardingTableRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingTableRow.swift; sourceTree = "<group>"; };
 		FF14A0C81E984D72007BB710 /* SBAOnboardingTableHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAOnboardingTableHeader.swift; sourceTree = "<group>"; };
 		FF14A0F81E9C1BA2007BB710 /* SBASignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASignUpViewController.swift; sourceTree = "<group>"; };
-		FF1B898E1EE768E900A96DAE /* SBAMoodScaleStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAMoodScaleStepViewController.swift; sourceTree = "<group>"; };
-		FF1B898F1EE768E900A96DAE /* SBAMoodScaleStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBAMoodScaleStepViewController.xib; sourceTree = "<group>"; };
 		FF1F8D341CA9B9650098FAC5 /* SBAUserWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserWrapper.swift; sourceTree = "<group>"; };
 		FF1F8D3F1CA9D1BF0098FAC5 /* SBAConsentSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAConsentSignature.swift; sourceTree = "<group>"; };
 		FF21DE6F1DDBDA4A00C0B181 /* SBADemographicDataArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBADemographicDataArchive.swift; sourceTree = "<group>"; };
@@ -526,8 +447,6 @@
 		FF2498131CB6C1F0002DD05F /* MockTrackedDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockTrackedDataStore.m; sourceTree = "<group>"; };
 		FF24FECC1E28AF4D0016C4DF /* ResearchUXFactory.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchUXFactory.xcodeproj; path = ResearchUXFactory/ResearchUXFactory.xcodeproj; sourceTree = "<group>"; };
 		FF24FEF01E28AF5A0016C4DF /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchUXFactory/ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
-		FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBABrainBaselineStepViewController.swift; sourceTree = "<group>"; };
-		FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBABrainBaselineStepViewController.xib; sourceTree = "<group>"; };
 		FF3075541DF6209800F2B3EA /* SBAUserProfileControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAUserProfileControllerTests.swift; sourceTree = "<group>"; };
 		FF30E5BA1CF76CBA003C0F8F /* SBAExternalIDLoginStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAExternalIDLoginStep.swift; sourceTree = "<group>"; };
 		FF35094C1EE9F8110018022D /* UIColor+StyleGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StyleGuide.swift"; sourceTree = "<group>"; };
@@ -568,7 +487,6 @@
 		FF722C121D775BB8004B2F8B /* SBANewsFeedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedManager.m; sourceTree = "<group>"; };
 		FF722C171D775C55004B2F8B /* SBANewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBANewsFeedItem.h; sourceTree = "<group>"; };
 		FF722C181D775C55004B2F8B /* SBANewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBANewsFeedItem.m; sourceTree = "<group>"; };
-		FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAEqualityTests.m; sourceTree = "<group>"; };
 		FF7601C31EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SBAActiveTask+CardioChallenge.swift"; sourceTree = "<group>"; };
 		FF7601C51EE7DB6300438F08 /* cardio.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cardio.json; sourceTree = "<group>"; };
 		FF7602511EE9357300438F08 /* SBAInstructionBelowImageStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBAInstructionBelowImageStep.swift; sourceTree = "<group>"; };
@@ -609,15 +527,6 @@
 		FF826EC41ED7FE7700731DD4 /* SBASinglePermissionStepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SBASinglePermissionStepViewController.xib; sourceTree = "<group>"; };
 		FF826EC71ED8025000731DD4 /* SBASinglePermissionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBASinglePermissionStep.swift; sourceTree = "<group>"; };
 		FF84AB651D90A7D900ABD54C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
-		FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sage Cardio Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF8630421E709C9E0077AC57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
-		FF8630441E709C9E0077AC57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FF8630461E709C9E0077AC57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Sage Cardio Challenge Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF8630511E709C9E0077AC57 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
-		FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		FF8630581E709C9E0077AC57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FF86305A1E709C9E0077AC57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF8997581D0B3B9800B26051 /* MockAppInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockAppInfoDelegate.h; sourceTree = "<group>"; };
 		FF8997591D0B3B9800B26051 /* MockAppInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockAppInfoDelegate.m; sourceTree = "<group>"; };
 		FF8997771D0B585600B26051 /* MockBridgeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockBridgeInfo.h; sourceTree = "<group>"; };
@@ -725,22 +634,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF8630481E709C9E0077AC57 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630791E709CD80077AC57 /* ResearchKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630821E709CEC0077AC57 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF86307E1E709CEB0077AC57 /* ResearchKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -785,8 +678,6 @@
 				161479C01BD6CE8F0099A068 /* BridgeAppSDKSample.app */,
 				801040B21C5A843D00D26E19 /* BridgeAppSDK.framework */,
 				801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */,
-				FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */,
-				FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -887,7 +778,6 @@
 				FF3E30821D5CE85D00347165 /* SBAActivityArchiveTests.swift */,
 				FFDECDFC1D077C2000434001 /* SBAConsentTests.swift */,
 				FF64113B1CB43EC6007FB9E1 /* SBADataObjectTests.swift */,
-				FF73B5721D38402E00E9D4BD /* SBAEqualityTests.m */,
 				FFDECDFE1D0796D200434001 /* SBAOnboardingManagerTests.swift */,
 				60F2BB451EC1296100957BE6 /* SBAProfileManagerTests.swift */,
 				FF71DEAB1EC5180C00921EB5 /* SBBScheduledActivityFilterTests.swift */,
@@ -913,8 +803,6 @@
 				FFC15FDD1CFE503100C29AF7 /* Resources */,
 				FFC15FD41CFE43BE00C29AF7 /* Storyboards */,
 				801040F41C5AD55800D26E19 /* Supporting Files */,
-				FF8630401E709C9D0077AC57 /* Sage Cardio Challenge */,
-				FF86304F1E709C9E0077AC57 /* Sage Cardio Challenge Extension */,
 			);
 			path = BridgeAppSDKSample;
 			sourceTree = "<group>";
@@ -1064,15 +952,6 @@
 			name = Account;
 			sourceTree = "<group>";
 		};
-		FF1B89791EE7682800A96DAE /* Mood Step */ = {
-			isa = PBXGroup;
-			children = (
-				FF1B898E1EE768E900A96DAE /* SBAMoodScaleStepViewController.swift */,
-				FF1B898F1EE768E900A96DAE /* SBAMoodScaleStepViewController.xib */,
-			);
-			name = "Mood Step";
-			sourceTree = "<group>";
-		};
 		FF24FECD1E28AF4D0016C4DF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1092,15 +971,6 @@
 				FF24FEF91E28AF5B0016C4DF /* ResearchKitTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		FF2FE7651ED4CA6C008224D0 /* BrainBaseline */ = {
-			isa = PBXGroup;
-			children = (
-				FF2FE77A1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift */,
-				FF2FE77B1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib */,
-			);
-			name = BrainBaseline;
 			sourceTree = "<group>";
 		};
 		FF37BE2C1ED7925300C264CB /* Views */ = {
@@ -1208,37 +1078,6 @@
 				FFD6AB5F1EDE30710075ABEF /* SBAPermissionsStep+PageSource.swift */,
 			);
 			name = Permissions;
-			sourceTree = "<group>";
-		};
-		FF8630401E709C9D0077AC57 /* Sage Cardio Challenge */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630411E709C9E0077AC57 /* Interface.storyboard */,
-				FF8630441E709C9E0077AC57 /* Assets.xcassets */,
-				FF8630461E709C9E0077AC57 /* Info.plist */,
-			);
-			name = "Sage Cardio Challenge";
-			path = "../Sage Cardio Challenge";
-			sourceTree = "<group>";
-		};
-		FF86304F1E709C9E0077AC57 /* Sage Cardio Challenge Extension */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630541E709C9E0077AC57 /* ExtensionDelegate.swift */,
-				FF8630581E709C9E0077AC57 /* Assets.xcassets */,
-				FF86305A1E709C9E0077AC57 /* Info.plist */,
-				FF8630501E709C9E0077AC57 /* Supporting Files */,
-			);
-			name = "Sage Cardio Challenge Extension";
-			path = "../Sage Cardio Challenge Extension";
-			sourceTree = "<group>";
-		};
-		FF8630501E709C9E0077AC57 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				FF8630511E709C9E0077AC57 /* PushNotificationPayload.apns */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		FF90559E1CE286EA0049D12A /* BridgeExtensions */ = {
@@ -1442,10 +1281,8 @@
 			isa = PBXGroup;
 			children = (
 				FFD6AB801EDE836F0075ABEF /* Activity Introduction Step */,
-				FF2FE7651ED4CA6C008224D0 /* BrainBaseline */,
 				FFCC3ABC1EE7277500A2A2C8 /* Completion Step */,
 				FFADF30D1EE5DCA7005F7E1D /* Instruction Step */,
-				FF1B89791EE7682800A96DAE /* Mood Step */,
 			);
 			name = "Custom Step UI";
 			sourceTree = "<group>";
@@ -1523,7 +1360,6 @@
 				FF24FF241E28C3DF0016C4DF /* PBXTargetDependency */,
 				FF24FF281E28C3E80016C4DF /* PBXTargetDependency */,
 				FF24FF2E1E28C55F0016C4DF /* PBXTargetDependency */,
-				FF86305C1E709C9E0077AC57 /* PBXTargetDependency */,
 			);
 			name = BridgeAppSDKSample;
 			productName = ResearchHealth;
@@ -1567,45 +1403,6 @@
 			productReference = 801040BB1C5A843D00D26E19 /* BridgeAppSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FF8630771E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge" */;
-			buildPhases = (
-				FF86303D1E709C9D0077AC57 /* Resources */,
-				FF8630761E709C9E0077AC57 /* Embed App Extensions */,
-				FF8630821E709CEC0077AC57 /* Frameworks */,
-				FF8630831E709CEC0077AC57 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FF86304E1E709C9E0077AC57 /* PBXTargetDependency */,
-				FF8630811E709CEB0077AC57 /* PBXTargetDependency */,
-			);
-			name = "Sage Cardio Challenge";
-			productName = "Sage Cardio Challenge";
-			productReference = FF86303F1E709C9D0077AC57 /* Sage Cardio Challenge.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FF8630751E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge Extension" */;
-			buildPhases = (
-				FF8630471E709C9E0077AC57 /* Sources */,
-				FF8630481E709C9E0077AC57 /* Frameworks */,
-				FF8630491E709C9E0077AC57 /* Resources */,
-				FF86307D1E709CD90077AC57 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FF86307C1E709CD80077AC57 /* PBXTargetDependency */,
-			);
-			name = "Sage Cardio Challenge Extension";
-			productName = "Sage Cardio Challenge Extension";
-			productReference = FF86304B1E709C9E0077AC57 /* Sage Cardio Challenge Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1613,13 +1410,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Sage Bionetworks";
 				TargetAttributes = {
 					161479BF1BD6CE8F0099A068 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 4B822CZK9N;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1638,23 +1435,13 @@
 					};
 					801040B11C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1030;
 					};
 					801040BA1C5A843D00D26E19 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 161479BF1BD6CE8F0099A068;
-					};
-					FF86303E1E709C9D0077AC57 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Manual;
-					};
-					FF86304A1E709C9E0077AC57 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 4B822CZK9N;
-						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1663,6 +1450,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1688,8 +1476,6 @@
 				161479BF1BD6CE8F0099A068 /* BridgeAppSDKSample */,
 				801040B11C5A843D00D26E19 /* BridgeAppSDK */,
 				801040BA1C5A843D00D26E19 /* BridgeAppSDKTests */,
-				FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */,
-				FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -1843,7 +1629,6 @@
 				80815D951EC271BB0095D1C0 /* ClassTypeMap.plist in Resources */,
 				FF71A6321D71023D00A4EE8A /* BridgeAppSDK.strings in Resources */,
 				FF5051D11D664E790065E677 /* SBAOnboardingCompleteTableViewCell.xib in Resources */,
-				FF1B89911EE768E900A96DAE /* SBAMoodScaleStepViewController.xib in Resources */,
 				FF63D1021CD03F89007ADEE5 /* License_ZipZap.txt in Resources */,
 				FFADF3111EE5DD00005F7E1D /* SBAInstructionStepViewController.xib in Resources */,
 				FF7601C61EE7DB6300438F08 /* cardio.json in Resources */,
@@ -1851,7 +1636,6 @@
 				8045EE981EF308C4009B80E0 /* ProfileItems.json in Resources */,
 				FFA391AD1D7F3C4E000957E1 /* CatastrophicError.storyboard in Resources */,
 				FFCC3ADE1EE7400000A2A2C8 /* SBACompletionStepViewController.xib in Resources */,
-				FF2FE77D1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1865,23 +1649,6 @@
 				60F2BB581EC12A1A00957BE6 /* ProfileDescription.json in Resources */,
 				808AC1DE1F1861B900050782 /* ClassTypeMap.plist in Resources */,
 				FF9055CA1CE3A8860049D12A /* CombinedTask.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF86303D1E709C9D0077AC57 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630451E709C9E0077AC57 /* Assets.xcassets in Resources */,
-				FF8630431E709C9E0077AC57 /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630491E709C9E0077AC57 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630591E709C9E0077AC57 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1925,7 +1692,6 @@
 				6032424A1E4001A100C184AD /* SBADataArchive.m in Sources */,
 				805FBBED1CECF694009E1348 /* SBAActivityArchive.swift in Sources */,
 				FB8439191C727BEB0086E961 /* SBASurveyFactory.swift in Sources */,
-				FF1B89901EE768E900A96DAE /* SBAMoodScaleStepViewController.swift in Sources */,
 				FF92A6441DBFE16C00614D1F /* SBALearnInfo.swift in Sources */,
 				FF77525D1F71A0A8004925B8 /* SBACrosshatchView.swift in Sources */,
 				FF14A0C71E984D3E007BB710 /* SBAOnboardingTableRow.swift in Sources */,
@@ -1964,7 +1730,6 @@
 				FF21DE701DDBDA4A00C0B181 /* SBADemographicDataArchive.swift in Sources */,
 				FF7601C41EE7D69C00438F08 /* SBAActiveTask+CardioChallenge.swift in Sources */,
 				03D5F9A01F13D43800C40FF5 /* UIView+Layout.swift in Sources */,
-				FF2FE77C1ED4CBFF008224D0 /* SBABrainBaselineStepViewController.swift in Sources */,
 				80FDDC961E661BF70010DFA7 /* SBAProfileItem.swift in Sources */,
 				FF1F8D351CA9B9650098FAC5 /* SBAUserWrapper.swift in Sources */,
 				6099B9A01E008B6400902297 /* SBAAppInfoDelegate.swift in Sources */,
@@ -2015,7 +1780,6 @@
 				FF64113C1CB43EC6007FB9E1 /* SBADataObjectTests.swift in Sources */,
 				FFCF37741CD41A920090452F /* SBAScheduledActivityManagerTests.swift in Sources */,
 				FFB30E5D1D49537400D175D2 /* SBAAccountTests.swift in Sources */,
-				FF73B5731D38402E00E9D4BD /* SBAEqualityTests.m in Sources */,
 				FF3075551DF6209800F2B3EA /* SBAUserProfileControllerTests.swift in Sources */,
 				FF8997931D0B589500B26051 /* MockUser.m in Sources */,
 				FFCE310D1EC1273C0086DCAA /* MockActivityManager.swift in Sources */,
@@ -2031,14 +1795,6 @@
 				60F2BB461EC1296100957BE6 /* SBAProfileManagerTests.swift in Sources */,
 				FF71DEAC1EC5180C00921EB5 /* SBBScheduledActivityFilterTests.swift in Sources */,
 				FFB30D621D40891400D175D2 /* ORKFormStep+Result.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FF8630471E709C9E0077AC57 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FF8630551E709C9E0077AC57 /* ExtensionDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2074,26 +1830,6 @@
 			isa = PBXTargetDependency;
 			name = BridgeSDK;
 			targetProxy = FF24FF2D1E28C55F0016C4DF /* PBXContainerItemProxy */;
-		};
-		FF86304E1E709C9E0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF86304A1E709C9E0077AC57 /* Sage Cardio Challenge Extension */;
-			targetProxy = FF86304D1E709C9E0077AC57 /* PBXContainerItemProxy */;
-		};
-		FF86305C1E709C9E0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF86303E1E709C9D0077AC57 /* Sage Cardio Challenge */;
-			targetProxy = FF86305B1E709C9E0077AC57 /* PBXContainerItemProxy */;
-		};
-		FF86307C1E709CD80077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ResearchKit (watchOS)";
-			targetProxy = FF86307B1E709CD80077AC57 /* PBXContainerItemProxy */;
-		};
-		FF8630811E709CEB0077AC57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ResearchKit (watchOS)";
-			targetProxy = FF8630801E709CEB0077AC57 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2330,14 +2066,6 @@
 			name = Walking.json;
 			sourceTree = "<group>";
 		};
-		FF8630411E709C9E0077AC57 /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FF8630421E709C9E0077AC57 /* Base */,
-			);
-			name = Interface.storyboard;
-			sourceTree = "<group>";
-		};
 		FF92A6721DBFF12A00614D1F /* About.html */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2413,14 +2141,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2462,14 +2198,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2508,13 +2252,14 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 4B822CZK9N;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
 				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -2529,12 +2274,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 4B822CZK9N;
 				INFOPLIST_FILE = BridgeAppSDKSample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample;
 				PROVISIONING_PROFILE = "dd2bdd52-d477-4142-90b4-82521722f5cc";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKSample/BridgeAppSDKSample-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -2551,13 +2297,14 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeAppSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2576,11 +2323,12 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeAppSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2594,12 +2342,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = BridgeAppSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
 			};
 			name = Debug;
@@ -2612,106 +2361,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = BridgeAppSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKTests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BridgeAppSDKTests/BridgeAppSDKTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeAppSDKSample.app/BridgeAppSDKSample";
-			};
-			name = Release;
-		};
-		FF86305E1E709C9E0077AC57 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				IBSC_MODULE = Sage_Cardio_Challenge_Extension;
-				INFOPLIST_FILE = "Sage Cardio Challenge/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Debug;
-		};
-		FF86305F1E709C9E0077AC57 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				IBSC_MODULE = Sage_Cardio_Challenge_Extension;
-				INFOPLIST_FILE = "Sage Cardio Challenge/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "daac6901-a4e1-4b33-b0d4-8fbc5720ca1d";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Release;
-		};
-		FF8630601E709C9E0077AC57 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				INFOPLIST_FILE = "Sage Cardio Challenge Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
-			};
-			name = Debug;
-		};
-		FF8630611E709C9E0077AC57 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				DEVELOPMENT_TEAM = 4B822CZK9N;
-				INFOPLIST_FILE = "Sage Cardio Challenge Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6675745f-687b-487e-8397-d73b6461156f";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sagebase.BridgeAppSDKSample.watchkitapp.watchkitextension";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 3.1;
 			};
 			name = Release;
 		};
@@ -2750,24 +2406,6 @@
 			buildConfigurations = (
 				801040CD1C5A843E00D26E19 /* Debug */,
 				801040CE1C5A843E00D26E19 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FF8630751E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FF8630601E709C9E0077AC57 /* Debug */,
-				FF8630611E709C9E0077AC57 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FF8630771E709C9E0077AC57 /* Build configuration list for PBXNativeTarget "Sage Cardio Challenge" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FF86305E1E709C9E0077AC57 /* Debug */,
-				FF86305F1E709C9E0077AC57 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

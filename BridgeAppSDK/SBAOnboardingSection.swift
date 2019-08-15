@@ -101,9 +101,9 @@ public enum SBAOnboardingSectionBaseType: String {
     */
     func ordinal() -> Int {
         let order:[SBAOnboardingSectionBaseType] = SBAOnboardingSectionBaseType.all
-        guard let ret = order.index(of: self) else {
+        guard let ret = order.firstIndex(of: self) else {
             assertionFailure("\(self) ordinal value is unknown")
-            return (order.index(of: .completion)! - 1)
+            return (order.firstIndex(of: .completion)! - 1)
         }
         return ret
     }
@@ -173,12 +173,13 @@ public func ==(lhs: SBAOnboardingSectionType, rhs: SBAOnboardingSectionType) -> 
 }
 
 extension SBAOnboardingSectionType: Hashable {
-    public var hashValue: Int {
+    
+    public func hash(into hasher: inout Hasher) {
         switch (self) {
         case (.base(let value)):
-            return value.hashValue;
+            hasher.combine(value)
         case (.custom(let value)):
-            return value.hashValue;
+            hasher.combine(value)
         }
     }
 }

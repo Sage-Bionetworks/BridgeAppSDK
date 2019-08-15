@@ -46,7 +46,7 @@ class SBAVisualConsentStepViewController: ORKPageStepViewController, UIPageViewC
             
             // set progress on the view
             stepVC.stepCount = pageStep.steps.count
-            stepVC.stepIndex = pageStep.steps.index(of: step)! + 1
+            stepVC.stepIndex = pageStep.steps.firstIndex(of: step)! + 1
         }
         
         return stepVC

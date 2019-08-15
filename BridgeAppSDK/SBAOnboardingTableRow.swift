@@ -58,7 +58,7 @@ extension NSDictionary: SBAOnboardingTableRow {
     
     public var onboardingSectionTypes: [SBAOnboardingSectionType] {
         guard let onboardingTypes = self["sections"] as? [String] else { return [] }
-        return onboardingTypes.mapAndFilter({ SBAOnboardingSectionType(rawValue: $0) })
+        return onboardingTypes.sba_mapAndFilter({ SBAOnboardingSectionType(rawValue: $0) })
     }
     
     public var title: String {

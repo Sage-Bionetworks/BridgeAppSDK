@@ -71,7 +71,7 @@ extension SBAActiveTask {
 
         // Include all the inner steps in the workout so that they are included in the same progress
         // Also, replace images and steps as required to match designs
-        let workoutSteps = orderedTask.steps.mapAndFilter ({ (step) -> [ORKStep]? in
+        let workoutSteps = orderedTask.steps.sba_mapAndFilter ({ (step) -> [ORKStep]? in
             
             // Filter out the steps that aren't considered part of the workout (and included in the count)
             let cardioIdentifier = BridgeCardioChallengeStepIdentifier(rawValue: step.identifier)
@@ -137,12 +137,6 @@ extension SBAActiveTask {
             instructionStep.text = step.text
             instructionStep.image = SBAResourceFinder.shared.image(forResource: "phoneinpocketIllustration")
             return instructionStep
-            
-        case .breathingBefore, .breathingAfter:
-            return SBAMoodScaleStep(step: step, images: nil)
-            
-        case .tiredBefore, .tiredAfter:
-            return SBAMoodScaleStep(step: step, images: nil)
 
         default:
             return step

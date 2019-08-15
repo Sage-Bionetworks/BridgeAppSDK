@@ -94,7 +94,7 @@
     [SBBComponent(SBBAuthManager) resetUserSessionInfo];
 }
 
-+ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
++ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
 }

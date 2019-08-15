@@ -97,7 +97,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  @param identifier        The session identifier.
  @param completionHandler A SBABridgeManagerCompletionBlock to be called upon completion. Optional.
  */
-+ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
++ (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 
 /*!
  Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field. At minimum, the email and password fields must be filled in; in general, you would also want to fill in any of the following information available at sign-up time: firstName, lastName, sharingScope, externalId (if used), dataGroups, notifyByEmail, and any custom attributes you've defined for the attributes field.

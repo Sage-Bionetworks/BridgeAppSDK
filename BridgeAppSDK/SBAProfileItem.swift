@@ -340,7 +340,7 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
         return sourceDict[key] as? String ?? self.profileKey
     }
     
-    open var fallbackKey: String? {
+    @objc open var fallbackKey: String? {
         let key = #keyPath(fallbackKey)
         return sourceDict[key] as? String
     }
@@ -351,6 +351,7 @@ open class SBAProfileItemBase: NSObject, SBAProfileItem {
         return SBAProfileTypeIdentifier(rawValue: rawValue)
     }
     
+    @objc
     public required init(dictionaryRepresentation dictionary: [AnyHashable: Any]) {
         sourceDict = dictionary
         super.init()
@@ -579,7 +580,10 @@ enum SBAProfileParticipantSourceKey: String {
     case dataGroups
 }
 
+@objc
 open class SBAStudyParticipantProfileItem: SBAStudyParticipantCustomAttributesProfileItem {
+    
+    @objc
     public static var studyParticipant: SBBStudyParticipant?
     
     override open func storedValue(forKey key: String) -> Any? {
@@ -724,9 +728,9 @@ open class SBAWhatAndWhen: NSObject, Comparable {
     static var valueKey: String { return #keyPath(value) }
     static var dateKey: String { return #keyPath(date) }
     static var isNewKey: String { return #keyPath(isNew) }
-    open var value: SBBJSONValue
-    open var date: NSDate
-    var isNew: Bool
+    @objc open var value: SBBJSONValue
+    @objc open var date: NSDate
+    @objc var isNew: Bool
     
     public init(dictionaryRepresentation dictionary: [String: SBBJSONValue]) {
         value = dictionary[SBAWhatAndWhen.valueKey]!
@@ -838,7 +842,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         didSet {
             // get all the SBAClientDataProfileItem instances from SBAProfileManager
             guard scheduledActivities != nil && scheduledActivities!.count > 0,
-                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.mapAndFilter({ return $0 as? SBAClientDataProfileItem })
+                    let clientDataItems: [SBAClientDataProfileItem] = SBAProfileManager.shared?.profileItems().values.sba_mapAndFilter({ return $0 as? SBAClientDataProfileItem })
                 else {
                     return
             }
@@ -906,17 +910,17 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
         }
     }
     
-    open var taskIdentifier: String? {
+    @objc open var taskIdentifier: String? {
         let key = #keyPath(taskIdentifier)
         return sourceDict[key] as? String
     }
     
-    open var surveyIdentifier: String? {
+    @objc open var surveyIdentifier: String? {
         let key = #keyPath(surveyIdentifier)
         return sourceDict[key] as? String
     }
     
-    open var activityIdentifier: String {
+    @objc open var activityIdentifier: String {
         let key = #keyPath(activityIdentifier)
         let explicitActivityIdentifer = sourceDict[key] as? String
         guard let identifier = explicitActivityIdentifer ?? taskIdentifier ?? surveyIdentifier
@@ -935,7 +939,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     
     func jsonWhatsAndWhensFromBridge() -> [[String: SBBJSONValue]] {
         // pull out all the non-empty lists of date/value instances for this activityIdentifier and key into one non-empty list
-        guard let valueArrays = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> [[String: SBBJSONValue]]? in
+        guard let valueArrays = SBAClientDataProfileItem.scheduledActivities?.sba_mapAndFilter({ (scheduledActivity) -> [[String: SBBJSONValue]]? in
                     guard scheduledActivity.activityIdentifier == activityIdentifier,
                             let clientData = scheduledActivity.clientData as? NSDictionary,
                             let valueArray = clientData[sourceKey] as? [[String : SBBJSONValue]],
@@ -982,7 +986,7 @@ open class SBAClientDataProfileItem: SBAProfileItemBase {
     func setToAppropriateScheduledActivity(_ jsonWhatAndWhen: [String: SBBJSONValue]) {
         // potential SBBScheduledActivity instances to update will have the right activityIdentifier and will expire after, if at all
         let when = SBAWhatAndWhen(dictionaryRepresentation: jsonWhatAndWhen).date as Date
-        guard let activities = SBAClientDataProfileItem.scheduledActivities?.mapAndFilter({ (scheduledActivity) -> SBBScheduledActivity? in
+        guard let activities = SBAClientDataProfileItem.scheduledActivities?.sba_mapAndFilter({ (scheduledActivity) -> SBBScheduledActivity? in
                     if scheduledActivity.activityIdentifier == activityIdentifier {
                         return scheduledActivity
                     }
@@ -1113,12 +1117,12 @@ open class SBAFullNameProfileItem: SBAStudyParticipantProfileItem, SBANameDataSo
         return true
     }
     
-    fileprivate dynamic var givenNameKey: String {
+    @objc fileprivate dynamic var givenNameKey: String {
         let key = #keyPath(givenNameKey)
         return sourceDict[key] as? String ?? SBAProfileSourceKey.givenName.rawValue
     }
     
-    fileprivate dynamic var familyNameKey: String {
+    @objc fileprivate dynamic var familyNameKey: String {
         let key = #keyPath(familyNameKey)
         return sourceDict[key] as? String ?? SBAProfileSourceKey.familyName.rawValue
     }

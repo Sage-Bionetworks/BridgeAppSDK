@@ -547,7 +547,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
         let expectedResultIdentifiers = [ "file", "file_dup1", "file_dup2"]
         XCTAssertEqual(resultIdentifiers, expectedResultIdentifiers)
         
-        let lastCountdownResult = (taskVC.taskResult.results?.findLast(withIdentifier: "countdown") as? ORKStepResult)?.results?.first
+        let lastCountdownResult = (taskVC.taskResult.results?.sba_findLast(withIdentifier: "countdown") as? ORKStepResult)?.results?.first
         XCTAssertNotNil(lastCountdownResult)
         XCTAssertEqual(lastCountdownResult?.identifier, "file")
     }
@@ -884,7 +884,7 @@ class SBAScheduledActivityManagerTests: XCTestCase {
             if let _ = step as? SBATrackedSelectionStep {
                 // modify the result to include the selected items if this is the selection step
                 let answerMap = NSMutableDictionary()
-                if let meds = selectedMeds, let choices = meds.allKeys {
+                if let meds = selectedMeds, let choices = meds.sba_allKeys {
                     answerMap.setValue(choices, forKey: "choices")
                     for (key, value) in meds {
                         answerMap.setValue(value, forKey: key)

@@ -82,7 +82,7 @@ import UIKit
     }
     
     // Force all titles to be an attributed title
-    override open func setTitle(_ title: String?, for state: UIControlState) {
+    override open func setTitle(_ title: String?, for state: UIControl.State) {
         super.setTitle(title, for: state)
         self.setAttributedTitle(attributedString(title), for: state)
     }
@@ -91,13 +91,24 @@ import UIKit
     private func attributedString(_ title: String?) -> NSAttributedString? {
         if let titleUnwrapped = title {
             let attributes: [String : Any] = [
-                NSFontAttributeName : textFont,
-                NSForegroundColorAttributeName : textColor,
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+                convertFromNSAttributedStringKey(NSAttributedString.Key.font) : textFont,
+                convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor) : textColor,
+                convertFromNSAttributedStringKey(NSAttributedString.Key.underlineStyle) : NSUnderlineStyle.single.rawValue
             ]
-            return NSAttributedString(string: titleUnwrapped, attributes: attributes)
+            return NSAttributedString(string: titleUnwrapped, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         } else {
             return nil
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

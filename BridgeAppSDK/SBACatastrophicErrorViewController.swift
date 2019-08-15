@@ -73,7 +73,7 @@ class SBACatastrophicErrorViewController: UIViewController, SBASharedInfoControl
         
         // If the button title is nil set to default title
         let buttonTitle = buttonText ?? String.localizedStringWithFormat(Localization.localizedString("SBA_UPDATE_APP_BUTTON"), Localization.localizedAppName)
-        actionButton.setTitle(buttonTitle, for: UIControlState())
+        actionButton.setTitle(buttonTitle, for: UIControl.State())
         
         // If the action handler is nil then set to default of opening the app for update
         if action != nil {

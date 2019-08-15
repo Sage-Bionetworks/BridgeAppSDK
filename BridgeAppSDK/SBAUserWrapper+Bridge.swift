@@ -70,7 +70,7 @@ public extension SBAUserWrapper {
     /**
      Logout the current user
     */
-    public func logout() {
+    func logout() {
         resetStoredUserData()
         // TODO: syoung 09/19/2016 clear the user cache
     }
@@ -81,7 +81,7 @@ public extension SBAUserWrapper {
      @param dataGroup   The data group to look for
      @return            `YES` if the user is in this data group and `NO` if not
      */
-    public func containsDataGroup(_ dataGroup: String) -> Bool {
+    func containsDataGroup(_ dataGroup: String) -> Bool {
         return self.dataGroups?.contains(dataGroup) ?? false
     }
     
@@ -91,7 +91,7 @@ public extension SBAUserWrapper {
      @param dataGroup   The data group to add to the user's data groups
      @param completion  Completion handler
      */
-    public func addDataGroup(_ dataGroup: String, completion: ((Error?) -> Void)?) {
+    func addDataGroup(_ dataGroup: String, completion: ((Error?) -> Void)?) {
         let dataGroups = (self.dataGroups ?? []) + [dataGroup]
         updateDataGroups(dataGroups, completion: completion)
     }
@@ -102,8 +102,8 @@ public extension SBAUserWrapper {
      @param dataGroup   The data group to remove
      @param completion  Completion handler
      */
-    public func removeDataGroup(_ dataGroup: String, completion: ((Error?) -> Void)?) {
-        guard let idx = self.dataGroups?.index(of: dataGroup) else {
+    func removeDataGroup(_ dataGroup: String, completion: ((Error?) -> Void)?) {
+        guard let idx = self.dataGroups?.firstIndex(of: dataGroup) else {
             completion?(nil)
             return
         }
@@ -118,7 +118,7 @@ public extension SBAUserWrapper {
      @param dataGroups  The new set of data groups
      @param completion  Completion handler
      */
-    public func updateDataGroups(_ dataGroups: [String], completion: ((Error?) -> Void)?) {
+    func updateDataGroups(_ dataGroups: [String], completion: ((Error?) -> Void)?) {
         SBABridgeManager.updateDataGroups(dataGroups, completion: { [weak self] (_, error) in
             guard (self != nil) else { return }
 
@@ -138,7 +138,7 @@ public extension SBAUserWrapper {
      @param externalIdentifier      The external identifier
      @param completion              Completion handler
     */
-    public func setExternalID(_ externalIdentifier: String, completion: ((Error?) -> Void)?) {
+    func setExternalID(_ externalIdentifier: String, completion: ((Error?) -> Void)?) {
         SBABridgeManager.setExternalIdentifier(externalIdentifier) { [weak self] (_, error) in
             guard (self != nil) else { return }
 
@@ -157,7 +157,7 @@ public extension SBAUserWrapper {
      @param email       The email address to use for the new user
      @param completion  Completion handler
      */
-    public func changeUserEmailAddress(_ email: String, completion: ((Error?) -> Void)?) {
+    func changeUserEmailAddress(_ email: String, completion: ((Error?) -> Void)?) {
         guard let password = self.password(forAuthManager: nil) else {
             assertionFailure("Attempting to change email without a stored password")
             return
@@ -171,7 +171,7 @@ public extension SBAUserWrapper {
      @param email       The email address to send the forget password message
      @param completion  Completion handler
     */
-    public func forgotPassword(_ email: String, completion: ((Error?) -> Void)?) {
+    func forgotPassword(_ email: String, completion: ((Error?) -> Void)?) {
         SBABridgeManager.forgotPassword(email) { [weak self] (_, error) in
             self?.callCompletionOnMain(error, completion: completion)
         }
@@ -187,7 +187,7 @@ public extension SBAUserWrapper {
      @param dataGroups  The data groups to assign initially to this user
      @param completion  Completion handler
      */
-    public func registerUser(email: String, password: String, externalId: String?, dataGroups dataGroupsIn: [String]?, completion: ((Error?) -> Void)?) {
+    func registerUser(email: String, password: String, externalId: String?, dataGroups dataGroupsIn: [String]?, completion: ((Error?) -> Void)?) {
         
         let signup = SBBSignUp()
         signup.email = email
@@ -213,7 +213,7 @@ public extension SBAUserWrapper {
      @param signup      A valid signup object should include a non-nil password and non-nil email. Other fields are optional.
      @param completion  Completion handler
      */
-    public func registerUser(signup: SBBSignUp, completion: ((Error?) -> Void)?) {
+    func registerUser(signup: SBBSignUp, completion: ((Error?) -> Void)?) {
     
         func completeRegistration(_ isTester: Bool) {
             
@@ -265,7 +265,7 @@ public extension SBAUserWrapper {
      
      @param completion  Completion handler
      */
-    public func verifyRegistration(_ completion: ((Error?) -> Void)?) {
+    func verifyRegistration(_ completion: ((Error?) -> Void)?) {
         guard let username = self.email, let password = self.password else {
             assertionFailure("Attempting to login without a stored username and password")
             return
@@ -298,7 +298,7 @@ public extension SBAUserWrapper {
      @param externalId  External ID to use for login
      @param completion  Completion handler
      */
-    public func loginUser(externalId: String, completion: ((Error?) -> Void)?) {
+    func loginUser(externalId: String, completion: ((Error?) -> Void)?) {
         let (email, password) = emailAndPasswordForExternalId(externalId)
         guard (email != nil) && (password != nil) else {
             return
@@ -314,7 +314,7 @@ public extension SBAUserWrapper {
      @param password    Password to use for login
      @param completion  Completion handler
      */
-    public func loginUser(email: String, password: String, completion: ((Error?) -> Void)?) {
+    func loginUser(email: String, password: String, completion: ((Error?) -> Void)?) {
         loginUser(email: email, password: password, externalId: nil, completion: completion)
     }
     
@@ -337,7 +337,7 @@ public extension SBAUserWrapper {
      @param consentSignature    The consent signature 
      @param completion          Completion handler
      */
-    public func sendUserConsented(_ consentSignature: SBAConsentSignatureWrapper, completion: ((Error?) -> Void)?) {
+    func sendUserConsented(_ consentSignature: SBAConsentSignatureWrapper, completion: ((Error?) -> Void)?) {
         backgroundSendUserConsented(consentSignature) { [weak self] (error) in
             self?.callCompletionOnMain(error, completion: completion)
         }
@@ -360,7 +360,7 @@ public extension SBAUserWrapper {
     /**
      Sign in when app is active if the login and consent have been verified
      */
-    public func ensureSignedInWithCompletion(_ completion: ((Error?) -> Void)?) {
+    func ensureSignedInWithCompletion(_ completion: ((Error?) -> Void)?) {
         
         // If the user is not logged in or consented then do not attempt login
         // Just return with an error
@@ -391,7 +391,7 @@ public extension SBAUserWrapper {
      @param reason      Reason for withdrawing from study
      @param completion  Completion handler
      */
-    public func withdrawFromStudy() {
+    func withdrawFromStudy() {
         guard let appDelegate = self.appDelegate else {
             assertionFailure("This method is only applicable for applications that support the SBABridgeAppSDKDelegate")
             return
@@ -456,7 +456,7 @@ public extension SBAUserWrapper {
      @param reason      Reason for withdrawing from study
      @param completion  Completion handler
      */
-    public func withdrawFromStudy(reason:String?, completion: ((Error?) -> Void)?) {
+    func withdrawFromStudy(reason:String?, completion: ((Error?) -> Void)?) {
         guard let subpop = subpopulationGuid else {
             // Valid subpopulation was not found. Just reset and call completion
             self.resetStoredUserData()
@@ -473,7 +473,7 @@ public extension SBAUserWrapper {
      @param reason              Reason for withdrawing from study
      @param completion          Completion handler
      */
-    public func withdrawFromStudy(subpopulationGuid:String, reason:String?, completion: ((Error?) -> Void)?) {
+    func withdrawFromStudy(subpopulationGuid:String, reason:String?, completion: ((Error?) -> Void)?) {
         // Withdraw from the study
         SBABridgeManager.withdrawConsent(forSubpopulation: subpopulationGuid, reason: reason) { [weak self] (_, error) in
             self?.callCompletionOnMain(error, completion: completion)
@@ -542,7 +542,7 @@ public extension SBAUserWrapper {
         self.createdOn = response.createdOn
     }
     
-    public func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
+    func emailAndPasswordForExternalId(_ externalId: String) -> (String?, String?) {
         
         guard let emailFormat = self.bridgeInfo?.emailFormatForLoginViaExternalId else {
             assertionFailure("'emailFormatForRegistrationViaExternalId' key missing from BridgeInfo")

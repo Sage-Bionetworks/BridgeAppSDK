@@ -79,13 +79,14 @@ public let SBAMainStoryboardName = "Main"
     
     open var window: UIWindow?
     
+    @objc
     public final class var shared: SBAAppDelegate? {
         return UIApplication.shared.delegate as? SBAAppDelegate
     }
     
     // MARK: UIApplicationDelegate
     
-    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization before application launch.
         
         // emm 2017-09-28 Hack to make sure SBAUser has the app delegate available for later use off the main queue,
@@ -118,7 +119,7 @@ public let SBAMainStoryboardName = "Main"
         return true
     }
 
-    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         if shouldShowPasscode() {
             lockScreen()
@@ -414,7 +415,7 @@ public let SBAMainStoryboardName = "Main"
             if (animated) {
                 UIView.transition(with: window,
                     duration: 0.6,
-                    options: UIViewAnimationOptions.transitionCrossDissolve,
+                    options: UIView.AnimationOptions.transitionCrossDissolve,
                     animations: {
                         window.rootViewController = viewController
                     },

@@ -43,7 +43,7 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
     static let identifier = "identifier"
     
     @objc(sharedManager)
-    open static let shared = SBANotificationsManager()
+    public static let shared = SBANotificationsManager()
     
     lazy open var sharedAppDelegate: SBAAppInfoDelegate = {
         return UIApplication.shared.delegate as! SBAAppInfoDelegate

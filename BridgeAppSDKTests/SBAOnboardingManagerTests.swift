@@ -172,7 +172,7 @@ class SBAOnboardingManagerTests: ResourceTestCase {
                              "profile",
                              "completion",
                              "customEnd",]
-        let actualOrder = sections.mapAndFilter({ $0.onboardingSectionType?.identifier })
+        let actualOrder = sections.sba_mapAndFilter({ $0.onboardingSectionType?.identifier })
         
         XCTAssertEqual(actualOrder, expectedOrder)
         

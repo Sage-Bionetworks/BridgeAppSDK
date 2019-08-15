@@ -220,8 +220,8 @@ open class SBAStepHeaderView: UIView {
         self.addSubview(detailsLabel)
         self.addSubview(promptLabel)
         
-        headerLabel.accessibilityTraits = UIAccessibilityTraitHeader
-        detailsLabel.accessibilityTraits = UIAccessibilityTraitSummaryElement
+        headerLabel.accessibilityTraits = UIAccessibilityTraits.header
+        detailsLabel.accessibilityTraits = UIAccessibilityTraits.summaryElement
         
         headerLabel.numberOfLines = 0
         detailsLabel.numberOfLines = 0
@@ -343,7 +343,7 @@ open class SBAStepHeaderView: UIView {
             }
             
             // check our minimum height
-            let height = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+            let height = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             if height == 0 {
                 NSLayoutConstraint.deactivate(self.constraints)
                 self.makeHeight(.equal, 0.0)

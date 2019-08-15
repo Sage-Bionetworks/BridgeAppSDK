@@ -57,7 +57,7 @@ class SBAStepChoiceCell: UITableViewCell {
         return isSelected ? UIColor.choiceCellLabelHighlighted : UIColor.choiceCellLabel
     }
     
-    open let shadowView: UIView = {
+    let shadowView: UIView = {
         let rule = UIView()
         rule.backgroundColor = UIColor.black
         return rule
@@ -72,7 +72,7 @@ class SBAStepChoiceCell: UITableViewCell {
     }
     
     
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         commonInit()
     }
@@ -193,7 +193,7 @@ open class SBAStepTextFieldCell: UITableViewCell {
         textField.placeholder = text
     }
     
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         commonInit()
     }

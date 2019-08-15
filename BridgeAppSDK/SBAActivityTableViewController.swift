@@ -68,7 +68,7 @@ open class SBAActivityTableViewController: UITableViewController, SBAScheduledAc
         self.refreshControl = refreshControl
         
         // setup notification to refresh on return to foreground
-        foregroundNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) {
+        foregroundNotification = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) {
             [weak self] _ in
             self?.scheduledActivityDataSource.reloadData()
         }

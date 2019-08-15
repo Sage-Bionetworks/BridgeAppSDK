@@ -57,7 +57,7 @@ open class SBAProfileSectionObject: SBADataObject, SBAProfileSection {
     // MARK: SBADataObject overrides
     
     override open func dictionaryRepresentationKeys() -> [String] {
-        return super.dictionaryRepresentationKeys().appending(contentsOf: [#keyPath(title), #keyPath(icon), #keyPath(items)])
+        return super.dictionaryRepresentationKeys().sba_appending(contentsOf: [#keyPath(title), #keyPath(icon), #keyPath(items)])
     }
 
     override open func defaultValue(forKey key: String) -> Any? {
@@ -115,7 +115,7 @@ open class SBAHTMLProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .showHTML
     }
     
-    open var htmlResource: String {
+    @objc open var htmlResource: String {
         get {
             let key = #keyPath(htmlResource)
             return sourceDict[key]! as! String
@@ -149,7 +149,7 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .editProfileItem
     }
     
-    open var profileItemKey: String {
+    @objc open var profileItemKey: String {
         let key = #keyPath(profileItemKey)
         return sourceDict[key]! as! String
     }
@@ -216,14 +216,14 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
     
     override open var detail: String? {
         guard let value = profileItem.value else { return "" }
-        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
+        if let surveyItem = SBASurveyFactory.profileQuestionSurveyItems?.sba_find(withIdentifier: profileItemKey) as? SBAFormStepSurveyItem,
             let choices = surveyItem.items as? [SBAChoice] {
             let selected = (value as? [Any]) ?? [value]
             let textList = selected.map({ (obj) -> String in
                 switch surveyItem.surveyItemType {
                 case .form(.singleChoice), .form(.multipleChoice),
                      .dataGroups(.singleChoice), .dataGroups(.multipleChoice):
-                    return choices.find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
+                    return choices.sba_find({ SBAObjectEquality($0.choiceValue, obj) })?.choiceText ?? String(describing: obj)
                 case .account(.profile):
                     guard let options = surveyItem.items as? [String],
                             options.count == 1,
@@ -261,7 +261,7 @@ open class SBAProfileItemProfileTableItem: SBAProfileTableItemBase {
         return String(describing: value)
     }
     
-    open var answerMapKeys: [String: String] {
+    @objc open var answerMapKeys: [String: String] {
         let key = #keyPath(answerMapKeys)
         return sourceDict[key] as? [String: String] ?? [self.profileItemKey: self.profileItemKey]
     }
@@ -273,7 +273,7 @@ open class SBAResourceProfileTableItem: SBAProfileTableItemBase {
         defaultOnSelectedAction = .showResource
     }
     
-    open var resource: String {
+    @objc open var resource: String {
         get {
             let key = #keyPath(resource)
             return sourceDict[key]! as! String

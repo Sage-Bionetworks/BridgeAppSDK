@@ -50,7 +50,7 @@ class NewsfeedTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 140
     }
 
@@ -82,7 +82,7 @@ class NewsfeedTableViewController: UITableViewController {
         
         if let data = (item.itemDescription as NSString).data(using: String.Encoding.utf8.rawValue) {
             do {
-                let attributedText = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
+                let attributedText = try NSAttributedString(data: data, options: convertToNSAttributedStringDocumentReadingOptionKeyDictionary([convertFromNSAttributedStringDocumentAttributeKey(NSAttributedString.DocumentAttributeKey.documentType): convertFromNSAttributedStringDocumentType(NSAttributedString.DocumentType.html)]), documentAttributes: nil)
                 newsCell.subtitleLabel.text = attributedText.string
             } catch {
                 newsCell.subtitleLabel.text = item.itemDescription
@@ -113,4 +113,19 @@ class NewsfeedTableViewController: UITableViewController {
         }
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringDocumentReadingOptionKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.DocumentReadingOptionKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.DocumentReadingOptionKey(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringDocumentAttributeKey(_ input: NSAttributedString.DocumentAttributeKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringDocumentType(_ input: NSAttributedString.DocumentType) -> String {
+	return input.rawValue
 }

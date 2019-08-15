@@ -44,8 +44,8 @@ extension UIView {
      @param view        The 'UIView' to which the view will be aligned.
      @param padding     The padding (or inset) to be applied to each constraint.
      */
-    public func alignAll(_ relation: NSLayoutRelation, to view: UIView!, padding: CGFloat) {
-        let attributes: [NSLayoutAttribute] = [.leading, .top, .trailing, .bottom]
+    public func alignAll(_ relation: NSLayoutConstraint.Relation, to view: UIView!, padding: CGFloat) {
+        let attributes: [NSLayoutConstraint.Attribute] = [.leading, .top, .trailing, .bottom]
         align(attributes, relation, to: view, attributes, padding: padding)
     }
 
@@ -55,7 +55,7 @@ extension UIView {
      @param attribute   The 'NSLayoutAttribute' to align to the view's superview.
      @param padding     The padding (or inset) to be applied to the constraint.
      */
-    public func alignToSuperview(_ attributes: [NSLayoutAttribute], padding: CGFloat) {
+    public func alignToSuperview(_ attributes: [NSLayoutConstraint.Attribute], padding: CGFloat) {
         align(attributes, .equal, to: self.superview, attributes, padding: padding)
     }
 
@@ -119,7 +119,7 @@ extension UIView {
      @param toAttributes    An array of 'NSLayoutAttribute' to be applied to the 'secondItem' (to View) in the constraints.
      @param padding         The padding (or inset) to be applied to the constraints.
      */
-    public func align(_ attributes: [NSLayoutAttribute]!, _ relation: NSLayoutRelation, to view:UIView!, _ toAttributes: [NSLayoutAttribute]!, padding: CGFloat) {
+    public func align(_ attributes: [NSLayoutConstraint.Attribute]!, _ relation: NSLayoutConstraint.Relation, to view:UIView!, _ toAttributes: [NSLayoutConstraint.Attribute]!, padding: CGFloat) {
         
         guard let superview = self.superview else {
             assertionFailure("Trying to set constraints without first setting superview")
@@ -138,7 +138,7 @@ extension UIView {
         
         attributes.forEach({
             
-            let toAttribute = toAttributes[attributes.index(of: $0)!]
+            let toAttribute = toAttributes[attributes.firstIndex(of: $0)!]
             let _padding = $0 == .trailing || $0 == .bottom ? -1 * padding : padding
             superview.addConstraint(NSLayoutConstraint(item: self,
                                                        attribute: $0,
@@ -203,7 +203,7 @@ extension UIView {
      @param relation    The 'NSLayoutRelation' used in the constraint.
      @param width       A 'CGFloat' constant for the width.
      */
-    public func makeWidth(_ relation: NSLayoutRelation, _ width : CGFloat) {
+    public func makeWidth(_ relation: NSLayoutConstraint.Relation, _ width : CGFloat) {
         self.addConstraint(NSLayoutConstraint(item: self,
                                               attribute: .width,
                                               relatedBy: relation,
@@ -219,7 +219,7 @@ extension UIView {
      @param relation    The 'NSLayoutRelation' used in the constraint.
      @param height       A 'CGFloat' constant for the height.
      */
-    public func makeHeight(_ relation: NSLayoutRelation, _ height : CGFloat) {
+    public func makeHeight(_ relation: NSLayoutConstraint.Relation, _ height : CGFloat) {
         self.addConstraint(NSLayoutConstraint(item: self,
                                               attribute: .height,
                                               relatedBy: relation,
@@ -310,7 +310,7 @@ extension UIView {
      
      @return            The 'NSLayoutConstraint' matching the supplied constraint properties, if any.
      */
-    open func constraint(for attribute: NSLayoutAttribute, relation: NSLayoutRelation) -> NSLayoutConstraint? {
+    open func constraint(for attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint? {
         
         var theConstraints = Array<NSLayoutConstraint>()
         

@@ -43,7 +43,7 @@ extension SBASurveyFactory {
      Return visual consent step
      */
     open func visualConsentStep() -> SBAVisualConsentStep {
-        return self.steps?.find({ $0 is SBAVisualConsentStep }) as? SBAVisualConsentStep ??
+        return self.steps?.sba_find({ $0 is SBAVisualConsentStep }) as? SBAVisualConsentStep ??
             SBAVisualConsentStep(identifier: SBAOnboardingSectionBaseType.consent.rawValue, consentDocument: self.consentDocument)
     }
     

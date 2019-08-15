@@ -116,7 +116,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
      @return                    The onboarding section for this section type
     */
     open func section(for sectionType: SBAOnboardingSectionType) -> SBAOnboardingSection? {
-        return self.sections?.find({ $0.onboardingSectionType == sectionType })
+        return self.sections?.sba_find({ $0.onboardingSectionType == sectionType })
     }
     
     /**
@@ -139,7 +139,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
             }
             else {
                 // Get the steps from the sections
-                return sections.mapAndFilter({
+                return sections.sba_mapAndFilter({
                     self.steps(for: $0, with: onboardingTaskType)
                 }).flatMap({$0})
             }
@@ -153,9 +153,9 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
     fileprivate func steps(for onboardingTaskType: SBAOnboardingTaskType, tableRow: Int) -> [ORKStep] {
         guard let tableRows = self.tableRows else { return [] }
         let mapping = sectionStepMapping(for: onboardingTaskType)
-        return tableRows.enumerated().mapAndFilter({ (offset: Int, row: SBAOnboardingTableRow) -> [ORKStep]? in
+        return tableRows.enumerated().sba_mapAndFilter({ (offset: Int, row: SBAOnboardingTableRow) -> [ORKStep]? in
             guard offset >= tableRow else { return nil }
-            return row.onboardingSectionTypes.mapAndFilter({ mapping[$0] })
+            return row.onboardingSectionTypes.sba_mapAndFilter({ mapping[$0] })
         }).flatMap({$0})
     }
     
@@ -316,7 +316,7 @@ open class SBAOnboardingManager: NSObject, SBASharedInfoController, ORKTaskResul
         if signupStepMapping.count != tableRows.count {
             self.signupStepMapping = {
                 let mapping = self.sectionStepMapping(for: .signup)
-                return tableRows.map { $0.onboardingSectionTypes.mapAndFilter { mapping[$0] } }
+                return tableRows.map { $0.onboardingSectionTypes.sba_mapAndFilter { mapping[$0] } }
             }()
         }
         

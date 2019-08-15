@@ -41,7 +41,6 @@ import ResearchUXFactory
 public enum BridgeSurveyItemSubtype: String {
     case onboardingCompletion   = "onboardingCompletion"    // SBAOnboardingCompletionStep
     case profileItem            = "profileItem"             // Mapped to the profile questions list
-    case brainBaseline          = "brainBaseline"           // SBABrainBaselineStep
 }
 
 /**
@@ -63,7 +62,7 @@ extension SBASurveyItemType {
  */
 open class SBASurveyFactory : SBABaseSurveyFactory {
     
-    open static var profileQuestionSurveyItems: [SBASurveyItem]? = {
+    public static var profileQuestionSurveyItems: [SBASurveyItem]? = {
         guard let json = SBAResourceFinder.shared.json(forResource: SBAProfileQuestionsJSONFilename) else { return nil }
         return json["steps"] as? [NSDictionary]
     }()
@@ -84,7 +83,7 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
         // Build the steps
         let count = survey.elements.count
         var usesTitleAndText: Bool = false
-        let steps: [ORKStep] = survey.elements.enumerated().mapAndFilter({ (offset: Int, element: Any) -> ORKStep? in
+        let steps: [ORKStep] = survey.elements.enumerated().sba_mapAndFilter({ (offset: Int, element: Any) -> ORKStep? in
             guard let surveyItem = element as? SBBSurveyElement else { return nil }
             let step = self.createSurveyStepWithSurveyElement(surveyItem, index: offset, count: count)
             if let qStep = step as? ORKQuestionStep, qStep.title != nil {
@@ -155,26 +154,14 @@ open class SBASurveyFactory : SBABaseSurveyFactory {
             
         case .profileItem:
             return profileItemStep(for: inputItem.identifier)?.copy() as? ORKStep
-            
-        case .brainBaseline:
-            return SBABrainBaselineStep(inputItem: inputItem)
         }
     }
     
     open func profileItemStep(for profileKey: String) -> ORKStep? {
-        guard let inputItem = SBASurveyFactory.profileQuestionSurveyItems?.find(withIdentifier: profileKey) else {
+        guard let inputItem = SBASurveyFactory.profileQuestionSurveyItems?.sba_find(withIdentifier: profileKey) else {
             return nil
         }
         return self.createSurveyStep(inputItem)
-    }
-    
-    open override func createFormStep(_ inputItem:SBAFormStepSurveyItem, isSubtaskStep: Bool = false) -> ORKStep? {
-        
-        if inputItem.surveyItemType.formSubtype() == .mood {
-            return SBAMoodScaleStep(inputItem: inputItem)
-        }
-        
-        return super.createFormStep(inputItem, isSubtaskStep: isSubtaskStep)
     }
     
     open override func createAccountStep(inputItem: SBASurveyItem, subtype: SBASurveyItemType.AccountSubtype) -> ORKStep? {
