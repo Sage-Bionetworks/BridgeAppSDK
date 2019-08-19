@@ -80,7 +80,6 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
-        authMock.authDelegate = user
         user.loginUser(email: email, password: password, completion: nil)
         
         // Verify the login
@@ -94,8 +93,6 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.none)
         XCTAssertFalse(user.isDataSharingEnabled)
-        XCTAssertEqual(user.name, "Jane")
-        XCTAssertEqual(user.familyName, "Doe")
     }
     
     func testLoginUser_SharingAll() {
@@ -107,7 +104,6 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
-        authMock.authDelegate = user
         user.loginUser(email: email, password: password, completion: nil)
         
         // Verify the login
@@ -121,8 +117,6 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
         XCTAssertTrue(user.isDataSharingEnabled)
-        XCTAssertEqual(user.name, "Jane")
-        XCTAssertEqual(user.familyName, "Doe")
     }
     
     func testLoginUser_ExternalId() {
@@ -134,7 +128,6 @@ class SBAUserTests: XCTestCase {
         
         // --- method under test
         let user = MockUser()
-        authMock.authDelegate = user
         user.loginUser(externalId: "1002", completion: nil)
         
         // Verify the login
@@ -148,8 +141,6 @@ class SBAUserTests: XCTestCase {
         XCTAssertEqual(user.dataGroups!, ["test_user","group_afternoon"])
         XCTAssertEqual(user.dataSharingScope, SBBParticipantDataSharingScope.all)
         XCTAssertTrue(user.isDataSharingEnabled)
-        XCTAssertEqual(user.name, "Jane")
-        XCTAssertEqual(user.familyName, "Doe")
     }
     
     // MARK: helper methods
@@ -193,7 +184,9 @@ class SBAUserTests: XCTestCase {
 }
 
 class MockAuthManager: NSObject, SBBAuthManagerProtocol {
-    
+
+
+
     var responseObject: Any?
     var responseError: Error?
     
@@ -206,103 +199,135 @@ class MockAuthManager: NSObject, SBBAuthManagerProtocol {
     
     var userSessionInfo: SBBUserSessionInfo?
     
-    weak var authDelegate: SBBAuthManagerDelegateProtocol?
-
-    public func signUpStudyParticipant(_ signUp: SBBSignUp, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask {
+    func signUpStudyParticipant(_ signUp: SBBSignUp, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         let session = URLSessionDataTask()
         signUpStudyParticipant_called = true
         self.signUp = signUp
         completion?(session, responseObject, responseError)
         return session
     }
-    
-    func savedPassword() -> String? {
-        return self.loginPassword
-    }
-    
+
     func isAuthenticated() -> Bool {
         return self.signIn_called
     }
-
-    func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    
+    func signIn(withEmail email: String, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         let session = URLSessionDataTask()
         self.loginEmail = email
         self.loginPassword = password
         signIn_called = true
-        
-        if let response = responseObject as? [String: Any],
-            let delegate = authDelegate,
-            delegate.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
+
+        if let response = responseObject as? [String: Any] {
             if let participantManager = SBBComponentManager.component(SBBParticipantManager.self) as? SBBParticipantManager {
                 // this is a BridgeSDK-internal method
                 let clearSelector = NSSelectorFromString("clearUserInfoFromCache")
                 participantManager.perform(clearSelector)
             }
             self.userSessionInfo = SBBUserSessionInfo(dictionaryRepresentation: response)
-            authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
         }
         completion?(session, responseObject, responseError)
         return session
     }
-    
-    func resendEmailVerification(_ email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+
+    func resendEmailVerification(_ email: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Not implemented")
-        return URLSessionDataTask()
+        return nil
     }
-    
+
     func resetUserSessionInfo() {
         userSessionInfo = SBBUserSessionInfo()
         userSessionInfo?.studyParticipant = SBBStudyParticipant()
-        if authDelegate != nil &&
-            authDelegate!.responds(to: #selector(SBBAuthManagerDelegateProtocol.authManager(_:didReceiveUserSessionInfo:))) {
-            authDelegate!.authManager!(self, didReceiveUserSessionInfo: userSessionInfo)
-        }
     }
     
-    func signOut(completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    func signIn(withCredential credentialKey: String, value credentialValue: SBBJSONValue, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Not implemented")
-        return URLSessionDataTask()
-    }
-
-    func ensureSignedIn(completion: SBBNetworkManagerCompletionBlock?) {
-        assertionFailure("Not implemented")
+        return nil
     }
     
-    func requestPasswordReset(forEmail email: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    func signIn(with phone: SBBPhone, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Not implemented")
-        return URLSessionDataTask()
+        return nil
+    }
+    
+    func signIn(withPhoneNumber phoneNumber: String, regionCode: String, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func signIn(withExternalId externalId: String, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func reauth(completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func emailSignInLink(to email: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func signIn(withEmail email: String, token: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func textSignInToken(to phoneNumber: String, regionCode: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func signIn(withPhoneNumber phoneNumber: String, regionCode: String, token: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
     }
 
-    func resetPassword(toNewPassword password: String, resetToken token: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    func signOut(completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Not implemented")
-        return URLSessionDataTask()
+        return nil
+    }
+    
+    func ensureSignedIn(completion: SBBNetworkManagerCompletionBlock? = nil) {
+        assertionFailure("Not implemented")
+    }
+
+    func requestPasswordReset(forEmail email: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
+    }
+    
+    func resetPassword(toNewPassword password: String, resetToken token: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
+        assertionFailure("Not implemented")
+        return nil
     }
 
     func addAuthHeader(toHeaders headers: NSMutableDictionary) {
         // doesn't need to do anything for the mock
         return
     }
-    
+
     // MARK: deprecated methods
     
-    func signUp(withEmail email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    func signUp(withEmail email: String, username: String, password: String, dataGroups: [String]?, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Deprecated method. Do not use.")
-        return URLSessionDataTask()
+        return nil
     }
     
-    func signUp(withEmail email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock?) -> URLSessionTask {
+    func signUp(withEmail email: String, username: String, password: String, completion: SBBNetworkManagerCompletionBlock? = nil) -> URLSessionTask? {
         assertionFailure("Deprecated method. Do not use.")
-        return URLSessionDataTask()
+        return nil
     }
 }
 
 class MockConsentManager: NSObject, SBBConsentManagerProtocol {
-
-    public func consentSignature(_ name: String, forSubpopulationGuid subpopGuid: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
+    
+    func consentSignature(_ name: String, birthdate date: Date?, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
         return URLSessionDataTask()
     }
-
-    public func consentSignature(_ name: String, birthdate date: Date, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
+    
+    func consentSignature(_ name: String, forSubpopulationGuid subpopGuid: String, birthdate date: Date?, signatureImage: UIImage?, dataSharing scope: SBBParticipantDataSharingScope, completion: SBBConsentManagerCompletionBlock? = nil) -> URLSessionTask {
         return URLSessionDataTask()
     }
 

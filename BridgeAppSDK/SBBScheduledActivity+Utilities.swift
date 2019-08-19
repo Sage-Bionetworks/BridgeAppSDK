@@ -86,23 +86,23 @@ public extension SBBScheduledActivity {
         return self.activity.survey?.identifier
     }
     
-    /**
-     Returns either the `SBBTaskReference` or `SBBSurveyReference` identifier.
-     The model currently supports an either/or case where the schedule includes a one-to-one
-     mapping to either a `SBBTaskReference` or `SBBSurveyReference`. This identifier maps to 
-     whichever of those is the appropriate identifier.
-     */
-    @objc dynamic var activityIdentifier: String? {
-        return self.taskIdentifier ?? self.surveyIdentifier
-    }
-    
-    @objc dynamic var scheduleIdentifier: String {
-        // Strip out the unique part of the guid
-        if let range = self.guid.range(of: ":") {
-            return String(self.guid[..<range.lowerBound])
-        }
-        else {
-            return self.guid
-        }
-    }
+//    /**
+//     Returns either the `SBBTaskReference` or `SBBSurveyReference` identifier.
+//     The model currently supports an either/or case where the schedule includes a one-to-one
+//     mapping to either a `SBBTaskReference` or `SBBSurveyReference`. This identifier maps to 
+//     whichever of those is the appropriate identifier.
+//     */
+//    @objc dynamic var activityIdentifier: String? {
+//        return self.taskIdentifier ?? self.surveyIdentifier
+//    }
+//    
+//    @objc dynamic var scheduleIdentifier: String {
+//        // Strip out the unique part of the guid
+//        if let range = self.guid.range(of: ":") {
+//            return String(self.guid[..<range.lowerBound])
+//        }
+//        else {
+//            return self.guid
+//        }
+//    }
 }

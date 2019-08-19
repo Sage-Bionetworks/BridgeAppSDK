@@ -66,8 +66,6 @@ extension SBAAppInfoDelegate {
         currentUser.resetUserKeychainIfNeeded()
         
         // Setup the study
-        SBABridgeManager.setup(bridgeInfo: bridgeInfo,
-                               participant: currentUser,
-                               authDelegate: currentUser)
+        SBABridgeManager.setup(withBridgeInfo: bridgeInfo, participant: currentUser)
     }
 }

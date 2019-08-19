@@ -81,7 +81,7 @@ open class SBANotificationsManager: NSObject, SBASharedInfoController {
                 notif.soundName = UILocalNotificationDefaultSoundName
                 notif.alertBody = Localization.localizedStringWithFormatKey("SBA_TIME_FOR_%@", sa.activity.label)
                 notif.userInfo = [ SBANotificationsManager.notificationType: SBAScheduledNotificationType.scheduledActivity.rawValue,
-                                   SBANotificationsManager.identifier: sa.scheduleIdentifier ]
+                                   SBANotificationsManager.identifier: sa.activity.guid ]
                 app.scheduleLocalNotification(notif)
             }
         }

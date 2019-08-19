@@ -158,7 +158,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     func changeUserEmailAddress(_ email: String, completion: ((Error?) -> Void)?) {
-        guard let password = self.password(forAuthManager: nil) else {
+        guard let password = self.password else {
             assertionFailure("Attempting to change email without a stored password")
             return
         }
@@ -282,7 +282,7 @@ public extension SBAUserWrapper {
      @param completion  Completion handler
      */
     func resendVerificationEmail(_ completion: ((Error?) -> Void)?) {
-        guard let email = self.email(forAuthManager: nil) else {
+        guard let email = self.email else {
             assertionFailure("Attempting to resend verification email without a stored email")
             return
         }
