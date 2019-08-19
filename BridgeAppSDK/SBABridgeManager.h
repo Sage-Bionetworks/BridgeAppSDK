@@ -76,8 +76,7 @@ typedef void (^SBABridgeManagerCompletionBlock)(id _Nullable responseObject, NSE
  @param authDelegate  Pointer to the auth delegate (Optional)
  */
 + (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo
-                participant:(id <SBAParticipantInfo>)participant
-               authDelegate:(id <SBBAuthManagerDelegateProtocol> _Nullable)authDelegate NS_SWIFT_NAME(setup(bridgeInfo:participant:authDelegate:));
+                participant:(id <SBAParticipantInfo>)participant;
 
 /*!
  Reset the Bridge SDK temporary session info and study participant object after a failed or incomplete onboarding.

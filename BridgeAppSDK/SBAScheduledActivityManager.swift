@@ -408,7 +408,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
             else {
                 return nil
         }
-        return activities.sba_find({ $0.scheduleIdentifier == scheduleIdentifier })
+        return activities.sba_find({ $0.activity.guid == scheduleIdentifier })
     }
     
     /**
@@ -761,7 +761,7 @@ open class SBABaseScheduledActivityManager: NSObject, ORKTaskViewControllerDeleg
      @param     taskRef             The task reference associated with this task
     */
     open func setup(taskViewController: SBATaskViewController, schedule: SBBScheduledActivity, taskRef: SBATaskReference) {
-        taskViewController.scheduleIdentifier = schedule.scheduleIdentifier
+        taskViewController.scheduleIdentifier = schedule.activity.guid
         taskViewController.delegate = self
     }
     

@@ -35,7 +35,7 @@
 
 
 class MockActivityManager : NSObject, SBBActivityManagerProtocol {
-    
+
     fileprivate let taskQueue = DispatchQueue(label: UUID().uuidString)
     
     // MARK: getScheduledActivities
@@ -71,6 +71,10 @@ class MockActivityManager : NSObject, SBBActivityManagerProtocol {
         return self.getScheduledActivities(forDaysAhead: daysAhead, daysBehind: 0, cachingPolicy: .noCaching, withCompletion: completion)
     }
     
+    func getCachedSchedules(using predicate: NSPredicate, sortDescriptors: [NSSortDescriptor]?, fetchLimit: UInt) throws -> [SBBScheduledActivity] {
+        return []
+    }
+
     
     // MARK: Not implemented
     

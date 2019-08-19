@@ -40,7 +40,7 @@ import UserNotifications
  The `SBAUser` model object is intended as a singleton object for storing information about
  the currently logged in user in the user defaults and keychain.
  */
-public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuthManagerDelegateProtocol {
+public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
 
     public static let shared = SBAUser()
     
@@ -552,36 +552,4 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource, SBBAuth
             UIApplication.shared.cancelAllLocalNotifications()
         }
     }
-        
-    public func sessionToken(forAuthManager authManager: SBBAuthManagerProtocol) -> String? {
-        let token = self.sessionToken
-        #if DEBUG
-            print("getting Session Token: \(String(describing: token))")
-        #endif
-        return token
-    }
-    
-    public func authManager(_ authManager: SBBAuthManagerProtocol?, didGetSessionToken sessionToken: String?, forEmail email: String?, andPassword password: String?) {
-        #if DEBUG
-            print("setting Session Token: \(String(describing: sessionToken))")
-        #endif
-        self.sessionToken = sessionToken
-        self.email = email
-        self.password = password
-    }
-    
-    public func authManager(_ authManager: SBBAuthManagerProtocol?, didReceiveUserSessionInfo sessionInfo: Any?) {
-        guard let info = sessionInfo as? SBBUserSessionInfo else { return }
-        self.updateFromUserSessionInfo(info)
-        SBAStudyParticipantProfileItem.studyParticipant = info.studyParticipant
-    }
-    
-    public func email(forAuthManager authManager: SBBAuthManagerProtocol?) -> String? {
-        return self.email
-    }
-    
-    public func password(forAuthManager authManager: SBBAuthManagerProtocol?) -> String? {
-        return self.password
-    }
-    
 }

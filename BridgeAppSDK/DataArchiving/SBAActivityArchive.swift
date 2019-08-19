@@ -143,7 +143,7 @@ open class SBAActivityArchive: SBBDataArchive {
         // set up the activity metadata
         // -- always set scheduledActivityGuid, scheduleIdentifier, scheduledOn, activityLabel, and taskRunUUID
         self.metadata[kScheduledActivityGuidKey] = schedule.guid as AnyObject?
-        self.metadata[kScheduleIdentifierKey] = schedule.scheduleIdentifier as AnyObject?
+        self.metadata[kScheduleIdentifierKey] = schedule.activity.guid as AnyObject?
         self.metadata[kScheduledOnKey] = (schedule.scheduledOn as NSDate).iso8601String() as AnyObject?
         self.metadata[kScheduledActivityLabelKey] = schedule.activity.label as AnyObject?
         self.metadata[kTaskRunUUIDKey] = result.taskRunUUID.uuidString as AnyObject?

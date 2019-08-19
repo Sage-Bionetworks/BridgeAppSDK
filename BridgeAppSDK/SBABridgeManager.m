@@ -53,8 +53,7 @@
 }
 
 + (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo
-                participant:(id <SBAParticipantInfo>)participant
-               authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
+                participant:(id <SBAParticipantInfo>)participant {
     
     // Add the resource bundle (if needed)
     [self addResourceBundleIfNeeded];
@@ -64,29 +63,6 @@
     
     // Setup the Bridge study
     [BridgeSDK setupWithBridgeInfo:bridgeInfo];
-    [BridgeSDK setAuthDelegate:authDelegate];
-}
-
-+ (void)setupWithStudy:(NSString *)study
-        cacheDaysAhead:(NSInteger)cacheDaysAhead
-       cacheDaysBehind:(NSInteger)cacheDaysBehind
-           environment:(SBBEnvironment)environment
-          authDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
-    
-    [self addResourceBundleIfNeeded];
-    
-    // If the auth delegate is also the current user then set that
-    if ([authDelegate conformsToProtocol:@protocol(SBAParticipantInfo)]) {
-        [SBAInfoManager sharedManager].currentParticipant = (id <SBAParticipantInfo>)authDelegate;
-    }
-    
-    // Finally setup bridge
-    [BridgeSDK setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
-    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
-}
-
-+ (void)setAuthDelegate:(id <SBBAuthManagerDelegateProtocol>) authDelegate {
-    [SBBComponent(SBBAuthManager) setAuthDelegate:authDelegate];
 }
 
 + (void)resetUserSessionInfo
