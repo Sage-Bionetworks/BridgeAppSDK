@@ -35,14 +35,6 @@ import BridgeSDK
 
 public extension SBBScheduledActivity {
     
-    var isCompleted: Bool {
-        return self.finishedOn != nil
-    }
-    
-    var isExpired: Bool {
-        return (self.expiresOn != nil) && ((Date() as NSDate).earlierDate(self.expiresOn!) == self.expiresOn)
-    }
-    
     var isNow: Bool {
         return !isCompleted && ((self.scheduledOn.timeIntervalSinceNow < 0) && !isExpired)
     }
