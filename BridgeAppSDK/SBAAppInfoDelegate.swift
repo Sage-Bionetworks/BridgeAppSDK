@@ -61,10 +61,6 @@ public protocol SBAAppInfoDelegate: NSObjectProtocol {
 extension SBAAppInfoDelegate {
     func initializeBridgeServerConnection() {
         
-        // Clearout the keychain if needed.
-        // WARNING: This will force login
-        currentUser.resetUserKeychainIfNeeded()
-        
         // Setup the study
         SBABridgeManager.setup(withBridgeInfo: bridgeInfo, participant: currentUser)
     }

@@ -121,16 +121,5 @@ extension SBAUserWrapper {
         // an assert to fail.
         return SBAUser.mainQueueAppDelegate
     }
-    
-    // With Xcode 8 and iOS 10, the keychain entitlement is required and is *not* reverse-compatible
-    // to previous versions of the app that did not require this. Because of this, it is possible to
-    // have the flags set for registered and verified without an accessible email/password. Because
-    // of this, we need to logout the user, but we want to keep their data that locally cached.
-    // syoung 09/19/2016
-    func resetUserKeychainIfNeeded() {
-        if ((isRegistered || isLoginVerified) && email == nil) {
-            resetStoredUserData()
-        }
-    }
 }
 
