@@ -56,6 +56,17 @@ public final class SBAUser: NSObject, SBAUserWrapper, SBANameDataSource {
     }()
     
     let lockQueue = DispatchQueue(label: "org.sagebase.UserLockQueue")
+    
+    public override init() {
+        super.init()
+        
+        // replacement for auth delegate didReceiveUserSessionInfo handler
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.sbbUserSessionUpdated, object: nil, queue: nil) { (notification) in
+            guard let info = notification.userInfo?[kSBBUserSessionInfoKey] as? SBBUserSessionInfo else { return }
+            self.updateFromUserSessionInfo(info)
+            SBAStudyParticipantProfileItem.studyParticipant = info.studyParticipant
+        }
+    }
 
     public func resetStoredUserData() {
         lockQueue.async {
