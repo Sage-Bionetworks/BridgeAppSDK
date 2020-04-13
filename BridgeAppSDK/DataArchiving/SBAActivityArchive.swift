@@ -140,6 +140,8 @@ open class SBAActivityArchive: SBBDataArchive {
         
         super.init(reference: result.schemaIdentifier, jsonValidationMapping: jsonValidationMapping)
         
+        self.usesV1LegacySchema = true
+        
         // set up the activity metadata
         // -- always set scheduledActivityGuid, scheduleIdentifier, scheduledOn, activityLabel, and taskRunUUID
         self.metadata[kScheduledActivityGuidKey] = schedule.guid as AnyObject?
