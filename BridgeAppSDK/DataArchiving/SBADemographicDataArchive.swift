@@ -56,6 +56,8 @@ public class SBADemographicDataArchive: SBBDataArchive, SBASharedInfoController 
         let identifier = kTaskIdentifierKey
         super.init(reference: identifier, jsonValidationMapping: jsonValidationMapping)
         
+        self.usesV1LegacySchema = true
+        
         // set the revision (if available)
         if let schemaRevision = sharedBridgeInfo.schemaReferenceWithIdentifier(identifier)?.schemaRevision {
             self.setArchiveInfoObject(schemaRevision, forKey: kSchemaRevisionKey)
