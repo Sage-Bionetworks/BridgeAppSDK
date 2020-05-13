@@ -193,6 +193,8 @@ open class SBAProfileManager: SBADataObject, SBAProfileManagerProtocol {
         let schemaIdentifier = demographicSchemaIdentifier ?? "Profile"
         let archive = SBBDataArchive(reference: schemaIdentifier, jsonValidationMapping: nil)
         
+        archive.usesV1LegacySchema = true
+        
         if let schemaRevision = SBAInfoManager.shared.schemaReferenceWithIdentifier(schemaIdentifier)?.schemaRevision {
             archive.setArchiveInfoObject(schemaRevision, forKey: "schemaRevision")
         }
