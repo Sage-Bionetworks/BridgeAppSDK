@@ -91,12 +91,14 @@ public protocol SBABridgeInfo: SBASharedAppInfo, SBBBridgeInfoProtocol {
      do not check for a text user.
     */
     var disableTestUserCheck: Bool { get }
+    
+    var keychainAccessGroupWithBundleSeedId: String? { get }
 }
 
 extension SBABridgeInfo {
-    
+
     public func createKeychainWrapper() -> SBAKeychainWrapper {
-        return SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroup)
+        return SBAKeychainWrapper(service: keychainService, accessGroup: keychainAccessGroupWithBundleSeedId)
     }
 }
 
@@ -186,6 +188,44 @@ extension SBAInfoManager: SBABridgeInfo {
     
     public var disableTestUserCheck: Bool {
         return self.plist["disableTestUserCheck"] as? Bool ?? false
+    }
+    
+    fileprivate static func bundleSeedID() -> String? {
+        let queryLoad: [String: AnyObject] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: "bundleSeedID" as AnyObject,
+            kSecAttrService as String: "" as AnyObject,
+            kSecReturnAttributes as String: kCFBooleanTrue
+        ]
+
+        var result : AnyObject?
+        var status = withUnsafeMutablePointer(to: &result) {
+            SecItemCopyMatching(queryLoad as CFDictionary, UnsafeMutablePointer($0))
+        }
+
+        if status == errSecItemNotFound {
+            status = withUnsafeMutablePointer(to: &result) {
+                SecItemAdd(queryLoad as CFDictionary, UnsafeMutablePointer($0))
+            }
+        }
+
+        if status == noErr {
+            if let resultDict = result as? [String: Any], let accessGroup = resultDict[kSecAttrAccessGroup as String] as? String {
+                let components = accessGroup.components(separatedBy: ".")
+                return components.first
+            }else {
+                return nil
+            }
+        } else {
+            print("Error getting bundleSeedID to Keychain")
+            return nil
+        }
+    }
+
+    public var keychainAccessGroupWithBundleSeedId: String? {
+        guard let group = self.keychainAccessGroup else { return nil }
+        guard let seed = SBAInfoManager.bundleSeedID() else { return nil }
+        return seed + "." + group
     }
 
 }
